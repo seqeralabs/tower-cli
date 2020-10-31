@@ -1,0 +1,30 @@
+<!--
+  ~ Copyright (c) 2019-2020, Seqera Labs.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  ~
+  ~ This Source Code Form is "Incompatible With Secondary Licenses", as
+  ~ defined by the Mozilla Public License, v. 2.0.
+  -->
+
+<configuration>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoders are assigned the type
+             ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder>
+            <pattern>[%t] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="WARN">
+        <appender-ref ref="STDOUT" />
+    </root>
+    <logger name="io.micronaut.http.client" level="WARN" />
+    <logger name="io.seqera" level="${TOWER_LOG_LEVEL:-DEBUG}"/>
+    <logger name="com.amazonaws" level="WARN" />
+    <logger name="org.hibernate.engine.internal.StatisticalLoggingSessionEventListener" level="WARN"/>
+    
+</configuration>
