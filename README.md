@@ -37,3 +37,4 @@ Micronaut HTTP declarative client and Tower domain classes
 * [Szymon Stepniak YT tutorial](https://www.youtube.com/watch?v=RPdugI8eZgo)
 * [Szymon Stepniak example](https://github.com/wololock/gttp)
 * [Mitch Seymour's blog post](https://medium.com/@mitch.seymour/building-native-java-clis-with-graalvm-picocli-and-gradle-2e8a8388d70d)
+* [CLI applications with GraalVM Native Image](https://medium.com/graalvm/cli-applications-with-graalvm-native-image-d629a40aa0be)
