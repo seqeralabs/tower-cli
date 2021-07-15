@@ -14,7 +14,6 @@ import picocli.CommandLine.Spec;
 import io.seqera.tower.api.TowerApi;
 import io.seqera.tower.ApiClient;
 
-import javax.inject.Inject;
 import java.util.concurrent.Callable;
 
 
@@ -27,7 +26,6 @@ import java.util.concurrent.Callable;
 public class App implements Callable<Integer> {
     @Spec CommandSpec spec;
 
-    @Inject
     private final AppConfig config;
 
     private final TowerApi api;
