@@ -1,0 +1,83 @@
+name: Tower CLI continuous build
+# read more here
+# https://help.github.com/en/articles/workflow-syntax-for-github-actions#on
+on:
+  push:
+    branches:
+      - '*'
+      - '!refs/tags/.*'
+    tags-ignore:
+      - '*'  
+
+jobs:
+  linux-image:
+    name: Tower CLI build Linux native image
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+    - name: Environment
+      run: env | sort 
+
+    - name: Checkout
+      uses: actions/checkout@v1
+      with:
+        fetch-depth: 1
+
+    - name: Setup Java
+      uses: actions/setup-java@v1
+      with:
+        java-version: '11'
+        architecture: x64
+
+    - name: Build Native Image
+      run: ./gradlew nativeImage
+
+  mac-image:
+    name: Tower CLI build Mac native image
+    runs-on: macos-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Environment
+        run: env | sort
+
+      - name: Checkout
+        uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+
+      - name: Setup Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: '11'
+          architecture: x64
+
+      - name: Build Native Image
+        run: ./gradlew nativeImage
+
+  windows-image:
+    name: Tower CLI build Windows native image
+    runs-on: windows-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Environment
+        run: env | sort
+
+      - name: Checkout
+        uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+
+      - name: Setup Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: '11'
+          architecture: x64
+
+      - name: Build Native Image
+        run: ./gradlew nativeImage
+
+
+
