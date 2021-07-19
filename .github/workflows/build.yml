@@ -33,6 +33,12 @@ jobs:
     - name: Build Native Image
       run: ./gradlew nativeImage
 
+    - name: Linux native image
+      uses: actions/upload-artifact@v2
+      with:
+        name: linux-native-image
+        path: build/graal/towr
+
   mac-image:
     name: Tower CLI build Mac native image
     runs-on: macos-latest
@@ -55,6 +61,12 @@ jobs:
 
       - name: Build Native Image
         run: ./gradlew nativeImage
+
+      - name: Mac native image
+        uses: actions/upload-artifact@v2
+        with:
+          name: mac-native-image
+          path: build/graal/towr
 
   windows-image:
     name: Tower CLI build Windows native image
@@ -79,5 +91,10 @@ jobs:
       - name: Build Native Image
         run: ./gradlew nativeImage
 
+      - name: Windows native image
+        uses: actions/upload-artifact@v2
+        with:
+          name: windows-native-image
+          path: build/graal/towr.exe
 
 
