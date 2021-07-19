@@ -5,14 +5,12 @@ plugins {
 }
 
 repositories {
-    // Use jcenter for resolving dependencies.
-    // You can declare any Maven/Ivy/file repository here.
-    mavenLocal()
-    jcenter()
+    mavenCentral()
+    maven { url = "https://s3-eu-west-1.amazonaws.com/maven.seqera.io/snapshots" }
 }
 
 dependencies {
-    implementation 'io.seqera:tower-java-sdk:1.1.0'
+    implementation 'io.seqera:tower-java-sdk:1.0.0-SNAPSHOT'
     implementation 'info.picocli:picocli:4.5.2'
     annotationProcessor 'info.picocli:picocli-codegen:4.5.2'
 
