@@ -77,7 +77,7 @@ class RunCmdTest {
 
         // Assert results
         assertEquals(-1, exitCode);
-        assertEquals("Unauthorized\n", stdOut.toString());
+        assertEquals(String.format("Unauthorized%n"), stdOut.toString());
     }
 
     @Test
@@ -106,7 +106,7 @@ class RunCmdTest {
 
         // Assert results
         assertEquals(-1, exitCode);
-        assertEquals("Pipeline 'hello' not found on this workspace.\n", stdOut.toString());
+        assertEquals(String.format("Pipeline 'hello' not found on this workspace.%n"), stdOut.toString());
 
     }
 
@@ -136,7 +136,7 @@ class RunCmdTest {
 
         // Assert results
         assertEquals(-1, exitCode);
-        assertEquals("Multiple pipelines match 'hello'\n", stdOut.toString());
+        assertEquals(String.format("Multiple pipelines match 'hello'%n"), stdOut.toString());
     }
 
     @Test
@@ -193,9 +193,9 @@ class RunCmdTest {
 
         // Assert results
         assertEquals(0, exitCode);
-        assertEquals("class SubmitWorkflowLaunchResponse {\n" +
-                "    workflowId: 35aLiS0bIM5efd\n" +
-                "}\n", stdOut.toString());
+        assertEquals(String.format("class SubmitWorkflowLaunchResponse {%n" +
+                "    workflowId: 35aLiS0bIM5efd%n" +
+                "}%n"), stdOut.toString());
 
     }
 
