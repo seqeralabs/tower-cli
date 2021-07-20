@@ -38,7 +38,7 @@ jobs:
       uses: actions/upload-artifact@v2
       if: failure()
       with:
-        name: test-reports
+        name: linux-test-reports
         path: build/reports/tests/test/
 
     - name: Build Native Image
@@ -77,7 +77,7 @@ jobs:
         uses: actions/upload-artifact@v2
         if: failure()
         with:
-          name: test-reports
+          name: mac-test-reports
           path: build/reports/tests/test/
 
       - name: Build Native Image
@@ -116,7 +116,7 @@ jobs:
         uses: actions/upload-artifact@v2
         if: failure()
         with:
-          name: test-reports
+          name: windows-test-reports
           path: build/reports/tests/test/
 
       - name: Build Native Image
