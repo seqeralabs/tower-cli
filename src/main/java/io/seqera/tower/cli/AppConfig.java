@@ -20,6 +20,12 @@ public class AppConfig {
         }
     }
 
+    public AppConfig(String url, String token, Long workspaceId) {
+        this.url = url;
+        this.token = token;
+        this.workspaceId = workspaceId;
+    }
+
     public String getToken() {
         return token;
     }

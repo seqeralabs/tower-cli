@@ -3,7 +3,6 @@ package io.seqera.tower.cli.commands;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.App;
 import io.seqera.tower.api.TowerApi;
-import picocli.CommandLine;
 
 import java.util.concurrent.Callable;
 
@@ -15,10 +14,6 @@ public abstract class BaseCmd implements Callable<Integer> {
         this.app = app;
     }
 
-    protected App getApp() {
-        return app;
-    }
-
     protected TowerApi api() {
         return app.getApi();
     }
@@ -28,7 +23,7 @@ public abstract class BaseCmd implements Callable<Integer> {
     }
 
     protected void println(String line) {
-        System.out.println(CommandLine.Help.Ansi.AUTO.string(line));
+        app.println(line);
     }
 
     @Override
@@ -36,8 +31,7 @@ public abstract class BaseCmd implements Callable<Integer> {
         try {
             return exec();
         } catch (ApiException e) {
-            println(e.getResponseBody());
-            e.printStackTrace();
+            println(e.getMessage());
             return -1;
         }
     }

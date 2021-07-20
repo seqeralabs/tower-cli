@@ -31,9 +31,11 @@ public class App implements Callable<Integer> {
     private final TowerApi api;
 
     public App() {
+        this(new AppConfig());
+    }
 
-        // Initialize configuration
-        config = new AppConfig();
+    public App(AppConfig config) {
+        this.config = config;
 
         // Initialize API client
         ApiClient client = new ApiClient();
@@ -52,12 +54,7 @@ public class App implements Callable<Integer> {
 
     public static void main(String[] args) {
         App app = new App();
-        CommandLine cmd = new CommandLine(app)
-                .addSubcommand(new RunCmd(app))
-                .addSubcommand(new HelpCommand());
-
-        // Add generate-completion command
-        cmd = cmd.addSubcommand(new AutocompleteCmd(cmd));
+        CommandLine cmd = buildCmd(app);
 
         // Execute command
         int exitCode = cmd.execute(args);
@@ -66,10 +63,25 @@ public class App implements Callable<Integer> {
         System.exit(exitCode);
     }
 
+    protected static CommandLine buildCmd(App app) {
+        CommandLine cmd = new CommandLine(app)
+                .addSubcommand(new RunCmd(app))
+                .addSubcommand(new HelpCommand());
+
+        // Add generate-completion command
+        cmd = cmd.addSubcommand(new AutocompleteCmd(cmd));
+
+        return cmd;
+    }
+
     @Override
     public Integer call() {
         // if the command was invoked without subcommand, show the usage help
         spec.commandLine().usage(System.err);
         return -1;
+    }
+
+    public void println(String content) {
+        spec.commandLine().getOut().println(content);
     }
 }
