@@ -140,7 +140,7 @@ class RunCmdTest {
     }
 
     @Test
-    void testSubmitWorkspacePipeline() {
+    void testSubmitUserPipeline() {
         // Create command line
         StringWriter stdOut = new StringWriter();
         CommandLine cmd = buildCmd("fake_auth_token", null, stdOut);
@@ -188,14 +188,26 @@ class RunCmdTest {
                             .withBody( loadResponse("workflow_launch"))
                 );
 
+        new MockServerClient("127.0.0.1", PORT)
+                .when(
+                        request()
+                                .withMethod("GET")
+                                .withPath("/user")
+                        ,
+                        exactly(1)
+                )
+                .respond(
+                        response()
+                                .withStatusCode(200)
+                                .withBody( loadResponse("user"))
+                );
+
         // Run the command
         int exitCode = cmd.execute("run", "sarek");
 
         // Assert results
         assertEquals(0, exitCode);
-        assertEquals(String.format("class SubmitWorkflowLaunchResponse {%n" +
-                "    workflowId: 35aLiS0bIM5efd%n" +
-                "}%n"), stdOut.toString());
+        assertEquals(String.format("Workflow submitted. Check it here:%nhttp://localhost:1080/user/jordi/watch/35aLiS0bIM5efd%n"), stdOut.toString());
 
     }
 

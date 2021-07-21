@@ -63,16 +63,27 @@ public class RunCmd extends BaseCmd {
         }
 
         Long pipelineId = pipelines.getPipelines().get(0).getPipelineId();
-        Launch launch = api().pipelineLaunchDescribe(pipelineId).getLaunch();
+        Launch launch = api().pipelineLaunchDescribe(pipelineId, workspaceId()).getLaunch();
 
         return submitWorkflow(createLaunchRequest(launch));
     }
 
     protected Integer submitWorkflow(WorkflowLaunchRequest launch) throws ApiException {
         SubmitWorkflowLaunchResponse response = api().workflowLaunchSubmit(new SubmitWorkflowLaunchRequest().launch(launch), workspaceId());
-        println(response.toString());
+        String workflowId = response.getWorkflowId();
+        println(String.format("Workflow submitted. Check it here:%n%s", workflowWatchUrl(workflowId)));
         return 0;
     }
+
+    private String workflowWatchUrl(String workflowId) {
+
+        if (workspaceId() == null) {
+            return String.format("%s/user/%s/watch/%s", serverUrl(), userName(), workflowId);
+        }
+
+        return String.format("%s/orgs/%s/workspaces/%s/watch/%s", serverUrl(), orgName(), workspaceName(), workflowId);
+    }
+
 }
 
 
