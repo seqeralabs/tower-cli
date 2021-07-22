@@ -13,23 +13,55 @@ Micronaut HTTP declarative client and Tower domain classes
     gu install native-image
     ``` 
 
-3. Compile and run to record execution analysis with `native-image-agent`: 
-
-    ``` 
-    ./gradlew run
-    ```
-
-4. Create the native client: 
+3. Create the native client: 
 
     ```
      ./gradlew nativeImage
     ```
 
-5. then run 
+4. then run 
 
     ```
     ./build/graal/towr
     ```
+
+## Configuration
+
+To use the command line you need to define these environment variables:
+
+ 1. `TOWER_ACCESS_TOKEN`: (mandatory) the user access token 
+ 2. `TOWER_WORKSPACE_ID`: (optional) the workspace id. Defaults to user workspace.
+ 3. `TOWER_URL`: (optional) the Tower API URL. Defaults to `tower.nf` API. 
+
+## Autocomplete
+
+To install the autocomplete only for the current session run:
+```
+source <(./towr generate-completion) 
+```
+
+## Usage examples
+
+Run a workspace defined pipeline with custom parameters file:
+```
+./towr run sarek -params-file ./myparams.yaml
+```
+
+Run any Nextflow pipeline using the primary compute environment:
+```
+./towr run nextflow-io/hello 
+```
+
+Run any Nextflow pipeline setting a profile.
+```
+./towr run nf-core/sarek -profile test,docker -params-file ./myparams.yaml
+```
+
+Select the compute environment that you want to use:
+```
+./towr run nf-core/sarek -compute-env "aws seqera" -profile test,docker
+```
+
 
 
 ### Credits & Links 

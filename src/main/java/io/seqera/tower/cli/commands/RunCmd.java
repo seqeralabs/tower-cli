@@ -2,7 +2,9 @@ package io.seqera.tower.cli.commands;
 
 import io.seqera.tower.cli.App;
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.autocomplete.ComputeEnvNamesCompletion;
 import io.seqera.tower.cli.autocomplete.WorkspacePipelinesCompletion;
+import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.Launch;
 import io.seqera.tower.model.ListPipelinesResponse;
 import io.seqera.tower.model.SubmitWorkflowLaunchRequest;
@@ -14,9 +16,10 @@ import picocli.CommandLine.Parameters;
 
 import static io.seqera.tower.cli.ModelHelper.createLaunchRequest;
 
-import java.io.File;
-import java.net.URI;
-import java.util.Optional;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
 
 @Command(name = "run", description = "Run a Nextflow pipeline")
 public class RunCmd extends BaseCmd {
@@ -25,18 +28,26 @@ public class RunCmd extends BaseCmd {
     String pipeline;
 
     @Option(names = { "-params-file" }, description = "parameters file")
-    Optional<File> paramsFile;
+    Path paramsFile;
+
+    @Option(names = { "-compute-env" }, description = "compute environment name", completionCandidates = ComputeEnvNamesCompletion.class)
+    String computeEnv;
+
+    @Option(names = { "-w", "-work-dir" }, description = "working directory")
+    String workDir;
+
+    @Option(names = "-profile", split = ",")
+    String[] profile;
 
     public RunCmd(App app) {
         super(app);
     }
 
     @Override
-    protected Integer exec() throws ApiException {
+    protected Integer exec() throws ApiException, IOException {
 
-        // Run absolute URLs as Nextflow pipelines
-        URI pipe = URI.create(pipeline);
-        if (pipe.isAbsolute()) {
+        // If the pipeline has at least one backslash consider it an external pipeline.
+        if (pipeline.contains("/")) {
             return runNextflowPipeline();
         }
 
@@ -45,12 +56,24 @@ public class RunCmd extends BaseCmd {
 
     }
 
-    protected Integer runNextflowPipeline() throws ApiException {
-        println("TODO: run nextflow pipeline");
-        return 0;
+    protected Integer runNextflowPipeline() throws ApiException, IOException {
+
+        // Retrieve the provided computeEnv or use the primary if not provided
+        ComputeEnv ce = computeEnv != null ? computeEnvByName(computeEnv) : primaryComputeEnv();
+
+        WorkflowLaunchRequest launch = new WorkflowLaunchRequest()
+                .pipeline(pipeline)
+                .workDir(workDir != null ? workDir : ce.getConfig().getWorkDir() )
+                .computeEnvId(ce.getId());
+
+        if (profile != null) {
+            launch.configProfiles(Arrays.asList(profile));
+        }
+
+        return submitWorkflow(launch);
     }
 
-    protected Integer runTowerPipeline() throws ApiException {
+    protected Integer runTowerPipeline() throws ApiException, IOException {
         ListPipelinesResponse pipelines = api().pipelineWorkspaceList(workspaceId(), 2, 0, pipeline);
         if (pipelines.getTotalSize() == 0) {
             println(String.format("Pipeline '%s' not found on this workspace.", pipeline));
@@ -68,7 +91,12 @@ public class RunCmd extends BaseCmd {
         return submitWorkflow(createLaunchRequest(launch));
     }
 
-    protected Integer submitWorkflow(WorkflowLaunchRequest launch) throws ApiException {
+    protected Integer submitWorkflow(WorkflowLaunchRequest launch) throws ApiException, IOException {
+
+        if (paramsFile != null) {
+            launch.paramsText(Files.readString(paramsFile));
+        }
+
         SubmitWorkflowLaunchResponse response = api().workflowLaunchSubmit(new SubmitWorkflowLaunchRequest().launch(launch), workspaceId());
         String workflowId = response.getWorkflowId();
         println(String.format("Workflow submitted. Check it here:%n%s", workflowWatchUrl(workflowId)));
