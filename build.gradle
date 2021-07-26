@@ -1,13 +1,11 @@
 plugins {
     id 'java'
     id 'application'
-    id 'com.palantir.graal' version "0.7.2"
+    id 'com.palantir.graal' version "0.9.0"
 }
 
 repositories {
-    // Use jcenter for resolving dependencies.
-    // You can declare any Maven/Ivy/file repository here.
-    jcenter()
+    mavenCentral()
     maven { url = "https://s3-eu-west-1.amazonaws.com/maven.seqera.io/snapshots" }
 }
 
@@ -15,45 +13,48 @@ dependencies {
     implementation 'org.slf4j:slf4j-api:1.7.30'
     implementation "ch.qos.logback:logback-core:1.2.3"
     implementation "ch.qos.logback:logback-classic:1.2.3"
-    implementation 'info.picocli:picocli:4.1.0'
-    annotationProcessor 'info.picocli:picocli-codegen:4.1.0'
+    implementation 'io.seqera:tower-java-sdk:1.0.0-SNAPSHOT'
+    implementation 'info.picocli:picocli:4.5.2'
+    annotationProcessor 'info.picocli:picocli-codegen:4.5.2'
 
-    implementation("io.micronaut:micronaut-inject:2.1.2")
-    implementation("io.micronaut:micronaut-http-client:2.1.2")
-    annotationProcessor("io.micronaut:micronaut-inject-java:2.1.2")
-
-    implementation("io.seqera:tower-core:20.11.0-SNAPSHOT") { transitive = false }
-    implementation "org.codehaus.groovy:groovy:3.0.5"
-
+    testImplementation 'org.mock-server:mockserver-client-java:5.11.2'
+    testImplementation 'org.mock-server:mockserver-netty:5.11.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
 }
 
 compileJava {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
     options.compilerArgs += ["-Aproject=${project.name}"]
 }
 
 application {
     // Define the main class for the application.
-    mainClassName = 'io.nativecli.App'
-    applicationDefaultJvmArgs = ["-agentlib:native-image-agent=config-output-dir=conf/"]
+    mainClassName = 'io.seqera.tower.cli.App'
+    applicationDefaultJvmArgs = ["-agentlib:native-image-agent=config-merge-dir=conf/"]
 }
+
 
 test {
     // Use junit platform for unit tests
     useJUnitPlatform()
+
+    // Uncomment if you want to use the tests to generate the GraalVM Agent configuration
+    //jvmArgs = ["-agentlib:native-image-agent=config-merge-dir=conf/"]
 }
 
 graal {
-    mainClass 'io.nativecli.App'
+    graalVersion '21.1.0'
+    javaVersion '11'
+    mainClass 'io.seqera.tower.cli.App'
     outputName 'towr'
-    option '--allow-incomplete-classpath'
-    option '--report-unsupported-elements-at-runtime'
-    option '--initialize-at-build-time'
-    option '--initialize-at-run-time=org.codehaus.groovy.control.XStreamUtils'
     option '--no-fallback'
     option '--no-server'
-    option '-H:ConfigurationFileDirectories=conf/'  
+    option '--allow-incomplete-classpath'
+    option '--report-unsupported-elements-at-runtime'
+    option '-H:+AddAllCharsets'
+    option '-H:EnableURLProtocols=https'
+    option '-H:ConfigurationFileDirectories=conf/'
+    option '-H:+ReportExceptionStackTraces'
 }

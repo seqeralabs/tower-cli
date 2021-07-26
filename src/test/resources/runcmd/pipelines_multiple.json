@@ -1,0 +1,31 @@
+{
+  "pipelines": [
+    {
+      "pipelineId": 250911634275687,
+      "name": "hello",
+      "description": null,
+      "icon": null,
+      "repository": "https://github.com/nf-core/sarek",
+      "userName": "jordi",
+      "userFirstName": null,
+      "userLastName": null,
+      "organizationName": null,
+      "workspaceName": null,
+      "visibility": null
+    },
+    {
+      "pipelineId": 266236469023080,
+      "name": "hellos",
+      "description": null,
+      "icon": null,
+      "repository": "https://github.com/pditommaso/nf-sleep",
+      "userName": "jordi",
+      "userFirstName": null,
+      "userLastName": null,
+      "organizationName": null,
+      "workspaceName": null,
+      "visibility": null
+    }
+  ],
+  "totalSize": 2
+}

@@ -1,0 +1,18 @@
+{
+  "pipelines": [
+    {
+      "pipelineId": 250911634275687,
+      "name": "sarek",
+      "description": null,
+      "icon": null,
+      "repository": "https://github.com/nf-core/sarek",
+      "userName": "jordi",
+      "userFirstName": null,
+      "userLastName": null,
+      "organizationName": null,
+      "workspaceName": null,
+      "visibility": null
+    }
+  ],
+  "totalSize": 1
+}
