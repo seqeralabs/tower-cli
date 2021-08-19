@@ -86,7 +86,7 @@ public abstract class BaseCmd implements Callable<Integer> {
         }
 
         if (availableComputeEnvsNameToId.containsKey(name)) {
-            return api().computeEnvDescribe(availableComputeEnvsNameToId.get(name), workspaceId()).getComputeEnv();
+            return api().describeComputeEnv(availableComputeEnvsNameToId.get(name), workspaceId()).getComputeEnv();
         }
 
         throw new ApiException(String.format("Compute environment '%s' is not available", name));
@@ -97,7 +97,7 @@ public abstract class BaseCmd implements Callable<Integer> {
             loadAvailableComputeEnvs();
         }
 
-        return api().computeEnvDescribe(primaryComputeEnvId, workspaceId()).getComputeEnv();
+        return api().describeComputeEnv(primaryComputeEnvId, workspaceId()).getComputeEnv();
     }
 
     protected String serverUrl() {
@@ -119,7 +119,7 @@ public abstract class BaseCmd implements Callable<Integer> {
 
     private void loadOrgAndWorkspace() {
         try {
-            for (OrgAndWorkspaceDbDto ow : api().workspaceListByUser(userId()).getOrgsAndWorkspaces()) {
+            for (OrgAndWorkspaceDbDto ow : api().listWorkspacesUser(userId()).getOrgsAndWorkspaces()) {
                 if ((workspaceId() == null && ow.getWorkspaceId() == null) || (workspaceId() != null && workspaceId().equals(ow.getWorkspaceId()))) {
                     workspaceName = ow.getWorkspaceName();
                     orgId = ow.getOrgId();
@@ -136,7 +136,7 @@ public abstract class BaseCmd implements Callable<Integer> {
     private void loadAvailableComputeEnvs() {
         try {
             availableComputeEnvsNameToId = new HashMap<>();
-            for (ListComputeEnvsResponseEntry ce : api().computeEnvList("AVAILABLE", workspaceId()).getComputeEnvs()) {
+            for (ListComputeEnvsResponseEntry ce : api().listComputeEnvs("AVAILABLE", workspaceId()).getComputeEnvs()) {
 
                 // Make the first compute environment the default if there is no primary set.
                 if (primaryComputeEnvId == null) {

@@ -37,7 +37,7 @@ public class WorkspacePipelinesCompletion implements Iterable<String> {
     public Iterator<String> iterator() {
 
         try {
-            return api.pipelineWorkspaceList(config.getWorkspaceId(), 20, 0, null)
+            return api.listPipelines(config.getWorkspaceId(), 20, 0, null)
                     .getPipelines().stream()
                     .map(PipelineDbDto::getName)
                     .iterator();

@@ -38,7 +38,7 @@ public class ComputeEnvNamesCompletion implements Iterable<String> {
     public Iterator<String> iterator() {
 
         try {
-            return api.computeEnvList("AVAILABLE", config.getWorkspaceId())
+            return api.listComputeEnvs("AVAILABLE", config.getWorkspaceId())
                     .getComputeEnvs().stream()
                     .map(ListComputeEnvsResponseEntry::getName)
                     .iterator();

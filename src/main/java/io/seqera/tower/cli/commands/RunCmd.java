@@ -74,7 +74,7 @@ public class RunCmd extends BaseCmd {
     }
 
     protected Integer runTowerPipeline() throws ApiException, IOException {
-        ListPipelinesResponse pipelines = api().pipelineWorkspaceList(workspaceId(), 2, 0, pipeline);
+        ListPipelinesResponse pipelines = api().listPipelines(workspaceId(), 2, 0, pipeline);
         if (pipelines.getTotalSize() == 0) {
             println(String.format("Pipeline '%s' not found on this workspace.", pipeline));
             return -1;
@@ -86,7 +86,7 @@ public class RunCmd extends BaseCmd {
         }
 
         Long pipelineId = pipelines.getPipelines().get(0).getPipelineId();
-        Launch launch = api().pipelineLaunchDescribe(pipelineId, workspaceId()).getLaunch();
+        Launch launch = api().describePipelineLaunch(pipelineId, workspaceId()).getLaunch();
 
         return submitWorkflow(createLaunchRequest(launch));
     }
@@ -97,7 +97,7 @@ public class RunCmd extends BaseCmd {
             launch.paramsText(Files.readString(paramsFile));
         }
 
-        SubmitWorkflowLaunchResponse response = api().workflowLaunchSubmit(new SubmitWorkflowLaunchRequest().launch(launch), workspaceId());
+        SubmitWorkflowLaunchResponse response = api().createWorkflowLaunch(new SubmitWorkflowLaunchRequest().launch(launch), workspaceId());
         String workflowId = response.getWorkflowId();
         println(String.format("Workflow submitted. Check it here:%n%s", workflowWatchUrl(workflowId)));
         return 0;
