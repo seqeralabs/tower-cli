@@ -27,16 +27,16 @@ public class RunCmd extends BaseCmd {
     @Parameters(index = "0", description = "workspace pipeline name or full pipeline URL", completionCandidates = WorkspacePipelinesCompletion.class)
     String pipeline;
 
-    @Option(names = { "-params-file" }, description = "parameters file")
+    @Option(names = { "--params-file" }, description = "parameters file")
     Path paramsFile;
 
-    @Option(names = { "-compute-env" }, description = "compute environment name", completionCandidates = ComputeEnvNamesCompletion.class)
+    @Option(names = { "--compute-env" }, description = "compute environment name", completionCandidates = ComputeEnvNamesCompletion.class)
     String computeEnv;
 
-    @Option(names = { "-w", "-work-dir" }, description = "working directory")
+    @Option(names = { "-w", "--work-dir" }, description = "working directory")
     String workDir;
 
-    @Option(names = "-profile", split = ",")
+    @Option(names = { "-p", "--profile" }, split = ",")
     String[] profile;
 
     public RunCmd(App app) {
