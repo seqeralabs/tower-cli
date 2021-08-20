@@ -6,9 +6,6 @@ package io.seqera.tower.cli.credentials;
 import io.seqera.tower.cli.BaseCmdTest;
 import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
-import picocli.CommandLine;
-
-import java.io.StringWriter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.matchers.Times.exactly;
@@ -18,35 +15,22 @@ import static org.mockserver.model.HttpResponse.response;
 class CreateAwsCmdTest extends BaseCmdTest {
 
     @Test
-    void testPipelineNotfound() {
-        // Create command line
-        StringWriter stdOut = new StringWriter();
-        StringWriter stdErr = new StringWriter();
-        CommandLine cmd = buildCmd(stdOut, stdErr);
+    void testOnlyAssumeRole(MockServerClient mock) {
 
         // Create server expectation
-        new MockServerClient("127.0.0.1", 1080)
-                .when(
-                        request()
-                                .withMethod("POST")
-                                .withPath("/credentials")
-                                .withBody("{\"credentials\":{\"name\":\"test_credentials\",\"provider\":\"aws\",\"keys\":{\"assumeRoleArn\":\"arn_role\"}}}")
-                        ,
-                        exactly(1)
-                )
-                .respond(
-                        response()
-                                .withStatusCode(200)
-                                .withBody("{\"credentialsId\":\"6Kyn17toiABGu47qpBXsVX\"}")
-                );
+        mock.when(
+                request().withMethod("POST").withPath("/credentials").withBody("{\"credentials\":{\"name\":\"test_credentials\",\"provider\":\"aws\",\"keys\":{\"assumeRoleArn\":\"arn_role\"}}}"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentialsId\":\"6Kyn17toiABGu47qpBXsVX\"}")
+        );
 
         // Run the command
-        int exitCode = cmd.execute("--access-token=my_token", "--url=http://localhost:1080", "creds", "create", "aws", "--name=test_credentials", "--assume-role-arn=arn_role");
+        ExecOut out = exec(mock, "creds", "create", "aws", "--name=test_credentials", "--assume-role-arn=arn_role");
 
         // Assert results
-        assertEquals(String.format("New AWS credentials 'test_credentials' added at personal workspace%n"), stdOut.toString());
-        assertEquals("", stdErr.toString());
-        assertEquals(0, exitCode);
+        assertEquals(String.format("New AWS credentials 'test_credentials' added at personal workspace%n"), out.stdOut);
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
 
     }
 

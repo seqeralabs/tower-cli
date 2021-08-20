@@ -3,36 +3,38 @@
  */
 package io.seqera.tower.cli;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.apache.commons.lang3.ArrayUtils;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockserver.client.MockServerClient;
-import org.mockserver.integration.ClientAndServer;
+import org.mockserver.junit.jupiter.MockServerExtension;
 import picocli.CommandLine;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockserver.integration.ClientAndServer.startClientAndServer;
-import static org.mockserver.matchers.Times.exactly;
-import static org.mockserver.model.HttpRequest.request;
-import static org.mockserver.model.HttpResponse.response;
-
+@ExtendWith(MockServerExtension.class)
 public abstract class BaseCmdTest {
 
-    public static Integer PORT = 1080;
-    public static ClientAndServer mockServer;
+    public static class ExecOut {
+        public String stdOut;
+        public String stdErr;
+        public int exitCode;
 
-    @BeforeAll
-    public static void startServer() {
-        mockServer = startClientAndServer(PORT);
-    }
+        public ExecOut stdOut(String value) {
+            this.stdOut = value;
+            return this;
+        }
 
-    @AfterAll
-    public static void stopServer() {
-        mockServer.stop();
+        public ExecOut stdErr(String value) {
+            this.stdErr = value;
+            return this;
+        }
+
+        public ExecOut exitCode(int value) {
+            this.exitCode = value;
+            return this;
+        }
     }
 
     public static CommandLine buildCmd(StringWriter stdOut, StringWriter stdErr) {
@@ -49,6 +51,27 @@ public abstract class BaseCmdTest {
             e.printStackTrace();
             return null;
         }
+    }
+
+    protected String url(MockServerClient mock) {
+        return String.format("http://localhost:%d", mock.getPort());
+    }
+
+    protected String token() {
+        return "fake_auth_token";
+    }
+
+    protected ExecOut exec(MockServerClient mock, String... args) {
+        StringWriter stdOut = new StringWriter();
+        StringWriter stdErr = new StringWriter();
+        CommandLine cmd = buildCmd(stdOut, stdErr);
+
+        int exitCode = cmd.execute(ArrayUtils.insert(0, args, String.format("--url=%s", url(mock)), String.format("--access-token=%s", token())));
+
+        return new ExecOut()
+                .stdOut(stdOut.toString())
+                .stdErr(stdErr.toString())
+                .exitCode(exitCode);
     }
 
 }

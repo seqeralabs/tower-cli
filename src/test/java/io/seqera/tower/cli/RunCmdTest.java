@@ -5,9 +5,6 @@ package io.seqera.tower.cli;
 
 import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
-import picocli.CommandLine;
-
-import java.io.StringWriter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.matchers.Times.exactly;
@@ -17,169 +14,99 @@ import static org.mockserver.model.HttpResponse.response;
 class RunCmdTest extends BaseCmdTest {
 
     @Test
-    void testInvalidAuth() {
-
-        // Create command line
-        StringWriter stdOut = new StringWriter();
-        StringWriter stdErr = new StringWriter();
-        CommandLine cmd = buildCmd(stdOut, stdErr);
+    void testInvalidAuth(MockServerClient mock) {
 
         // Create server expectation
-        new MockServerClient("127.0.0.1", 1080)
-                .when(
-                        request()
-                                .withMethod("GET")
-                                .withPath("/pipelines")
-                        ,
-                        exactly(1)
-                )
-                .respond(
-                        response().withStatusCode(401)
-                );
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines"), exactly(1)
+        ).respond(
+                response().withStatusCode(401)
+        );
 
         // Run the command
-        int exitCode = cmd.execute("--access-token=fake_auth_token", "--url=http://localhost:1080", "run", "hello");
+        ExecOut out = exec(mock, "run", "hello");
 
         // Assert results
-        assertEquals(-1, exitCode);
-        assertEquals(String.format("Unauthorized%n"), stdErr.toString());
-        assertEquals("", stdOut.toString());
-    }
-
-    @Test
-    void testPipelineNotfound() {
-        // Create command line
-        StringWriter stdOut = new StringWriter();
-        StringWriter stdErr = new StringWriter();
-        CommandLine cmd = buildCmd(stdOut, stdErr);
-
-        // Create server expectation
-        new MockServerClient("127.0.0.1", 1080)
-                .when(
-                        request()
-                                .withMethod("GET")
-                                .withPath("/pipelines")
-                        ,
-                        exactly(1)
-                )
-                .respond(
-                        response()
-                                .withStatusCode(200)
-                                .withBody(loadResponse("pipelines_none"))
-                );
-
-        // Run the command
-        int exitCode = cmd.execute("--access-token=fake_auth_token", "--url=http://localhost:1080", "run", "hello");
-
-        // Assert results
-        assertEquals(-1, exitCode);
-        assertEquals(String.format("Pipeline 'hello' not found on this workspace.%n"), stdOut.toString());
-        assertEquals("", stdErr.toString());
+        assertEquals(String.format("Unauthorized%n"), out.stdErr);
+        assertEquals("", out.stdOut);
+        assertEquals(-1, out.exitCode);
 
     }
 
     @Test
-    void testMultiplePipelinesFound() {
-        // Create command line
-        StringWriter stdOut = new StringWriter();
-        StringWriter stdErr = new StringWriter();
-        CommandLine cmd = buildCmd(stdOut, stdErr);
+    void testPipelineNotfound(MockServerClient mock) {
 
         // Create server expectation
-        new MockServerClient("127.0.0.1", PORT)
-                .when(
-                        request()
-                                .withMethod("GET")
-                                .withPath("/pipelines")
-                        ,
-                        exactly(1)
-                )
-                .respond(
-                        response()
-                                .withStatusCode(200)
-                                .withBody(loadResponse("pipelines_multiple"))
-                );
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResponse("pipelines_none"))
+        );
 
         // Run the command
-        int exitCode = cmd.execute("--access-token=fake_auth_token", "--url=http://localhost:1080", "run", "hello");
+        ExecOut out = exec(mock, "run", "hello");
 
         // Assert results
-        assertEquals(-1, exitCode);
-        assertEquals(String.format("Multiple pipelines match 'hello'%n"), stdOut.toString());
-        assertEquals("", stdErr.toString());
+        assertEquals(-1, out.exitCode);
+        assertEquals(String.format("Pipeline 'hello' not found on this workspace.%n"), out.stdOut);
+        assertEquals("", out.stdErr);
+
     }
 
     @Test
-    void testSubmitUserPipeline() {
-        // Create command line
-        StringWriter stdOut = new StringWriter();
-        StringWriter stdErr = new StringWriter();
-        CommandLine cmd = buildCmd(stdOut, stdErr);
+    void testMultiplePipelinesFound(MockServerClient mock) {
 
         // Create server expectation
-        new MockServerClient("127.0.0.1", PORT)
-                .when(
-                        request()
-                                .withMethod("GET")
-                                .withPath("/pipelines")
-                        ,
-                        exactly(1)
-                )
-                .respond(
-                        response()
-                                .withStatusCode(200)
-                                .withBody(loadResponse("pipelines_sarek"))
-                );
-
-        new MockServerClient("127.0.0.1", PORT)
-                .when(
-                        request()
-                                .withMethod("GET")
-                                .withPath("/pipelines/250911634275687/launch")
-                        ,
-                        exactly(1)
-                )
-                .respond(
-                        response()
-                                .withStatusCode(200)
-                                .withBody(loadResponse("pipeline_launch_describe"))
-                );
-
-        new MockServerClient("127.0.0.1", PORT)
-                .when(
-                        request()
-                                .withMethod("POST")
-                                .withPath("/workflow/launch")
-                        ,
-                        exactly(1)
-                )
-                .respond(
-                        response()
-                                .withStatusCode(200)
-                                .withBody(loadResponse("workflow_launch"))
-                );
-
-        new MockServerClient("127.0.0.1", PORT)
-                .when(
-                        request()
-                                .withMethod("GET")
-                                .withPath("/user")
-                        ,
-                        exactly(1)
-                )
-                .respond(
-                        response()
-                                .withStatusCode(200)
-                                .withBody(loadResponse("user"))
-                );
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResponse("pipelines_multiple"))
+        );
 
         // Run the command
-        int exitCode = cmd.execute("--access-token=fake_auth_token", "--url=http://localhost:1080", "run", "sarek");
+        ExecOut out = exec(mock, "run", "hello");
 
         // Assert results
-        assertEquals(0, exitCode);
-        assertEquals(String.format("Workflow submitted. Check it here:%nhttp://localhost:1080/user/jordi/watch/35aLiS0bIM5efd%n"), stdOut.toString());
-        assertEquals("", stdErr.toString());
+        assertEquals(-1, out.exitCode);
+        assertEquals(String.format("Multiple pipelines match 'hello'%n"), out.stdOut);
+        assertEquals("", out.stdErr);
+    }
+
+    @Test
+    void testSubmitUserPipeline(MockServerClient mock) {
+
+        // Create server expectation
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResponse("pipelines_sarek"))
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines/250911634275687/launch"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResponse("pipeline_launch_describe"))
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/workflow/launch"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResponse("workflow_launch"))
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResponse("user"))
+        );
+
+        // Run the command
+        ExecOut out = exec(mock, "run", "sarek");
+
+        // Assert results
+        assertEquals(0, out.exitCode);
+        assertEquals(String.format("Workflow submitted. Check it here:%n%s/user/jordi/watch/35aLiS0bIM5efd%n", url(mock)), out.stdOut);
+        assertEquals("", out.stdErr);
 
     }
 
