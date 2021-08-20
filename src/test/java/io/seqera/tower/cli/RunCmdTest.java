@@ -36,10 +36,10 @@ class RunCmdTest {
         mockServer.stop();
     }
 
-    public static CommandLine buildCmd(String token, Long workspaceId, StringWriter stdOut) {
-        App app = new App(new AppConfig("http://localhost:1080", token, workspaceId));
-        CommandLine cmd = App.buildCmd(app);
+    public static CommandLine buildCmd(StringWriter stdOut, StringWriter stdErr) {
+        CommandLine cmd = new CommandLine(new Tower());
         cmd.setOut(new PrintWriter(stdOut));
+        cmd.setErr(new PrintWriter(stdErr));
         return cmd;
     }
 
@@ -57,7 +57,8 @@ class RunCmdTest {
 
         // Create command line
         StringWriter stdOut = new StringWriter();
-        CommandLine cmd = buildCmd("fake_auth_token", null, stdOut);
+        StringWriter stdErr = new StringWriter();
+        CommandLine cmd = buildCmd(stdOut, stdErr);
 
         // Create server expectation
         new MockServerClient("127.0.0.1", 1080)
@@ -73,18 +74,20 @@ class RunCmdTest {
                 );
 
         // Run the command
-        int exitCode = cmd.execute("run", "hello");
+        int exitCode = cmd.execute("--access-token=fake_auth_token", "--url=http://localhost:1080", "run", "hello");
 
         // Assert results
         assertEquals(-1, exitCode);
-        assertEquals(String.format("Unauthorized%n"), stdOut.toString());
+        assertEquals(String.format("Unauthorized%n"), stdErr.toString());
+        assertEquals("", stdOut.toString());
     }
 
     @Test
     void testPipelineNotfound() {
         // Create command line
         StringWriter stdOut = new StringWriter();
-        CommandLine cmd = buildCmd("fake_auth_token", null, stdOut);
+        StringWriter stdErr = new StringWriter();
+        CommandLine cmd = buildCmd(stdOut, stdErr);
 
         // Create server expectation
         new MockServerClient("127.0.0.1", 1080)
@@ -102,11 +105,12 @@ class RunCmdTest {
                 );
 
         // Run the command
-        int exitCode = cmd.execute("run", "hello");
+        int exitCode = cmd.execute("--access-token=fake_auth_token", "--url=http://localhost:1080", "run", "hello");
 
         // Assert results
         assertEquals(-1, exitCode);
         assertEquals(String.format("Pipeline 'hello' not found on this workspace.%n"), stdOut.toString());
+        assertEquals("", stdErr.toString());
 
     }
 
@@ -114,7 +118,8 @@ class RunCmdTest {
     void testMultiplePipelinesFound() {
         // Create command line
         StringWriter stdOut = new StringWriter();
-        CommandLine cmd = buildCmd("fake_auth_token", null, stdOut);
+        StringWriter stdErr = new StringWriter();
+        CommandLine cmd = buildCmd(stdOut, stdErr);
 
         // Create server expectation
         new MockServerClient("127.0.0.1", PORT)
@@ -132,18 +137,20 @@ class RunCmdTest {
                 );
 
         // Run the command
-        int exitCode = cmd.execute("run", "hello");
+        int exitCode = cmd.execute("--access-token=fake_auth_token", "--url=http://localhost:1080", "run", "hello");
 
         // Assert results
         assertEquals(-1, exitCode);
         assertEquals(String.format("Multiple pipelines match 'hello'%n"), stdOut.toString());
+        assertEquals("", stdErr.toString());
     }
 
     @Test
     void testSubmitUserPipeline() {
         // Create command line
         StringWriter stdOut = new StringWriter();
-        CommandLine cmd = buildCmd("fake_auth_token", null, stdOut);
+        StringWriter stdErr = new StringWriter();
+        CommandLine cmd = buildCmd(stdOut, stdErr);
 
         // Create server expectation
         new MockServerClient("127.0.0.1", PORT)
@@ -203,11 +210,12 @@ class RunCmdTest {
                 );
 
         // Run the command
-        int exitCode = cmd.execute("run", "sarek");
+        int exitCode = cmd.execute("--access-token=fake_auth_token", "--url=http://localhost:1080", "run", "sarek");
 
         // Assert results
         assertEquals(0, exitCode);
         assertEquals(String.format("Workflow submitted. Check it here:%nhttp://localhost:1080/user/jordi/watch/35aLiS0bIM5efd%n"), stdOut.toString());
+        assertEquals("", stdErr.toString());
 
     }
 

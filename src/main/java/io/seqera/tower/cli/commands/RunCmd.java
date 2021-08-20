@@ -1,9 +1,7 @@
 package io.seqera.tower.cli.commands;
 
-import io.seqera.tower.cli.App;
+import io.seqera.tower.cli.Tower;
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.autocomplete.ComputeEnvNamesCompletion;
-import io.seqera.tower.cli.autocomplete.WorkspacePipelinesCompletion;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.Launch;
 import io.seqera.tower.model.ListPipelinesResponse;
@@ -13,6 +11,7 @@ import io.seqera.tower.model.WorkflowLaunchRequest;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
+import picocli.CommandLine.ParentCommand;
 
 import static io.seqera.tower.cli.ModelHelper.createLaunchRequest;
 
@@ -24,13 +23,16 @@ import java.util.Arrays;
 @Command(name = "run", description = "Run a Nextflow pipeline")
 public class RunCmd extends BaseCmd {
 
-    @Parameters(index = "0", description = "workspace pipeline name or full pipeline URL", completionCandidates = WorkspacePipelinesCompletion.class)
+    @ParentCommand
+    protected Tower app;
+
+    @Parameters(index = "0", description = "workspace pipeline name or full pipeline URL")
     String pipeline;
 
     @Option(names = { "--params-file" }, description = "parameters file")
     Path paramsFile;
 
-    @Option(names = { "--compute-env" }, description = "compute environment name", completionCandidates = ComputeEnvNamesCompletion.class)
+    @Option(names = { "--compute-env" }, description = "compute environment name")
     String computeEnv;
 
     @Option(names = { "-w", "--work-dir" }, description = "working directory")
@@ -39,8 +41,11 @@ public class RunCmd extends BaseCmd {
     @Option(names = { "-p", "--profile" }, split = ",")
     String[] profile;
 
-    public RunCmd(App app) {
-        super(app);
+    public RunCmd() {}
+
+    @Override
+    protected Tower app() {
+        return app;
     }
 
     @Override
@@ -103,7 +108,7 @@ public class RunCmd extends BaseCmd {
         return 0;
     }
 
-    private String workflowWatchUrl(String workflowId) {
+    private String workflowWatchUrl(String workflowId) throws ApiException {
 
         if (workspaceId() == null) {
             return String.format("%s/user/%s/watch/%s", serverUrl(), userName(), workflowId);
