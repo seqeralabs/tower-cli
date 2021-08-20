@@ -31,7 +31,7 @@ compileJava {
 
 application {
     // Define the main class for the application.
-    mainClassName = 'io.seqera.tower.cli.App'
+    mainClassName = 'io.seqera.tower.cli.Tower'
     applicationDefaultJvmArgs = ["-agentlib:native-image-agent=config-merge-dir=conf/"]
 }
 
@@ -47,7 +47,7 @@ test {
 graal {
     graalVersion '21.1.0'
     javaVersion '11'
-    mainClass 'io.seqera.tower.cli.App'
+    mainClass 'io.seqera.tower.cli.Tower'
     outputName 'towr'
     option '--no-fallback'
     option '--no-server'

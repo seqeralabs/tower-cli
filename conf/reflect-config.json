@@ -23,7 +23,7 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.App",
+  "name":"io.seqera.tower.cli.Tower",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
 },
