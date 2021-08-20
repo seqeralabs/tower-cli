@@ -40,6 +40,9 @@ public class Tower implements Callable<Integer> {
     @Option(names = {"--workspace-id"}, description = "Workspace numeric identifier", defaultValue = "${TOWER_WORKSPACE_ID}")
     public Long workspaceId;
 
+    @Option(names = {"--x-ray"}, description = "Shows HTTP request/response logs at stderr")
+    public boolean xRay;
+
     @ArgGroup(exclusive = false)
     public OrgAndWorkspace orgAndWorkspaceNames;
 

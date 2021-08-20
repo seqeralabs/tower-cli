@@ -8,6 +8,8 @@ import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.ListComputeEnvsResponseEntry;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import io.seqera.tower.model.User;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -37,14 +39,24 @@ public abstract class BaseCmd implements Callable<Integer> {
     protected TowerApi api() {
 
         if (api == null) {
-            // Initialize API client
-            ApiClient client = new ApiClient();
+            ApiClient client = new ApiClient(buildOkHttpClient());
             client.setBasePath(app().url);
             client.setBearerToken(app().token);
             api = new TowerApi(client);
         }
 
         return api;
+    }
+
+    private OkHttpClient buildOkHttpClient() {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        if (app().xRay) {
+            HttpLoggingInterceptor logging = new HttpLoggingInterceptor(s -> app().printerr(s));
+            logging.redactHeader("Authorization");
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+            builder.addInterceptor(logging);
+        }
+        return builder.build();
     }
 
     protected Long workspaceId() throws ApiException {

@@ -1,4 +1,4 @@
-package io.seqera.tower.cli;
+package io.seqera.tower.cli.utils;
 
 import io.seqera.tower.model.Launch;
 import io.seqera.tower.model.WorkflowLaunchRequest;

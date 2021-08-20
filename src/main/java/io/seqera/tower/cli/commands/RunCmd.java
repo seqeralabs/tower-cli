@@ -13,7 +13,7 @@ import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 import picocli.CommandLine.ParentCommand;
 
-import static io.seqera.tower.cli.ModelHelper.createLaunchRequest;
+import static io.seqera.tower.cli.utils.ModelHelper.createLaunchRequest;
 
 import java.io.IOException;
 import java.nio.file.Files;
