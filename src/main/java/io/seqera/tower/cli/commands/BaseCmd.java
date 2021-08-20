@@ -34,7 +34,7 @@ public abstract class BaseCmd implements Callable<Integer> {
     public BaseCmd() {
     }
 
-    protected abstract Tower app();
+    public abstract Tower app();
 
     protected TowerApi api() {
 
@@ -192,6 +192,13 @@ public abstract class BaseCmd implements Callable<Integer> {
         }
     }
 
+    protected String workspaceRef() throws ApiException {
+        if (workspaceId() == null) {
+            return "personal";
+        }
+        return String.format("[%s / %s]", orgName(), workspaceName());
+    }
+
     protected void println(String line) {
         app().println(line);
     }
@@ -213,5 +220,9 @@ public abstract class BaseCmd implements Callable<Integer> {
         }
     }
 
-    protected abstract Integer exec() throws ApiException, IOException;
+    protected Integer exec() throws ApiException, IOException {
+        // if the command was invoked without subcommand, show the usage help
+        app().spec.commandLine().usage(System.err);
+        return -1;
+    };
 }

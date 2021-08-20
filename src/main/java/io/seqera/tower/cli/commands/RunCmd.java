@@ -44,7 +44,7 @@ public class RunCmd extends BaseCmd {
     public RunCmd() {}
 
     @Override
-    protected Tower app() {
+    public Tower app() {
         return app;
     }
 

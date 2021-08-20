@@ -3,6 +3,7 @@
  */
 package io.seqera.tower.cli;
 
+import io.seqera.tower.cli.commands.CredentialsCmd;
 import io.seqera.tower.cli.commands.RunCmd;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -23,6 +24,7 @@ import java.util.concurrent.Callable;
         mixinStandardHelpOptions = true,
         subcommands = {
                 RunCmd.class,
+                CredentialsCmd.class,
                 HelpCommand.class,
                 GenerateCompletion.class
         }

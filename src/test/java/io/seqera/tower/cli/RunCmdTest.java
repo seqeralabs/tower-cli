@@ -3,54 +3,18 @@
  */
 package io.seqera.tower.cli;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
-import org.mockserver.integration.ClientAndServer;
 import picocli.CommandLine;
 
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import static org.mockserver.integration.ClientAndServer.startClientAndServer;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
-class RunCmdTest {
-
-    private static Integer PORT = 1080;
-    private static ClientAndServer mockServer;
-
-    @BeforeAll
-    public static void startServer() {
-        mockServer = startClientAndServer(PORT);
-    }
-
-    @AfterAll
-    public static void stopServer() {
-        mockServer.stop();
-    }
-
-    public static CommandLine buildCmd(StringWriter stdOut, StringWriter stdErr) {
-        CommandLine cmd = new CommandLine(new Tower());
-        cmd.setOut(new PrintWriter(stdOut));
-        cmd.setErr(new PrintWriter(stdErr));
-        return cmd;
-    }
-
-    private byte[] loadResponse(String name) {
-        try {
-            return this.getClass().getResourceAsStream("/runcmd/" + name + ".json").readAllBytes();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+class RunCmdTest extends BaseCmdTest {
 
     @Test
     void testInvalidAuth() {
@@ -164,7 +128,7 @@ class RunCmdTest {
                 .respond(
                         response()
                                 .withStatusCode(200)
-                                .withBody( loadResponse("pipelines_sarek"))
+                                .withBody(loadResponse("pipelines_sarek"))
                 );
 
         new MockServerClient("127.0.0.1", PORT)
@@ -178,21 +142,21 @@ class RunCmdTest {
                 .respond(
                         response()
                                 .withStatusCode(200)
-                                .withBody( loadResponse("pipeline_launch_describe"))
+                                .withBody(loadResponse("pipeline_launch_describe"))
                 );
 
         new MockServerClient("127.0.0.1", PORT)
                 .when(
                         request()
-                            .withMethod("POST")
-                            .withPath("/workflow/launch")
+                                .withMethod("POST")
+                                .withPath("/workflow/launch")
                         ,
                         exactly(1)
                 )
                 .respond(
                         response()
-                            .withStatusCode(200)
-                            .withBody( loadResponse("workflow_launch"))
+                                .withStatusCode(200)
+                                .withBody(loadResponse("workflow_launch"))
                 );
 
         new MockServerClient("127.0.0.1", PORT)
@@ -206,7 +170,7 @@ class RunCmdTest {
                 .respond(
                         response()
                                 .withStatusCode(200)
-                                .withBody( loadResponse("user"))
+                                .withBody(loadResponse("user"))
                 );
 
         // Run the command
