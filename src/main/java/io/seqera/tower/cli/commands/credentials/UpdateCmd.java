@@ -1,6 +1,7 @@
 package io.seqera.tower.cli.commands.credentials;
 
 import io.seqera.tower.cli.commands.credentials.update.UpdateAwsCmd;
+import io.seqera.tower.cli.commands.credentials.update.UpdateAzureCmd;
 import io.seqera.tower.cli.commands.credentials.update.UpdateBitbucketCmd;
 import io.seqera.tower.cli.commands.credentials.update.UpdateGithubCmd;
 import io.seqera.tower.cli.commands.credentials.update.UpdateGitlabCmd;
@@ -19,7 +20,8 @@ import picocli.CommandLine.Command;
                 UpdateGitlabCmd.class,
                 UpdateBitbucketCmd.class,
                 UpdateSshCmd.class,
-                UpdateK8sCmd.class
+                UpdateK8sCmd.class,
+                UpdateAzureCmd.class
         }
 )
 public class UpdateCmd extends AbstractCredentialsCmd {

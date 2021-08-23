@@ -59,3 +59,7 @@ graal {
     option '-H:ConfigurationFileDirectories=conf/'
     option '-H:+ReportExceptionStackTraces'
 }
+
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}

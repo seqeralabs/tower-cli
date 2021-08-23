@@ -1,6 +1,7 @@
 package io.seqera.tower.cli.commands.credentials;
 
 import io.seqera.tower.cli.commands.credentials.create.CreateAwsCmd;
+import io.seqera.tower.cli.commands.credentials.create.CreateAzureCmd;
 import io.seqera.tower.cli.commands.credentials.create.CreateBitbucketCmd;
 import io.seqera.tower.cli.commands.credentials.create.CreateGithubCmd;
 import io.seqera.tower.cli.commands.credentials.create.CreateGitlabCmd;
@@ -19,7 +20,8 @@ import picocli.CommandLine.Command;
                 CreateGitlabCmd.class,
                 CreateBitbucketCmd.class,
                 CreateSshCmd.class,
-                CreateK8sCmd.class
+                CreateK8sCmd.class,
+                CreateAzureCmd.class
         }
 )
 public class CreateCmd extends AbstractCredentialsCmd {
