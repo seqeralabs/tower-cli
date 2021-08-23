@@ -2,8 +2,8 @@ package io.seqera.tower.cli.commands;
 
 import io.seqera.tower.ApiClient;
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.Tower;
 import io.seqera.tower.api.TowerApi;
+import io.seqera.tower.cli.Tower;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.ListComputeEnvsResponseEntry;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
@@ -12,11 +12,12 @@ import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 
 import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-public abstract class BaseCmd implements Callable<Integer> {
+public abstract class AbstractCmd implements Callable<Integer> {
 
     public TowerApi api;
 
@@ -31,7 +32,7 @@ public abstract class BaseCmd implements Callable<Integer> {
     private transient Map<String, String> availableComputeEnvsNameToId;
     private transient String primaryComputeEnvId;
 
-    public BaseCmd() {
+    public AbstractCmd() {
     }
 
     public abstract Tower app();
@@ -213,16 +214,21 @@ public abstract class BaseCmd implements Callable<Integer> {
             return exec();
         } catch (NullPointerException e) {
             e.printStackTrace(app().spec.commandLine().getErr());
-            return -1;
-        } catch (ApiException | IOException e) {
-            printerr(e.getMessage());
-            return -1;
+        } catch (NoSuchFileException e) {
+            printerr(String.format("File not found. %s", e.getMessage()));
+        } catch (IOException e) {
+            printerr(String.format("IO error. %s", e.getMessage()));
+        } catch (ApiException e) {
+            printerr(String.format("[%d] %s", e.getCode(), e.getMessage()));
         }
+        return -1;
     }
 
     protected Integer exec() throws ApiException, IOException {
         // if the command was invoked without subcommand, show the usage help
         app().spec.commandLine().usage(System.err);
         return -1;
-    };
+    }
+
+    ;
 }

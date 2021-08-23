@@ -1,6 +1,5 @@
 package io.seqera.tower.cli.commands;
 
-import io.seqera.tower.cli.Tower;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.Launch;
@@ -11,41 +10,33 @@ import io.seqera.tower.model.WorkflowLaunchRequest;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
-import picocli.CommandLine.ParentCommand;
-
-import static io.seqera.tower.cli.utils.ModelHelper.createLaunchRequest;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 
-@Command(name = "run", description = "Run a Nextflow pipeline")
-public class RunCmd extends BaseCmd {
+import static io.seqera.tower.cli.utils.ModelHelper.createLaunchRequest;
 
-    @ParentCommand
-    protected Tower app;
+@Command(name = "run", description = "Run a Nextflow pipeline")
+public class RunCmd extends AbstractRootCmd {
 
     @Parameters(index = "0", description = "workspace pipeline name or full pipeline URL")
     String pipeline;
 
-    @Option(names = { "--params-file" }, description = "parameters file")
+    @Option(names = {"--params-file"}, description = "parameters file")
     Path paramsFile;
 
-    @Option(names = { "--compute-env" }, description = "compute environment name")
+    @Option(names = {"--compute-env"}, description = "compute environment name")
     String computeEnv;
 
-    @Option(names = { "-w", "--work-dir" }, description = "working directory")
+    @Option(names = {"-w", "--work-dir"}, description = "working directory")
     String workDir;
 
-    @Option(names = { "-p", "--profile" }, split = ",")
+    @Option(names = {"-p", "--profile"}, split = ",")
     String[] profile;
 
-    public RunCmd() {}
-
-    @Override
-    public Tower app() {
-        return app;
+    public RunCmd() {
     }
 
     @Override
@@ -68,7 +59,7 @@ public class RunCmd extends BaseCmd {
 
         WorkflowLaunchRequest launch = new WorkflowLaunchRequest()
                 .pipeline(pipeline)
-                .workDir(workDir != null ? workDir : ce.getConfig().getWorkDir() )
+                .workDir(workDir != null ? workDir : ce.getConfig().getWorkDir())
                 .computeEnvId(ce.getId());
 
         if (profile != null) {

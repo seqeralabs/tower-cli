@@ -1,9 +1,10 @@
 package io.seqera.tower.cli.commands;
 
-import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.commands.credentials.CreateCmd;
+import io.seqera.tower.cli.commands.credentials.DeleteCmd;
+import io.seqera.tower.cli.commands.credentials.ListCmd;
+import io.seqera.tower.cli.commands.credentials.UpdateCmd;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.ParentCommand;
 
 
 @Command(
@@ -11,16 +12,11 @@ import picocli.CommandLine.ParentCommand;
         aliases = {"creds"},
         description = "Manage workspace credentials",
         subcommands = {
-                CreateCmd.class
+                CreateCmd.class,
+                UpdateCmd.class,
+                DeleteCmd.class,
+                ListCmd.class
         }
 )
-public class CredentialsCmd extends BaseCmd {
-
-    @ParentCommand
-    protected Tower app;
-
-    @Override
-    public Tower app() {
-        return app;
-    }
+public class CredentialsCmd extends AbstractRootCmd {
 }

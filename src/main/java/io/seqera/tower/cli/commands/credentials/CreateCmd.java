@@ -1,27 +1,26 @@
 package io.seqera.tower.cli.commands.credentials;
 
-import io.seqera.tower.cli.Tower;
-import io.seqera.tower.cli.commands.BaseCmd;
-import io.seqera.tower.cli.commands.CredentialsCmd;
-import io.seqera.tower.cli.commands.credentials.create.AwsCmd;
+import io.seqera.tower.cli.commands.credentials.create.CreateAwsCmd;
+import io.seqera.tower.cli.commands.credentials.create.CreateBitbucketCmd;
+import io.seqera.tower.cli.commands.credentials.create.CreateGithubCmd;
+import io.seqera.tower.cli.commands.credentials.create.CreateGitlabCmd;
+import io.seqera.tower.cli.commands.credentials.create.CreateGoogleCmd;
+import io.seqera.tower.cli.commands.credentials.create.CreateK8sCmd;
+import io.seqera.tower.cli.commands.credentials.create.CreateSshCmd;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.ParentCommand;
 
 @Command(
         name = "create",
         description = "Create new workspace credentials",
         subcommands = {
-                AwsCmd.class
+                CreateAwsCmd.class,
+                CreateGoogleCmd.class,
+                CreateGithubCmd.class,
+                CreateGitlabCmd.class,
+                CreateBitbucketCmd.class,
+                CreateSshCmd.class,
+                CreateK8sCmd.class
         }
 )
-public class CreateCmd extends BaseCmd {
-
-    @ParentCommand
-    protected CredentialsCmd parent;
-
-    @Override
-    public Tower app() {
-        return parent.app();
-    }
-
+public class CreateCmd extends AbstractCredentialsCmd {
 }
