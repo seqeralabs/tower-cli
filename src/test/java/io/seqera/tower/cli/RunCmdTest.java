@@ -27,7 +27,7 @@ class RunCmdTest extends BaseCmdTest {
         ExecOut out = exec(mock, "run", "hello");
 
         // Assert results
-        assertEquals(String.format("Unauthorized%n"), out.stdErr);
+        assertEquals(String.format("[401] Unauthorized%n"), out.stdErr);
         assertEquals("", out.stdOut);
         assertEquals(-1, out.exitCode);
 
