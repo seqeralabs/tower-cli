@@ -2,11 +2,11 @@ package io.seqera.tower.cli.commands;
 
 import io.seqera.tower.ApiClient;
 import io.seqera.tower.ApiException;
-import io.seqera.tower.JSON;
 import io.seqera.tower.api.TowerApi;
 import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.InvalidResponseException;
+import io.seqera.tower.cli.utils.JSON;
 import io.seqera.tower.cli.utils.ShowUsageException;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.ListComputeEnvsResponseEntry;

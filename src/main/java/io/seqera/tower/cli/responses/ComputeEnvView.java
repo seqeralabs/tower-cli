@@ -11,6 +11,7 @@ public class ComputeEnvView extends Response {
     public ComputeEnvView(String id, String workspaceRef, ComputeEnv computeEnv) {
         this.id = id;
         this.computeEnv = computeEnv;
+        this.workspaceRef = workspaceRef;
     }
 
     @Override
