@@ -14,6 +14,7 @@ import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import io.seqera.tower.model.User;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+import picocli.CommandLine.Command;
 
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
@@ -21,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
+@Command(mixinStandardHelpOptions = true)
 public abstract class AbstractCmd implements Callable<Integer> {
 
     public TowerApi api;

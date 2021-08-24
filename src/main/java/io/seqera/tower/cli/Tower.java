@@ -3,13 +3,13 @@
  */
 package io.seqera.tower.cli;
 
+import io.seqera.tower.cli.commands.ComputeEnvCmd;
 import io.seqera.tower.cli.commands.CredentialsCmd;
 import io.seqera.tower.cli.commands.RunCmd;
 import picocli.AutoComplete.GenerateCompletion;
 import picocli.CommandLine;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.HelpCommand;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
@@ -25,7 +25,7 @@ import java.util.concurrent.Callable;
         subcommands = {
                 RunCmd.class,
                 CredentialsCmd.class,
-                HelpCommand.class,
+                ComputeEnvCmd.class,
                 GenerateCompletion.class
         }
 )
