@@ -1,6 +1,8 @@
 package io.seqera.tower.cli.commands.credentials;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.responses.CredentialsDeleted;
+import io.seqera.tower.cli.responses.Response;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
@@ -16,10 +18,10 @@ public class DeleteCmd extends AbstractCredentialsCmd {
     public String id;
 
     @Override
-    protected Integer exec() throws ApiException, IOException {
+    protected Response exec() throws ApiException {
         try {
             api().deleteCredentials(id, workspaceId());
-            app().println(String.format("AWS credentials '%s' deleted at %s workspace", id, workspaceRef()));
+            return new CredentialsDeleted(id, workspaceRef());
         } catch (ApiException e) {
             if (e.getCode() == 403) {
                 // Customize the forbidden message
@@ -27,6 +29,5 @@ public class DeleteCmd extends AbstractCredentialsCmd {
             }
             throw e;
         }
-        return 0;
     }
 }

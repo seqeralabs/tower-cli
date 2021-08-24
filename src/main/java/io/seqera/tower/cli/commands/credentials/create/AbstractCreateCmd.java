@@ -5,6 +5,8 @@ import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.commands.AbstractCmd;
 import io.seqera.tower.cli.commands.credentials.CreateCmd;
 import io.seqera.tower.cli.commands.credentials.providers.AbstractProvider;
+import io.seqera.tower.cli.responses.CredentialsCreated;
+import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.CreateCredentialsRequest;
 import io.seqera.tower.model.CredentialsSpec;
 import picocli.CommandLine.Command;
@@ -28,7 +30,7 @@ public abstract class AbstractCreateCmd extends AbstractCmd {
     }
 
     @Override
-    protected Integer exec() throws ApiException, IOException {
+    protected Response exec() throws ApiException, IOException {
 
         AbstractProvider provider = getProvider();
         api().createCredentials(
@@ -41,9 +43,7 @@ public abstract class AbstractCreateCmd extends AbstractCmd {
                 ),
                 workspaceId()
         );
-
-        app().println(String.format("New %S credentials '%s' added at %s workspace", provider.type(), name, workspaceRef()));
-        return 0;
+        return new CredentialsCreated(provider.type().name(), name, workspaceRef());
     }
 
     protected abstract AbstractProvider getProvider();

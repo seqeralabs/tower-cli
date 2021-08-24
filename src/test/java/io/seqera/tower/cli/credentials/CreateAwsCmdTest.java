@@ -28,7 +28,7 @@ class CreateAwsCmdTest extends BaseCmdTest {
         ExecOut out = exec(mock, "creds", "create", "aws", "--name=test_credentials", "--assume-role-arn=arn_role");
 
         // Assert results
-        assertEquals(String.format("New AWS credentials 'test_credentials' added at personal workspace%n"), out.stdOut);
+        assertEquals("New AWS credentials 'test_credentials' added at personal workspace", out.stdOut);
         assertEquals("", out.stdErr);
         assertEquals(0, out.exitCode);
 

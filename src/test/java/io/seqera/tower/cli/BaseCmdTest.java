@@ -69,8 +69,8 @@ public abstract class BaseCmdTest {
         int exitCode = cmd.execute(ArrayUtils.insert(0, args, String.format("--url=%s", url(mock)), String.format("--access-token=%s", token())));
 
         return new ExecOut()
-                .stdOut(stdOut.toString())
-                .stdErr(stdErr.toString())
+                .stdOut(stdOut.toString().trim())
+                .stdErr(stdErr.toString().trim())
                 .exitCode(exitCode);
     }
 

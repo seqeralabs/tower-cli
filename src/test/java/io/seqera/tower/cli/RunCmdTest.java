@@ -3,6 +3,7 @@
  */
 package io.seqera.tower.cli;
 
+import io.seqera.tower.cli.responses.RunSubmited;
 import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
 
@@ -27,7 +28,7 @@ class RunCmdTest extends BaseCmdTest {
         ExecOut out = exec(mock, "run", "hello");
 
         // Assert results
-        assertEquals(String.format("[401] Unauthorized%n"), out.stdErr);
+        assertEquals(String.format("[401] Unauthorized"), out.stdErr);
         assertEquals("", out.stdOut);
         assertEquals(-1, out.exitCode);
 
@@ -48,8 +49,7 @@ class RunCmdTest extends BaseCmdTest {
 
         // Assert results
         assertEquals(-1, out.exitCode);
-        assertEquals(String.format("Pipeline 'hello' not found on this workspace.%n"), out.stdOut);
-        assertEquals("", out.stdErr);
+        assertEquals("Pipeline 'hello' not found on this workspace.", out.stdErr);
 
     }
 
@@ -68,8 +68,7 @@ class RunCmdTest extends BaseCmdTest {
 
         // Assert results
         assertEquals(-1, out.exitCode);
-        assertEquals(String.format("Multiple pipelines match 'hello'%n"), out.stdOut);
-        assertEquals("", out.stdErr);
+        assertEquals("Multiple pipelines match 'hello'", out.stdErr);
     }
 
     @Test
@@ -105,7 +104,10 @@ class RunCmdTest extends BaseCmdTest {
 
         // Assert results
         assertEquals(0, out.exitCode);
-        assertEquals(String.format("Workflow submitted. Check it here:%n%s/user/jordi/watch/35aLiS0bIM5efd%n", url(mock)), out.stdOut);
+        assertEquals(
+                new RunSubmited("35aLiS0bIM5efd", String.format("%s/user/jordi/watch/35aLiS0bIM5efd", url(mock)), "personal").toString(),
+                out.stdOut
+        );
         assertEquals("", out.stdErr);
 
     }

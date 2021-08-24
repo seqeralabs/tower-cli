@@ -1,6 +1,9 @@
 package io.seqera.tower.cli.commands;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.responses.Response;
+import io.seqera.tower.cli.responses.RunSubmited;
+import io.seqera.tower.cli.utils.InvalidResponseException;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.Launch;
 import io.seqera.tower.model.ListPipelinesResponse;
@@ -40,7 +43,7 @@ public class RunCmd extends AbstractRootCmd {
     }
 
     @Override
-    protected Integer exec() throws ApiException, IOException {
+    protected Response exec() throws ApiException, IOException {
 
         // If the pipeline has at least one backslash consider it an external pipeline.
         if (pipeline.contains("/")) {
@@ -52,7 +55,7 @@ public class RunCmd extends AbstractRootCmd {
 
     }
 
-    protected Integer runNextflowPipeline() throws ApiException, IOException {
+    protected Response runNextflowPipeline() throws ApiException, IOException {
 
         // Retrieve the provided computeEnv or use the primary if not provided
         ComputeEnv ce = computeEnv != null ? computeEnvByName(computeEnv) : primaryComputeEnv();
@@ -69,16 +72,14 @@ public class RunCmd extends AbstractRootCmd {
         return submitWorkflow(launch);
     }
 
-    protected Integer runTowerPipeline() throws ApiException, IOException {
+    protected Response runTowerPipeline() throws ApiException, IOException {
         ListPipelinesResponse pipelines = api().listPipelines(workspaceId(), 2, 0, pipeline);
         if (pipelines.getTotalSize() == 0) {
-            println(String.format("Pipeline '%s' not found on this workspace.", pipeline));
-            return -1;
+            throw new InvalidResponseException(String.format("Pipeline '%s' not found on this workspace.", pipeline));
         }
 
         if (pipelines.getTotalSize() > 1) {
-            println(String.format("Multiple pipelines match '%s'", pipeline));
-            return -1;
+            throw new InvalidResponseException(String.format("Multiple pipelines match '%s'", pipeline));
         }
 
         Long pipelineId = pipelines.getPipelines().get(0).getPipelineId();
@@ -87,7 +88,7 @@ public class RunCmd extends AbstractRootCmd {
         return submitWorkflow(createLaunchRequest(launch));
     }
 
-    protected Integer submitWorkflow(WorkflowLaunchRequest launch) throws ApiException, IOException {
+    protected Response submitWorkflow(WorkflowLaunchRequest launch) throws ApiException, IOException {
 
         if (paramsFile != null) {
             launch.paramsText(Files.readString(paramsFile));
@@ -95,8 +96,7 @@ public class RunCmd extends AbstractRootCmd {
 
         SubmitWorkflowLaunchResponse response = api().createWorkflowLaunch(new SubmitWorkflowLaunchRequest().launch(launch), workspaceId());
         String workflowId = response.getWorkflowId();
-        println(String.format("Workflow submitted. Check it here:%n%s", workflowWatchUrl(workflowId)));
-        return 0;
+        return new RunSubmited(workflowId, workflowWatchUrl(workflowId), workspaceRef());
     }
 
     private String workflowWatchUrl(String workflowId) throws ApiException {

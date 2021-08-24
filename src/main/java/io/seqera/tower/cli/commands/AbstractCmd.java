@@ -4,6 +4,9 @@ import io.seqera.tower.ApiClient;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.api.TowerApi;
 import io.seqera.tower.cli.Tower;
+import io.seqera.tower.cli.responses.Response;
+import io.seqera.tower.cli.utils.InvalidResponseException;
+import io.seqera.tower.cli.utils.ShowUsageException;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.ListComputeEnvsResponseEntry;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
@@ -211,7 +214,13 @@ public abstract class AbstractCmd implements Callable<Integer> {
     @Override
     public Integer call() {
         try {
-            return exec();
+            Response response = exec();
+            println(response.toString());
+            return 0;
+        } catch (ShowUsageException e) {
+            app().spec.commandLine().usage(System.err);
+        } catch (InvalidResponseException e) {
+            printerr(e.getMessage());
         } catch (NullPointerException e) {
             e.printStackTrace(app().spec.commandLine().getErr());
         } catch (NoSuchFileException e) {
@@ -224,11 +233,7 @@ public abstract class AbstractCmd implements Callable<Integer> {
         return -1;
     }
 
-    protected Integer exec() throws ApiException, IOException {
-        // if the command was invoked without subcommand, show the usage help
-        app().spec.commandLine().usage(System.err);
-        return -1;
+    protected Response exec() throws ApiException, IOException {
+        throw new ShowUsageException();
     }
-
-    ;
 }

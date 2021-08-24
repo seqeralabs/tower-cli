@@ -5,6 +5,8 @@ import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.commands.AbstractCmd;
 import io.seqera.tower.cli.commands.credentials.UpdateCmd;
 import io.seqera.tower.cli.commands.credentials.providers.AbstractProvider;
+import io.seqera.tower.cli.responses.CredentialsUpdated;
+import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.Credentials;
 import io.seqera.tower.model.CredentialsSpec;
 import io.seqera.tower.model.DescribeCredentialsResponse;
@@ -34,7 +36,7 @@ public abstract class AbstractUpdateCmd extends AbstractCmd {
     }
 
     @Override
-    protected Integer exec() throws ApiException, IOException {
+    protected Response exec() throws ApiException, IOException {
 
         // Check that exists
         try {
@@ -49,7 +51,7 @@ public abstract class AbstractUpdateCmd extends AbstractCmd {
         }
     }
 
-    protected Integer update(@NotNull Credentials creds) throws ApiException, IOException {
+    protected Response update(@NotNull Credentials creds) throws ApiException, IOException {
 
         //TODO do we want to allow to change the name? name must be unique at workspace level?
         String name = creds.getName();
@@ -67,8 +69,7 @@ public abstract class AbstractUpdateCmd extends AbstractCmd {
                 workspaceId()
         );
 
-        app().println(String.format("%s credentials '%s' updated at %s workspace", provider.type(), name, workspaceRef()));
-        return 0;
+        return new CredentialsUpdated(provider.type().name(), name, workspaceRef());
     }
 
     protected abstract AbstractProvider getProvider();
