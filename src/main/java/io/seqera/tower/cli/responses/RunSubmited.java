@@ -1,6 +1,6 @@
 package io.seqera.tower.cli.responses;
 
-public class RunSubmited implements Response {
+public class RunSubmited extends Response {
 
     private String workflowId;
 

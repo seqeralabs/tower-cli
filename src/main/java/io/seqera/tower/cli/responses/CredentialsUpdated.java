@@ -1,6 +1,6 @@
 package io.seqera.tower.cli.responses;
 
-public class CredentialsUpdated implements Response {
+public class CredentialsUpdated extends Response {
 
     private String provider;
     private String name;

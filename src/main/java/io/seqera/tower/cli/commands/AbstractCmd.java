@@ -2,6 +2,7 @@ package io.seqera.tower.cli.commands;
 
 import io.seqera.tower.ApiClient;
 import io.seqera.tower.ApiException;
+import io.seqera.tower.JSON;
 import io.seqera.tower.api.TowerApi;
 import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.responses.Response;
@@ -215,7 +216,11 @@ public abstract class AbstractCmd implements Callable<Integer> {
     public Integer call() {
         try {
             Response response = exec();
-            println(response.toString());
+            if (app().json) {
+                println(new JSON().serialize(response.getBody()));
+            } else {
+                println(response.toString());
+            }
             return 0;
         } catch (ShowUsageException e) {
             app().spec.commandLine().usage(System.err);

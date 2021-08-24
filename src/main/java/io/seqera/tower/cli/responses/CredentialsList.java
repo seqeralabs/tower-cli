@@ -4,7 +4,7 @@ import io.seqera.tower.model.Credentials;
 
 import java.util.List;
 
-public class CredentialsList implements Response {
+public class CredentialsList extends Response {
 
     private List<Credentials> credentials;
 

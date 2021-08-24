@@ -1,8 +1,8 @@
 package io.seqera.tower.cli.responses;
 
-import java.io.Serializable;
+public abstract class Response {
 
-public interface Response extends Serializable {
-
-
+    public Object getBody() {
+        return this;
+    }
 }

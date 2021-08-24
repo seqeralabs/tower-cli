@@ -5,14 +5,14 @@ package io.seqera.tower.cli;
 
 import io.seqera.tower.cli.commands.CredentialsCmd;
 import io.seqera.tower.cli.commands.RunCmd;
+import picocli.AutoComplete.GenerateCompletion;
 import picocli.CommandLine;
+import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.Option;
 import picocli.CommandLine.HelpCommand;
 import picocli.CommandLine.Model.CommandSpec;
+import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
-import picocli.CommandLine.ArgGroup;
-import picocli.AutoComplete.GenerateCompletion;
 
 import java.util.concurrent.Callable;
 
@@ -44,6 +44,9 @@ public class Tower implements Callable<Integer> {
 
     @Option(names = {"--x-ray"}, description = "Shows HTTP request/response logs at stderr")
     public boolean xRay;
+
+    @Option(names = {"--json"}, description = "Show output as JSON")
+    public boolean json;
 
     @ArgGroup(exclusive = false)
     public OrgAndWorkspace orgAndWorkspaceNames;
