@@ -1,8 +1,7 @@
 package io.seqera.tower.cli.commands.credentials.update;
 
-import io.seqera.tower.cli.commands.credentials.providers.AbstractProvider;
 import io.seqera.tower.cli.commands.credentials.providers.AzureProvider;
-import io.seqera.tower.cli.commands.credentials.providers.GoogleProvider;
+import io.seqera.tower.cli.commands.credentials.providers.CredentialsProvider;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 
@@ -16,7 +15,7 @@ public class UpdateAzureCmd extends AbstractUpdateCmd {
     protected AzureProvider provider;
 
     @Override
-    protected AbstractProvider getProvider() {
+    protected CredentialsProvider getProvider() {
         return provider;
     }
 }

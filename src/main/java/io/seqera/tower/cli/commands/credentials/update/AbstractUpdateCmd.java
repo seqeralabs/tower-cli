@@ -4,14 +4,13 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.commands.AbstractCmd;
 import io.seqera.tower.cli.commands.credentials.UpdateCmd;
-import io.seqera.tower.cli.commands.credentials.providers.AbstractProvider;
+import io.seqera.tower.cli.commands.credentials.providers.CredentialsProvider;
 import io.seqera.tower.cli.responses.CredentialsUpdated;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.Credentials;
 import io.seqera.tower.model.CredentialsSpec;
 import io.seqera.tower.model.DescribeCredentialsResponse;
 import io.seqera.tower.model.UpdateCredentialsRequest;
-import org.jetbrains.annotations.NotNull;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.ParentCommand;
@@ -51,28 +50,24 @@ public abstract class AbstractUpdateCmd extends AbstractCmd {
         }
     }
 
-    protected Response update(@NotNull Credentials creds) throws ApiException, IOException {
+    protected Response update(Credentials creds) throws ApiException, IOException {
 
         //TODO do we want to allow to change the name? name must be unique at workspace level?
         String name = creds.getName();
 
-        AbstractProvider provider = getProvider();
-        api().updateCredentials(id,
-                new UpdateCredentialsRequest().credentials(
-                        new CredentialsSpec()
-                                .id(id)
-                                .name(name)
-                                .baseUrl(provider.baseUrl())
-                                .provider(provider.type())
-                                .keys(provider.securityKeys())
-                ),
-                workspaceId()
-        );
+        CredentialsSpec specs = new CredentialsSpec();
+        specs
+                .keys(getProvider().securityKeys())
+                .name(name)
+                .baseUrl(getProvider().baseUrl())
+                .provider(getProvider().type());
 
-        return new CredentialsUpdated(provider.type().name(), name, workspaceRef());
+        api().updateCredentials(id, new UpdateCredentialsRequest().credentials(specs), workspaceId());
+
+        return new CredentialsUpdated(getProvider().type().name(), name, workspaceRef());
     }
 
-    protected abstract AbstractProvider getProvider();
+    protected abstract CredentialsProvider getProvider();
 
 }
 

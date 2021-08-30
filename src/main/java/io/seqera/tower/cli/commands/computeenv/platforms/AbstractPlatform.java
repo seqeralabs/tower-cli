@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public abstract class AbstractPlatform {
+public abstract class AbstractPlatform<T extends ComputeConfig> implements Platform {
 
     private PlatformEnum type;
 
@@ -20,25 +20,32 @@ public abstract class AbstractPlatform {
     public Path preRunScript;
 
     @Option(names = {"--post-run-script"}, description = "Post-run script")
-    private Path postRunScript;
+    public Path postRunScript;
 
     public AbstractPlatform(PlatformEnum type) {
         this.type = type;
+    }
+
+    protected String preRunScriptString() throws IOException {
+        if (preRunScript == null) {
+            return null;
+        }
+        return Files.readString(preRunScript);
+    }
+
+    protected String postRunScriptString() throws IOException {
+        if (postRunScript == null) {
+            return null;
+        }
+        return Files.readString(postRunScript);
     }
 
     public PlatformEnum type() {
         return type;
     }
 
-    public ComputeConfig computeConfig() throws IOException, ApiException {
-        ComputeConfig res = new ComputeConfig();
-        res.workDir(workDir);
-        if (preRunScript != null) {
-            res.preRunScript(Files.readString(preRunScript));
-        }
-        if (postRunScript != null) {
-            res.postRunScript(Files.readString(postRunScript));
-        }
-        return res;
-    }
+    public abstract T computeConfig() throws ApiException, IOException;
+
+
+
 }

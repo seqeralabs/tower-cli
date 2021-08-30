@@ -1,13 +1,12 @@
 package io.seqera.tower.cli.commands.credentials.providers;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.model.CredentialsSpec.ProviderEnum;
+import io.seqera.tower.model.Credentials.ProviderEnum;
 import io.seqera.tower.model.SecurityKeys;
 
 import java.io.IOException;
 
-public abstract class AbstractProvider {
-
+public abstract class AbstractProvider<T extends SecurityKeys> implements CredentialsProvider {
     private ProviderEnum type;
 
     public AbstractProvider(ProviderEnum type) {
@@ -22,5 +21,5 @@ public abstract class AbstractProvider {
         return type;
     }
 
-    public abstract SecurityKeys securityKeys() throws IOException, ApiException;
+    public abstract T securityKeys() throws IOException, ApiException;
 }

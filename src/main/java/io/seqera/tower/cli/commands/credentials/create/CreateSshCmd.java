@@ -1,6 +1,6 @@
 package io.seqera.tower.cli.commands.credentials.create;
 
-import io.seqera.tower.cli.commands.credentials.providers.AbstractProvider;
+import io.seqera.tower.cli.commands.credentials.providers.CredentialsProvider;
 import io.seqera.tower.cli.commands.credentials.providers.SshProvider;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
@@ -15,7 +15,7 @@ public class CreateSshCmd extends AbstractCreateCmd {
     SshProvider provider;
 
     @Override
-    protected AbstractProvider getProvider() {
+    protected CredentialsProvider getProvider() {
         return provider;
     }
 }

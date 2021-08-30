@@ -1,14 +1,12 @@
 package io.seqera.tower.cli.commands.credentials.providers;
 
-import io.seqera.tower.model.CredentialsSpec.ProviderEnum;
-import io.seqera.tower.model.SecurityKeys;
+import io.seqera.tower.model.AzureSecurityKeys;
+import io.seqera.tower.model.Credentials.ProviderEnum;
 import picocli.CommandLine.Option;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
-public class AzureProvider extends AbstractProvider {
+public class AzureProvider extends AbstractProvider<AzureSecurityKeys> {
 
     @Option(names = {"--batch-key"}, description = "Azure batch account key")
     public String batchKey;
@@ -27,8 +25,8 @@ public class AzureProvider extends AbstractProvider {
     }
 
     @Override
-    public SecurityKeys securityKeys() throws IOException {
-        return new SecurityKeys()
+    public AzureSecurityKeys securityKeys() throws IOException {
+        return new AzureSecurityKeys()
                 .batchKey(batchKey)
                 .batchName(batchName)
                 .storageKey(storageKey)

@@ -1,8 +1,7 @@
 package io.seqera.tower.cli.commands.computeenv.platforms;
 
-import io.seqera.tower.ApiException;
-import io.seqera.tower.model.ComputeConfig;
 import io.seqera.tower.model.ComputeEnv.PlatformEnum;
+import io.seqera.tower.model.K8sComputeConfig;
 import io.seqera.tower.model.PodCleanupPolicy;
 import picocli.CommandLine.Option;
 
@@ -10,7 +9,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class K8sPlatform extends AbstractPlatform {
+public class K8sPlatform extends AbstractPlatform<K8sComputeConfig> {
 
     @Option(names = {"--server"}, description = "Master server")
     public String server;
@@ -47,9 +46,12 @@ public class K8sPlatform extends AbstractPlatform {
     }
 
     @Override
-    public ComputeConfig computeConfig() throws IOException, ApiException {
-
-        ComputeConfig res = super.computeConfig()
+    public K8sComputeConfig computeConfig() throws IOException {
+        return new K8sComputeConfig()
+                .platform("k8s-platform")
+                .workDir(workDir)
+                .preRunScript(preRunScriptString())
+                .postRunScript(postRunScriptString())
                 .computeServiceAccount(computeServiceAccount)
                 .headPodSpec(Files.readString(headPodSpec))
                 .headServiceAccount(headServiceAccount)
@@ -60,7 +62,5 @@ public class K8sPlatform extends AbstractPlatform {
                 .sslCert(Files.readString(sslCert))
                 .storageClaimName(storageClaimName)
                 .storageMountPath(storageMountPath);
-
-        return res;
     }
 }

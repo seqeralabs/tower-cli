@@ -1,13 +1,13 @@
 package io.seqera.tower.cli.commands.computeenv.create;
 
-import io.seqera.tower.cli.commands.computeenv.platforms.AbstractPlatform;
 import io.seqera.tower.cli.commands.computeenv.platforms.K8sPlatform;
-import picocli.CommandLine.Mixin;
+import io.seqera.tower.cli.commands.computeenv.platforms.Platform;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.Mixin;
 
 @Command(
-    name = "k8s",
-    description = "Create new Kubernetes compute environment"
+        name = "k8s",
+        description = "Create new Kubernetes compute environment"
 )
 public class CreateK8sCmd extends AbstractCreateCmd {
 
@@ -15,7 +15,7 @@ public class CreateK8sCmd extends AbstractCreateCmd {
     public K8sPlatform platform;
 
     @Override
-    protected AbstractPlatform getPlatform() {
+    protected Platform getPlatform() {
         return platform;
     }
 }

@@ -1,7 +1,7 @@
 package io.seqera.tower.cli.commands.credentials.providers;
 
-import io.seqera.tower.model.CredentialsSpec.ProviderEnum;
-import io.seqera.tower.model.SecurityKeys;
+import io.seqera.tower.model.K8sSecurityKeys;
+import io.seqera.tower.model.Credentials.ProviderEnum;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Option;
 
@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class K8sProvider extends AbstractProvider {
+public class K8sProvider extends AbstractProvider<K8sSecurityKeys> {
 
     @ArgGroup
     public Keys keys;
@@ -37,8 +37,8 @@ public class K8sProvider extends AbstractProvider {
     }
 
     @Override
-    public SecurityKeys securityKeys() throws IOException {
-        SecurityKeys result = new SecurityKeys();
+    public K8sSecurityKeys securityKeys() throws IOException {
+        K8sSecurityKeys result = new K8sSecurityKeys();
         if (keys.certs != null) {
             result
                     .certificate(Files.readString(keys.certs.certificate))

@@ -1,14 +1,14 @@
 package io.seqera.tower.cli.commands.credentials.providers;
 
-import io.seqera.tower.model.CredentialsSpec.ProviderEnum;
-import io.seqera.tower.model.SecurityKeys;
+import io.seqera.tower.model.GoogleSecurityKeys;
+import io.seqera.tower.model.Credentials.ProviderEnum;
 import picocli.CommandLine.Option;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class GoogleProvider extends AbstractProvider {
+public class GoogleProvider extends AbstractProvider<GoogleSecurityKeys> {
 
     @Option(names = {"-k", "--key"}, description = "JSON file with the service account key", required = true)
     public Path serviceAccountKey;
@@ -18,9 +18,8 @@ public class GoogleProvider extends AbstractProvider {
     }
 
     @Override
-    public SecurityKeys securityKeys() throws IOException {
-        SecurityKeys result = new SecurityKeys();
-        result.data(Files.readString(serviceAccountKey));
-        return result;
+    public GoogleSecurityKeys securityKeys() throws IOException {
+        return new GoogleSecurityKeys()
+                .data(Files.readString(serviceAccountKey));
     }
 }

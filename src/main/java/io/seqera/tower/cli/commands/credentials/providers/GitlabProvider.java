@@ -1,12 +1,12 @@
 package io.seqera.tower.cli.commands.credentials.providers;
 
-import io.seqera.tower.model.CredentialsSpec.ProviderEnum;
-import io.seqera.tower.model.SecurityKeys;
+import io.seqera.tower.model.GitLabSecurityKeys;
+import io.seqera.tower.model.Credentials.ProviderEnum;
 import picocli.CommandLine.Option;
 
 import java.io.IOException;
 
-public class GitlabProvider extends AbstractGitProvider {
+public class GitlabProvider extends AbstractGitProvider<GitLabSecurityKeys> {
 
     @Option(names = {"-u", "--username"}, description = "Gitlab username", required = true)
     public String userName;
@@ -20,10 +20,10 @@ public class GitlabProvider extends AbstractGitProvider {
     public GitlabProvider() {
         super(ProviderEnum.GITLAB);
     }
-    
+
     @Override
-    public SecurityKeys securityKeys() throws IOException {
-        return new SecurityKeys()
+    public GitLabSecurityKeys securityKeys() throws IOException {
+        return new GitLabSecurityKeys()
                 .username(userName)
                 .password(password)
                 .token(accessToken);

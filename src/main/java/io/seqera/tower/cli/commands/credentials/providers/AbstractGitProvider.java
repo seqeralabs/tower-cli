@@ -1,9 +1,10 @@
 package io.seqera.tower.cli.commands.credentials.providers;
 
-import io.seqera.tower.model.CredentialsSpec.ProviderEnum;
+import io.seqera.tower.model.Credentials.ProviderEnum;
+import io.seqera.tower.model.SecurityKeys;
 import picocli.CommandLine;
 
-public abstract class AbstractGitProvider extends AbstractProvider {
+public abstract class AbstractGitProvider<T extends SecurityKeys> extends AbstractProvider<T> {
 
     @CommandLine.Option(names = {"--base-url"}, description = "Repository base URL")
     public String baseUrl;

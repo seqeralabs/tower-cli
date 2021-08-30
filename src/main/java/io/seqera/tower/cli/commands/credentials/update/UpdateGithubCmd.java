@@ -1,6 +1,6 @@
 package io.seqera.tower.cli.commands.credentials.update;
 
-import io.seqera.tower.cli.commands.credentials.providers.AbstractProvider;
+import io.seqera.tower.cli.commands.credentials.providers.CredentialsProvider;
 import io.seqera.tower.cli.commands.credentials.providers.GithubProvider;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
@@ -15,7 +15,7 @@ public class UpdateGithubCmd extends AbstractUpdateCmd {
     protected GithubProvider provider;
 
     @Override
-    protected AbstractProvider getProvider() {
+    protected CredentialsProvider getProvider() {
         return provider;
     }
 }

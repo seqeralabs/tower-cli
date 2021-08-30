@@ -1,7 +1,7 @@
 package io.seqera.tower.cli.commands.credentials.create;
 
-import io.seqera.tower.cli.commands.credentials.providers.AbstractProvider;
 import io.seqera.tower.cli.commands.credentials.providers.GoogleProvider;
+import io.seqera.tower.cli.commands.credentials.providers.CredentialsProvider;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 
@@ -15,7 +15,7 @@ public class CreateGithubCmd extends AbstractCreateCmd {
     GoogleProvider provider;
 
     @Override
-    protected AbstractProvider getProvider() {
+    protected CredentialsProvider getProvider() {
         return provider;
     }
 }

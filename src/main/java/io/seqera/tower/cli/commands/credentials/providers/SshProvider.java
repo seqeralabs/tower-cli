@@ -1,14 +1,14 @@
 package io.seqera.tower.cli.commands.credentials.providers;
 
-import io.seqera.tower.model.CredentialsSpec.ProviderEnum;
-import io.seqera.tower.model.SecurityKeys;
+import io.seqera.tower.model.SSHSecurityKeys;
+import io.seqera.tower.model.Credentials.ProviderEnum;
 import picocli.CommandLine.Option;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class SshProvider extends AbstractProvider {
+public class SshProvider extends AbstractProvider<SSHSecurityKeys> {
 
     @Option(names = {"-k", "--key"}, description = "SSH private key file", required = true)
     public Path serviceAccountKey;
@@ -21,8 +21,8 @@ public class SshProvider extends AbstractProvider {
     }
 
     @Override
-    public SecurityKeys securityKeys() throws IOException {
-        return new SecurityKeys()
+    public SSHSecurityKeys securityKeys() throws IOException {
+        return new SSHSecurityKeys()
                 .privateKey(Files.readString(serviceAccountKey))
                 .passphrase(passphrase);
     }

@@ -1,12 +1,11 @@
 package io.seqera.tower.cli.commands.computeenv;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.responses.ComputeEnvDeleted;
 import io.seqera.tower.cli.responses.ComputeEnvView;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.DescribeComputeEnvResponse;
-import picocli.CommandLine;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
 
 @Command(
         name = "view",
@@ -14,14 +13,17 @@ import picocli.CommandLine.Command;
 )
 public class ViewCmd extends AbstractComputeEnvCmd {
 
-    @CommandLine.Option(names = {"-i", "--id"}, required = true)
+    @Option(names = {"-i", "--id"}, description = "Compute environment identifier", required = true)
     public String id;
+
+    @Option(names = {"--config"}, description = "Show a config JSON")
+    public boolean config;
 
     @Override
     protected Response exec() throws ApiException {
         try {
             DescribeComputeEnvResponse response = api().describeComputeEnv(id, workspaceId());
-            return new ComputeEnvView(id, workspaceRef(), response.getComputeEnv());
+            return new ComputeEnvView(id, workspaceRef(), response.getComputeEnv(), config);
         } catch (ApiException e) {
             if (e.getCode() == 403) {
                 // Customize the forbidden message

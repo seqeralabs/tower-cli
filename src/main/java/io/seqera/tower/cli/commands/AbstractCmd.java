@@ -1,19 +1,20 @@
 package io.seqera.tower.cli.commands;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.ApiClient;
 import io.seqera.tower.ApiException;
+import io.seqera.tower.Configuration;
+import io.seqera.tower.JSON;
 import io.seqera.tower.api.TowerApi;
 import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.InvalidResponseException;
-import io.seqera.tower.cli.utils.JSON;
 import io.seqera.tower.cli.utils.ShowUsageException;
+import io.seqera.tower.model.ComputeConfig;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.ListComputeEnvsResponseEntry;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import io.seqera.tower.model.User;
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import picocli.CommandLine.Command;
 
 import java.io.IOException;
@@ -46,7 +47,8 @@ public abstract class AbstractCmd implements Callable<Integer> {
     protected TowerApi api() {
 
         if (api == null) {
-            ApiClient client = new ApiClient(buildOkHttpClient());
+            ApiClient client = buildApiClient();
+            client.setServerIndex(null);
             client.setBasePath(app().url);
             client.setBearerToken(app().token);
             api = new TowerApi(client);
@@ -55,15 +57,17 @@ public abstract class AbstractCmd implements Callable<Integer> {
         return api;
     }
 
-    private OkHttpClient buildOkHttpClient() {
-        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+    private ApiClient buildApiClient() {
+        return Configuration.getDefaultApiClient();
+
+        /*OkHttpClient.Builder builder = new OkHttpClient.Builder();
         if (app().xRay) {
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor(s -> app().printerr(s));
             logging.redactHeader("Authorization");
             logging.setLevel(HttpLoggingInterceptor.Level.BODY);
             builder.addInterceptor(logging);
         }
-        return builder.build();
+        return builder.build();*/
     }
 
     protected Long workspaceId() throws ApiException {
@@ -219,7 +223,7 @@ public abstract class AbstractCmd implements Callable<Integer> {
         try {
             Response response = exec();
             if (app().json) {
-                println(new JSON().serialize(response.getBody()));
+                println(prettyJson(response.getBody()));
             } else {
                 println(response.toString());
             }
@@ -237,10 +241,15 @@ public abstract class AbstractCmd implements Callable<Integer> {
         } catch (ApiException e) {
             printerr(String.format("[%d] %s", e.getCode(), e.getMessage()));
         }
+
         return -1;
     }
 
     protected Response exec() throws ApiException, IOException {
         throw new ShowUsageException();
+    }
+
+    private static String prettyJson(Object obj) throws JsonProcessingException {
+        return new JSON().getContext(obj.getClass()).writerWithDefaultPrettyPrinter().writeValueAsString(obj);
     }
 }

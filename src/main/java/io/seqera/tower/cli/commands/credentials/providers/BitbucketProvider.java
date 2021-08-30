@@ -1,12 +1,12 @@
 package io.seqera.tower.cli.commands.credentials.providers;
 
-import io.seqera.tower.model.CredentialsSpec.ProviderEnum;
-import io.seqera.tower.model.SecurityKeys;
+import io.seqera.tower.model.BitBucketSecurityKeys;
+import io.seqera.tower.model.Credentials.ProviderEnum;
 import picocli.CommandLine.Option;
 
 import java.io.IOException;
 
-public class BitbucketProvider extends AbstractGitProvider {
+public class BitbucketProvider extends AbstractGitProvider<BitBucketSecurityKeys> {
 
     @Option(names = {"-u", "--username"}, description = "Bitbucket username", required = true)
     public String userName;
@@ -19,8 +19,8 @@ public class BitbucketProvider extends AbstractGitProvider {
     }
 
     @Override
-    public SecurityKeys securityKeys() throws IOException {
-        return new SecurityKeys()
+    public BitBucketSecurityKeys securityKeys() throws IOException {
+        return new BitBucketSecurityKeys()
                 .username(userName)
                 .password(password);
     }

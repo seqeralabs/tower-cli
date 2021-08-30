@@ -10,9 +10,10 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.slf4j:slf4j-api:1.7.30'
-    implementation "ch.qos.logback:logback-core:1.2.3"
-    implementation "ch.qos.logback:logback-classic:1.2.3"
+    implementation 'javax.activation:activation:1.1.1'
+    implementation 'org.slf4j:slf4j-api:1.7.32'
+    implementation 'ch.qos.logback:logback-core:1.2.5'
+    implementation 'ch.qos.logback:logback-classic:1.2.5'
     implementation 'io.seqera:tower-java-sdk:1.0.0-SNAPSHOT'
     implementation 'info.picocli:picocli:4.6.1'
     annotationProcessor 'info.picocli:picocli-codegen:4.6.1'
@@ -20,8 +21,8 @@ dependencies {
     testImplementation 'org.mock-server:mockserver-client-java:5.11.2'
     testImplementation 'org.mock-server:mockserver-netty:5.11.2'
     testImplementation 'org.mock-server:mockserver-junit-jupiter:5.11.2'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
 }
 
 compileJava {

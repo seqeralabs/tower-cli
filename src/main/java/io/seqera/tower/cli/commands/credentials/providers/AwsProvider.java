@@ -1,11 +1,11 @@
 package io.seqera.tower.cli.commands.credentials.providers;
 
-import io.seqera.tower.model.CredentialsSpec.ProviderEnum;
-import io.seqera.tower.model.SecurityKeys;
+import io.seqera.tower.model.AwsSecurityKeys;
+import io.seqera.tower.model.Credentials.ProviderEnum;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Option;
 
-public class AwsProvider extends AbstractProvider {
+public class AwsProvider extends AbstractProvider<AwsSecurityKeys> {
 
     @ArgGroup(exclusive = false)
     public Keys keys;
@@ -27,8 +27,8 @@ public class AwsProvider extends AbstractProvider {
     }
 
     @Override
-    public SecurityKeys securityKeys() {
-        SecurityKeys result = new SecurityKeys();
+    public AwsSecurityKeys securityKeys() {
+        AwsSecurityKeys result = new AwsSecurityKeys();
         if (keys != null) {
             result.accessKey(keys.accessKey).secretKey(keys.secretKey);
         }
