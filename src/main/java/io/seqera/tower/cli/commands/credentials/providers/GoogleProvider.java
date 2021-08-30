@@ -20,6 +20,7 @@ public class GoogleProvider extends AbstractProvider<GoogleSecurityKeys> {
     @Override
     public GoogleSecurityKeys securityKeys() throws IOException {
         return new GoogleSecurityKeys()
+                .provider(ProviderEnum.GOOGLE.getValue())
                 .data(Files.readString(serviceAccountKey));
     }
 }

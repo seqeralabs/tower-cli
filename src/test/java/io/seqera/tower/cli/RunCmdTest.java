@@ -6,6 +6,7 @@ package io.seqera.tower.cli;
 import io.seqera.tower.cli.responses.RunSubmited;
 import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
+import org.mockserver.model.MediaType;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.matchers.Times.exactly;
@@ -31,7 +32,6 @@ class RunCmdTest extends BaseCmdTest {
         assertEquals(String.format("[401] Unauthorized"), out.stdErr);
         assertEquals("", out.stdOut);
         assertEquals(-1, out.exitCode);
-
     }
 
     @Test
@@ -41,16 +41,15 @@ class RunCmdTest extends BaseCmdTest {
         mock.when(
                 request().withMethod("GET").withPath("/pipelines"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResponse("pipelines_none"))
+                response().withStatusCode(200).withBody(loadResponse("pipelines_none")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         // Run the command
         ExecOut out = exec(mock, "run", "hello");
 
         // Assert results
-        assertEquals(-1, out.exitCode);
         assertEquals("Pipeline 'hello' not found on this workspace.", out.stdErr);
-
+        assertEquals(-1, out.exitCode);
     }
 
     @Test
@@ -60,15 +59,15 @@ class RunCmdTest extends BaseCmdTest {
         mock.when(
                 request().withMethod("GET").withPath("/pipelines"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResponse("pipelines_multiple"))
+                response().withStatusCode(200).withBody(loadResponse("pipelines_multiple")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         // Run the command
         ExecOut out = exec(mock, "run", "hello");
 
         // Assert results
-        assertEquals(-1, out.exitCode);
         assertEquals("Multiple pipelines match 'hello'", out.stdErr);
+        assertEquals(-1, out.exitCode);
     }
 
     @Test
@@ -78,38 +77,37 @@ class RunCmdTest extends BaseCmdTest {
         mock.when(
                 request().withMethod("GET").withPath("/pipelines"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResponse("pipelines_sarek"))
+                response().withStatusCode(200).withBody(loadResponse("pipelines_sarek")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
                 request().withMethod("GET").withPath("/pipelines/250911634275687/launch"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResponse("pipeline_launch_describe"))
+                response().withStatusCode(200).withBody(loadResponse("pipeline_launch_describe")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
                 request().withMethod("POST").withPath("/workflow/launch"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResponse("workflow_launch"))
+                response().withStatusCode(200).withBody(loadResponse("workflow_launch")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResponse("user"))
+                response().withStatusCode(200).withBody(loadResponse("user")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         // Run the command
         ExecOut out = exec(mock, "run", "sarek");
 
         // Assert results
-        assertEquals(0, out.exitCode);
         assertEquals(
                 new RunSubmited("35aLiS0bIM5efd", String.format("%s/user/jordi/watch/35aLiS0bIM5efd", url(mock)), "personal").toString(),
                 out.stdOut
         );
         assertEquals("", out.stdErr);
-
+        assertEquals(0, out.exitCode);
     }
 
 }

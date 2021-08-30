@@ -21,6 +21,7 @@ public class GithubProvider extends AbstractGitProvider<GitHubSecurityKeys> {
     @Override
     public GitHubSecurityKeys securityKeys() throws IOException {
         return new GitHubSecurityKeys()
+                .provider(ProviderEnum.GITHUB.getValue())
                 .username(userName)
                 .password(password);
     }

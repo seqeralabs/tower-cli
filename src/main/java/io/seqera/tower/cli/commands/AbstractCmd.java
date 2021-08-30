@@ -15,6 +15,8 @@ import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.ListComputeEnvsResponseEntry;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import io.seqera.tower.model.User;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.logging.LoggingFeature;
 import picocli.CommandLine.Command;
 
 import java.io.IOException;
@@ -22,6 +24,7 @@ import java.nio.file.NoSuchFileException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.logging.Logger;
 
 @Command(mixinStandardHelpOptions = true)
 public abstract class AbstractCmd implements Callable<Integer> {
@@ -58,16 +61,14 @@ public abstract class AbstractCmd implements Callable<Integer> {
     }
 
     private ApiClient buildApiClient() {
-        return Configuration.getDefaultApiClient();
-
-        /*OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        if (app().xRay) {
-            HttpLoggingInterceptor logging = new HttpLoggingInterceptor(s -> app().printerr(s));
-            logging.redactHeader("Authorization");
-            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-            builder.addInterceptor(logging);
-        }
-        return builder.build();*/
+        return new ApiClient() {
+            protected void performAdditionalClientConfiguration(ClientConfig clientConfig) {
+                if (app().xRay) {
+                    clientConfig.register(new LoggingFeature(Logger.getLogger(LoggingFeature.DEFAULT_LOGGER_NAME), java.util.logging.Level.INFO, LoggingFeature.Verbosity.PAYLOAD_ANY, 1024 * 50 /* Log payloads up to 50K */));
+                    clientConfig.property(LoggingFeature.LOGGING_FEATURE_VERBOSITY, LoggingFeature.Verbosity.PAYLOAD_ANY);
+                }
+            }
+        };
     }
 
     protected Long workspaceId() throws ApiException {
@@ -239,7 +240,13 @@ public abstract class AbstractCmd implements Callable<Integer> {
         } catch (IOException e) {
             printerr(String.format("IO error. %s", e.getMessage()));
         } catch (ApiException e) {
-            printerr(String.format("[%d] %s", e.getCode(), e.getMessage()));
+            switch (e.getCode()) {
+                case 401:
+                    printerr("[401] Unauthorized");
+                    break;
+                default:
+                    printerr(String.format("[%d] %s", e.getCode(), e.getMessage()));
+            }
         }
 
         return -1;

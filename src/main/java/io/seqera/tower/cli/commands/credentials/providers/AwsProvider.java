@@ -28,7 +28,7 @@ public class AwsProvider extends AbstractProvider<AwsSecurityKeys> {
 
     @Override
     public AwsSecurityKeys securityKeys() {
-        AwsSecurityKeys result = new AwsSecurityKeys();
+        AwsSecurityKeys result = new AwsSecurityKeys().provider(ProviderEnum.AWS.getValue());
         if (keys != null) {
             result.accessKey(keys.accessKey).secretKey(keys.secretKey);
         }

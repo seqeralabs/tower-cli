@@ -48,7 +48,7 @@ public class K8sPlatform extends AbstractPlatform<K8sComputeConfig> {
     @Override
     public K8sComputeConfig computeConfig() throws IOException {
         return new K8sComputeConfig()
-                .platform("k8s-platform")
+                .platform(PlatformEnum.K8S_PLATFORM.name())
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())

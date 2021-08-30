@@ -38,7 +38,8 @@ public class K8sProvider extends AbstractProvider<K8sSecurityKeys> {
 
     @Override
     public K8sSecurityKeys securityKeys() throws IOException {
-        K8sSecurityKeys result = new K8sSecurityKeys();
+        K8sSecurityKeys result = new K8sSecurityKeys()
+                .provider(ProviderEnum.K8S.getValue());
         if (keys.certs != null) {
             result
                     .certificate(Files.readString(keys.certs.certificate))

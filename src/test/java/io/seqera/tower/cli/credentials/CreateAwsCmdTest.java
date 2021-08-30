@@ -6,6 +6,7 @@ package io.seqera.tower.cli.credentials;
 import io.seqera.tower.cli.BaseCmdTest;
 import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
+import org.mockserver.model.MediaType;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.matchers.Times.exactly;
@@ -19,17 +20,17 @@ class CreateAwsCmdTest extends BaseCmdTest {
 
         // Create server expectation
         mock.when(
-                request().withMethod("POST").withPath("/credentials").withBody("{\"credentials\":{\"name\":\"test_credentials\",\"provider\":\"aws\",\"keys\":{\"assumeRoleArn\":\"arn_role\"}}}"), exactly(1)
+                request().withMethod("POST").withPath("/credentials").withBody("{\"credentials\":{\"keys\":{\"assumeRoleArn\":\"arn_role\",\"provider\":\"aws\"},\"name\":\"test_credentials\",\"provider\":\"aws\"}}"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"credentialsId\":\"6Kyn17toiABGu47qpBXsVX\"}")
+                response().withStatusCode(200).withBody("{\"credentialsId\":\"6Kyn17toiABGu47qpBXsVX\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         // Run the command
-        ExecOut out = exec(mock, "creds", "create", "aws", "--name=test_credentials", "--assume-role-arn=arn_role");
+        ExecOut out = exec(mock, "--x-ray", "creds", "create", "aws", "--name=test_credentials", "--assume-role-arn=arn_role");
 
         // Assert results
-        assertEquals("New AWS credentials 'test_credentials' added at personal workspace", out.stdOut);
         assertEquals("", out.stdErr);
+        assertEquals("New AWS credentials 'test_credentials' added at personal workspace", out.stdOut);
         assertEquals(0, out.exitCode);
 
     }
