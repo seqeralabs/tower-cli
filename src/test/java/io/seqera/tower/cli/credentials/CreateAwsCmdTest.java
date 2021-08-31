@@ -4,6 +4,7 @@
 package io.seqera.tower.cli.credentials;
 
 import io.seqera.tower.cli.BaseCmdTest;
+import io.seqera.tower.cli.responses.CredentialsCreated;
 import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
@@ -30,7 +31,7 @@ class CreateAwsCmdTest extends BaseCmdTest {
 
         // Assert results
         assertEquals("", out.stdErr);
-        assertEquals("New AWS credentials 'test_credentials' added at personal workspace", out.stdOut);
+        assertEquals(new CredentialsCreated("aws", "6Kyn17toiABGu47qpBXsVX", "test_credentials", "personal").toString(), out.stdOut);
         assertEquals(0, out.exitCode);
 
     }
