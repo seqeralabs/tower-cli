@@ -13,7 +13,7 @@ public abstract class AbstractPlatform<T extends ComputeConfig> implements Platf
 
     private PlatformEnum type;
 
-    @Option(names = {"-w", "--work-dir"}, description = "Work directory")
+    @Option(names = {"-w", "--work-dir"}, description = "Work directory", required = true)
     public String workDir;
 
     @Option(names = {"--pre-run-script"}, description = "Pre-run script")

@@ -10,6 +10,7 @@ import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.ComputeConfig;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.CreateComputeEnvRequest;
+import io.seqera.tower.model.CreateComputeEnvResponse;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.ParentCommand;
@@ -22,10 +23,10 @@ public abstract class AbstractCreateCmd extends AbstractCmd {
     @ParentCommand
     protected CreateCmd parent;
 
-    @Option(names = {"-n", "--name"}, description = "Compute environment name")
+    @Option(names = {"-n", "--name"}, description = "Compute environment name", required = true)
     public String name;
 
-    @Option(names = {"--credentials-id"}, description = "Credentials identifier")
+    @Option(names = {"-c", "--credentials-id"}, description = "Credentials identifier", required = true)
     public String credentialsId;
 
     @Override
@@ -35,13 +36,15 @@ public abstract class AbstractCreateCmd extends AbstractCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
+        return createComputeEnv(getPlatform().computeConfig());
+    }
 
-        ComputeConfig config = getPlatform().computeConfig();
+    protected ComputeEnvCreated createComputeEnv(ComputeConfig config) throws ApiException {
         api().createComputeEnv(
                 new CreateComputeEnvRequest().computeEnv(
                         new ComputeEnv()
                                 .name(name)
-                                .platform(getPlatform().type())
+                                .platform(ComputeEnv.PlatformEnum.fromValue(config.getPlatform()))
                                 .credentialsId(credentialsId)
                                 .config(config)
                 ), workspaceId()

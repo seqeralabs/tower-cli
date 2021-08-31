@@ -256,7 +256,11 @@ public abstract class AbstractCmd implements Callable<Integer> {
         throw new ShowUsageException();
     }
 
-    private static String prettyJson(Object obj) throws JsonProcessingException {
+    protected static String prettyJson(Object obj) throws JsonProcessingException {
         return new JSON().getContext(obj.getClass()).writerWithDefaultPrettyPrinter().writeValueAsString(obj);
+    }
+
+    protected static <T> T parseJson(String json, Class<T> clazz) throws JsonProcessingException {
+        return new JSON().getContext(clazz).readValue(json, clazz);
     }
 }

@@ -1,0 +1,34 @@
+package io.seqera.tower.cli.commands.computeenv.create;
+
+import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.commands.computeenv.platforms.Platform;
+import io.seqera.tower.cli.responses.Response;
+import io.seqera.tower.model.ComputeConfig;
+import picocli.CommandLine;
+import picocli.CommandLine.Option;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+@CommandLine.Command(
+        name = "json",
+        description = "Create new compute environment from a JSON config file"
+)
+public class CreateJsonCmd extends AbstractCreateCmd {
+
+    @Option(names = "--config", description = "JSON configuration file", required = true)
+    Path config;
+
+    @Override
+    protected Response exec() throws ApiException, IOException {
+        return createComputeEnv(
+                parseJson(Files.readString(config), ComputeConfig.class)
+        );
+    }
+
+    @Override
+    protected Platform getPlatform() {
+        throw new UnsupportedOperationException("Unknown platform");
+    }
+}

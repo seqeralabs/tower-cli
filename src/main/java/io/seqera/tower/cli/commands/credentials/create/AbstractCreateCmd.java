@@ -8,6 +8,7 @@ import io.seqera.tower.cli.commands.credentials.providers.CredentialsProvider;
 import io.seqera.tower.cli.responses.CredentialsCreated;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.CreateCredentialsRequest;
+import io.seqera.tower.model.CreateCredentialsResponse;
 import io.seqera.tower.model.CredentialsSpec;
 import io.seqera.tower.model.SecurityKeys;
 import picocli.CommandLine.Command;
@@ -22,7 +23,7 @@ public abstract class AbstractCreateCmd<T extends SecurityKeys> extends Abstract
     @ParentCommand
     protected CreateCmd parent;
 
-    @Option(names = {"-n", "--name"}, required = true)
+    @Option(names = {"-n", "--name"}, description = "Credentials name", required = true)
     public String name;
 
     @Override
@@ -40,8 +41,9 @@ public abstract class AbstractCreateCmd<T extends SecurityKeys> extends Abstract
                 .baseUrl(getProvider().baseUrl())
                 .provider(getProvider().type());
 
-        api().createCredentials(new CreateCredentialsRequest().credentials(specs), workspaceId());
-        return new CredentialsCreated(getProvider().type().name(), name, workspaceRef());
+        CreateCredentialsResponse resp = api().createCredentials(new CreateCredentialsRequest().credentials(specs), workspaceId());
+
+        return new CredentialsCreated(getProvider().type().name(), resp.getCredentialsId(), name, workspaceRef());
     }
 
     protected abstract CredentialsProvider getProvider();

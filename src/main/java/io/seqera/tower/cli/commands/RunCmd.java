@@ -17,7 +17,7 @@ import picocli.CommandLine.Parameters;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
+import java.util.List;
 
 import static io.seqera.tower.cli.utils.ModelHelper.createLaunchRequest;
 
@@ -37,7 +37,7 @@ public class RunCmd extends AbstractRootCmd {
     String workDir;
 
     @Option(names = {"-p", "--profile"}, split = ",")
-    String[] profile;
+    List<String> profile;
 
     public RunCmd() {
     }
@@ -60,16 +60,12 @@ public class RunCmd extends AbstractRootCmd {
         // Retrieve the provided computeEnv or use the primary if not provided
         ComputeEnv ce = computeEnv != null ? computeEnvByName(computeEnv) : primaryComputeEnv();
 
-        WorkflowLaunchRequest launch = new WorkflowLaunchRequest()
+        return submitWorkflow( new WorkflowLaunchRequest()
                 .pipeline(pipeline)
                 .workDir(workDir != null ? workDir : ce.getConfig().getWorkDir())
-                .computeEnvId(ce.getId());
-
-        if (profile != null) {
-            launch.configProfiles(Arrays.asList(profile));
-        }
-
-        return submitWorkflow(launch);
+                .computeEnvId(ce.getId())
+                .configProfiles(profile)
+        );
     }
 
     protected Response runTowerPipeline() throws ApiException, IOException {
