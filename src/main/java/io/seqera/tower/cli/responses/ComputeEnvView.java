@@ -8,8 +8,6 @@ import io.seqera.tower.model.AwsBatchConfig;
 import io.seqera.tower.model.ComputeConfig;
 import io.seqera.tower.model.ComputeEnv;
 
-import java.io.IOException;
-
 public class ComputeEnvView extends Response {
 
     private String id;

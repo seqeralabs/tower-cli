@@ -1,7 +1,7 @@
 package io.seqera.tower.cli.commands.credentials.create;
 
-import io.seqera.tower.cli.commands.credentials.providers.GoogleProvider;
 import io.seqera.tower.cli.commands.credentials.providers.CredentialsProvider;
+import io.seqera.tower.cli.commands.credentials.providers.GithubProvider;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 
@@ -12,7 +12,7 @@ import picocli.CommandLine.Mixin;
 public class CreateGithubCmd extends AbstractCreateCmd {
 
     @Mixin
-    GoogleProvider provider;
+    GithubProvider provider;
 
     @Override
     protected CredentialsProvider getProvider() {

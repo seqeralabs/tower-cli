@@ -5,7 +5,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.ParentCommand;
 
 @Command
-public abstract class AbstractRootCmd extends AbstractCmd {
+public abstract class AbstractRootCmd extends AbstractApiCmd {
 
     @ParentCommand
     protected Tower app;

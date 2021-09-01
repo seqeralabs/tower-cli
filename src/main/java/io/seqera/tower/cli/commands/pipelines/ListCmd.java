@@ -13,6 +13,7 @@ import java.io.IOException;
 
 @Command(
         name = "list",
+        aliases = "l",
         description = "List workspace pipelines"
 )
 public class ListCmd extends AbstractPipelinesCmd {

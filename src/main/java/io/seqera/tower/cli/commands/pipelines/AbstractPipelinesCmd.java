@@ -2,18 +2,15 @@ package io.seqera.tower.cli.commands.pipelines;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.Tower;
-import io.seqera.tower.cli.commands.AbstractCmd;
+import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.commands.PipelinesCmd;
-import io.seqera.tower.model.DescribeLaunchResponse;
-import io.seqera.tower.model.DescribePipelineResponse;
 import io.seqera.tower.model.ListPipelinesResponse;
 import io.seqera.tower.model.PipelineDbDto;
-import io.seqera.tower.model.PipelineInfo;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.ParentCommand;
 
 @Command
-public abstract class AbstractPipelinesCmd extends AbstractCmd {
+public abstract class AbstractPipelinesCmd extends AbstractApiCmd {
 
     @ParentCommand
     protected PipelinesCmd parent;

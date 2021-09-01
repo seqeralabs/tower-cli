@@ -11,6 +11,7 @@ import java.io.IOException;
 
 @Command(
         name = "list",
+        aliases = "l",
         description = "List all workspace credentials"
 )
 public class ListCmd extends AbstractCredentialsCmd {

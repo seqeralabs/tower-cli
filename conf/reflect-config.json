@@ -68,6 +68,11 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.AbstractApiCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true
+},
+{
   "name":"io.seqera.tower.cli.commands.AbstractCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
@@ -170,10 +175,20 @@
   "allDeclaredMethods":true
 },
 {
+  "name":"io.seqera.tower.cli.commands.computeenv.platforms.AbstractPlatform$StagingOptions",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true
+},
+{
   "name":"io.seqera.tower.cli.commands.computeenv.platforms.AwsBatchForgePlatform",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.computeenv.platforms.AwsBatchForgePlatform$AdvancedOptions",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenv.platforms.AwsBatchForgePlatform$EfsFileSystem",
@@ -190,6 +205,11 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.computeenv.platforms.AwsBatchManualPlatform$AdvancedOptions",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenv.platforms.K8sPlatform",

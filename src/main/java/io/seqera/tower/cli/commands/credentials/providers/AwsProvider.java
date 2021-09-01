@@ -12,14 +12,14 @@ public class AwsProvider extends AbstractProvider<AwsSecurityKeys> {
 
     public static class Keys {
 
-        @Option(names = {"--access-key"}, required = true)
+        @Option(names = {"-a", "--access-key"}, description = "The AWS access key required to access the desired service")
         String accessKey;
 
-        @Option(names = {"--secret-key"}, required = true)
+        @Option(names = {"-s", "--secret-key"}, description = "The AWS secret key required to access the desired service")
         String secretKey;
     }
 
-    @Option(names = {"--assume-role-arn"})
+    @Option(names = {"-r", "--assume-role-arn"}, description = "The IAM role to access the AWS resources. It should be a fully qualified AWS role ARN.")
     String assumeRoleArn;
 
     public AwsProvider() {

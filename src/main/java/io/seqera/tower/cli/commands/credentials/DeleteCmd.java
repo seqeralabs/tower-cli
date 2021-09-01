@@ -3,18 +3,17 @@ package io.seqera.tower.cli.commands.credentials;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.responses.CredentialsDeleted;
 import io.seqera.tower.cli.responses.Response;
-import picocli.CommandLine;
+import picocli.CommandLine.Option;
 import picocli.CommandLine.Command;
-
-import java.io.IOException;
 
 @Command(
         name = "delete",
+        aliases = "d",
         description = "Delete workspace credentials"
 )
 public class DeleteCmd extends AbstractCredentialsCmd {
 
-    @CommandLine.Option(names = {"-i", "--id"}, required = true)
+    @Option(names = {"-i", "--id"}, description = "Credentials identifier", required = true)
     public String id;
 
     @Override

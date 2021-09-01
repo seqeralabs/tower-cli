@@ -23,6 +23,7 @@ import java.io.IOException;
 
 @Command(
         name = "update",
+        aliases = "u",
         description = "Update a workspace pipeline"
 )
 public class UpdateCmd extends AbstractPipelinesCmd {
@@ -30,14 +31,14 @@ public class UpdateCmd extends AbstractPipelinesCmd {
     @Option(names = {"-n", "--name"}, description = "Pipeline name", required = true)
     public String name;
 
-    @Option(names = {"--description"}, description = "Pipeline description")
+    @Option(names = {"-d", "--description"}, description = "Pipeline description")
     public String description;
-
-    @Option(names = {"--pipe", "--pipeline"}, description = "Nextflow pipeline URL")
-    public String pipeline;
 
     @Mixin
     public LaunchOptions opts;
+
+    @Option(names = {"--pipeline"}, description = "Nextflow pipeline URL")
+    public String pipeline;
 
     @Override
     protected Response exec() throws ApiException, IOException {

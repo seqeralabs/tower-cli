@@ -11,6 +11,7 @@ import java.io.IOException;
 
 @Command(
         name = "delete",
+        aliases = "d",
         description = "Delete a workspace pipeline"
 )
 public class DeleteCmd extends AbstractPipelinesCmd {

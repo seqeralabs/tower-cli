@@ -17,6 +17,7 @@ import java.io.IOException;
 
 @Command(
         name = "create",
+        aliases = "c",
         description = "Create a workspace pipeline"
 )
 public class CreateCmd extends AbstractPipelinesCmd {
@@ -24,10 +25,10 @@ public class CreateCmd extends AbstractPipelinesCmd {
     @Option(names = {"-n", "--name"}, description = "Pipeline name", required = true)
     public String name;
 
-    @Option(names = {"--description"}, description = "Pipeline description")
+    @Option(names = {"-d", "--description"}, description = "Pipeline description")
     public String description;
 
-    @Parameters(index = "0", description = "Nextflow pipeline URL", arity = "1")
+    @Parameters(index = "0", paramLabel = "PIPELINE_URL", description = "Nextflow pipeline URL", arity = "1")
     public String pipeline;
 
     @Mixin

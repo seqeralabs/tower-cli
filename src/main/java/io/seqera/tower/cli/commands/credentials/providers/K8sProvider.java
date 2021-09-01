@@ -25,10 +25,10 @@ public class K8sProvider extends AbstractProvider<K8sSecurityKeys> {
 
     public static class ClientCerts {
 
-        @Option(names = {"--certificate"}, required = true, description = "Client certificate file")
+        @Option(names = {"-c", "--certificate"}, description = "Client certificate file")
         public Path certificate;
 
-        @Option(names = {"--private-key"}, required = true, description = "Client key file")
+        @Option(names = {"-k", "--private-key"}, description = "Client key file")
         public Path privateKey;
     }
 

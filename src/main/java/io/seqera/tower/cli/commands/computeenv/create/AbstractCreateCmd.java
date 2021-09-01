@@ -2,7 +2,7 @@ package io.seqera.tower.cli.commands.computeenv.create;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.Tower;
-import io.seqera.tower.cli.commands.AbstractCmd;
+import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.commands.computeenv.CreateCmd;
 import io.seqera.tower.cli.commands.computeenv.platforms.Platform;
 import io.seqera.tower.cli.responses.ComputeEnvCreated;
@@ -10,7 +10,6 @@ import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.ComputeConfig;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.CreateComputeEnvRequest;
-import io.seqera.tower.model.CreateComputeEnvResponse;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.ParentCommand;
@@ -18,7 +17,7 @@ import picocli.CommandLine.ParentCommand;
 import java.io.IOException;
 
 @Command
-public abstract class AbstractCreateCmd extends AbstractCmd {
+public abstract class AbstractCreateCmd extends AbstractApiCmd {
 
     @ParentCommand
     protected CreateCmd parent;

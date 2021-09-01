@@ -3,6 +3,7 @@
  */
 package io.seqera.tower.cli;
 
+import io.seqera.tower.cli.commands.AbstractCmd;
 import io.seqera.tower.cli.commands.ComputeEnvCmd;
 import io.seqera.tower.cli.commands.CredentialsCmd;
 import io.seqera.tower.cli.commands.PipelinesCmd;
@@ -22,7 +23,6 @@ import java.util.concurrent.Callable;
         name = "towr",
         description = "Nextflow Tower CLI",
         version = "Tower 0.1.0",
-        mixinStandardHelpOptions = true,
         subcommands = {
                 RunCmd.class,
                 CredentialsCmd.class,
@@ -31,34 +31,34 @@ import java.util.concurrent.Callable;
                 GenerateCompletion.class
         }
 )
-public class Tower implements Callable<Integer> {
+public class Tower extends AbstractCmd {
     @Spec
     public CommandSpec spec;
 
-    @Option(names = {"--access-token"}, description = "Tower personal access token", defaultValue = "${TOWER_ACCESS_TOKEN}", required = true)
+    @Option(names = {"-t", "--access-token"}, description = "Tower personal access token (TOWER_ACCESS_TOKEN)", defaultValue = "${TOWER_ACCESS_TOKEN}")
     public String token;
 
-    @Option(names = {"--url"}, description = "Tower server URL", defaultValue = "${TOWER_SERVER_URL:-https://api.tower.nf}", required = true)
-    public String url;
-
-    @Option(names = {"--workspace-id"}, description = "Workspace numeric identifier", defaultValue = "${TOWER_WORKSPACE_ID}")
+    @Option(names = {"-i", "--workspace-id"}, description = "Workspace numeric identifier (TOWER_WORKSPACE_ID)", defaultValue = "${TOWER_WORKSPACE_ID}")
     public Long workspaceId;
-
-    @Option(names = {"--x-ray"}, description = "Shows HTTP request/response logs at stderr")
-    public boolean xRay;
-
-    @Option(names = {"--json"}, description = "Show output as JSON")
-    public boolean json;
 
     @ArgGroup(exclusive = false)
     public OrgAndWorkspace orgAndWorkspaceNames;
 
-    public static class OrgAndWorkspace {
-        @Option(names = {"--workspace-name"}, description = "Workspace name", defaultValue = "${TOWER_WORKSPACE_NAME}")
-        public String workspaceName;
+    @Option(names = {"-u", "--url"}, description = "Tower server URL. Defaults to tower.nf (TOWER_SERVER_URL)", defaultValue = "${TOWER_SERVER_URL:-https://api.tower.nf}", required = true)
+    public String url;
 
-        @Option(names = {"--org-name"}, description = "Organization name", defaultValue = "${TOWER_ORG_NAME}")
-        public String orgName;
+    @Option(names = {"-j", "--json"}, description = "Show output as JSON")
+    public boolean json;
+
+    @Option(names = {"-v", "--verbose"}, description = "Shows HTTP request/response logs at stderr")
+    public boolean verbose;
+
+    public static class OrgAndWorkspace {
+        @Option(names = {"-w", "--workspace"}, description = "Workspace name", defaultValue = "${TOWER_WORKSPACE_NAME}")
+        public String workspace;
+
+        @Option(names = {"-o", "--organization"}, description = "Organization name", defaultValue = "${TOWER_ORG_NAME}")
+        public String organization;
     }
 
     public Tower() {
@@ -67,6 +67,7 @@ public class Tower implements Callable<Integer> {
     public static void main(String[] args) {
         Tower app = new Tower();
         CommandLine cmd = new CommandLine(app);
+        cmd.setUsageHelpLongOptionsMaxWidth(40);
         int exitCode = cmd.execute(args);
         System.exit(exitCode);
     }

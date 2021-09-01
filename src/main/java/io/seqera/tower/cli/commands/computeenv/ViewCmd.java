@@ -9,6 +9,7 @@ import picocli.CommandLine.Option;
 
 @Command(
         name = "view",
+        aliases = "v",
         description = "View compute environment"
 )
 public class ViewCmd extends AbstractComputeEnvCmd {

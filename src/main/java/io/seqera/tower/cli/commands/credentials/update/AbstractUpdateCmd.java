@@ -2,7 +2,7 @@ package io.seqera.tower.cli.commands.credentials.update;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.Tower;
-import io.seqera.tower.cli.commands.AbstractCmd;
+import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.commands.credentials.UpdateCmd;
 import io.seqera.tower.cli.commands.credentials.providers.CredentialsProvider;
 import io.seqera.tower.cli.responses.CredentialsUpdated;
@@ -18,7 +18,7 @@ import picocli.CommandLine.ParentCommand;
 import java.io.IOException;
 
 @Command
-public abstract class AbstractUpdateCmd extends AbstractCmd {
+public abstract class AbstractUpdateCmd extends AbstractApiCmd {
 
     @ParentCommand
     protected UpdateCmd parent;

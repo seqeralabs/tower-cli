@@ -11,26 +11,26 @@ import java.nio.file.Path;
 
 public class K8sPlatform extends AbstractPlatform<K8sComputeConfig> {
 
-    @Option(names = {"--server"}, description = "Master server")
+    @Option(names = {"--server"}, description = "Master server", required = true)
     public String server;
 
-    @Option(names = {"--ssl-cert"}, description = "SSL certificate")
-    public Path sslCert;
-
-    @Option(names = {"--namespace"}, description = "Namespace")
+    @Option(names = {"--namespace"}, description = "Namespace", required = true)
     public String namespace;
 
-    @Option(names = {"--head-service-account"}, description = "Head service account")
-    public String headServiceAccount;
+    @Option(names = {"--ssl-cert"}, description = "SSL certificate", required = true)
+    public Path sslCert;
 
-    @Option(names = {"--storage-claim-name"}, description = "Storage claim name")
-    public String storageClaimName;
+    @Option(names = {"--head-account"}, description = "Head service account", required = true)
+    public String headAccount;
 
-    @Option(names = {"--compute-service-account"}, description = "Compute service account")
-    public String computeServiceAccount;
+    @Option(names = {"--storage-claim"}, description = "Storage claim name")
+    public String storageClaim;
 
-    @Option(names = {"--storage-mount-path"}, description = "Storage mount path")
-    public String storageMountPath;
+    @Option(names = {"--compute-account"}, description = "Compute service account")
+    public String computeAccount;
+
+    @Option(names = {"--storage-mount"}, description = "Storage mount path")
+    public String storageMount;
 
     @Option(names = {"--service-pod-spec"}, description = "Custom service pod specs file")
     public Path servicePodSpec;
@@ -52,15 +52,15 @@ public class K8sPlatform extends AbstractPlatform<K8sComputeConfig> {
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
-                .computeServiceAccount(computeServiceAccount)
+                .computeServiceAccount(computeAccount)
                 .headPodSpec(FilesHelper.readString(headPodSpec))
-                .headServiceAccount(headServiceAccount)
+                .headServiceAccount(headAccount)
                 .namespace(namespace)
                 .podCleanup(podCleanup)
                 .server(server)
                 .servicePodSpec(FilesHelper.readString(servicePodSpec))
                 .sslCert(FilesHelper.readString(sslCert))
-                .storageClaimName(storageClaimName)
-                .storageMountPath(storageMountPath);
+                .storageClaimName(storageClaim)
+                .storageMountPath(storageMount);
     }
 }
