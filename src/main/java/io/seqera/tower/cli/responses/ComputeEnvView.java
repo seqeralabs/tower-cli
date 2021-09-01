@@ -3,6 +3,7 @@ package io.seqera.tower.cli.responses;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.JSON;
 import io.seqera.tower.cli.commands.computeenv.platforms.AwsBatchForgePlatform;
+import io.seqera.tower.cli.commands.computeenv.platforms.AwsBatchManualPlatform;
 import io.seqera.tower.model.AwsBatchConfig;
 import io.seqera.tower.model.ComputeConfig;
 import io.seqera.tower.model.ComputeEnv;
@@ -37,8 +38,12 @@ public class ComputeEnvView extends Response {
             // Remove forged resources
             ComputeConfig config = computeEnv.getConfig();
             if (config instanceof AwsBatchConfig) {
-                //TODO differentiate between manual and forged config
-                AwsBatchForgePlatform.clean((AwsBatchConfig) config);
+                AwsBatchConfig awsCfg = (AwsBatchConfig) config;
+                if (awsCfg.getForge() != null) {
+                    AwsBatchForgePlatform.clean(awsCfg);
+                } else {
+                    AwsBatchManualPlatform.clean(awsCfg);
+                }
             }
 
             try {
