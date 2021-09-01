@@ -3,6 +3,7 @@ package io.seqera.tower.cli.commands;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.RunSubmited;
+import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.cli.utils.InvalidResponseException;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.Launch;
@@ -15,7 +16,6 @@ import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -87,7 +87,7 @@ public class RunCmd extends AbstractRootCmd {
     protected Response submitWorkflow(WorkflowLaunchRequest launch) throws ApiException, IOException {
 
         if (paramsFile != null) {
-            launch.paramsText(Files.readString(paramsFile));
+            launch.paramsText(FilesHelper.readString(paramsFile));
         }
 
         SubmitWorkflowLaunchResponse response = api().createWorkflowLaunch(new SubmitWorkflowLaunchRequest().launch(launch), workspaceId());

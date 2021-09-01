@@ -1,12 +1,12 @@
 package io.seqera.tower.cli.commands.computeenv.platforms;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.ComputeConfig;
 import io.seqera.tower.model.ComputeEnv.PlatformEnum;
 import picocli.CommandLine.Option;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 public abstract class AbstractPlatform<T extends ComputeConfig> implements Platform {
@@ -30,14 +30,14 @@ public abstract class AbstractPlatform<T extends ComputeConfig> implements Platf
         if (preRunScript == null) {
             return null;
         }
-        return Files.readString(preRunScript);
+        return FilesHelper.readString(preRunScript);
     }
 
     protected String postRunScriptString() throws IOException {
         if (postRunScript == null) {
             return null;
         }
-        return Files.readString(postRunScript);
+        return FilesHelper.readString(postRunScript);
     }
 
     public PlatformEnum type() {

@@ -3,12 +3,12 @@ package io.seqera.tower.cli.commands.computeenv.create;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.computeenv.platforms.Platform;
 import io.seqera.tower.cli.responses.Response;
+import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.ComputeConfig;
 import picocli.CommandLine;
 import picocli.CommandLine.Option;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 @CommandLine.Command(
@@ -23,7 +23,7 @@ public class CreateJsonCmd extends AbstractCreateCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
         return createComputeEnv(
-                parseJson(Files.readString(config), ComputeConfig.class)
+                parseJson(FilesHelper.readString(config), ComputeConfig.class)
         );
     }
 

@@ -6,7 +6,7 @@ import java.util.List;
 
 public class CredentialsList extends Response {
 
-    private List<Credentials> credentials;
+    private final List<Credentials> credentials;
 
     public CredentialsList(List<Credentials> credentials) {
         this.credentials = credentials;
@@ -14,6 +14,10 @@ public class CredentialsList extends Response {
 
     @Override
     public String toString() {
+        if (credentials.isEmpty()) {
+            return "No credentials found";
+        }
+
         StringBuilder res = new StringBuilder();
         for (Credentials cred : credentials) {
             res.append(String.format("- [%s] (%s) %s%s%n", cred.getId(), cred.getProvider(), cred.getName(), formatDescription(cred.getDescription())));

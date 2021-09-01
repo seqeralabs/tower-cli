@@ -205,8 +205,9 @@ public abstract class AbstractCmd implements Callable<Integer> {
     }
 
     protected String workspaceRef() throws ApiException {
+        //TODO Use a WorkspaceRef class instead of this method?
         if (workspaceId() == null) {
-            return "personal";
+            return "user";
         }
         return String.format("[%s / %s]", orgName(), workspaceName());
     }

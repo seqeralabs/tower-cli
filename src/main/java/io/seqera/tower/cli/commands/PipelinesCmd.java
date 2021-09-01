@@ -1,0 +1,24 @@
+package io.seqera.tower.cli.commands;
+
+import io.seqera.tower.cli.commands.pipelines.CreateCmd;
+import io.seqera.tower.cli.commands.pipelines.DeleteCmd;
+import io.seqera.tower.cli.commands.pipelines.ListCmd;
+import io.seqera.tower.cli.commands.pipelines.UpdateCmd;
+import io.seqera.tower.cli.commands.pipelines.ViewCmd;
+import picocli.CommandLine.Command;
+
+
+@Command(
+        name = "pipelines",
+        aliases = {"pipes"},
+        description = "Manage workspace pipelines launchpad",
+        subcommands = {
+                ListCmd.class,
+                CreateCmd.class,
+                DeleteCmd.class,
+                ViewCmd.class,
+                UpdateCmd.class
+        }
+)
+public class PipelinesCmd extends AbstractRootCmd {
+}

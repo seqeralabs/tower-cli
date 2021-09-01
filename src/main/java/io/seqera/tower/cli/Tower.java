@@ -5,6 +5,7 @@ package io.seqera.tower.cli;
 
 import io.seqera.tower.cli.commands.ComputeEnvCmd;
 import io.seqera.tower.cli.commands.CredentialsCmd;
+import io.seqera.tower.cli.commands.PipelinesCmd;
 import io.seqera.tower.cli.commands.RunCmd;
 import picocli.AutoComplete.GenerateCompletion;
 import picocli.CommandLine;
@@ -25,6 +26,7 @@ import java.util.concurrent.Callable;
         subcommands = {
                 RunCmd.class,
                 CredentialsCmd.class,
+                PipelinesCmd.class,
                 ComputeEnvCmd.class,
                 GenerateCompletion.class
         }

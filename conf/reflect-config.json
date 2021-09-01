@@ -95,6 +95,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.PipelinesCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.RunCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -389,6 +395,47 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.pipelines.AbstractPipelinesCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true
+},
+{
+  "name":"io.seqera.tower.cli.commands.pipelines.CreateCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.pipelines.DeleteCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.pipelines.LaunchOptions",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.pipelines.ListCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.pipelines.UpdateCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.pipelines.ViewCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.model.AwsBatchConfig",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -457,6 +504,18 @@
   "allDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.model.CreatePipelineRequest",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.model.CreatePipelineResponse",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.model.Credentials",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -483,7 +542,15 @@
 {
   "name":"io.seqera.tower.model.DescribeLaunchResponse",
   "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.model.DescribePipelineResponse",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
 },
 {
   "name":"io.seqera.tower.model.DescribeUserResponse",
@@ -515,6 +582,8 @@
 {
   "name":"io.seqera.tower.model.Launch",
   "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -584,6 +653,18 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.model.UpdatePipelineRequest",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.model.UpdatePipelineResponse",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.model.User",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -609,6 +690,10 @@
 },
 {
   "name":"java.lang.Class[]"
+},
+{
+  "name":"java.lang.Cloneable",
+  "allDeclaredMethods":true
 },
 {
   "name":"java.lang.Comparable",
@@ -643,6 +728,9 @@
 {
   "name":"java.lang.System",
   "methods":[{"name":"console","parameterTypes":[] }]
+},
+{
+  "name":"java.lang.annotation.Annotation[]"
 },
 {
   "name":"java.lang.reflect.AccessibleObject",
@@ -760,6 +848,15 @@
   "name":"java.util.Date"
 },
 {
+  "name":"java.util.Locale",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"java.util.Locale[]"
+},
+{
   "name":"java.util.concurrent.LinkedTransferQueue",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -782,6 +879,27 @@
   "name":"javax.security.auth.x500.X500Principal",
   "fields":[{"name":"thisX500Name"}],
   "methods":[{"name":"<init>","parameterTypes":["sun.security.x509.X500Name"] }]
+},
+{
+  "name":"javax.ws.rs.client.Entity",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"javax.ws.rs.core.MediaType",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"javax.ws.rs.core.MediaType[]"
+},
+{
+  "name":"javax.ws.rs.core.Variant",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
 },
 {
   "name":"org.glassfish.hk2.internal.PerThreadContext",

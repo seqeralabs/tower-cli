@@ -1,11 +1,11 @@
 package io.seqera.tower.cli.commands.credentials.providers;
 
-import io.seqera.tower.model.GoogleSecurityKeys;
+import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.Credentials.ProviderEnum;
+import io.seqera.tower.model.GoogleSecurityKeys;
 import picocli.CommandLine.Option;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class GoogleProvider extends AbstractProvider<GoogleSecurityKeys> {
@@ -21,6 +21,6 @@ public class GoogleProvider extends AbstractProvider<GoogleSecurityKeys> {
     public GoogleSecurityKeys securityKeys() throws IOException {
         return new GoogleSecurityKeys()
                 .provider(ProviderEnum.GOOGLE.getValue())
-                .data(Files.readString(serviceAccountKey));
+                .data(FilesHelper.readString(serviceAccountKey));
     }
 }

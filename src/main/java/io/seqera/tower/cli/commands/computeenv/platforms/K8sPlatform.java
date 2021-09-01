@@ -1,12 +1,12 @@
 package io.seqera.tower.cli.commands.computeenv.platforms;
 
+import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.ComputeEnv.PlatformEnum;
 import io.seqera.tower.model.K8sComputeConfig;
 import io.seqera.tower.model.PodCleanupPolicy;
 import picocli.CommandLine.Option;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class K8sPlatform extends AbstractPlatform<K8sComputeConfig> {
@@ -53,13 +53,13 @@ public class K8sPlatform extends AbstractPlatform<K8sComputeConfig> {
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
                 .computeServiceAccount(computeServiceAccount)
-                .headPodSpec(Files.readString(headPodSpec))
+                .headPodSpec(FilesHelper.readString(headPodSpec))
                 .headServiceAccount(headServiceAccount)
                 .namespace(namespace)
                 .podCleanup(podCleanup)
                 .server(server)
-                .servicePodSpec(Files.readString(servicePodSpec))
-                .sslCert(Files.readString(sslCert))
+                .servicePodSpec(FilesHelper.readString(servicePodSpec))
+                .sslCert(FilesHelper.readString(sslCert))
                 .storageClaimName(storageClaimName)
                 .storageMountPath(storageMountPath);
     }
