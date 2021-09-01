@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 
+import static io.seqera.tower.cli.commands.AbstractCmd.USER_WORKSPACE_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
@@ -31,7 +32,7 @@ class CreateAwsCmdTest extends BaseCmdTest {
 
         // Assert results
         assertEquals("", out.stdErr);
-        assertEquals(new CredentialsCreated("aws", "6Kyn17toiABGu47qpBXsVX", "test_credentials", "personal").toString(), out.stdOut);
+        assertEquals(new CredentialsCreated("aws", "6Kyn17toiABGu47qpBXsVX", "test_credentials", USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
 
     }

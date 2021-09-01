@@ -3,14 +3,12 @@ package io.seqera.tower.cli.commands;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.ApiClient;
 import io.seqera.tower.ApiException;
-import io.seqera.tower.Configuration;
 import io.seqera.tower.JSON;
 import io.seqera.tower.api.TowerApi;
 import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.InvalidResponseException;
 import io.seqera.tower.cli.utils.ShowUsageException;
-import io.seqera.tower.model.ComputeConfig;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.ListComputeEnvsResponseEntry;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
@@ -29,6 +27,8 @@ import java.util.logging.Logger;
 @Command(mixinStandardHelpOptions = true)
 public abstract class AbstractCmd implements Callable<Integer> {
 
+    public static final String USER_WORKSPACE_NAME = "user";
+
     public TowerApi api;
 
     private transient Long userId;
@@ -42,7 +42,7 @@ public abstract class AbstractCmd implements Callable<Integer> {
     private transient Map<String, String> availableComputeEnvsNameToId;
     private transient String primaryComputeEnvId;
 
-    public AbstractCmd() {
+    protected AbstractCmd() {
     }
 
     public abstract Tower app();
@@ -62,6 +62,7 @@ public abstract class AbstractCmd implements Callable<Integer> {
 
     private ApiClient buildApiClient() {
         return new ApiClient() {
+            @Override
             protected void performAdditionalClientConfiguration(ClientConfig clientConfig) {
                 if (app().xRay) {
                     clientConfig.register(new LoggingFeature(Logger.getLogger(LoggingFeature.DEFAULT_LOGGER_NAME), java.util.logging.Level.INFO, LoggingFeature.Verbosity.PAYLOAD_ANY, 1024 * 50 /* Log payloads up to 50K */));
@@ -207,7 +208,7 @@ public abstract class AbstractCmd implements Callable<Integer> {
     protected String workspaceRef() throws ApiException {
         //TODO Use a WorkspaceRef class instead of this method?
         if (workspaceId() == null) {
-            return "user";
+            return USER_WORKSPACE_NAME;
         }
         return String.format("[%s / %s]", orgName(), workspaceName());
     }

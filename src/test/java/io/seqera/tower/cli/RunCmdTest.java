@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 
+import static io.seqera.tower.cli.commands.AbstractCmd.USER_WORKSPACE_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
@@ -103,7 +104,7 @@ class RunCmdTest extends BaseCmdTest {
 
         // Assert results
         assertEquals(
-                new RunSubmited("35aLiS0bIM5efd", String.format("%s/user/jordi/watch/35aLiS0bIM5efd", url(mock)), "personal").toString(),
+                new RunSubmited("35aLiS0bIM5efd", String.format("%s/user/jordi/watch/35aLiS0bIM5efd", url(mock)), USER_WORKSPACE_NAME).toString(),
                 out.stdOut
         );
         assertEquals("", out.stdErr);
