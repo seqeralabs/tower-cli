@@ -28,7 +28,7 @@ class CreateAwsCmdTest extends BaseCmdTest {
         );
 
         // Run the command
-        ExecOut out = exec(mock,  "creds", "create", "aws", "--name=test_credentials", "--assume-role-arn=arn_role");
+        ExecOut out = exec(mock,  "credentials", "create", "aws", "--name=test_credentials", "--assume-role-arn=arn_role");
 
         // Assert results
         assertEquals("", out.stdErr);
