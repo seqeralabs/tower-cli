@@ -12,7 +12,6 @@ import picocli.CommandLine.Command;
 
 @Command(
         name = "update",
-        aliases = "u",
         description = "Update new workspace credentials",
         subcommands = {
                 UpdateAwsCmd.class,

@@ -8,7 +8,6 @@ import picocli.CommandLine.Command;
 
 @Command(
         name = "delete",
-        aliases = "d",
         description = "Delete workspace credentials"
 )
 public class DeleteCmd extends AbstractCredentialsCmd {

@@ -23,7 +23,6 @@ import java.io.IOException;
 
 @Command(
         name = "update",
-        aliases = "u",
         description = "Update a workspace pipeline"
 )
 public class UpdateCmd extends AbstractPipelinesCmd {

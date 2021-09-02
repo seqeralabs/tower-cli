@@ -17,7 +17,6 @@ import java.io.IOException;
 
 @Command(
         name = "create",
-        aliases = "c",
         description = "Create a workspace pipeline"
 )
 public class CreateCmd extends AbstractPipelinesCmd {

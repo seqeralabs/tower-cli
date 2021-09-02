@@ -8,7 +8,6 @@ import picocli.CommandLine.Command;
 
 @Command(
         name = "create",
-        aliases = "c",
         description = "Create new compute environment",
         subcommands = {
                 CreateK8sCmd.class,

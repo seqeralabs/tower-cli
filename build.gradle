@@ -56,7 +56,7 @@ graal {
     option '--allow-incomplete-classpath'
     option '--report-unsupported-elements-at-runtime'
     option '-H:+AddAllCharsets'
-    option '-H:EnableURLProtocols=https'
+    option '-H:EnableURLProtocols=https,http'
     option '-H:ConfigurationFileDirectories=conf/'
     option '-H:+ReportExceptionStackTraces'
 }

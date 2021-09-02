@@ -9,7 +9,6 @@ import picocli.CommandLine.Command;
 
 @Command(
         name = "credentials",
-        aliases = {"creds"},
         description = "Manage workspace credentials",
         subcommands = {
                 CreateCmd.class,

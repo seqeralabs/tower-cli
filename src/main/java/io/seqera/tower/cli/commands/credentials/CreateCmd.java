@@ -12,7 +12,6 @@ import picocli.CommandLine.Command;
 
 @Command(
         name = "create",
-        aliases = "c",
         description = "Create new workspace credentials",
         subcommands = {
                 CreateAwsCmd.class,

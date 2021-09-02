@@ -14,7 +14,6 @@ import picocli.CommandLine.Option;
 
 @Command(
         name = "view",
-        aliases = "v",
         description = "View pipeline details"
 )
 public class ViewCmd extends AbstractPipelinesCmd {
