@@ -14,6 +14,6 @@ public class PipelinesCreated extends Response {
 
     @Override
     public String toString() {
-        return ansi(String.format("%n  @|yellow New pipeline '(%s) %s' added at %s workspace|@%n", pipeline.getRepository(), pipeline.getName(), workspaceRef));
+        return ansi(String.format("%n  @|yellow New pipeline '%s' added at %s workspace|@%n", pipeline.getName(), workspaceRef));
     }
 }

@@ -24,10 +24,10 @@ import static io.seqera.tower.cli.utils.ModelHelper.createLaunchRequest;
 @Command(name = "run", description = "Run a Nextflow pipeline")
 public class RunCmd extends AbstractRootCmd {
 
-    @Parameters(index = "0", paramLabel = "PIPELINE_OR_URL", description = "Workspace pipeline name or full pipeline URL")
+    @Parameters(index = "0", paramLabel = "PIPELINE_OR_URL", description = "Workspace pipeline name or full pipeline URL", arity = "1")
     String pipeline;
 
-    @Option(names = {"-f", "--params-file"}, description = "Parameters file")
+    @Option(names = {"--params"}, description = "Parameters file")
     Path paramsFile;
 
     @Option(names = {"-c", "--compute-env"}, description = "Compute environment name (defaults to workspace primary)")
