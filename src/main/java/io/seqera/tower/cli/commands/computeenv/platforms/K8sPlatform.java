@@ -4,6 +4,7 @@ import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.ComputeEnv.PlatformEnum;
 import io.seqera.tower.model.K8sComputeConfig;
 import io.seqera.tower.model.PodCleanupPolicy;
+import picocli.CommandLine;
 import picocli.CommandLine.Option;
 
 import java.io.IOException;
@@ -26,20 +27,25 @@ public class K8sPlatform extends AbstractPlatform<K8sComputeConfig> {
     @Option(names = {"--storage-claim"}, description = "Storage claim name")
     public String storageClaim;
 
-    @Option(names = {"--compute-account"}, description = "Compute service account")
-    public String computeAccount;
+    @CommandLine.ArgGroup(heading = "%nAdvanced options:%n", validate = false)
+    public K8sPlatform.AdvancedOptions adv;
 
-    @Option(names = {"--storage-mount"}, description = "Storage mount path")
-    public String storageMount;
+    public static class AdvancedOptions {
+        @Option(names = {"--storage-mount"}, description = "Storage mount path")
+        public String storageMount;
 
-    @Option(names = {"--service-pod-spec"}, description = "Custom service pod specs file")
-    public Path servicePodSpec;
+        @Option(names = {"--compute-account"}, description = "Compute service account")
+        public String computeAccount;
 
-    @Option(names = {"--head-pod-spec"}, description = "Custom head pod specs file")
-    public Path headPodSpec;
+        @Option(names = "--pod-cleanup", description = "Pod cleanup policy (ON_SUCCESS, ALWAYS, NEVER)")
+        public PodCleanupPolicy podCleanup;
 
-    @Option(names = "--pod-cleanup", description = "Pod cleanup policy (${COMPLETION-CANDIDATES})")
-    public PodCleanupPolicy podCleanup;
+        @Option(names = {"--head-pod-spec"}, description = "Custom head pod specs file")
+        public Path headPodSpec;
+
+        @Option(names = {"--service-pod-spec"}, description = "Custom service pod specs file")
+        public Path servicePodSpec;
+    }
 
     public K8sPlatform() {
         super(PlatformEnum.K8S_PLATFORM);
@@ -52,15 +58,22 @@ public class K8sPlatform extends AbstractPlatform<K8sComputeConfig> {
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
-                .computeServiceAccount(computeAccount)
-                .headPodSpec(FilesHelper.readString(headPodSpec))
+                .computeServiceAccount(adv().computeAccount)
+                .headPodSpec(FilesHelper.readString(adv().headPodSpec))
                 .headServiceAccount(headAccount)
                 .namespace(namespace)
-                .podCleanup(podCleanup)
+                .podCleanup(adv().podCleanup)
                 .server(server)
-                .servicePodSpec(FilesHelper.readString(servicePodSpec))
+                .servicePodSpec(FilesHelper.readString(adv().servicePodSpec))
                 .sslCert(FilesHelper.readString(sslCert))
                 .storageClaimName(storageClaim)
-                .storageMountPath(storageMount);
+                .storageMountPath(adv().storageMount);
+    }
+
+    private AdvancedOptions adv() {
+        if (adv == null) {
+            return new K8sPlatform.AdvancedOptions();
+        }
+        return adv;
     }
 }

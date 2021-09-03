@@ -2,6 +2,7 @@ package io.seqera.tower.cli.commands.computeenv;
 
 import io.seqera.tower.cli.commands.computeenv.create.CreateAwsCmd;
 import io.seqera.tower.cli.commands.computeenv.create.CreateAwsManualCmd;
+import io.seqera.tower.cli.commands.computeenv.create.CreateEksCmd;
 import io.seqera.tower.cli.commands.computeenv.create.CreateJsonCmd;
 import io.seqera.tower.cli.commands.computeenv.create.CreateK8sCmd;
 import picocli.CommandLine.Command;
@@ -13,7 +14,8 @@ import picocli.CommandLine.Command;
                 CreateK8sCmd.class,
                 CreateAwsCmd.class,
                 CreateAwsManualCmd.class,
-                CreateJsonCmd.class
+                CreateJsonCmd.class,
+                CreateEksCmd.class
         }
 )
 public class CreateCmd extends AbstractComputeEnvCmd {
