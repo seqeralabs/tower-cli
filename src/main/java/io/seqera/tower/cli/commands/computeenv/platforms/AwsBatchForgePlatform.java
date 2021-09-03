@@ -95,7 +95,7 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
         @Option(names = {"--key-pair"}, description = "The EC2 key pair to be installed in the compute nodes to access via SSH.")
         public String keyPair;
 
-        @Option(names = {"--min-cpus"}, description = "The minimum number of CPUs provisioned in this environment that will remain active and you will be billed regardless of whether you are running any workloads", required = true, defaultValue = "0")
+        @Option(names = {"--min-cpus"}, description = "The minimum number of CPUs provisioned in this environment that will remain active and you will be billed regardless of whether you are running any workloads")
         public Integer minCpus;
 
         @Option(names = {"--head-job-cpus"}, description = "The number of CPUs to be allocated for the Nextflow runner job")
@@ -161,7 +161,7 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
                 .securityGroups(adv().securityGroups)
                 .imageId(adv().amiId)
                 .ec2KeyPair(adv().keyPair)
-                .minCpus(adv().minCpus)
+                .minCpus(adv().minCpus == null ? 0 : adv().minCpus)
                 .ebsBlockSize(adv().ebsBlockSize)
                 .bidPercentage(adv().bidPercentage);
 
