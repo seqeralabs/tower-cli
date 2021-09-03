@@ -4,6 +4,7 @@
 package io.seqera.tower.cli;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.junit.jupiter.MockServerExtension;
@@ -69,8 +70,8 @@ public abstract class BaseCmdTest {
         int exitCode = cmd.execute(ArrayUtils.insert(0, args, String.format("--url=%s", url(mock)), String.format("--access-token=%s", token())));
 
         return new ExecOut()
-                .stdOut(stdOut.toString().trim())
-                .stdErr(stdErr.toString().trim())
+                .stdOut(StringUtils.chop(stdOut.toString()))
+                .stdErr(StringUtils.chop(stdErr.toString()))
                 .exitCode(exitCode);
     }
 
