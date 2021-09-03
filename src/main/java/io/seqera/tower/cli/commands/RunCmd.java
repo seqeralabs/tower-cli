@@ -30,7 +30,7 @@ public class RunCmd extends AbstractRootCmd {
     @Option(names = {"-f", "--params-file"}, description = "Parameters file")
     Path paramsFile;
 
-    @Option(names = {"-c", "--compute-env"}, description = "Compute environment name")
+    @Option(names = {"-c", "--compute-env"}, description = "Compute environment name (defaults to workspace primary)")
     String computeEnv;
 
     @Option(names = {"-w", "--work-dir"}, description = "Working directory")

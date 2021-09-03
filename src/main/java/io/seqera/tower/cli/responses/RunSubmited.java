@@ -16,7 +16,7 @@ public class RunSubmited extends Response {
 
     @Override
     public String toString() {
-        return String.format("Workflow %s submitted at %s workspace. Check it here:%n%s", workflowId, workspaceRef, workflowUrl);
+        return ansi(String.format("%n  @|yellow Workflow %s submitted at %s workspace.|@%n%n    @|bold %s|@%n", workflowId, workspaceRef, workflowUrl));
     }
 
 }

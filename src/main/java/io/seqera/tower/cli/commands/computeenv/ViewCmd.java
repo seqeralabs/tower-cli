@@ -16,14 +16,11 @@ public class ViewCmd extends AbstractComputeEnvCmd {
     @Option(names = {"-i", "--id"}, description = "Compute environment identifier", required = true)
     public String id;
 
-    @Option(names = {"--config"}, description = "Show a config JSON")
-    public boolean config;
-
     @Override
     protected Response exec() throws ApiException {
         try {
             DescribeComputeEnvResponse response = api().describeComputeEnv(id, workspaceId());
-            return new ComputeEnvView(id, workspaceRef(), response.getComputeEnv(), config);
+            return new ComputeEnvView(id, workspaceRef(), response.getComputeEnv());
         } catch (ApiException e) {
             if (e.getCode() == 403) {
                 // Customize the forbidden message

@@ -4,22 +4,23 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.JSON;
 import io.seqera.tower.cli.commands.computeenv.platforms.AwsBatchForgePlatform;
 import io.seqera.tower.cli.commands.computeenv.platforms.AwsBatchManualPlatform;
+import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.AwsBatchConfig;
 import io.seqera.tower.model.ComputeConfig;
 import io.seqera.tower.model.ComputeEnv;
+
+import java.io.PrintWriter;
 
 public class ComputeEnvView extends Response {
 
     private String id;
     private ComputeEnv computeEnv;
     private String workspaceRef;
-    private boolean showConfig;
 
-    public ComputeEnvView(String id, String workspaceRef, ComputeEnv computeEnv, boolean showConfig) {
+    public ComputeEnvView(String id, String workspaceRef, ComputeEnv computeEnv) {
         this.id = id;
         this.computeEnv = computeEnv;
         this.workspaceRef = workspaceRef;
-        this.showConfig = showConfig;
     }
 
     @Override
@@ -28,29 +29,34 @@ public class ComputeEnvView extends Response {
     }
 
     @Override
-    public String toString() {
+    public void toString(PrintWriter out) {
         String configJson = "";
 
-        if (this.showConfig) {
-
-            // Remove forged resources
-            ComputeConfig config = computeEnv.getConfig();
-            if (config instanceof AwsBatchConfig) {
-                AwsBatchConfig awsCfg = (AwsBatchConfig) config;
-                if (awsCfg.getForge() != null) {
-                    AwsBatchForgePlatform.clean(awsCfg);
-                } else {
-                    AwsBatchManualPlatform.clean(awsCfg);
-                }
-            }
-
-            try {
-                configJson = new JSON().getContext(ComputeConfig.class).writerWithDefaultPrettyPrinter().writeValueAsString(config);
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
+        // Remove forged resources
+        ComputeConfig config = computeEnv.getConfig();
+        if (config instanceof AwsBatchConfig) {
+            AwsBatchConfig awsCfg = (AwsBatchConfig) config;
+            if (awsCfg.getForge() != null) {
+                AwsBatchForgePlatform.clean(awsCfg);
+            } else {
+                AwsBatchManualPlatform.clean(awsCfg);
             }
         }
 
-        return String.format("Compute environment '%s' at %s workspace.%n%s", id, workspaceRef, configJson);
+        try {
+            configJson = new JSON().getContext(ComputeConfig.class).writerWithDefaultPrettyPrinter().writeValueAsString(config);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        out.println(ansi(String.format("%n  @|bold Compute environment at %s workspace:|@%n", workspaceRef)));
+        TableList table = new TableList(out, 2).withUnicode(false);
+        table.setPrefix("    ");
+        table.addRow("ID", id);
+        table.addRow("Name", computeEnv.getName());
+        table.addRow("Platform", computeEnv.getPlatform().getValue());
+        table.print();
+
+        out.println(String.format("%n  Configuration:%n%n%s%n", configJson.replaceAll("(?m)^", "     ")));
     }
 }

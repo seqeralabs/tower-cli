@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.JSON;
 import io.seqera.tower.cli.commands.computeenv.platforms.AwsBatchForgePlatform;
 import io.seqera.tower.cli.utils.ModelHelper;
+import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.AwsBatchConfig;
 import io.seqera.tower.model.ComputeConfig;
 import io.seqera.tower.model.ComputeEnv;
@@ -11,34 +12,40 @@ import io.seqera.tower.model.Launch;
 import io.seqera.tower.model.PipelineDbDto;
 import io.seqera.tower.model.WorkflowLaunchRequest;
 
+import java.io.PrintWriter;
+
 public class PipelinesView extends Response {
 
     private String workspaceRef;
     private PipelineDbDto info;
     private Launch launch;
-    private boolean showConfig;
 
-    public PipelinesView(String workspaceRef, PipelineDbDto info, Launch launch, boolean showConfig) {
+    public PipelinesView(String workspaceRef, PipelineDbDto info, Launch launch) {
         this.workspaceRef = workspaceRef;
         this.info = info;
         this.launch = launch;
-        this.showConfig = showConfig;
     }
 
     @Override
-    public String toString() {
+    public void toString(PrintWriter out) {
         String configJson = "";
-
-        if (this.showConfig) {
-
-            try {
-                WorkflowLaunchRequest request = ModelHelper.createLaunchRequest(launch);
-                configJson = new JSON().getContext(WorkflowLaunchRequest.class).writerWithDefaultPrettyPrinter().writeValueAsString(request);
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
+        try {
+            WorkflowLaunchRequest request = ModelHelper.createLaunchRequest(launch);
+            configJson = new JSON().getContext(WorkflowLaunchRequest.class).writerWithDefaultPrettyPrinter().writeValueAsString(request);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
         }
 
-        return String.format("Pipeline '%s' at %s workspace.%n%s", info.getName(), workspaceRef, configJson);
+        out.println(ansi(String.format("%n  @|bold Pipeline at %s workspace:|@%n", workspaceRef)));
+        TableList table = new TableList(out, 2).withUnicode(false);
+        table.setPrefix("    ");
+        table.addRow("ID", info.getPipelineId().toString());
+        table.addRow("Name", info.getName());
+        table.addRow("Description", info.getDescription());
+        table.addRow("Repository", info.getRepository());
+        table.addRow("Compute env.", launch.getComputeEnv().getName());
+        table.print();
+
+        out.println(String.format("%n  Configuration:%n%n%s%n", configJson.replaceAll("(?m)^", "     ")));
     }
 }

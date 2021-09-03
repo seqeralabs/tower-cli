@@ -15,13 +15,11 @@ import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import io.seqera.tower.model.User;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.logging.LoggingFeature;
-import picocli.CommandLine.Command;
 
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.logging.Logger;
 
 public abstract class AbstractApiCmd extends AbstractCmd {
@@ -212,11 +210,11 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         return String.format("[%s / %s]", orgName(), workspaceName());
     }
 
-    protected void println(String line) {
+    private void println(String line) {
         app().println(line);
     }
 
-    protected void printerr(String line) {
+    private void printerr(String line) {
         app().printerr(line);
     }
 
@@ -227,7 +225,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
             if (app().json) {
                 println(prettyJson(response.getBody()));
             } else {
-                println(response.toString());
+                response.toString(app().getOut());
             }
             return 0;
         } catch (ShowUsageException e) {

@@ -21,14 +21,11 @@ public class ViewCmd extends AbstractPipelinesCmd {
     @Option(names = {"-n", "--name"}, description = "Pipeline name", required = true)
     public String name;
 
-    @Option(names = {"--config"}, description = "Show a config JSON")
-    public boolean config;
-
     @Override
     protected Response exec() throws ApiException {
         PipelineDbDto pipe = pipelineByName(name);
         DescribeLaunchResponse resp = api().describePipelineLaunch(pipe.getPipelineId(), workspaceId());
-        return new PipelinesView(workspaceRef(), pipe, resp.getLaunch(), config);
+        return new PipelinesView(workspaceRef(), pipe, resp.getLaunch());
     }
 
 

@@ -14,6 +14,6 @@ public class CredentialsUpdated extends Response {
 
     @Override
     public String toString() {
-        return String.format("%S credentials '%s' updated at %s workspace", provider, name, workspaceRef);
+        return ansi(String.format("%n  @|yellow %S credentials '%s' updated at %s workspace|@%n", provider, name, workspaceRef));
     }
 }

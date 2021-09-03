@@ -16,6 +16,6 @@ public class CredentialsCreated extends Response {
 
     @Override
     public String toString() {
-        return String.format("New %S credentials '%s (%s)' added at %s workspace", provider, name, id, workspaceRef);
+        return ansi(String.format("%n  @|yellow New %S credentials '%s (%s)' added at %s workspace|@%n", provider, name, id, workspaceRef));
     }
 }

@@ -18,6 +18,6 @@ public class ListCmd extends AbstractComputeEnvCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
         ListComputeEnvsResponse response = api().listComputeEnvs(null, workspaceId());
-        return new ComputeEnvList(response.getComputeEnvs());
+        return new ComputeEnvList(workspaceRef(), response.getComputeEnvs());
     }
 }

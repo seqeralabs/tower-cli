@@ -12,6 +12,6 @@ public class PipelinesDeleted extends Response {
 
     @Override
     public String toString() {
-        return String.format("Pipeline '%s' deleted at %s workspace", id, workspaceRef);
+        return ansi(String.format("%n  @|yellow Pipeline '%s' deleted at %s workspace|@%n", id, workspaceRef));
     }
 }

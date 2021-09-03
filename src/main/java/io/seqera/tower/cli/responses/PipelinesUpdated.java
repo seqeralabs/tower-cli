@@ -14,6 +14,6 @@ public class PipelinesUpdated extends Response {
 
     @Override
     public String toString() {
-        return String.format("Pipeline '(%s) %s' updated at %s workspace", pipeline.getRepository(), pipeline.getName(), workspaceRef);
+        return ansi(String.format("%n  @|yellow Pipeline '%s' updated at %s workspace|@%n", pipeline.getName(), workspaceRef));
     }
 }

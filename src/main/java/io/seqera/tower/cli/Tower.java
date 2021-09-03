@@ -16,6 +16,7 @@ import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
 
+import java.io.PrintWriter;
 import java.util.concurrent.Callable;
 
 
@@ -85,5 +86,13 @@ public class Tower extends AbstractCmd {
 
     public void printerr(String content) {
         spec.commandLine().getErr().println(content);
+    }
+
+    public PrintWriter getErr() {
+        return spec.commandLine().getErr();
+    }
+
+    public PrintWriter getOut() {
+        return spec.commandLine().getOut();
     }
 }

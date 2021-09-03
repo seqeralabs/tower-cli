@@ -23,6 +23,6 @@ public class ListCmd extends AbstractPipelinesCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
         ListPipelinesResponse response = api().listPipelines(workspaceId(), null, null, filter);
-        return new PipelinesList(response.getPipelines());
+        return new PipelinesList(workspaceRef(), response.getPipelines());
     }
 }

@@ -14,6 +14,6 @@ public class ComputeEnvCreated extends Response {
 
     @Override
     public String toString() {
-        return String.format("New %S compute environment '%s' added at %s workspace", platform, name, workspaceRef);
+        return ansi(String.format("%n  @|yellow New %S compute environment '%s' added at %s workspace|@%n", platform, name, workspaceRef));
     }
 }
