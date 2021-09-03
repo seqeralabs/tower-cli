@@ -55,6 +55,9 @@ public class ComputeEnvView extends Response {
         table.addRow("ID", id);
         table.addRow("Name", computeEnv.getName());
         table.addRow("Platform", computeEnv.getPlatform().getValue());
+        table.addRow("Last updated", formatTime(computeEnv.getLastUpdated()));
+        table.addRow("Last activity", formatTime(computeEnv.getLastUsed()));
+        table.addRow("Created", formatTime(computeEnv.getDateCreated()));
         table.print();
 
         out.println(String.format("%n  Configuration:%n%n%s%n", configJson.replaceAll("(?m)^", "     ")));

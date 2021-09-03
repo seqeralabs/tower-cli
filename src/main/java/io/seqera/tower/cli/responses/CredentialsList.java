@@ -26,9 +26,9 @@ public class CredentialsList extends Response {
             return;
         }
 
-        TableList table = new TableList(out, 4, "ID", "Provider", "Name", "Description").sortBy(0).withUnicode(false);
+        TableList table = new TableList(out, 4, "ID", "Provider", "Name", "Last activity").sortBy(0).withUnicode(false);
         table.setPrefix("    ");
-        credentials.forEach(element -> table.addRow(element.getId(), element.getProvider().getValue(), element.getName(), element.getDescription()));
+        credentials.forEach(element -> table.addRow(element.getId(), element.getProvider().getValue(), element.getName(), formatTime(element.getLastUsed())));
 
         table.print();
         out.println("");

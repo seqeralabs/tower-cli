@@ -26,9 +26,9 @@ public class ComputeEnvList extends Response {
             return;
         }
 
-        TableList table = new TableList(out, 3, "ID", "Platform", "Name").sortBy(0).withUnicode(false);
+        TableList table = new TableList(out, 4, "ID", "Platform", "Name", "Last activity").sortBy(0).withUnicode(false);
         table.setPrefix("    ");
-        computeEnvs.forEach(ce -> table.addRow(ce.getId(), ce.getPlatform(), ce.getName()));
+        computeEnvs.forEach(ce -> table.addRow(ce.getId(), ce.getPlatform(), ce.getName(), formatTime(ce.getLastUsed())));
         table.print();
         out.println("");
     }
