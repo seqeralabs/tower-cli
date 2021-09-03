@@ -11,7 +11,6 @@ import io.seqera.tower.model.ComputeConfig;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.CreateComputeEnvRequest;
 import io.seqera.tower.model.Credentials;
-import io.seqera.tower.model.ListCredentialsResponse;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.ParentCommand;
@@ -43,7 +42,7 @@ public abstract class AbstractCreateCmd extends AbstractApiCmd {
 
     protected ComputeEnvCreated createComputeEnv(ComputeConfig config) throws ApiException {
 
-        String credsId = credentialsId == null ? findWorkspaceCredentials(getPlatform().credentialsType()) : credentialsId;
+        String credsId = credentialsId == null ? findWorkspaceCredentials(getPlatform().type()) : credentialsId;
 
         api().createComputeEnv(
                 new CreateComputeEnvRequest().computeEnv(
@@ -58,7 +57,7 @@ public abstract class AbstractCreateCmd extends AbstractApiCmd {
         return new ComputeEnvCreated(config.getPlatform(), name, workspaceRef());
     }
 
-    private String findWorkspaceCredentials(Credentials.ProviderEnum type) throws ApiException {
+    private String findWorkspaceCredentials(ComputeEnv.PlatformEnum type) throws ApiException {
         List<Credentials> credentials = api().listCredentials(workspaceId(), type.getValue()).getCredentials();
         if (credentials.isEmpty()) {
             throw new ApiException("No valid credentials found at the workspace");

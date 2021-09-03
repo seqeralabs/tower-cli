@@ -2,7 +2,6 @@ package io.seqera.tower.cli.commands.computeenv.platforms;
 
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.ComputeEnv.PlatformEnum;
-import io.seqera.tower.model.Credentials;
 import io.seqera.tower.model.K8sComputeConfig;
 import io.seqera.tower.model.PodCleanupPolicy;
 import picocli.CommandLine.Option;
@@ -44,11 +43,6 @@ public class K8sPlatform extends AbstractPlatform<K8sComputeConfig> {
 
     public K8sPlatform() {
         super(PlatformEnum.K8S_PLATFORM);
-    }
-
-    @Override
-    public Credentials.ProviderEnum credentialsType() {
-        return Credentials.ProviderEnum.K8S;
     }
 
     @Override
