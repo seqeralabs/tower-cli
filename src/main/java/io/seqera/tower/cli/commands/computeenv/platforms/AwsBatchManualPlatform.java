@@ -2,6 +2,7 @@ package io.seqera.tower.cli.commands.computeenv.platforms;
 
 import io.seqera.tower.model.AwsBatchConfig;
 import io.seqera.tower.model.ComputeEnv.PlatformEnum;
+import io.seqera.tower.model.Credentials;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Option;
 
@@ -40,6 +41,11 @@ public class AwsBatchManualPlatform extends AbstractPlatform<AwsBatchConfig> {
 
     public AwsBatchManualPlatform() {
         super(PlatformEnum.AWS_BATCH);
+    }
+
+    @Override
+    public Credentials.ProviderEnum credentialsType() {
+        return Credentials.ProviderEnum.AWS;
     }
 
     @Override

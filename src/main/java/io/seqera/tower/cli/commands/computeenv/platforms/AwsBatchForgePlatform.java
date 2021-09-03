@@ -3,6 +3,7 @@ package io.seqera.tower.cli.commands.computeenv.platforms;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.model.AwsBatchConfig;
 import io.seqera.tower.model.ComputeEnv.PlatformEnum;
+import io.seqera.tower.model.Credentials;
 import io.seqera.tower.model.ForgeConfig;
 import io.seqera.tower.model.ForgeConfig.AllocStrategyEnum;
 import io.seqera.tower.model.ForgeConfig.TypeEnum;
@@ -123,6 +124,11 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
 
     public AwsBatchForgePlatform() {
         super(PlatformEnum.AWS_BATCH);
+    }
+
+    @Override
+    public Credentials.ProviderEnum credentialsType() {
+        return Credentials.ProviderEnum.AWS;
     }
 
     @Override
