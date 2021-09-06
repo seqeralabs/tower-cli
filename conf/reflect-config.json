@@ -176,6 +176,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.computeenv.create.CreateLsfCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.computeenv.create.CreateSlurmCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -242,6 +248,17 @@
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenv.platforms.K8sPlatform$AdvancedOptions",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true
+},
+{
+  "name":"io.seqera.tower.cli.commands.computeenv.platforms.LsfPlatform",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.computeenv.platforms.LsfPlatform$AdvancedOptions",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
 },
@@ -507,6 +524,11 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.model.AbstractGridConfig",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true
+},
+{
   "name":"io.seqera.tower.model.AwsBatchConfig",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -688,6 +710,12 @@
   "name":"io.seqera.tower.model.ListWorkspacesAndOrgResponse",
   "allDeclaredFields":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.model.LsfComputeConfig",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
 },
 {
   "name":"io.seqera.tower.model.OrgAndWorkspaceDbDto",
