@@ -1,5 +1,6 @@
 package io.seqera.tower.cli.commands.computeenv;
 
+import io.seqera.tower.cli.commands.computeenv.create.CreateAltairCmd;
 import io.seqera.tower.cli.commands.computeenv.create.CreateAwsCmd;
 import io.seqera.tower.cli.commands.computeenv.create.CreateAwsManualCmd;
 import io.seqera.tower.cli.commands.computeenv.create.CreateEksCmd;
@@ -21,7 +22,8 @@ import picocli.CommandLine.Command;
                 CreateEksCmd.class,
                 CreateSlurmCmd.class,
                 CreateLsfCmd.class,
-                CreateUgeCmd.class
+                CreateUgeCmd.class,
+                CreateAltairCmd.class
         }
 )
 public class CreateCmd extends AbstractComputeEnvCmd {

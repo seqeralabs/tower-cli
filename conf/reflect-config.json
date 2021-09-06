@@ -146,6 +146,12 @@
   "allDeclaredMethods":true
 },
 {
+  "name":"io.seqera.tower.cli.commands.computeenv.create.CreateAltairCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.computeenv.create.CreateAwsCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
