@@ -21,8 +21,8 @@ import java.util.List;
 
 import static io.seqera.tower.cli.utils.ModelHelper.createLaunchRequest;
 
-@Command(name = "run", description = "Run a Nextflow pipeline")
-public class RunCmd extends AbstractRootCmd {
+@Command(name = "launch", description = "Run a Nextflow pipeline")
+public class LaunchCmd extends AbstractRootCmd {
 
     @Parameters(index = "0", paramLabel = "PIPELINE_OR_URL", description = "Workspace pipeline name or full pipeline URL", arity = "1")
     String pipeline;
@@ -39,7 +39,7 @@ public class RunCmd extends AbstractRootCmd {
     @Option(names = {"-p", "--profile"}, split = ",", description = "Configuration profiles")
     List<String> profile;
 
-    public RunCmd() {
+    public LaunchCmd() {
     }
 
     @Override

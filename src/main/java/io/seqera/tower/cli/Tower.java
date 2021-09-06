@@ -7,7 +7,7 @@ import io.seqera.tower.cli.commands.AbstractCmd;
 import io.seqera.tower.cli.commands.ComputeEnvCmd;
 import io.seqera.tower.cli.commands.CredentialsCmd;
 import io.seqera.tower.cli.commands.PipelinesCmd;
-import io.seqera.tower.cli.commands.RunCmd;
+import io.seqera.tower.cli.commands.LaunchCmd;
 import picocli.AutoComplete.GenerateCompletion;
 import picocli.CommandLine;
 import picocli.CommandLine.ArgGroup;
@@ -17,7 +17,6 @@ import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
 
 import java.io.PrintWriter;
-import java.util.concurrent.Callable;
 
 
 @Command(
@@ -25,7 +24,7 @@ import java.util.concurrent.Callable;
         description = "Nextflow Tower CLI",
         version = "Tower 0.1.0",
         subcommands = {
-                RunCmd.class,
+                LaunchCmd.class,
                 CredentialsCmd.class,
                 PipelinesCmd.class,
                 ComputeEnvCmd.class,

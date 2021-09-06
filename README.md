@@ -95,17 +95,17 @@ towr pipelines create -n sleep_one_minute --params=<(echo 'timeout: 60') https:/
 
 Run it!
 ```
-towr run sleep_one_minute
+towr launch sleep_one_minute
 ```
 
 Run it with different parameters
 ```
-towr run sleep_one_minute --params=<(echo 'timeout: 30')
+towr launch sleep_one_minute --params=<(echo 'timeout: 30')
 ```
 
-Directly run a Github pipeline not defined at launchpad
+Directly launch a Github pipeline not defined at launchpad
 ```
-towr run nextflow-io/hello
+towr launch nextflow-io/hello
 ```
 
 Update a launchpad pipeline
@@ -113,26 +113,26 @@ Update a launchpad pipeline
 towr pipelines update -n sleep_one_minute --params=<(echo 'timeout: 30')
 ```
 
-## Run usage examples
+## Launch usage examples
 
 Run a workspace defined pipeline with custom parameters file:
 ```
-towr run sarek --params ./myparams.yaml
+towr launch sarek --params ./myparams.yaml
 ```
 
 Run any Nextflow pipeline using the primary compute environment:
 ```
-towr run nextflow-io/hello 
+towr launch nextflow-io/hello 
 ```
 
 Run any Nextflow pipeline setting a profile.
 ```
-towr run nf-core/sarek --profile test,docker --params ./myparams.yaml
+towr launch nf-core/sarek --profile test,docker --params ./myparams.yaml
 ```
 
 Select the compute environment that you want to use:
 ```
-towr run nf-core/sarek --compute-env "aws seqera" --profile test,docker
+towr launch nf-core/sarek --compute-env "aws seqera" --profile test,docker
 ```
 
 
