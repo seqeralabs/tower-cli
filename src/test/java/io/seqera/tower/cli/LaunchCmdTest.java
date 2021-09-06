@@ -14,7 +14,7 @@ import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
-class RunCmdTest extends BaseCmdTest {
+class LaunchCmdTest extends BaseCmdTest {
 
     @Test
     void testInvalidAuth(MockServerClient mock) {
@@ -27,7 +27,7 @@ class RunCmdTest extends BaseCmdTest {
         );
 
         // Run the command
-        ExecOut out = exec(mock, "run", "hello");
+        ExecOut out = exec(mock, "launch", "hello");
 
         // Assert results
         assertEquals(String.format("[401] Unauthorized"), out.stdErr);
@@ -46,7 +46,7 @@ class RunCmdTest extends BaseCmdTest {
         );
 
         // Run the command
-        ExecOut out = exec(mock, "run", "hello");
+        ExecOut out = exec(mock, "launch", "hello");
 
         // Assert results
         assertEquals("Pipeline 'hello' not found on this workspace.", out.stdErr);
@@ -64,7 +64,7 @@ class RunCmdTest extends BaseCmdTest {
         );
 
         // Run the command
-        ExecOut out = exec(mock, "run", "hello");
+        ExecOut out = exec(mock, "launch", "hello");
 
         // Assert results
         assertEquals("Multiple pipelines match 'hello'", out.stdErr);
@@ -100,7 +100,7 @@ class RunCmdTest extends BaseCmdTest {
         );
 
         // Run the command
-        ExecOut out = exec(mock, "run", "sarek");
+        ExecOut out = exec(mock, "launch", "sarek");
 
         // Assert results
         assertEquals(

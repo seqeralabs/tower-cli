@@ -170,6 +170,18 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.computeenv.create.CreateAzureCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.computeenv.create.CreateAzureManualCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.computeenv.create.CreateEksCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -256,6 +268,28 @@
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenv.platforms.AwsBatchManualPlatform$AdvancedOptions",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true
+},
+{
+  "name":"io.seqera.tower.cli.commands.computeenv.platforms.AzBatchForgePlatform",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.computeenv.platforms.AzBatchForgePlatform$AdvancedOptions",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true
+},
+{
+  "name":"io.seqera.tower.cli.commands.computeenv.platforms.AzBatchManualPlatform",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.computeenv.platforms.AzBatchManualPlatform$AdvancedOptions",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
 },
@@ -604,8 +638,16 @@
   "allDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.model.AzBatchConfig",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.model.AzBatchForgeConfig",
   "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -728,6 +770,17 @@
 },
 {
   "name":"io.seqera.tower.model.ForgeConfig$TypeEnum",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true
+},
+{
+  "name":"io.seqera.tower.model.GoogleLifeSciencesConfig",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.model.JobCleanupPolicy",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
 },

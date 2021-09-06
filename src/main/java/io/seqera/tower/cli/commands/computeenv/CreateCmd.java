@@ -4,6 +4,7 @@ import io.seqera.tower.cli.commands.computeenv.create.CreateAltairCmd;
 import io.seqera.tower.cli.commands.computeenv.create.CreateAwsCmd;
 import io.seqera.tower.cli.commands.computeenv.create.CreateAwsManualCmd;
 import io.seqera.tower.cli.commands.computeenv.create.CreateAzureCmd;
+import io.seqera.tower.cli.commands.computeenv.create.CreateAzureManualCmd;
 import io.seqera.tower.cli.commands.computeenv.create.CreateEksCmd;
 import io.seqera.tower.cli.commands.computeenv.create.CreateGkeCmd;
 import io.seqera.tower.cli.commands.computeenv.create.CreateGoogleCmd;
@@ -30,7 +31,7 @@ import picocli.CommandLine.Command;
                 CreateGkeCmd.class,
                 CreateGoogleCmd.class,
                 CreateAzureCmd.class,
-                CreateAwsManualCmd.class
+                CreateAzureManualCmd.class
         }
 )
 public class CreateCmd extends AbstractComputeEnvCmd {

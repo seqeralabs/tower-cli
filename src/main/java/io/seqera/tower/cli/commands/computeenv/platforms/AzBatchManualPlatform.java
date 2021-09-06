@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public class AzBatchManualPlatform extends AbstractPlatform<AzBatchConfig> {
 
-    @Option(names = {"--location"}, description = "The Azure location where the workload will be deployed", required = true)
+    @Option(names = {"-l", "--location"}, description = "The Azure location where the workload will be deployed", required = true)
     public String location;
 
     @Option(names = {"--compute-pool-name"}, description = "The Azure Batch compute pool to be used to run the Nextflow jobs. This needs to be a pre-configured Batch compute pool which includes the azcopy command line (see the Tower documentation for details).", required = true)

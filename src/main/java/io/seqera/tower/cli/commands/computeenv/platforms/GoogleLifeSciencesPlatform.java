@@ -11,7 +11,7 @@ import java.util.List;
 
 public class GoogleLifeSciencesPlatform extends AbstractPlatform<GoogleLifeSciencesConfig> {
 
-    @Option(names = {"--region"}, description = "The region where the workload will be executed", required = true)
+    @Option(names = {"-r", "--region"}, description = "The region where the workload will be executed", required = true)
     public String region;
 
     @Option(names = {"--zones"}, split = ",", description = "One or more zones where the workload will be executed. If specified, it has priority over the region setting.")

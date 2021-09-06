@@ -13,7 +13,7 @@ import java.util.List;
 
 public class AzBatchForgePlatform extends AbstractPlatform<AzBatchConfig> {
 
-    @Option(names = {"--location"}, description = "The Azure location where the workload will be deployed")
+    @Option(names = {"-l", "--location"}, description = "The Azure location where the workload will be deployed", required = true)
     public String location;
 
     @Option(names = {"--vm-type"}, description = "Specify the virtual machine type used by this pool. It must be a valid Azure Batch VM type (default: Standard_D4_v3)")
