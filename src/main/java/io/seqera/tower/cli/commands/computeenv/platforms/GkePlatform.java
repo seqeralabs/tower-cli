@@ -3,15 +3,13 @@ package io.seqera.tower.cli.commands.computeenv.platforms;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.ComputeEnv.PlatformEnum;
-import io.seqera.tower.model.EksComputeConfig;
-import io.seqera.tower.model.PodCleanupPolicy;
+import io.seqera.tower.model.GkeComputeConfig;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Option;
 
 import java.io.IOException;
-import java.nio.file.Path;
 
-public class EksPlatform extends AbstractPlatform<EksComputeConfig> {
+public class GkePlatform extends AbstractPlatform<GkeComputeConfig> {
 
     @Option(names = {"-r", "--region"}, description = "AWS region", required = true)
     public String region;
@@ -31,13 +29,13 @@ public class EksPlatform extends AbstractPlatform<EksComputeConfig> {
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
     public K8sPlatform.AdvancedOptions adv;
 
-    public EksPlatform() {
-        super(PlatformEnum.EKS_PLATFORM);
+    public GkePlatform() {
+        super(PlatformEnum.GKE_PLATFORM);
     }
 
     @Override
-    public EksComputeConfig computeConfig() throws ApiException, IOException {
-        EksComputeConfig config = new EksComputeConfig();
+    public GkeComputeConfig computeConfig() throws ApiException, IOException {
+        GkeComputeConfig config = new GkeComputeConfig();
         config
                 .region(region)
                 .clusterName(clusterName)

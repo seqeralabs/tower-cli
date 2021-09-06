@@ -41,7 +41,7 @@ public class AltairPlatform extends AbstractPlatform<AltairPbsComputeConfig> {
 
 
     public AltairPlatform() {
-        super(PlatformEnum.SLURM_PLATFORM);
+        super(PlatformEnum.ALTAIR_PLATFORM);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class AltairPlatform extends AbstractPlatform<AltairPbsComputeConfig> {
 
         config
                 // Common
-                .platform(PlatformEnum.SLURM_PLATFORM.getValue())
+                .platform(type().getValue())
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())

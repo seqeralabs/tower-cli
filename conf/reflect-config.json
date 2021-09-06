@@ -170,6 +170,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.computeenv.create.CreateGkeCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.computeenv.create.CreateJsonCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -251,6 +257,12 @@
   "name":"io.seqera.tower.cli.commands.computeenv.platforms.EksPlatform$AdvancedOptions",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
+},
+{
+  "name":"io.seqera.tower.cli.commands.computeenv.platforms.GkePlatform",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenv.platforms.K8sPlatform",
