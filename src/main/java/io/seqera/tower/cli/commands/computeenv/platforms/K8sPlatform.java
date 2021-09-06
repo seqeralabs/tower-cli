@@ -4,7 +4,7 @@ import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.ComputeEnv.PlatformEnum;
 import io.seqera.tower.model.K8sComputeConfig;
 import io.seqera.tower.model.PodCleanupPolicy;
-import picocli.CommandLine;
+import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Option;
 
 import java.io.IOException;
@@ -27,8 +27,8 @@ public class K8sPlatform extends AbstractPlatform<K8sComputeConfig> {
     @Option(names = {"--storage-claim"}, description = "Storage claim name")
     public String storageClaim;
 
-    @CommandLine.ArgGroup(heading = "%nAdvanced options:%n", validate = false)
-    public K8sPlatform.AdvancedOptions adv;
+    @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
+    public AdvancedOptions adv;
 
     public static class AdvancedOptions {
         @Option(names = {"--storage-mount"}, description = "Storage mount path")

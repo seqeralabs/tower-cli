@@ -176,6 +176,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.computeenv.create.CreateSlurmCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.computeenv.platforms.AbstractPlatform",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
@@ -236,6 +242,17 @@
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenv.platforms.K8sPlatform$AdvancedOptions",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true
+},
+{
+  "name":"io.seqera.tower.cli.commands.computeenv.platforms.SlurmPlatform",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.computeenv.platforms.SlurmPlatform$AdvancedOptions",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
 },
@@ -691,6 +708,12 @@
 {
   "name":"io.seqera.tower.model.SecurityKeys",
   "allDeclaredMethods":true
+},
+{
+  "name":"io.seqera.tower.model.SlurmComputeConfig",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
 },
 {
   "name":"io.seqera.tower.model.SubmitWorkflowLaunchRequest",
