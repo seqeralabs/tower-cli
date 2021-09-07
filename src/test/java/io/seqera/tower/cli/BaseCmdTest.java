@@ -3,6 +3,7 @@
  */
 package io.seqera.tower.cli;
 
+import io.seqera.tower.cli.utils.ErrorReporting;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,6 +19,7 @@ import java.io.StringWriter;
 public abstract class BaseCmdTest {
 
     public static class ExecOut {
+        public Tower app;
         public String stdOut;
         public String stdErr;
         public int exitCode;
@@ -36,13 +38,11 @@ public abstract class BaseCmdTest {
             this.exitCode = value;
             return this;
         }
-    }
 
-    public static CommandLine buildCmd(StringWriter stdOut, StringWriter stdErr) {
-        CommandLine cmd = new CommandLine(new Tower());
-        cmd.setOut(new PrintWriter(stdOut));
-        cmd.setErr(new PrintWriter(stdErr));
-        return cmd;
+        public ExecOut app(Tower app) {
+            this.app = app;
+            return this;
+        }
     }
 
     protected byte[] loadResponse(String name) {
@@ -63,16 +63,26 @@ public abstract class BaseCmdTest {
     }
 
     protected ExecOut exec(MockServerClient mock, String... args) {
+        Tower app = new Tower();
         StringWriter stdOut = new StringWriter();
         StringWriter stdErr = new StringWriter();
-        CommandLine cmd = buildCmd(stdOut, stdErr);
+        CommandLine cmd = new CommandLine(app);
+        cmd.setOut(new PrintWriter(stdOut));
+        cmd.setErr(new PrintWriter(stdErr));
 
         int exitCode = cmd.execute(ArrayUtils.insert(0, args, String.format("--url=%s", url(mock)), String.format("--access-token=%s", token())));
 
         return new ExecOut()
+                .app(app)
                 .stdOut(StringUtils.chop(stdOut.toString()))
                 .stdErr(StringUtils.chop(stdErr.toString()))
                 .exitCode(exitCode);
+    }
+
+    protected String errorMessage(Tower app, Exception e) {
+        StringWriter out = new StringWriter();
+        ErrorReporting.errorMessage(app, new PrintWriter(out), e);
+        return StringUtils.chop(out.toString());
     }
 
 }

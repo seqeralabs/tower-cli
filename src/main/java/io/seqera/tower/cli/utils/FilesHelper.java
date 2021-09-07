@@ -6,6 +6,9 @@ import java.nio.file.Path;
 
 public class FilesHelper {
 
+    private FilesHelper() {
+    }
+
     public static String readString(Path path) throws IOException {
         if (path == null) {
             return null;

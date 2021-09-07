@@ -3,6 +3,8 @@
  */
 package io.seqera.tower.cli;
 
+import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.exceptions.InvalidResponseException;
 import io.seqera.tower.cli.responses.RunSubmited;
 import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
@@ -30,7 +32,7 @@ class LaunchCmdTest extends BaseCmdTest {
         ExecOut out = exec(mock, "launch", "hello");
 
         // Assert results
-        assertEquals(String.format("[401] Unauthorized"), out.stdErr);
+        assertEquals(errorMessage(out.app, new ApiException(401, "Unauthorized")), out.stdErr);
         assertEquals("", out.stdOut);
         assertEquals(-1, out.exitCode);
     }
@@ -49,7 +51,7 @@ class LaunchCmdTest extends BaseCmdTest {
         ExecOut out = exec(mock, "launch", "hello");
 
         // Assert results
-        assertEquals("Pipeline 'hello' not found on this workspace.", out.stdErr);
+        assertEquals(errorMessage(out.app, new InvalidResponseException("Pipeline 'hello' not found on this workspace.")), out.stdErr);
         assertEquals(-1, out.exitCode);
     }
 
@@ -67,7 +69,7 @@ class LaunchCmdTest extends BaseCmdTest {
         ExecOut out = exec(mock, "launch", "hello");
 
         // Assert results
-        assertEquals("Multiple pipelines match 'hello'", out.stdErr);
+        assertEquals(errorMessage(out.app, new InvalidResponseException("Multiple pipelines match 'hello'")), out.stdErr);
         assertEquals(-1, out.exitCode);
     }
 

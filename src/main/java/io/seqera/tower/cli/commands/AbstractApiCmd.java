@@ -1,14 +1,10 @@
 package io.seqera.tower.cli.commands;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.ApiClient;
 import io.seqera.tower.ApiException;
-import io.seqera.tower.JSON;
 import io.seqera.tower.api.TowerApi;
 import io.seqera.tower.cli.Tower;
-import io.seqera.tower.cli.exceptions.ApiExceptionMessage;
 import io.seqera.tower.cli.exceptions.ShowUsageException;
-import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.ListComputeEnvsResponseEntry;
@@ -19,27 +15,29 @@ import org.glassfish.jersey.logging.LoggingFeature;
 import picocli.CommandLine;
 
 import java.io.IOException;
-import java.nio.file.NoSuchFileException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
+
+import static io.seqera.tower.cli.utils.ErrorReporting.errorMessage;
+import static io.seqera.tower.cli.utils.JsonHelper.prettyJson;
 
 public abstract class AbstractApiCmd extends AbstractCmd {
 
     public static final String USER_WORKSPACE_NAME = "user";
 
-    public TowerApi api;
+    private TowerApi api;
 
-    private transient Long userId;
-    private transient String userName;
-    private transient Long workspaceId;
-    private transient Long orgId;
-    private transient String orgName;
-    private transient String workspaceName;
-    private transient String serverUrl;
+    private Long userId;
+    private String userName;
+    private Long workspaceId;
+    private Long orgId;
+    private String orgName;
+    private String workspaceName;
+    private String serverUrl;
 
-    private transient Map<String, String> availableComputeEnvsNameToId;
-    private transient String primaryComputeEnvId;
+    private Map<String, String> availableComputeEnvsNameToId;
+    private String primaryComputeEnvId;
 
     protected AbstractApiCmd() {
     }
@@ -212,10 +210,6 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         return String.format("[%s / %s]", orgName(), workspaceName());
     }
 
-    private void printerr(String line) {
-        app().printerr(ansi(String.format("%n @|bold,red ERROR:|@ @|red %s|@%n", line)));
-    }
-
     @Override
     public Integer call() {
         try {
@@ -226,29 +220,8 @@ public abstract class AbstractApiCmd extends AbstractCmd {
                 response.toString(app().getOut());
             }
             return 0;
-        } catch (ShowUsageException e) {
-            app().spec.commandLine().usage(System.err);
-        } catch (TowerException e) {
-            printerr(e.getMessage());
-        } catch (NullPointerException e) {
-            e.printStackTrace(app().spec.commandLine().getErr());
-        } catch (NoSuchFileException e) {
-            printerr(String.format("File not found. %s", e.getMessage()));
-        } catch (IOException e) {
-            printerr(String.format("IO error. %s", e.getMessage()));
-        } catch (ApiException e) {
-            switch (e.getCode()) {
-                case 401:
-                    printerr("Unauthorized. Check your access token, workspace id and tower server url.");
-                    break;
-
-                case 403:
-                    printerr("Unknown entity. Check that the provided identifier is correct.");
-                    break;
-
-                default:
-                    printerr(String.format("[%d] %s", e.getCode(), decodeMessage(e.getResponseBody())));
-            }
+        } catch (Exception e) {
+            errorMessage(app(), e);
         }
 
         return -1;
@@ -258,32 +231,9 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         throw new ShowUsageException();
     }
 
-    protected static String prettyJson(Object obj) throws JsonProcessingException {
-        return new JSON().getContext(obj.getClass()).writerWithDefaultPrettyPrinter().writeValueAsString(obj);
-    }
-
-    protected static <T> T parseJson(String json, Class<T> clazz) throws JsonProcessingException {
-        return new JSON().getContext(clazz).readValue(json, clazz);
-    }
-
     protected String ansi(String value) {
         return CommandLine.Help.Ansi.AUTO.string(value);
     }
 
-    private String decodeMessage(String body) {
-        if (body == null) {
-            return "";
-        }
-
-        try {
-            ApiExceptionMessage message = parseJson(body, ApiExceptionMessage.class);
-            return message.getMessage();
-        } catch (JsonProcessingException e) {
-            // On exception return as it is
-        }
-
-        return body;
-
-    }
 
 }

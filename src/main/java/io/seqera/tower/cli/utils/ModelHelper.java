@@ -5,6 +5,9 @@ import io.seqera.tower.model.WorkflowLaunchRequest;
 
 public class ModelHelper {
 
+    private ModelHelper() {
+    }
+
     public static WorkflowLaunchRequest createLaunchRequest(Launch launch) {
         return new WorkflowLaunchRequest()
                 .computeEnvId(launch.getComputeEnv().getId())

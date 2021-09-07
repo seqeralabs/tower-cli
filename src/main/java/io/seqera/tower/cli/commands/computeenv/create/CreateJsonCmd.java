@@ -11,6 +11,8 @@ import picocli.CommandLine.Option;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
+
 @CommandLine.Command(
         name = "json",
         description = "Create new compute environment from a JSON config file"
