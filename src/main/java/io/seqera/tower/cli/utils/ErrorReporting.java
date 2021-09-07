@@ -58,11 +58,11 @@ public class ErrorReporting {
                     break;
 
                 case 403:
-                    print(err, "Unknown entity. Check that the provided identifier is correct.");
+                    print(err, "Unknown. Check that the provided identifier is correct.");
                     break;
 
                 default:
-                    print(err, String.format("[%d] %s", ex.getCode(), decodeMessage(ex.getResponseBody())));
+                    print(err, decodeMessage(ex.getResponseBody()));
             }
             return;
         }
