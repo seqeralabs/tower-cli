@@ -12,7 +12,7 @@ import picocli.CommandLine.Command;
 
 @Command(
         name = "update",
-        description = "Update new workspace credentials",
+        description = "Update workspace credentials",
         subcommands = {
                 UpdateAwsCmd.class,
                 UpdateGoogleCmd.class,

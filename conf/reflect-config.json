@@ -750,6 +750,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.model.DescribeCredentialsResponse",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.model.DescribeLaunchResponse",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -887,6 +893,12 @@
 },
 {
   "name":"io.seqera.tower.model.UnivaComputeConfig",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.model.UpdateCredentialsRequest",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true

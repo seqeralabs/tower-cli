@@ -60,7 +60,8 @@ public abstract class AbstractUpdateCmd extends AbstractApiCmd {
                 .keys(getProvider().securityKeys())
                 .name(name)
                 .baseUrl(getProvider().baseUrl())
-                .provider(getProvider().type());
+                .provider(getProvider().type())
+                .id(id);
 
         api().updateCredentials(id, new UpdateCredentialsRequest().credentials(specs), workspaceId());
 

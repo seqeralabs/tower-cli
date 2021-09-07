@@ -3,6 +3,7 @@ package io.seqera.tower.cli.responses;
 import picocli.CommandLine;
 
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -14,6 +15,13 @@ public abstract class Response {
 
     public void toString(PrintWriter out) {
         out.println(this);
+    }
+
+    @Override
+    public String toString() {
+        StringWriter writer = new StringWriter();
+        toString(new PrintWriter(writer));
+        return writer.toString();
     }
 
     protected String ansi(String value) {
