@@ -5,6 +5,7 @@ import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.commands.computeenv.CreateCmd;
 import io.seqera.tower.cli.commands.computeenv.platforms.Platform;
+import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.ComputeEnvCreated;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.ComputeConfig;
@@ -60,11 +61,11 @@ public abstract class AbstractCreateCmd extends AbstractApiCmd {
     private String findWorkspaceCredentials(ComputeEnv.PlatformEnum type) throws ApiException {
         List<Credentials> credentials = api().listCredentials(workspaceId(), type.getValue()).getCredentials();
         if (credentials.isEmpty()) {
-            throw new ApiException("No valid credentials found at the workspace");
+            throw new TowerException("No valid credentials found at the workspace");
         }
 
         if (credentials.size() > 1) {
-            throw new ApiException("Multiple credentials match this compute environment. Please provide the credentials identifier that you want to use");
+            throw new TowerException("Multiple credentials match this compute environment. Please provide the credentials identifier that you want to use");
         }
 
         return credentials.get(0).getId();

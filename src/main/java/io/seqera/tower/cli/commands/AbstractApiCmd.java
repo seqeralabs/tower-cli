@@ -6,15 +6,17 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.JSON;
 import io.seqera.tower.api.TowerApi;
 import io.seqera.tower.cli.Tower;
+import io.seqera.tower.cli.exceptions.ApiExceptionMessage;
+import io.seqera.tower.cli.exceptions.ShowUsageException;
+import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.cli.utils.InvalidResponseException;
-import io.seqera.tower.cli.utils.ShowUsageException;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.ListComputeEnvsResponseEntry;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import io.seqera.tower.model.User;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.logging.LoggingFeature;
+import picocli.CommandLine;
 
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
@@ -210,12 +212,8 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         return String.format("[%s / %s]", orgName(), workspaceName());
     }
 
-    private void println(String line) {
-        app().println(line);
-    }
-
     private void printerr(String line) {
-        app().printerr(line);
+        app().printerr(ansi(String.format("%n @|bold,red ERROR:|@ @|red %s|@%n", line)));
     }
 
     @Override
@@ -223,14 +221,14 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         try {
             Response response = exec();
             if (app().json) {
-                println(prettyJson(response.getBody()));
+                app().println(prettyJson(response.getBody()));
             } else {
                 response.toString(app().getOut());
             }
             return 0;
         } catch (ShowUsageException e) {
             app().spec.commandLine().usage(System.err);
-        } catch (InvalidResponseException e) {
+        } catch (TowerException e) {
             printerr(e.getMessage());
         } catch (NullPointerException e) {
             e.printStackTrace(app().spec.commandLine().getErr());
@@ -241,10 +239,15 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         } catch (ApiException e) {
             switch (e.getCode()) {
                 case 401:
-                    printerr("[401] Unauthorized");
+                    printerr("Unauthorized. Check your access token, workspace id and tower server url.");
                     break;
+
+                case 403:
+                    printerr("Unknown entity. Check that the provided identifier is correct.");
+                    break;
+
                 default:
-                    printerr(String.format("[%d] %s", e.getCode(), e.getMessage()));
+                    printerr(String.format("[%d] %s", e.getCode(), decodeMessage(e.getResponseBody())));
             }
         }
 
@@ -262,4 +265,25 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     protected static <T> T parseJson(String json, Class<T> clazz) throws JsonProcessingException {
         return new JSON().getContext(clazz).readValue(json, clazz);
     }
+
+    protected String ansi(String value) {
+        return CommandLine.Help.Ansi.AUTO.string(value);
+    }
+
+    private String decodeMessage(String body) {
+        if (body == null) {
+            return "";
+        }
+
+        try {
+            ApiExceptionMessage message = parseJson(body, ApiExceptionMessage.class);
+            return message.getMessage();
+        } catch (JsonProcessingException e) {
+            // On exception return as it is
+        }
+
+        return body;
+
+    }
+
 }

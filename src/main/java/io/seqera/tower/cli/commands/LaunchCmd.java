@@ -4,7 +4,7 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.RunSubmited;
 import io.seqera.tower.cli.utils.FilesHelper;
-import io.seqera.tower.cli.utils.InvalidResponseException;
+import io.seqera.tower.cli.exceptions.InvalidResponseException;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.Launch;
 import io.seqera.tower.model.ListPipelinesResponse;
