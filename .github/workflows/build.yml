@@ -152,10 +152,10 @@ jobs:
         run: TOWER_CLI=build/graal/towr.exe ./gradlew cleanTest test
 
       - name: Binary tests reports
-          uses: actions/upload-artifact@v2
-          if: failure()
-          with:
-            name: windows-binary-test-reports
-            path: build/reports/tests/test/
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: windows-binary-test-reports
+          path: build/reports/tests/test/
 
 
