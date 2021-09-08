@@ -40,9 +40,9 @@ class GoogleProviderTest extends BaseCmdTest {
     @Test
     void testFileNotFound(MockServerClient mock) {
 
-        ExecOut out = exec(mock, "credentials", "create", "google", "-n", "google", "-k", "/random_path/not_found.key");
+        ExecOut out = exec(mock, "credentials", "create", "google", "-n", "google", "-k", "random_path_not_found.key");
 
-        assertEquals(errorMessage(out.app, new NoSuchFileException("/random_path/not_found.key")), out.stdErr);
+        assertEquals(errorMessage(out.app, new NoSuchFileException("random_path_not_found.key")), out.stdErr);
         assertEquals("", out.stdOut);
         assertEquals(-1, out.exitCode);
     }
