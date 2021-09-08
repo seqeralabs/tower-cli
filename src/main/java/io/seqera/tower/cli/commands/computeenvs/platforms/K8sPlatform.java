@@ -12,7 +12,7 @@ import java.nio.file.Path;
 
 public class K8sPlatform extends AbstractPlatform<K8sComputeConfig> {
 
-    @Option(names = {"--server"}, description = "Master server", required = true)
+    @Option(names = {"-s", "--server"}, description = "Master server", required = true)
     public String server;
 
     @Option(names = {"--namespace"}, description = "Namespace", required = true)
@@ -24,7 +24,7 @@ public class K8sPlatform extends AbstractPlatform<K8sComputeConfig> {
     @Option(names = {"--head-account"}, description = "Head service account", required = true)
     public String headAccount;
 
-    @Option(names = {"--storage-claim"}, description = "Storage claim name")
+    @Option(names = {"--storage-claim"}, description = "Storage claim name", required = true)
     public String storageClaim;
 
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)

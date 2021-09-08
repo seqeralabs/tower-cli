@@ -595,7 +595,8 @@
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.K8sPlatform$AdvancedOptions",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.LsfPlatform",
@@ -1099,6 +1100,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.model.K8sComputeConfig",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.model.K8sSecurityKeys",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1160,6 +1167,11 @@
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.model.PodCleanupPolicy",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true
 },
 {
   "name":"io.seqera.tower.model.PodCleanupPolicy$Adapter",
