@@ -544,7 +544,8 @@
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AzBatchManualPlatform$AdvancedOptions",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.EksPlatform",
