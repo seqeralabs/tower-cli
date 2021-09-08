@@ -59,7 +59,7 @@ class CredentialsCmdTest extends BaseCmdTest {
         mock.when(
                 request().withMethod("GET").withPath("/credentials"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResponse("credentials_list")).withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(loadResource("credentials_list")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         ExecOut out = exec(mock, "credentials", "list");

@@ -44,7 +44,7 @@ class LaunchCmdTest extends BaseCmdTest {
         mock.when(
                 request().withMethod("GET").withPath("/pipelines"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResponse("pipelines_none")).withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(loadResource("pipelines_none")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         // Run the command
@@ -62,7 +62,7 @@ class LaunchCmdTest extends BaseCmdTest {
         mock.when(
                 request().withMethod("GET").withPath("/pipelines"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResponse("pipelines_multiple")).withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(loadResource("pipelines_multiple")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         // Run the command
@@ -80,25 +80,25 @@ class LaunchCmdTest extends BaseCmdTest {
         mock.when(
                 request().withMethod("GET").withPath("/pipelines"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResponse("pipelines_sarek")).withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(loadResource("pipelines_sarek")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
                 request().withMethod("GET").withPath("/pipelines/250911634275687/launch"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResponse("pipeline_launch_describe")).withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(loadResource("pipeline_launch_describe")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
                 request().withMethod("POST").withPath("/workflow/launch"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResponse("workflow_launch")).withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(loadResource("workflow_launch")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResponse("user")).withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         // Run the command

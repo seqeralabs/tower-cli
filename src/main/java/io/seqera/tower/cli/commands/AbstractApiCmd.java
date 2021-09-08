@@ -4,7 +4,9 @@ import io.seqera.tower.ApiClient;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.api.TowerApi;
 import io.seqera.tower.cli.Tower;
+import io.seqera.tower.cli.exceptions.NoComputeEnvironmentException;
 import io.seqera.tower.cli.exceptions.ShowUsageException;
+import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.ListComputeEnvsResponseEntry;
@@ -140,6 +142,10 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     protected ComputeEnv primaryComputeEnv() throws ApiException {
         if (primaryComputeEnvId == null) {
             loadAvailableComputeEnvs();
+        }
+
+        if (primaryComputeEnvId == null) {
+            throw new NoComputeEnvironmentException(workspaceRef());
         }
 
         return api().describeComputeEnv(primaryComputeEnvId, workspaceId()).getComputeEnv();

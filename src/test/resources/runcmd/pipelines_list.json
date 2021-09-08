@@ -1,0 +1,21 @@
+{
+  "pipelines": [
+    {
+      "pipelineId": 183522618315672,
+      "name": "sleep_one_minute",
+      "description": null,
+      "icon": null,
+      "repository": "https://github.com/pditommaso/nf-sleep",
+      "userId": 4,
+      "userName": "jordi",
+      "userFirstName": null,
+      "userLastName": null,
+      "orgId": null,
+      "orgName": null,
+      "workspaceId": null,
+      "workspaceName": null,
+      "visibility": null
+    }
+  ],
+  "totalSize": 1
+}

@@ -69,6 +69,6 @@ public class CreateCmd extends AbstractPipelinesCmd {
                 , workspaceId()
         );
 
-        return new PipelinesCreated(workspaceRef(), response.getPipeline());
+        return new PipelinesCreated(workspaceRef(), response.getPipeline().getName());
     }
 }

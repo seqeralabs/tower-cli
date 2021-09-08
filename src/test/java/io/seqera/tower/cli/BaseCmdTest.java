@@ -7,6 +7,7 @@ import io.seqera.tower.cli.utils.ErrorReporting;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.junit.jupiter.MockServerExtension;
 import picocli.CommandLine;
@@ -14,9 +15,14 @@ import picocli.CommandLine;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 @ExtendWith(MockServerExtension.class)
 public abstract class BaseCmdTest {
+
+    @TempDir
+    Path tempDir;
 
     public static class ExecOut {
         public Tower app;
@@ -45,13 +51,19 @@ public abstract class BaseCmdTest {
         }
     }
 
-    protected byte[] loadResponse(String name) {
+    protected byte[] loadResource(String name) {
         try {
             return this.getClass().getResourceAsStream("/runcmd/" + name + ".json").readAllBytes();
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    protected String tempFile(String content, String prefix, String suffix) throws IOException {
+        Path file = Files.createTempFile(tempDir, prefix, suffix);
+        Files.writeString(file, content);
+        return file.toAbsolutePath().toString();
     }
 
     protected String url(MockServerClient mock) {

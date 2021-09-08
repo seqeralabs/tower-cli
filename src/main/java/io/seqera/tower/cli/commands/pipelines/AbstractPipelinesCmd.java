@@ -4,6 +4,8 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.commands.PipelinesCmd;
+import io.seqera.tower.cli.exceptions.PipelineNotFoundException;
+import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.model.ListPipelinesResponse;
 import io.seqera.tower.model.PipelineDbDto;
 import picocli.CommandLine.Command;
@@ -28,11 +30,11 @@ public abstract class AbstractPipelinesCmd extends AbstractApiCmd {
         ListPipelinesResponse list = api().listPipelines(workspaceId(), null, null, name);
 
         if (list.getPipelines().isEmpty()) {
-            throw new ApiException(String.format("Unknown pipeline '%s' at %s workspace", name, workspaceRef()));
+            throw new PipelineNotFoundException(name, workspaceRef());
         }
 
         if (list.getPipelines().size() > 1) {
-            throw new ApiException(String.format("Multiple pipelines match '%s' at %s workspace", name, workspaceRef()));
+            throw new TowerException(String.format("Multiple pipelines match '%s' at %s workspace", name, workspaceRef()));
         }
 
         return list.getPipelines().get(0);
