@@ -5,6 +5,7 @@ package io.seqera.tower.cli.credentials;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.BaseCmdTest;
+import io.seqera.tower.cli.exceptions.ShowUsageException;
 import io.seqera.tower.cli.responses.CredentialsDeleted;
 import io.seqera.tower.cli.responses.CredentialsList;
 import io.seqera.tower.model.Credentials;
@@ -81,5 +82,34 @@ class CredentialsCmdTest extends BaseCmdTest {
         )).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
+
+    @Test
+    void testInvalidAuth(MockServerClient mock) {
+        mock.when(
+                request().withMethod("DELETE").withPath("/credentials/1cz5A8cuBkB5iJliCwJCFU"), exactly(1)
+        ).respond(
+                response().withStatusCode(401)
+        );
+
+        ExecOut out = exec(mock, "credentials", "delete", "-i", "1cz5A8cuBkB5iJliCwJCFU");
+
+        assertEquals(errorMessage(out.app, new ApiException(401, "Unauthorized")), out.stdErr);
+        assertEquals("", out.stdOut);
+        assertEquals(-1, out.exitCode);
+    }
+
+    @Test
+    void testShowUsage(MockServerClient mock) {
+
+        ExecOut out = exec(mock, "credentials");
+
+        if (out.app != null) {
+            assertEquals(errorMessage(out.app, new ShowUsageException()), out.stdErr);
+            assertEquals("", out.stdOut);
+            assertEquals(-1, out.exitCode);
+        }
+    }
+
+
 
 }
