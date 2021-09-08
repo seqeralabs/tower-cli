@@ -32,7 +32,7 @@ jobs:
         architecture: x64
 
     - name: Tests
-      run: ./gradlew test
+      run: ./gradlew cleanTest test
 
     - name: Tests reports
       uses: actions/upload-artifact@v2
@@ -49,6 +49,16 @@ jobs:
       with:
         name: linux-native-image
         path: build/graal/towr
+
+    - name: Binary tests
+      run: TOWER_CLI=build/graal/towr ./gradlew cleanTest test
+
+    - name: Binary tests reports
+      uses: actions/upload-artifact@v2
+      if: failure()
+      with:
+        name: linux-binary-test-reports
+        path: build/reports/tests/test/
 
   mac-image:
     name: Tower CLI build Mac native image
@@ -71,7 +81,7 @@ jobs:
           architecture: x64
 
       - name: Tests
-        run: ./gradlew test
+        run: ./gradlew cleanTest test
 
       - name: Tests reports
         uses: actions/upload-artifact@v2
@@ -88,6 +98,16 @@ jobs:
         with:
           name: mac-native-image
           path: build/graal/towr
+
+      - name: Binary tests
+        run: TOWER_CLI=build/graal/towr ./gradlew cleanTest test
+
+      - name: Binary tests reports
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: mac-binary-test-reports
+          path: build/reports/tests/test/
 
   windows-image:
     name: Tower CLI build Windows native image
@@ -110,7 +130,7 @@ jobs:
           architecture: x64
 
       - name: Tests
-        run: ./gradlew test
+        run: ./gradlew cleanTest test
 
       - name: Tests reports
         uses: actions/upload-artifact@v2
@@ -127,5 +147,15 @@ jobs:
         with:
           name: windows-native-image
           path: build/graal/towr.exe
+
+      - name: Binary tests
+        run: TOWER_CLI=build/graal/towr.exe ./gradlew cleanTest test
+
+      - name: Binary tests reports
+          uses: actions/upload-artifact@v2
+          if: failure()
+          with:
+            name: windows-binary-test-reports
+            path: build/reports/tests/test/
 
 
