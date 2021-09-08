@@ -99,6 +99,23 @@ class ComputeEnvCmdTest extends BaseCmdTest {
     }
 
     @Test
+    void testListEmpty(MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "compute-envs", "list");
+
+        assertEquals("", out.stdErr);
+        assertEquals(chop(new ComputeEnvList(USER_WORKSPACE_NAME, List.of()).toString()), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
+
+
+    @Test
     void testViewAwsForge(MockServerClient mock) {
 
         mock.when(

@@ -518,12 +518,14 @@
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AwsBatchForgePlatform$EfsFileSystem",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AwsBatchForgePlatform$FsxFileSystem",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AwsBatchManualPlatform",
@@ -585,7 +587,8 @@
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.GoogleLifeSciencesPlatform$Filestore",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.K8sPlatform",
@@ -1050,6 +1053,12 @@
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.model.EksComputeConfig",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
 },
 {
   "name":"io.seqera.tower.model.ForgeConfig",
