@@ -13,27 +13,27 @@ import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
 
-class SlurmPlatformTest extends BaseCmdTest {
+class UnivaPlatformTest extends BaseCmdTest {
 
     @Test
     void testCreate(MockServerClient mock) {
 
         mock.when(
-                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "slurm-platform"), exactly(1)
+                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "uge-platform"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"2ba2oekqeTEBzwSDgXg7xf\",\"name\":\"jdeu\",\"description\":null,\"provider\":\"ssh\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-06T08:53:51Z\",\"dateCreated\":\"2021-09-06T06:54:53Z\",\"lastUpdated\":\"2021-09-06T06:54:53Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"name\":\"slurm\",\"platform\":\"slurm-platform\",\"config\":{\"workDir\":\"/home/jordeu/nf\",\"userName\":\"jordi\",\"hostName\":\"ssh.mydomain.net\",\"headQueue\":\"normal\",\"platform\":\"slurm-platform\"},\"credentialsId\":\"2ba2oekqeTEBzwSDgXg7xf\"}}"), exactly(1)
+                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"name\":\"uge\",\"platform\":\"uge-platform\",\"config\":{\"workDir\":\"/home/jordeu/nf\",\"userName\":\"jordi\",\"hostName\":\"ssh.mydomain.net\",\"headQueue\":\"normal\",\"platform\":\"uge-platform\"},\"credentialsId\":\"2ba2oekqeTEBzwSDgXg7xf\"}}"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "compute-envs", "create", "slurm", "-n", "slurm", "-w", "/home/jordeu/nf", "-u", "jordi", "-H", "ssh.mydomain.net", "-q", "normal");
+        ExecOut out = exec(mock, "compute-envs", "create", "uge", "-n", "uge", "-w", "/home/jordeu/nf", "-u", "jordi", "-H", "ssh.mydomain.net", "-q", "normal");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvCreated("slurm-platform", "slurm", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvCreated("uge-platform", "uge", USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -41,21 +41,21 @@ class SlurmPlatformTest extends BaseCmdTest {
     void testCreateWithAdvancedOptions(MockServerClient mock) {
 
         mock.when(
-                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "slurm-platform"), exactly(1)
+                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "uge-platform"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"2ba2oekqeTEBzwSDgXg7xf\",\"name\":\"jdeu\",\"description\":null,\"provider\":\"ssh\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-06T08:53:51Z\",\"dateCreated\":\"2021-09-06T06:54:53Z\",\"lastUpdated\":\"2021-09-06T06:54:53Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"name\":\"slurm\",\"platform\":\"slurm-platform\",\"config\":{\"workDir\":\"/home/jordeu/nf\",\"userName\":\"jordi\",\"hostName\":\"ssh.mydomain.net\",\"headQueue\":\"normal\",\"maxQueueSize\":200,\"platform\":\"slurm-platform\"},\"credentialsId\":\"2ba2oekqeTEBzwSDgXg7xf\"}}"), exactly(1)
+                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"name\":\"uge\",\"platform\":\"uge-platform\",\"config\":{\"workDir\":\"/home/jordeu/nf\",\"userName\":\"jordi\",\"hostName\":\"ssh.mydomain.net\",\"headQueue\":\"normal\",\"maxQueueSize\":200,\"platform\":\"uge-platform\"},\"credentialsId\":\"2ba2oekqeTEBzwSDgXg7xf\"}}"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "compute-envs", "create", "slurm", "-n", "slurm", "-w", "/home/jordeu/nf", "-u", "jordi", "-H", "ssh.mydomain.net", "-q", "normal", "--max-queue-size=200");
+        ExecOut out = exec(mock, "compute-envs", "create", "uge", "-n", "uge", "-w", "/home/jordeu/nf", "-u", "jordi", "-H", "ssh.mydomain.net", "-q", "normal", "--max-queue-size=200");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvCreated("slurm-platform", "slurm", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvCreated("uge-platform", "uge", USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
