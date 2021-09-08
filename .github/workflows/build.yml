@@ -51,7 +51,9 @@ jobs:
         path: build/graal/towr
 
     - name: Binary tests
-      run: TOWER_CLI=build/graal/towr ./gradlew cleanTest test
+      run: ./gradlew cleanTest test
+      env:
+        TOWER_CLI: build/graal/towr
 
     - name: Binary tests reports
       uses: actions/upload-artifact@v2
@@ -100,7 +102,9 @@ jobs:
           path: build/graal/towr
 
       - name: Binary tests
-        run: TOWER_CLI=build/graal/towr ./gradlew cleanTest test
+        run: ./gradlew cleanTest test
+        env:
+          TOWER_CLI: build/graal/towr
 
       - name: Binary tests reports
         uses: actions/upload-artifact@v2
@@ -149,7 +153,9 @@ jobs:
           path: build/graal/towr.exe
 
       - name: Binary tests
-        run: TOWER_CLI=build/graal/towr.exe ./gradlew cleanTest test
+        run: ./gradlew cleanTest test
+        env:
+          TOWER_CLI: build/graal/towr.exe
 
       - name: Binary tests reports
         uses: actions/upload-artifact@v2
