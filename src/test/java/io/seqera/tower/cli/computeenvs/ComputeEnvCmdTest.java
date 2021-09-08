@@ -3,12 +3,14 @@
  */
 package io.seqera.tower.cli.computeenvs;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
 import io.seqera.tower.cli.responses.ComputeEnvDeleted;
 import io.seqera.tower.cli.responses.ComputeEnvList;
 import io.seqera.tower.cli.responses.ComputeEnvView;
+import io.seqera.tower.cli.utils.JsonHelper;
 import io.seqera.tower.model.AwsBatchConfig;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.ComputeEnvStatus;
@@ -189,6 +191,42 @@ class ComputeEnvCmdTest extends BaseCmdTest {
 
                         )
         ).toString()), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testViewAwsManualJSON(MockServerClient mock) throws JsonProcessingException {
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/53aWhB2qJroy0i51FOrFAC"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_env_view_aws_manual")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "--json", "compute-envs", "view", "-i", "53aWhB2qJroy0i51FOrFAC");
+
+        assertEquals("", out.stdErr);
+        assertEquals(JsonHelper.prettyJson(new ComputeEnvView("53aWhB2qJroy0i51FOrFAC", USER_WORKSPACE_NAME,
+                new ComputeEnv()
+                        .id("53aWhB2qJroy0i51FOrFAC")
+                        .name("manual")
+                        .platform(ComputeEnv.PlatformEnum.AWS_BATCH)
+                        .dateCreated(OffsetDateTime.parse("2021-09-08T15:19:08Z"))
+                        .lastUpdated(OffsetDateTime.parse("2021-09-08T15:19:08Z"))
+                        .status(ComputeEnvStatus.AVAILABLE)
+                        .credentialsId("6g0ER59L4ZoE5zpOmUP48D")
+                        .config(
+                                new AwsBatchConfig()
+                                        .region("eu-west-1")
+                                        .computeQueue("TowerForge-isnEDBLvHDAIteOEF44ow-work")
+                                        .headQueue("TowerForge-isnEDBLvHDAIteOEF44ow-head")
+                                        .cliPath("/home/ec2-user/miniconda/bin/aws")
+                                        .workDir("s3://nextflow-ci/jordeu")
+                                        .platform("aws-batch")
+                                        .volumes(List.of())
+
+                        )
+        ).getBody()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

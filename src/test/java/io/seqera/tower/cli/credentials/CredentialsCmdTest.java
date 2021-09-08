@@ -16,6 +16,7 @@ import org.mockserver.model.MediaType;
 
 import java.time.OffsetDateTime;
 import java.util.Arrays;
+import java.util.List;
 
 import static io.seqera.tower.cli.commands.AbstractApiCmd.USER_WORKSPACE_NAME;
 import static org.apache.commons.lang3.StringUtils.chop;
@@ -81,6 +82,22 @@ class CredentialsCmdTest extends BaseCmdTest {
                         .dateCreated(OffsetDateTime.parse("2021-09-07T13:50:21Z"))
                         .lastUpdated(OffsetDateTime.parse("2021-09-07T13:50:21Z"))
         )).toString()), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testListEmpty(MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/credentials"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\": []}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "credentials", "list");
+
+        assertEquals("", out.stdErr);
+        assertEquals(chop(new CredentialsList(USER_WORKSPACE_NAME, List.of()).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

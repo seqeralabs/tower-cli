@@ -277,6 +277,22 @@ class PipelinesCmdTest extends BaseCmdTest {
     }
 
     @Test
+    void testListEmpty(MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{ \"pipelines\": [], \"totalSize\": 0 }").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "pipelines", "list");
+
+        assertEquals("", out.stdErr);
+        assertEquals(chop(new PipelinesList(USER_WORKSPACE_NAME, List.of()).toString()), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
     void testView(MockServerClient mock) {
 
         mock.when(
