@@ -20,7 +20,7 @@ import static org.mockserver.model.HttpResponse.response;
 class K8sProviderTest extends BaseCmdTest {
 
     @Test
-    void testCreate(MockServerClient mock) throws IOException {
+    void testCreateWithCertificate(MockServerClient mock) throws IOException {
 
         mock.when(
                 request().withMethod("POST").withPath("/credentials").withBody("{\"credentials\":{\"keys\":{\"certificate\":\"my_certificate\",\"privateKey\":\"my_private_key\",\"provider\":\"k8s\"},\"name\":\"k8s\",\"provider\":\"k8s\"}}"), exactly(1)
@@ -34,6 +34,21 @@ class K8sProviderTest extends BaseCmdTest {
         assertEquals(new CredentialsCreated("k8s", "1cz5A8cuBkB5iJliCwJCFU", "k8s", USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
 
+    }
+
+    @Test
+    void testCreateWithToken(MockServerClient mock) {
+        mock.when(
+                request().withMethod("POST").withPath("/credentials").withBody("{\"credentials\":{\"keys\":{\"token\":\"my_token\",\"provider\":\"k8s\"},\"name\":\"k8s\",\"provider\":\"k8s\"}}"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentialsId\":\"1cz5A8cuBkB5iJliCwJCFU\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "credentials", "create", "k8s", "-n", "k8s", "-t", "my_token");
+
+        assertEquals("", out.stdErr);
+        assertEquals(new CredentialsCreated("k8s", "1cz5A8cuBkB5iJliCwJCFU", "k8s", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(0, out.exitCode);
     }
 
 }
