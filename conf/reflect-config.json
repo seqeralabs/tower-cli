@@ -493,6 +493,17 @@
   "allDeclaredMethods":true
 },
 {
+  "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AltairPlatform",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AltairPlatform$AdvancedOptions",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true
+},
+{
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AwsBatchForgePlatform",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -881,6 +892,12 @@
   "name":"io.seqera.tower.model.AbstractGridConfig",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
+},
+{
+  "name":"io.seqera.tower.model.AltairPbsComputeConfig",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
 },
 {
   "name":"io.seqera.tower.model.AwsBatchConfig",
