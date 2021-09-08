@@ -12,11 +12,16 @@ import org.mockserver.client.MockServerClient;
 import org.mockserver.junit.jupiter.MockServerExtension;
 import picocli.CommandLine;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
 @ExtendWith(MockServerExtension.class)
 public abstract class BaseCmdTest {
@@ -75,6 +80,13 @@ public abstract class BaseCmdTest {
     }
 
     protected ExecOut exec(MockServerClient mock, String... args) {
+
+        // Run binary command line
+        if (System.getenv().containsKey("TOWER_CLI")) {
+            return execBinary(mock, System.getenv("TOWER_CLI"), args);
+        }
+
+        // Run java version
         Tower app = new Tower();
         StringWriter stdOut = new StringWriter();
         StringWriter stdErr = new StringWriter();
@@ -89,6 +101,58 @@ public abstract class BaseCmdTest {
                 .stdOut(StringUtils.chop(stdOut.toString()))
                 .stdErr(StringUtils.chop(stdErr.toString()))
                 .exitCode(exitCode);
+    }
+
+    private static class StreamGobbler implements Runnable {
+        private InputStream inputStream;
+        private Consumer<String> consumer;
+
+        public StreamGobbler(InputStream inputStream, Consumer<String> consumer) {
+            this.inputStream = inputStream;
+            this.consumer = consumer;
+        }
+
+        @Override
+        public void run() {
+            new BufferedReader(new InputStreamReader(inputStream)).lines().forEach(consumer);
+        }
+    }
+
+    private ExecOut execBinary(MockServerClient mock, String command, String... args) {
+
+        try {
+            StringWriter stdOut = new StringWriter();
+            StringWriter stdErr = new StringWriter();
+
+            PrintWriter outWriter = new PrintWriter(stdOut);
+            PrintWriter errWriter = new PrintWriter(stdErr);
+
+            ProcessBuilder builder = new ProcessBuilder();
+            builder.command(ArrayUtils.insert(0, args, command, String.format("--url=%s", url(mock)), String.format("--access-token=%s", token())));
+            Process process = builder.start();
+
+            StreamGobbler consumeOut = new StreamGobbler(process.getInputStream(), outWriter::println);
+            StreamGobbler consumeErr = new StreamGobbler(process.getErrorStream(), errWriter::println);
+            Executors.newSingleThreadExecutor().submit(consumeOut);
+            Executors.newSingleThreadExecutor().submit(consumeErr);
+            int exitCode = process.waitFor();
+
+            if (exitCode == 255) {
+                exitCode = -1;
+            }
+
+            return new ExecOut()
+                    .stdOut(StringUtils.chop(stdOut.toString()))
+                    .stdErr(StringUtils.chop(stdErr.toString()))
+                    .exitCode(exitCode);
+
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            return new ExecOut()
+                    .stdOut("")
+                    .stdErr(e.getMessage())
+                    .exitCode(-1);
+        }
     }
 
     protected String errorMessage(Tower app, Exception e) {
