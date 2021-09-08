@@ -11,10 +11,10 @@ public class GitlabProvider extends AbstractGitProvider<GitLabSecurityKeys> {
     @Option(names = {"-u", "--username"}, description = "Gitlab username", required = true)
     public String userName;
 
-    @Option(names = {"-p", "--password"}, description = "Github account password or access token (recommended)", interactive = true, required = true)
+    @Option(names = {"-p", "--password"}, description = "Gitlab account password or access token (recommended)", arity = "0..1", interactive = true, required = true)
     public String password;
 
-    @Option(names = {"-t", "--token"}, description = "Gitlab account access token", required = true, interactive = true)
+    @Option(names = {"-t", "--token"}, description = "Gitlab account access token", arity = "0..1", required = true, interactive = true)
     public String accessToken;
 
     public GitlabProvider() {

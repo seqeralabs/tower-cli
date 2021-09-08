@@ -13,7 +13,7 @@ public class SshProvider extends AbstractProvider<SSHSecurityKeys> {
     @Option(names = {"-k", "--key"}, description = "SSH private key file", required = true)
     public Path serviceAccountKey;
 
-    @Option(names = {"-p", "--passphrase"}, description = "Passphrase associated with the private key", interactive = true)
+    @Option(names = {"-p", "--passphrase"}, description = "Passphrase associated with the private key", arity = "0..1", interactive = true)
     public String passphrase;
 
     public SshProvider() {

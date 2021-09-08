@@ -1,6 +1,6 @@
 package io.seqera.tower.cli.commands.credentials.create;
 
-import io.seqera.tower.cli.commands.credentials.providers.GitlabProvider;
+import io.seqera.tower.cli.commands.credentials.providers.BitbucketProvider;
 import io.seqera.tower.cli.commands.credentials.providers.CredentialsProvider;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
@@ -12,7 +12,7 @@ import picocli.CommandLine.Mixin;
 public class CreateBitbucketCmd extends AbstractCreateCmd {
 
     @Mixin
-    GitlabProvider provider;
+    BitbucketProvider provider;
 
     @Override
     protected CredentialsProvider getProvider() {

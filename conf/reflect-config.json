@@ -911,6 +911,12 @@
   "allDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.model.BitBucketSecurityKeys",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.model.ComputeConfig",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1040,7 +1046,25 @@
   "allDeclaredMethods":true
 },
 {
+  "name":"io.seqera.tower.model.GitHubSecurityKeys",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.model.GitLabSecurityKeys",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.model.GoogleLifeSciencesConfig",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.model.GoogleSecurityKeys",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true
@@ -1116,6 +1140,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.model.SSHSecurityKeys",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.model.SecurityKeys",
   "allDeclaredMethods":true
 },
@@ -1176,6 +1206,10 @@
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"java.io.Console",
+  "methods":[{"name":"readPassword","parameterTypes":["java.lang.String","java.lang.Object[]"] }]
 },
 {
   "name":"java.io.Serializable",
