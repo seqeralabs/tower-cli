@@ -761,12 +761,14 @@
 {
   "name":"io.seqera.tower.cli.commands.credentials.providers.K8sProvider$ClientCerts",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.providers.K8sProvider$Keys",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.providers.SshProvider",
@@ -1077,6 +1079,12 @@
 {
   "name":"io.seqera.tower.model.JobCleanupPolicy$Adapter",
   "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.model.K8sSecurityKeys",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
 },
 {
   "name":"io.seqera.tower.model.Launch",
