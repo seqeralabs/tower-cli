@@ -86,7 +86,7 @@ class ComputeEnvCmdTest extends BaseCmdTest {
     void testView(MockServerClient mock) {
 
         mock.when(
-                request().withMethod("GET").withPath("/compute-envs/isnEDBLvHDAIteOEF44ow")
+                request().withMethod("GET").withPath("/compute-envs/isnEDBLvHDAIteOEF44ow"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("compute_env_view")).withContentType(MediaType.APPLICATION_JSON)
         );
