@@ -490,7 +490,8 @@
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AbstractPlatform$StagingOptions",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AltairPlatform",
@@ -1074,6 +1075,12 @@
 },
 {
   "name":"io.seqera.tower.model.GitLabSecurityKeys",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.model.GkeComputeConfig",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true

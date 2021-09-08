@@ -21,10 +21,10 @@ public abstract class AbstractPlatform<T extends ComputeConfig> implements Platf
     public StagingOptions staging;
 
     public static class StagingOptions {
-        @Option(names = {"--pre-run-script"}, description = "Pre-run script")
+        @Option(names = {"--pre-run"}, description = "Pre-run script")
         public Path preRunScript;
 
-        @Option(names = {"--post-run-script"}, description = "Post-run script")
+        @Option(names = {"--post-run"}, description = "Post-run script")
         public Path postRunScript;
     }
 
