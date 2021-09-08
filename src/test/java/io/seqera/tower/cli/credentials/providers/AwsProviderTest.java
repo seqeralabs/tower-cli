@@ -3,7 +3,9 @@
  */
 package io.seqera.tower.cli.credentials.providers;
 
+import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.BaseCmdTest;
+import io.seqera.tower.cli.exceptions.CredentialsNotFoundException;
 import io.seqera.tower.cli.responses.CredentialsCreated;
 import io.seqera.tower.cli.responses.CredentialsUpdated;
 import org.junit.jupiter.api.Test;
@@ -74,6 +76,37 @@ class AwsProviderTest extends BaseCmdTest {
 
         assertEquals("", out.stdErr);
         assertEquals(new CredentialsUpdated("aws", "aws", USER_WORKSPACE_NAME).toString(), out.stdOut);
+    }
+
+    @Test
+    void testUpdateNotFound(MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/credentials/kfKx9xRgzpIIZrbCMOcU5"), exactly(1)
+        ).respond(
+                response().withStatusCode(403)
+        );
+
+        ExecOut out = exec(mock, "credentials", "update", "aws", "-i", "kfKx9xRgzpIIZrbCMOcU5", "-r", "changeAssumeRole");
+
+        assertEquals(errorMessage(out.app, new CredentialsNotFoundException("kfKx9xRgzpIIZrbCMOcU5", USER_WORKSPACE_NAME)), out.stdErr);
+        assertEquals("", out.stdOut);
+        assertEquals(-1, out.exitCode);
+    }
+
+    @Test
+    void testInvalidAuth(MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/credentials/kfKx9xRgzpIIZrbCMOcU5"), exactly(1)
+        ).respond(
+                response().withStatusCode(401)
+        );
+
+        ExecOut out = exec(mock, "credentials", "update", "aws", "-i", "kfKx9xRgzpIIZrbCMOcU5", "-r", "changeAssumeRole");
+
+        assertEquals(errorMessage(out.app, new ApiException(401, "Unauthorized")), out.stdErr);
+        assertEquals("", out.stdOut);
+        assertEquals(-1, out.exitCode);
     }
 
 }

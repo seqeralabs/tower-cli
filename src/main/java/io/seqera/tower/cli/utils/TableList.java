@@ -23,9 +23,6 @@ public class TableList {
     private PrintWriter out;
 
     public TableList(PrintWriter out, int columns, String... descriptions) {
-        if (descriptions.length != columns && descriptions.length != 0) {
-            throw new IllegalArgumentException();
-        }
         this.out = out;
         this.rows = columns;
         this.descriptions = descriptions;
@@ -62,24 +59,11 @@ public class TableList {
         return this.compareWith((o1, o2) -> o1[column].compareTo(o2[column]));
     }
 
-    public TableList align(int column, EnumAlignment align) {
-        aligns[column] = align;
-        return this;
-    }
-
-    public TableList withSpacing(int spacing) {
-        this.spacing = spacing;
-        return this;
-    }
-
     /**
      * Adds a row to the table with the specified elements.
      */
 
     public TableList addRow(String... elements) {
-        if (elements.length != rows) {
-            throw new IllegalArgumentException();
-        }
         table.add(elements);
         updateSizes(elements);
         return this;

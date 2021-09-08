@@ -5,6 +5,7 @@ package io.seqera.tower.cli.credentials;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.BaseCmdTest;
+import io.seqera.tower.cli.exceptions.CredentialsNotFoundException;
 import io.seqera.tower.cli.exceptions.ShowUsageException;
 import io.seqera.tower.cli.responses.CredentialsDeleted;
 import io.seqera.tower.cli.responses.CredentialsList;
@@ -41,7 +42,7 @@ class CredentialsCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testDeleteUnknown(MockServerClient mock) {
+    void testDeleteNotFound(MockServerClient mock) {
         mock.when(
                 request().withMethod("DELETE").withPath("/credentials/1cz5A8cuBkB5iKKiCwJCFU"), exactly(1)
         ).respond(
@@ -50,7 +51,7 @@ class CredentialsCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(mock, "credentials", "delete", "-i", "1cz5A8cuBkB5iKKiCwJCFU");
 
-        assertEquals(errorMessage(out.app, new ApiException(403, "")), out.stdErr);
+        assertEquals(errorMessage(out.app, new CredentialsNotFoundException("1cz5A8cuBkB5iKKiCwJCFU", USER_WORKSPACE_NAME)), out.stdErr);
         assertEquals("", out.stdOut);
         assertEquals(-1, out.exitCode);
     }

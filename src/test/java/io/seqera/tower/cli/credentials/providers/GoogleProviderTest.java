@@ -10,6 +10,7 @@ import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 
 import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 
 import static io.seqera.tower.cli.commands.AbstractApiCmd.USER_WORKSPACE_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,6 +35,16 @@ class GoogleProviderTest extends BaseCmdTest {
         assertEquals(new CredentialsCreated("google", "1cz5A8cuBkB5iJliCwJCFU", "google", USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
 
+    }
+
+    @Test
+    void testFileNotFound(MockServerClient mock) {
+
+        ExecOut out = exec(mock, "credentials", "create", "google", "-n", "google", "-k", "/random_path/not_found.key");
+
+        assertEquals(errorMessage(out.app, new NoSuchFileException("/random_path/not_found.key")), out.stdErr);
+        assertEquals("", out.stdOut);
+        assertEquals(-1, out.exitCode);
     }
 
 }

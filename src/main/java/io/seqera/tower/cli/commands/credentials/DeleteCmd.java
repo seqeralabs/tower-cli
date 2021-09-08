@@ -1,6 +1,7 @@
 package io.seqera.tower.cli.commands.credentials;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.exceptions.CredentialsNotFoundException;
 import io.seqera.tower.cli.responses.CredentialsDeleted;
 import io.seqera.tower.cli.responses.Response;
 import picocli.CommandLine.Option;
@@ -23,7 +24,7 @@ public class DeleteCmd extends AbstractCredentialsCmd {
         } catch (ApiException e) {
             if (e.getCode() == 403) {
                 // Customize the forbidden message
-                throw new ApiException(403, String.format("Unknown credentials with id '%s' at %s workspace", id, workspaceRef()));
+                throw new CredentialsNotFoundException(id, workspaceRef());
             }
             throw e;
         }

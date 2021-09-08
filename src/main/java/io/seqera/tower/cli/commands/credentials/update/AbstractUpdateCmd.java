@@ -5,6 +5,7 @@ import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.commands.credentials.UpdateCmd;
 import io.seqera.tower.cli.commands.credentials.providers.CredentialsProvider;
+import io.seqera.tower.cli.exceptions.CredentialsNotFoundException;
 import io.seqera.tower.cli.responses.CredentialsUpdated;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.Credentials;
@@ -44,7 +45,7 @@ public abstract class AbstractUpdateCmd extends AbstractApiCmd {
         } catch (ApiException e) {
             if (e.getCode() == 403) {
                 // Customize the forbidden message
-                throw new ApiException(403, String.format("Unknown credentials with id '%s' at %s workspace", id, workspaceRef()));
+                throw new CredentialsNotFoundException(id, workspaceRef());
             }
             throw e;
         }
