@@ -3,6 +3,7 @@
  */
 package io.seqera.tower.cli.computeenvs;
 
+import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
 import io.seqera.tower.cli.responses.ComputeEnvDeleted;
@@ -46,7 +47,22 @@ class ComputeEnvCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testDeleteUnknown(MockServerClient mock) {
+    void testDeleteInvalidAuth(MockServerClient mock) {
+        mock.when(
+                request().withMethod("DELETE").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ8"), exactly(1)
+        ).respond(
+                response().withStatusCode(401)
+        );
+
+        ExecOut out = exec(mock, "compute-envs", "delete", "-i", "vYOK4vn7spw7bHHWBDXZ8");
+
+        assertEquals(errorMessage(out.app, new ApiException(401, "Unauthorized")), out.stdErr);
+        assertEquals("", out.stdOut);
+        assertEquals(-1, out.exitCode);
+    }
+
+    @Test
+    void testDeleteNotFound(MockServerClient mock) {
         mock.when(
                 request().withMethod("DELETE").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ3"), exactly(1)
         ).respond(
@@ -83,7 +99,7 @@ class ComputeEnvCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testView(MockServerClient mock) {
+    void testViewAwsForge(MockServerClient mock) {
 
         mock.when(
                 request().withMethod("GET").withPath("/compute-envs/isnEDBLvHDAIteOEF44ow"), exactly(1)
@@ -123,5 +139,71 @@ class ComputeEnvCmdTest extends BaseCmdTest {
         ).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
+
+    @Test
+    void testViewAwsManual(MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/53aWhB2qJroy0i51FOrFAC"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_env_view_aws_manual")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "compute-envs", "view", "-i", "53aWhB2qJroy0i51FOrFAC");
+
+        assertEquals("", out.stdErr);
+        assertEquals(StringUtils.chop(new ComputeEnvView("53aWhB2qJroy0i51FOrFAC", USER_WORKSPACE_NAME,
+                new ComputeEnv()
+                        .id("53aWhB2qJroy0i51FOrFAC")
+                        .name("manual")
+                        .platform(ComputeEnv.PlatformEnum.AWS_BATCH)
+                        .dateCreated(OffsetDateTime.parse("2021-09-08T15:19:08Z"))
+                        .lastUpdated(OffsetDateTime.parse("2021-09-08T15:19:08Z"))
+                        .status(ComputeEnvStatus.AVAILABLE)
+                        .credentialsId("6g0ER59L4ZoE5zpOmUP48D")
+                        .config(
+                                new AwsBatchConfig()
+                                        .region("eu-west-1")
+                                        .computeQueue("TowerForge-isnEDBLvHDAIteOEF44ow-work")
+                                        .headQueue("TowerForge-isnEDBLvHDAIteOEF44ow-head")
+                                        .cliPath("/home/ec2-user/miniconda/bin/aws")
+                                        .workDir("s3://nextflow-ci/jordeu")
+                                        .platform("aws-batch")
+
+                        )
+        ).toString()), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testViewNotFound(MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/isnEDBLvHDAIteOEF44or"), exactly(1)
+        ).respond(
+                response().withStatusCode(403)
+        );
+
+        ExecOut out = exec(mock, "compute-envs", "view", "-i", "isnEDBLvHDAIteOEF44or");
+
+        assertEquals(errorMessage(out.app, new ComputeEnvNotFoundException("isnEDBLvHDAIteOEF44or", USER_WORKSPACE_NAME)), out.stdErr);
+        assertEquals("", out.stdOut);
+        assertEquals(-1, out.exitCode);
+    }
+
+    @Test
+    void testViewInvalidAuth(MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/isnEDBLvHDAIteOEF44om"), exactly(1)
+        ).respond(
+                response().withStatusCode(401)
+        );
+
+        ExecOut out = exec(mock, "compute-envs", "view", "-i", "isnEDBLvHDAIteOEF44om");
+
+        assertEquals(errorMessage(out.app, new ApiException(401, "Unauthorized")), out.stdErr);
+        assertEquals("", out.stdOut);
+        assertEquals(-1, out.exitCode);
+    }
+
 
 }

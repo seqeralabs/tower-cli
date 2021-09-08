@@ -1,6 +1,7 @@
 package io.seqera.tower.cli.commands.computeenvs;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
 import io.seqera.tower.cli.responses.ComputeEnvView;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.DescribeComputeEnvResponse;
@@ -24,7 +25,7 @@ public class ViewCmd extends AbstractComputeEnvCmd {
         } catch (ApiException e) {
             if (e.getCode() == 403) {
                 // Customize the forbidden message
-                throw new ApiException(404, String.format("Unknown compute environment with id '%s' at %s workspace", id, workspaceRef()));
+                throw new ComputeEnvNotFoundException(id, workspaceRef());
             }
             throw e;
         }

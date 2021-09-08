@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class AwsBatchManualPlatform extends AbstractPlatform<AwsBatchConfig> {
 
-    @Option(names = {"--region"}, description = "AWS region", required = true)
+    @Option(names = {"-r", "--region"}, description = "AWS region", required = true)
     public String region;
 
     @Option(names = {"--head-queue"}, description = "The Batch queue that will run the Nextflow application. A queue that does not use spot instances is expected", required = true)

@@ -221,7 +221,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         try {
             Response response = exec();
             if (app().json) {
-                app().println(prettyJson(response.getBody()));
+                app().getOut().println(prettyJson(response.getBody()));
             } else {
                 response.toString(app().getOut());
             }

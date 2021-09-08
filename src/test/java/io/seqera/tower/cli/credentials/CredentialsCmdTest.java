@@ -87,12 +87,12 @@ class CredentialsCmdTest extends BaseCmdTest {
     @Test
     void testInvalidAuth(MockServerClient mock) {
         mock.when(
-                request().withMethod("DELETE").withPath("/credentials/1cz5A8cuBkB5iJliCwJCFU"), exactly(1)
+                request().withMethod("DELETE").withPath("/credentials/1cz5A8cuBkB5iJliCwJCFT"), exactly(1)
         ).respond(
                 response().withStatusCode(401)
         );
 
-        ExecOut out = exec(mock, "credentials", "delete", "-i", "1cz5A8cuBkB5iJliCwJCFU");
+        ExecOut out = exec(mock, "credentials", "delete", "-i", "1cz5A8cuBkB5iJliCwJCFT");
 
         assertEquals(errorMessage(out.app, new ApiException(401, "Unauthorized")), out.stdErr);
         assertEquals("", out.stdOut);

@@ -79,14 +79,6 @@ public class Tower extends AbstractCmd {
         return -1;
     }
 
-    public void println(String content) {
-        spec.commandLine().getOut().println(content);
-    }
-
-    public void printerr(String content) {
-        spec.commandLine().getErr().println(content);
-    }
-
     public PrintWriter getErr() {
         return spec.commandLine().getErr();
     }
