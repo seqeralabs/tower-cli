@@ -2,11 +2,11 @@ package io.seqera.tower.cli.responses;
 
 public class RunSubmited extends Response {
 
-    private String workflowId;
+    public final String workflowId;
 
-    private String workflowUrl;
+    public final String workflowUrl;
 
-    private String workspaceRef;
+    public final String workspaceRef;
 
     public RunSubmited(String workflowId, String workflowUrl, String workspaceRef) {
         this.workflowId = workflowId;

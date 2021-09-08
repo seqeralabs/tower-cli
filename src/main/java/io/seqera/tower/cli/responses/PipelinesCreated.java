@@ -2,8 +2,8 @@ package io.seqera.tower.cli.responses;
 
 public class PipelinesCreated extends Response {
 
-    private String workspaceRef;
-    private String pipelineName;
+    public final String workspaceRef;
+    public final String pipelineName;
 
     public PipelinesCreated(String workspaceRef, String pipelineName) {
         this.workspaceRef = workspaceRef;

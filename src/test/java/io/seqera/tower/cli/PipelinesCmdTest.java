@@ -3,6 +3,7 @@
  */
 package io.seqera.tower.cli;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.exceptions.MultiplePipelinesFoundException;
 import io.seqera.tower.cli.exceptions.NoComputeEnvironmentException;
 import io.seqera.tower.cli.exceptions.PipelineNotFoundException;
@@ -24,6 +25,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 import static io.seqera.tower.cli.commands.AbstractApiCmd.USER_WORKSPACE_NAME;
+import static io.seqera.tower.cli.utils.JsonHelper.prettyJson;
 import static org.apache.commons.lang3.StringUtils.chop;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.matchers.Times.exactly;
@@ -289,6 +291,22 @@ class PipelinesCmdTest extends BaseCmdTest {
 
         assertEquals("", out.stdErr);
         assertEquals(chop(new PipelinesList(USER_WORKSPACE_NAME, List.of()).toString()), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testListJSON(MockServerClient mock) throws JsonProcessingException {
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{ \"pipelines\": [], \"totalSize\": 0 }").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "--json", "pipelines", "list");
+
+        assertEquals("", out.stdErr);
+        assertEquals(prettyJson(new PipelinesList(USER_WORKSPACE_NAME, List.of()).getJSON()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

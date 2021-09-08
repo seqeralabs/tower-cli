@@ -35,18 +35,8 @@ public class ErrorReporting {
             return;
         }
 
-        if (e instanceof NullPointerException) {
-            e.printStackTrace(err);
-            return;
-        }
-
         if (e instanceof NoSuchFileException) {
             print(err, String.format("File not found. %s", e.getMessage()));
-            return;
-        }
-
-        if (e instanceof IOException) {
-            print(err, String.format("IO error. %s", e.getMessage()));
             return;
         }
 
@@ -67,7 +57,7 @@ public class ErrorReporting {
             return;
         }
 
-        print(err, e.getMessage());
+        e.printStackTrace(err);
     }
 
     private static void print(PrintWriter err, String line) {

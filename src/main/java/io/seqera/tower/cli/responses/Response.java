@@ -1,5 +1,6 @@
 package io.seqera.tower.cli.responses;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import picocli.CommandLine;
 
 import java.io.PrintWriter;
@@ -9,7 +10,8 @@ import java.time.format.DateTimeFormatter;
 
 public abstract class Response {
 
-    public Object getBody() {
+    @JsonIgnore
+    public Object getJSON() {
         return this;
     }
 

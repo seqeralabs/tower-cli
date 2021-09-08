@@ -112,5 +112,4 @@ class LaunchCmdTest extends BaseCmdTest {
         assertEquals("", out.stdErr);
         assertEquals(0, out.exitCode);
     }
-
 }

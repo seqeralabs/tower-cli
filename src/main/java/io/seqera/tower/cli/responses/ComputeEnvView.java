@@ -13,9 +13,9 @@ import java.io.PrintWriter;
 
 public class ComputeEnvView extends Response {
 
-    private String id;
-    private ComputeEnv computeEnv;
-    private String workspaceRef;
+    public final String id;
+    public final ComputeEnv computeEnv;
+    public final String workspaceRef;
 
     public ComputeEnvView(String id, String workspaceRef, ComputeEnv computeEnv) {
         this.id = id;
@@ -24,7 +24,7 @@ public class ComputeEnvView extends Response {
     }
 
     @Override
-    public Object getBody() {
+    public Object getJSON() {
         return computeEnv;
     }
 

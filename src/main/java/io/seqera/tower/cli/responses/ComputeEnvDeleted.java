@@ -2,8 +2,8 @@ package io.seqera.tower.cli.responses;
 
 public class ComputeEnvDeleted extends Response {
 
-    private String id;
-    private String workspaceRef;
+    public final String id;
+    public final String workspaceRef;
 
     public ComputeEnvDeleted(String id, String workspaceRef) {
         this.id = id;

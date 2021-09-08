@@ -9,8 +9,8 @@ import java.util.List;
 
 public class ComputeEnvList extends Response {
 
-    private String workspaceRef;
-    private List<ListComputeEnvsResponseEntry> computeEnvs;
+    public final String workspaceRef;
+    public final List<ListComputeEnvsResponseEntry> computeEnvs;
 
     public ComputeEnvList(String workspaceRef, List<ListComputeEnvsResponseEntry> computeEnvs) {
         this.workspaceRef = workspaceRef;

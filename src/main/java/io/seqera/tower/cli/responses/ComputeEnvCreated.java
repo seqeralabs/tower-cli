@@ -2,9 +2,9 @@ package io.seqera.tower.cli.responses;
 
 public class ComputeEnvCreated extends Response {
 
-    private String platform;
-    private String name;
-    private String workspaceRef;
+    public final String platform;
+    public final String name;
+    public final String workspaceRef;
 
     public ComputeEnvCreated(String platform, String name, String workspaceRef) {
         this.platform = platform;

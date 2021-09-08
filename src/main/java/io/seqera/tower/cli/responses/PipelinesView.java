@@ -12,9 +12,9 @@ import java.io.PrintWriter;
 
 public class PipelinesView extends Response {
 
-    private String workspaceRef;
-    private PipelineDbDto info;
-    private Launch launch;
+    public final String workspaceRef;
+    public final PipelineDbDto info;
+    public final Launch launch;
 
     public PipelinesView(String workspaceRef, PipelineDbDto info, Launch launch) {
         this.workspaceRef = workspaceRef;

@@ -2,10 +2,10 @@ package io.seqera.tower.cli.responses;
 
 public class CredentialsCreated extends Response {
 
-    private String id;
-    private String provider;
-    private String name;
-    private String workspaceRef;
+    public final String id;
+    public final String provider;
+    public final String name;
+    public final String workspaceRef;
 
     public CredentialsCreated(String provider, String id, String name, String workspaceRef) {
         this.provider = provider;

@@ -2,9 +2,9 @@ package io.seqera.tower.cli.responses;
 
 public class CredentialsUpdated extends Response {
 
-    private String provider;
-    private String name;
-    private String workspaceRef;
+    public final String provider;
+    public final String name;
+    public final String workspaceRef;
 
     public CredentialsUpdated(String provider, String name, String workspaceRef) {
         this.provider = provider;

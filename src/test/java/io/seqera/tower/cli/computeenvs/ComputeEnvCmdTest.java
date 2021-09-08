@@ -226,7 +226,7 @@ class ComputeEnvCmdTest extends BaseCmdTest {
                                         .volumes(List.of())
 
                         )
-        ).getBody()), out.stdOut);
+        ).getJSON()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

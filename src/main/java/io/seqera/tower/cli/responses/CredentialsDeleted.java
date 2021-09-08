@@ -2,8 +2,8 @@ package io.seqera.tower.cli.responses;
 
 public class CredentialsDeleted extends Response {
 
-    private String id;
-    private String workspaceRef;
+    public final String id;
+    public final String workspaceRef;
 
     public CredentialsDeleted(String id, String workspaceRef) {
         this.id = id;

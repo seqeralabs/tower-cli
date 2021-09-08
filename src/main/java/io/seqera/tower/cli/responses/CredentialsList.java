@@ -8,8 +8,8 @@ import java.util.List;
 
 public class CredentialsList extends Response {
 
-    private String workspaceRef;
-    private final List<Credentials> credentials;
+    public final String workspaceRef;
+    public final List<Credentials> credentials;
 
     public CredentialsList(String workspaceRef, List<Credentials> credentials) {
         this.workspaceRef = workspaceRef;

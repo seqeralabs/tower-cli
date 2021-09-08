@@ -8,8 +8,8 @@ import java.util.List;
 
 public class PipelinesList extends Response {
 
-    private String workspaceRef;
-    private final List<PipelineDbDto> pipelines;
+    public final String workspaceRef;
+    public final List<PipelineDbDto> pipelines;
 
     public PipelinesList(String workspaceRef, List<PipelineDbDto> pipelines) {
         this.workspaceRef = workspaceRef;
@@ -32,4 +32,6 @@ public class PipelinesList extends Response {
         table.print();
         out.println("");
     }
+
+
 }

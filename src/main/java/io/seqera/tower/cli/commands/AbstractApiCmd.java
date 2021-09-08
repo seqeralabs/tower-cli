@@ -6,7 +6,6 @@ import io.seqera.tower.api.TowerApi;
 import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.exceptions.NoComputeEnvironmentException;
 import io.seqera.tower.cli.exceptions.ShowUsageException;
-import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.ListComputeEnvsResponseEntry;
@@ -221,7 +220,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         try {
             Response response = exec();
             if (app().json) {
-                app().getOut().println(prettyJson(response.getBody()));
+                app().getOut().println(prettyJson(response.getJSON()));
             } else {
                 response.toString(app().getOut());
             }
