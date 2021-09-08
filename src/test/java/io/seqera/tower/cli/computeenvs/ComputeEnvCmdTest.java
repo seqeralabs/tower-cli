@@ -7,12 +7,18 @@ import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
 import io.seqera.tower.cli.responses.ComputeEnvDeleted;
 import io.seqera.tower.cli.responses.ComputeEnvList;
+import io.seqera.tower.cli.responses.ComputeEnvView;
+import io.seqera.tower.model.AwsBatchConfig;
+import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.ComputeEnvStatus;
+import io.seqera.tower.model.ForgeConfig;
 import io.seqera.tower.model.ListComputeEnvsResponseEntry;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import static io.seqera.tower.cli.commands.AbstractApiCmd.USER_WORKSPACE_NAME;
@@ -73,6 +79,48 @@ class ComputeEnvCmdTest extends BaseCmdTest {
                         .platform("aws-batch")
                         .status(ComputeEnvStatus.AVAILABLE)
         )).toString()), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testView(MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/isnEDBLvHDAIteOEF44ow")
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_env_view")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "compute-envs", "view", "-i", "isnEDBLvHDAIteOEF44ow");
+
+        assertEquals("", out.stdErr);
+        assertEquals(StringUtils.chop(new ComputeEnvView("isnEDBLvHDAIteOEF44ow", USER_WORKSPACE_NAME,
+                new ComputeEnv()
+                        .id("isnEDBLvHDAIteOEF44ow")
+                        .name("demo")
+                        .platform(ComputeEnv.PlatformEnum.AWS_BATCH)
+                        .dateCreated(OffsetDateTime.parse("2021-09-08T11:19:24Z"))
+                        .lastUpdated(OffsetDateTime.parse("2021-09-08T11:20:08Z"))
+                        .status(ComputeEnvStatus.AVAILABLE)
+                        .credentialsId("6g0ER59L4ZoE5zpOmUP48D")
+                        .config(
+                                new AwsBatchConfig()
+                                        .region("eu-west-1")
+                                        .cliPath("/home/ec2-user/miniconda/bin/aws")
+                                        .workDir("s3://nextflow-ci/jordeu")
+                                        .platform("aws-batch")
+                                        .forge(
+                                                new ForgeConfig()
+                                                        .type(ForgeConfig.TypeEnum.SPOT)
+                                                        .minCpus(0)
+                                                        .maxCpus(123)
+                                                        .gpuEnabled(false)
+                                                        .ebsAutoScale(true)
+                                                        .disposeOnDeletion(true)
+                                                        .fusionEnabled(true)
+                                        )
+                        )
+        ).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

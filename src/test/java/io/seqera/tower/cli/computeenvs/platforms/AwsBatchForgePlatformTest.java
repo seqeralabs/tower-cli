@@ -37,8 +37,4 @@ class AwsBatchForgePlatformTest extends BaseCmdTest {
         assertEquals(0, out.exitCode);
     }
 
-    @Test
-    void testUpdate(MockServerClient mock) {
-
-    }
 }

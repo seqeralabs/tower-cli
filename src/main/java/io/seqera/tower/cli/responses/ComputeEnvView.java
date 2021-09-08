@@ -50,7 +50,7 @@ public class ComputeEnvView extends Response {
         }
 
         out.println(ansi(String.format("%n  @|bold Compute environment at %s workspace:|@%n", workspaceRef)));
-        TableList table = new TableList(out, 2).withUnicode(false);
+        TableList table = new TableList(out, 2);
         table.setPrefix("    ");
         table.addRow("ID", id);
         table.addRow("Name", computeEnv.getName());

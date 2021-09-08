@@ -26,7 +26,7 @@ public class PipelinesList extends Response {
             return;
         }
 
-        TableList table = new TableList(out, 3, "ID", "Repository", "Description").sortBy(0).withUnicode(false);
+        TableList table = new TableList(out, 3, "ID", "Repository", "Description").sortBy(0);
         table.setPrefix("    ");
         pipelines.forEach(pipe -> table.addRow(pipe.getName(), pipe.getRepository(), pipe.getDescription()));
         table.print();

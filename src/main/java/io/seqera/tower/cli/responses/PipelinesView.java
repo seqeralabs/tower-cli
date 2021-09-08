@@ -33,7 +33,7 @@ public class PipelinesView extends Response {
         }
 
         out.println(ansi(String.format("%n  @|bold Pipeline at %s workspace:|@%n", workspaceRef)));
-        TableList table = new TableList(out, 2).withUnicode(false);
+        TableList table = new TableList(out, 2);
         table.setPrefix("    ");
         table.addRow("ID", info.getPipelineId().toString());
         table.addRow("Name", info.getName());
