@@ -1,19 +1,17 @@
 package io.seqera.tower.cli.responses;
 
-import io.seqera.tower.model.PipelineDbDto;
-
 public class PipelinesUpdated extends Response {
 
     private String workspaceRef;
-    private PipelineDbDto pipeline;
+    private String pipelineName;
 
-    public PipelinesUpdated(String workspaceRef, PipelineDbDto pipeline) {
+    public PipelinesUpdated(String workspaceRef, String pipelineName) {
         this.workspaceRef = workspaceRef;
-        this.pipeline = pipeline;
+        this.pipelineName = pipelineName;
     }
 
     @Override
     public String toString() {
-        return ansi(String.format("%n  @|yellow Pipeline '%s' updated at %s workspace|@%n", pipeline.getName(), workspaceRef));
+        return ansi(String.format("%n  @|yellow Pipeline '%s' updated at %s workspace|@%n", pipelineName, workspaceRef));
     }
 }

@@ -1,0 +1,102 @@
+{
+  "launch": {
+    "id": "oRptz8ekYa3BSA4Nnx7Qn",
+    "computeEnv": {
+      "id": "vYOK4vn7spw7bHHWBDXZ2",
+      "name": "demo",
+      "description": null,
+      "platform": "aws-batch",
+      "config": {
+        "region": "eu-west-1",
+        "computeQueue": "TowerForge-vYOK4vn7spw7bHHWBDXZ2-work",
+        "computeJobRole": null,
+        "headQueue": "TowerForge-vYOK4vn7spw7bHHWBDXZ2-head",
+        "headJobRole": null,
+        "cliPath": "/home/ec2-user/miniconda/bin/aws",
+        "volumes": [],
+        "workDir": "s3://nextflow-ci/jordeu",
+        "preRunScript": null,
+        "postRunScript": null,
+        "headJobCpus": null,
+        "headJobMemoryMb": null,
+        "forge": {
+          "type": "SPOT",
+          "minCpus": 0,
+          "maxCpus": 123,
+          "gpuEnabled": false,
+          "ebsAutoScale": true,
+          "instanceTypes": null,
+          "allocStrategy": null,
+          "imageId": null,
+          "vpcId": null,
+          "subnets": null,
+          "securityGroups": null,
+          "fsxMount": null,
+          "fsxName": null,
+          "fsxSize": null,
+          "disposeOnDeletion": true,
+          "ec2KeyPair": null,
+          "allowBuckets": null,
+          "ebsBlockSize": null,
+          "fusionEnabled": true,
+          "bidPercentage": null,
+          "efsCreate": null,
+          "efsId": null,
+          "efsMount": null
+        },
+        "forgedResources": [
+          {
+            "IamRole": "arn:aws:iam::195996028523:role/TowerForge-vYOK4vn7spw7bHHWBDXZ2-ServiceRole"
+          },
+          {
+            "IamRole": "arn:aws:iam::195996028523:role/TowerForge-vYOK4vn7spw7bHHWBDXZ2-FleetRole"
+          },
+          {
+            "IamInstanceProfile": "arn:aws:iam::195996028523:instance-profile/TowerForge-vYOK4vn7spw7bHHWBDXZ2-InstanceRole"
+          },
+          {
+            "Ec2LaunchTemplate": "TowerForge-vYOK4vn7spw7bHHWBDXZ2"
+          },
+          {
+            "BatchEnv": "arn:aws:batch:eu-west-1:195996028523:compute-environment/TowerForge-vYOK4vn7spw7bHHWBDXZ2-head"
+          },
+          {
+            "BatchQueue": "arn:aws:batch:eu-west-1:195996028523:job-queue/TowerForge-vYOK4vn7spw7bHHWBDXZ2-head"
+          },
+          {
+            "BatchEnv": "arn:aws:batch:eu-west-1:195996028523:compute-environment/TowerForge-vYOK4vn7spw7bHHWBDXZ2-work"
+          },
+          {
+            "BatchQueue": "arn:aws:batch:eu-west-1:195996028523:job-queue/TowerForge-vYOK4vn7spw7bHHWBDXZ2-work"
+          }
+        ],
+        "platform": "aws-batch"
+      },
+      "dateCreated": "2021-09-08T06:00:06Z",
+      "lastUpdated": "2021-09-08T06:00:59Z",
+      "lastUsed": null,
+      "deleted": null,
+      "status": "AVAILABLE",
+      "message": null,
+      "primary": null,
+      "credentialsId": "6g0ER59L4ZoE5zpOmUP48D"
+    },
+    "pipeline": "https://github.com/pditommaso/nf-sleep",
+    "workDir": "s3://nextflow-ci/jordeu",
+    "revision": null,
+    "configText": null,
+    "paramsText": "timeout: 60\n",
+    "preRunScript": null,
+    "postRunScript": null,
+    "mainScript": null,
+    "entryName": null,
+    "schemaName": null,
+    "resume": false,
+    "pullLatest": false,
+    "stubRun": false,
+    "sessionId": null,
+    "configProfiles": null,
+    "dateCreated": "2021-09-08T06:50:54Z",
+    "lastUpdated": "2021-09-08T06:50:54Z"
+  }
+}

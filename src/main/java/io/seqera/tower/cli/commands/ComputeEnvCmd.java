@@ -1,14 +1,14 @@
 package io.seqera.tower.cli.commands;
 
-import io.seqera.tower.cli.commands.computeenv.CreateCmd;
-import io.seqera.tower.cli.commands.computeenv.DeleteCmd;
-import io.seqera.tower.cli.commands.computeenv.ListCmd;
-import io.seqera.tower.cli.commands.computeenv.ViewCmd;
+import io.seqera.tower.cli.commands.computeenvs.CreateCmd;
+import io.seqera.tower.cli.commands.computeenvs.DeleteCmd;
+import io.seqera.tower.cli.commands.computeenvs.ListCmd;
+import io.seqera.tower.cli.commands.computeenvs.ViewCmd;
 import picocli.CommandLine.Command;
 
 
 @Command(
-        name = "compute-env",
+        name = "compute-envs",
         description = "Manage workspace compute environments",
         subcommands = {
                 CreateCmd.class,

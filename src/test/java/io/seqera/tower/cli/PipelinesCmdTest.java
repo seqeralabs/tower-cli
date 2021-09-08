@@ -8,6 +8,7 @@ import io.seqera.tower.cli.exceptions.PipelineNotFoundException;
 import io.seqera.tower.cli.responses.PipelinesCreated;
 import io.seqera.tower.cli.responses.PipelinesDeleted;
 import io.seqera.tower.cli.responses.PipelinesList;
+import io.seqera.tower.cli.responses.PipelinesUpdated;
 import io.seqera.tower.model.PipelineDbDto;
 import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
@@ -24,6 +25,33 @@ import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
 class PipelinesCmdTest extends BaseCmdTest {
+
+    @Test
+    void testUpdate(MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "sleep_one_minute"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"pipelines\":[{\"pipelineId\":217997727159863,\"name\":\"sleep_one_minute\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/pditommaso/nf-sleep\",\"userId\":4,\"userName\":\"jordi\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null}],\"totalSize\":1}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines/217997727159863/launch"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("pipelines_update")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("PUT").withPath("/pipelines/217997727159863").withBody("{\"description\":\"Sleep one minute and exit\",\"launch\":{\"computeEnvId\":\"vYOK4vn7spw7bHHWBDXZ2\",\"pipeline\":\"https://github.com/pditommaso/nf-sleep\",\"workDir\":\"s3://nextflow-ci/jordeu\",\"paramsText\":\"timeout: 60\\n\",\"pullLatest\":false,\"stubRun\":false}}")
+        ).respond(
+                response().withStatusCode(200).withBody("{\"pipeline\":{\"pipelineId\":217997727159863,\"name\":\"sleep_one_minute\",\"description\":\"Sleep one minute and exit\",\"icon\":null,\"repository\":\"https://github.com/pditommaso/nf-sleep\",\"userId\":4,\"userName\":\"jordi\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null}}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "pipelines", "update", "-n", "sleep_one_minute", "-d", "Sleep one minute and exit");
+
+        assertEquals("", out.stdErr);
+        assertEquals(new PipelinesUpdated(USER_WORKSPACE_NAME, "sleep_one_minute").toString(), out.stdOut);
+    }
 
     @Test
     void testCreate(MockServerClient mock) throws IOException {

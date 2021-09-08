@@ -75,7 +75,7 @@ public class UpdateCmd extends AbstractPipelinesCmd {
                 , workspaceId()
         );
 
-        return new PipelinesUpdated(workspaceRef(), response.getPipeline());
+        return new PipelinesUpdated(workspaceRef(), response.getPipeline().getName());
     }
 
     private static <T> T coalesce(T value, T defaultValue) {

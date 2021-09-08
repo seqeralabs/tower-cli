@@ -1,13 +1,9 @@
 package io.seqera.tower.cli.commands.pipelines;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.commands.computeenv.AbstractComputeEnvCmd;
-import io.seqera.tower.cli.responses.ComputeEnvView;
 import io.seqera.tower.cli.responses.PipelinesView;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.model.DescribeComputeEnvResponse;
 import io.seqera.tower.model.DescribeLaunchResponse;
-import io.seqera.tower.model.DescribePipelineResponse;
 import io.seqera.tower.model.PipelineDbDto;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;

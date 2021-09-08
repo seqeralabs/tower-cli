@@ -2,8 +2,8 @@ package io.seqera.tower.cli.responses;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.JSON;
-import io.seqera.tower.cli.commands.computeenv.platforms.AwsBatchForgePlatform;
-import io.seqera.tower.cli.commands.computeenv.platforms.AwsBatchManualPlatform;
+import io.seqera.tower.cli.commands.computeenvs.platforms.AwsBatchForgePlatform;
+import io.seqera.tower.cli.commands.computeenvs.platforms.AwsBatchManualPlatform;
 import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.AwsBatchConfig;
 import io.seqera.tower.model.ComputeConfig;
