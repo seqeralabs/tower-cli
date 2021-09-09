@@ -43,19 +43,20 @@ public abstract class AbstractCreateCmd extends AbstractApiCmd {
 
     protected ComputeEnvCreated createComputeEnv(ComputeConfig config) throws ApiException {
 
-        String credsId = credentialsId == null ? findWorkspaceCredentials(getPlatform().type()) : credentialsId;
+        ComputeEnv.PlatformEnum platform = ComputeEnv.PlatformEnum.fromValue(config.getPlatform());
+        String credsId = credentialsId == null ? findWorkspaceCredentials(platform) : credentialsId;
 
         api().createComputeEnv(
                 new CreateComputeEnvRequest().computeEnv(
                         new ComputeEnv()
                                 .name(name)
-                                .platform(ComputeEnv.PlatformEnum.fromValue(config.getPlatform()))
+                                .platform(platform)
                                 .credentialsId(credsId)
                                 .config(config)
                 ), workspaceId()
         );
 
-        return new ComputeEnvCreated(config.getPlatform(), name, workspaceRef());
+        return new ComputeEnvCreated(platform.getValue(), name, workspaceRef());
     }
 
     private String findWorkspaceCredentials(ComputeEnv.PlatformEnum type) throws ApiException {

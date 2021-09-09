@@ -65,11 +65,14 @@ public class Tower extends AbstractCmd {
     }
 
     public static void main(String[] args) {
+        System.exit(buildCommandLine().execute(args));
+    }
+
+    protected static CommandLine buildCommandLine() {
         Tower app = new Tower();
         CommandLine cmd = new CommandLine(app);
         cmd.setUsageHelpLongOptionsMaxWidth(40);
-        int exitCode = cmd.execute(args);
-        System.exit(exitCode);
+        return cmd;
     }
 
     @Override

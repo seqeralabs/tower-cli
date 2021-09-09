@@ -23,6 +23,8 @@ import java.nio.file.Path;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
+import static io.seqera.tower.cli.Tower.buildCommandLine;
+
 @ExtendWith(MockServerExtension.class)
 public abstract class BaseCmdTest {
 
@@ -87,17 +89,16 @@ public abstract class BaseCmdTest {
         }
 
         // Run java version
-        Tower app = new Tower();
         StringWriter stdOut = new StringWriter();
         StringWriter stdErr = new StringWriter();
-        CommandLine cmd = new CommandLine(app);
+        CommandLine cmd = buildCommandLine();
         cmd.setOut(new PrintWriter(stdOut));
         cmd.setErr(new PrintWriter(stdErr));
 
         int exitCode = cmd.execute(ArrayUtils.insert(0, args, String.format("--url=%s", url(mock)), String.format("--access-token=%s", token())));
 
         return new ExecOut()
-                .app(app)
+                .app(cmd.getCommand())
                 .stdOut(StringUtils.chop(stdOut.toString()))
                 .stdErr(StringUtils.chop(stdErr.toString()))
                 .exitCode(exitCode);

@@ -6,6 +6,7 @@ import io.seqera.tower.api.TowerApi;
 import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.exceptions.NoComputeEnvironmentException;
 import io.seqera.tower.cli.exceptions.ShowUsageException;
+import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.exceptions.WorkspaceNotFoundException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.ComputeEnv;
@@ -14,7 +15,6 @@ import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import io.seqera.tower.model.User;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.logging.LoggingFeature;
-import picocli.CommandLine;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -129,7 +129,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
             return api().describeComputeEnv(availableComputeEnvsNameToId.get(name), workspaceId()).getComputeEnv();
         }
 
-        throw new ApiException(String.format("Compute environment '%s' is not available", name));
+        throw new TowerException(String.format("Compute environment '%s' is not available", name));
     }
 
     protected ComputeEnv primaryComputeEnv() throws ApiException {
