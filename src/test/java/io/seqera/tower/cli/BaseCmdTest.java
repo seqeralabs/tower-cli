@@ -20,7 +20,11 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 
 import static io.seqera.tower.cli.Tower.buildCommandLine;
@@ -134,9 +138,15 @@ public abstract class BaseCmdTest {
 
             StreamGobbler consumeOut = new StreamGobbler(process.getInputStream(), outWriter::println);
             StreamGobbler consumeErr = new StreamGobbler(process.getErrorStream(), errWriter::println);
-            Executors.newSingleThreadExecutor().submit(consumeOut);
-            Executors.newSingleThreadExecutor().submit(consumeErr);
+            Future<?> taskOut = Executors.newSingleThreadExecutor().submit(consumeOut);
+            Future<?> taskErr = Executors.newSingleThreadExecutor().submit(consumeErr);
             int exitCode = process.waitFor();
+            try {
+                taskErr.get(5, TimeUnit.SECONDS);
+                taskOut.get(5, TimeUnit.SECONDS);
+            } catch (ExecutionException | TimeoutException e) {
+                // Ignore this
+            }
 
             if (exitCode == 255) {
                 exitCode = -1;
