@@ -28,4 +28,11 @@ public class ModelHelper {
                 .stubRun(launch.getStubRun())
                 .dateCreated(launch.getDateCreated());
     }
+
+    public static <T> T coalesce(T value, T defaultValue) {
+        if (value == null) {
+            return defaultValue;
+        }
+        return value;
+    }
 }

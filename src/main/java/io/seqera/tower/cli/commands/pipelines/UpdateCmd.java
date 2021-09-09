@@ -21,6 +21,8 @@ import picocli.CommandLine.Parameters;
 
 import java.io.IOException;
 
+import static io.seqera.tower.cli.utils.ModelHelper.coalesce;
+
 @Command(
         name = "update",
         description = "Update a workspace pipeline"
@@ -76,12 +78,5 @@ public class UpdateCmd extends AbstractPipelinesCmd {
         );
 
         return new PipelinesUpdated(workspaceRef(), response.getPipeline().getName());
-    }
-
-    private static <T> T coalesce(T value, T defaultValue) {
-        if (value == null) {
-            return defaultValue;
-        }
-        return value;
     }
 }
