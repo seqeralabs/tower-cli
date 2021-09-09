@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 
+import java.io.IOException;
+
 import static io.seqera.tower.cli.commands.AbstractApiCmd.USER_WORKSPACE_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.matchers.Times.exactly;
@@ -74,7 +76,7 @@ class LaunchCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testSubmitUserPipeline(MockServerClient mock) {
+    void testSubmitLaunchpadPipeline(MockServerClient mock) {
 
         // Create server expectation
         mock.when(
@@ -90,7 +92,7 @@ class LaunchCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/workflow/launch"), exactly(1)
+                request().withMethod("POST").withPath("/workflow/launch").withBody("{\"launch\":{\"computeEnvId\":\"4X7YrYJp9B1d1DUpfur7DS\",\"pipeline\":\"https://github.com/nf-core/sarek\",\"workDir\":\"/efs\",\"pullLatest\":false,\"stubRun\":false}}"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("workflow_launch")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -102,14 +104,86 @@ class LaunchCmdTest extends BaseCmdTest {
         );
 
         // Run the command
-        ExecOut out = exec(mock, "launch", "sarek");
+        ExecOut out = exec(mock, "-v", "launch", "sarek");
 
         // Assert results
-        assertEquals(
-                new RunSubmited("35aLiS0bIM5efd", String.format("%s/user/jordi/watch/35aLiS0bIM5efd", url(mock)), USER_WORKSPACE_NAME).toString(),
-                out.stdOut
+        assertEquals("", out.stdErr);
+        assertEquals(new RunSubmited("35aLiS0bIM5efd", String.format("%s/user/jordi/watch/35aLiS0bIM5efd", url(mock)), USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testSubmitGithubPipeline(MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs").withQueryStringParameter("status", "AVAILABLE"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"1uJweHHZTo7gydE6pyDt7x\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":null,\"visibility\":null},{\"id\":\"3bBgyqQrehvoihCVjunUaJ\",\"name\":\"google\",\"platform\":\"google-lifesciences\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":null,\"visibility\":null},{\"id\":\"53aWhB2qJroy0i51FOrFAC\",\"name\":\"manual\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":null,\"visibility\":null},{\"id\":\"7TZgco4ZknMHk4W4DzB8dH\",\"name\":\"google\",\"platform\":\"google-lifesciences\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":null,\"visibility\":null},{\"id\":\"NDEIULtY1a08q16osv8kg\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":null,\"visibility\":null},{\"id\":\"isnEDBLvHDAIteOEF44ow\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
         );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/1uJweHHZTo7gydE6pyDt7x"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnv\":{\"id\":\"1uJweHHZTo7gydE6pyDt7x\",\"name\":\"demo\",\"description\":null,\"platform\":\"aws-batch\",\"config\":{\"region\":\"eu-west-1\",\"computeQueue\":\"TowerForge-1uJweHHZTo7gydE6pyDt7x-work\",\"computeJobRole\":null,\"headQueue\":\"TowerForge-1uJweHHZTo7gydE6pyDt7x-head\",\"headJobRole\":null,\"cliPath\":\"/home/ec2-user/miniconda/bin/aws\",\"volumes\":[],\"workDir\":\"s3://nextflow-ci/jordeu\",\"preRunScript\":null,\"postRunScript\":null,\"headJobCpus\":null,\"headJobMemoryMb\":null,\"forge\":{\"type\":\"SPOT\",\"minCpus\":0,\"maxCpus\":123,\"gpuEnabled\":false,\"ebsAutoScale\":true,\"instanceTypes\":null,\"allocStrategy\":null,\"imageId\":null,\"vpcId\":null,\"subnets\":null,\"securityGroups\":null,\"fsxMount\":null,\"fsxName\":null,\"fsxSize\":null,\"disposeOnDeletion\":true,\"ec2KeyPair\":null,\"allowBuckets\":null,\"ebsBlockSize\":null,\"fusionEnabled\":false,\"bidPercentage\":null,\"efsCreate\":true,\"efsId\":null,\"efsMount\":null},\"forgedResources\":[{\"IamRole\":\"arn:aws:iam::195996028523:role/TowerForge-1uJweHHZTo7gydE6pyDt7x-ServiceRole\"},{\"IamRole\":\"arn:aws:iam::195996028523:role/TowerForge-1uJweHHZTo7gydE6pyDt7x-FleetRole\"},{\"IamInstanceProfile\":\"arn:aws:iam::195996028523:instance-profile/TowerForge-1uJweHHZTo7gydE6pyDt7x-InstanceRole\"},{\"EfsId\":\"fs-cb8117ff\"},{\"Ec2LaunchTemplate\":\"TowerForge-1uJweHHZTo7gydE6pyDt7x\"},{\"BatchEnv\":\"arn:aws:batch:eu-west-1:195996028523:compute-environment/TowerForge-1uJweHHZTo7gydE6pyDt7x-head\"},{\"BatchQueue\":\"arn:aws:batch:eu-west-1:195996028523:job-queue/TowerForge-1uJweHHZTo7gydE6pyDt7x-head\"},{\"BatchEnv\":\"arn:aws:batch:eu-west-1:195996028523:compute-environment/TowerForge-1uJweHHZTo7gydE6pyDt7x-work\"},{\"BatchQueue\":\"arn:aws:batch:eu-west-1:195996028523:job-queue/TowerForge-1uJweHHZTo7gydE6pyDt7x-work\"}],\"platform\":\"aws-batch\"},\"dateCreated\":\"2021-09-08T18:52:10Z\",\"lastUpdated\":\"2021-09-08T18:54:16Z\",\"lastUsed\":null,\"deleted\":null,\"status\":\"AVAILABLE\",\"message\":null,\"primary\":null,\"credentialsId\":\"6g0ER59L4ZoE5zpOmUP48D\"}}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/workflow/launch").withBody("{\"launch\":{\"computeEnvId\":\"1uJweHHZTo7gydE6pyDt7x\",\"pipeline\":\"nextflow-io/hello\",\"workDir\":\"s3://nextflow-ci/jordeu\"}}"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"workflowId\":\"57ojrWRzTyous\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "launch", "nextflow-io/hello");
+
+        assertEquals(new RunSubmited("57ojrWRzTyous", String.format("%s/user/jordi/watch/57ojrWRzTyous", url(mock)), USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals("", out.stdErr);
         assertEquals(0, out.exitCode);
     }
+
+    @Test
+    void testSubmitLaunchpadPipelineWithAdvancedOptions(MockServerClient mock) throws IOException {
+
+        // Create server expectation
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("pipelines_sarek")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines/250911634275687/launch"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("pipeline_launch_describe")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/workflow/launch").withBody("{\"launch\":{\"computeEnvId\":\"4X7YrYJp9B1d1DUpfur7DS\",\"pipeline\":\"https://github.com/nf-core/sarek\",\"workDir\":\"/my_work_dir\",\"revision\":\"develop\",\"configProfiles\":[\"test\",\"docker\"],\"configText\":\"extra_config\",\"preRunScript\":\"pre_run_me\",\"postRunScript\":\"post_run_me\",\"mainScript\":\"alternate.nf\",\"entryName\":\"dsl2\",\"schemaName\":\"my_schema.json\",\"pullLatest\":true,\"stubRun\":true}}"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workflow_launch")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // Run the command
+        ExecOut out = exec(mock, "launch", "sarek", "-p", "test,docker", "-r", "develop", "-w", "/my_work_dir",
+                "--config", tempFile("extra_config", "nextflow", "config"), "--pull-latest", "--stub-run",
+                "--pre-run", tempFile("pre_run_me", "pre", "sh"), "--post-run", tempFile("post_run_me", "post", "sh"),
+                "--main-script", "alternate.nf", "--entry-name", "dsl2", "--schema-name", "my_schema.json");
+
+        // Assert results
+        assertEquals("", out.stdErr);
+        assertEquals(new RunSubmited("35aLiS0bIM5efd", String.format("%s/user/jordi/watch/35aLiS0bIM5efd", url(mock)), USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
+
 }
