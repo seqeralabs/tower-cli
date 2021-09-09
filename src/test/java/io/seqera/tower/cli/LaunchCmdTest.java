@@ -105,7 +105,7 @@ class LaunchCmdTest extends BaseCmdTest {
         );
 
         // Run the command
-        ExecOut out = exec(mock, "-v", "launch", "sarek");
+        ExecOut out = exec(mock, "launch", "sarek");
 
         // Assert results
         assertEquals("", out.stdErr);
