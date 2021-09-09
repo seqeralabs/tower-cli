@@ -13,6 +13,7 @@ import org.mockserver.model.MediaType;
 import java.io.IOException;
 
 import static io.seqera.tower.cli.commands.AbstractApiCmd.USER_WORKSPACE_NAME;
+import static io.seqera.tower.cli.commands.AbstractApiCmd.buildWorkspaceRef;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
@@ -183,6 +184,48 @@ class LaunchCmdTest extends BaseCmdTest {
         // Assert results
         assertEquals("", out.stdErr);
         assertEquals(new RunSubmited("35aLiS0bIM5efd", String.format("%s/user/jordi/watch/35aLiS0bIM5efd", url(mock)), USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testSubmitToAWorkspace(MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs").withQueryStringParameter("status", "AVAILABLE").withQueryStringParameter("workspaceId", "222756650686576"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"4iqCDE6C2Stq0jzBsHJvHn\",\"name\":\"aws\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":\"cli\",\"visibility\":\"PRIVATE\"}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/4iqCDE6C2Stq0jzBsHJvHn").withQueryStringParameter("workspaceId", "222756650686576"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnv\":{\"id\":\"4iqCDE6C2Stq0jzBsHJvHn\",\"name\":\"aws\",\"description\":null,\"platform\":\"aws-batch\",\"config\":{\"region\":\"eu-west-1\",\"computeQueue\":\"TowerForge-4iqCDE6C2Stq0jzBsHJvHn-work\",\"computeJobRole\":null,\"headQueue\":\"TowerForge-4iqCDE6C2Stq0jzBsHJvHn-head\",\"headJobRole\":null,\"cliPath\":\"/home/ec2-user/miniconda/bin/aws\",\"volumes\":[],\"workDir\":\"s3://nextflow-ci/jordeu\",\"preRunScript\":null,\"postRunScript\":null,\"headJobCpus\":null,\"headJobMemoryMb\":null,\"forge\":{\"type\":\"SPOT\",\"minCpus\":0,\"maxCpus\":123,\"gpuEnabled\":false,\"ebsAutoScale\":true,\"instanceTypes\":[],\"allocStrategy\":null,\"imageId\":null,\"vpcId\":null,\"subnets\":[],\"securityGroups\":[],\"fsxMount\":null,\"fsxName\":null,\"fsxSize\":null,\"disposeOnDeletion\":true,\"ec2KeyPair\":null,\"allowBuckets\":[],\"ebsBlockSize\":null,\"fusionEnabled\":false,\"bidPercentage\":null,\"efsCreate\":false,\"efsId\":null,\"efsMount\":null},\"forgedResources\":[{\"IamRole\":\"arn:aws:iam::195996028523:role/TowerForge-4iqCDE6C2Stq0jzBsHJvHn-ServiceRole\"},{\"IamRole\":\"arn:aws:iam::195996028523:role/TowerForge-4iqCDE6C2Stq0jzBsHJvHn-FleetRole\"},{\"IamInstanceProfile\":\"arn:aws:iam::195996028523:instance-profile/TowerForge-4iqCDE6C2Stq0jzBsHJvHn-InstanceRole\"},{\"Ec2LaunchTemplate\":\"TowerForge-4iqCDE6C2Stq0jzBsHJvHn\"},{\"BatchEnv\":\"arn:aws:batch:eu-west-1:195996028523:compute-environment/TowerForge-4iqCDE6C2Stq0jzBsHJvHn-head\"},{\"BatchQueue\":\"arn:aws:batch:eu-west-1:195996028523:job-queue/TowerForge-4iqCDE6C2Stq0jzBsHJvHn-head\"},{\"BatchEnv\":\"arn:aws:batch:eu-west-1:195996028523:compute-environment/TowerForge-4iqCDE6C2Stq0jzBsHJvHn-work\"},{\"BatchQueue\":\"arn:aws:batch:eu-west-1:195996028523:job-queue/TowerForge-4iqCDE6C2Stq0jzBsHJvHn-work\"}],\"platform\":\"aws-batch\"},\"dateCreated\":\"2021-09-09T08:53:37Z\",\"lastUpdated\":\"2021-09-09T08:54:13Z\",\"lastUsed\":null,\"deleted\":null,\"status\":\"AVAILABLE\",\"message\":null,\"primary\":null,\"credentialsId\":\"3WzBlcFy1nSE9dSqFT1xPS\"}}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/workflow/launch").withQueryStringParameter("workspaceId", "222756650686576").withBody("{\"launch\":{\"computeEnvId\":\"4iqCDE6C2Stq0jzBsHJvHn\",\"pipeline\":\"nextflow-io/hello\",\"workDir\":\"s3://nextflow-ci/jordeu\"}}"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"workflowId\":\"52KAMEcqXFyhZ9\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"orgsAndWorkspaces\":[{\"orgId\":166815615776895,\"orgName\":\"Seqera\",\"orgLogoUrl\":null,\"workspaceId\":null,\"workspaceName\":null},{\"orgId\":166815615776895,\"orgName\":\"Seqera\",\"orgLogoUrl\":null,\"workspaceId\":222756650686576,\"workspaceName\":\"cli\"}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // Run the command
+        ExecOut out = exec(mock, "-i", "222756650686576", "launch", "nextflow-io/hello");
+
+        // Assert results
+        assertEquals("", out.stdErr);
+        assertEquals(new RunSubmited("52KAMEcqXFyhZ9", String.format("%s/orgs/Seqera/workspaces/cli/watch/52KAMEcqXFyhZ9", url(mock)), buildWorkspaceRef("Seqera", "cli")).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.exceptions.MultiplePipelinesFoundException;
 import io.seqera.tower.cli.exceptions.NoComputeEnvironmentException;
 import io.seqera.tower.cli.exceptions.PipelineNotFoundException;
+import io.seqera.tower.cli.exceptions.WorkspaceNotFoundException;
 import io.seqera.tower.cli.responses.PipelinesCreated;
 import io.seqera.tower.cli.responses.PipelinesDeleted;
 import io.seqera.tower.cli.responses.PipelinesList;
@@ -25,6 +26,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 import static io.seqera.tower.cli.commands.AbstractApiCmd.USER_WORKSPACE_NAME;
+import static io.seqera.tower.cli.commands.AbstractApiCmd.buildWorkspaceRef;
 import static io.seqera.tower.cli.utils.JsonHelper.prettyJson;
 import static org.apache.commons.lang3.StringUtils.chop;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -349,6 +351,56 @@ class PipelinesCmdTest extends BaseCmdTest {
         );
         assertEquals(0, out.exitCode);
 
+    }
+
+    @Test
+    void testListFromWorkspace(MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"orgsAndWorkspaces\":[{\"orgId\":166815615776895,\"orgName\":\"Seqera\",\"orgLogoUrl\":null,\"workspaceId\":null,\"workspaceName\":null},{\"orgId\":166815615776895,\"orgName\":\"Seqera\",\"orgLogoUrl\":null,\"workspaceId\":222756650686576,\"workspaceName\":\"cli\"}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("workspaceId", "222756650686576"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"pipelines\":[],\"totalSize\":0}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "-w", "cli", "-o", "seqera", "pipelines", "list");
+
+        assertEquals("", out.stdErr);
+        assertEquals(chop(new PipelinesList(buildWorkspaceRef("Seqera", "cli"), List.of()).toString()), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testListFromWorkspaceNotFound(MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"orgsAndWorkspaces\":[{\"orgId\":166815615776895,\"orgName\":\"Seqera\",\"orgLogoUrl\":null,\"workspaceId\":null,\"workspaceName\":null},{\"orgId\":166815615776895,\"orgName\":\"Seqera\",\"orgLogoUrl\":null,\"workspaceId\":222756650686576,\"workspaceName\":\"cli\"}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "-w", "cli", "-o", "sequera", "pipelines", "list");
+
+        assertEquals(errorMessage(out.app, new WorkspaceNotFoundException("cli", "sequera")), out.stdErr);
+        assertEquals("", out.stdOut);
+        assertEquals(-1, out.exitCode);
     }
 
 }

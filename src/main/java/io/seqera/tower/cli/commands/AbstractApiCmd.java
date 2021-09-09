@@ -6,6 +6,7 @@ import io.seqera.tower.api.TowerApi;
 import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.exceptions.NoComputeEnvironmentException;
 import io.seqera.tower.cli.exceptions.ShowUsageException;
+import io.seqera.tower.cli.exceptions.WorkspaceNotFoundException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.ListComputeEnvsResponseEntry;
@@ -97,13 +98,6 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         return userName;
     }
 
-    protected Long orgId() throws ApiException {
-        if (orgId == null) {
-            loadOrgAndWorkspaceFromIds();
-        }
-        return orgId;
-    }
-
     protected String orgName() throws ApiException {
         if (orgName == null) {
             if (app().orgAndWorkspaceNames == null) {
@@ -174,21 +168,23 @@ public abstract class AbstractApiCmd extends AbstractCmd {
             }
         }
 
-        throw new ApiException(String.format("Workspace %d not found", workspaceId));
+        throw new WorkspaceNotFoundException(workspaceId);
     }
 
     private void loadOrgAndWorkspaceFromNames() throws ApiException {
-        String workspaceName = workspaceName();
-        String orgName = orgName();
+        String wName = workspaceName();
+        String oName = orgName();
         for (OrgAndWorkspaceDbDto ow : api().listWorkspacesUser(userId()).getOrgsAndWorkspaces()) {
-            if (workspaceName.equals(ow.getWorkspaceName()) && orgName.equals(ow.getOrgName())) {
+            if (wName.equalsIgnoreCase(ow.getWorkspaceName()) && oName.equalsIgnoreCase(ow.getOrgName())) {
+                workspaceName = ow.getWorkspaceName();
+                orgName = ow.getOrgName();
                 workspaceId = ow.getWorkspaceId();
                 orgId = ow.getOrgId();
                 return;
             }
         }
 
-        throw new ApiException(String.format("Workspace '%s' at organization '%s' not found", workspaceName, orgName));
+        throw new WorkspaceNotFoundException(workspaceName, orgName);
     }
 
     private void loadAvailableComputeEnvs() throws ApiException {
@@ -212,7 +208,11 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         if (workspaceId() == null) {
             return USER_WORKSPACE_NAME;
         }
-        return String.format("[%s / %s]", orgName(), workspaceName());
+        return buildWorkspaceRef(orgName(), workspaceName());
+    }
+
+    public static String buildWorkspaceRef(String orgName, String workspaceName) {
+        return String.format("[%s / %s]", orgName, workspaceName);
     }
 
     @Override
@@ -235,10 +235,5 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     protected Response exec() throws ApiException, IOException {
         throw new ShowUsageException();
     }
-
-    protected String ansi(String value) {
-        return CommandLine.Help.Ansi.AUTO.string(value);
-    }
-
 
 }

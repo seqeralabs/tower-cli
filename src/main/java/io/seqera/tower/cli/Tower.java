@@ -54,10 +54,10 @@ public class Tower extends AbstractCmd {
     public boolean verbose;
 
     public static class OrgAndWorkspace {
-        @Option(names = {"-w", "--workspace"}, description = "Workspace name", defaultValue = "${TOWER_WORKSPACE_NAME}")
+        @Option(names = {"-w", "--workspace"}, description = "Workspace name (case insensitive)", defaultValue = "${TOWER_WORKSPACE_NAME}")
         public String workspace;
 
-        @Option(names = {"-o", "--organization"}, description = "Organization name", defaultValue = "${TOWER_ORG_NAME}")
+        @Option(names = {"-o", "--organization"}, description = "Organization name (case insensitive)", defaultValue = "${TOWER_ORG_NAME}")
         public String organization;
     }
 

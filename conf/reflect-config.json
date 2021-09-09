@@ -56,7 +56,8 @@
 {
   "name":"io.seqera.tower.cli.Tower$OrgAndWorkspace",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.autocomplete.AutocompleteCmd",
@@ -1180,6 +1181,8 @@
 {
   "name":"io.seqera.tower.model.ListWorkspacesAndOrgResponse",
   "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1191,6 +1194,8 @@
 {
   "name":"io.seqera.tower.model.OrgAndWorkspaceDbDto",
   "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
