@@ -142,6 +142,9 @@ public abstract class BaseCmdTest {
                 exitCode = -1;
             }
 
+            outWriter.close();
+            errWriter.close();
+
             return new ExecOut()
                     .stdOut(StringUtils.chop(stdOut.toString()))
                     .stdErr(StringUtils.chop(stdErr.toString()))
