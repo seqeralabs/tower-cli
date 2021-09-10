@@ -27,6 +27,7 @@ import java.util.List;
 
 import static io.seqera.tower.cli.commands.AbstractApiCmd.USER_WORKSPACE_NAME;
 import static io.seqera.tower.cli.commands.AbstractApiCmd.buildWorkspaceRef;
+import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
 import static io.seqera.tower.cli.utils.JsonHelper.prettyJson;
 import static org.apache.commons.lang3.StringUtils.chop;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -313,7 +314,7 @@ class PipelinesCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testView(MockServerClient mock) {
+    void testView(MockServerClient mock) throws JsonProcessingException {
 
         mock.when(
                 request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "sleep_one_minute"), exactly(1)
@@ -345,7 +346,8 @@ class PipelinesCmdTest extends BaseCmdTest {
                         .pullLatest(false)
                         .stubRun(false)
                         .computeEnv(
-                                new ComputeEnv().id("vYOK4vn7spw7bHHWBDXZ2").name("demo")
+                                parseJson("{\"id\": \"vYOK4vn7spw7bHHWBDXZ2\"}", ComputeEnv.class)
+                                        .name("demo")
                         )
                 ).toString()), out.stdOut
         );

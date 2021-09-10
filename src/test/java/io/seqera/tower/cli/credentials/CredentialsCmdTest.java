@@ -3,6 +3,7 @@
  */
 package io.seqera.tower.cli.credentials;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.exceptions.CredentialsNotFoundException;
@@ -19,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static io.seqera.tower.cli.commands.AbstractApiCmd.USER_WORKSPACE_NAME;
+import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
 import static org.apache.commons.lang3.StringUtils.chop;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.matchers.Times.exactly;
@@ -58,7 +60,7 @@ class CredentialsCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testList(MockServerClient mock) {
+    void testList(MockServerClient mock) throws JsonProcessingException {
 
         mock.when(
                 request().withMethod("GET").withPath("/credentials"), exactly(1)
@@ -70,17 +72,12 @@ class CredentialsCmdTest extends BaseCmdTest {
 
         assertEquals("", out.stdErr);
         assertEquals(chop(new CredentialsList(USER_WORKSPACE_NAME, Arrays.asList(
-                new Credentials().id("2ba2oekqeTEBzwSDgXg7xf")
+                parseJson("{\"id\": \"2ba2oekqeTEBzwSDgXg7xf\", \"lastUsed\": \"2021-09-06T08:53:51Z\", \"dateCreated\":\"2021-09-06T06:54:53Z\", \"lastUpdated\":\"2021-09-06T06:54:53Z\"}", Credentials.class)
                         .name("ssh")
-                        .provider(Credentials.ProviderEnum.SSH)
-                        .lastUsed(OffsetDateTime.parse("2021-09-06T08:53:51Z"))
-                        .dateCreated(OffsetDateTime.parse("2021-09-06T06:54:53Z"))
-                        .lastUpdated(OffsetDateTime.parse("2021-09-06T06:54:53Z")),
-                new Credentials().id("57Ic6reczFn78H1DTaaXkp")
+                        .provider(Credentials.ProviderEnum.SSH),
+                parseJson("{\"id\": \"57Ic6reczFn78H1DTaaXkp\", \"dateCreated\":\"2021-09-07T13:50:21Z\", \"lastUpdated\":\"2021-09-07T13:50:21Z\"}", Credentials.class)
                         .name("azure")
                         .provider(Credentials.ProviderEnum.AZURE)
-                        .dateCreated(OffsetDateTime.parse("2021-09-07T13:50:21Z"))
-                        .lastUpdated(OffsetDateTime.parse("2021-09-07T13:50:21Z"))
         )).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }

@@ -11,7 +11,6 @@ import io.seqera.tower.cli.responses.ComputeEnvCreated;
 import io.seqera.tower.cli.responses.ComputeEnvDeleted;
 import io.seqera.tower.cli.responses.ComputeEnvList;
 import io.seqera.tower.cli.responses.ComputeEnvView;
-import io.seqera.tower.cli.utils.JsonHelper;
 import io.seqera.tower.model.AwsBatchConfig;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.ComputeEnvStatus;
@@ -24,10 +23,11 @@ import org.mockserver.model.MediaType;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.time.OffsetDateTime;
 import java.util.List;
 
 import static io.seqera.tower.cli.commands.AbstractApiCmd.USER_WORKSPACE_NAME;
+import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
+import static io.seqera.tower.cli.utils.JsonHelper.prettyJson;
 import static org.apache.commons.lang3.StringUtils.chop;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.matchers.Times.exactly;
@@ -121,7 +121,7 @@ class ComputeEnvCmdTest extends BaseCmdTest {
 
 
     @Test
-    void testViewAwsForge(MockServerClient mock) {
+    void testViewAwsForge(MockServerClient mock) throws JsonProcessingException {
 
         mock.when(
                 request().withMethod("GET").withPath("/compute-envs/isnEDBLvHDAIteOEF44ow"), exactly(1)
@@ -133,12 +133,9 @@ class ComputeEnvCmdTest extends BaseCmdTest {
 
         assertEquals("", out.stdErr);
         assertEquals(StringUtils.chop(new ComputeEnvView("isnEDBLvHDAIteOEF44ow", USER_WORKSPACE_NAME,
-                new ComputeEnv()
-                        .id("isnEDBLvHDAIteOEF44ow")
+                parseJson("{\"id\": \"isnEDBLvHDAIteOEF44ow\", \"dateCreated\": \"2021-09-08T11:19:24Z\", \"lastUpdated\": \"2021-09-08T11:20:08Z\"}", ComputeEnv.class)
                         .name("demo")
                         .platform(ComputeEnv.PlatformEnum.AWS_BATCH)
-                        .dateCreated(OffsetDateTime.parse("2021-09-08T11:19:24Z"))
-                        .lastUpdated(OffsetDateTime.parse("2021-09-08T11:20:08Z"))
                         .status(ComputeEnvStatus.AVAILABLE)
                         .credentialsId("6g0ER59L4ZoE5zpOmUP48D")
                         .config(
@@ -163,7 +160,7 @@ class ComputeEnvCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testViewAwsManual(MockServerClient mock) {
+    void testViewAwsManual(MockServerClient mock) throws JsonProcessingException {
 
         mock.when(
                 request().withMethod("GET").withPath("/compute-envs/53aWhB2qJroy0i51FOrFAC"), exactly(1)
@@ -175,12 +172,9 @@ class ComputeEnvCmdTest extends BaseCmdTest {
 
         assertEquals("", out.stdErr);
         assertEquals(StringUtils.chop(new ComputeEnvView("53aWhB2qJroy0i51FOrFAC", USER_WORKSPACE_NAME,
-                new ComputeEnv()
-                        .id("53aWhB2qJroy0i51FOrFAC")
+                parseJson("{\"id\": \"53aWhB2qJroy0i51FOrFAC\", \"dateCreated\": \"2021-09-08T15:19:08Z\", \"lastUpdated\": \"2021-09-08T15:19:08Z\"}", ComputeEnv.class)
                         .name("manual")
                         .platform(ComputeEnv.PlatformEnum.AWS_BATCH)
-                        .dateCreated(OffsetDateTime.parse("2021-09-08T15:19:08Z"))
-                        .lastUpdated(OffsetDateTime.parse("2021-09-08T15:19:08Z"))
                         .status(ComputeEnvStatus.AVAILABLE)
                         .credentialsId("6g0ER59L4ZoE5zpOmUP48D")
                         .config(
@@ -209,13 +203,10 @@ class ComputeEnvCmdTest extends BaseCmdTest {
         ExecOut out = exec(mock, "--json", "compute-envs", "view", "-i", "53aWhB2qJroy0i51FOrFAC");
 
         assertEquals("", out.stdErr);
-        assertEquals(JsonHelper.prettyJson(new ComputeEnvView("53aWhB2qJroy0i51FOrFAC", USER_WORKSPACE_NAME,
-                new ComputeEnv()
-                        .id("53aWhB2qJroy0i51FOrFAC")
+        assertEquals(prettyJson(new ComputeEnvView("53aWhB2qJroy0i51FOrFAC", USER_WORKSPACE_NAME,
+                parseJson("{\"id\": \"53aWhB2qJroy0i51FOrFAC\", \"dateCreated\": \"2021-09-08T15:19:08Z\", \"lastUpdated\": \"2021-09-08T15:19:08Z\"}", ComputeEnv.class)
                         .name("manual")
                         .platform(ComputeEnv.PlatformEnum.AWS_BATCH)
-                        .dateCreated(OffsetDateTime.parse("2021-09-08T15:19:08Z"))
-                        .lastUpdated(OffsetDateTime.parse("2021-09-08T15:19:08Z"))
                         .status(ComputeEnvStatus.AVAILABLE)
                         .credentialsId("6g0ER59L4ZoE5zpOmUP48D")
                         .config(

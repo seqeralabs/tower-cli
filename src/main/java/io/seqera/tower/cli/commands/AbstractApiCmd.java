@@ -2,7 +2,7 @@ package io.seqera.tower.cli.commands;
 
 import io.seqera.tower.ApiClient;
 import io.seqera.tower.ApiException;
-import io.seqera.tower.api.TowerApi;
+import io.seqera.tower.api.DefaultApi;
 import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.exceptions.NoComputeEnvironmentException;
 import io.seqera.tower.cli.exceptions.ShowUsageException;
@@ -28,7 +28,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
 
     public static final String USER_WORKSPACE_NAME = "user";
 
-    private TowerApi api;
+    private DefaultApi api;
 
     private Long userId;
     private String userName;
@@ -46,14 +46,14 @@ public abstract class AbstractApiCmd extends AbstractCmd {
 
     public abstract Tower app();
 
-    protected TowerApi api() {
+    protected DefaultApi api() {
 
         if (api == null) {
             ApiClient client = buildApiClient();
             client.setServerIndex(null);
             client.setBasePath(app().url);
             client.setBearerToken(app().token);
-            api = new TowerApi(client);
+            api = new DefaultApi(client);
         }
 
         return api;
@@ -159,7 +159,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
 
     private void loadOrgAndWorkspaceFromIds() throws ApiException {
         Long workspaceId = workspaceId();
-        for (OrgAndWorkspaceDbDto ow : api().listWorkspacesUser(userId()).getOrgsAndWorkspaces()) {
+        for (OrgAndWorkspaceDbDto ow : api().listUserWorkspacesAndOrgs(userId()).getOrgsAndWorkspaces()) {
             if ((workspaceId == null && ow.getWorkspaceId() == null) || (workspaceId != null && workspaceId().equals(ow.getWorkspaceId()))) {
                 workspaceName = ow.getWorkspaceName();
                 orgId = ow.getOrgId();
@@ -174,7 +174,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     private void loadOrgAndWorkspaceFromNames() throws ApiException {
         String wName = workspaceName();
         String oName = orgName();
-        for (OrgAndWorkspaceDbDto ow : api().listWorkspacesUser(userId()).getOrgsAndWorkspaces()) {
+        for (OrgAndWorkspaceDbDto ow : api().listUserWorkspacesAndOrgs(userId()).getOrgsAndWorkspaces()) {
             if (wName.equalsIgnoreCase(ow.getWorkspaceName()) && oName.equalsIgnoreCase(ow.getOrgName())) {
                 workspaceName = ow.getWorkspaceName();
                 orgName = ow.getOrgName();

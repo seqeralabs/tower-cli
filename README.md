@@ -84,7 +84,7 @@ towr credentials list
 
 Create an AWS compute environment with automatic provisioning of compute resources
 ```
-towr compute-env create aws -n demo -r eu-west-1 -w s3://nextflow-ci/jordeu --max-cpus=123 --fusion
+towr compute-envs create aws -n demo -r eu-west-1 -w s3://nextflow-ci/jordeu --max-cpus=123 --fusion
 ```
 
 Create a new pipeline at launchpad
