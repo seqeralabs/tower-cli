@@ -64,7 +64,8 @@
         "preRunScript": null,
         "region": "eu-west-1",
         "volumes": [],
-        "workDir": "/efs"
+        "workDir": "/efs",
+        "discriminator": "aws-batch"
       },
       "credentialsId": "6WUj8vHLEymif55zjcUB0J",
       "dateCreated": "2021-06-28T14:40:21Z",

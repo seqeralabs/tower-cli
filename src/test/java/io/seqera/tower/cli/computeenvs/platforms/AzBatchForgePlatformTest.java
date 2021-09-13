@@ -21,11 +21,11 @@ class AzBatchForgePlatformTest extends BaseCmdTest {
         mock.when(
                 request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "azure-batch"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"57Ic6reczFn78H1DTaaXkp\",\"name\":\"azure\",\"description\":null,\"provider\":\"azure\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":null,\"dateCreated\":\"2021-09-07T13:50:21Z\",\"lastUpdated\":\"2021-09-07T13:50:21Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"57Ic6reczFn78H1DTaaXkp\",\"name\":\"azure\",\"description\":null,\"discriminator\":\"azure\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":null,\"dateCreated\":\"2021-09-07T13:50:21Z\",\"lastUpdated\":\"2021-09-07T13:50:21Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"name\":\"azure\",\"platform\":\"azure-batch\",\"config\":{\"workDir\":\"az://nextflow-ci/jordeu\",\"region\":\"europe\",\"forge\":{\"autoScale\":true,\"disposeOnDeletion\":true},\"platform\":\"azure-batch\"},\"credentialsId\":\"57Ic6reczFn78H1DTaaXkp\"}}"), exactly(1)
+                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"name\":\"azure\",\"platform\":\"azure-batch\",\"config\":{\"workDir\":\"az://nextflow-ci/jordeu\",\"region\":\"europe\",\"forge\":{\"autoScale\":true,\"disposeOnDeletion\":true}},\"credentialsId\":\"57Ic6reczFn78H1DTaaXkp\"}}"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -43,11 +43,11 @@ class AzBatchForgePlatformTest extends BaseCmdTest {
         mock.when(
                 request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "azure-batch"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"57Ic6reczFn78H1DTaaXkp\",\"name\":\"azure\",\"description\":null,\"provider\":\"azure\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":null,\"dateCreated\":\"2021-09-07T13:50:21Z\",\"lastUpdated\":\"2021-09-07T13:50:21Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"57Ic6reczFn78H1DTaaXkp\",\"name\":\"azure\",\"description\":null,\"discriminator\":\"azure\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":null,\"dateCreated\":\"2021-09-07T13:50:21Z\",\"lastUpdated\":\"2021-09-07T13:50:21Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"name\":\"azure\",\"platform\":\"azure-batch\",\"config\":{\"workDir\":\"az://nextflow-ci/jordeu\",\"region\":\"europe\",\"forge\":{\"autoScale\":true,\"disposeOnDeletion\":true},\"tokenDuration\":\"24\",\"platform\":\"azure-batch\"},\"credentialsId\":\"57Ic6reczFn78H1DTaaXkp\"}}"), exactly(1)
+                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"name\":\"azure\",\"platform\":\"azure-batch\",\"config\":{\"workDir\":\"az://nextflow-ci/jordeu\",\"region\":\"europe\",\"forge\":{\"autoScale\":true,\"disposeOnDeletion\":true},\"tokenDuration\":\"24\"},\"credentialsId\":\"57Ic6reczFn78H1DTaaXkp\"}}"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );

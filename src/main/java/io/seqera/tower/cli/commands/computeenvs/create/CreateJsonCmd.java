@@ -5,6 +5,7 @@ import io.seqera.tower.cli.commands.computeenvs.platforms.Platform;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.ComputeConfig;
+import io.seqera.tower.model.ComputeEnv;
 import picocli.CommandLine;
 import picocli.CommandLine.Option;
 
@@ -24,9 +25,9 @@ public class CreateJsonCmd extends AbstractCreateCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        return createComputeEnv(
-                parseJson(FilesHelper.readString(config), ComputeConfig.class)
-        );
+        ComputeConfig configObj = parseJson(FilesHelper.readString(config), ComputeConfig.class);
+        ComputeEnv.PlatformEnum platform = ComputeEnv.PlatformEnum.fromValue(configObj.getDiscriminator());
+        return createComputeEnv(platform, configObj);
     }
 
     @Override

@@ -21,7 +21,7 @@ class AzureProviderTest extends BaseCmdTest {
     void testCreate(MockServerClient mock) {
 
         mock.when(
-                request().withMethod("POST").withPath("/credentials").withBody("{\"credentials\":{\"keys\":{\"batchName\":\"batchName\",\"batchKey\":\"batchKey\",\"storageName\":\"storageName\",\"storageKey\":\"storageKey\",\"provider\":\"azure\"},\"name\":\"azure\",\"provider\":\"azure\"}}"), exactly(1)
+                request().withMethod("POST").withPath("/credentials").withBody("{\"credentials\":{\"keys\":{\"batchName\":\"batchName\",\"batchKey\":\"batchKey\",\"storageName\":\"storageName\",\"storageKey\":\"storageKey\"},\"name\":\"azure\",\"provider\":\"azure\"}}"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"credentialsId\":\"1cz5A8cuBkB5iJliCwJCFU\"}").withContentType(MediaType.APPLICATION_JSON)
         );

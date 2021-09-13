@@ -23,11 +23,11 @@ class GkePlatformTest extends BaseCmdTest {
         mock.when(
                 request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "gke-platform"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"6XfOhoztUq6de3Dw3X9LSb\",\"name\":\"google\",\"description\":null,\"provider\":\"google\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":null,\"dateCreated\":\"2021-09-08T12:57:04Z\",\"lastUpdated\":\"2021-09-08T12:57:04Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"6XfOhoztUq6de3Dw3X9LSb\",\"name\":\"google\",\"description\":null,\"discriminator\":\"google\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":null,\"dateCreated\":\"2021-09-08T12:57:04Z\",\"lastUpdated\":\"2021-09-08T12:57:04Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"name\":\"gke\",\"platform\":\"gke-platform\",\"config\":{\"workDir\":\"/workdir\",\"namespace\":\"nf\",\"headServiceAccount\":\"head\",\"storageClaimName\":\"nf\",\"platform\":\"gke-platform\",\"region\":\"europe\",\"clusterName\":\"tower\"},\"credentialsId\":\"6XfOhoztUq6de3Dw3X9LSb\"}}"), exactly(1)
+                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"name\":\"gke\",\"platform\":\"gke-platform\",\"config\":{\"workDir\":\"/workdir\",\"namespace\":\"nf\",\"headServiceAccount\":\"head\",\"storageClaimName\":\"nf\",\"region\":\"europe\",\"clusterName\":\"tower\"},\"credentialsId\":\"6XfOhoztUq6de3Dw3X9LSb\"}}"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -45,11 +45,11 @@ class GkePlatformTest extends BaseCmdTest {
         mock.when(
                 request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "gke-platform"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"6XfOhoztUq6de3Dw3X9LSb\",\"name\":\"google\",\"description\":null,\"provider\":\"google\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":null,\"dateCreated\":\"2021-09-08T12:57:04Z\",\"lastUpdated\":\"2021-09-08T12:57:04Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"6XfOhoztUq6de3Dw3X9LSb\",\"name\":\"google\",\"description\":null,\"discriminator\":\"google\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":null,\"dateCreated\":\"2021-09-08T12:57:04Z\",\"lastUpdated\":\"2021-09-08T12:57:04Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"name\":\"gke\",\"platform\":\"gke-platform\",\"config\":{\"workDir\":\"/workdir\",\"namespace\":\"nf\",\"headServiceAccount\":\"head\",\"storageClaimName\":\"nf\",\"storageMountPath\":\"/workdir\",\"platform\":\"gke-platform\",\"region\":\"europe\",\"clusterName\":\"tower\"},\"credentialsId\":\"6XfOhoztUq6de3Dw3X9LSb\"}}"), exactly(1)
+                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"name\":\"gke\",\"platform\":\"gke-platform\",\"config\":{\"workDir\":\"/workdir\",\"namespace\":\"nf\",\"headServiceAccount\":\"head\",\"storageClaimName\":\"nf\",\"storageMountPath\":\"/workdir\",\"region\":\"europe\",\"clusterName\":\"tower\"},\"credentialsId\":\"6XfOhoztUq6de3Dw3X9LSb\"}}"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );

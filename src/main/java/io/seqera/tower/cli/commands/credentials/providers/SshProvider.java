@@ -23,7 +23,6 @@ public class SshProvider extends AbstractProvider<SSHSecurityKeys> {
     @Override
     public SSHSecurityKeys securityKeys() throws IOException {
         return new SSHSecurityKeys()
-                .provider(ProviderEnum.SSH.getValue())
                 .privateKey(FilesHelper.readString(serviceAccountKey))
                 .passphrase(passphrase);
     }

@@ -27,7 +27,6 @@ public class AzureProvider extends AbstractProvider<AzureSecurityKeys> {
     @Override
     public AzureSecurityKeys securityKeys() throws IOException {
         return new AzureSecurityKeys()
-                .provider(ProviderEnum.AZURE.getValue())
                 .batchKey(batchKey)
                 .batchName(batchName)
                 .storageKey(storageKey)

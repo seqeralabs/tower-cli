@@ -60,7 +60,6 @@ public class LsfPlatform extends AbstractPlatform<LsfComputeConfig> {
 
         config
                 // Common
-                .platform(type().getValue())
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())

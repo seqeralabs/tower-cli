@@ -40,7 +40,6 @@ public class AzBatchManualPlatform extends AbstractPlatform<AzBatchConfig> {
 
         config
                 // Common
-                .platform(type().getValue())
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())

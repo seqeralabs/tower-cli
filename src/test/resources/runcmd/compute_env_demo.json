@@ -68,7 +68,7 @@
           "BatchQueue": "arn:aws:batch:eu-west-1:195996028523:job-queue/TowerForge-vYOK4vn7spw7bHHWBDXZ2-work"
         }
       ],
-      "platform": "aws-batch"
+      "discriminator": "aws-batch"
     },
     "dateCreated": "2021-09-08T06:00:06Z",
     "lastUpdated": "2021-09-08T06:00:59Z",

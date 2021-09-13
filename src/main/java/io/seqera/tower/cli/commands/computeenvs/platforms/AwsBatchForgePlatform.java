@@ -128,7 +128,6 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
     @Override
     public AwsBatchConfig computeConfig() throws ApiException, IOException {
         return new AwsBatchConfig()
-                .platform(type().getValue())
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())

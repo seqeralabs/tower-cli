@@ -25,7 +25,7 @@ class AwsProviderTest extends BaseCmdTest {
 
         // Create server expectation
         mock.when(
-                request().withMethod("POST").withPath("/credentials").withBody("{\"credentials\":{\"keys\":{\"assumeRoleArn\":\"arn_role\",\"provider\":\"aws\"},\"name\":\"test_credentials\",\"provider\":\"aws\"}}"), exactly(1)
+                request().withMethod("POST").withPath("/credentials").withBody("{\"credentials\":{\"keys\":{\"assumeRoleArn\":\"arn_role\"},\"name\":\"test_credentials\",\"provider\":\"aws\"}}"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"credentialsId\":\"6Kyn17toiABGu47qpBXsVX\"}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -44,7 +44,7 @@ class AwsProviderTest extends BaseCmdTest {
     void testCreate(MockServerClient mock) {
 
         mock.when(
-                request().withMethod("POST").withPath("/credentials").withBody("{\"credentials\":{\"keys\":{\"accessKey\":\"access_key\",\"secretKey\":\"secret_key\",\"provider\":\"aws\"},\"name\":\"aws\",\"provider\":\"aws\"}}"), exactly(1)
+                request().withMethod("POST").withPath("/credentials").withBody("{\"credentials\":{\"keys\":{\"accessKey\":\"access_key\",\"secretKey\":\"secret_key\"},\"name\":\"aws\",\"provider\":\"aws\"}}"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"credentialsId\":\"1cz5A8cuBkB5iJliCwJCFU\"}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -63,11 +63,11 @@ class AwsProviderTest extends BaseCmdTest {
         mock.when(
                 request().withMethod("GET").withPath("/credentials/kfKx9xRgzpIIZrbCMOcU4"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"credentials\":{\"id\":\"kfKx9xRgzpIIZrbCMOcU4\",\"name\":\"aws\",\"description\":null,\"provider\":\"aws\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-06T15:16:52Z\",\"dateCreated\":\"2021-09-03T13:23:37Z\",\"lastUpdated\":\"2021-09-03T13:23:37Z\"}}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody("{\"credentials\":{\"id\":\"kfKx9xRgzpIIZrbCMOcU4\",\"name\":\"aws\",\"description\":null,\"discriminator\":\"aws\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-06T15:16:52Z\",\"dateCreated\":\"2021-09-03T13:23:37Z\",\"lastUpdated\":\"2021-09-03T13:23:37Z\"}}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
-                request().withMethod("PUT").withPath("/credentials/kfKx9xRgzpIIZrbCMOcU4").withBody("{\"credentials\":{\"keys\":{\"assumeRoleArn\":\"changeAssumeRole\",\"provider\":\"aws\"},\"id\":\"kfKx9xRgzpIIZrbCMOcU4\",\"name\":\"aws\",\"provider\":\"aws\"}}").withContentType(MediaType.APPLICATION_JSON)
+                request().withMethod("PUT").withPath("/credentials/kfKx9xRgzpIIZrbCMOcU4").withBody("{\"credentials\":{\"keys\":{\"assumeRoleArn\":\"changeAssumeRole\"},\"id\":\"kfKx9xRgzpIIZrbCMOcU4\",\"name\":\"aws\",\"provider\":\"aws\"}}").withContentType(MediaType.APPLICATION_JSON)
         ).respond(
                 response().withStatusCode(204)
         );

@@ -21,7 +21,7 @@ class GithubProviderTest extends BaseCmdTest {
     void testCreate(MockServerClient mock) {
 
         mock.when(
-                request().withMethod("POST").withPath("/credentials").withBody("{\"credentials\":{\"keys\":{\"username\":\"jordi@seqera.io\",\"password\":\"mysecret\",\"provider\":\"github\"},\"name\":\"github\",\"provider\":\"github\"}}"), exactly(1)
+                request().withMethod("POST").withPath("/credentials").withBody("{\"credentials\":{\"keys\":{\"username\":\"jordi@seqera.io\",\"password\":\"mysecret\"},\"name\":\"github\",\"provider\":\"github\"}}"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"credentialsId\":\"1cz5A8cuBkB5iJliCwJCFU\"}").withContentType(MediaType.APPLICATION_JSON)
         );

@@ -50,7 +50,6 @@ public class SlurmPlatform extends AbstractPlatform<SlurmComputeConfig> {
 
         config
                 // Common
-                .platform(type().getValue())
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())

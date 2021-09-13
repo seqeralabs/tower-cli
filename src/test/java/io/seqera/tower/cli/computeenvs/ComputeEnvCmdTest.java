@@ -139,11 +139,10 @@ class ComputeEnvCmdTest extends BaseCmdTest {
                         .status(ComputeEnvStatus.AVAILABLE)
                         .credentialsId("6g0ER59L4ZoE5zpOmUP48D")
                         .config(
-                                new AwsBatchConfig()
+                                parseJson(" {\"discriminator\": \"aws-batch\"}", AwsBatchConfig.class)
                                         .region("eu-west-1")
                                         .cliPath("/home/ec2-user/miniconda/bin/aws")
                                         .workDir("s3://nextflow-ci/jordeu")
-                                        .platform("aws-batch")
                                         .forge(
                                                 new ForgeConfig()
                                                         .type(ForgeConfig.TypeEnum.SPOT)
@@ -178,14 +177,12 @@ class ComputeEnvCmdTest extends BaseCmdTest {
                         .status(ComputeEnvStatus.AVAILABLE)
                         .credentialsId("6g0ER59L4ZoE5zpOmUP48D")
                         .config(
-                                new AwsBatchConfig()
+                                parseJson(" {\"discriminator\": \"aws-batch\"}", AwsBatchConfig.class)
                                         .region("eu-west-1")
                                         .computeQueue("TowerForge-isnEDBLvHDAIteOEF44ow-work")
                                         .headQueue("TowerForge-isnEDBLvHDAIteOEF44ow-head")
                                         .cliPath("/home/ec2-user/miniconda/bin/aws")
                                         .workDir("s3://nextflow-ci/jordeu")
-                                        .platform("aws-batch")
-
                         )
         ).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
@@ -210,13 +207,12 @@ class ComputeEnvCmdTest extends BaseCmdTest {
                         .status(ComputeEnvStatus.AVAILABLE)
                         .credentialsId("6g0ER59L4ZoE5zpOmUP48D")
                         .config(
-                                new AwsBatchConfig()
+                                parseJson(" {\"discriminator\": \"aws-batch\"}", AwsBatchConfig.class)
                                         .region("eu-west-1")
                                         .computeQueue("TowerForge-isnEDBLvHDAIteOEF44ow-work")
                                         .headQueue("TowerForge-isnEDBLvHDAIteOEF44ow-head")
                                         .cliPath("/home/ec2-user/miniconda/bin/aws")
                                         .workDir("s3://nextflow-ci/jordeu")
-                                        .platform("aws-batch")
                                         .volumes(List.of())
 
                         )
@@ -260,11 +256,11 @@ class ComputeEnvCmdTest extends BaseCmdTest {
         mock.when(
                 request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "aws-batch"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"6g0ER59L4ZoE5zpOmUP48D\",\"name\":\"aws\",\"description\":null,\"provider\":\"aws\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-09T07:20:53Z\",\"dateCreated\":\"2021-09-08T05:48:51Z\",\"lastUpdated\":\"2021-09-08T05:48:51Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"6g0ER59L4ZoE5zpOmUP48D\",\"name\":\"aws\",\"description\":null,\"discriminator\":\"aws\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-09T07:20:53Z\",\"dateCreated\":\"2021-09-08T05:48:51Z\",\"lastUpdated\":\"2021-09-08T05:48:51Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"name\":\"json\",\"platform\":\"aws-batch\",\"config\":{\"region\":\"eu-west-1\",\"cliPath\":\"/home/ec2-user/miniconda/bin/aws\",\"workDir\":\"s3://nextflow-ci/jordeu\",\"forge\":{\"type\":\"SPOT\",\"minCpus\":0,\"maxCpus\":123,\"gpuEnabled\":false,\"ebsAutoScale\":true,\"disposeOnDeletion\":true,\"fusionEnabled\":false,\"efsCreate\":true},\"platform\":\"aws-batch\"},\"credentialsId\":\"6g0ER59L4ZoE5zpOmUP48D\"}}"), exactly(1)
+                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"name\":\"json\",\"platform\":\"aws-batch\",\"config\":{\"region\":\"eu-west-1\",\"cliPath\":\"/home/ec2-user/miniconda/bin/aws\",\"workDir\":\"s3://nextflow-ci/jordeu\",\"forge\":{\"type\":\"SPOT\",\"minCpus\":0,\"maxCpus\":123,\"gpuEnabled\":false,\"ebsAutoScale\":true,\"disposeOnDeletion\":true,\"fusionEnabled\":false,\"efsCreate\":true},\"discriminator\":\"aws-batch\"},\"credentialsId\":\"6g0ER59L4ZoE5zpOmUP48D\"}}"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"3T6xWeFD63QIuzdAowvSTC\"}").withContentType(MediaType.APPLICATION_JSON)
         );

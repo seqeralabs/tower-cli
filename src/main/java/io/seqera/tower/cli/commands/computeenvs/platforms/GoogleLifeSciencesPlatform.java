@@ -64,7 +64,6 @@ public class GoogleLifeSciencesPlatform extends AbstractPlatform<GoogleLifeScien
 
         config
                 // Common
-                .platform(type().getValue())
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())

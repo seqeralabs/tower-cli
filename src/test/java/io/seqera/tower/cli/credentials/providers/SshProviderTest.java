@@ -24,7 +24,7 @@ class SshProviderTest extends BaseCmdTest {
     void testCreate(MockServerClient mock) throws IOException {
 
         mock.when(
-                request().withMethod("POST").withPath("/credentials").withBody("{\"credentials\":{\"keys\":{\"privateKey\":\"privat_key\",\"passphrase\":\"my_secret\",\"provider\":\"ssh\"},\"name\":\"ssh\",\"provider\":\"ssh\"}}"), exactly(1)
+                request().withMethod("POST").withPath("/credentials").withBody("{\"credentials\":{\"keys\":{\"privateKey\":\"privat_key\",\"passphrase\":\"my_secret\"},\"name\":\"ssh\",\"provider\":\"ssh\"}}"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"credentialsId\":\"1cz5A8cuBkB5iJliCwJCFU\"}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -41,7 +41,7 @@ class SshProviderTest extends BaseCmdTest {
     void testInvalidPrivateKey(MockServerClient mock) throws IOException {
 
         mock.when(
-                request().withMethod("POST").withPath("/credentials").withBody("{\"credentials\":{\"keys\":{\"privateKey\":\"invalid_private_key\",\"passphrase\":\"my_secret\",\"provider\":\"ssh\"},\"name\":\"ssh\",\"provider\":\"ssh\"}}"), exactly(1)
+                request().withMethod("POST").withPath("/credentials").withBody("{\"credentials\":{\"keys\":{\"privateKey\":\"invalid_private_key\",\"passphrase\":\"my_secret\"},\"name\":\"ssh\",\"provider\":\"ssh\"}}"), exactly(1)
         ).respond(
                 response().withStatusCode(400).withBody("{\"message\":\"Unrecognised SSH private key type\"}").withContentType(MediaType.APPLICATION_JSON)
         );

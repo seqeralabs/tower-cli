@@ -24,7 +24,6 @@ public class GitlabProvider extends AbstractGitProvider<GitLabSecurityKeys> {
     @Override
     public GitLabSecurityKeys securityKeys() throws IOException {
         return new GitLabSecurityKeys()
-                .provider(ProviderEnum.GITLAB.getValue())
                 .username(userName)
                 .password(password)
                 .token(accessToken);

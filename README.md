@@ -135,6 +135,12 @@ Select the compute environment that you want to use:
 towr launch nf-core/sarek --compute-env "aws seqera" --profile test,docker
 ```
 
+### Development
+
+To force reload SNAPSHOT dependencies run:
+```
+./gradlew clean build --refresh-dependencies
+```
 
 ### Credits & Links 
 

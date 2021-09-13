@@ -19,7 +19,7 @@
       "headJobMemoryMb": null,
       "forge": null,
       "forgedResources": null,
-      "platform": "aws-batch"
+      "discriminator": "aws-batch"
     },
     "dateCreated": "2021-09-08T15:19:08Z",
     "lastUpdated": "2021-09-08T15:19:08Z",

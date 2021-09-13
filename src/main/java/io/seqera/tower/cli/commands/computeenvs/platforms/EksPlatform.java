@@ -51,7 +51,6 @@ public class EksPlatform extends AbstractPlatform<EksComputeConfig> {
                 .servicePodSpec(FilesHelper.readString(adv().servicePodSpec))
 
                 // Common
-                .platform(type().getValue())
                 .workDir(workDir)
 
                 // Stagging

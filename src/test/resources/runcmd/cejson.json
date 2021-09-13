@@ -12,5 +12,5 @@
     "fusionEnabled": false,
     "efsCreate": true
   },
-  "platform": "aws-batch"
+  "discriminator": "aws-batch"
 }

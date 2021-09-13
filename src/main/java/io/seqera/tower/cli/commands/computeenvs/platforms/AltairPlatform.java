@@ -50,7 +50,6 @@ public class AltairPlatform extends AbstractPlatform<AltairPbsComputeConfig> {
 
         config
                 // Common
-                .platform(type().getValue())
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())

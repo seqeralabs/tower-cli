@@ -21,7 +21,6 @@ public class BitbucketProvider extends AbstractGitProvider<BitBucketSecurityKeys
     @Override
     public BitBucketSecurityKeys securityKeys() throws IOException {
         return new BitBucketSecurityKeys()
-                .provider(ProviderEnum.BITBUCKET.getValue())
                 .username(userName)
                 .password(password);
     }

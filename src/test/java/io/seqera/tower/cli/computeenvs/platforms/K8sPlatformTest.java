@@ -23,11 +23,11 @@ class K8sPlatformTest extends BaseCmdTest {
         mock.when(
                 request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "k8s-platform"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"2iEjbUUbqbuOaQEx03OxyH\",\"name\":\"k8s\",\"description\":null,\"provider\":\"k8s\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":null,\"dateCreated\":\"2021-09-08T13:03:27Z\",\"lastUpdated\":\"2021-09-08T13:03:27Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"2iEjbUUbqbuOaQEx03OxyH\",\"name\":\"k8s\",\"description\":null,\"discriminator\":\"k8s\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":null,\"dateCreated\":\"2021-09-08T13:03:27Z\",\"lastUpdated\":\"2021-09-08T13:03:27Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"name\":\"k8s\",\"platform\":\"k8s-platform\",\"config\":{\"workDir\":\"/workdir\",\"server\":\"k8s.mydomain.net\",\"sslCert\":\"ssl_cert\",\"namespace\":\"nf\",\"headServiceAccount\":\"head\",\"storageClaimName\":\"nf\",\"platform\":\"k8s-platform\"},\"credentialsId\":\"2iEjbUUbqbuOaQEx03OxyH\"}}"), exactly(1)
+                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"name\":\"k8s\",\"platform\":\"k8s-platform\",\"config\":{\"workDir\":\"/workdir\",\"server\":\"k8s.mydomain.net\",\"sslCert\":\"ssl_cert\",\"namespace\":\"nf\",\"headServiceAccount\":\"head\",\"storageClaimName\":\"nf\"},\"credentialsId\":\"2iEjbUUbqbuOaQEx03OxyH\"}}"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -45,11 +45,11 @@ class K8sPlatformTest extends BaseCmdTest {
         mock.when(
                 request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "k8s-platform"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"2iEjbUUbqbuOaQEx03OxyH\",\"name\":\"k8s\",\"description\":null,\"provider\":\"k8s\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":null,\"dateCreated\":\"2021-09-08T13:03:27Z\",\"lastUpdated\":\"2021-09-08T13:03:27Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"2iEjbUUbqbuOaQEx03OxyH\",\"name\":\"k8s\",\"description\":null,\"discriminator\":\"k8s\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":null,\"dateCreated\":\"2021-09-08T13:03:27Z\",\"lastUpdated\":\"2021-09-08T13:03:27Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"name\":\"k8s\",\"platform\":\"k8s-platform\",\"config\":{\"workDir\":\"/workdir\",\"server\":\"k8s.mydomain.net\",\"sslCert\":\"ssl_cert\",\"namespace\":\"nf\",\"headServiceAccount\":\"head\",\"storageClaimName\":\"nf\",\"storageMountPath\":\"/workdir\",\"platform\":\"k8s-platform\"},\"credentialsId\":\"2iEjbUUbqbuOaQEx03OxyH\"}}"), exactly(1)
+                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"name\":\"k8s\",\"platform\":\"k8s-platform\",\"config\":{\"workDir\":\"/workdir\",\"server\":\"k8s.mydomain.net\",\"sslCert\":\"ssl_cert\",\"namespace\":\"nf\",\"headServiceAccount\":\"head\",\"storageClaimName\":\"nf\",\"storageMountPath\":\"/workdir\"},\"credentialsId\":\"2iEjbUUbqbuOaQEx03OxyH\"}}"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -67,11 +67,11 @@ class K8sPlatformTest extends BaseCmdTest {
         mock.when(
                 request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "k8s-platform"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"2iEjbUUbqbuOaQEx03OxyH\",\"name\":\"k8s\",\"description\":null,\"provider\":\"k8s\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":null,\"dateCreated\":\"2021-09-08T13:03:27Z\",\"lastUpdated\":\"2021-09-08T13:03:27Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"2iEjbUUbqbuOaQEx03OxyH\",\"name\":\"k8s\",\"description\":null,\"discriminator\":\"k8s\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":null,\"dateCreated\":\"2021-09-08T13:03:27Z\",\"lastUpdated\":\"2021-09-08T13:03:27Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"name\":\"k8s\",\"platform\":\"k8s-platform\",\"config\":{\"workDir\":\"/workdir\",\"preRunScript\":\"pre_run_me\",\"postRunScript\":\"post_run_me\",\"server\":\"k8s.mydomain.net\",\"sslCert\":\"ssl_cert\",\"namespace\":\"nf\",\"headServiceAccount\":\"head\",\"storageClaimName\":\"nf\",\"platform\":\"k8s-platform\"},\"credentialsId\":\"2iEjbUUbqbuOaQEx03OxyH\"}}"), exactly(1)
+                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"name\":\"k8s\",\"platform\":\"k8s-platform\",\"config\":{\"workDir\":\"/workdir\",\"preRunScript\":\"pre_run_me\",\"postRunScript\":\"post_run_me\",\"server\":\"k8s.mydomain.net\",\"sslCert\":\"ssl_cert\",\"namespace\":\"nf\",\"headServiceAccount\":\"head\",\"storageClaimName\":\"nf\"},\"credentialsId\":\"2iEjbUUbqbuOaQEx03OxyH\"}}"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );

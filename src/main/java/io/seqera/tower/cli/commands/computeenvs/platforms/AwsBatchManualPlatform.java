@@ -45,7 +45,6 @@ public class AwsBatchManualPlatform extends AbstractPlatform<AwsBatchConfig> {
     @Override
     public AwsBatchConfig computeConfig() throws IOException {
         return new AwsBatchConfig()
-                .platform(type().getValue())
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())

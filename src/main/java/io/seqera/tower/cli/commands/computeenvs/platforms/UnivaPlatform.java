@@ -50,7 +50,6 @@ public class UnivaPlatform extends AbstractPlatform<UnivaComputeConfig> {
 
         config
                 // Common
-                .platform(type().getValue())
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())

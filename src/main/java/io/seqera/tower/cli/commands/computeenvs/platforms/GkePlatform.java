@@ -51,7 +51,6 @@ public class GkePlatform extends AbstractPlatform<GkeComputeConfig> {
                 .servicePodSpec(FilesHelper.readString(adv().servicePodSpec))
 
                 // Common
-                .platform(type().getValue())
                 .workDir(workDir)
 
                 // Stagging
