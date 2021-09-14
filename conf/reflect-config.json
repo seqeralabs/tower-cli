@@ -911,6 +911,12 @@
   "allDeclaredMethods":true
 },
 {
+  "name":"io.seqera.tower.cli.utils.VersionProvider",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.model.AbstractGridConfig",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
@@ -1781,6 +1787,11 @@
 },
 {
   "name":"picocli.CommandLine$HelpCommand",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true
+},
+{
+  "name":"picocli.CommandLine$NoVersionProvider",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
 },

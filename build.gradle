@@ -26,10 +26,31 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
 }
 
+String gitVersion() {
+    def p = new ProcessBuilder() .command('sh','-c','git rev-parse --short HEAD') .start()
+    def r = p.waitFor()
+    return r==0 ? p.text.trim() : '(unknown)'
+}
+
+task buildInfo { doLast {
+    def version = rootProject.file('VERSION').text.trim()
+    def versionApi = rootProject.file('VERSION-API').text.trim()
+    def commitId = gitVersion().trim()
+    def info = """\
+                    version=${version}
+                    versionApi=${versionApi}
+                    commitId=${commitId}
+                """.stripIndent().toString()
+    def f = file("src/main/resources/META-INF/build-info.properties")
+    f.parentFile.mkdirs()
+    f.text = info
+} }
+
 compileJava {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
     options.compilerArgs += ["-Aproject=${project.name}"]
+    dependsOn buildInfo
 }
 
 application {
@@ -42,8 +63,6 @@ application {
 test {
     // Use junit platform for unit tests
     useJUnitPlatform()
-
-
 }
 
 graal {
