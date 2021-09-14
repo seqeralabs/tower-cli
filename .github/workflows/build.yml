@@ -44,10 +44,14 @@ jobs:
     - name: Build Native Image
       run: ./gradlew nativeImage
 
-    - name: Linux native image
+    - name: Extract version
+      run: echo "::set-output name=VERSION::$(cat src/main/resources/META-INF/build-info.properties | grep "version=" | cut -d= -f2)_$(cat src/main/resources/META-INF/build-info.properties | grep "commitId=" | cut -d= -f2)"
+      id: extract-version
+
+    - name: Upload linux native image artifact
       uses: actions/upload-artifact@v2
       with:
-        name: linux-native-image
+        name: towr_${{ steps.extract-version.outputs.VERSION }}_linux
         path: build/graal/towr
 
     - name: Binary tests
@@ -95,10 +99,14 @@ jobs:
       - name: Build Native Image
         run: ./gradlew nativeImage
 
-      - name: Mac native image
+      - name: Extract version
+        run: echo "::set-output name=VERSION::$(cat src/main/resources/META-INF/build-info.properties | grep "version=" | cut -d= -f2)_$(cat src/main/resources/META-INF/build-info.properties | grep "commitId=" | cut -d= -f2)"
+        id: extract-version
+
+      - name: Upload Mac native image artifact
         uses: actions/upload-artifact@v2
         with:
-          name: mac-native-image
+          name: towr_${{ steps.extract-version.outputs.VERSION }}_mac
           path: build/graal/towr
 
       - name: Binary tests
@@ -146,10 +154,14 @@ jobs:
       - name: Build Native Image
         run: ./gradlew nativeImage
 
-      - name: Windows native image
+      - name: Extract version
+        run: echo "::set-output name=VERSION::$(cat src/main/resources/META-INF/build-info.properties | grep "version=" | cut -d= -f2)_$(cat src/main/resources/META-INF/build-info.properties | grep "commitId=" | cut -d= -f2)"
+        id: extract-version
+
+      - name: Upload Windows native image artifact
         uses: actions/upload-artifact@v2
         with:
-          name: windows-native-image
+          name: towr_${{ steps.extract-version.outputs.VERSION }}_windows
           path: build/graal/towr.exe
 
       - name: Binary tests
