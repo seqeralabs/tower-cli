@@ -3,7 +3,6 @@ package io.seqera.tower.cli.commands.credentials;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.responses.CredentialsList;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.model.Credentials;
 import io.seqera.tower.model.ListCredentialsResponse;
 import picocli.CommandLine.Command;
 

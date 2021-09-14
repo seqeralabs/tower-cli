@@ -14,24 +14,6 @@ public class K8sProvider extends AbstractProvider<K8sSecurityKeys> {
     @ArgGroup
     public Keys keys;
 
-    public static class Keys {
-
-        @Option(names = {"-t", "--token"}, description = "Service account token")
-        public String token;
-
-        @ArgGroup(exclusive = false)
-        public ClientCerts certs;
-    }
-
-    public static class ClientCerts {
-
-        @Option(names = {"-c", "--certificate"}, description = "Client certificate file")
-        public Path certificate;
-
-        @Option(names = {"-k", "--private-key"}, description = "Client key file")
-        public Path privateKey;
-    }
-
     public K8sProvider() {
         super(ProviderEnum.K8S);
     }
@@ -48,5 +30,23 @@ public class K8sProvider extends AbstractProvider<K8sSecurityKeys> {
         }
 
         return result;
+    }
+
+    public static class Keys {
+
+        @Option(names = {"-t", "--token"}, description = "Service account token")
+        public String token;
+
+        @ArgGroup(exclusive = false)
+        public ClientCerts certs;
+    }
+
+    public static class ClientCerts {
+
+        @Option(names = {"-c", "--certificate"}, description = "Client certificate file")
+        public Path certificate;
+
+        @Option(names = {"-k", "--private-key"}, description = "Client key file")
+        public Path privateKey;
     }
 }

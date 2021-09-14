@@ -25,34 +25,8 @@ public class GoogleLifeSciencesPlatform extends AbstractPlatform<GoogleLifeScien
 
     @ArgGroup(heading = "%nFilestore file system:%n", validate = false)
     public Filestore filestore;
-
-    public static class Filestore {
-
-        @Option(names = {"--nfs-target"}, description = "The Filestore instance IP address and share file name e.g. 1.2.3.4:/my_share_name")
-        public String nfsTarget;
-
-        @Option(names = {"--nfs-mount"}, description = "Specify the NFS mount path. It should be the same as the pipeline work directory or a parent path of it (defaults to the pipeline work directory root path if omitted).")
-        public String nfsMount;
-
-    }
-
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
     public AdvancedOptions adv;
-
-    public static class AdvancedOptions {
-        @Option(names = {"--use-private-address"}, description = "Do not attach a public IP address to the VM. When enabled only Google internal services are accessible.")
-        public Boolean usePrivateAddress;
-
-        @Option(names = {"--boot-disk-size"}, description = "Enter the boot disk size as GB")
-        public Integer bootDiskSizeGb;
-
-        @Option(names = {"--head-job-cpus"}, description = "The number of CPUs to be allocated for the Nextflow runner job")
-        public Integer headJobCpus;
-
-        @Option(names = {"--head-job-memory"}, description = "The number of MiB of memory reserved for the Nextflow runner job (value should be a multiple of 256MiB and from 0.5 GB to 8 GB per CPU)")
-        public Integer headJobMemoryMb;
-    }
-
 
     public GoogleLifeSciencesPlatform() {
         super(PlatformEnum.GOOGLE_LIFESCIENCES);
@@ -91,5 +65,29 @@ public class GoogleLifeSciencesPlatform extends AbstractPlatform<GoogleLifeScien
         }
 
         return config;
+    }
+
+    public static class Filestore {
+
+        @Option(names = {"--nfs-target"}, description = "The Filestore instance IP address and share file name e.g. 1.2.3.4:/my_share_name")
+        public String nfsTarget;
+
+        @Option(names = {"--nfs-mount"}, description = "Specify the NFS mount path. It should be the same as the pipeline work directory or a parent path of it (defaults to the pipeline work directory root path if omitted).")
+        public String nfsMount;
+
+    }
+
+    public static class AdvancedOptions {
+        @Option(names = {"--use-private-address"}, description = "Do not attach a public IP address to the VM. When enabled only Google internal services are accessible.")
+        public Boolean usePrivateAddress;
+
+        @Option(names = {"--boot-disk-size"}, description = "Enter the boot disk size as GB")
+        public Integer bootDiskSizeGb;
+
+        @Option(names = {"--head-job-cpus"}, description = "The number of CPUs to be allocated for the Nextflow runner job")
+        public Integer headJobCpus;
+
+        @Option(names = {"--head-job-memory"}, description = "The number of MiB of memory reserved for the Nextflow runner job (value should be a multiple of 256MiB and from 0.5 GB to 8 GB per CPU)")
+        public Integer headJobMemoryMb;
     }
 }

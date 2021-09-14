@@ -1,7 +1,7 @@
 package io.seqera.tower.cli.commands.credentials.create;
 
-import io.seqera.tower.cli.commands.credentials.providers.GitlabProvider;
 import io.seqera.tower.cli.commands.credentials.providers.CredentialsProvider;
+import io.seqera.tower.cli.commands.credentials.providers.GitlabProvider;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 

@@ -22,14 +22,12 @@ import java.util.List;
 @Command
 public abstract class AbstractCreateCmd extends AbstractApiCmd {
 
-    @ParentCommand
-    protected CreateCmd parent;
-
     @Option(names = {"-n", "--name"}, description = "Compute environment name", required = true)
     public String name;
-
     @Option(names = {"-c", "--credentials-id"}, description = "Credentials identifier (defaults to use the workspace credentials)")
     public String credentialsId;
+    @ParentCommand
+    protected CreateCmd parent;
 
     @Override
     public Tower app() {

@@ -13,7 +13,7 @@ public class LaunchOptions {
     @Option(names = {"-w", "--work-dir"}, description = "Path where the pipeline scratch data is stored")
     public String workDir;
 
-    @Option(names = {"-p", "--profiles"}, split=",", description = "One or more (separated by comma) configuration profile names you want to use for this pipeline execution")
+    @Option(names = {"-p", "--profiles"}, split = ",", description = "One or more (separated by comma) configuration profile names you want to use for this pipeline execution")
     public List<String> profiles;
 
     @Option(names = {"--params"}, description = "Pipeline parameters using either JSON or YML file")

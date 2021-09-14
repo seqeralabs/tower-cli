@@ -9,16 +9,6 @@ public class AwsProvider extends AbstractProvider<AwsSecurityKeys> {
 
     @ArgGroup(exclusive = false)
     public Keys keys;
-
-    public static class Keys {
-
-        @Option(names = {"-a", "--access-key"}, description = "The AWS access key required to access the desired service")
-        String accessKey;
-
-        @Option(names = {"-s", "--secret-key"}, description = "The AWS secret key required to access the desired service")
-        String secretKey;
-    }
-
     @Option(names = {"-r", "--assume-role-arn"}, description = "The IAM role to access the AWS resources. It should be a fully qualified AWS role ARN.")
     String assumeRoleArn;
 
@@ -38,5 +28,14 @@ public class AwsProvider extends AbstractProvider<AwsSecurityKeys> {
         }
 
         return result;
+    }
+
+    public static class Keys {
+
+        @Option(names = {"-a", "--access-key"}, description = "The AWS access key required to access the desired service")
+        String accessKey;
+
+        @Option(names = {"-s", "--secret-key"}, description = "The AWS secret key required to access the desired service")
+        String secretKey;
     }
 }

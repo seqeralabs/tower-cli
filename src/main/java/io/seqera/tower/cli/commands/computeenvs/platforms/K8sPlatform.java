@@ -30,23 +30,6 @@ public class K8sPlatform extends AbstractPlatform<K8sComputeConfig> {
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
     public AdvancedOptions adv;
 
-    public static class AdvancedOptions {
-        @Option(names = {"--storage-mount"}, description = "Storage mount path")
-        public String storageMount;
-
-        @Option(names = {"--compute-account"}, description = "Compute service account")
-        public String computeAccount;
-
-        @Option(names = "--pod-cleanup", description = "Pod cleanup policy (ON_SUCCESS, ALWAYS, NEVER)")
-        public PodCleanupPolicy podCleanup;
-
-        @Option(names = {"--head-pod-spec"}, description = "Custom head pod specs file")
-        public Path headPodSpec;
-
-        @Option(names = {"--service-pod-spec"}, description = "Custom service pod specs file")
-        public Path servicePodSpec;
-    }
-
     public K8sPlatform() {
         super(PlatformEnum.K8S_PLATFORM);
     }
@@ -74,5 +57,22 @@ public class K8sPlatform extends AbstractPlatform<K8sComputeConfig> {
             return new K8sPlatform.AdvancedOptions();
         }
         return adv;
+    }
+
+    public static class AdvancedOptions {
+        @Option(names = {"--storage-mount"}, description = "Storage mount path")
+        public String storageMount;
+
+        @Option(names = {"--compute-account"}, description = "Compute service account")
+        public String computeAccount;
+
+        @Option(names = "--pod-cleanup", description = "Pod cleanup policy (ON_SUCCESS, ALWAYS, NEVER)")
+        public PodCleanupPolicy podCleanup;
+
+        @Option(names = {"--head-pod-spec"}, description = "Custom head pod specs file")
+        public Path headPodSpec;
+
+        @Option(names = {"--service-pod-spec"}, description = "Custom service pod specs file")
+        public Path servicePodSpec;
     }
 }

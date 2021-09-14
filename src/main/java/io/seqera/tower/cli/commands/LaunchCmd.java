@@ -50,34 +50,6 @@ public class LaunchCmd extends AbstractRootCmd {
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
     AdvancedOptions adv;
 
-    public static class AdvancedOptions {
-
-        @Option(names = {"--config"}, description = "Additional Nextflow config settings can be provided in the above field. These settings will be included in the nextflow.config file for this execution")
-        public Path config;
-
-        @Option(names = {"--pre-run"}, description = "Pre-run script")
-        public Path preRunScript;
-
-        @Option(names = {"--post-run"}, description = "Post-run script")
-        public Path postRunScript;
-
-        @Option(names = {"--pull-latest"}, description = "Enabling this option Nextflow pulls the latest version from the Git repository before run the pipeline")
-        public Boolean pullLatest;
-
-        @Option(names = {"--stub-run"}, description = "Execute the workflow replacing process scripts with command stubs")
-        public Boolean stubRun;
-
-        @Option(names = {"--main-script"}, description = "Specify the pipeline main script file if different from `main.nf`")
-        public String mainScript;
-
-        @Option(names = {"--entry-name"}, description = "Specify the main workflow name to be executed when using DLS2 syntax")
-        public String entryName;
-
-        @Option(names = {"--schema-name"}, description = "Enter schema name")
-        public String schemaName;
-
-    }
-
     public LaunchCmd() {
     }
 
@@ -160,6 +132,34 @@ public class LaunchCmd extends AbstractRootCmd {
             return new AdvancedOptions();
         }
         return adv;
+    }
+
+    public static class AdvancedOptions {
+
+        @Option(names = {"--config"}, description = "Additional Nextflow config settings can be provided in the above field. These settings will be included in the nextflow.config file for this execution")
+        public Path config;
+
+        @Option(names = {"--pre-run"}, description = "Pre-run script")
+        public Path preRunScript;
+
+        @Option(names = {"--post-run"}, description = "Post-run script")
+        public Path postRunScript;
+
+        @Option(names = {"--pull-latest"}, description = "Enabling this option Nextflow pulls the latest version from the Git repository before run the pipeline")
+        public Boolean pullLatest;
+
+        @Option(names = {"--stub-run"}, description = "Execute the workflow replacing process scripts with command stubs")
+        public Boolean stubRun;
+
+        @Option(names = {"--main-script"}, description = "Specify the pipeline main script file if different from `main.nf`")
+        public String mainScript;
+
+        @Option(names = {"--entry-name"}, description = "Specify the main workflow name to be executed when using DLS2 syntax")
+        public String entryName;
+
+        @Option(names = {"--schema-name"}, description = "Enter schema name")
+        public String schemaName;
+
     }
 
 }

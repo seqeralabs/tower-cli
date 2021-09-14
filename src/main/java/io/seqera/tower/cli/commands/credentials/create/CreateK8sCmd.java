@@ -1,7 +1,7 @@
 package io.seqera.tower.cli.commands.credentials.create;
 
-import io.seqera.tower.cli.commands.credentials.providers.K8sProvider;
 import io.seqera.tower.cli.commands.credentials.providers.CredentialsProvider;
+import io.seqera.tower.cli.commands.credentials.providers.K8sProvider;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 

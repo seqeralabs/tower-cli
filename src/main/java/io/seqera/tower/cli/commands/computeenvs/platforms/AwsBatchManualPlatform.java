@@ -21,25 +21,17 @@ public class AwsBatchManualPlatform extends AbstractPlatform<AwsBatchConfig> {
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
     public AdvancedOptions adv;
 
-    public static class AdvancedOptions {
-        @Option(names = {"--head-job-cpus"}, description = "The number of CPUs to be allocated for the Nextflow runner job")
-        public Integer headJobCpus;
-
-        @Option(names = {"--head-job-memory"}, description = "The number of MiB of memory reserved for the Nextflow runner job")
-        public Integer headJobMemoryMb;
-
-        @Option(names = {"--head-job-role"}, description = "IAM role to fine-grained control permissions for the Nextflow runner job")
-        public String headJobRole;
-
-        @Option(names = {"--compute-job-role"}, description = "IAM role to fine-grained control permissions for jobs submitted by Nextflow")
-        public String computeJobRole;
-
-        @Option(names = {"--cli-path"}, description = "Nextflow requires the AWS CLI installed in the Ec2 instances. Use this field to specify the path")
-        public String cliPath;
-    }
-
     public AwsBatchManualPlatform() {
         super(PlatformEnum.AWS_BATCH);
+    }
+
+    /**
+     * Clean backend generated config
+     *
+     * @param config
+     */
+    public static void clean(AwsBatchConfig config) {
+        config.volumes(null);
     }
 
     @Override
@@ -62,19 +54,27 @@ public class AwsBatchManualPlatform extends AbstractPlatform<AwsBatchConfig> {
                 .headJobRole(adv().headJobRole);
     }
 
-    /**
-     * Clean backend generated config
-     *
-     * @param config
-     */
-    public static void clean(AwsBatchConfig config) {
-        config.volumes(null);
-    }
-
     private AdvancedOptions adv() {
         if (adv == null) {
             return new AdvancedOptions();
         }
         return adv;
+    }
+
+    public static class AdvancedOptions {
+        @Option(names = {"--head-job-cpus"}, description = "The number of CPUs to be allocated for the Nextflow runner job")
+        public Integer headJobCpus;
+
+        @Option(names = {"--head-job-memory"}, description = "The number of MiB of memory reserved for the Nextflow runner job")
+        public Integer headJobMemoryMb;
+
+        @Option(names = {"--head-job-role"}, description = "IAM role to fine-grained control permissions for the Nextflow runner job")
+        public String headJobRole;
+
+        @Option(names = {"--compute-job-role"}, description = "IAM role to fine-grained control permissions for jobs submitted by Nextflow")
+        public String computeJobRole;
+
+        @Option(names = {"--cli-path"}, description = "Nextflow requires the AWS CLI installed in the Ec2 instances. Use this field to specify the path")
+        public String cliPath;
     }
 }

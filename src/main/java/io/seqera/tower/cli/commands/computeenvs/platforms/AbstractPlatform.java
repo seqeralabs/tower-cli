@@ -12,21 +12,11 @@ import java.nio.file.Path;
 
 public abstract class AbstractPlatform<T extends ComputeConfig> implements Platform {
 
-    private PlatformEnum type;
-
     @Option(names = {"-w", "--work-dir"}, description = "Work directory", required = true)
     public String workDir;
-
     @ArgGroup(heading = "%nStaging options:%n", validate = false)
     public StagingOptions staging;
-
-    public static class StagingOptions {
-        @Option(names = {"--pre-run"}, description = "Pre-run script")
-        public Path preRunScript;
-
-        @Option(names = {"--post-run"}, description = "Post-run script")
-        public Path postRunScript;
-    }
+    private PlatformEnum type;
 
     public AbstractPlatform(PlatformEnum type) {
         this.type = type;
@@ -52,6 +42,13 @@ public abstract class AbstractPlatform<T extends ComputeConfig> implements Platf
 
     public abstract T computeConfig() throws ApiException, IOException;
 
+    public static class StagingOptions {
+        @Option(names = {"--pre-run"}, description = "Pre-run script")
+        public Path preRunScript;
+
+        @Option(names = {"--post-run"}, description = "Post-run script")
+        public Path postRunScript;
+    }
 
 
 }

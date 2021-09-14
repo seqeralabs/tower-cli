@@ -44,6 +44,10 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     protected AbstractApiCmd() {
     }
 
+    public static String buildWorkspaceRef(String orgName, String workspaceName) {
+        return String.format("[%s / %s]", orgName, workspaceName);
+    }
+
     public abstract Tower app();
 
     protected DefaultApi api() {
@@ -209,10 +213,6 @@ public abstract class AbstractApiCmd extends AbstractCmd {
             return USER_WORKSPACE_NAME;
         }
         return buildWorkspaceRef(orgName(), workspaceName());
-    }
-
-    public static String buildWorkspaceRef(String orgName, String workspaceName) {
-        return String.format("[%s / %s]", orgName, workspaceName);
     }
 
     @Override

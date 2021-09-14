@@ -31,16 +31,6 @@ public class AzBatchForgePlatform extends AbstractPlatform<AzBatchConfig> {
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
     public AdvancedOptions adv;
 
-    public static class AdvancedOptions {
-
-        @Option(names = {"--jobs-cleanup"}, description = "Enable the automatic deletion of Batch jobs created by the pipeline execution (ON_SUCESS, ALWAYS, NEVER)")
-        public JobCleanupPolicy jobsCleanup;
-
-        @Option(names = {"--token-duration"}, description = "The duration of the shared access signature token created by Nextflow when the 'sasToken' option is not specified (default: 12h)")
-        public String tokenDuration;
-
-    }
-
     public AzBatchForgePlatform() {
         super(PlatformEnum.AZURE_BATCH);
     }
@@ -71,5 +61,15 @@ public class AzBatchForgePlatform extends AbstractPlatform<AzBatchConfig> {
         );
 
         return config;
+    }
+
+    public static class AdvancedOptions {
+
+        @Option(names = {"--jobs-cleanup"}, description = "Enable the automatic deletion of Batch jobs created by the pipeline execution (ON_SUCESS, ALWAYS, NEVER)")
+        public JobCleanupPolicy jobsCleanup;
+
+        @Option(names = {"--token-duration"}, description = "The duration of the shared access signature token created by Nextflow when the 'sasToken' option is not specified (default: 12h)")
+        public String tokenDuration;
+
     }
 }

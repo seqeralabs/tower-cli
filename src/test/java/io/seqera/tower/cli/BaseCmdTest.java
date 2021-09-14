@@ -35,33 +35,6 @@ public abstract class BaseCmdTest {
     @TempDir
     Path tempDir;
 
-    public static class ExecOut {
-        public Tower app;
-        public String stdOut;
-        public String stdErr;
-        public int exitCode;
-
-        public ExecOut stdOut(String value) {
-            this.stdOut = value;
-            return this;
-        }
-
-        public ExecOut stdErr(String value) {
-            this.stdErr = value;
-            return this;
-        }
-
-        public ExecOut exitCode(int value) {
-            this.exitCode = value;
-            return this;
-        }
-
-        public ExecOut app(Tower app) {
-            this.app = app;
-            return this;
-        }
-    }
-
     protected byte[] loadResource(String name) {
         try {
             return this.getClass().getResourceAsStream("/runcmd/" + name + ".json").readAllBytes();
@@ -106,21 +79,6 @@ public abstract class BaseCmdTest {
                 .stdOut(StringUtils.chop(stdOut.toString()))
                 .stdErr(StringUtils.chop(stdErr.toString()))
                 .exitCode(exitCode);
-    }
-
-    private static class StreamGobbler implements Runnable {
-        private InputStream inputStream;
-        private Consumer<String> consumer;
-
-        public StreamGobbler(InputStream inputStream, Consumer<String> consumer) {
-            this.inputStream = inputStream;
-            this.consumer = consumer;
-        }
-
-        @Override
-        public void run() {
-            new BufferedReader(new InputStreamReader(inputStream)).lines().forEach(consumer);
-        }
     }
 
     private ExecOut execBinary(MockServerClient mock, String command, String... args) {
@@ -173,6 +131,48 @@ public abstract class BaseCmdTest {
         StringWriter out = new StringWriter();
         ErrorReporting.errorMessage(app, new PrintWriter(out), e);
         return StringUtils.chop(out.toString());
+    }
+
+    public static class ExecOut {
+        public Tower app;
+        public String stdOut;
+        public String stdErr;
+        public int exitCode;
+
+        public ExecOut stdOut(String value) {
+            this.stdOut = value;
+            return this;
+        }
+
+        public ExecOut stdErr(String value) {
+            this.stdErr = value;
+            return this;
+        }
+
+        public ExecOut exitCode(int value) {
+            this.exitCode = value;
+            return this;
+        }
+
+        public ExecOut app(Tower app) {
+            this.app = app;
+            return this;
+        }
+    }
+
+    private static class StreamGobbler implements Runnable {
+        private InputStream inputStream;
+        private Consumer<String> consumer;
+
+        public StreamGobbler(InputStream inputStream, Consumer<String> consumer) {
+            this.inputStream = inputStream;
+            this.consumer = consumer;
+        }
+
+        @Override
+        public void run() {
+            new BufferedReader(new InputStreamReader(inputStream)).lines().forEach(consumer);
+        }
     }
 
 }

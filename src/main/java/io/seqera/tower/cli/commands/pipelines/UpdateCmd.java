@@ -1,14 +1,10 @@
 package io.seqera.tower.cli.commands.pipelines;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.responses.PipelinesCreated;
 import io.seqera.tower.cli.responses.PipelinesUpdated;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.ComputeEnv;
-import io.seqera.tower.model.CreatePipelineRequest;
-import io.seqera.tower.model.CreatePipelineResponse;
-import io.seqera.tower.model.DescribeLaunchResponse;
 import io.seqera.tower.model.Launch;
 import io.seqera.tower.model.PipelineDbDto;
 import io.seqera.tower.model.UpdatePipelineRequest;
@@ -17,7 +13,6 @@ import io.seqera.tower.model.WorkflowLaunchRequest;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Option;
-import picocli.CommandLine.Parameters;
 
 import java.io.IOException;
 

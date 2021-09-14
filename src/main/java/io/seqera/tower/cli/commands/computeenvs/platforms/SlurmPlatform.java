@@ -31,15 +31,6 @@ public class SlurmPlatform extends AbstractPlatform<SlurmComputeConfig> {
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
     public AdvancedOptions adv;
 
-    public static class AdvancedOptions {
-        @Option(names = {"--max-queue-size"}, description = "This option limits the number of jobs Nextflow can submit to the Slurm queue at the same time (default: 100)")
-        public Integer maxQueueSize;
-
-        @Option(names = {"--head-job-options"}, description = "Slurm submit options for the Nextflow head job. These options are added to the 'sbatch' command run by Tower to launch the pipeline execution.")
-        public String headJobOptions;
-    }
-
-
     public SlurmPlatform() {
         super(PlatformEnum.SLURM_PLATFORM);
     }
@@ -74,5 +65,13 @@ public class SlurmPlatform extends AbstractPlatform<SlurmComputeConfig> {
             return new AdvancedOptions();
         }
         return adv;
+    }
+
+    public static class AdvancedOptions {
+        @Option(names = {"--max-queue-size"}, description = "This option limits the number of jobs Nextflow can submit to the Slurm queue at the same time (default: 100)")
+        public Integer maxQueueSize;
+
+        @Option(names = {"--head-job-options"}, description = "Slurm submit options for the Nextflow head job. These options are added to the 'sbatch' command run by Tower to launch the pipeline execution.")
+        public String headJobOptions;
     }
 }

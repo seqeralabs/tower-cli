@@ -6,7 +6,6 @@ import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.commands.PipelinesCmd;
 import io.seqera.tower.cli.exceptions.MultiplePipelinesFoundException;
 import io.seqera.tower.cli.exceptions.PipelineNotFoundException;
-import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.model.ListPipelinesResponse;
 import io.seqera.tower.model.PipelineDbDto;
 import picocli.CommandLine.Command;

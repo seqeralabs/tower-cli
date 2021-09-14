@@ -8,7 +8,6 @@ import io.seqera.tower.cli.exceptions.ShowUsageException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import picocli.CommandLine;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.NoSuchFileException;
 

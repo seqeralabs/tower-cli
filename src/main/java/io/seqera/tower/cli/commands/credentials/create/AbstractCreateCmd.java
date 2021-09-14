@@ -20,11 +20,10 @@ import java.io.IOException;
 @Command
 public abstract class AbstractCreateCmd<T extends SecurityKeys> extends AbstractApiCmd {
 
-    @ParentCommand
-    protected CreateCmd parent;
-
     @Option(names = {"-n", "--name"}, description = "Credentials name", required = true)
     public String name;
+    @ParentCommand
+    protected CreateCmd parent;
 
     @Override
     public Tower app() {

@@ -31,25 +31,6 @@ public class LsfPlatform extends AbstractPlatform<LsfComputeConfig> {
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
     public AdvancedOptions adv;
 
-    public static class AdvancedOptions {
-        @Option(names = {"--max-queue-size"}, description = "This option limits the number of jobs Nextflow can submit to the Slurm queue at the same time (default: 100)")
-        public Integer maxQueueSize;
-
-        @Option(names = {"--head-job-options"}, description = "Slurm submit options for the Nextflow head job. These options are added to the 'sbatch' command run by Tower to launch the pipeline execution.")
-        public String headJobOptions;
-
-        @Option(names = {"--unit-for-limits"}, description = "This option defines the unit used by your LSF cluster for memory limits. It should match the attribute LSF_UNIT_FOR_LIMITS setting in your lsf.conf file.")
-        public String unitForLimits;
-
-        @Option(names = {"--per-job-mem-limit"}, description = "Whether the memory limit is interpreted as per-job or per-process. It should match the attribute LSB_JOB_MEMLIMIT in your lsf.conf file")
-        public Boolean perJobMemLimit;
-
-        @Option(names = {"--per-task-reserve"}, description = "Whether the memory reservation is made on job tasks instead of per-host. It should match the attribute RESOURCE_RESERVE_PER_TASK in your lsf.conf file.")
-        public Boolean perTaskReserve;
-
-    }
-
-
     public LsfPlatform() {
         super(PlatformEnum.LSF_PLATFORM);
     }
@@ -89,5 +70,23 @@ public class LsfPlatform extends AbstractPlatform<LsfComputeConfig> {
             return new AdvancedOptions();
         }
         return adv;
+    }
+
+    public static class AdvancedOptions {
+        @Option(names = {"--max-queue-size"}, description = "This option limits the number of jobs Nextflow can submit to the Slurm queue at the same time (default: 100)")
+        public Integer maxQueueSize;
+
+        @Option(names = {"--head-job-options"}, description = "Slurm submit options for the Nextflow head job. These options are added to the 'sbatch' command run by Tower to launch the pipeline execution.")
+        public String headJobOptions;
+
+        @Option(names = {"--unit-for-limits"}, description = "This option defines the unit used by your LSF cluster for memory limits. It should match the attribute LSF_UNIT_FOR_LIMITS setting in your lsf.conf file.")
+        public String unitForLimits;
+
+        @Option(names = {"--per-job-mem-limit"}, description = "Whether the memory limit is interpreted as per-job or per-process. It should match the attribute LSB_JOB_MEMLIMIT in your lsf.conf file")
+        public Boolean perJobMemLimit;
+
+        @Option(names = {"--per-task-reserve"}, description = "Whether the memory reservation is made on job tasks instead of per-host. It should match the attribute RESOURCE_RESERVE_PER_TASK in your lsf.conf file.")
+        public Boolean perTaskReserve;
+
     }
 }

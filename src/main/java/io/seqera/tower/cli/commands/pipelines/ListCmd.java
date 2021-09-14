@@ -1,10 +1,8 @@
 package io.seqera.tower.cli.commands.pipelines;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.responses.CredentialsList;
 import io.seqera.tower.cli.responses.PipelinesList;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.model.ListCredentialsResponse;
 import io.seqera.tower.model.ListPipelinesResponse;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;

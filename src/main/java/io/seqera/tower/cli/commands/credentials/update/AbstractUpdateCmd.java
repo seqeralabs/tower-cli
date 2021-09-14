@@ -21,11 +21,10 @@ import java.io.IOException;
 @Command
 public abstract class AbstractUpdateCmd extends AbstractApiCmd {
 
-    @ParentCommand
-    protected UpdateCmd parent;
-
     @CommandLine.Option(names = {"-i", "--id"}, required = true)
     public String id;
+    @ParentCommand
+    protected UpdateCmd parent;
 
     public AbstractUpdateCmd() {
     }

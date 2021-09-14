@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 
-import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -124,7 +123,6 @@ class CredentialsCmdTest extends BaseCmdTest {
             assertEquals(-1, out.exitCode);
         }
     }
-
 
 
 }

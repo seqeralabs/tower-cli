@@ -7,7 +7,7 @@ on:
       - '*'
       - '!refs/tags/.*'
     tags-ignore:
-      - '*'  
+      - '*'
 
 jobs:
 
@@ -17,54 +17,54 @@ jobs:
     timeout-minutes: 90
 
     steps:
-    - name: Environment
-      run: env | sort 
+      - name: Environment
+        run: env | sort
 
-    - name: Checkout
-      uses: actions/checkout@v1
-      with:
-        fetch-depth: 1
+      - name: Checkout
+        uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
 
-    - name: Setup Java
-      uses: actions/setup-java@v1
-      with:
-        java-version: '11'
-        architecture: x64
+      - name: Setup Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: '11'
+          architecture: x64
 
-    - name: Tests
-      run: ./gradlew cleanTest test
+      - name: Tests
+        run: ./gradlew cleanTest test
 
-    - name: Tests reports
-      uses: actions/upload-artifact@v2
-      if: failure()
-      with:
-        name: linux-test-reports
-        path: build/reports/tests/test/
+      - name: Tests reports
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: linux-test-reports
+          path: build/reports/tests/test/
 
-    - name: Build Native Image
-      run: ./gradlew nativeImage
+      - name: Build Native Image
+        run: ./gradlew nativeImage
 
-    - name: Extract version
-      run: echo "::set-output name=VERSION::$(cat src/main/resources/META-INF/build-info.properties | grep "version=" | cut -d= -f2)_$(cat src/main/resources/META-INF/build-info.properties | grep "commitId=" | cut -d= -f2)"
-      id: extract-version
+      - name: Extract version
+        run: echo "::set-output name=VERSION::$(cat src/main/resources/META-INF/build-info.properties | grep "version=" | cut -d= -f2)_$(cat src/main/resources/META-INF/build-info.properties | grep "commitId=" | cut -d= -f2)"
+        id: extract-version
 
-    - name: Upload linux native image artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: towr_${{ steps.extract-version.outputs.VERSION }}_linux
-        path: build/graal/towr
+      - name: Upload linux native image artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: towr_${{ steps.extract-version.outputs.VERSION }}_linux
+          path: build/graal/towr
 
-    - name: Binary tests
-      run: ./gradlew cleanTest test
-      env:
-        TOWER_CLI: build/graal/towr
+      - name: Binary tests
+        run: ./gradlew cleanTest test
+        env:
+          TOWER_CLI: build/graal/towr
 
-    - name: Binary tests reports
-      uses: actions/upload-artifact@v2
-      if: failure()
-      with:
-        name: linux-binary-test-reports
-        path: build/reports/tests/test/
+      - name: Binary tests reports
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: linux-binary-test-reports
+          path: build/reports/tests/test/
 
   mac-image:
     name: Tower CLI build Mac native image

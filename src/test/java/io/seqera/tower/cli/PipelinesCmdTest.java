@@ -333,22 +333,22 @@ class PipelinesCmdTest extends BaseCmdTest {
 
         assertEquals("", out.stdErr);
         assertEquals(StringUtils.chop(new PipelinesView(
-                USER_WORKSPACE_NAME,
-                new PipelineDbDto().pipelineId(217997727159863L).name("sleep_one_minute").repository("https://github.com/pditommaso/nf-sleep"),
-                new Launch()
-                        .id("oRptz8ekYa3BSA4Nnx7Qn")
-                        .pipeline("https://github.com/pditommaso/nf-sleep")
-                        .workDir("s3://nextflow-ci/jordeu")
-                        .paramsText("timeout: 60\n")
-                        .dateCreated(OffsetDateTime.parse("2021-09-08T06:50:54Z"))
-                        .lastUpdated(OffsetDateTime.parse("2021-09-08T06:50:54Z"))
-                        .resume(false)
-                        .pullLatest(false)
-                        .stubRun(false)
-                        .computeEnv(
-                                parseJson("{\"id\": \"vYOK4vn7spw7bHHWBDXZ2\"}", ComputeEnv.class)
-                                        .name("demo")
-                        )
+                        USER_WORKSPACE_NAME,
+                        new PipelineDbDto().pipelineId(217997727159863L).name("sleep_one_minute").repository("https://github.com/pditommaso/nf-sleep"),
+                        new Launch()
+                                .id("oRptz8ekYa3BSA4Nnx7Qn")
+                                .pipeline("https://github.com/pditommaso/nf-sleep")
+                                .workDir("s3://nextflow-ci/jordeu")
+                                .paramsText("timeout: 60\n")
+                                .dateCreated(OffsetDateTime.parse("2021-09-08T06:50:54Z"))
+                                .lastUpdated(OffsetDateTime.parse("2021-09-08T06:50:54Z"))
+                                .resume(false)
+                                .pullLatest(false)
+                                .stubRun(false)
+                                .computeEnv(
+                                        parseJson("{\"id\": \"vYOK4vn7spw7bHHWBDXZ2\"}", ComputeEnv.class)
+                                                .name("demo")
+                                )
                 ).toString()), out.stdOut
         );
         assertEquals(0, out.exitCode);

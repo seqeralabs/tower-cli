@@ -6,9 +6,8 @@ package io.seqera.tower.cli;
 import io.seqera.tower.cli.commands.AbstractCmd;
 import io.seqera.tower.cli.commands.ComputeEnvCmd;
 import io.seqera.tower.cli.commands.CredentialsCmd;
-import io.seqera.tower.cli.commands.PipelinesCmd;
 import io.seqera.tower.cli.commands.LaunchCmd;
-import io.seqera.tower.cli.utils.VersionProvider;
+import io.seqera.tower.cli.commands.PipelinesCmd;
 import picocli.AutoComplete.GenerateCompletion;
 import picocli.CommandLine;
 import picocli.CommandLine.ArgGroup;
@@ -53,14 +52,6 @@ public class Tower extends AbstractCmd {
     @Option(names = {"-v", "--verbose"}, description = "Shows HTTP request/response logs at stderr")
     public boolean verbose;
 
-    public static class OrgAndWorkspace {
-        @Option(names = {"-w", "--workspace"}, description = "Workspace name (case insensitive)", defaultValue = "${TOWER_WORKSPACE_NAME}")
-        public String workspace;
-
-        @Option(names = {"-o", "--organization"}, description = "Organization name (case insensitive)", defaultValue = "${TOWER_ORG_NAME}")
-        public String organization;
-    }
-
     public Tower() {
     }
 
@@ -88,5 +79,13 @@ public class Tower extends AbstractCmd {
 
     public PrintWriter getOut() {
         return spec.commandLine().getOut();
+    }
+
+    public static class OrgAndWorkspace {
+        @Option(names = {"-w", "--workspace"}, description = "Workspace name (case insensitive)", defaultValue = "${TOWER_WORKSPACE_NAME}")
+        public String workspace;
+
+        @Option(names = {"-o", "--organization"}, description = "Organization name (case insensitive)", defaultValue = "${TOWER_ORG_NAME}")
+        public String organization;
     }
 }

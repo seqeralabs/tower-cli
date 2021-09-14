@@ -4,7 +4,6 @@ import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.ListComputeEnvsResponseEntry;
 
 import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.List;
 
 public class ComputeEnvList extends Response {

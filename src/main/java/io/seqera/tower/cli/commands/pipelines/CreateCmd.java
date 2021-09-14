@@ -8,8 +8,8 @@ import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.CreatePipelineRequest;
 import io.seqera.tower.model.CreatePipelineResponse;
 import io.seqera.tower.model.WorkflowLaunchRequest;
-import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
