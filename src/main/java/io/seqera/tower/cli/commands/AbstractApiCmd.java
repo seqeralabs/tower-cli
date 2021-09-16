@@ -163,7 +163,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
 
     private void loadOrgAndWorkspaceFromIds() throws ApiException {
         Long workspaceId = workspaceId();
-        for (OrgAndWorkspaceDbDto ow : api().listUserWorkspacesAndOrgs(userId()).getOrgsAndWorkspaces()) {
+        for (OrgAndWorkspaceDbDto ow : api().listWorkspacesUser(userId()).getOrgsAndWorkspaces()) {
             if ((workspaceId == null && ow.getWorkspaceId() == null) || (workspaceId != null && workspaceId().equals(ow.getWorkspaceId()))) {
                 workspaceName = ow.getWorkspaceName();
                 orgId = ow.getOrgId();
@@ -178,7 +178,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     private void loadOrgAndWorkspaceFromNames() throws ApiException {
         String wName = workspaceName();
         String oName = orgName();
-        for (OrgAndWorkspaceDbDto ow : api().listUserWorkspacesAndOrgs(userId()).getOrgsAndWorkspaces()) {
+        for (OrgAndWorkspaceDbDto ow : api().listWorkspacesUser(userId()).getOrgsAndWorkspaces()) {
             if (wName.equalsIgnoreCase(ow.getWorkspaceName()) && oName.equalsIgnoreCase(ow.getOrgName())) {
                 workspaceName = ow.getWorkspaceName();
                 orgName = ow.getOrgName();
