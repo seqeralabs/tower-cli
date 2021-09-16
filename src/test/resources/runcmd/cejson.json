@@ -1,0 +1,16 @@
+{
+  "region": "eu-west-1",
+  "cliPath": "/home/ec2-user/miniconda/bin/aws",
+  "workDir": "s3://nextflow-ci/jordeu",
+  "forge": {
+    "type": "SPOT",
+    "minCpus": 0,
+    "maxCpus": 123,
+    "gpuEnabled": false,
+    "ebsAutoScale": true,
+    "disposeOnDeletion": true,
+    "fusionEnabled": false,
+    "efsCreate": true
+  },
+  "discriminator": "aws-batch"
+}

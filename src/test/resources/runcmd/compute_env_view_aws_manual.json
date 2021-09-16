@@ -1,0 +1,33 @@
+{
+  "computeEnv": {
+    "id": "53aWhB2qJroy0i51FOrFAC",
+    "name": "manual",
+    "description": null,
+    "platform": "aws-batch",
+    "config": {
+      "region": "eu-west-1",
+      "computeQueue": "TowerForge-isnEDBLvHDAIteOEF44ow-work",
+      "computeJobRole": null,
+      "headQueue": "TowerForge-isnEDBLvHDAIteOEF44ow-head",
+      "headJobRole": null,
+      "cliPath": "/home/ec2-user/miniconda/bin/aws",
+      "volumes": [],
+      "workDir": "s3://nextflow-ci/jordeu",
+      "preRunScript": null,
+      "postRunScript": null,
+      "headJobCpus": null,
+      "headJobMemoryMb": null,
+      "forge": null,
+      "forgedResources": null,
+      "discriminator": "aws-batch"
+    },
+    "dateCreated": "2021-09-08T15:19:08Z",
+    "lastUpdated": "2021-09-08T15:19:08Z",
+    "lastUsed": null,
+    "deleted": null,
+    "status": "AVAILABLE",
+    "message": null,
+    "primary": null,
+    "credentialsId": "6g0ER59L4ZoE5zpOmUP48D"
+  }
+}
