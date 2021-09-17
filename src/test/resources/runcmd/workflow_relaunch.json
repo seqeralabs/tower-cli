@@ -1,0 +1,20 @@
+{
+  "launch": {
+    "id": "2yqriiMhddzKOq9unctD0S",
+    "computeEnvId": "3xkkzYH2nbD3nZjrzKm0oR",
+    "pipeline": "https://github.com/grananda/nextflow-hello",
+    "revision": "main",
+    "workDir": "s3://nextflow-ci/julio",
+    "configProfiles": [],
+    "configText": null,
+    "paramsText": null,
+    "preRunScript": null,
+    "postRunScript": null,
+    "pullLatest": false,
+    "stubRun": false,
+    "mainScript": null,
+    "entryName": null,
+    "schemaName": null,
+    "dateCreated": "2021-09-22T11:43:46.062Z"
+  }
+}
