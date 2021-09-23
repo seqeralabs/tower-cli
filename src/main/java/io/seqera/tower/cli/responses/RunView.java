@@ -124,17 +124,5 @@ public class RunView extends Response {
             statsTable.addRow("Success duration", workflow.getStats().getSucceedDuration().toString());
             statsTable.print();
         }
-
-//        out.println(ansi(String.format("%n%n    @|bold Pipeline run workflow progress|@")));
-//
-//        TableList wfProgressTable = new TableList(out, 2);
-//        wfProgressTable.setPrefix("    ");
-//        wfProgressTable.print();
-//
-//        out.println(ansi(String.format("%n%n    @|bold Pipeline run process progress|@")));
-//
-//        TableList processProgressTable = new TableList(out, 2);
-//        processProgressTable.setPrefix("    ");
-//        processProgressTable.print();
     }
 }
