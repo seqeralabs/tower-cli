@@ -1125,6 +1125,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.model.DescribeWorkflowResponse",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.model.EksComputeConfig",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1366,6 +1372,12 @@
 },
 {
   "name":"io.seqera.tower.model.WfStats",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.model.Workflow",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true
