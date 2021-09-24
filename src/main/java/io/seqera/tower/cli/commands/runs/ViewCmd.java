@@ -4,7 +4,12 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.exceptions.RunNotFoundException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.RunView;
+import io.seqera.tower.model.ComputeEnv;
+import io.seqera.tower.model.DescribeLaunchResponse;
 import io.seqera.tower.model.DescribeWorkflowResponse;
+import io.seqera.tower.model.GetProgressResponse;
+import io.seqera.tower.model.Workflow;
+import io.seqera.tower.model.WorkflowLoad;
 import picocli.CommandLine;
 
 @CommandLine.Command(
@@ -18,9 +23,20 @@ public class ViewCmd extends AbstractRunsCmd {
 
     protected Response exec() throws ApiException {
         try {
-            DescribeWorkflowResponse response = api().describeWorkflow(id, workspaceId());
+            DescribeWorkflowResponse workflowResponse = api().describeWorkflow(id, workspaceId());
 
-            return new RunView(id, workspaceRef(), response.getWorkflow());
+            if (workflowResponse.getWorkflow() == null) {
+                throw new RunNotFoundException(id, workspaceRef());
+            }
+
+            GetProgressResponse getProgressResponse = api().describeWorkflowProgress(id, workspaceId());
+            DescribeLaunchResponse launchResponse = api().describeLaunch(workflowResponse.getWorkflow().getLaunchId(), workspaceId());
+
+            Workflow workflow = workflowResponse.getWorkflow();
+            WorkflowLoad workflowLoad = getProgressResponse.getProgress().getWorkflowProgress();
+            ComputeEnv computeEnv = launchResponse.getLaunch().getComputeEnv();
+
+            return new RunView(id, workspaceRef(), workflow, workflowLoad, computeEnv);
 
         } catch (ApiException e) {
             if (e.getCode() == 403) {

@@ -25,16 +25,15 @@ public class RunList extends Response {
             return;
         }
 
-        TableList table = new TableList(out, 7, "ID", "Status", "Run Name", "Username", "Created", "Completed", "Submitted", "Started", "Completed").sortBy(0);
+        TableList table = new TableList(out, 6, "ID", "Status", "Project Name", "Run Name", "Username", "Submit Date").sortBy(0);
         table.setPrefix("    ");
         workflows.forEach(wf -> table.addRow(
                 wf.getWorkflow().getId(),
                 wf.getWorkflow().getStatus() != null ? wf.getWorkflow().getStatus().getValue() : "Not reported",
+                wf.getWorkflow().getProjectName(),
                 wf.getWorkflow().getRunName(),
                 wf.getWorkflow().getUserName(),
-                wf.getWorkflow().getSubmit() != null ?  wf.getWorkflow().getSubmit().toString() : "",
-                wf.getWorkflow().getStart() != null ?  wf.getWorkflow().getStart().toString() : "",
-                wf.getWorkflow().getComplete() != null ?  wf.getWorkflow().getComplete().toString() : ""
+                formatTime(wf.getWorkflow().getSubmit())
         ));
         table.print();
         out.println("");

@@ -14,12 +14,12 @@ import java.io.IOException;
 )
 public class ListCmd extends AbstractRunsCmd {
 
-    @CommandLine.Option(names = {"-f", "--filter"}, description = "Show only pipeline's runs that contain the given word")
-    public String filter;
+    @CommandLine.Option(names = {"-f", "--filter"}, description = "Show only pipeline's runs that it's name starts with the given word")
+    public String startsWith;
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        ListWorkflowsResponse response = api().listWorkflows(workspaceId(), null, null, filter);
+        ListWorkflowsResponse response = api().listWorkflows(workspaceId(), null, null, startsWith);
         return new RunList(workspaceRef(), response.getWorkflows());
     }
 }
