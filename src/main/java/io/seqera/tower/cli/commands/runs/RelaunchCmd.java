@@ -1,6 +1,7 @@
 package io.seqera.tower.cli.commands.runs;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.commands.pipelines.LaunchOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.RunCreated;
 import io.seqera.tower.cli.utils.FilesHelper;
@@ -24,8 +25,14 @@ public class RelaunchCmd extends AbstractRunsCmd {
     @Option(names = {"-i", "--id"}, description = "Pipeline id to run", required = true)
     public Long id;
 
+    @Option(names = {"-p", "--pipeline"}, description = "Pipeline to launch")
+    public String pipeline;
+
+    @Option(names = {"--no-resume"}, description = "Not to resume the pipeline's run (true as default)")
+    public boolean resume = true;
+
     @Mixin
-    public RunOptions opts;
+    public LaunchOptions opts;
 
     @Override
     protected Response exec() throws ApiException, IOException {
@@ -34,7 +41,7 @@ public class RelaunchCmd extends AbstractRunsCmd {
         WorkflowLaunchRequest workflowLaunchRequest = new WorkflowLaunchRequest()
                 .id(launch.getId())
                 .computeEnvId(opts.computeEnv != null ? opts.computeEnv : launch.getComputeEnv().getId())
-                .pipeline(opts.pipeline != null ? opts.pipeline : launch.getPipeline())
+                .pipeline(pipeline != null ? pipeline : launch.getPipeline())
                 .workDir(opts.workDir != null ? opts.workDir : launch.getWorkDir())
                 .revision(opts.revision != null ? opts.revision : launch.getRevision())
                 .configProfiles(opts.profiles != null ? opts.profiles : launch.getConfigProfiles())
@@ -45,7 +52,7 @@ public class RelaunchCmd extends AbstractRunsCmd {
                 .mainScript(opts.mainScript != null ? opts.mainScript :launch.getPostRunScript())
                 .entryName(opts.entryName != null ? opts.entryName :launch.getEntryName())
                 .schemaName(opts.schemaName != null ? opts.schemaName :launch.getSchemaName())
-                .resume(opts.resume != null ? opts.resume :launch.getResume())
+                .resume(resume)
                 .pullLatest(opts.pullLatest != null ? opts.pullLatest :launch.getPullLatest())
                 .stubRun(opts.stubRun != null ? opts.stubRun :launch.getStubRun())
                 .dateCreated(OffsetDateTime.now());
