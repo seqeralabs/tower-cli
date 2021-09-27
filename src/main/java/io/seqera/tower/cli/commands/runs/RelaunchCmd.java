@@ -5,9 +5,14 @@ import io.seqera.tower.cli.commands.pipelines.LaunchOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.RunCreated;
 import io.seqera.tower.cli.utils.FilesHelper;
+import io.seqera.tower.model.ComputeEnv;
+import io.seqera.tower.model.DescribeLaunchResponse;
+import io.seqera.tower.model.DescribeWorkflowResponse;
+import io.seqera.tower.model.DescribeWorkspaceResponse;
 import io.seqera.tower.model.Launch;
 import io.seqera.tower.model.SubmitWorkflowLaunchRequest;
 import io.seqera.tower.model.SubmitWorkflowLaunchResponse;
+import io.seqera.tower.model.Workflow;
 import io.seqera.tower.model.WorkflowLaunchRequest;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
@@ -22,10 +27,10 @@ import java.time.OffsetDateTime;
 )
 public class RelaunchCmd extends AbstractRunsCmd {
 
-    @Option(names = {"-i", "--id"}, description = "Pipeline id to run", required = true)
-    public Long id;
+    @Option(names = {"-i", "--id"}, description = "Pipeline's run id to relaunch", required = true)
+    public String id;
 
-    @Option(names = {"-p", "--pipeline"}, description = "Pipeline to launch")
+    @Option(names = {"--pipeline"}, description = "Pipeline to launch")
     public String pipeline;
 
     @Option(names = {"--no-resume"}, description = "Not to resume the pipeline's run (true as default)")
@@ -36,11 +41,18 @@ public class RelaunchCmd extends AbstractRunsCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        Launch launch = launchByPipelineId(id);
+        Workflow workflow = workflowById(id);
+        Launch launch = launchById(workflow.getLaunchId());
+
+        ComputeEnv ce = null;
+        if(opts.computeEnv != null){
+            ce = computeEnvByName(opts.computeEnv);
+        }
 
         WorkflowLaunchRequest workflowLaunchRequest = new WorkflowLaunchRequest()
-                .id(launch.getId())
-                .computeEnvId(opts.computeEnv != null ? opts.computeEnv : launch.getComputeEnv().getId())
+                .id(workflow.getLaunchId())
+                .sessionId(launch.getSessionId())
+                .computeEnvId(ce != null ? ce.getId() : launch.getComputeEnv().getId())
                 .pipeline(pipeline != null ? pipeline : launch.getPipeline())
                 .workDir(opts.workDir != null ? opts.workDir : launch.getWorkDir())
                 .revision(opts.revision != null ? opts.revision : launch.getRevision())

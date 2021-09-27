@@ -583,24 +583,30 @@ class RunsCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testRelaunch(MockServerClient mock) throws IOException {
+    void testRelaunch(MockServerClient mock) {
         mock.when(
                 request().withMethod("POST").withPath("/workflow/launch"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"workflowId\": \"5UVJlhfUAHTuAP\"}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(loadResource("workflow_launch")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
-                request().withMethod("GET").withPath("/pipelines/39121971175999/launch"), exactly(1)
+                request().withMethod("GET").withPath("/workflow/5UVJlhfUAHTuAP"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResource("workflow_relaunch_pipeline_description")).withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(loadResource("workflow_view")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "runs", "relaunch", "-i", "39121971175999");
+        mock.when(
+                request().withMethod("GET").withPath("/launch/5SCyEXKrCqFoGzOXGpesr5"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("launch_view")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "runs", "relaunch", "-i", "5UVJlhfUAHTuAP");
 
 
         assertEquals("", out.stdErr);
-        assertEquals(new RunCreated("5UVJlhfUAHTuAP", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new RunCreated("35aLiS0bIM5efd", USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
