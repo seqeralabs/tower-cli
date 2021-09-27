@@ -958,6 +958,24 @@
   "allDeclaredMethods":true
 },
 {
+  "name":"io.seqera.tower.cli.responses.RunCanceled",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.RunDeleted",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.RunList",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.cli.utils.VersionProvider",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1151,6 +1169,12 @@
   "name":"io.seqera.tower.model.ForgeConfig$TypeEnum",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
+},
+{
+  "name":"io.seqera.tower.model.GetProgressResponse",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
 },
 {
   "name":"io.seqera.tower.model.GitHubSecurityKeys",
@@ -1434,6 +1458,12 @@
 {
   "name":"java.lang.Enum",
   "allDeclaredMethods":true
+},
+{
+  "name":"java.lang.Float",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
 },
 {
   "name":"java.lang.Integer",
@@ -1978,6 +2008,10 @@
 },
 {
   "name":"sun.security.provider.certpath.PKIXCertPathValidator",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"sun.security.rsa.PSSParameters",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
