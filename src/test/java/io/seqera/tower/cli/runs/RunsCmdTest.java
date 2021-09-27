@@ -6,9 +6,9 @@ import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.exceptions.RunNotFoundException;
 import io.seqera.tower.cli.exceptions.ShowUsageException;
 import io.seqera.tower.cli.responses.RunCanceled;
-import io.seqera.tower.cli.responses.RunCreated;
 import io.seqera.tower.cli.responses.RunDeleted;
 import io.seqera.tower.cli.responses.RunList;
+import io.seqera.tower.cli.responses.RunSubmited;
 import io.seqera.tower.cli.responses.RunView;
 import io.seqera.tower.model.Launch;
 import io.seqera.tower.model.ListWorkflowsResponseListWorkflowsElement;
@@ -19,7 +19,6 @@ import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -602,11 +601,18 @@ class RunsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("launch_view")).withContentType(MediaType.APPLICATION_JSON)
         );
 
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+
         ExecOut out = exec(mock, "runs", "relaunch", "-i", "5UVJlhfUAHTuAP");
 
 
         assertEquals("", out.stdErr);
-        assertEquals(new RunCreated("35aLiS0bIM5efd", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new RunSubmited("35aLiS0bIM5efd", String.format("%s/user/jordi/watch/35aLiS0bIM5efd", url(mock)), "user").toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

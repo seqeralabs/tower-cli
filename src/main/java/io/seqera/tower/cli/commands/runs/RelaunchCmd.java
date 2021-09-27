@@ -3,12 +3,9 @@ package io.seqera.tower.cli.commands.runs;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.pipelines.LaunchOptions;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.cli.responses.RunCreated;
+import io.seqera.tower.cli.responses.RunSubmited;
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.ComputeEnv;
-import io.seqera.tower.model.DescribeLaunchResponse;
-import io.seqera.tower.model.DescribeWorkflowResponse;
-import io.seqera.tower.model.DescribeWorkspaceResponse;
 import io.seqera.tower.model.Launch;
 import io.seqera.tower.model.SubmitWorkflowLaunchRequest;
 import io.seqera.tower.model.SubmitWorkflowLaunchResponse;
@@ -45,7 +42,7 @@ public class RelaunchCmd extends AbstractRunsCmd {
         Launch launch = launchById(workflow.getLaunchId());
 
         ComputeEnv ce = null;
-        if(opts.computeEnv != null){
+        if (opts.computeEnv != null) {
             ce = computeEnvByName(opts.computeEnv);
         }
 
@@ -60,13 +57,13 @@ public class RelaunchCmd extends AbstractRunsCmd {
                 .configText(opts.config != null ? FilesHelper.readString(opts.config) : launch.getConfigText())
                 .paramsText(opts.params != null ? FilesHelper.readString(opts.params) : launch.getParamsText())
                 .preRunScript(opts.preRunScript != null ? FilesHelper.readString(opts.preRunScript) : launch.getPreRunScript())
-                .postRunScript(opts.postRunScript != null ? FilesHelper.readString(opts.postRunScript) :launch.getPostRunScript())
-                .mainScript(opts.mainScript != null ? opts.mainScript :launch.getPostRunScript())
-                .entryName(opts.entryName != null ? opts.entryName :launch.getEntryName())
-                .schemaName(opts.schemaName != null ? opts.schemaName :launch.getSchemaName())
+                .postRunScript(opts.postRunScript != null ? FilesHelper.readString(opts.postRunScript) : launch.getPostRunScript())
+                .mainScript(opts.mainScript != null ? opts.mainScript : launch.getPostRunScript())
+                .entryName(opts.entryName != null ? opts.entryName : launch.getEntryName())
+                .schemaName(opts.schemaName != null ? opts.schemaName : launch.getSchemaName())
                 .resume(resume)
-                .pullLatest(opts.pullLatest != null ? opts.pullLatest :launch.getPullLatest())
-                .stubRun(opts.stubRun != null ? opts.stubRun :launch.getStubRun())
+                .pullLatest(opts.pullLatest != null ? opts.pullLatest : launch.getPullLatest())
+                .stubRun(opts.stubRun != null ? opts.stubRun : launch.getStubRun())
                 .dateCreated(OffsetDateTime.now());
 
         SubmitWorkflowLaunchRequest submitWorkflowLaunchRequest = new SubmitWorkflowLaunchRequest()
@@ -74,6 +71,15 @@ public class RelaunchCmd extends AbstractRunsCmd {
 
         SubmitWorkflowLaunchResponse response = api().createWorkflowLaunch(submitWorkflowLaunchRequest, workspaceId());
 
-        return new RunCreated(response.getWorkflowId(), workspaceRef());
+        return new RunSubmited(response.getWorkflowId(), workflowWatchUrl(response.getWorkflowId()), workspaceRef());
+    }
+
+    private String workflowWatchUrl(String workflowId) throws ApiException {
+
+        if (workspaceId() == null) {
+            return String.format("%s/user/%s/watch/%s", serverUrl(), userName(), workflowId);
+        }
+
+        return String.format("%s/orgs/%s/workspaces/%s/watch/%s", serverUrl(), orgName(), workspaceName(), workflowId);
     }
 }
