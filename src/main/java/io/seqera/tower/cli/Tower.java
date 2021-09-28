@@ -9,6 +9,7 @@ import io.seqera.tower.cli.commands.CredentialsCmd;
 import io.seqera.tower.cli.commands.LaunchCmd;
 import io.seqera.tower.cli.commands.PipelinesCmd;
 import io.seqera.tower.cli.commands.RunsCmd;
+import io.seqera.tower.cli.commands.WorkspaceCmd;
 import picocli.AutoComplete.GenerateCompletion;
 import picocli.CommandLine;
 import picocli.CommandLine.ArgGroup;
@@ -29,7 +30,8 @@ import java.io.PrintWriter;
                 PipelinesCmd.class,
                 ComputeEnvCmd.class,
                 RunsCmd.class,
-                GenerateCompletion.class
+                WorkspaceCmd.class,
+                GenerateCompletion.class,
         }
 )
 public class Tower extends AbstractCmd {
