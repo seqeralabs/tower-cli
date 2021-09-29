@@ -38,7 +38,7 @@ To use the command line you need to define these environment variables (they als
 
 1. `TOWER_ACCESS_TOKEN`: (mandatory) the user access token
 2. `TOWER_WORKSPACE_ID`: (optional) the workspace id. Defaults to user workspace.
-3. `TOWER_SERVER_URL`: (optional) the Tower API URL. Defaults to `tower.nf` API.
+3. `TOWER_API_ENDPOINT`: (optional) the Tower API URL. Defaults to `api.tower.nf` API.
 
 ## Autocomplete
 

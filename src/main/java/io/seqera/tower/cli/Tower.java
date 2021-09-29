@@ -8,6 +8,7 @@ import io.seqera.tower.cli.commands.ComputeEnvCmd;
 import io.seqera.tower.cli.commands.CredentialsCmd;
 import io.seqera.tower.cli.commands.LaunchCmd;
 import io.seqera.tower.cli.commands.PipelinesCmd;
+import io.seqera.tower.cli.commands.RunsCmd;
 import picocli.AutoComplete.GenerateCompletion;
 import picocli.CommandLine;
 import picocli.CommandLine.ArgGroup;
@@ -27,6 +28,7 @@ import java.io.PrintWriter;
                 CredentialsCmd.class,
                 PipelinesCmd.class,
                 ComputeEnvCmd.class,
+                RunsCmd.class,
                 GenerateCompletion.class
         }
 )
@@ -43,7 +45,7 @@ public class Tower extends AbstractCmd {
     @ArgGroup(exclusive = false)
     public OrgAndWorkspace orgAndWorkspaceNames;
 
-    @Option(names = {"-u", "--url"}, description = "Tower server URL. Defaults to tower.nf (TOWER_SERVER_URL)", defaultValue = "${TOWER_SERVER_URL:-https://api.tower.nf}", required = true)
+    @Option(names = {"-u", "--url"}, description = "Tower server API endpoint URL. Defaults to tower.nf (TOWER_API_ENDPOINT)", defaultValue = "${TOWER_API_ENDPOINT:-https://api.tower.nf}", required = true)
     public String url;
 
     @Option(names = {"-j", "--json"}, description = "Show output as JSON")

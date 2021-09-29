@@ -1,0 +1,34 @@
+{
+  "progress": {
+    "workflowProgress": {
+      "cpus": 0,
+      "cpuTime": 0,
+      "cpuLoad": 0,
+      "memoryRss": 0,
+      "memoryReq": 0,
+      "readBytes": 0,
+      "writeBytes": 0,
+      "volCtxSwitch": 0,
+      "invCtxSwitch": 0,
+      "cost": null,
+      "loadTasks": 0,
+      "loadCpus": 0,
+      "loadMemory": 0,
+      "peakCpus": 0,
+      "peakTasks": 0,
+      "peakMemory": 0,
+      "executors": null,
+      "dateCreated": null,
+      "lastUpdated": null,
+      "cached": 0,
+      "pending": 0,
+      "submitted": 0,
+      "running": 0,
+      "succeeded": 0,
+      "failed": 0,
+      "memoryEfficiency": 0,
+      "cpuEfficiency": 0
+    },
+    "processesProgress": []
+  }
+}

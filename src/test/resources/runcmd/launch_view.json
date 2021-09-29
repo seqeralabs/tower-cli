@@ -1,0 +1,103 @@
+{
+  "launch": {
+    "id": "5SCyEXKrCqFoGzOXGpesr5",
+    "computeEnv": {
+      "id": "3xkkzYH2nbD3nZjrzKm0oR",
+      "name": "ce-aws-144996268157965",
+      "description": null,
+      "platform": "aws-batch",
+      "config": {
+        "region": "eu-west-1",
+        "computeQueue": "TowerForge-3xkkzYH2nbD3nZjrzKm0oR-work",
+        "computeJobRole": null,
+        "headQueue": "TowerForge-3xkkzYH2nbD3nZjrzKm0oR-head",
+        "headJobRole": null,
+        "cliPath": "/home/ec2-user/miniconda/bin/aws",
+        "volumes": [],
+        "workDir": "s3://nextflow-ci/julio",
+        "preRunScript": null,
+        "postRunScript": null,
+        "headJobCpus": null,
+        "headJobMemoryMb": null,
+        "forge": {
+          "type": "SPOT",
+          "minCpus": 0,
+          "maxCpus": 1,
+          "gpuEnabled": false,
+          "ebsAutoScale": true,
+          "instanceTypes": [],
+          "allocStrategy": null,
+          "imageId": null,
+          "vpcId": null,
+          "subnets": [],
+          "securityGroups": [],
+          "fsxMount": null,
+          "fsxName": null,
+          "fsxSize": null,
+          "disposeOnDeletion": true,
+          "ec2KeyPair": null,
+          "allowBuckets": [],
+          "ebsBlockSize": null,
+          "fusionEnabled": false,
+          "bidPercentage": null,
+          "efsCreate": false,
+          "efsId": null,
+          "efsMount": null
+        },
+        "forgedResources": [
+          {
+            "IamRole": "arn:aws:iam::195996028523:role/TowerForge-3xkkzYH2nbD3nZjrzKm0oR-ServiceRole"
+          },
+          {
+            "IamRole": "arn:aws:iam::195996028523:role/TowerForge-3xkkzYH2nbD3nZjrzKm0oR-FleetRole"
+          },
+          {
+            "IamInstanceProfile": "arn:aws:iam::195996028523:instance-profile/TowerForge-3xkkzYH2nbD3nZjrzKm0oR-InstanceRole"
+          },
+          {
+            "Ec2LaunchTemplate": "TowerForge-3xkkzYH2nbD3nZjrzKm0oR"
+          },
+          {
+            "BatchEnv": "arn:aws:batch:eu-west-1:195996028523:compute-environment/TowerForge-3xkkzYH2nbD3nZjrzKm0oR-head"
+          },
+          {
+            "BatchQueue": "arn:aws:batch:eu-west-1:195996028523:job-queue/TowerForge-3xkkzYH2nbD3nZjrzKm0oR-head"
+          },
+          {
+            "BatchEnv": "arn:aws:batch:eu-west-1:195996028523:compute-environment/TowerForge-3xkkzYH2nbD3nZjrzKm0oR-work"
+          },
+          {
+            "BatchQueue": "arn:aws:batch:eu-west-1:195996028523:job-queue/TowerForge-3xkkzYH2nbD3nZjrzKm0oR-work"
+          }
+        ],
+        "platform": "aws-batch"
+      },
+      "dateCreated": "2021-09-21T12:56:19Z",
+      "lastUpdated": "2021-09-21T12:57:03Z",
+      "lastUsed": "2021-09-22T12:51:18Z",
+      "deleted": null,
+      "status": "AVAILABLE",
+      "message": null,
+      "primary": null,
+      "credentialsId": "33Qc0pYMGcVImw6zc2xpLn"
+    },
+    "pipeline": "https://github.com/grananda/nextflow-hello",
+    "workDir": "s3://nextflow-ci/julio",
+    "revision": "main",
+    "sessionId": "722eae42-f9e7-4631-9e9b-d77ed473071e",
+    "configProfiles": [],
+    "configText": null,
+    "paramsText": null,
+    "preRunScript": null,
+    "postRunScript": null,
+    "mainScript": null,
+    "entryName": null,
+    "schemaName": null,
+    "resume": false,
+    "pullLatest": false,
+    "stubRun": false,
+    "resumeDir": "s3://nextflow-ci/julio",
+    "resumeCommitId": null,
+    "dateCreated": "2021-09-22T11:43:46Z"
+  }
+}
