@@ -6,6 +6,7 @@ package io.seqera.tower.cli;
 import io.seqera.tower.cli.commands.AbstractCmd;
 import io.seqera.tower.cli.commands.ComputeEnvCmd;
 import io.seqera.tower.cli.commands.CredentialsCmd;
+import io.seqera.tower.cli.commands.HealthCheckCmd;
 import io.seqera.tower.cli.commands.LaunchCmd;
 import io.seqera.tower.cli.commands.PipelinesCmd;
 import io.seqera.tower.cli.commands.RunsCmd;
@@ -32,6 +33,7 @@ import java.io.PrintWriter;
                 RunsCmd.class,
                 WorkspaceCmd.class,
                 GenerateCompletion.class,
+                HealthCheckCmd.class,
         }
 )
 public class Tower extends AbstractCmd {
