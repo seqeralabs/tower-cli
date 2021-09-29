@@ -15,6 +15,7 @@ public class HealthCheckCmdTest extends BaseCmdTest {
 
     @Test
     void testHealthStatus(MockServerClient mock) {
+        mock.reset();
         mock.when(
                 request().withMethod("GET").withPath("/service-info"), exactly(1)
         ).respond(
@@ -36,6 +37,7 @@ public class HealthCheckCmdTest extends BaseCmdTest {
 
     @Test
     void testHealthStatusTokenFail(MockServerClient mock) {
+        mock.reset();
         mock.when(
                 request().withMethod("GET").withPath("/service-info"), exactly(1)
         ).respond(
@@ -57,6 +59,7 @@ public class HealthCheckCmdTest extends BaseCmdTest {
 
     @Test
     void testHealthVersionFail(MockServerClient mock) {
+        mock.reset();
         mock.when(
                 request().withMethod("GET").withPath("/service-info"), exactly(1)
         ).respond(
@@ -78,6 +81,7 @@ public class HealthCheckCmdTest extends BaseCmdTest {
 
     @Test
     void testHealthStatusUrlFail(MockServerClient mock) {
+        mock.reset();
         mock.when(
                 request().withMethod("GET").withPath("health/service-info"), exactly(1)
         ).respond(
