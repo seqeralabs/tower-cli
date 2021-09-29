@@ -113,7 +113,7 @@ public class RunView extends Response {
         }
 
 
-        if (workflow.getParams() != null || !workflow.getParams().isEmpty()) {
+        if (workflow.getParams() != null && !workflow.getParams().isEmpty()) {
             out.println(ansi(String.format("%n    @|bold Parameters|@")));
             TableList paramsTable = new TableList(out, 2);
             paramsTable.setPrefix("    ");
