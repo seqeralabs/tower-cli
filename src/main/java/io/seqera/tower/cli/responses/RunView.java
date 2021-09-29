@@ -113,14 +113,14 @@ public class RunView extends Response {
         }
 
 
-        if (workflow.getParams() != null) {
+        if (workflow.getParams() != null || !workflow.getParams().isEmpty()) {
             out.println(ansi(String.format("%n    @|bold Parameters|@")));
             TableList paramsTable = new TableList(out, 2);
             paramsTable.setPrefix("    ");
             workflow.getParams().forEach((key, value) -> paramsTable.addRow(key, value.toString()));
         }
 
-        if (workflow.getConfigText() != null) {
+        if (workflow.getConfigText() != null && !workflow.getConfigText().isBlank()) {
             out.println(ansi(String.format("%n    @|bold Configuration|@")));
             out.println(workflow.getConfigText());
         }
