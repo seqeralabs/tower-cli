@@ -36,7 +36,11 @@ public class HealthCheckResponse extends Response {
         table.print();
 
         if (connectionCheck == 0) {
-            out.println(ansi(String.format("%n    @|bold,fg(red) Tower API URL %s it is not available (did you mean %s/api?)|@", opts.get("serverUrl"), opts.get("serverUrl"))));
+            if (opts.get("serverUrl").contains("/api")) {
+                out.println(ansi(String.format("%n    @|bold,fg(red) Tower API URL %s it is not available|@", opts.get("serverUrl"))));
+            } else {
+                out.println(ansi(String.format("%n    @|bold,fg(red) Tower API URL %s it is not available (did you mean %s/api?)|@", opts.get("serverUrl"), opts.get("serverUrl"))));
+            }
         }
 
         if (versionCheck == 0) {
