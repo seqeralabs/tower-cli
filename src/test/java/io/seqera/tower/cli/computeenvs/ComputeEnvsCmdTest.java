@@ -34,7 +34,7 @@ import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
-class ComputeEnvCmdTest extends BaseCmdTest {
+class ComputeEnvsCmdTest extends BaseCmdTest {
 
     @Test
     void testDelete(MockServerClient mock) {
