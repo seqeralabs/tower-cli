@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.cli.responses.Workspaces.WorkspaceView;
+import io.seqera.tower.cli.responses.workspaces.WorkspaceView;
 import io.seqera.tower.model.DescribeWorkspaceResponse;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import picocli.CommandLine;

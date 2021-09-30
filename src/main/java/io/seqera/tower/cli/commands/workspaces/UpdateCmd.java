@@ -2,7 +2,7 @@ package io.seqera.tower.cli.commands.workspaces;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.cli.responses.Workspaces.WorkspaceUpdated;
+import io.seqera.tower.cli.responses.workspaces.WorkspaceUpdated;
 import io.seqera.tower.model.DescribeWorkspaceResponse;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import io.seqera.tower.model.UpdateWorkspaceRequest;
@@ -16,6 +16,9 @@ import java.io.IOException;
         description = "Update an existing organization's workspace"
 )
 public class UpdateCmd extends AbstractWorkspaceCmd {
+    @CommandLine.Option(names = {"-f", "--fullName"}, description = "The workspace full name")
+    public String workspaceFullName;
+
     @CommandLine.Mixin
     WorkspaceOptions opts;
 
@@ -24,7 +27,9 @@ public class UpdateCmd extends AbstractWorkspaceCmd {
         OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = orgAndWorkspaceByName(opts.workspaceName, opts.organizationName);
 
         UpdateWorkspaceRequest request = new UpdateWorkspaceRequest();
-        request.setFullName(opts.workspaceFullName);
+        if (workspaceFullName != null) {
+            request.setFullName(workspaceFullName);
+        }
         request.setDescription(opts.description);
         request.setVisibility(Visibility.PRIVATE);
 

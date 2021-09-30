@@ -2,7 +2,7 @@ package io.seqera.tower.cli.commands.workspaces;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.cli.responses.Workspaces.WorkspaceDeleted;
+import io.seqera.tower.cli.responses.workspaces.WorkspaceDeleted;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import picocli.CommandLine;
 

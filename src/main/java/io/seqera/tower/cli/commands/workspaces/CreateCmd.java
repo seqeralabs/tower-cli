@@ -2,12 +2,13 @@ package io.seqera.tower.cli.commands.workspaces;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.cli.responses.Workspaces.WorkspaceCreated;
+import io.seqera.tower.cli.responses.workspaces.WorkspaceCreated;
 import io.seqera.tower.model.CreateWorkspaceRequest;
 import io.seqera.tower.model.CreateWorkspaceResponse;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import io.seqera.tower.model.Visibility;
 import io.seqera.tower.model.Workspace;
+import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 
@@ -18,6 +19,9 @@ import java.io.IOException;
         description = "Create a new organization's workspace"
 )
 public class CreateCmd extends AbstractWorkspaceCmd {
+    @CommandLine.Option(names = {"-f", "--fullName"}, description = "The workspace full name", required = true)
+    public String workspaceFullName;
+
     @Mixin
     WorkspaceOptions opts;
 
@@ -25,7 +29,7 @@ public class CreateCmd extends AbstractWorkspaceCmd {
     protected Response exec() throws ApiException, IOException {
         Workspace workspace = new Workspace();
         workspace.setName(opts.workspaceName);
-        workspace.setFullName(opts.workspaceFullName);
+        workspace.setFullName(workspaceFullName);
         workspace.setDescription(opts.description);
         workspace.setVisibility(Visibility.PRIVATE);
 

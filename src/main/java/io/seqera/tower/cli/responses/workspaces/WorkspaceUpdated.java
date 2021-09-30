@@ -1,4 +1,4 @@
-package io.seqera.tower.cli.responses.Workspaces;
+package io.seqera.tower.cli.responses.workspaces;
 
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.Visibility;

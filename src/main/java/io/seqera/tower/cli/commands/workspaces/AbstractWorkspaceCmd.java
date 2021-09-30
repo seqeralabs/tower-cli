@@ -3,7 +3,7 @@ package io.seqera.tower.cli.commands.workspaces;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
-import io.seqera.tower.cli.commands.WorkspaceCmd;
+import io.seqera.tower.cli.commands.WorkspacesCmd;
 import io.seqera.tower.cli.exceptions.OrganizationNotFoundException;
 import io.seqera.tower.cli.exceptions.WorkspaceNotFoundException;
 import io.seqera.tower.model.ListWorkspacesAndOrgResponse;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public abstract class AbstractWorkspaceCmd extends AbstractApiCmd {
 
     @ParentCommand
-    protected WorkspaceCmd parent;
+    protected WorkspacesCmd parent;
 
     public AbstractWorkspaceCmd() {
     }

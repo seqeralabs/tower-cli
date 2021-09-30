@@ -4,11 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.exceptions.OrganizationNotFoundException;
 import io.seqera.tower.cli.exceptions.WorkspaceNotFoundException;
-import io.seqera.tower.cli.responses.Workspaces.WorkspaceCreated;
-import io.seqera.tower.cli.responses.Workspaces.WorkspaceDeleted;
-import io.seqera.tower.cli.responses.Workspaces.WorkspaceList;
-import io.seqera.tower.cli.responses.Workspaces.WorkspaceUpdated;
-import io.seqera.tower.cli.responses.Workspaces.WorkspaceView;
+import io.seqera.tower.cli.responses.workspaces.WorkspaceCreated;
+import io.seqera.tower.cli.responses.workspaces.WorkspaceDeleted;
+import io.seqera.tower.cli.responses.workspaces.WorkspaceList;
+import io.seqera.tower.cli.responses.workspaces.WorkspaceUpdated;
+import io.seqera.tower.cli.responses.workspaces.WorkspaceView;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import io.seqera.tower.model.Visibility;
 import org.junit.jupiter.api.Test;
@@ -60,6 +60,34 @@ public class WorkspacesCmdTest extends BaseCmdTest {
                         "      \"workspaceId\": 75887156211590,\n" +
                         "      \"workspaceName\": \"workspace2\"\n" +
                         "    }", OrgAndWorkspaceDbDto.class)
+        )).toString()), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testListByOrganization(MockServerClient mock) throws JsonProcessingException {
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "workspaces", "list", "-o", "organization2");
+
+        assertEquals("", out.stdErr);
+        assertEquals(chop(new WorkspaceList("jordi", List.of(parseJson("{\n" +
+                "      \"orgId\": 37736513644467,\n" +
+                "      \"orgName\": \"organization2\",\n" +
+                "      \"orgLogoUrl\": null,\n" +
+                "      \"workspaceId\": 75887156211590,\n" +
+                "      \"workspaceName\": \"workspace2\"\n" +
+                "    }", OrgAndWorkspaceDbDto.class)
         )).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
