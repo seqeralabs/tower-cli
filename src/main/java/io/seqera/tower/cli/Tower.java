@@ -4,7 +4,7 @@
 package io.seqera.tower.cli;
 
 import io.seqera.tower.cli.commands.AbstractCmd;
-import io.seqera.tower.cli.commands.ComputeEnvCmd;
+import io.seqera.tower.cli.commands.ComputeEnvsCmd;
 import io.seqera.tower.cli.commands.CredentialsCmd;
 import io.seqera.tower.cli.commands.LaunchCmd;
 import io.seqera.tower.cli.commands.PipelinesCmd;
@@ -28,7 +28,7 @@ import java.io.PrintWriter;
                 LaunchCmd.class,
                 CredentialsCmd.class,
                 PipelinesCmd.class,
-                ComputeEnvCmd.class,
+                ComputeEnvsCmd.class,
                 RunsCmd.class,
                 WorkspacesCmd.class,
                 GenerateCompletion.class,

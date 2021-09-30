@@ -2,7 +2,7 @@ package io.seqera.tower.cli.commands.computeenvs;
 
 import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
-import io.seqera.tower.cli.commands.ComputeEnvCmd;
+import io.seqera.tower.cli.commands.ComputeEnvsCmd;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.ParentCommand;
 
@@ -10,7 +10,7 @@ import picocli.CommandLine.ParentCommand;
 public abstract class AbstractComputeEnvCmd extends AbstractApiCmd {
 
     @ParentCommand
-    protected ComputeEnvCmd parent;
+    protected ComputeEnvsCmd parent;
 
     public AbstractComputeEnvCmd() {
     }
