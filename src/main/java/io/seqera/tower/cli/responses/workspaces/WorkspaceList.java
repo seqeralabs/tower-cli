@@ -1,4 +1,4 @@
-package io.seqera.tower.cli.responses.Workspaces;
+package io.seqera.tower.cli.responses.workspaces;
 
 import java.io.PrintWriter;
 import java.util.List;

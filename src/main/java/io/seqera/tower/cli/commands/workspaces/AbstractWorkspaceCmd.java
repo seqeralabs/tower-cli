@@ -3,7 +3,7 @@ package io.seqera.tower.cli.commands.workspaces;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
-import io.seqera.tower.cli.commands.WorkspaceCmd;
+import io.seqera.tower.cli.commands.WorkspacesCmd;
 import io.seqera.tower.cli.exceptions.OrganizationNotFoundException;
 import io.seqera.tower.cli.exceptions.WorkspaceNotFoundException;
 import io.seqera.tower.model.ListWorkspacesAndOrgResponse;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public abstract class AbstractWorkspaceCmd extends AbstractApiCmd {
 
     @ParentCommand
-    protected WorkspaceCmd parent;
+    protected WorkspacesCmd parent;
 
     public AbstractWorkspaceCmd() {
     }
@@ -36,6 +36,10 @@ public abstract class AbstractWorkspaceCmd extends AbstractApiCmd {
 
     protected OrgAndWorkspaceDbDto organizationByName(String organizationName) throws ApiException {
         return findOrgAndWorkspaceByName(organizationName, null).orElse(null);
+    }
+
+    protected OrgAndWorkspaceDbDto workspaceById(Long workspaceId) throws ApiException {
+        return findOrgAndWorkspaceById(workspaceId).orElse(null);
     }
 
     private Optional<OrgAndWorkspaceDbDto> findOrgAndWorkspaceByName(String organizationName, String workspaceName) throws ApiException {
@@ -63,6 +67,27 @@ public abstract class AbstractWorkspaceCmd extends AbstractApiCmd {
             }
 
             throw new WorkspaceNotFoundException(workspaceName, organizationName);
+        }
+
+        return orgAndWorkspaceDbDtoList.stream().findFirst();
+    }
+    private Optional<OrgAndWorkspaceDbDto> findOrgAndWorkspaceById(Long workspaceId) throws ApiException {
+        ListWorkspacesAndOrgResponse workspacesAndOrgResponse = api().listWorkspacesUser(userId());
+
+        if (workspacesAndOrgResponse == null || workspacesAndOrgResponse.getOrgsAndWorkspaces() == null) {
+            throw new WorkspaceNotFoundException(workspaceId);
+        }
+
+        List<OrgAndWorkspaceDbDto> orgAndWorkspaceDbDtoList = workspacesAndOrgResponse
+                .getOrgsAndWorkspaces()
+                .stream()
+                .filter(
+                        item -> Objects.equals(item.getWorkspaceId(), workspaceId)
+                )
+                .collect(Collectors.toList());
+
+        if (orgAndWorkspaceDbDtoList.isEmpty()) {
+            throw new WorkspaceNotFoundException(workspaceId);
         }
 
         return orgAndWorkspaceDbDtoList.stream().findFirst();

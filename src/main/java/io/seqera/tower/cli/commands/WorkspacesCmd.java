@@ -18,5 +18,5 @@ import picocli.CommandLine;
                 ViewCmd.class,
         }
 )
-public class WorkspaceCmd extends AbstractRootCmd {
+public class WorkspacesCmd extends AbstractRootCmd {
 }

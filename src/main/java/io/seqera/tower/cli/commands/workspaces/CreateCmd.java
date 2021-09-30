@@ -2,12 +2,13 @@ package io.seqera.tower.cli.commands.workspaces;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.cli.responses.Workspaces.WorkspaceCreated;
+import io.seqera.tower.cli.responses.workspaces.WorkspaceCreated;
 import io.seqera.tower.model.CreateWorkspaceRequest;
 import io.seqera.tower.model.CreateWorkspaceResponse;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import io.seqera.tower.model.Visibility;
 import io.seqera.tower.model.Workspace;
+import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 
