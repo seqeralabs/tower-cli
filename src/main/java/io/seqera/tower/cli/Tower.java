@@ -6,7 +6,7 @@ package io.seqera.tower.cli;
 import io.seqera.tower.cli.commands.AbstractCmd;
 import io.seqera.tower.cli.commands.ComputeEnvsCmd;
 import io.seqera.tower.cli.commands.CredentialsCmd;
-import io.seqera.tower.cli.commands.LaunchCmd;
+import io.seqera.tower.cli.commands.LaunchesCmd;
 import io.seqera.tower.cli.commands.PipelinesCmd;
 import io.seqera.tower.cli.commands.RunsCmd;
 import io.seqera.tower.cli.commands.WorkspacesCmd;
@@ -25,7 +25,7 @@ import java.io.PrintWriter;
         name = "towr",
         description = "Nextflow Tower CLI",
         subcommands = {
-                LaunchCmd.class,
+                LaunchesCmd.class,
                 CredentialsCmd.class,
                 PipelinesCmd.class,
                 ComputeEnvsCmd.class,
