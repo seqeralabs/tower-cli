@@ -13,18 +13,23 @@ import java.io.IOException;
         description = "Delete an organization's workspace"
 )
 public class DeleteCmd extends AbstractWorkspaceCmd {
-    @CommandLine.Option(names = {"-n", "--name"}, description = "Workspace name", required = true)
-    public String workspaceName;
 
-    @CommandLine.Option(names = {"-o", "--org", "--organization"}, description = "Workspace organization name", required = true)
-    public String organizationName;
+    @CommandLine.ArgGroup
+    public WorkspacesMatchOptions opts;
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = orgAndWorkspaceByName(workspaceName, organizationName);
+
+        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto;
+
+        if (opts.matchById != null) {
+            orgAndWorkspaceDbDto = workspaceById(opts.matchById.workspaceId);
+        } else {
+            orgAndWorkspaceDbDto = orgAndWorkspaceByName(opts.matchByName.workspaceName, opts.matchByName.organizationName);
+        }
 
         api().deleteWorkspace(orgAndWorkspaceDbDto.getOrgId(), orgAndWorkspaceDbDto.getWorkspaceId());
 
-        return new WorkspaceDeleted(workspaceName, organizationName);
+        return new WorkspaceDeleted(orgAndWorkspaceDbDto.getWorkspaceName(), orgAndWorkspaceDbDto.getOrgName());
     }
 }

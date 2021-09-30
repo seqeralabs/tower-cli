@@ -19,9 +19,6 @@ import java.io.IOException;
         description = "Create a new organization's workspace"
 )
 public class CreateCmd extends AbstractWorkspaceCmd {
-    @CommandLine.Option(names = {"-f", "--fullName"}, description = "The workspace full name", required = true)
-    public String workspaceFullName;
-
     @Mixin
     WorkspaceOptions opts;
 
@@ -29,7 +26,7 @@ public class CreateCmd extends AbstractWorkspaceCmd {
     protected Response exec() throws ApiException, IOException {
         Workspace workspace = new Workspace();
         workspace.setName(opts.workspaceName);
-        workspace.setFullName(workspaceFullName);
+        workspace.setFullName(opts.workspaceFullName);
         workspace.setDescription(opts.description);
         workspace.setVisibility(Visibility.PRIVATE);
 

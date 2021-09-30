@@ -38,6 +38,10 @@ public abstract class AbstractWorkspaceCmd extends AbstractApiCmd {
         return findOrgAndWorkspaceByName(organizationName, null).orElse(null);
     }
 
+    protected OrgAndWorkspaceDbDto workspaceById(Long workspaceId) throws ApiException {
+        return findOrgAndWorkspaceById(workspaceId).orElse(null);
+    }
+
     private Optional<OrgAndWorkspaceDbDto> findOrgAndWorkspaceByName(String organizationName, String workspaceName) throws ApiException {
         ListWorkspacesAndOrgResponse workspacesAndOrgResponse = api().listWorkspacesUser(userId());
 
@@ -63,6 +67,27 @@ public abstract class AbstractWorkspaceCmd extends AbstractApiCmd {
             }
 
             throw new WorkspaceNotFoundException(workspaceName, organizationName);
+        }
+
+        return orgAndWorkspaceDbDtoList.stream().findFirst();
+    }
+    private Optional<OrgAndWorkspaceDbDto> findOrgAndWorkspaceById(Long workspaceId) throws ApiException {
+        ListWorkspacesAndOrgResponse workspacesAndOrgResponse = api().listWorkspacesUser(userId());
+
+        if (workspacesAndOrgResponse == null || workspacesAndOrgResponse.getOrgsAndWorkspaces() == null) {
+            throw new WorkspaceNotFoundException(workspaceId);
+        }
+
+        List<OrgAndWorkspaceDbDto> orgAndWorkspaceDbDtoList = workspacesAndOrgResponse
+                .getOrgsAndWorkspaces()
+                .stream()
+                .filter(
+                        item -> Objects.equals(item.getWorkspaceId(), workspaceId)
+                )
+                .collect(Collectors.toList());
+
+        if (orgAndWorkspaceDbDtoList.isEmpty()) {
+            throw new WorkspaceNotFoundException(workspaceId);
         }
 
         return orgAndWorkspaceDbDtoList.stream().findFirst();
