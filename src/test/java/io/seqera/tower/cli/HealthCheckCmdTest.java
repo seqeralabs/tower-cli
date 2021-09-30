@@ -5,6 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.apache.commons.lang3.StringUtils.chop;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.matchers.Times.exactly;
@@ -28,10 +31,15 @@ public class HealthCheckCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
 
+        Map<String, String> opts = new HashMap<>();
+        opts.put("requiredApiVersion", "1.6");
+        opts.put("systemApiVersion", "1.6");
+        opts.put("serverUrl", "http://"+mock.remoteAddress().getHostName()+":"+mock.getPort());
+
         ExecOut out = exec(mock, "health");
 
         assertEquals("", out.stdErr);
-        assertEquals(chop(new HealthCheckResponse(1,1,1).toString()), out.stdOut);
+        assertEquals(chop(new HealthCheckResponse(1,1,1, opts).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -52,8 +60,13 @@ public class HealthCheckCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(mock, "health");
 
+        Map<String, String> opts = new HashMap<>();
+        opts.put("requiredApiVersion", "1.6");
+        opts.put("systemApiVersion", "1.6");
+        opts.put("serverUrl", "http://"+mock.remoteAddress().getHostName()+":"+mock.getPort());
+
         assertEquals("", out.stdErr);
-        assertEquals(chop(new HealthCheckResponse(1,1,0).toString()), out.stdOut);
+        assertEquals(chop(new HealthCheckResponse(1,1,0, opts).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -74,8 +87,13 @@ public class HealthCheckCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(mock, "health");
 
+        Map<String, String> opts = new HashMap<>();
+        opts.put("requiredApiVersion", "1.6");
+        opts.put("systemApiVersion", "0.1");
+        opts.put("serverUrl", "http://"+mock.remoteAddress().getHostName()+":"+mock.getPort());
+
         assertEquals("", out.stdErr);
-        assertEquals(chop(new HealthCheckResponse(1,0,1).toString()), out.stdOut);
+        assertEquals(chop(new HealthCheckResponse(1,0,1, opts).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -96,8 +114,13 @@ public class HealthCheckCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(mock, "health");
 
+        Map<String, String> opts = new HashMap<>();
+        opts.put("requiredApiVersion", "1.6");
+        opts.put("systemApiVersion", "1.6");
+        opts.put("serverUrl", "http://"+mock.remoteAddress().getHostName()+":"+mock.getPort());
+
         assertEquals("", out.stdErr);
-        assertEquals(chop(new HealthCheckResponse(0,-1,-1).toString()), out.stdOut);
+        assertEquals(chop(new HealthCheckResponse(0,-1,-1, opts).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 }

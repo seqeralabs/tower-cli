@@ -7,6 +7,10 @@ import io.seqera.tower.model.ServiceInfoResponse;
 import picocli.CommandLine;
 
 import java.io.IOException;
+import java.lang.module.ModuleDescriptor;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 @CommandLine.Command(
         name = "health",
@@ -18,16 +22,18 @@ public class HealthCheckCmd extends AbstractRootCmd {
         int connectionCheck = 1;
         int versionCheck = -1;
         int credentialsCheck = -1;
-        int requiredApiVersion = 160;
+
+        ModuleDescriptor.Version systemApiVersion = null;
+        ModuleDescriptor.Version requiredApiVersion = null;
 
         try {
             ServiceInfoResponse infoResponse = api().info();
 
             if (infoResponse.getServiceInfo() != null && infoResponse.getServiceInfo().getApiVersion() != null) {
-                versionCheck = 0;
-                if (Integer.parseInt(infoResponse.getServiceInfo().getApiVersion().replace(".", "")) >= requiredApiVersion) {
-                    versionCheck = 1;
-                }
+                systemApiVersion = ModuleDescriptor.Version.parse(infoResponse.getServiceInfo().getApiVersion());
+                requiredApiVersion = ModuleDescriptor.Version.parse(getVersionApi());
+
+                versionCheck = systemApiVersion.compareTo(requiredApiVersion) >= 0 ? 1 : 0;
             }
         } catch (Exception e) {
             connectionCheck = 0;
@@ -44,6 +50,18 @@ public class HealthCheckCmd extends AbstractRootCmd {
             }
         }
 
-        return new HealthCheckResponse(connectionCheck, versionCheck, credentialsCheck);
+        Map<String, String> opts = new HashMap<>();
+        opts.put("requiredApiVersion", requiredApiVersion != null ? requiredApiVersion.toString() : null);
+        opts.put("systemApiVersion", systemApiVersion != null ? systemApiVersion.toString() : null);
+        opts.put("serverUrl", this.serverUrl());
+
+        return new HealthCheckResponse(connectionCheck, versionCheck, credentialsCheck, opts);
+    }
+
+    private String getVersionApi() throws IOException {
+        Properties properties = new Properties();
+        properties.load(this.getClass().getResourceAsStream("/META-INF/build-info.properties"));
+
+        return properties.get("versionApi").toString();
     }
 }
