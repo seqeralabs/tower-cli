@@ -1004,6 +1004,12 @@
   "allDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.cli.responses.HealthCheckResponse",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.cli.responses.PipelinesList",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
