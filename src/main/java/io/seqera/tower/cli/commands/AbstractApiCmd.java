@@ -224,7 +224,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
             } else {
                 response.toString(app().getOut());
             }
-            return 0;
+            return response.getExitCode();
         } catch (Exception e) {
             errorMessage(app(), e);
         }
