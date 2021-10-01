@@ -99,6 +99,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.ComputeEnvsCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.CredentialsCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -112,6 +118,17 @@
 },
 {
   "name":"io.seqera.tower.cli.commands.LaunchCmd$AdvancedOptions",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true
+},
+{
+  "name":"io.seqera.tower.cli.commands.LaunchesCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.LaunchesCmd$AdvancedOptions",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
 },
@@ -996,6 +1013,16 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.workspaces.UpdateCmd$UpdateById",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true
+},
+{
+  "name":"io.seqera.tower.cli.commands.workspaces.UpdateCmd$UpdateByName",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true
+},
+{
   "name":"io.seqera.tower.cli.commands.workspaces.ViewCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1021,6 +1048,24 @@
 },
 {
   "name":"io.seqera.tower.cli.commands.workspaces.WorkspacesDeleteOptions$DeleteByName",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.workspaces.WorkspacesMatchOptions",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.workspaces.WorkspacesMatchOptions$MatchById",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.workspaces.WorkspacesMatchOptions$MatchByName",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
@@ -1892,16 +1937,16 @@
 {
   "name":"org.glassfish.jersey.internal.util.collection.ConcurrentHashMapV8",
   "fields":[
-    {"name":"baseCount"}, 
-    {"name":"cellsBusy"}, 
-    {"name":"sizeCtl"}, 
-    {"name":"transferIndex"}, 
-    {"name":"transferOrigin"}
+    {"name":"baseCount", "allowUnsafeAccess":true}, 
+    {"name":"cellsBusy", "allowUnsafeAccess":true}, 
+    {"name":"sizeCtl", "allowUnsafeAccess":true}, 
+    {"name":"transferIndex", "allowUnsafeAccess":true}, 
+    {"name":"transferOrigin", "allowUnsafeAccess":true}
   ]
 },
 {
   "name":"org.glassfish.jersey.internal.util.collection.ConcurrentHashMapV8$CounterCell",
-  "fields":[{"name":"value"}]
+  "fields":[{"name":"value", "allowUnsafeAccess":true}]
 },
 {
   "name":"org.glassfish.jersey.jackson.JacksonFeature",
