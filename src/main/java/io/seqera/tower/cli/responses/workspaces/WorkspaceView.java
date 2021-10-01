@@ -16,12 +16,17 @@ public class WorkspaceView extends Response {
 
     @Override
     public void toString(PrintWriter out) {
-        out.println(ansi(String.format("%n  @|bold Details for workspace '%s@|%n'", workspace.getFullName())));
+        out.println(ansi(String.format("%n  @|bold Details for workspace '%s'|@%n", workspace.getFullName())));
 
-        TableList table = new TableList(out, 7, "ID", "Name", "Full Name", "Description", "Visibility", "Date Created", "Last Updated").sortBy(0);
+        TableList table = new TableList(out, 2);
         table.setPrefix(" ");
-        table.addRow(workspace.getId().toString(), workspace.getName(), workspace.getFullName(), workspace.getDescription(), workspace.getVisibility().toString(), formatTime(workspace.getDateCreated()), formatTime(workspace.getLastUpdated()));
-
+        table.addRow("ID", workspace.getId().toString());
+        table.addRow("Name", workspace.getName());
+        table.addRow("Full Name", workspace.getFullName());
+        table.addRow("Description", workspace.getDescription());
+        table.addRow("Visibility", workspace.getVisibility().toString());
+        table.addRow("Date Created", formatTime(workspace.getDateCreated()));
+        table.addRow("Last Updated", formatTime(workspace.getLastUpdated()));
         table.print();
         out.println("");
     }
