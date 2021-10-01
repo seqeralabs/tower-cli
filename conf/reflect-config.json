@@ -111,6 +111,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.HealthCheckCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.LaunchCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1077,6 +1083,12 @@
   "allDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.cli.responses.HealthCheckResponse",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.cli.responses.PipelinesList",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1465,6 +1477,18 @@
   "allDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.model.NavbarConfig",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.model.NavbarConfigNavbarMenu",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.model.OrgAndWorkspaceDbDto",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1508,6 +1532,18 @@
 {
   "name":"io.seqera.tower.model.SecurityKeys",
   "allDeclaredMethods":true
+},
+{
+  "name":"io.seqera.tower.model.ServiceInfo",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.model.ServiceInfoResponse",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
 },
 {
   "name":"io.seqera.tower.model.SlurmComputeConfig",

@@ -38,4 +38,8 @@ public abstract class Response {
         return value.format(DateTimeFormatter.RFC_1123_DATE_TIME);
     }
 
+    public int getExitCode() {
+        return 0;
+    }
+
 }
