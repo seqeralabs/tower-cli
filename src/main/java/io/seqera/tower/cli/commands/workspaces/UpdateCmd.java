@@ -16,10 +16,10 @@ import java.io.IOException;
         description = "Update an existing organization's workspace"
 )
 public class UpdateCmd extends AbstractWorkspaceCmd {
-    @CommandLine.ArgGroup( exclusive = false, heading = "Update by workspace and organization name")
+    @CommandLine.ArgGroup( exclusive = false, heading = "%nUpdate by workspace and organization name:%n")
     UpdateByName updateByName;
 
-    @CommandLine.ArgGroup(heading = "Update by workspace ID")
+    @CommandLine.ArgGroup(heading = "%nUpdate by workspace ID:%n")
     UpdateById updateById;
 
     @CommandLine.Option(names = {"-f", "--fullName"}, description = "The workspace full name")
