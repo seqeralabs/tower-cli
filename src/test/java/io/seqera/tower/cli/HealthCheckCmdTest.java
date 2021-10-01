@@ -34,7 +34,7 @@ public class HealthCheckCmdTest extends BaseCmdTest {
         Map<String, String> opts = new HashMap<>();
         opts.put("requiredApiVersion", "1.6");
         opts.put("systemApiVersion", "1.6");
-        opts.put("serverUrl", "http://"+mock.remoteAddress().getHostName()+":"+mock.getPort());
+        opts.put("serverUrl", "http://localhost:"+mock.getPort());
 
         ExecOut out = exec(mock, "health");
 
@@ -63,7 +63,7 @@ public class HealthCheckCmdTest extends BaseCmdTest {
         Map<String, String> opts = new HashMap<>();
         opts.put("requiredApiVersion", "1.6");
         opts.put("systemApiVersion", "1.6");
-        opts.put("serverUrl", "http://"+mock.remoteAddress().getHostName()+":"+mock.getPort());
+        opts.put("serverUrl", "http://localhost:"+mock.getPort());
 
         assertEquals("", out.stdErr);
         assertEquals(-1, out.exitCode);
@@ -90,7 +90,7 @@ public class HealthCheckCmdTest extends BaseCmdTest {
         Map<String, String> opts = new HashMap<>();
         opts.put("requiredApiVersion", "1.6");
         opts.put("systemApiVersion", "0.1");
-        opts.put("serverUrl", "http://"+mock.remoteAddress().getHostName()+":"+mock.getPort());
+        opts.put("serverUrl", "http://localhost:"+mock.getPort());
 
         assertEquals("", out.stdErr);
         assertEquals(-1, out.exitCode);
@@ -117,7 +117,7 @@ public class HealthCheckCmdTest extends BaseCmdTest {
         Map<String, String> opts = new HashMap<>();
         opts.put("requiredApiVersion", "1.6");
         opts.put("systemApiVersion", "1.6");
-        opts.put("serverUrl", "http://"+mock.remoteAddress().getHostName()+":"+mock.getPort());
+        opts.put("serverUrl", "http://localhost:"+mock.getPort());
 
         assertEquals("", out.stdErr);
         assertEquals(-1, out.exitCode);
