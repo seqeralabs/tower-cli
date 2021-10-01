@@ -37,19 +37,21 @@ public class HealthCheckResponse extends Response {
 
         if (connectionCheck == 0) {
             if (opts.get("serverUrl").contains("/api")) {
-                out.println(ansi(String.format("%n    @|bold,fg(red) Tower API URL %s it is not available|@", opts.get("serverUrl"))));
+                out.println(ansi(String.format("%n    @|bold,fg(red) Tower API URL %s it is not available|@%n", opts.get("serverUrl"))));
             } else {
-                out.println(ansi(String.format("%n    @|bold,fg(red) Tower API URL %s it is not available (did you mean %s/api?)|@", opts.get("serverUrl"), opts.get("serverUrl"))));
+                out.println(ansi(String.format("%n    @|bold,fg(red) Tower API URL %s it is not available (did you mean %s/api?)|@%n", opts.get("serverUrl"), opts.get("serverUrl"))));
             }
         }
 
         if (versionCheck == 0) {
-            out.println(ansi(String.format("%n    @|bold,fg(red) Tower API version is %s while the minimum required version to be fully compatible is %s|@", opts.get("systemApiVersion"), opts.get("requiredApiVersion"))));
+            out.println(ansi(String.format("%n    @|bold,fg(red) Tower API version is %s while the minimum required version to be fully compatible is %s|@%n", opts.get("systemApiVersion"), opts.get("requiredApiVersion"))));
         }
 
         if (credentialsCheck == 0) {
-            out.println(ansi(String.format("%n    @|bold,fg(red) Review that your current access token is valid and active.|@")));
+            out.println(ansi(String.format("%n    @|bold,fg(red) Review that your current access token is valid and active.|@%n")));
         }
+
+        out.println("");
     }
 
     @Override
