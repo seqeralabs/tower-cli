@@ -51,4 +51,9 @@ public class HealthCheckResponse extends Response {
             out.println(ansi(String.format("%n    @|bold,fg(red) Review that your current access token is valid and active.|@")));
         }
     }
+
+    @Override
+    public int getExitCode() {
+        return (connectionCheck + versionCheck + credentialsCheck == 3) ? 0 : -1;
+    }
 }

@@ -39,8 +39,8 @@ public class HealthCheckCmdTest extends BaseCmdTest {
         ExecOut out = exec(mock, "health");
 
         assertEquals("", out.stdErr);
-        assertEquals(chop(new HealthCheckResponse(1,1,1, opts).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
+        assertEquals(chop(new HealthCheckResponse(1,1,1, opts).toString()), out.stdOut);
     }
 
     @Test
@@ -66,8 +66,8 @@ public class HealthCheckCmdTest extends BaseCmdTest {
         opts.put("serverUrl", "http://"+mock.remoteAddress().getHostName()+":"+mock.getPort());
 
         assertEquals("", out.stdErr);
+        assertEquals(-1, out.exitCode);
         assertEquals(chop(new HealthCheckResponse(1,1,0, opts).toString()), out.stdOut);
-        assertEquals(0, out.exitCode);
     }
 
     @Test
@@ -93,8 +93,8 @@ public class HealthCheckCmdTest extends BaseCmdTest {
         opts.put("serverUrl", "http://"+mock.remoteAddress().getHostName()+":"+mock.getPort());
 
         assertEquals("", out.stdErr);
+        assertEquals(-1, out.exitCode);
         assertEquals(chop(new HealthCheckResponse(1,0,1, opts).toString()), out.stdOut);
-        assertEquals(0, out.exitCode);
     }
 
     @Test
@@ -120,7 +120,7 @@ public class HealthCheckCmdTest extends BaseCmdTest {
         opts.put("serverUrl", "http://"+mock.remoteAddress().getHostName()+":"+mock.getPort());
 
         assertEquals("", out.stdErr);
+        assertEquals(-1, out.exitCode);
         assertEquals(chop(new HealthCheckResponse(0,-1,-1, opts).toString()), out.stdOut);
-        assertEquals(0, out.exitCode);
     }
 }
