@@ -1,0 +1,25 @@
+{
+  "orgsAndWorkspaces": [
+    {
+      "orgId": 27736513644467,
+      "orgName": "organization1",
+      "orgLogoUrl": null,
+      "workspaceId": null,
+      "workspaceName": null
+    },
+    {
+      "orgId": 27736513644467,
+      "orgName": "organization1",
+      "orgLogoUrl": null,
+      "workspaceId": 75887156211589,
+      "workspaceName": "workspace1"
+    },
+    {
+      "orgId": 37736513644467,
+      "orgName": "organization2",
+      "orgLogoUrl": null,
+      "workspaceId": 75887156211590,
+      "workspaceName": "workspace2"
+    }
+  ]
+}

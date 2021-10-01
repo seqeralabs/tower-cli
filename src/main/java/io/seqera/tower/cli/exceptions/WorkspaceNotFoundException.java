@@ -9,4 +9,8 @@ public class WorkspaceNotFoundException extends TowerException {
     public WorkspaceNotFoundException(String workspaceName, String orgName) {
         super(String.format("Workspace '%s' at organization '%s' not found", workspaceName, orgName));
     }
+
+    public WorkspaceNotFoundException(Long workspaceId, Long orgId) {
+        super(String.format("Workspace '%s' at organization '%s' not found", workspaceId, orgId));
+    }
 }

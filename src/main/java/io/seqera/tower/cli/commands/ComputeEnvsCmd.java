@@ -17,5 +17,5 @@ import picocli.CommandLine.Command;
                 ListCmd.class
         }
 )
-public class ComputeEnvCmd extends AbstractRootCmd {
+public class ComputeEnvsCmd extends AbstractRootCmd {
 }
