@@ -1,0 +1,46 @@
+{
+  "actions": [
+    {
+      "id": "57byWxhmUDLLWIF4J97XEP",
+      "name": "hello",
+      "pipeline": "https://github.com/pditommaso/hello",
+      "source": "github",
+      "status": "ACTIVE",
+      "lastSeen": "2021-06-18T10:10:33Z",
+      "dateCreated": "2021-06-18T10:10:05Z",
+      "event": {
+        "@class": "io.seqera.tower.domain.github.GithubActionEvent",
+        "ref": "refs/heads/master",
+        "commitId": "af8d93083a36552914929a959f7576f62996032e",
+        "commitMessage": "Update README.md",
+        "pusherName": "pditommaso",
+        "pusherEmail": "paolo.ditommaso@gmail.com",
+        "timestamp": "2021-06-18T12:10:32+02:00",
+        "discriminator": "github"
+      },
+      "usageCmd": null,
+      "endpoint": "https://api.github.com/repos/pditommaso/hello/hooks/303166158"
+    },
+    {
+      "id": "58byWxhmUDLLWIF4J97XEP",
+      "name": "Bye",
+      "pipeline": "https://github.com/pditommaso/hello",
+      "source": "github",
+      "status": "ACTIVE",
+      "lastSeen": "2021-06-18T10:10:33Z",
+      "dateCreated": "2021-06-18T10:10:05Z",
+      "event": {
+        "@class": "io.seqera.tower.domain.github.GithubActionEvent",
+        "ref": "refs/heads/master",
+        "commitId": "af8d93083a36552914929a959f7576f62996032e",
+        "commitMessage": "Update README.md",
+        "pusherName": "pditommaso",
+        "pusherEmail": "paolo.ditommaso@gmail.com",
+        "timestamp": "2021-06-18T12:10:32+02:00",
+        "discriminator": "github"
+      },
+      "usageCmd": null,
+      "endpoint": "https://api.github.com/repos/pditommaso/hello/hooks/303166158"
+    }
+  ]
+}
