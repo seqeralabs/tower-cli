@@ -275,6 +275,29 @@ public class ActionsCmdTest extends BaseCmdTest {
     }
 
     @Test
+    void testActionDeleteError(MockServerClient mock) {
+        mock.reset();
+
+        mock.when(
+                request().withMethod("GET").withPath("/actions"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("actions/actions_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("DELETE").withPath("/actions/57byWxhmUDLLWIF4J97XEP"), exactly(1)
+        ).respond(
+                response().withStatusCode(500)
+        );
+
+        ExecOut out = exec(mock, "actions", "delete", "-n", "hello");
+
+        assertEquals("", out.stdOut);
+        assertEquals(-1, out.exitCode);
+        assertEquals(errorMessage(out.app, new TowerException(String.format("Unable to delete action for workspace '%s'", USER_WORKSPACE_NAME))), out.stdErr);
+    }
+
+    @Test
     void testActionDeleteNotFound(MockServerClient mock) {
         mock.reset();
 

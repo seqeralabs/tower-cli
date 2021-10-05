@@ -3,6 +3,7 @@ package io.seqera.tower.cli.commands.actions;
 import java.io.IOException;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.actions.ActionsDelete;
 import io.seqera.tower.model.ListActionsResponseActionInfo;
@@ -20,7 +21,11 @@ public class DeleteCmd extends AbstractActionsCmd {
     protected Response exec() throws ApiException, IOException {
         ListActionsResponseActionInfo listActionsResponseActionInfo = actionByName(actionName);
 
-        api().deleteAction(listActionsResponseActionInfo.getId(), workspaceId());
+        try {
+            api().deleteAction(listActionsResponseActionInfo.getId(), workspaceId());
+        } catch (Exception e) {
+            throw new TowerException(String.format("Unable to delete action for workspace '%s'", workspaceRef()));
+        }
 
         return new ActionsDelete(actionName, workspaceRef());
     }
