@@ -1136,6 +1136,12 @@
   "allDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.cli.responses.CredentialsList",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.cli.responses.HealthCheckResponse",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
