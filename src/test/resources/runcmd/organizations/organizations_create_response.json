@@ -1,0 +1,14 @@
+{
+  "organization": {
+    "orgId": 275484385882108,
+    "name": "sample-organization",
+    "fullName": "sample organization",
+    "description": "sample organization description",
+    "location": "office",
+    "website": "http://www.seqera.io",
+    "logoId": null,
+    "logoUrl": null,
+    "memberId": null,
+    "memberRole": null
+  }
+}
