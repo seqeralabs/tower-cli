@@ -476,9 +476,9 @@ public class ActionsCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/actions/57byWxhmUDLLWIF4J97XEP/pause"), exactly(1)
+                request().withMethod("GET").withPath("/actions/57byWxhmUDLLWIF4J97XEP"), exactly(1)
         ).respond(
-                response().withStatusCode(204)
+                response().withStatusCode(200).withBody(loadResource("actions/action_view")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
@@ -517,9 +517,9 @@ public class ActionsCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/actions/57byWxhmUDLLWIF4J97XEP/pause"), exactly(1)
+                request().withMethod("GET").withPath("/actions/57byWxhmUDLLWIF4J97XEP"), exactly(1)
         ).respond(
-                response().withStatusCode(204)
+                response().withStatusCode(200).withBody(loadResource("actions/action_view")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
