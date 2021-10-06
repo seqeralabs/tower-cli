@@ -1492,6 +1492,12 @@
   "allDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.model.GithubActionEvent",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.model.GkeComputeConfig",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
