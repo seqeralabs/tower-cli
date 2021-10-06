@@ -1,18 +1,19 @@
 package io.seqera.tower.cli.commands.actions;
 
-import java.io.IOException;
-
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.pipelines.LaunchOptions;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.actions.ActionCreate;
 import io.seqera.tower.cli.utils.FilesHelper;
+import io.seqera.tower.model.ActionSource;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.CreateActionRequest;
 import io.seqera.tower.model.CreateActionResponse;
 import io.seqera.tower.model.WorkflowLaunchRequest;
 import picocli.CommandLine;
+
+import java.io.IOException;
 
 @CommandLine.Command(
         name = "create",
@@ -24,7 +25,7 @@ public class CreateCmd extends AbstractActionsCmd {
     public String actionName;
 
     @CommandLine.Option(names = {"-s", "--source"}, description = "Action source (github or tower)", required = true)
-    public String source;
+    public ActionSource source;
 
     @CommandLine.Option(names = {"--pipeline"}, description = "Pipeline to launch")
     public String pipeline;
@@ -38,9 +39,9 @@ public class CreateCmd extends AbstractActionsCmd {
         ComputeEnv ce = opts.computeEnv != null ? computeEnvByName(opts.computeEnv) : primaryComputeEnv();
 
         // Use compute env values by default
-        String workDirValue = opts.workDir == null ? ce.getConfig().getWorkDir() : opts.workDir;
-        String preRunScriptValue = opts.preRunScript == null ? ce.getConfig().getPreRunScript() : FilesHelper.readString(opts.preRunScript);
-        String postRunScriptValue = opts.postRunScript == null ? ce.getConfig().getPostRunScript() : FilesHelper.readString(opts.postRunScript);
+        String workDirValue = opts.workDir != null ? opts.workDir : ce.getConfig() != null ? ce.getConfig().getWorkDir() : null;
+        String preRunScriptValue = opts.preRunScript != null ? FilesHelper.readString(opts.preRunScript) : ce.getConfig() != null ? ce.getConfig().getPreRunScript() : null;
+        String postRunScriptValue = opts.postRunScript != null ? FilesHelper.readString(opts.postRunScript) : ce.getConfig() != null ? ce.getConfig().getPostRunScript() : null;
 
 
         WorkflowLaunchRequest workflowLaunchRequest = new WorkflowLaunchRequest();
@@ -62,7 +63,7 @@ public class CreateCmd extends AbstractActionsCmd {
 
         CreateActionRequest request = new CreateActionRequest();
         request.setName(actionName);
-        request.setName(source);
+        request.setSource(source);
         request.setLaunch(workflowLaunchRequest);
 
         CreateActionResponse response;

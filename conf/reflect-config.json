@@ -1312,6 +1312,18 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.model.CreateActionRequest",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.model.CreateActionResponse",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.model.CreateComputeEnvRequest",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,

@@ -6,6 +6,7 @@ import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.actions.ActionUpdate;
 import io.seqera.tower.cli.utils.FilesHelper;
+import io.seqera.tower.model.Action;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.ListActionsResponseActionInfo;
 import io.seqera.tower.model.UpdateActionRequest;
@@ -27,20 +28,23 @@ public class UpdateCmd extends AbstractActionsCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        ListActionsResponseActionInfo action = actionByName(actionName);
+        ListActionsResponseActionInfo actionInfo = actionByName(actionName);
+
+        Action action = api().describeAction(actionInfo.getId(), workspaceId()).getAction();
 
         // Retrieve the provided computeEnv or use the primary if not provided
         ComputeEnv ce = opts.computeEnv != null ? computeEnvByName(opts.computeEnv) : primaryComputeEnv();
 
         // Use compute env values by default
-        String workDirValue = opts.workDir == null ? ce.getConfig().getWorkDir() : opts.workDir;
-        String preRunScriptValue = opts.preRunScript == null ? ce.getConfig().getPreRunScript() : FilesHelper.readString(opts.preRunScript);
-        String postRunScriptValue = opts.postRunScript == null ? ce.getConfig().getPostRunScript() : FilesHelper.readString(opts.postRunScript);
+        String workDirValue = opts.workDir != null ? opts.workDir : ce.getConfig() != null ? ce.getConfig().getWorkDir() : null;
+        String preRunScriptValue = opts.preRunScript != null ? FilesHelper.readString(opts.preRunScript) : ce.getConfig() != null ? ce.getConfig().getPreRunScript() : null;
+        String postRunScriptValue = opts.postRunScript != null ? FilesHelper.readString(opts.postRunScript) : ce.getConfig() != null ? ce.getConfig().getPostRunScript() : null;
 
 
         WorkflowLaunchRequest workflowLaunchRequest = new WorkflowLaunchRequest();
         workflowLaunchRequest.computeEnvId(ce.getId())
-                .pipeline(workflowLaunchRequest.getPipeline())
+                .id(action.getLaunch().getId())
+                .pipeline(actionInfo.getPipeline())
                 .revision(opts.revision)
                 .workDir(workDirValue)
                 .configProfiles(opts.profiles)
