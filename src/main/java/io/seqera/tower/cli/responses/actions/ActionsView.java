@@ -19,7 +19,7 @@ public class ActionsView extends Response {
         out.println(ansi(String.format("%n  @|bold Details for action '%s'|@%n", action.getName())));
 
         TableList table = new TableList(out, 2);
-        table.setPrefix(" ");
+        table.setPrefix("    ");
         table.addRow("ID", action.getId());
         table.addRow("Name", action.getName());
         table.addRow("Pipeline URL", action.getLaunch().getPipeline());

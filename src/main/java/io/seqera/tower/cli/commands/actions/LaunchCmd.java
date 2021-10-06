@@ -32,7 +32,6 @@ public class LaunchCmd extends AbstractActionsCmd {
 
         LaunchActionRequest request = new LaunchActionRequest();
 
-        // TODO: Allow YML to map parsing
         if (params != null) {
             request.setParams(JsonHelper.parseJson(json, Map.class));
         }

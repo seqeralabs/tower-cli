@@ -11,7 +11,7 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "delete",
-        description = "Delete an existing Pipeline Action"
+        description = "Delete a Pipeline Action"
 )
 public class DeleteCmd extends AbstractActionsCmd {
     @CommandLine.Option(names = {"-n", "--name"}, description = "Action name", required = true)
@@ -24,7 +24,7 @@ public class DeleteCmd extends AbstractActionsCmd {
         try {
             api().deleteAction(listActionsResponseActionInfo.getId(), workspaceId());
         } catch (Exception e) {
-            throw new TowerException(String.format("Unable to delete action for workspace '%s'", workspaceRef()));
+            throw new TowerException(String.format("Unable to delete action '%s' for workspace '%s'", actionName, workspaceRef()));
         }
 
         return new ActionsDelete(actionName, workspaceRef());

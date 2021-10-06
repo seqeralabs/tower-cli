@@ -294,7 +294,7 @@ public class ActionsCmdTest extends BaseCmdTest {
 
         assertEquals("", out.stdOut);
         assertEquals(-1, out.exitCode);
-        assertEquals(errorMessage(out.app, new TowerException(String.format("Unable to delete action for workspace '%s'", USER_WORKSPACE_NAME))), out.stdErr);
+        assertEquals(errorMessage(out.app, new TowerException(String.format("Unable to delete action '%s' for workspace '%s'", "hello", USER_WORKSPACE_NAME))), out.stdErr);
     }
 
     @Test
