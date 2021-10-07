@@ -7,7 +7,6 @@ import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.actions.ActionCreate;
 import io.seqera.tower.cli.responses.actions.ActionUpdate;
 import io.seqera.tower.cli.responses.actions.ActionsDelete;
-import io.seqera.tower.cli.responses.actions.ActionsLaunch;
 import io.seqera.tower.cli.responses.actions.ActionsList;
 import io.seqera.tower.cli.responses.actions.ActionsView;
 import io.seqera.tower.model.Action;
@@ -312,52 +311,6 @@ public class ActionsCmdTest extends BaseCmdTest {
         assertEquals("", out.stdOut);
         assertEquals(-1, out.exitCode);
         assertEquals(errorMessage(out.app, new ActionNotFoundException("test", USER_WORKSPACE_NAME)), out.stdErr);
-    }
-
-    @Test
-    void testActionLaunch(MockServerClient mock) throws IOException {
-        mock.reset();
-
-        mock.when(
-                request().withMethod("GET").withPath("/actions"), exactly(1)
-        ).respond(
-                response().withStatusCode(200).withBody(loadResource("actions/actions_list")).withContentType(MediaType.APPLICATION_JSON)
-        );
-
-        mock.when(
-                request().withMethod("POST").withPath("/actions/57byWxhmUDLLWIF4J97XEP/launch"), exactly(1)
-        ).respond(
-                response().withStatusCode(200).withBody(loadResource("actions/action_launch")).withContentType(MediaType.APPLICATION_JSON)
-        );
-
-        ExecOut out = exec(mock, "actions", "launch", "-n", "hello", "--params", tempFile("{ \"timeout\": 60 }", "params", ".json"));
-
-        assertEquals("", out.stdErr);
-        assertEquals(0, out.exitCode);
-        assertEquals(new ActionsLaunch("hello", USER_WORKSPACE_NAME, "QM0fP9K31kMLe").toString(), out.stdOut);
-    }
-
-    @Test
-    void testActionLaunchError(MockServerClient mock) throws IOException {
-        mock.reset();
-
-        mock.when(
-                request().withMethod("GET").withPath("/actions"), exactly(1)
-        ).respond(
-                response().withStatusCode(200).withBody(loadResource("actions/actions_list")).withContentType(MediaType.APPLICATION_JSON)
-        );
-
-        mock.when(
-                request().withMethod("POST").withPath("/actions/57byWxhmUDLLWIF4J97XEP/launch"), exactly(1)
-        ).respond(
-                response().withStatusCode(500)
-        );
-
-        ExecOut out = exec(mock, "actions", "launch", "-n", "hello", "--params", tempFile("{ \"timeout\": 60 }", "params", ".json"));
-
-        assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
-        assertEquals(errorMessage(out.app, new TowerException(String.format("An error has occur while launching action '%s'", "hello"))), out.stdErr);
     }
 
     @Test

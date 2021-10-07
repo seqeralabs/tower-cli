@@ -2,7 +2,6 @@ package io.seqera.tower.cli.commands;
 
 import io.seqera.tower.cli.commands.actions.CreateCmd;
 import io.seqera.tower.cli.commands.actions.DeleteCmd;
-import io.seqera.tower.cli.commands.actions.LaunchCmd;
 import io.seqera.tower.cli.commands.actions.ListCmd;
 import io.seqera.tower.cli.commands.actions.UpdateCmd;
 import io.seqera.tower.cli.commands.actions.ViewCmd;
@@ -15,7 +14,6 @@ import picocli.CommandLine;
                 ListCmd.class,
                 ViewCmd.class,
                 DeleteCmd.class,
-                LaunchCmd.class,
                 CreateCmd.class,
                 UpdateCmd.class,
         }
