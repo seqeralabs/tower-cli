@@ -14,7 +14,6 @@ import io.seqera.tower.model.WorkflowLaunchRequest;
 import picocli.CommandLine;
 
 import java.io.IOException;
-import java.util.Locale;
 import java.util.Objects;
 
 @CommandLine.Command(
@@ -38,12 +37,12 @@ public class UpdateCmd extends AbstractActionsCmd {
         Action action = api().describeAction(actionInfo.getId(), workspaceId()).getAction();
 
         // Retrieve the provided computeEnv or use the primary if not provided
-        ComputeEnv ce = opts.computeEnv != null ? computeEnvByName(opts.computeEnv) : primaryComputeEnv();
+        ComputeEnv ce = opts.computeEnv != null ? computeEnvByName(opts.computeEnv) : action.getLaunch().getComputeEnv();
 
         // Use compute env values by default
-        String workDirValue = opts.workDir != null ? opts.workDir : ce.getConfig() != null ? ce.getConfig().getWorkDir() : null;
-        String preRunScriptValue = opts.preRunScript != null ? FilesHelper.readString(opts.preRunScript) : ce.getConfig() != null ? ce.getConfig().getPreRunScript() : null;
-        String postRunScriptValue = opts.postRunScript != null ? FilesHelper.readString(opts.postRunScript) : ce.getConfig() != null ? ce.getConfig().getPostRunScript() : null;
+        String workDirValue = opts.workDir != null ? opts.workDir : action.getLaunch().getWorkDir();
+        String preRunScriptValue = opts.preRunScript != null ? FilesHelper.readString(opts.preRunScript) : action.getLaunch().getPreRunScript();
+        String postRunScriptValue = opts.postRunScript != null ? FilesHelper.readString(opts.postRunScript) : action.getLaunch().getPostRunScript();
 
 
         WorkflowLaunchRequest workflowLaunchRequest = new WorkflowLaunchRequest();
