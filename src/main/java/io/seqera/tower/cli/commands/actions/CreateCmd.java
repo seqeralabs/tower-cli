@@ -27,7 +27,7 @@ public class CreateCmd extends AbstractActionsCmd {
     @CommandLine.Option(names = {"-s", "--source"}, description = "Action source (github or tower)", required = true)
     public ActionSource source;
 
-    @CommandLine.Option(names = {"--pipeline"}, description = "Pipeline to launch")
+    @CommandLine.Option(names = {"--pipeline"}, description = "Pipeline to launch", required = true)
     public String pipeline;
 
     @CommandLine.Mixin
