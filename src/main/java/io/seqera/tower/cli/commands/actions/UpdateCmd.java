@@ -14,6 +14,8 @@ import io.seqera.tower.model.WorkflowLaunchRequest;
 import picocli.CommandLine;
 
 import java.io.IOException;
+import java.util.Locale;
+import java.util.Objects;
 
 @CommandLine.Command(
         name = "update",
@@ -22,6 +24,9 @@ import java.io.IOException;
 public class UpdateCmd extends AbstractActionsCmd {
     @CommandLine.Option(names = {"-n", "--name"}, description = "Action name", required = true)
     public String actionName;
+
+    @CommandLine.Option(names = {"-s", "--status"}, description = "Action status (pause or active)")
+    public String status;
 
     @CommandLine.Mixin
     public LaunchOptions opts;
@@ -66,6 +71,18 @@ public class UpdateCmd extends AbstractActionsCmd {
             api().updateAction(action.getId(), request, workspaceId());
         } catch (Exception e) {
             throw new TowerException(String.format("Unable to update action '%s' for workspace '%s'", actionName, workspaceRef()));
+        }
+
+        if (status != null) {
+            if (Objects.equals(action.getStatus().toString().toLowerCase(), status)) {
+                throw new TowerException(String.format("The action is already set to '%s'", status.toUpperCase()));
+            }
+
+            try {
+                api().pauseAction(action.getId(), workspaceId(), null);
+            } catch (Exception e) {
+                throw new TowerException(String.format("An error has occur while setting the action '%s' to '%s'", actionName, status.toUpperCase()));
+            }
         }
 
         return new ActionUpdate(actionName, workspaceRef(), action.getId());

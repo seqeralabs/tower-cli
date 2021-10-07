@@ -9,7 +9,6 @@ import io.seqera.tower.cli.responses.actions.ActionUpdate;
 import io.seqera.tower.cli.responses.actions.ActionsDelete;
 import io.seqera.tower.cli.responses.actions.ActionsLaunch;
 import io.seqera.tower.cli.responses.actions.ActionsList;
-import io.seqera.tower.cli.responses.actions.ActionsPause;
 import io.seqera.tower.cli.responses.actions.ActionsView;
 import io.seqera.tower.model.Action;
 import io.seqera.tower.model.ListActionsResponseActionInfo;
@@ -362,52 +361,6 @@ public class ActionsCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testActionPause(MockServerClient mock) throws IOException {
-        mock.reset();
-
-        mock.when(
-                request().withMethod("GET").withPath("/actions"), exactly(1)
-        ).respond(
-                response().withStatusCode(200).withBody(loadResource("actions/actions_list")).withContentType(MediaType.APPLICATION_JSON)
-        );
-
-        mock.when(
-                request().withMethod("POST").withPath("/actions/57byWxhmUDLLWIF4J97XEP/pause"), exactly(1)
-        ).respond(
-                response().withStatusCode(204)
-        );
-
-        ExecOut out = exec(mock, "actions", "pause", "-n", "hello", "--params", tempFile("{ \"param\": 1 }", "params", ".json"));
-
-        assertEquals("", out.stdErr);
-        assertEquals(0, out.exitCode);
-        assertEquals(new ActionsPause("hello", USER_WORKSPACE_NAME).toString(), out.stdOut);
-    }
-
-    @Test
-    void testActionPauseError(MockServerClient mock) throws IOException {
-        mock.reset();
-
-        mock.when(
-                request().withMethod("GET").withPath("/actions"), exactly(1)
-        ).respond(
-                response().withStatusCode(200).withBody(loadResource("actions/actions_list")).withContentType(MediaType.APPLICATION_JSON)
-        );
-
-        mock.when(
-                request().withMethod("POST").withPath("/actions/57byWxhmUDLLWIF4J97XEP/pause"), exactly(1)
-        ).respond(
-                response().withStatusCode(500)
-        );
-
-        ExecOut out = exec(mock, "actions", "pause", "-n", "hello", "--params", tempFile("{ \"timeout\": 60 }", "params", ".json"));
-
-        assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
-        assertEquals(errorMessage(out.app, new TowerException(String.format("An error has occur while pausing action '%s'", "hello"))), out.stdErr);
-    }
-
-    @Test
     void testActionCreate(MockServerClient mock) {
         mock.reset();
 
@@ -545,5 +498,140 @@ public class ActionsCmdTest extends BaseCmdTest {
         assertEquals("", out.stdOut);
         assertEquals(-1, out.exitCode);
         assertEquals(errorMessage(out.app, new TowerException(String.format("Unable to update action '%s' for workspace '%s'", "hello", USER_WORKSPACE_NAME))), out.stdErr);
+    }
+
+    @Test
+    void testActionPause(MockServerClient mock) throws IOException {
+        mock.reset();
+
+        mock.when(
+                request().withMethod("GET").withPath("/actions"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("actions/actions_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/actions/57byWxhmUDLLWIF4J97XEP"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("actions/action_view")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs").withQueryStringParameter("status", "AVAILABLE"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("PUT").withPath("/actions/57byWxhmUDLLWIF4J97XEP"), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/actions/57byWxhmUDLLWIF4J97XEP/pause"), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(mock, "actions", "update", "-n", "hello", "-s", "pause");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        assertEquals(new ActionUpdate("hello", USER_WORKSPACE_NAME, "57byWxhmUDLLWIF4J97XEP").toString(), out.stdOut);
+    }
+
+    @Test
+    void testActionPauseAlreadyPausedItem(MockServerClient mock) throws IOException {
+        mock.reset();
+
+        mock.when(
+                request().withMethod("GET").withPath("/actions"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("actions/actions_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/actions/57byWxhmUDLLWIF4J97XEP"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("actions/action_view")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs").withQueryStringParameter("status", "AVAILABLE"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("PUT").withPath("/actions/57byWxhmUDLLWIF4J97XEP"), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(mock, "actions", "update", "-n", "hello", "-s", "active");
+
+        assertEquals("", out.stdOut);
+        assertEquals(-1, out.exitCode);
+        assertEquals(errorMessage(out.app, new TowerException(String.format("The action is already set to '%s'", "ACTIVE"))), out.stdErr);
+    }
+
+    @Test
+    void testActionPauseError(MockServerClient mock) throws IOException {
+        mock.reset();
+
+        mock.when(
+                request().withMethod("GET").withPath("/actions"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("actions/actions_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/actions/57byWxhmUDLLWIF4J97XEP"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("actions/action_view")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs").withQueryStringParameter("status", "AVAILABLE"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("PUT").withPath("/actions/57byWxhmUDLLWIF4J97XEP"), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/actions/57byWxhmUDLLWIF4J97XEP/pause"), exactly(1)
+        ).respond(
+                response().withStatusCode(500)
+        );
+
+        ExecOut out = exec(mock, "actions", "update", "-n", "hello", "-s", "pause");
+
+        assertEquals("", out.stdOut);
+        assertEquals(-1, out.exitCode);
+        assertEquals(errorMessage(out.app, new TowerException(String.format("An error has occur while setting the action '%s' to '%s'", "hello", "PAUSE"))), out.stdErr);
     }
 }
