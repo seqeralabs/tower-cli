@@ -22,6 +22,7 @@ public class ListCmd extends AbstractOrganizationsCmd {
 
         ListWorkspacesAndOrgResponse response = api().listWorkspacesUser(userId());
 
+
         if (response.getOrgsAndWorkspaces() != null) {
             List<OrgAndWorkspaceDbDto> responseOrg = response.getOrgsAndWorkspaces()
                     .stream()

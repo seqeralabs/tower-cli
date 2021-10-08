@@ -19,10 +19,10 @@ public class OrganizationsList extends Response {
 
     @Override
     public void toString(PrintWriter out) {
-        out.println(ansi(String.format("%n  @|bold Organizations for %s user:|@%n", userName)));
+        out.println(ansi(String.format("%n  @|bold organizations for %s user:|@%n", userName)));
 
         if (organizations.isEmpty()) {
-            out.println(ansi("    @|yellow No Organizations found|@"));
+            out.println(ansi("    @|yellow No organizations found|@"));
             return;
         }
 

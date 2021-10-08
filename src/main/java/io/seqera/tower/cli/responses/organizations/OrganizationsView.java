@@ -23,7 +23,7 @@ public class OrganizationsView extends Response {
         table.addRow("ID", organization.getOrgId().toString());
         table.addRow("Name", organization.getName());
         table.addRow("Full Name", organization.getFullName());
-        table.addRow("Description", organization.getWebsite());
+        table.addRow("Description", organization.getDescription());
         table.addRow("Website", organization.getWebsite());
         table.print();
         out.println("");

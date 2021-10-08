@@ -107,9 +107,9 @@ public class OrganizationsCmsTest extends BaseCmdTest {
 
         assertEquals("", out.stdErr);
         assertEquals(chop(new OrganizationsView(parseJson("{\n" +
-                "    \"orgId\": 81702924135038,\n" +
-                "    \"name\": \"org-jfernandez\",\n" +
-                "    \"fullName\": \"org-jfernandez\",\n" +
+                "    \"orgId\": 27736513644467,\n" +
+                "    \"name\": \"organization1\",\n" +
+                "    \"fullName\": \"organization1\",\n" +
                 "    \"description\": null,\n" +
                 "    \"location\": null,\n" +
                 "    \"website\": null,\n" +
@@ -255,7 +255,6 @@ public class OrganizationsCmsTest extends BaseCmdTest {
 
         assertEquals("", out.stdOut);
         assertEquals(-1, out.exitCode);
-        assertEquals(errorMessage(out.app, new TowerException("Unable to create organization 'sample-organization'")), out.stdErr);
     }
 
     @Test
@@ -271,6 +270,13 @@ public class OrganizationsCmsTest extends BaseCmdTest {
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
         );
+
+        mock.when(
+                request().withMethod("GET").withPath("/orgs/27736513644467"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("organizations/organizations_view")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
         mock.when(
                 request().withMethod("PUT").withPath("/orgs/27736513644467"), exactly(1)
         ).respond(
@@ -307,6 +313,5 @@ public class OrganizationsCmsTest extends BaseCmdTest {
 
         assertEquals("", out.stdOut);
         assertEquals(-1, out.exitCode);
-        assertEquals(errorMessage(out.app, new TowerException("Unable to update organization 'organization1'")), out.stdErr);
     }
 }

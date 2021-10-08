@@ -1,10 +1,12 @@
 package io.seqera.tower.cli.commands.organizations;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.organizations.OrganizationsUpdated;
+import io.seqera.tower.model.DescribeOrganizationResponse;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
+import io.seqera.tower.model.Organization;
+import io.seqera.tower.model.OrganizationDbDto;
 import io.seqera.tower.model.UpdateOrganizationRequest;
 import picocli.CommandLine;
 
@@ -15,24 +17,28 @@ import java.io.IOException;
         description = "Update organization details"
 )
 public class UpdateCmd extends AbstractOrganizationsCmd {
+
     @CommandLine.Mixin
     OrganizationsOptions opts;
+
+    @CommandLine.Option(names = {"-f", "--full-name"}, description = "Organization full name")
+    public String fullName;
 
     @Override
     protected Response exec() throws ApiException, IOException {
         OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = organizationByName(opts.name);
 
-        try {
-            UpdateOrganizationRequest request = new UpdateOrganizationRequest();
-            request.setFullName(opts.fullName);
-            request.setDescription(opts.description);
-            request.setLocation(opts.fullName);
-            request.setWebsite(opts.website);
+        DescribeOrganizationResponse describeOrganization = api().describeOrganization(orgAndWorkspaceDbDto.getOrgId());
 
-            api().updateOrganization(orgAndWorkspaceDbDto.getOrgId(), request);
-        } catch (Exception e) {
-            throw new TowerException(String.format("Unable to update organization '%s'", opts.name));
-        }
+        OrganizationDbDto organization = describeOrganization.getOrganization();
+
+        UpdateOrganizationRequest request = new UpdateOrganizationRequest();
+        request.setFullName(fullName != null ? fullName : organization.getFullName());
+        request.setDescription(opts.description != null ? opts.description : organization.getDescription());
+        request.setLocation(opts.location != null ? opts.location : organization.getLocation());
+        request.setWebsite(opts.website != null ? opts.website : organization.getWebsite());
+
+        api().updateOrganization(orgAndWorkspaceDbDto.getOrgId(), request);
 
         return new OrganizationsUpdated(opts.name);
     }

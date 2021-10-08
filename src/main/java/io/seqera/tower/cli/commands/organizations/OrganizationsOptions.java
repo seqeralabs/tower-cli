@@ -7,9 +7,6 @@ public class OrganizationsOptions {
     @CommandLine.Option(names = {"-n", "--name"}, description = "Organization name", required = true)
     public String name;
 
-    @CommandLine.Option(names = {"-f", "--fullName"}, description = "Organization full name", required = true)
-    public String fullName;
-
     @CommandLine.Option(names = {"-d", "--description"}, description = "Organization description")
     public String description;
 
