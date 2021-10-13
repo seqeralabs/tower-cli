@@ -335,7 +335,7 @@ public class ActionsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("/actions/action_create")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "actions", "create", "github", "-n", "new-action", "--source", "github", "--pipeline", "https://github.com/pditommaso/nf-sleep");
+        ExecOut out = exec(mock, "actions", "create", "github", "-n", "new-action", "--pipeline", "https://github.com/pditommaso/nf-sleep");
 
         assertEquals("", out.stdErr);
         assertEquals(0, out.exitCode);
@@ -364,7 +364,7 @@ public class ActionsCmdTest extends BaseCmdTest {
                 response().withStatusCode(500)
         );
 
-        ExecOut out = exec(mock, "actions", "create", "github", "-n", "new-action", "--source", "github", "--pipeline", "https://github.com/pditommaso/nf-sleep");
+        ExecOut out = exec(mock, "actions", "create", "github", "-n", "new-action", "--pipeline", "https://github.com/pditommaso/nf-sleep");
 
         assertEquals("", out.stdOut);
         assertEquals(-1, out.exitCode);
