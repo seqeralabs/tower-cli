@@ -10,6 +10,7 @@ import io.seqera.tower.cli.commands.HealthCheckCmd;
 import io.seqera.tower.cli.commands.LaunchesCmd;
 import io.seqera.tower.cli.commands.PipelinesCmd;
 import io.seqera.tower.cli.commands.RunsCmd;
+import io.seqera.tower.cli.commands.TeamsCmd;
 import io.seqera.tower.cli.commands.WorkspacesCmd;
 import picocli.AutoComplete.GenerateCompletion;
 import picocli.CommandLine;
@@ -34,6 +35,7 @@ import java.io.PrintWriter;
                 WorkspacesCmd.class,
                 GenerateCompletion.class,
                 HealthCheckCmd.class,
+                TeamsCmd.class,
         }
 )
 public class Tower extends AbstractCmd {
