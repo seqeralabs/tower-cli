@@ -145,6 +145,12 @@
   "allDeclaredMethods":true
 },
 {
+  "name":"io.seqera.tower.cli.commands.OrganizationsCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.PipelinesCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -968,6 +974,47 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.organizations.AbstractOrganizationsCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true
+},
+{
+  "name":"io.seqera.tower.cli.commands.organizations.CreateCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.organizations.DeleteCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.organizations.ListCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.organizations.OrganizationsOptions",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.organizations.UpdateCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.organizations.ViewCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.pipelines.AbstractPipelinesCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
@@ -1401,6 +1448,18 @@
   "allDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.model.CreateOrganizationRequest",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.model.CreateOrganizationResponse",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.model.CreatePipelineRequest",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1466,6 +1525,12 @@
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.model.DescribeOrganizationResponse",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
 },
 {
   "name":"io.seqera.tower.model.DescribePipelineResponse",
@@ -1686,6 +1751,23 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.model.OrgRole",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true
+},
+{
+  "name":"io.seqera.tower.model.Organization",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.model.OrganizationDbDto",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.model.PipelineDbDto",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1769,6 +1851,12 @@
 },
 {
   "name":"io.seqera.tower.model.UpdateCredentialsRequest",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.model.UpdateOrganizationRequest",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true
@@ -2169,16 +2257,16 @@
 {
   "name":"org.glassfish.jersey.internal.util.collection.ConcurrentHashMapV8",
   "fields":[
-    {"name":"baseCount", "allowUnsafeAccess":true}, 
-    {"name":"cellsBusy", "allowUnsafeAccess":true}, 
-    {"name":"sizeCtl", "allowUnsafeAccess":true}, 
-    {"name":"transferIndex", "allowUnsafeAccess":true}, 
-    {"name":"transferOrigin", "allowUnsafeAccess":true}
+    {"name":"baseCount"}, 
+    {"name":"cellsBusy"}, 
+    {"name":"sizeCtl"}, 
+    {"name":"transferIndex"}, 
+    {"name":"transferOrigin"}
   ]
 },
 {
   "name":"org.glassfish.jersey.internal.util.collection.ConcurrentHashMapV8$CounterCell",
-  "fields":[{"name":"value", "allowUnsafeAccess":true}]
+  "fields":[{"name":"value"}]
 },
 {
   "name":"org.glassfish.jersey.jackson.JacksonFeature",

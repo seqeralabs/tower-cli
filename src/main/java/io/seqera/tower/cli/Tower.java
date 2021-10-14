@@ -9,6 +9,7 @@ import io.seqera.tower.cli.commands.ComputeEnvsCmd;
 import io.seqera.tower.cli.commands.CredentialsCmd;
 import io.seqera.tower.cli.commands.HealthCheckCmd;
 import io.seqera.tower.cli.commands.LaunchesCmd;
+import io.seqera.tower.cli.commands.OrganizationsCmd;
 import io.seqera.tower.cli.commands.PipelinesCmd;
 import io.seqera.tower.cli.commands.RunsCmd;
 import io.seqera.tower.cli.commands.WorkspacesCmd;
@@ -27,15 +28,16 @@ import java.io.PrintWriter;
         name = "towr",
         description = "Nextflow Tower CLI",
         subcommands = {
-                ActionsCmd.class,
-                ComputeEnvsCmd.class,
-                CredentialsCmd.class,
-                GenerateCompletion.class,
-                HealthCheckCmd.class,
                 LaunchesCmd.class,
                 PipelinesCmd.class,
                 RunsCmd.class,
+                ActionsCmd.class,
+                ComputeEnvsCmd.class,
+                CredentialsCmd.class,
                 WorkspacesCmd.class,
+                OrganizationsCmd.class,
+                HealthCheckCmd.class,
+                GenerateCompletion.class,
         }
 )
 public class Tower extends AbstractCmd {
