@@ -11,7 +11,7 @@ public class WorkspaceOptions {
     @Option(names = {"-n", "--name"}, description = "The workspace short name. Only alphanumeric, dash and underscore characters are allowed", required = true)
     public String workspaceName;
 
-    @CommandLine.Option(names = {"-f", "--fullName"}, description = "The workspace full name", required = true)
+    @CommandLine.Option(names = {"-f", "--full-name"}, description = "The workspace full name", required = true)
     public String workspaceFullName;
 
     @Option(names = {"-d", "--description"}, description = "The workspace description")
