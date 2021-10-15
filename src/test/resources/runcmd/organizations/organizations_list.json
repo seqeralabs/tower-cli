@@ -1,0 +1,29 @@
+{
+  "organizations": [
+    {
+      "orgId": 81702924135038,
+      "name": "org-jfernandez",
+      "fullName": "org-jfernandez",
+      "description": null,
+      "location": null,
+      "website": null,
+      "logoId": null,
+      "logoUrl": null,
+      "memberId": 175703974560466,
+      "memberRole": "owner"
+    },
+    {
+      "orgId": 27736513644467,
+      "name": "organization1",
+      "fullName": "organization1",
+      "description": null,
+      "location": null,
+      "website": null,
+      "logoId": null,
+      "logoUrl": null,
+      "memberId": 255127489273627,
+      "memberRole": "owner"
+    }
+  ],
+  "totalSize": null
+}

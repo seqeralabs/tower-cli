@@ -1,0 +1,78 @@
+{
+  "action": {
+    "id": "57byWxhmUDLLWIF4J97XEP",
+    "launch": {
+      "id": "3htPtgK2KufwvQcovOko",
+      "computeEnv": {
+        "id": "1NcvsrdHeaKsrpgQ85NYpe",
+        "name": "deleted-774901692352490",
+        "description": null,
+        "platform": "slurm-platform",
+        "config": {
+          "hostName": "slurm.seqera.io",
+          "workDir": "/home/ubuntu/nf-work",
+          "userName": "ubuntu",
+          "preRunScript": null,
+          "postRunScript": null,
+          "headQueue": "long",
+          "launchDir": "/home/ubuntu/nf-work",
+          "headJobOptions": null,
+          "computeQueue": null,
+          "port": null,
+          "maxQueueSize": null,
+          "discriminator": "slurm-platform"
+        },
+        "dateCreated": "2021-06-18T08:58:21Z",
+        "lastUpdated": "2021-06-18T08:58:21Z",
+        "lastUsed": "2021-06-18T10:22:31Z",
+        "deleted": true,
+        "status": "AVAILABLE",
+        "message": null,
+        "primary": null,
+        "credentialsId": "5KmzwVT34sT8ItofmP5S"
+      },
+      "pipeline": "https://github.com/pditommaso/hello",
+      "workDir": "/home/ubuntu/nf-work",
+      "revision": null,
+      "configText": null,
+      "paramsText": null,
+      "preRunScript": null,
+      "postRunScript": null,
+      "mainScript": null,
+      "entryName": null,
+      "schemaName": null,
+      "resume": false,
+      "pullLatest": false,
+      "stubRun": false,
+      "sessionId": null,
+      "configProfiles": null,
+      "dateCreated": "2021-06-18T10:10:05Z",
+      "lastUpdated": "2021-06-18T10:10:05Z"
+    },
+    "name": "hello",
+    "hookId": "303166158",
+    "hookUrl": "https://api.github.com/repos/pditommaso/hello/hooks/303166158",
+    "message": null,
+    "deleted": null,
+    "source": "github",
+    "status": "ACTIVE",
+    "config": {
+      "events": [
+        "push"
+      ],
+      "discriminator": "github"
+    },
+    "event": {
+      "ref": "refs/heads/master",
+      "commitId": "af8d93083a36552914929a959f7576f62996032e",
+      "commitMessage": "Update README.md",
+      "pusherName": "pditommaso",
+      "pusherEmail": "paolo.ditommaso@gmail.com",
+      "timestamp": "2021-06-18T12:10:32+02:00",
+      "discriminator": "github"
+    },
+    "lastSeen": "2021-06-18T10:10:33Z",
+    "dateCreated": "2021-06-18T10:10:05Z",
+    "lastUpdated": "2021-06-18T10:10:33Z"
+  }
+}
