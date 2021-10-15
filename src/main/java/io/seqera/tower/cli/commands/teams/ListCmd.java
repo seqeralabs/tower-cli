@@ -11,7 +11,7 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "list",
-        description = "List available organizations"
+        description = "List all the teams of a given organization"
 )
 public class ListCmd extends AbstractTeamsCmd {
 

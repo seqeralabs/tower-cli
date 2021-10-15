@@ -10,7 +10,7 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "delete",
-        description = "Update organization details"
+        description = "Delete an organization team"
 )
 public class DeleteCmd extends AbstractTeamsCmd {
 
