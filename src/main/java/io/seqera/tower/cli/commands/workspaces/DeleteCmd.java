@@ -14,18 +14,21 @@ import java.io.IOException;
 )
 public class DeleteCmd extends AbstractWorkspaceCmd {
 
-    @CommandLine.ArgGroup
-    public WorkspacesMatchOptions opts;
+    @CommandLine.ArgGroup(exclusive = false, heading = "%nMatch by workspace and organization name:%n")
+    WorkspacesMatchOptions.MatchByName matchByName;
+
+    @CommandLine.ArgGroup(heading = "%nMatch by workspace ID:%n")
+    WorkspacesMatchOptions.MatchById matchById;
 
     @Override
     protected Response exec() throws ApiException, IOException {
 
         OrgAndWorkspaceDbDto orgAndWorkspaceDbDto;
 
-        if (opts.matchById != null) {
-            orgAndWorkspaceDbDto = workspaceById(opts.matchById.workspaceId);
+        if (matchById != null) {
+            orgAndWorkspaceDbDto = workspaceById(matchById.workspaceId);
         } else {
-            orgAndWorkspaceDbDto = orgAndWorkspaceByName(opts.matchByName.workspaceName, opts.matchByName.organizationName);
+            orgAndWorkspaceDbDto = orgAndWorkspaceByName(matchByName.workspaceName, matchByName.organizationName);
         }
 
         api().deleteWorkspace(orgAndWorkspaceDbDto.getOrgId(), orgAndWorkspaceDbDto.getWorkspaceId());

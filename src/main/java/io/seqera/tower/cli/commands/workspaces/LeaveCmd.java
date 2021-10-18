@@ -12,16 +12,27 @@ import picocli.CommandLine;
         name = "leave",
         description = "Leave workspace"
 )
-public class LeaveCmd extends AbstractWorkspaceCmd{
+public class LeaveCmd extends AbstractWorkspaceCmd {
+
+    @CommandLine.ArgGroup(exclusive = false, heading = "%nMatch by workspace and organization name:%n")
+    WorkspacesMatchOptions.MatchByName matchByName;
+
+    @CommandLine.ArgGroup(heading = "%nMatch by workspace ID:%n")
+    WorkspacesMatchOptions.MatchById matchById;
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        String workspaceName = workspaceName();
 
-        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = workspaceById(workspaceId());
+        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto;
+
+        if (matchById != null) {
+            orgAndWorkspaceDbDto = workspaceById(matchById.workspaceId);
+        } else {
+            orgAndWorkspaceDbDto = orgAndWorkspaceByName(matchByName.workspaceName, matchByName.organizationName);
+        }
 
         api().leaveWorkspaceParticipant(orgAndWorkspaceDbDto.getOrgId(), orgAndWorkspaceDbDto.getWorkspaceId());
 
-        return new ParticipantLeft(workspaceName);
+        return new ParticipantLeft(orgAndWorkspaceDbDto.getWorkspaceName());
     }
 }

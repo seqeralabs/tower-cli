@@ -14,17 +14,20 @@ import java.io.IOException;
         description = "Describe an existing organization's workspace"
 )
 public class ViewCmd extends AbstractWorkspaceCmd {
-    @CommandLine.ArgGroup
-    public WorkspacesMatchOptions opts;
+    @CommandLine.ArgGroup(exclusive = false, heading = "%nMatch by workspace and organization name:%n")
+    WorkspacesMatchOptions.MatchByName matchByName;
+
+    @CommandLine.ArgGroup(heading = "%nMatch by workspace ID:%n")
+    WorkspacesMatchOptions.MatchById matchById;
 
     @Override
     protected Response exec() throws ApiException, IOException {
         OrgAndWorkspaceDbDto orgAndWorkspaceDbDto;
 
-        if (opts.matchById != null) {
-            orgAndWorkspaceDbDto = workspaceById(opts.matchById.workspaceId);
+        if (matchById != null) {
+            orgAndWorkspaceDbDto = workspaceById(matchById.workspaceId);
         } else {
-            orgAndWorkspaceDbDto = orgAndWorkspaceByName(opts.matchByName.workspaceName, opts.matchByName.organizationName);
+            orgAndWorkspaceDbDto = orgAndWorkspaceByName(matchByName.workspaceName, matchByName.organizationName);
         }
 
         DescribeWorkspaceResponse response = api().describeWorkspace(orgAndWorkspaceDbDto.getOrgId(), orgAndWorkspaceDbDto.getWorkspaceId());
