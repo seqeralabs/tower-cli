@@ -5,26 +5,28 @@ import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.workspaces.WorkspaceView;
 import io.seqera.tower.model.DescribeWorkspaceResponse;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
-import picocli.CommandLine;
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Mixin;
 
 import java.io.IOException;
 
-@CommandLine.Command(
+@Command(
         name = "view",
         description = "Describe an existing organization's workspace"
 )
 public class ViewCmd extends AbstractWorkspaceCmd {
-    @CommandLine.ArgGroup
-    public WorkspacesMatchOptions opts;
+
+    @Mixin
+    public WorkspacesMatchOptions ws;
 
     @Override
     protected Response exec() throws ApiException, IOException {
         OrgAndWorkspaceDbDto orgAndWorkspaceDbDto;
 
-        if (opts.matchById != null) {
-            orgAndWorkspaceDbDto = workspaceById(opts.matchById.workspaceId);
+        if (ws.match.byId != null) {
+            orgAndWorkspaceDbDto = workspaceById(ws.match.byId.workspaceId);
         } else {
-            orgAndWorkspaceDbDto = orgAndWorkspaceByName(opts.matchByName.workspaceName, opts.matchByName.organizationName);
+            orgAndWorkspaceDbDto = orgAndWorkspaceByName(ws.match.byName.workspaceName, ws.match.byName.organizationName);
         }
 
         DescribeWorkspaceResponse response = api().describeWorkspace(orgAndWorkspaceDbDto.getOrgId(), orgAndWorkspaceDbDto.getWorkspaceId());

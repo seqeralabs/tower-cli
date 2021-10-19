@@ -1182,6 +1182,11 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.workspaces.WorkspacesMatchOptions$ByNameOrId",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true
+},
+{
   "name":"io.seqera.tower.cli.commands.workspaces.WorkspacesMatchOptions$MatchById",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1271,18 +1276,6 @@
   "allDeclaredConstructors":true
 },
 {
-  "name":"io.seqera.tower.cli.responses.actions.ActionsList",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
-},
-{
-  "name":"io.seqera.tower.cli.responses.actions.ActionsView",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
-},
-{
   "name":"io.seqera.tower.cli.responses.actions.ActionsCreate",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1295,7 +1288,19 @@
   "allDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.cli.responses.actions.ActionsList",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.cli.responses.actions.ActionsUpdate",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.actions.ActionsView",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true
