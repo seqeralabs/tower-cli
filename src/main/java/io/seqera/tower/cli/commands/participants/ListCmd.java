@@ -18,9 +18,6 @@ import java.util.stream.Collectors;
 )
 public class ListCmd extends AbstractParticipantsCmd {
 
-    @CommandLine.Mixin
-    ParticipantsOptions opts;
-
     @CommandLine.Option(names = {"-t", "--type"}, description = "Participant type to list (MEMBER, TEAM, COLLABORATOR)")
     public ParticipantType type;
 
@@ -29,15 +26,12 @@ public class ListCmd extends AbstractParticipantsCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
-
-        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = findOrgAndWorkspaceByName(opts.organizationName,opts. workspaceName);
-
-        List<ParticipantDbDto> response = api().listWorkspaceParticipants(orgAndWorkspaceDbDto.getOrgId(), orgAndWorkspaceDbDto.getWorkspaceId(), null, null, startsWith).getParticipants();
+        List<ParticipantDbDto> response = api().listWorkspaceParticipants(orgId(), workspaceId(), null, null, startsWith).getParticipants();
 
         if (response != null && type != null) {
             response = response.stream().filter(it -> it.getType() == type).collect(Collectors.toList());
         }
 
-        return new ParticipantsList(opts.organizationName, opts.workspaceName, response);
+        return new ParticipantsList(orgName(), workspaceName(), response);
     }
 }

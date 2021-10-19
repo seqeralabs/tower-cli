@@ -19,9 +19,6 @@ import java.util.Objects;
 )
 public class AddCmd extends AbstractParticipantsCmd {
 
-    @CommandLine.Mixin
-    ParticipantsOptions opts;
-
     @CommandLine.Option(names = {"-n", "--name"}, description = "Team name or username of existing organization team or member", required = true)
     public String name;
 
@@ -30,22 +27,21 @@ public class AddCmd extends AbstractParticipantsCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = findOrgAndWorkspaceByName(opts.organizationName, opts.workspaceName);
 
         AddParticipantRequest request = new AddParticipantRequest();
 
         if (Objects.equals(type, ParticipantType.MEMBER)) {
-            request.setMemberId(findOrganizationMemberByName(orgAndWorkspaceDbDto.getOrgId(), name).getMemberId());
+            request.setMemberId(findOrganizationMemberByName(orgId(), name).getMemberId());
         } else if (Objects.equals(type, ParticipantType.TEAM)) {
-            request.setTeamId(findOrganizationTeamByName(orgAndWorkspaceDbDto.getOrgId(), name).getTeamId());
+            request.setTeamId(findOrganizationTeamByName(orgId(), name).getTeamId());
         } else if (Objects.equals(type, ParticipantType.COLLABORATOR)) {
-            request.setMemberId(findOrganizationCollaboratorByName(orgAndWorkspaceDbDto.getOrgId(), name).getMemberId());
+            request.setMemberId(findOrganizationCollaboratorByName(orgId(), name).getMemberId());
         } else {
             throw new TowerException("Unknown participant candidate type provided.");
         }
 
-        AddParticipantResponse response = api().createWorkspaceParticipant(orgAndWorkspaceDbDto.getOrgId(), orgAndWorkspaceDbDto.getWorkspaceId(), request);
+        AddParticipantResponse response = api().createWorkspaceParticipant(orgId(), workspaceId(), request);
 
-        return new ParticipantAdded(response.getParticipant(), opts.workspaceName);
+        return new ParticipantAdded(response.getParticipant(), workspaceName());
     }
 }

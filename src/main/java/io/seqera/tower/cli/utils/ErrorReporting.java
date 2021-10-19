@@ -51,7 +51,7 @@ public class ErrorReporting {
                     break;
 
                 default:
-                    print(err, decodeMessage(ex.getResponseBody()));
+                    print(err, decodeMessage(ex));
             }
             return;
         }
@@ -63,19 +63,19 @@ public class ErrorReporting {
         err.println(CommandLine.Help.Ansi.AUTO.string((String.format("%n @|bold,red ERROR:|@ @|red %s|@%n", line))));
     }
 
-    private static String decodeMessage(String body) {
-        if (body == null) {
-            return "";
+    private static String decodeMessage(ApiException ex) {
+        if (ex.getResponseBody() == null) {
+            return ex.getMessage();
         }
 
         try {
-            ApiExceptionMessage message = parseJson(body, ApiExceptionMessage.class);
+            ApiExceptionMessage message = parseJson(ex.getResponseBody(), ApiExceptionMessage.class);
             return message.getMessage();
         } catch (JsonProcessingException e) {
             // On exception return as it is
         }
 
-        return body;
+        return ex.getResponseBody();
 
     }
 

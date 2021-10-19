@@ -18,9 +18,6 @@ import java.io.IOException;
 )
 public class ChangeCmd extends AbstractParticipantsCmd {
 
-    @CommandLine.Mixin
-    ParticipantsOptions opts;
-
     @CommandLine.Option(names = {"-n", "--name"}, description = "Team name, username or email of existing organization team or member", required = true)
     public String name;
 
@@ -32,15 +29,14 @@ public class ChangeCmd extends AbstractParticipantsCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = findOrgAndWorkspaceByName(opts.organizationName, opts.workspaceName);
 
-        ParticipantDbDto participant = findWorkspaceParticipant(orgAndWorkspaceDbDto.getOrgId(), orgAndWorkspaceDbDto.getWorkspaceId(), name, type);
+        ParticipantDbDto participant = findWorkspaceParticipant(orgId(), workspaceId(), name, type);
 
         UpdateParticipantRoleRequest request = new UpdateParticipantRoleRequest();
         request.setRole(role);
 
-        api().updateWorkspaceParticipantRole(orgAndWorkspaceDbDto.getOrgId(), orgAndWorkspaceDbDto.getWorkspaceId(), participant.getParticipantId(), request);
+        api().updateWorkspaceParticipantRole(orgId(), workspaceId(), participant.getParticipantId(), request);
 
-        return new ParticipantChanged(opts.workspaceName, name, role.getValue());
+        return new ParticipantChanged(workspaceName(), name, role.getValue());
     }
 }

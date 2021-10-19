@@ -16,12 +16,6 @@ import picocli.CommandLine;
 )
 public class DeleteCmd extends AbstractParticipantsCmd {
 
-    @CommandLine.Option(names = {"-o", "--org", "--organization"}, description = "The organization name", required = true)
-    public String organizationName;
-
-    @CommandLine.Option(names = {"-w", "--wsp", "--workspace"}, description = "The workspace organization name", required = true)
-    public String workspaceName;
-
     @CommandLine.Option(names = {"-n", "--name"}, description = "Team name, username or email of existing organization team or member", required = true)
     public String name;
 
@@ -30,12 +24,9 @@ public class DeleteCmd extends AbstractParticipantsCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = findOrgAndWorkspaceByName(organizationName, workspaceName);
+        ParticipantDbDto participant = findWorkspaceParticipant(orgId(), workspaceId(), name, type);
+        api().deleteWorkspaceParticipant(orgId(), workspaceId(), participant.getParticipantId());
 
-        ParticipantDbDto participant = findWorkspaceParticipant(orgAndWorkspaceDbDto.getOrgId(), orgAndWorkspaceDbDto.getWorkspaceId(), name, type);
-
-        api().deleteWorkspaceParticipant(orgAndWorkspaceDbDto.getOrgId(), orgAndWorkspaceDbDto.getWorkspaceId(), participant.getParticipantId());
-
-        return new ParticipantDeleted(name, workspaceName);
+        return new ParticipantDeleted(name, workspaceName());
     }
 }

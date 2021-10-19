@@ -88,6 +88,13 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         return workspaceId;
     }
 
+    protected Long orgId() throws ApiException {
+        if (orgId == null) {
+            loadOrgAndWorkspaceFromIds();
+        }
+        return orgId;
+    }
+
     protected Long userId() throws ApiException {
         if (userId == null) {
             loadUser();
