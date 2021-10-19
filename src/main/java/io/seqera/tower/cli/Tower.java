@@ -9,6 +9,7 @@ import io.seqera.tower.cli.commands.ComputeEnvsCmd;
 import io.seqera.tower.cli.commands.CredentialsCmd;
 import io.seqera.tower.cli.commands.HealthCheckCmd;
 import io.seqera.tower.cli.commands.LaunchesCmd;
+import io.seqera.tower.cli.commands.MembersCmd;
 import io.seqera.tower.cli.commands.OrganizationsCmd;
 import io.seqera.tower.cli.commands.PipelinesCmd;
 import io.seqera.tower.cli.commands.RunsCmd;
@@ -35,6 +36,7 @@ import java.io.PrintWriter;
                 GenerateCompletion.class,
                 HealthCheckCmd.class,
                 LaunchesCmd.class,
+                MembersCmd.class,
                 OrganizationsCmd.class,
                 PipelinesCmd.class,
                 RunsCmd.class,
