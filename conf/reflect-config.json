@@ -1824,6 +1824,12 @@
   "allDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.model.ListMembersResponse",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.model.ListParticipantsResponse",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1863,6 +1869,12 @@
 },
 {
   "name":"io.seqera.tower.model.LsfComputeConfig",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.model.MemberDbDto",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true
