@@ -45,7 +45,7 @@ public class ParticipantsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("participants/participants_list")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "participants", "list", "-o", "organization1", "-w", "workspace1");
+        ExecOut out = exec(mock, "-o", "organization1", "-w", "workspace1", "participants", "list");
 
         assertEquals("", out.stdErr);
         assertEquals(chop(new ParticipantsList("organization1", "workspace1",
@@ -148,7 +148,7 @@ public class ParticipantsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("participants/participants_list")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "participants", "list", "-o", "organization1", "-w", "workspace1", "-t", "TEAM");
+        ExecOut out = exec(mock, "-o", "organization1", "-w", "workspace1", "participants", "list", "-t", "TEAM");
 
         assertEquals("", out.stdErr);
         assertEquals(chop(new ParticipantsList("organization1", "workspace1",
@@ -197,7 +197,7 @@ public class ParticipantsCmdTest extends BaseCmdTest {
                 response().withStatusCode(204)
         );
 
-        ExecOut out = exec(mock, "participants", "delete", "-o", "organization1", "-w", "workspace1", "-n", "julio", "-t", "MEMBER");
+        ExecOut out = exec(mock, "-o", "organization1", "-w", "workspace1", "participants", "delete", "-n", "julio", "-t", "MEMBER");
 
         assertEquals("", out.stdErr);
         assertEquals(new ParticipantDeleted("julio", "workspace1").toString(), out.stdOut);
@@ -230,7 +230,7 @@ public class ParticipantsCmdTest extends BaseCmdTest {
                 response().withStatusCode(204)
         );
 
-        ExecOut out = exec(mock, "participants", "delete", "-o", "organization1", "-w", "workspace1", "-n", "julio", "-t", "TEAM");
+        ExecOut out = exec(mock, "-o", "organization1", "-w", "workspace1", "participants", "delete", "-n", "julio", "-t", "TEAM");
 
         assertEquals("", out.stdErr);
         assertEquals(new ParticipantDeleted("julio", "workspace1").toString(), out.stdOut);
@@ -257,7 +257,7 @@ public class ParticipantsCmdTest extends BaseCmdTest {
                 response().withStatusCode(204)
         );
 
-        ExecOut out = exec(mock, "participants", "leave", "-o", "organization1", "-w", "workspace1");
+        ExecOut out = exec(mock, "-o", "organization1", "-w", "workspace1", "participants", "leave");
 
         assertEquals("", out.stdErr);
         assertEquals(new ParticipantLeft("workspace1").toString(), out.stdOut);
@@ -290,7 +290,7 @@ public class ParticipantsCmdTest extends BaseCmdTest {
                 response().withStatusCode(204)
         );
 
-        ExecOut out = exec(mock, "participants", "change", "-o", "organization1", "-w", "workspace1", "-n", "julio", "-r", "OWNER", "-t", "MEMBER");
+        ExecOut out = exec(mock, "-o", "organization1", "-w", "workspace1", "participants", "change", "-n", "julio", "-r", "OWNER", "-t", "MEMBER");
 
         assertEquals("", out.stdErr);
         assertEquals(new ParticipantChanged("workspace1", "julio", WspRole.OWNER.toString()).toString(), out.stdOut);
@@ -323,7 +323,7 @@ public class ParticipantsCmdTest extends BaseCmdTest {
                 response().withStatusCode(204)
         );
 
-        ExecOut out = exec(mock, "participants", "change", "-o", "organization1", "-w", "workspace1", "-n", "julio", "-r", "OWNER", "-t", "TEAM");
+        ExecOut out = exec(mock,  "-o", "organization1", "-w", "workspace1", "participants", "change", "-n", "julio", "-r", "OWNER", "-t", "TEAM");
 
         assertEquals("", out.stdErr);
         assertEquals(new ParticipantChanged("workspace1", "julio", WspRole.OWNER.toString()).toString(), out.stdOut);
@@ -356,7 +356,7 @@ public class ParticipantsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("participants/participant_add")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "participants", "add", "-o", "organization1", "-w", "workspace1", "-n", "julio", "-t", "MEMBER");
+        ExecOut out = exec(mock, "-o", "organization1", "-w", "workspace1", "participants", "add", "-n", "julio", "-t", "MEMBER");
 
         assertEquals("", out.stdErr);
         assertEquals(new ParticipantAdded(parseJson("{\n" +

@@ -90,7 +90,11 @@ public abstract class AbstractApiCmd extends AbstractCmd {
 
     protected Long orgId() throws ApiException {
         if (orgId == null) {
-            loadOrgAndWorkspaceFromIds();
+            if (app().workspaceId != null) {
+                loadOrgAndWorkspaceFromIds();
+            } else {
+                loadOrgAndWorkspaceFromNames();
+            }
         }
         return orgId;
     }
