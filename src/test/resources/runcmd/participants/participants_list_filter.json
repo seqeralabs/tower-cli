@@ -1,0 +1,35 @@
+{
+  "participants": [
+    {
+      "participantId": 36791779798370,
+      "memberId": 255080245994226,
+      "userName": "julio",
+      "firstName": null,
+      "lastName": null,
+      "email": "julio@seqera.io",
+      "orgRole": "member",
+      "teamId": null,
+      "teamName": null,
+      "wspRole": "admin",
+      "type": "MEMBER",
+      "teamAvatarUrl": null,
+      "userAvatarUrl": "https://www.gravatar.com/avatar/72918a9f674eaa696729917bec58760b?d=404"
+    },
+    {
+      "participantId": 179548688376545,
+      "memberId": null,
+      "userName": null,
+      "firstName": null,
+      "lastName": null,
+      "email": null,
+      "orgRole": null,
+      "teamId": 255717345477198,
+      "teamName": "julio",
+      "wspRole": "launch",
+      "type": "TEAM",
+      "teamAvatarUrl": null,
+      "userAvatarUrl": null
+    }
+  ],
+  "totalSize": 2
+}

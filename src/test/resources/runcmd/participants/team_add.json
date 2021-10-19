@@ -1,0 +1,17 @@
+{
+  "participant": {
+    "participantId": 179548688376545,
+    "memberId": null,
+    "userName": null,
+    "firstName": null,
+    "lastName": null,
+    "email": null,
+    "orgRole": null,
+    "teamId": 255717345477198,
+    "teamName": "team-test-2",
+    "wspRole": "launch",
+    "type": "TEAM",
+    "teamAvatarUrl": null,
+    "userAvatarUrl": null
+  }
+}
