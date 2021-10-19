@@ -7,48 +7,35 @@ import io.seqera.tower.model.DescribeWorkspaceResponse;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import io.seqera.tower.model.UpdateWorkspaceRequest;
 import io.seqera.tower.model.Visibility;
-import picocli.CommandLine;
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Mixin;
+import picocli.CommandLine.Option;
 
 import java.io.IOException;
 
-@CommandLine.Command(
+@Command(
         name = "update",
         description = "Update an existing organization's workspace"
 )
 public class UpdateCmd extends AbstractWorkspaceCmd {
-    @CommandLine.ArgGroup( exclusive = false, heading = "%nUpdate by workspace and organization name:%n")
-    UpdateByName updateByName;
 
-    @CommandLine.ArgGroup(heading = "%nUpdate by workspace ID:%n")
-    UpdateById updateById;
+    @Mixin
+    public WorkspacesMatchOptions ws;
 
-    @CommandLine.Option(names = {"-f", "--fullName"}, description = "The workspace full name")
+    @Option(names = {"-f", "--fullName"}, description = "The workspace full name")
     public String workspaceFullName;
 
-    @CommandLine.Option(names = {"-d", "--description"}, description = "The workspace description")
+    @Option(names = {"-d", "--description"}, description = "The workspace description")
     public String description;
-
-    static class UpdateByName {
-        @CommandLine.Option(names = {"-n", "--name"}, description = "Workspace name", required = true)
-        public String workspaceName;
-
-        @CommandLine.Option(names = {"-o", "--org", "--organization"}, description = "Workspace organization name", required = true)
-        public String organizationName;
-    }
-
-    static class UpdateById {
-        @CommandLine.Option(names = {"-i", "--id"}, description = "Workspace id", required = true)
-        public Long workspaceId;
-    }
 
     @Override
     protected Response exec() throws ApiException, IOException {
         OrgAndWorkspaceDbDto orgAndWorkspaceDbDto;
 
-        if (updateById != null) {
-            orgAndWorkspaceDbDto = workspaceById(updateById.workspaceId);
+        if (ws.match.byId != null) {
+            orgAndWorkspaceDbDto = workspaceById(ws.match.byId.workspaceId);
         } else {
-            orgAndWorkspaceDbDto = orgAndWorkspaceByName(updateByName.workspaceName, updateByName.organizationName);
+            orgAndWorkspaceDbDto = orgAndWorkspaceByName(ws.match.byName.workspaceName, ws.match.byName.organizationName);
         }
 
         UpdateWorkspaceRequest request = new UpdateWorkspaceRequest();

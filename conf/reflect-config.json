@@ -1264,6 +1264,11 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.workspaces.WorkspacesMatchOptions$ByNameOrId",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true
+},
+{
   "name":"io.seqera.tower.cli.commands.workspaces.WorkspacesMatchOptions$MatchById",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
