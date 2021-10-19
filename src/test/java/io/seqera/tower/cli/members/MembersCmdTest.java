@@ -7,7 +7,6 @@ import io.seqera.tower.cli.responses.members.MembersDeleted;
 import io.seqera.tower.cli.responses.members.MembersLeave;
 import io.seqera.tower.cli.responses.members.MembersList;
 import io.seqera.tower.cli.responses.members.MembersUpdate;
-import io.seqera.tower.cli.responses.organizations.OrganizationsDeleted;
 import io.seqera.tower.model.MemberDbDto;
 import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
