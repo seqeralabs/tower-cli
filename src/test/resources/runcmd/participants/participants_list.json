@@ -1,0 +1,80 @@
+{
+  "participants": [
+    {
+      "participantId": 48516118433516,
+      "memberId": 175703974560466,
+      "userName": "jfernandez74",
+      "firstName": null,
+      "lastName": null,
+      "email": "jfernandez74@gmail.com",
+      "orgRole": "owner",
+      "teamId": null,
+      "teamName": null,
+      "wspRole": "owner",
+      "type": "MEMBER",
+      "teamAvatarUrl": null,
+      "userAvatarUrl": "https://www.gravatar.com/avatar/7d3c1ee212a3465233e161b451fb4d05?d=404"
+    },
+    {
+      "participantId": 36791779798370,
+      "memberId": 255080245994226,
+      "userName": "julio",
+      "firstName": null,
+      "lastName": null,
+      "email": "julio@seqera.io",
+      "orgRole": "member",
+      "teamId": null,
+      "teamName": null,
+      "wspRole": "admin",
+      "type": "MEMBER",
+      "teamAvatarUrl": null,
+      "userAvatarUrl": "https://www.gravatar.com/avatar/72918a9f674eaa696729917bec58760b?d=404"
+    },
+    {
+      "participantId": 110330443206779,
+      "memberId": 80726606082762,
+      "userName": "julio2",
+      "firstName": null,
+      "lastName": null,
+      "email": "julio2@seqera.io",
+      "orgRole": "member",
+      "teamId": null,
+      "teamName": null,
+      "wspRole": "launch",
+      "type": "MEMBER",
+      "teamAvatarUrl": null,
+      "userAvatarUrl": null
+    },
+    {
+      "participantId": 110330443206780,
+      "memberId": 80726606082770,
+      "userName": "jordi",
+      "firstName": null,
+      "lastName": null,
+      "email": "jordi@seqera.io",
+      "orgRole": "member",
+      "teamId": null,
+      "teamName": null,
+      "wspRole": "launch",
+      "type": "MEMBER",
+      "teamAvatarUrl": null,
+      "userAvatarUrl": null
+    },
+    {
+      "participantId": 179548688376545,
+      "memberId": null,
+      "userName": null,
+      "firstName": null,
+      "lastName": null,
+      "email": null,
+      "orgRole": null,
+      "teamId": 255717345477198,
+      "teamName": "team-test-2",
+      "wspRole": "launch",
+      "type": "TEAM",
+      "teamAvatarUrl": null,
+      "userAvatarUrl": null
+    }
+  ],
+  "totalSize": 4
+}

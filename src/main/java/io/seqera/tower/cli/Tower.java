@@ -11,11 +11,11 @@ import io.seqera.tower.cli.commands.HealthCheckCmd;
 import io.seqera.tower.cli.commands.LaunchesCmd;
 import io.seqera.tower.cli.commands.MembersCmd;
 import io.seqera.tower.cli.commands.OrganizationsCmd;
+import io.seqera.tower.cli.commands.ParticipantsCmd;
 import io.seqera.tower.cli.commands.PipelinesCmd;
 import io.seqera.tower.cli.commands.RunsCmd;
 import io.seqera.tower.cli.commands.TeamsCmd;
 import io.seqera.tower.cli.commands.WorkspacesCmd;
-import picocli.AutoComplete.GenerateCompletion;
 import picocli.CommandLine;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
@@ -24,6 +24,8 @@ import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
 
 import java.io.PrintWriter;
+
+import static picocli.AutoComplete.GenerateCompletion;
 
 
 @Command(
@@ -38,6 +40,7 @@ import java.io.PrintWriter;
                 LaunchesCmd.class,
                 MembersCmd.class,
                 OrganizationsCmd.class,
+                ParticipantsCmd.class,
                 PipelinesCmd.class,
                 RunsCmd.class,
                 TeamsCmd.class,

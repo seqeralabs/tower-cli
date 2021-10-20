@@ -2,6 +2,7 @@ package io.seqera.tower.cli.commands;
 
 import io.seqera.tower.cli.commands.workspaces.CreateCmd;
 import io.seqera.tower.cli.commands.workspaces.DeleteCmd;
+import io.seqera.tower.cli.commands.workspaces.LeaveCmd;
 import io.seqera.tower.cli.commands.workspaces.ListCmd;
 import io.seqera.tower.cli.commands.workspaces.UpdateCmd;
 import io.seqera.tower.cli.commands.workspaces.ViewCmd;
@@ -16,6 +17,7 @@ import picocli.CommandLine;
                 CreateCmd.class,
                 UpdateCmd.class,
                 ViewCmd.class,
+                LeaveCmd.class,
         }
 )
 public class WorkspacesCmd extends AbstractRootCmd {

@@ -1,0 +1,17 @@
+{
+  "participant": {
+    "participantId": 110330443206779,
+    "memberId": 80726606082762,
+    "userName": "julio",
+    "firstName": null,
+    "lastName": null,
+    "email": "user@seqera.io",
+    "orgRole": "member",
+    "teamId": null,
+    "teamName": null,
+    "wspRole": "launch",
+    "type": "MEMBER",
+    "teamAvatarUrl": null,
+    "userAvatarUrl": null
+  }
+}

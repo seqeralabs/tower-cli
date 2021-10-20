@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.exceptions.OrganizationNotFoundException;
 import io.seqera.tower.cli.exceptions.WorkspaceNotFoundException;
+import io.seqera.tower.cli.responses.participants.ParticipantLeft;
 import io.seqera.tower.cli.responses.workspaces.WorkspaceCreated;
 import io.seqera.tower.cli.responses.workspaces.WorkspaceDeleted;
 import io.seqera.tower.cli.responses.workspaces.WorkspaceList;
@@ -415,4 +416,59 @@ public class WorkspacesCmdTest extends BaseCmdTest {
         assertEquals("", out.stdOut);
         assertEquals(-1, out.exitCode);
     }
+
+    @Test
+    void leaveWorkspaceAsParticipantById(MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("DELETE").withPath("/orgs/27736513644467/workspaces/75887156211589/participants"), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(mock, "workspaces", "leave", "-i", "75887156211589");
+
+        assertEquals("", out.stdErr);
+        assertEquals(new ParticipantLeft("workspace1").toString(), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void leaveWorkspaceAsParticipantByName(MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("DELETE").withPath("/orgs/27736513644467/workspaces/75887156211589/participants"), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(mock, "workspaces", "leave", "-o", "organization1", "-n", "workspace1");
+
+        assertEquals("", out.stdErr);
+        assertEquals(new ParticipantLeft("workspace1").toString(), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
+
 }
