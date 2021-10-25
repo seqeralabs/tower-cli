@@ -1,5 +1,6 @@
 package io.seqera.tower.cli.commands.credentials;
 
+import io.seqera.tower.cli.commands.WithRequiredSubCommands;
 import io.seqera.tower.cli.commands.credentials.create.CreateAwsCmd;
 import io.seqera.tower.cli.commands.credentials.create.CreateAzureCmd;
 import io.seqera.tower.cli.commands.credentials.create.CreateBitbucketCmd;
@@ -24,5 +25,5 @@ import picocli.CommandLine.Command;
                 CreateAzureCmd.class
         }
 )
-public class CreateCmd extends AbstractCredentialsCmd {
+public class CreateCmd extends AbstractCredentialsCmd implements WithRequiredSubCommands {
 }

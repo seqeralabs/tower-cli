@@ -1,5 +1,6 @@
 package io.seqera.tower.cli.commands.credentials;
 
+import io.seqera.tower.cli.commands.WithRequiredSubCommands;
 import io.seqera.tower.cli.commands.credentials.update.UpdateAwsCmd;
 import io.seqera.tower.cli.commands.credentials.update.UpdateAzureCmd;
 import io.seqera.tower.cli.commands.credentials.update.UpdateBitbucketCmd;
@@ -24,5 +25,5 @@ import picocli.CommandLine.Command;
                 UpdateAzureCmd.class
         }
 )
-public class UpdateCmd extends AbstractCredentialsCmd {
+public class UpdateCmd extends AbstractCredentialsCmd implements WithRequiredSubCommands {
 }
