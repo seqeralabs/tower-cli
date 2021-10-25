@@ -1,20 +1,21 @@
 package io.seqera.tower.cli.commands.teams;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.commands.TeamsCmd;
+import io.seqera.tower.cli.exceptions.MemberNotFoundException;
 import io.seqera.tower.cli.exceptions.OrganizationNotFoundException;
-import io.seqera.tower.cli.exceptions.WorkspaceNotFoundException;
+import io.seqera.tower.model.ListMembersResponse;
 import io.seqera.tower.model.ListWorkspacesAndOrgResponse;
+import io.seqera.tower.model.MemberDbDto;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.ParentCommand;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Command
 abstract public class AbstractTeamsCmd extends AbstractApiCmd {
@@ -50,5 +51,26 @@ abstract public class AbstractTeamsCmd extends AbstractApiCmd {
         }
 
         return orgAndWorkspaceDbDtoList.stream().findFirst().orElse(null);
+    }
+
+    protected MemberDbDto findMemberByUsername(Long orgId, Long teamId, String username) throws ApiException {
+        ListMembersResponse listMembersResponse = api().listOrganizationTeamMembers(orgId, teamId);
+
+        if (listMembersResponse.getMembers() == null) {
+            throw new MemberNotFoundException(orgId, username);
+        }
+
+        MemberDbDto member = listMembersResponse
+                .getMembers()
+                .stream()
+                .filter(item -> Objects.equals(item.getUserName(), username))
+                .findFirst()
+                .orElse(null);
+
+        if (member == null) {
+            throw new MemberNotFoundException(orgId, username);
+        }
+
+        return member;
     }
 }

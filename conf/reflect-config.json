@@ -1173,6 +1173,18 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.teams.MembersCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.teams.members.AddCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.workspaces.AbstractWorkspaceCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
@@ -1436,6 +1448,18 @@
   "allDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.cli.responses.teams.members.TeamMembersList",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.workspaces.WorkspaceList",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.cli.utils.VersionProvider",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1484,6 +1508,12 @@
 },
 {
   "name":"io.seqera.tower.model.AddParticipantResponse",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.model.AddTeamMemberResponse",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true
@@ -1614,6 +1644,12 @@
 },
 {
   "name":"io.seqera.tower.model.CreatePipelineResponse",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.model.CreateTeamMemberRequest",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true
@@ -2474,16 +2510,16 @@
 {
   "name":"org.glassfish.jersey.internal.util.collection.ConcurrentHashMapV8",
   "fields":[
-    {"name":"baseCount", "allowUnsafeAccess":true}, 
-    {"name":"cellsBusy", "allowUnsafeAccess":true}, 
-    {"name":"sizeCtl", "allowUnsafeAccess":true}, 
-    {"name":"transferIndex", "allowUnsafeAccess":true}, 
-    {"name":"transferOrigin", "allowUnsafeAccess":true}
+    {"name":"baseCount"}, 
+    {"name":"cellsBusy"}, 
+    {"name":"sizeCtl"}, 
+    {"name":"transferIndex"}, 
+    {"name":"transferOrigin"}
   ]
 },
 {
   "name":"org.glassfish.jersey.internal.util.collection.ConcurrentHashMapV8$CounterCell",
-  "fields":[{"name":"value", "allowUnsafeAccess":true}]
+  "fields":[{"name":"value"}]
 },
 {
   "name":"org.glassfish.jersey.jackson.JacksonFeature",
