@@ -25,7 +25,7 @@ public class RunList extends Response {
             return;
         }
 
-        TableList table = new TableList(out, 6, "ID", "Status", "Project Name", "Run Name", "Username", "Submit Date").sortBy(0);
+        TableList table = new TableList(out, 6, "ID", "Status", "Project Name", "Run Name", "Username", "Submit Date");
         table.setPrefix("    ");
         workflows.forEach(wf -> table.addRow(
                 wf.getWorkflow().getId(),
