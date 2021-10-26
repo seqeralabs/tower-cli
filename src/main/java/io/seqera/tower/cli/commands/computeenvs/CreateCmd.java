@@ -1,7 +1,6 @@
 package io.seqera.tower.cli.commands.computeenvs;
 
 
-import io.seqera.tower.cli.commands.WithRequiredSubCommands;
 import io.seqera.tower.cli.commands.computeenvs.create.CreateAltairCmd;
 import io.seqera.tower.cli.commands.computeenvs.create.CreateAwsCmd;
 import io.seqera.tower.cli.commands.computeenvs.create.CreateAwsManualCmd;

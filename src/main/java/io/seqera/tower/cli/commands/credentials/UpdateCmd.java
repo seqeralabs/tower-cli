@@ -1,6 +1,5 @@
 package io.seqera.tower.cli.commands.credentials;
 
-import io.seqera.tower.cli.commands.WithRequiredSubCommands;
 import io.seqera.tower.cli.commands.credentials.update.UpdateAwsCmd;
 import io.seqera.tower.cli.commands.credentials.update.UpdateAzureCmd;
 import io.seqera.tower.cli.commands.credentials.update.UpdateBitbucketCmd;

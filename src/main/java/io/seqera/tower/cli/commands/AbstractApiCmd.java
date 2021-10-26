@@ -245,10 +245,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     }
 
     protected Response exec() throws ApiException, IOException {
-        if(getSpec().subcommands().isEmpty()){
-            throw new ShowUsageException();
-        }
-        throw new CommandLine.ParameterException(getSpec().commandLine(), "Missing required subcommand");
+        throw new ShowUsageException(getSpec());
     }
 
 }

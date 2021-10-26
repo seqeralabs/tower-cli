@@ -118,7 +118,7 @@ class CredentialsCmdTest extends BaseCmdTest {
         ExecOut out = exec(mock, "credentials");
 
         if (out.app != null) {
-            assertEquals(errorMessage(out.app, new ShowUsageException()), out.stdErr);
+            assertEquals(errorMessage(out.app, new ShowUsageException(out.app.spec.subcommands().get("credentials").getCommandSpec())), out.stdErr);
             assertEquals("", out.stdOut);
             assertEquals(-1, out.exitCode);
         }

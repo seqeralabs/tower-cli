@@ -1,6 +1,5 @@
 package io.seqera.tower.cli.commands.credentials;
 
-import io.seqera.tower.cli.commands.WithRequiredSubCommands;
 import io.seqera.tower.cli.commands.credentials.create.CreateAwsCmd;
 import io.seqera.tower.cli.commands.credentials.create.CreateAzureCmd;
 import io.seqera.tower.cli.commands.credentials.create.CreateBitbucketCmd;
