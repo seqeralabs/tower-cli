@@ -8,17 +8,17 @@ import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.MemberDbDto;
 
 public class TeamMembersList extends Response {
-    Long teamId;
+    String teamName;
     List<MemberDbDto> members;
 
-    public TeamMembersList(Long teamId, List<MemberDbDto> members) {
-        this.teamId = teamId;
+    public TeamMembersList(String teamName, List<MemberDbDto> members) {
+        this.teamName = teamName;
         this.members = members;
     }
 
     @Override
     public void toString(PrintWriter out) {
-        out.println(ansi(String.format("%n  @|bold Members for team '%d':|@%n", teamId)));
+        out.println(ansi(String.format("%n  @|bold Members for team '%s':|@%n", teamName)));
 
         if (members.isEmpty()) {
             out.println(ansi("    @|yellow No team members found|@"));

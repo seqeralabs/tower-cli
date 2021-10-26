@@ -1,17 +1,16 @@
 package io.seqera.tower.cli.teams.members;
 
-import org.junit.jupiter.api.Test;
-
-import java.util.Arrays;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
-import io.seqera.tower.cli.responses.teams.TeamsList;
+import io.seqera.tower.cli.responses.teams.members.TeamMemberDeleted;
+import io.seqera.tower.cli.responses.teams.members.TeamMembersAdd;
 import io.seqera.tower.cli.responses.teams.members.TeamMembersList;
 import io.seqera.tower.model.MemberDbDto;
-import io.seqera.tower.model.TeamDbDto;
+import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
+
+import java.util.Arrays;
 
 import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
 import static org.apache.commons.lang3.StringUtils.chop;
@@ -31,22 +30,28 @@ public class TeamMembersCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(2)
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
-                request().withMethod("GET").withPath("/orgs/{orgId}/teams/{teamId}/members"), exactly(1)
+                request().withMethod("GET").withPath("/orgs/27736513644467/teams"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("teams/teams_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/orgs/27736513644467/teams/267477500890054/members"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("teams/members/members_list")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "teams", "members", "-i", "267477500890054");
+        ExecOut out = exec(mock, "teams", "members", "-o", "organization1", "-t", "team1");
 
         assertEquals("", out.stdErr);
-        assertEquals(chop(new TeamMembersList(267477500890054L, Arrays.asList(
-                parseJson("  {\n" +
+        assertEquals(chop(new TeamMembersList("team1", Arrays.asList(
+                parseJson("   {\n" +
                         "      \"memberId\": 80726606082762,\n" +
                         "      \"userName\": \"julio2\",\n" +
                         "      \"email\": \"julio2@seqera.io\",\n" +
@@ -65,13 +70,6 @@ public class TeamMembersCmdTest extends BaseCmdTest {
                         "      \"role\": \"member\"\n" +
                         "    }", MemberDbDto.class),
                 parseJson(" {\n" +
-                        "      \"teamId\": 255717345477198,\n" +
-                        "      \"name\": \"team-test-2\",\n" +
-                        "      \"description\": \"a new team\",\n" +
-                        "      \"avatarUrl\": null,\n" +
-                        "      \"membersCount\": 0\n" +
-                        "    }", MemberDbDto.class),
-                parseJson(" {\n" +
                         "      \"memberId\": 199966343791197,\n" +
                         "      \"userName\": \"julio7899\",\n" +
                         "      \"email\": \"julio7899@seqera.io\",\n" +
@@ -85,12 +83,83 @@ public class TeamMembersCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testAdd(MockServerClient mock) {
+    void testAdd(MockServerClient mock) throws JsonProcessingException {
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
 
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/orgs/27736513644467/teams"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("teams/teams_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/orgs/27736513644467/teams/267477500890054/members")
+                        .withBody("{\"userNameOrEmail\":\"abc@seqera.io\"}").withContentType(MediaType.APPLICATION_JSON), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("teams/members/member_add")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "teams", "members", "-o", "organization1", "-t", "team1", "add", "-m", "abc@seqera.io");
+
+        assertEquals("", out.stdErr);
+        assertEquals(new TeamMembersAdd("team1", parseJson("{\n" +
+                "    \"memberId\": 42005399330152,\n" +
+                "    \"userName\": \"abc\",\n" +
+                "    \"email\": \"abc@seqera.io\",\n" +
+                "    \"firstName\": null,\n" +
+                "    \"lastName\": null,\n" +
+                "    \"avatar\": null,\n" +
+                "    \"role\": \"member\"\n" +
+                "  }", MemberDbDto.class)).toString(), out.stdOut);
+        assertEquals(0, out.exitCode);
     }
 
     @Test
     void testDelete(MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
 
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/orgs/27736513644467/teams"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("teams/teams_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/orgs/27736513644467/teams/267477500890054/members"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("teams/members/members_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("DELETE").withPath("/orgs/27736513644467/teams/267477500890054/members/80726606082762/delete"), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(mock, "teams", "members", "-o", "organization1", "-t", "team1", "delete", "-m", "julio2");
+
+        assertEquals("", out.stdErr);
+        assertEquals(new TeamMemberDeleted("team1", "julio2").toString(), out.stdOut);
+        assertEquals(0, out.exitCode);
     }
 }

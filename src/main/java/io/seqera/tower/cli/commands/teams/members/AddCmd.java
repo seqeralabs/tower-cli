@@ -8,6 +8,8 @@ import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.teams.members.TeamMembersAdd;
 import io.seqera.tower.model.AddTeamMemberResponse;
 import io.seqera.tower.model.CreateTeamMemberRequest;
+import io.seqera.tower.model.OrgAndWorkspaceDbDto;
+import io.seqera.tower.model.TeamDbDto;
 import picocli.CommandLine;
 
 import java.io.IOException;
@@ -30,11 +32,15 @@ public class AddCmd extends AbstractApiCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
+        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = parent.findOrganizationByName(parent.organizationName);
+
+        TeamDbDto team = parent.findTeamByName(orgAndWorkspaceDbDto.getOrgId(), parent.teamName);
+
         CreateTeamMemberRequest request = new CreateTeamMemberRequest();
         request.setUserNameOrEmail(userNameOrEmail);
 
-        AddTeamMemberResponse response = api().createOrganizationTeamMember(orgId(), parent.teamId, request);
+        AddTeamMemberResponse response = api().createOrganizationTeamMember(orgAndWorkspaceDbDto.getOrgId(), team.getTeamId(), request);
 
-        return new TeamMembersAdd(parent.teamId, response.getMember());
+        return new TeamMembersAdd(parent.teamName, response.getMember());
     }
 }

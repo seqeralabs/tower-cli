@@ -6,10 +6,13 @@ import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.commands.TeamsCmd;
 import io.seqera.tower.cli.exceptions.MemberNotFoundException;
 import io.seqera.tower.cli.exceptions.OrganizationNotFoundException;
+import io.seqera.tower.cli.exceptions.TeamNotFoundException;
 import io.seqera.tower.model.ListMembersResponse;
+import io.seqera.tower.model.ListTeamResponse;
 import io.seqera.tower.model.ListWorkspacesAndOrgResponse;
 import io.seqera.tower.model.MemberDbDto;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
+import io.seqera.tower.model.TeamDbDto;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.ParentCommand;
 
@@ -18,7 +21,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Command
-abstract public class AbstractTeamsCmd extends AbstractApiCmd {
+public abstract class AbstractTeamsCmd extends AbstractApiCmd {
 
     @ParentCommand
     protected TeamsCmd parent;
@@ -31,7 +34,7 @@ abstract public class AbstractTeamsCmd extends AbstractApiCmd {
         return parent.app();
     }
 
-    protected OrgAndWorkspaceDbDto findOrganizationByName(String organizationName) throws ApiException {
+    public OrgAndWorkspaceDbDto findOrganizationByName(String organizationName) throws ApiException {
         ListWorkspacesAndOrgResponse workspacesAndOrgResponse = api().listWorkspacesUser(userId());
 
         if (workspacesAndOrgResponse.getOrgsAndWorkspaces() == null) {
@@ -53,24 +56,33 @@ abstract public class AbstractTeamsCmd extends AbstractApiCmd {
         return orgAndWorkspaceDbDtoList.stream().findFirst().orElse(null);
     }
 
-    protected MemberDbDto findMemberByUsername(Long orgId, Long teamId, String username) throws ApiException {
+    public MemberDbDto findMemberByUsername(Long orgId, Long teamId, String username) throws ApiException {
         ListMembersResponse listMembersResponse = api().listOrganizationTeamMembers(orgId, teamId);
 
         if (listMembersResponse.getMembers() == null) {
             throw new MemberNotFoundException(orgId, username);
         }
 
-        MemberDbDto member = listMembersResponse
+        return listMembersResponse
                 .getMembers()
                 .stream()
                 .filter(item -> Objects.equals(item.getUserName(), username))
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(()->new MemberNotFoundException(orgId, username));
+    }
 
-        if (member == null) {
-            throw new MemberNotFoundException(orgId, username);
+    public TeamDbDto findTeamByName(Long orgId, String teamName) throws ApiException {
+        ListTeamResponse listTeamResponse = api().listOrganizationTeams(orgId, null, null);
+
+        if (listTeamResponse == null) {
+            throw new TeamNotFoundException(orgId, teamName);
         }
 
-        return member;
+        return listTeamResponse
+                .getTeams()
+                .stream()
+                .filter(item -> Objects.equals(item.getName(), teamName))
+                .findFirst()
+                .orElseThrow(() -> new TeamNotFoundException(orgId, teamName));
     }
 }
