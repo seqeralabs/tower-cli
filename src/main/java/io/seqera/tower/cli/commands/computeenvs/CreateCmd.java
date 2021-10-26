@@ -36,7 +36,7 @@ import picocli.CommandLine.Command;
                 CreateAzureManualCmd.class
         }
 )
-public class CreateCmd extends AbstractComputeEnvCmd implements WithRequiredSubCommands {
+public class CreateCmd extends AbstractComputeEnvCmd  {
 
 
 }

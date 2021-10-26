@@ -15,6 +15,7 @@ import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import io.seqera.tower.model.User;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.logging.LoggingFeature;
+import picocli.CommandLine;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -244,7 +245,10 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     }
 
     protected Response exec() throws ApiException, IOException {
-        throw new ShowUsageException();
+        if(getSpec().subcommands().isEmpty()){
+            throw new ShowUsageException();
+        }
+        throw new CommandLine.ParameterException(getSpec().commandLine(), "Missing required subcommand");
     }
 
 }

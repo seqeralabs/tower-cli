@@ -25,5 +25,5 @@ import picocli.CommandLine.Command;
                 UpdateAzureCmd.class
         }
 )
-public class UpdateCmd extends AbstractCredentialsCmd implements WithRequiredSubCommands {
+public class UpdateCmd extends AbstractCredentialsCmd {
 }
