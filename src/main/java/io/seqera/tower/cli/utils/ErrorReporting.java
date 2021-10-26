@@ -2,6 +2,7 @@ package io.seqera.tower.cli.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.ApiException;
+import io.seqera.tower.StringUtil;
 import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.exceptions.ApiExceptionMessage;
 import io.seqera.tower.cli.exceptions.ShowUsageException;
@@ -25,7 +26,13 @@ public class ErrorReporting {
     public static void errorMessage(Tower app, PrintWriter err, Exception e) {
 
         if (e instanceof ShowUsageException) {
-            app.spec.commandLine().usage(err);
+
+            String message = e.getMessage();
+            if(message != null && !message.trim().equals("")) {
+                err.append(CommandLine.Help.Ansi.AUTO.string((String.format("%n@|bold,red ERROR:|@ @|red %s|@%n", message))));
+            }
+            ((ShowUsageException)e).getSpecs().commandLine().usage(err);
+
             return;
         }
 

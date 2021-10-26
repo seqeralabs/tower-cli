@@ -1,5 +1,7 @@
 package io.seqera.tower.cli.commands.computeenvs;
 
+
+import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.computeenvs.create.CreateAltairCmd;
 import io.seqera.tower.cli.commands.computeenvs.create.CreateAwsCmd;
 import io.seqera.tower.cli.commands.computeenvs.create.CreateAwsManualCmd;
@@ -13,7 +15,11 @@ import io.seqera.tower.cli.commands.computeenvs.create.CreateK8sCmd;
 import io.seqera.tower.cli.commands.computeenvs.create.CreateLsfCmd;
 import io.seqera.tower.cli.commands.computeenvs.create.CreateSlurmCmd;
 import io.seqera.tower.cli.commands.computeenvs.create.CreateUgeCmd;
+import io.seqera.tower.cli.exceptions.ShowUsageException;
+import io.seqera.tower.cli.responses.Response;
 import picocli.CommandLine.Command;
+
+import java.io.IOException;
 
 @Command(
         name = "create",
@@ -34,5 +40,9 @@ import picocli.CommandLine.Command;
                 CreateAzureManualCmd.class
         }
 )
-public class CreateCmd extends AbstractComputeEnvCmd {
+public class CreateCmd extends AbstractComputeEnvCmd  {
+    @Override
+    protected Response exec() throws ApiException, IOException {
+        throw new ShowUsageException(getSpec(), "Missing Required Subcommand");
+    }
 }
