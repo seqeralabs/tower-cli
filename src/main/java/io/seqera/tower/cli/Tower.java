@@ -9,6 +9,7 @@ import io.seqera.tower.cli.commands.ComputeEnvsCmd;
 import io.seqera.tower.cli.commands.CredentialsCmd;
 import io.seqera.tower.cli.commands.HealthCheckCmd;
 import io.seqera.tower.cli.commands.LaunchesCmd;
+import io.seqera.tower.cli.commands.MembersCmd;
 import io.seqera.tower.cli.commands.OrganizationsCmd;
 import io.seqera.tower.cli.commands.ParticipantsCmd;
 import io.seqera.tower.cli.commands.PipelinesCmd;
@@ -28,7 +29,7 @@ import static picocli.AutoComplete.GenerateCompletion;
 
 
 @Command(
-        name = "towr",
+        name = "tw",
         description = "Nextflow Tower CLI",
         subcommands = {
                 ActionsCmd.class,
@@ -37,6 +38,7 @@ import static picocli.AutoComplete.GenerateCompletion;
                 GenerateCompletion.class,
                 HealthCheckCmd.class,
                 LaunchesCmd.class,
+                MembersCmd.class,
                 OrganizationsCmd.class,
                 ParticipantsCmd.class,
                 PipelinesCmd.class,

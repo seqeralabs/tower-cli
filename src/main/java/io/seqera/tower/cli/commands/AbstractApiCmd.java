@@ -5,12 +5,14 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.api.DefaultApi;
 import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.exceptions.NoComputeEnvironmentException;
+import io.seqera.tower.cli.exceptions.OrganizationNotFoundException;
 import io.seqera.tower.cli.exceptions.ShowUsageException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.exceptions.WorkspaceNotFoundException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.ListComputeEnvsResponseEntry;
+import io.seqera.tower.model.ListWorkspacesAndOrgResponse;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import io.seqera.tower.model.User;
 import org.glassfish.jersey.client.ClientConfig;
@@ -18,8 +20,11 @@ import org.glassfish.jersey.logging.LoggingFeature;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import static io.seqera.tower.cli.utils.ErrorReporting.errorMessage;
 import static io.seqera.tower.cli.utils.JsonHelper.prettyJson;
@@ -164,6 +169,24 @@ public abstract class AbstractApiCmd extends AbstractCmd {
             serverUrl = app().url.replaceFirst("api\\.", "").replaceFirst("/api", "");
         }
         return serverUrl;
+    }
+
+    protected OrgAndWorkspaceDbDto findOrganizationByName(String organizationName) throws ApiException {
+        ListWorkspacesAndOrgResponse workspacesAndOrgResponse = api().listWorkspacesUser(userId());
+
+        if (workspacesAndOrgResponse.getOrgsAndWorkspaces() == null) {
+            throw new OrganizationNotFoundException(organizationName);
+        }
+
+        List<OrgAndWorkspaceDbDto> orgAndWorkspaceDbDtoList = workspacesAndOrgResponse
+                .getOrgsAndWorkspaces()
+                .stream()
+                .filter(
+                        item -> Objects.equals(item.getWorkspaceName(), null) && Objects.equals(item.getOrgName(), organizationName)
+                )
+                .collect(Collectors.toList());
+
+        return orgAndWorkspaceDbDtoList.stream().findFirst().orElseThrow(() -> new OrganizationNotFoundException(organizationName));
     }
 
     private void loadUser() throws ApiException {
