@@ -11,5 +11,5 @@ v0.1 - 16 Sept 2021
 - Add command 'launch' to launch pipelines
 - Add command 'pipelines' to list/create/delete/view/update workspace pipelines
 - Add command 'compute-envs' to create/delete/view/list workspace compute environments
-- Allow to create compute environments using a json file 'towr compute-envs create json --config=<..>'
-- Add command 'generate-completion' to create the bash auto-completion script 'source <(towr generate-completion)'
+- Allow to create compute environments using a json file 'tw compute-envs create json --config=<..>'
+- Add command 'generate-completion' to create the bash auto-completion script 'source <(tw generate-completion)'
