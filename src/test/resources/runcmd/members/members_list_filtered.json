@@ -1,0 +1,14 @@
+{
+  "members": [
+    {
+      "memberId": 255080245994226,
+      "userName": "julio",
+      "email": "julio@seqera.io",
+      "firstName": null,
+      "lastName": null,
+      "avatar": "https://www.gravatar.com/avatar/72918a9f674eaa696729917bec58760b?d=404",
+      "role": "member"
+    }
+  ],
+  "totalSize": 1
+}
