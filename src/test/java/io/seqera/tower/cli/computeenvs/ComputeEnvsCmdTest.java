@@ -30,6 +30,7 @@ import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
 import static io.seqera.tower.cli.utils.JsonHelper.prettyJson;
 import static org.apache.commons.lang3.StringUtils.chop;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
@@ -272,5 +273,10 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
         assertEquals(0, out.exitCode);
     }
 
-
+    @Test
+    public void testCreateWithoutSubCommands(MockServerClient mock) {
+        ExecOut out = exec(mock, "compute-envs", "create");
+        assertEquals(2,out.exitCode);
+        assertTrue(out.stdErr.contains("Missing required subcommand"));
+    }
 }

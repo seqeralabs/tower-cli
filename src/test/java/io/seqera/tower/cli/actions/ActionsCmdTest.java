@@ -23,6 +23,7 @@ import static io.seqera.tower.cli.commands.AbstractApiCmd.USER_WORKSPACE_NAME;
 import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
 import static org.apache.commons.lang3.StringUtils.chop;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
@@ -541,6 +542,8 @@ public class ActionsCmdTest extends BaseCmdTest {
         assertEquals(errorMessage(out.app, new TowerException(String.format("The action is already set to '%s'", "ACTIVE"))), out.stdErr);
     }
 
+
+
     @Test
     void testActionPauseError(MockServerClient mock) throws IOException {
         mock.reset();
@@ -586,5 +589,12 @@ public class ActionsCmdTest extends BaseCmdTest {
         assertEquals("", out.stdOut);
         assertEquals(-1, out.exitCode);
         assertEquals(errorMessage(out.app, new TowerException(String.format("An error has occur while setting the action '%s' to '%s'", "hello", "PAUSE"))), out.stdErr);
+    }
+
+    @Test
+    public void testCreateWithoutSubCommands(MockServerClient mock) {
+        ExecOut out = exec(mock, "actions", "create");
+        assertEquals(2,out.exitCode);
+        assertTrue(out.stdErr.contains("Missing required subcommand"));
     }
 }
