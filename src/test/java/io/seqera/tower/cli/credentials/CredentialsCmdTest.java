@@ -22,6 +22,7 @@ import static io.seqera.tower.cli.commands.AbstractApiCmd.USER_WORKSPACE_NAME;
 import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
 import static org.apache.commons.lang3.StringUtils.chop;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
@@ -121,6 +122,18 @@ class CredentialsCmdTest extends BaseCmdTest {
             assertEquals(errorMessage(out.app, new ShowUsageException(out.app.spec.subcommands().get("credentials").getCommandSpec())), out.stdErr);
             assertEquals("", out.stdOut);
             assertEquals(-1, out.exitCode);
+        }
+    }
+
+    @Test
+    void testMissingSubcommand(MockServerClient mock) {
+
+        ExecOut out = exec(mock, "credentials","create");
+
+        if (out.app != null) {
+            assertEquals("", out.stdOut);
+            assertEquals(-1, out.exitCode);
+            assertTrue(out.stdErr.contains("Missing Required Subcommand"));
         }
     }
 

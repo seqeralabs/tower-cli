@@ -595,5 +595,6 @@ public class ActionsCmdTest extends BaseCmdTest {
     public void testCreateWithoutSubCommands(MockServerClient mock) {
         ExecOut out = exec(mock, "actions", "create");
         assertEquals(-1, out.exitCode);
+        assertTrue(out.stdErr.contains("Missing Required Subcommand"));
     }
 }

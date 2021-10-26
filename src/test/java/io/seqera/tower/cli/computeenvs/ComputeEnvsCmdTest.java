@@ -277,5 +277,6 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
     public void testCreateWithoutSubCommands(MockServerClient mock) {
         ExecOut out = exec(mock, "compute-envs", "create");
         assertEquals(-1, out.exitCode);
+        assertTrue(out.stdErr.contains("Missing Required Subcommand"));
     }
 }
