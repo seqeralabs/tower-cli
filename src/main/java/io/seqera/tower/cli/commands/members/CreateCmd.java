@@ -19,7 +19,7 @@ public class CreateCmd extends AbstractMembersClass {
     @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization's name identifier", required = true)
     public String organizationName;
 
-    @CommandLine.Option(names = {"-u", "--user"}, description = "User email to add as organization's member")
+    @CommandLine.Option(names = {"-u", "--user"}, description = "User email to add as organization's member", required = true)
     public String user;
 
     @Override

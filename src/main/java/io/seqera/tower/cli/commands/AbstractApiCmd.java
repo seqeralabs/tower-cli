@@ -186,11 +186,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
                 )
                 .collect(Collectors.toList());
 
-        if (orgAndWorkspaceDbDtoList.isEmpty()) {
-            throw new OrganizationNotFoundException(organizationName);
-        }
-
-        return orgAndWorkspaceDbDtoList.stream().findFirst().orElse(null);
+        return orgAndWorkspaceDbDtoList.stream().findFirst().orElseThrow(() -> new OrganizationNotFoundException(organizationName));
     }
 
     private void loadUser() throws ApiException {

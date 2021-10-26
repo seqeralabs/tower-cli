@@ -18,7 +18,7 @@ public class DeleteCmd extends AbstractMembersClass{
     @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization's name identifier", required = true)
     public String organizationName;
 
-    @CommandLine.Option(names = {"-u", "--user"}, description = "Username or email of user to delete from organization's members")
+    @CommandLine.Option(names = {"-u", "--user"}, description = "Username or email of user to delete from organization's members", required = true)
     public String user;
 
     @Override

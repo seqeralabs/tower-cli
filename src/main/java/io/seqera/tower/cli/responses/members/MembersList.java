@@ -26,7 +26,7 @@ public class MembersList extends Response {
             return;
         }
 
-        TableList table = new TableList(out, 4, "ID", "Username", "Email", "Role").sortBy(0);
+        TableList table = new TableList(out, 4, "ID", "Username", "Email", "Role");
         table.setPrefix("    ");
         members.forEach(element -> {
             table.addRow(element.getMemberId().toString(), element.getUserName(), element.getEmail(), element.getRole().toString());
