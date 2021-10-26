@@ -108,7 +108,7 @@ public class RunView extends Response {
             statsTable.addRow("Running", workflowLoad.getRunning().toString());
             statsTable.addRow("Cached", workflowLoad.getCached().toString());
             statsTable.addRow("Succeeded", workflowLoad.getSucceeded().toString());
-            statsTable.addRow("getFailed", workflowLoad.getFailed().toString());
+            statsTable.addRow("Failed", workflowLoad.getFailed().toString());
             statsTable.print();
         }
 
