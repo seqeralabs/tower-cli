@@ -1,0 +1,32 @@
+{
+  "members": [
+    {
+      "memberId": 80726606082762,
+      "userName": "julio2",
+      "email": "julio2@seqera.io",
+      "firstName": null,
+      "lastName": null,
+      "avatar": null,
+      "role": "member"
+    },
+    {
+      "memberId": 142050384398323,
+      "userName": "julio789",
+      "email": "julio789@seqera.io",
+      "firstName": null,
+      "lastName": null,
+      "avatar": null,
+      "role": "member"
+    },
+    {
+      "memberId": 199966343791197,
+      "userName": "julio7899",
+      "email": "julio7899@seqera.io",
+      "firstName": null,
+      "lastName": null,
+      "avatar": null,
+      "role": "member"
+    }
+  ],
+  "totalSize": 3
+}

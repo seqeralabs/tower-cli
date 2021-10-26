@@ -1,0 +1,11 @@
+{
+  "member": {
+    "memberId": 42005399330152,
+    "userName": "abc",
+    "email": "abc@seqera.io",
+    "firstName": null,
+    "lastName": null,
+    "avatar": null,
+    "role": "member"
+  }
+}

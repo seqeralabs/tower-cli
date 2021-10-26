@@ -4,6 +4,7 @@ package io.seqera.tower.cli.commands;
 import io.seqera.tower.cli.commands.teams.CreateCmd;
 import io.seqera.tower.cli.commands.teams.DeleteCmd;
 import io.seqera.tower.cli.commands.teams.ListCmd;
+import io.seqera.tower.cli.commands.teams.MembersCmd;
 import picocli.CommandLine;
 
 @CommandLine.Command(
@@ -12,7 +13,8 @@ import picocli.CommandLine;
         subcommands = {
                 ListCmd.class,
                 CreateCmd.class,
-                DeleteCmd.class
+                DeleteCmd.class,
+                MembersCmd.class,
         }
 )
 public class TeamsCmd extends AbstractRootCmd {
