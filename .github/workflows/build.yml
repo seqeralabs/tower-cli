@@ -51,13 +51,13 @@ jobs:
       - name: Upload linux native image artifact
         uses: actions/upload-artifact@v2
         with:
-          name: towr_${{ steps.extract-version.outputs.VERSION }}_linux
-          path: build/graal/towr
+          name: tw_${{ steps.extract-version.outputs.VERSION }}_linux
+          path: build/graal/tw
 
       - name: Binary tests
         run: ./gradlew cleanTest test
         env:
-          TOWER_CLI: build/graal/towr
+          TOWER_CLI: build/graal/tw
 
       - name: Binary tests reports
         uses: actions/upload-artifact@v2
@@ -106,13 +106,13 @@ jobs:
       - name: Upload Mac native image artifact
         uses: actions/upload-artifact@v2
         with:
-          name: towr_${{ steps.extract-version.outputs.VERSION }}_mac
-          path: build/graal/towr
+          name: tw_${{ steps.extract-version.outputs.VERSION }}_mac
+          path: build/graal/tw
 
       - name: Binary tests
         run: ./gradlew cleanTest test
         env:
-          TOWER_CLI: build/graal/towr
+          TOWER_CLI: build/graal/tw
 
       - name: Binary tests reports
         uses: actions/upload-artifact@v2
@@ -161,13 +161,13 @@ jobs:
       - name: Upload Windows native image artifact
         uses: actions/upload-artifact@v2
         with:
-          name: towr_${{ steps.extract-version.outputs.VERSION }}_windows
-          path: build/graal/towr.exe
+          name: tw_${{ steps.extract-version.outputs.VERSION }}_windows
+          path: build/graal/tw.exe
 
       - name: Binary tests
         run: ./gradlew cleanTest test
         env:
-          TOWER_CLI: build/graal/towr.exe
+          TOWER_CLI: build/graal/tw.exe
 
       - name: Binary tests reports
         uses: actions/upload-artifact@v2

@@ -4,7 +4,7 @@ Proof of concept of Tower command line client app based on Java native compilati
 
 ## Installation
 
-From the last Github action at artifacts section, download the binary for your OS. Unzip it, give it execution permissions with `chmod +x ./towr` and move it into a folder that it's in your path (ex: `sudo mv ./towr /usr/local/bin/towr`)
+From the last Github action at artifacts section, download the binary for your OS. Unzip it, give it execution permissions with `chmod +x ./tw` and move it into a folder that it's in your path (ex: `sudo mv ./tw /usr/local/bin/tw`)
 
 ## Build binary development version
 
@@ -25,12 +25,12 @@ From the last Github action at artifacts section, download the binary for your O
 4. then run
 
     ```
-    ./build/graal/towr
+    ./build/graal/tw
     ```
 
 ## Run non-binary development version
 
-You can run a non-binary development version running the script `./towr` at the root of this repository.
+You can run a non-binary development version running the script `./tw` at the root of this repository.
 
 ## Configuration
 
@@ -45,7 +45,7 @@ To use the command line you need to define these environment variables (they als
 To install the autocomplete only for the current session run:
 
 ```
-source <(towr generate-completion) 
+source <(tw generate-completion) 
 ```
 
 ## Tutorial
@@ -62,64 +62,64 @@ _NOTE: If you don't set the `TOWER_WORKSPACE_ID` the user workspace will be used
 First test that it is working
 
 ```
-towr -h
+tw -h
 ```
 
 Install the autocomplete on your current session
 
 ```
-source <(towr generate-completion)
+source <(tw generate-completion)
 ```
 
 Check available create credentials commands
 
 ```
-towr credentials create -h
+tw credentials create -h
 ```
 
 Check help and create AWS credentials
 
 ```
-towr credentials create aws -h
-towr credentials create aws -n aws -a <your aws access key> -s <your aws secret key> 
-towr credentials list
+tw credentials create aws -h
+tw credentials create aws -n aws -a <your aws access key> -s <your aws secret key> 
+tw credentials list
 ```
 
 Create an AWS compute environment with automatic provisioning of compute resources
 
 ```
-towr compute-envs create aws -n demo -r eu-west-1 -w s3://nextflow-ci/jordeu --max-cpus=123 --fusion
+tw compute-envs create aws -n demo -r eu-west-1 -w s3://nextflow-ci/jordeu --max-cpus=123 --fusion
 ```
 
 Create a new pipeline at launchpad
 _NOTE: the params option has to be a file. Here we are using Bash pipes to convert a command output into a file automatically._
 
 ```
-towr pipelines create -n sleep_one_minute --params=<(echo 'timeout: 60') https://github.com/pditommaso/nf-sleep
+tw pipelines create -n sleep_one_minute --params=<(echo 'timeout: 60') https://github.com/pditommaso/nf-sleep
 ```
 
 Run it!
 
 ```
-towr launch sleep_one_minute
+tw launch sleep_one_minute
 ```
 
 Run it with different parameters
 
 ```
-towr launch sleep_one_minute --params=<(echo 'timeout: 30')
+tw launch sleep_one_minute --params=<(echo 'timeout: 30')
 ```
 
 Directly launch a Github pipeline not defined at launchpad
 
 ```
-towr launch nextflow-io/hello
+tw launch nextflow-io/hello
 ```
 
 Update a launchpad pipeline
 
 ```
-towr pipelines update -n sleep_one_minute --params=<(echo 'timeout: 30')
+tw pipelines update -n sleep_one_minute --params=<(echo 'timeout: 30')
 ```
 
 ## Launch usage examples
@@ -127,25 +127,25 @@ towr pipelines update -n sleep_one_minute --params=<(echo 'timeout: 30')
 Run a workspace defined pipeline with custom parameters file:
 
 ```
-towr launch sarek --params ./myparams.yaml
+tw launch sarek --params ./myparams.yaml
 ```
 
 Run any Nextflow pipeline using the primary compute environment:
 
 ```
-towr launch nextflow-io/hello 
+tw launch nextflow-io/hello 
 ```
 
 Run any Nextflow pipeline setting a profile.
 
 ```
-towr launch nf-core/sarek --profile test,docker --params ./myparams.yaml
+tw launch nf-core/sarek --profile test,docker --params ./myparams.yaml
 ```
 
 Select the compute environment that you want to use:
 
 ```
-towr launch nf-core/sarek --compute-env "aws seqera" --profile test,docker
+tw launch nf-core/sarek --compute-env "aws seqera" --profile test,docker
 ```
 
 ### Development

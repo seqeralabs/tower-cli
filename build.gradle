@@ -71,7 +71,7 @@ graal {
     graalVersion '21.1.0'
     javaVersion '11'
     mainClass 'io.seqera.tower.cli.Tower'
-    outputName 'towr'
+    outputName 'tw'
     option '--no-fallback'
     option '--no-server'
     option '--allow-incomplete-classpath'

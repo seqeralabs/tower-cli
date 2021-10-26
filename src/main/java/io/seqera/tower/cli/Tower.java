@@ -28,7 +28,7 @@ import static picocli.AutoComplete.GenerateCompletion;
 
 
 @Command(
-        name = "towr",
+        name = "tw",
         description = "Nextflow Tower CLI",
         subcommands = {
                 ActionsCmd.class,
