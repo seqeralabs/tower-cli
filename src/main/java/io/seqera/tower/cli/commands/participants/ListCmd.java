@@ -1,6 +1,7 @@
 package io.seqera.tower.cli.commands.participants;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.commands.global.PaginationOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.participants.ParticipantsList;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
@@ -17,6 +18,8 @@ import java.util.stream.Collectors;
         description = "List workspace participants"
 )
 public class ListCmd extends AbstractParticipantsCmd {
+    @CommandLine.Mixin
+    PaginationOptions paginationOptions;
 
     @CommandLine.Option(names = {"-t", "--type"}, description = "Participant type to list (MEMBER, TEAM, COLLABORATOR)")
     public ParticipantType type;
@@ -26,7 +29,10 @@ public class ListCmd extends AbstractParticipantsCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        List<ParticipantDbDto> response = api().listWorkspaceParticipants(orgId(), workspaceId(), null, null, startsWith).getParticipants();
+        Integer max = PaginationOptions.getMax(paginationOptions);
+        Integer offset = PaginationOptions.getOffset(paginationOptions, max);
+
+        List<ParticipantDbDto> response = api().listWorkspaceParticipants(orgId(), workspaceId(), max, offset, startsWith).getParticipants();
 
         if (response != null && type != null) {
             response = response.stream().filter(it -> it.getType() == type).collect(Collectors.toList());
