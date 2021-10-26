@@ -5,8 +5,8 @@ import io.seqera.tower.model.MemberDbDto;
 
 public class TeamMembersAdd extends Response {
 
-    String teamName;
-    MemberDbDto member;
+    public final String teamName;
+    public final MemberDbDto member;
 
     public TeamMembersAdd(String teamName, MemberDbDto member) {
         this.teamName = teamName;

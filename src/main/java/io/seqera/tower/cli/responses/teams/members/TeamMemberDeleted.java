@@ -4,8 +4,8 @@ import io.seqera.tower.cli.responses.Response;
 
 public class TeamMemberDeleted extends Response {
 
-    String teamName;
-    String username;
+    public final String teamName;
+    public final String username;
 
     public TeamMemberDeleted(String teamName, String username) {
         this.teamName = teamName;

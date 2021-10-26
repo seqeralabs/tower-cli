@@ -8,8 +8,8 @@ import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.MemberDbDto;
 
 public class TeamMembersList extends Response {
-    String teamName;
-    List<MemberDbDto> members;
+    public final String teamName;
+    public final List<MemberDbDto> members;
 
     public TeamMembersList(String teamName, List<MemberDbDto> members) {
         this.teamName = teamName;
