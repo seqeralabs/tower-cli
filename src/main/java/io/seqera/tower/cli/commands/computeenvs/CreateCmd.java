@@ -5,7 +5,6 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.computeenvs.create.CreateAltairCmd;
 import io.seqera.tower.cli.commands.computeenvs.create.CreateAwsCmd;
 import io.seqera.tower.cli.commands.computeenvs.create.CreateAzureCmd;
-import io.seqera.tower.cli.commands.computeenvs.create.CreateAzureManualCmd;
 import io.seqera.tower.cli.commands.computeenvs.create.CreateEksCmd;
 import io.seqera.tower.cli.commands.computeenvs.create.CreateGkeCmd;
 import io.seqera.tower.cli.commands.computeenvs.create.CreateGoogleCmd;
@@ -35,10 +34,9 @@ import java.io.IOException;
                 CreateGkeCmd.class,
                 CreateGoogleCmd.class,
                 CreateAzureCmd.class,
-                CreateAzureManualCmd.class
         }
 )
-public class CreateCmd extends AbstractComputeEnvCmd  {
+public class CreateCmd extends AbstractComputeEnvCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
         throw new ShowUsageException(getSpec(), "Missing Required Subcommand");
