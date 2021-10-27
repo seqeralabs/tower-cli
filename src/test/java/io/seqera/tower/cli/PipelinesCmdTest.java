@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.exceptions.MultiplePipelinesFoundException;
 import io.seqera.tower.cli.exceptions.NoComputeEnvironmentException;
 import io.seqera.tower.cli.exceptions.PipelineNotFoundException;
+import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.exceptions.WorkspaceNotFoundException;
 import io.seqera.tower.cli.responses.PipelinesCreated;
 import io.seqera.tower.cli.responses.PipelinesDeleted;
@@ -279,6 +280,92 @@ class PipelinesCmdTest extends BaseCmdTest {
                         .userName("jordi")
         )).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testListWithOffset(MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines")
+                        .withQueryStringParameter("offset", "1")
+                        .withQueryStringParameter("max", "2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("pipelines_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "pipelines", "list", "--offset", "1", "--max", "2");
+
+        assertEquals("", out.stdErr);
+        assertEquals(chop(new PipelinesList(USER_WORKSPACE_NAME, List.of(
+                new PipelineDbDto()
+                        .pipelineId(183522618315672L)
+                        .name("sleep_one_minute")
+                        .repository("https://github.com/pditommaso/nf-sleep")
+                        .userId(4L)
+                        .userName("jordi")
+        )).toString()), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testListWithPage(MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines")
+                        .withQueryStringParameter("offset", "0")
+                        .withQueryStringParameter("max", "2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("pipelines_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "pipelines", "list", "--page", "1", "--max", "2");
+
+        assertEquals("", out.stdErr);
+        assertEquals(chop(new PipelinesList(USER_WORKSPACE_NAME, List.of(
+                new PipelineDbDto()
+                        .pipelineId(183522618315672L)
+                        .name("sleep_one_minute")
+                        .repository("https://github.com/pditommaso/nf-sleep")
+                        .userId(4L)
+                        .userName("jordi")
+        )).toString()), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testListWithConflictingPageable(MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines")
+                        .withQueryStringParameter("offset", "0")
+                        .withQueryStringParameter("max", "2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("pipelines_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "pipelines", "list", "--page", "1", "--offset", "0", "--max", "2");
+
+        assertEquals(errorMessage(out.app, new TowerException("Please use either --page or --offset as pagination parameter")), out.stdErr);
+        assertEquals("", out.stdOut);
+        assertEquals(-1, out.exitCode);
+    }
+
+    @Test
+    void testListWithConflictingSizeable(MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines")
+                        .withQueryStringParameter("offset", "0")
+                        .withQueryStringParameter("max", "2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("pipelines_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "pipelines", "list", "--page", "1", "--no-max", "--max", "2");
+
+        assertEquals(errorMessage(out.app, new TowerException("Please use either --no-max or --max as pagination size parameter")), out.stdErr);
+        assertEquals("", out.stdOut);
+        assertEquals(-1, out.exitCode);
     }
 
     @Test

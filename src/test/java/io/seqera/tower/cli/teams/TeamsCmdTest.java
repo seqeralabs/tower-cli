@@ -3,6 +3,7 @@ package io.seqera.tower.cli.teams;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.exceptions.OrganizationNotFoundException;
+import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.teams.TeamCreated;
 import io.seqera.tower.cli.responses.teams.TeamDeleted;
 import io.seqera.tower.cli.responses.teams.TeamsList;
@@ -77,6 +78,180 @@ public class TeamsCmdTest extends BaseCmdTest {
                         "    }", TeamDbDto.class)
         )).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testListWithOffset(MockServerClient mock) throws JsonProcessingException {
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/orgs/27736513644467/teams")
+                        .withQueryStringParameter("offset", "1")
+                        .withQueryStringParameter("max", "2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("teams/teams_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "teams", "list", "-o", "organization1", "--offset", "1", "--max", "2");
+
+        assertEquals("", out.stdErr);
+        assertEquals(chop(new TeamsList("organization1", Arrays.asList(
+                parseJson(" {\n" +
+                        "      \"teamId\": 249211453903161,\n" +
+                        "      \"name\": \"team-test-3\",\n" +
+                        "      \"description\": \"AAAAAA\",\n" +
+                        "      \"avatarUrl\": null,\n" +
+                        "      \"membersCount\": 0\n" +
+                        "    }", TeamDbDto.class),
+                parseJson(" {\n" +
+                        "      \"teamId\": 69076469523589,\n" +
+                        "      \"name\": \"team-test-1\",\n" +
+                        "      \"description\": \"a new team\",\n" +
+                        "      \"avatarUrl\": null,\n" +
+                        "      \"membersCount\": 0\n" +
+                        "    }", TeamDbDto.class),
+                parseJson(" {\n" +
+                        "      \"teamId\": 255717345477198,\n" +
+                        "      \"name\": \"team-test-2\",\n" +
+                        "      \"description\": \"a new team\",\n" +
+                        "      \"avatarUrl\": null,\n" +
+                        "      \"membersCount\": 0\n" +
+                        "    }", TeamDbDto.class),
+                parseJson("{\n" +
+                        "      \"teamId\": 267477500890054,\n" +
+                        "      \"name\": \"team1\",\n" +
+                        "      \"description\": \"Team 1\",\n" +
+                        "      \"avatarUrl\": null,\n" +
+                        "      \"membersCount\": 1\n" +
+                        "    }", TeamDbDto.class)
+        )).toString()), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testListWithPage(MockServerClient mock) throws JsonProcessingException {
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/orgs/27736513644467/teams")
+                        .withQueryStringParameter("offset", "0")
+                        .withQueryStringParameter("max", "2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("teams/teams_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "teams", "list", "-o", "organization1", "--page", "1", "--max", "2");
+
+        assertEquals("", out.stdErr);
+        assertEquals(chop(new TeamsList("organization1", Arrays.asList(
+                parseJson(" {\n" +
+                        "      \"teamId\": 249211453903161,\n" +
+                        "      \"name\": \"team-test-3\",\n" +
+                        "      \"description\": \"AAAAAA\",\n" +
+                        "      \"avatarUrl\": null,\n" +
+                        "      \"membersCount\": 0\n" +
+                        "    }", TeamDbDto.class),
+                parseJson(" {\n" +
+                        "      \"teamId\": 69076469523589,\n" +
+                        "      \"name\": \"team-test-1\",\n" +
+                        "      \"description\": \"a new team\",\n" +
+                        "      \"avatarUrl\": null,\n" +
+                        "      \"membersCount\": 0\n" +
+                        "    }", TeamDbDto.class),
+                parseJson(" {\n" +
+                        "      \"teamId\": 255717345477198,\n" +
+                        "      \"name\": \"team-test-2\",\n" +
+                        "      \"description\": \"a new team\",\n" +
+                        "      \"avatarUrl\": null,\n" +
+                        "      \"membersCount\": 0\n" +
+                        "    }", TeamDbDto.class),
+                parseJson("{\n" +
+                        "      \"teamId\": 267477500890054,\n" +
+                        "      \"name\": \"team1\",\n" +
+                        "      \"description\": \"Team 1\",\n" +
+                        "      \"avatarUrl\": null,\n" +
+                        "      \"membersCount\": 1\n" +
+                        "    }", TeamDbDto.class)
+        )).toString()), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testListWithConflictingPageable(MockServerClient mock) throws JsonProcessingException {
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/orgs/27736513644467/teams")
+                        .withQueryStringParameter("offset", "0")
+                        .withQueryStringParameter("max", "2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("teams/teams_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "teams", "list", "-o", "organization1", "--page", "1", "--offset", "0", "--max", "2");
+
+        assertEquals(errorMessage(out.app, new TowerException("Please use either --page or --offset as pagination parameter")), out.stdErr);
+        assertEquals("", out.stdOut);
+        assertEquals(-1, out.exitCode);
+    }
+
+    @Test
+    void testListWithConflictingSizeable(MockServerClient mock) throws JsonProcessingException {
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/orgs/27736513644467/teams")
+                        .withQueryStringParameter("offset", "0")
+                        .withQueryStringParameter("max", "2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("teams/teams_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "teams", "list", "-o", "organization1", "--page", "1", "--no-max", "--max", "2");
+
+        assertEquals(errorMessage(out.app, new TowerException("Please use either --no-max or --max as pagination size parameter")), out.stdErr);
+        assertEquals("", out.stdOut);
+        assertEquals(-1, out.exitCode);
     }
 
     @Test
