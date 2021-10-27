@@ -32,7 +32,7 @@ class GoogleLifeSciencesPlatformTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "compute-envs", "create", "google", "-n", "google", "-w", "gs://workdir", "-r", "europe");
+        ExecOut out = exec(mock, "compute-envs", "create", "google-ls", "-n", "google", "-w", "gs://workdir", "-r", "europe");
 
         assertEquals("", out.stdErr);
         assertEquals(new ComputeEnvCreated("google-lifesciences", "google", USER_WORKSPACE_NAME).toString(), out.stdOut);
@@ -54,7 +54,7 @@ class GoogleLifeSciencesPlatformTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "compute-envs", "create", "google", "-n", "google", "-w", "gs://workdir", "-r", "europe", "--use-private-address");
+        ExecOut out = exec(mock, "compute-envs", "create", "google-ls", "-n", "google", "-w", "gs://workdir", "-r", "europe", "--use-private-address");
 
         assertEquals("", out.stdErr);
         assertEquals(new ComputeEnvCreated("google-lifesciences", "google", USER_WORKSPACE_NAME).toString(), out.stdOut);
@@ -76,7 +76,7 @@ class GoogleLifeSciencesPlatformTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "compute-envs", "create", "google", "-n", "google", "-w", "gs://workdir", "-r", "europe", "--nfs-target=1.2.3.4:/my_share_name");
+        ExecOut out = exec(mock, "compute-envs", "create", "google-ls", "-n", "google", "-w", "gs://workdir", "-r", "europe", "--nfs-target=1.2.3.4:/my_share_name");
 
         assertEquals("", out.stdErr);
         assertEquals(new ComputeEnvCreated("google-lifesciences", "google", USER_WORKSPACE_NAME).toString(), out.stdOut);
