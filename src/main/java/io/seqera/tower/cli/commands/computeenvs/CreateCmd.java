@@ -4,7 +4,6 @@ package io.seqera.tower.cli.commands.computeenvs;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.computeenvs.create.CreateAltairCmd;
 import io.seqera.tower.cli.commands.computeenvs.create.CreateAwsCmd;
-import io.seqera.tower.cli.commands.computeenvs.create.CreateAwsManualCmd;
 import io.seqera.tower.cli.commands.computeenvs.create.CreateAzureCmd;
 import io.seqera.tower.cli.commands.computeenvs.create.CreateAzureManualCmd;
 import io.seqera.tower.cli.commands.computeenvs.create.CreateEksCmd;
@@ -27,7 +26,6 @@ import java.io.IOException;
         subcommands = {
                 CreateK8sCmd.class,
                 CreateAwsCmd.class,
-                CreateAwsManualCmd.class,
                 CreateJsonCmd.class,
                 CreateEksCmd.class,
                 CreateSlurmCmd.class,

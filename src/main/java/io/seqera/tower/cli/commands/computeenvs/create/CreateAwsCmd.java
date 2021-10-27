@@ -1,21 +1,18 @@
 package io.seqera.tower.cli.commands.computeenvs.create;
 
-import io.seqera.tower.cli.commands.computeenvs.platforms.AwsBatchForgePlatform;
-import io.seqera.tower.cli.commands.computeenvs.platforms.Platform;
+import io.seqera.tower.cli.commands.computeenvs.AbstractComputeEnvCmd;
+import io.seqera.tower.cli.commands.computeenvs.create.aws.CreateAwsForgeCmd;
+import io.seqera.tower.cli.commands.computeenvs.create.aws.CreateAwsManualCmd;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.Mixin;
 
 @Command(
-        name = "aws",
-        description = "Create new AWS Batch compute environment with automatic provisioning of compute resources"
+        name = "aws-batch",
+        description = "Create new AWS Batch compute environment with automatic provisioning of compute resources",
+        subcommands = {
+                CreateAwsForgeCmd.class,
+                CreateAwsManualCmd.class,
+        }
 )
-public class CreateAwsCmd extends AbstractCreateCmd {
-
-    @Mixin
-    public AwsBatchForgePlatform platform;
-
-    @Override
-    protected Platform getPlatform() {
-        return platform;
-    }
+public class CreateAwsCmd extends AbstractComputeEnvCmd {
 }
+
