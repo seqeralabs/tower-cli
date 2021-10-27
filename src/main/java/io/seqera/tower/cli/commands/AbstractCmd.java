@@ -1,6 +1,7 @@
 package io.seqera.tower.cli.commands;
 
 import io.seqera.tower.cli.utils.VersionProvider;
+import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
 import java.util.concurrent.Callable;
@@ -19,4 +20,11 @@ import java.util.concurrent.Callable;
         optionListHeading = "%nOptions:%n"
 )
 public abstract class AbstractCmd implements Callable<Integer> {
+
+    @CommandLine.Spec
+    CommandLine.Model.CommandSpec spec;
+
+    public CommandLine.Model.CommandSpec getSpec() {
+        return spec;
+    }
 }
