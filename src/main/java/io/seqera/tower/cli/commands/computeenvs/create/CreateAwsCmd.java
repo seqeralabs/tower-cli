@@ -7,7 +7,7 @@ import picocli.CommandLine.Command;
 
 @Command(
         name = "aws-batch",
-        description = "Create new AWS Batch compute environment with automatic provisioning of compute resources",
+        description = "Create new AWS Batch compute environment",
         subcommands = {
                 CreateAwsForgeCmd.class,
                 CreateAwsManualCmd.class,
