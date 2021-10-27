@@ -1,9 +1,7 @@
 package io.seqera.tower.cli.commands.organizations;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
-import io.seqera.tower.cli.commands.OrganizationsCmd;
 import io.seqera.tower.cli.exceptions.OrganizationNotFoundException;
 import io.seqera.tower.cli.exceptions.UserOrganizationsNotFoundException;
 import io.seqera.tower.model.ListWorkspacesAndOrgResponse;
@@ -16,15 +14,8 @@ import java.util.stream.Collectors;
 
 @CommandLine.Command
 public class AbstractOrganizationsCmd extends AbstractApiCmd {
-    @CommandLine.ParentCommand
-    protected OrganizationsCmd parent;
 
     public AbstractOrganizationsCmd() {
-    }
-
-    @Override
-    public Tower app() {
-        return parent.app();
     }
 
     protected List<OrgAndWorkspaceDbDto> organizationsByUser() throws ApiException {

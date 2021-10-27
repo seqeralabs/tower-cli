@@ -54,7 +54,9 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         return String.format("[%s / %s]", orgName, workspaceName);
     }
 
-    public abstract Tower app();
+    private Tower app() {
+        return (Tower) getSpec().root().userObject();
+    }
 
     protected DefaultApi api() {
 
