@@ -6,7 +6,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 
 @Command(
-        name = "azure",
+        name = "azure-batch",
         description = "Create new Azure Batch compute environment with automatic provisioning of compute resources"
 )
 public class CreateAzureCmd extends AbstractCreateCmd {
