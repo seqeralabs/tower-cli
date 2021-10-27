@@ -1,9 +1,7 @@
 package io.seqera.tower.cli.commands.teams;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
-import io.seqera.tower.cli.commands.TeamsCmd;
 import io.seqera.tower.cli.exceptions.MemberNotFoundException;
 import io.seqera.tower.cli.exceptions.OrganizationNotFoundException;
 import io.seqera.tower.cli.exceptions.TeamNotFoundException;
@@ -14,7 +12,6 @@ import io.seqera.tower.model.MemberDbDto;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import io.seqera.tower.model.TeamDbDto;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.ParentCommand;
 
 import java.util.List;
 import java.util.Objects;
@@ -23,15 +20,7 @@ import java.util.stream.Collectors;
 @Command
 public abstract class AbstractTeamsCmd extends AbstractApiCmd {
 
-    @ParentCommand
-    protected TeamsCmd parent;
-
     public AbstractTeamsCmd() {
-    }
-
-    @Override
-    public Tower app() {
-        return parent.app();
     }
 
     public OrgAndWorkspaceDbDto findOrganizationByName(String organizationName) throws ApiException {

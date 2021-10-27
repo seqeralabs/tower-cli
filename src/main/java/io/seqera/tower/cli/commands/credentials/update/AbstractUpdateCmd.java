@@ -1,9 +1,7 @@
 package io.seqera.tower.cli.commands.credentials.update;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
-import io.seqera.tower.cli.commands.credentials.UpdateCmd;
 import io.seqera.tower.cli.commands.credentials.providers.CredentialsProvider;
 import io.seqera.tower.cli.exceptions.CredentialsNotFoundException;
 import io.seqera.tower.cli.responses.CredentialsUpdated;
@@ -14,7 +12,6 @@ import io.seqera.tower.model.DescribeCredentialsResponse;
 import io.seqera.tower.model.UpdateCredentialsRequest;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.ParentCommand;
 
 import java.io.IOException;
 
@@ -23,15 +20,8 @@ public abstract class AbstractUpdateCmd extends AbstractApiCmd {
 
     @CommandLine.Option(names = {"-i", "--id"}, required = true)
     public String id;
-    @ParentCommand
-    protected UpdateCmd parent;
 
     public AbstractUpdateCmd() {
-    }
-
-    @Override
-    public Tower app() {
-        return parent.app();
     }
 
     @Override

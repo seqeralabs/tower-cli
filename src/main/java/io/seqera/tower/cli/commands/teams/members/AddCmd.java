@@ -1,7 +1,6 @@
 package io.seqera.tower.cli.commands.teams.members;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.commands.teams.MembersCmd;
 import io.seqera.tower.cli.responses.Response;
@@ -25,10 +24,6 @@ public class AddCmd extends AbstractApiCmd {
 
     @CommandLine.ParentCommand
     public MembersCmd parent;
-
-    public Tower app() {
-        return parent.app();
-    }
 
     @Override
     protected Response exec() throws ApiException, IOException {

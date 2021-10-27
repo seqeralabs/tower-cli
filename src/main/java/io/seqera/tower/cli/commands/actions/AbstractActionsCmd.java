@@ -16,14 +16,6 @@ import java.util.stream.Collectors;
 @CommandLine.Command
 public abstract class AbstractActionsCmd extends AbstractApiCmd {
 
-    @CommandLine.ParentCommand
-    protected ActionsCmd parent;
-
-    @Override
-    public Tower app() {
-        return parent.app();
-    }
-
     protected ListActionsResponseActionInfo actionByName(String actionName) throws ApiException {
         ListActionsResponse listActionResponse = api().listActions(workspaceId());
 
