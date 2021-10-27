@@ -992,6 +992,24 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.global.PaginationOptions",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.global.PaginationOptions$Pageable",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.global.PaginationOptions$Sizeable",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.members.AbstractMembersClass",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
@@ -1022,24 +1040,6 @@
 },
 {
   "name":"io.seqera.tower.cli.commands.members.UpdateCmd",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.global.PaginationOptions",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.global.PaginationOptions$Pageable",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.global.PaginationOptions$Sizeable",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
@@ -2383,7 +2383,7 @@
 {
   "name":"java.sql.DriverManager",
   "methods":[
-    {"name":"getConnection","parameterTypes":["java.lang.String"] },
+    {"name":"getConnection","parameterTypes":["java.lang.String"] }, 
     {"name":"getDriver","parameterTypes":["java.lang.String"] }
   ]
 },
@@ -2478,7 +2478,7 @@
 {
   "name":"javax.naming.InitialContext",
   "methods":[
-    {"name":"<init>","parameterTypes":[] },
+    {"name":"<init>","parameterTypes":[] }, 
     {"name":"lookup","parameterTypes":["java.lang.String"] }
   ]
 },
@@ -2581,10 +2581,10 @@
 {
   "name":"org.glassfish.jersey.internal.util.collection.ConcurrentHashMapV8",
   "fields":[
-    {"name":"baseCount"},
-    {"name":"cellsBusy"},
-    {"name":"sizeCtl"},
-    {"name":"transferIndex"},
+    {"name":"baseCount"}, 
+    {"name":"cellsBusy"}, 
+    {"name":"sizeCtl"}, 
+    {"name":"transferIndex"}, 
     {"name":"transferOrigin"}
   ]
 },
@@ -2786,7 +2786,7 @@
   "name":"sun.misc.Unsafe",
   "allDeclaredFields":true,
   "methods":[
-    {"name":"objectFieldOffset","parameterTypes":["java.lang.reflect.Field"] },
+    {"name":"objectFieldOffset","parameterTypes":["java.lang.reflect.Field"] }, 
     {"name":"putBoolean","parameterTypes":["java.lang.Object","long","boolean"] }
   ]
 },

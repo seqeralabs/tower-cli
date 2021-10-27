@@ -18,14 +18,15 @@ import java.util.stream.Collectors;
         description = "List workspace participants"
 )
 public class ListCmd extends AbstractParticipantsCmd {
-    @CommandLine.Mixin
-    PaginationOptions paginationOptions;
 
     @CommandLine.Option(names = {"-t", "--type"}, description = "Participant type to list (MEMBER, TEAM, COLLABORATOR)")
     public ParticipantType type;
 
     @CommandLine.Option(names = {"-f", "--filter"}, description = "Show only participants that it's name starts with the given word")
     public String startsWith;
+
+    @CommandLine.Mixin
+    PaginationOptions paginationOptions;
 
     @Override
     protected Response exec() throws ApiException, IOException {

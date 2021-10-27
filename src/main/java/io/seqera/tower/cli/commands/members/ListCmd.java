@@ -16,14 +16,14 @@ import picocli.CommandLine;
 )
 public class ListCmd extends AbstractMembersClass {
 
-    @CommandLine.Mixin
-    PaginationOptions paginationOptions;
-
     @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization's name identifier", required = true)
     public String organizationName;
 
     @CommandLine.Option(names = {"-f", "--filter"}, description = "Show only members with usernames that starts with the given word")
     public String startsWith;
+
+    @CommandLine.Mixin
+    PaginationOptions paginationOptions;
 
     @Override
     protected Response exec() throws ApiException, IOException {

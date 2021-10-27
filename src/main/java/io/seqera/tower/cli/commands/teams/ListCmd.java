@@ -16,11 +16,11 @@ import java.io.IOException;
 )
 public class ListCmd extends AbstractTeamsCmd {
 
-    @CommandLine.Mixin
-    PaginationOptions paginationOptions;
-
     @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization's name identifier", required = true)
     public String organizationName;
+
+    @CommandLine.Mixin
+    PaginationOptions paginationOptions;
 
     @Override
     protected Response exec() throws ApiException, IOException {

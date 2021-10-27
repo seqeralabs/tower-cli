@@ -15,11 +15,12 @@ import java.io.IOException;
         description = "List workspace pipelines"
 )
 public class ListCmd extends AbstractPipelinesCmd {
-    @CommandLine.Mixin
-    PaginationOptions paginationOptions;
 
     @CommandLine.Option(names = {"-f", "--filter"}, description = "Show only pipelines that contain the given word")
     public String filter;
+
+    @CommandLine.Mixin
+    PaginationOptions paginationOptions;
 
     @Override
     protected Response exec() throws ApiException, IOException {

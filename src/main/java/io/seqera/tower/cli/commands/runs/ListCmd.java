@@ -15,11 +15,11 @@ import java.io.IOException;
 )
 public class ListCmd extends AbstractRunsCmd {
 
-    @CommandLine.Mixin
-    PaginationOptions paginationOptions;
-
     @CommandLine.Option(names = {"-f", "--filter"}, description = "Show only pipeline's runs that it's name starts with the given word")
     public String startsWith;
+
+    @CommandLine.Mixin
+    PaginationOptions paginationOptions;
 
     @Override
     protected Response exec() throws ApiException, IOException {
