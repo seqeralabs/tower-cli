@@ -1,15 +1,12 @@
 package io.seqera.tower.cli.commands.workspaces;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
-import io.seqera.tower.cli.commands.WorkspacesCmd;
 import io.seqera.tower.cli.exceptions.OrganizationNotFoundException;
 import io.seqera.tower.cli.exceptions.WorkspaceNotFoundException;
 import io.seqera.tower.model.ListWorkspacesAndOrgResponse;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.ParentCommand;
 
 import java.util.List;
 import java.util.Objects;
@@ -19,17 +16,9 @@ import java.util.stream.Collectors;
 @Command
 public abstract class AbstractWorkspaceCmd extends AbstractApiCmd {
 
-    @ParentCommand
-    protected WorkspacesCmd parent;
-
     public AbstractWorkspaceCmd() {
     }
-
-    @Override
-    public Tower app() {
-        return parent.app();
-    }
-
+    
     protected OrgAndWorkspaceDbDto orgAndWorkspaceByName(String workspaceName, String organizationName) throws ApiException {
         return findOrgAndWorkspaceByName(organizationName, workspaceName).orElse(null);
     }

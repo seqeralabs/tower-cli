@@ -1,9 +1,7 @@
 package io.seqera.tower.cli.commands.actions.create;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
-import io.seqera.tower.cli.commands.actions.CreateCmd;
 import io.seqera.tower.cli.commands.pipelines.LaunchOptions;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
@@ -28,14 +26,6 @@ public abstract class AbstractCreateCmd extends AbstractApiCmd {
 
     @CommandLine.Mixin
     public LaunchOptions opts;
-
-    @CommandLine.ParentCommand
-    protected CreateCmd parent;
-
-    @Override
-    public Tower app() {
-        return parent.app();
-    }
 
     @Override
     protected Response exec() throws ApiException, IOException {

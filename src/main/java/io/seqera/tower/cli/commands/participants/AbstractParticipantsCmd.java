@@ -1,9 +1,7 @@
 package io.seqera.tower.cli.commands.participants;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
-import io.seqera.tower.cli.commands.ParticipantsCmd;
 import io.seqera.tower.cli.exceptions.MemberNotFoundException;
 import io.seqera.tower.cli.exceptions.OrganizationNotFoundException;
 import io.seqera.tower.cli.exceptions.ParticipantNotFoundException;
@@ -27,15 +25,7 @@ import java.util.stream.Collectors;
 @CommandLine.Command
 public class AbstractParticipantsCmd extends AbstractApiCmd {
 
-    @CommandLine.ParentCommand
-    protected ParticipantsCmd parent;
-
     public AbstractParticipantsCmd() {
-    }
-
-    @Override
-    public Tower app() {
-        return parent.app();
     }
 
     protected OrgAndWorkspaceDbDto findOrgAndWorkspaceByName(String organizationName, String workspaceName) throws ApiException {

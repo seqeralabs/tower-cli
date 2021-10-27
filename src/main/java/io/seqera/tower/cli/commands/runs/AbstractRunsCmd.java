@@ -1,9 +1,7 @@
 package io.seqera.tower.cli.commands.runs;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
-import io.seqera.tower.cli.commands.RunsCmd;
 import io.seqera.tower.cli.exceptions.LaunchNotFoundException;
 import io.seqera.tower.cli.exceptions.RunNotFoundException;
 import io.seqera.tower.cli.exceptions.WorkflowProgressNotFoundException;
@@ -14,20 +12,11 @@ import io.seqera.tower.model.Launch;
 import io.seqera.tower.model.Workflow;
 import io.seqera.tower.model.WorkflowLoad;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.ParentCommand;
 
 @Command
 abstract public class AbstractRunsCmd extends AbstractApiCmd {
 
-    @ParentCommand
-    protected RunsCmd parent;
-
     public AbstractRunsCmd() {
-    }
-
-    @Override
-    public Tower app() {
-        return parent.app();
     }
 
     protected Workflow workflowById(String id) throws ApiException {

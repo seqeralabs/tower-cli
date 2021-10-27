@@ -13,15 +13,7 @@ import picocli.CommandLine;
 @CommandLine.Command
 abstract public class AbstractMembersClass extends AbstractApiCmd {
 
-    @CommandLine.ParentCommand
-    protected MembersCmd parent;
-
     public AbstractMembersClass() {
-    }
-
-    @Override
-    public Tower app() {
-        return parent.app();
     }
 
     protected MemberDbDto findMemberByUser(Long orgId, String user) throws ApiException {
