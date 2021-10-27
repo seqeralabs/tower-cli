@@ -6,7 +6,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 
 @Command(
-        name = "google",
+        name = "google-ls",
         description = "Create new Google life sciences compute environment"
 )
 public class CreateGoogleCmd extends AbstractCreateCmd {
