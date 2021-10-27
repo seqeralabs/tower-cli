@@ -7,9 +7,11 @@ public class PaginationOptions {
 
     public static final int MAX = 100;
 
+    // TODO: The use of the validate option is a work around to an existing Picocli issue. Please refer to https://github.com/seqeralabs/tower-cli/pull/72#issuecomment-952588876
     @CommandLine.ArgGroup(validate = false)
     public Pageable pageable;
 
+    // TODO: The use of the validate option is a work around to an existing Picocli issue. Please refer to https://github.com/seqeralabs/tower-cli/pull/72#issuecomment-952588876
     @CommandLine.ArgGroup(validate = false)
     public Sizeable sizeable;
 
