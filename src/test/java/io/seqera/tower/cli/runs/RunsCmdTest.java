@@ -135,6 +135,92 @@ class RunsCmdTest extends BaseCmdTest {
     }
 
     @Test
+    void testListWithOffset(MockServerClient mock) throws JsonProcessingException {
+
+        mock.when(
+                request().withMethod("GET").withPath("/workflow")
+                        .withQueryStringParameter("offset", "1")
+                        .withQueryStringParameter("max", "2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workflow_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "runs", "list", "--offset", "1", "--max", "2");
+
+        assertEquals("", out.stdErr);
+        assertEquals(chop(new RunList(USER_WORKSPACE_NAME, Arrays.asList(
+                parseJson(" {\n" +
+                        "      \"starred\": false,\n" +
+                        "      \"workflow\": {\n" +
+                        "        \"id\": \"5mDfiUtqyptDib\",\n" +
+                        "        \"commandLine\": \"nextflow run https://github.com/grananda/nextflow-hello -name spontaneous_easley -with-tower https://scratch.staging-tower.xyz/api -r main\",\n" +
+                        "        \"ownerId\": 9,\n" +
+                        "        \"submit\": \"2021-09-22T05:45:44Z\",\n" +
+                        "        \"dateCreated\": \"2021-09-22T05:45:44Z\",\n" +
+                        "        \"lastUpdated\": \"2021-09-22T05:45:44Z\",\n" +
+                        "        \"runName\": \"spontaneous_easley\"\n" +
+                        "      }\n" +
+                        "    }", ListWorkflowsResponseListWorkflowsElement.class),
+                parseJson(" {\n" +
+                        "      \"starred\": false,\n" +
+                        "      \"workflow\": {\n" +
+                        "        \"id\": \"6mDfiUtqyptDib\",\n" +
+                        "        \"commandLine\": \"nextflow run https://github.com/grananda/nextflow-hello -name spontaneous_easley -with-tower https://scratch.staging-tower.xyz/api -r main\",\n" +
+                        "        \"ownerId\": 9,\n" +
+                        "        \"submit\": \"2021-09-22T05:45:44Z\",\n" +
+                        "        \"dateCreated\": \"2021-09-22T05:45:44Z\",\n" +
+                        "        \"lastUpdated\": \"2021-09-22T05:45:44Z\",\n" +
+                        "        \"runName\": \"spontaneous_easley\"\n" +
+                        "      }\n" +
+                        "    }", ListWorkflowsResponseListWorkflowsElement.class)
+        )).toString()), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testListWithPage(MockServerClient mock) throws JsonProcessingException {
+
+        mock.when(
+                request().withMethod("GET").withPath("/workflow")
+                        .withQueryStringParameter("offset", "0")
+                        .withQueryStringParameter("max", "2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workflow_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "runs", "list", "--page", "1", "--max", "2");
+
+        assertEquals("", out.stdErr);
+        assertEquals(chop(new RunList(USER_WORKSPACE_NAME, Arrays.asList(
+                parseJson(" {\n" +
+                        "      \"starred\": false,\n" +
+                        "      \"workflow\": {\n" +
+                        "        \"id\": \"5mDfiUtqyptDib\",\n" +
+                        "        \"commandLine\": \"nextflow run https://github.com/grananda/nextflow-hello -name spontaneous_easley -with-tower https://scratch.staging-tower.xyz/api -r main\",\n" +
+                        "        \"ownerId\": 9,\n" +
+                        "        \"submit\": \"2021-09-22T05:45:44Z\",\n" +
+                        "        \"dateCreated\": \"2021-09-22T05:45:44Z\",\n" +
+                        "        \"lastUpdated\": \"2021-09-22T05:45:44Z\",\n" +
+                        "        \"runName\": \"spontaneous_easley\"\n" +
+                        "      }\n" +
+                        "    }", ListWorkflowsResponseListWorkflowsElement.class),
+                parseJson(" {\n" +
+                        "      \"starred\": false,\n" +
+                        "      \"workflow\": {\n" +
+                        "        \"id\": \"6mDfiUtqyptDib\",\n" +
+                        "        \"commandLine\": \"nextflow run https://github.com/grananda/nextflow-hello -name spontaneous_easley -with-tower https://scratch.staging-tower.xyz/api -r main\",\n" +
+                        "        \"ownerId\": 9,\n" +
+                        "        \"submit\": \"2021-09-22T05:45:44Z\",\n" +
+                        "        \"dateCreated\": \"2021-09-22T05:45:44Z\",\n" +
+                        "        \"lastUpdated\": \"2021-09-22T05:45:44Z\",\n" +
+                        "        \"runName\": \"spontaneous_easley\"\n" +
+                        "      }\n" +
+                        "    }", ListWorkflowsResponseListWorkflowsElement.class)
+        )).toString()), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
     void testListEmpty(MockServerClient mock) {
 
         mock.when(
