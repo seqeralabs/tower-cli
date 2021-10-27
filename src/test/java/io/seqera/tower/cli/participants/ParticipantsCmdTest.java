@@ -2,6 +2,7 @@ package io.seqera.tower.cli.participants;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
+import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.participants.ParticipantAdded;
 import io.seqera.tower.cli.responses.participants.ParticipantChanged;
 import io.seqera.tower.cli.responses.participants.ParticipantDeleted;
@@ -336,6 +337,64 @@ public class ParticipantsCmdTest extends BaseCmdTest {
                                 "      \"userAvatarUrl\": null\n" +
                                 "    }", ParticipantDbDto.class))).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testListWithConflictingPageable(MockServerClient mock) throws JsonProcessingException {
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/orgs/27736513644467/workspaces/75887156211589/participants")
+                        .withQueryStringParameter("offset", "0")
+                        .withQueryStringParameter("max", "2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("participants/participants_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "-o", "organization1", "-w", "workspace1", "participants", "list", "--page", "1", "--offset", "0", "--max", "2");
+
+        assertEquals(errorMessage(out.app, new TowerException("Please use either --page or --offset as pagination parameter")), out.stdErr);
+        assertEquals("", out.stdOut);
+        assertEquals(-1, out.exitCode);
+    }
+
+    @Test
+    void testListWithConflictingSizeable(MockServerClient mock) throws JsonProcessingException {
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/orgs/27736513644467/workspaces/75887156211589/participants")
+                        .withQueryStringParameter("offset", "0")
+                        .withQueryStringParameter("max", "2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("participants/participants_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "-o", "organization1", "-w", "workspace1", "participants", "list", "--page", "1", "--no-max", "--max", "2");
+
+        assertEquals(errorMessage(out.app, new TowerException("Please use either --no-max or --max as pagination size parameter")), out.stdErr);
+        assertEquals("", out.stdOut);
+        assertEquals(-1, out.exitCode);
     }
 
     @Test

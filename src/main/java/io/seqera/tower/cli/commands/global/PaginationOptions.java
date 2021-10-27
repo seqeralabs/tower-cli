@@ -28,14 +28,18 @@ public class PaginationOptions {
         public Integer max;
 
         @CommandLine.Option(names = {"--no-max"}, description = "Show all records")
-        public Boolean noMax = false;
+        public Boolean noMax;
     }
 
-    public static Integer getMax(PaginationOptions paginationOptions) {
+    public static Integer getMax(PaginationOptions paginationOptions) throws TowerException {
         Integer max = PaginationOptions.MAX;
 
         if (paginationOptions.sizeable != null) {
-            max = paginationOptions.sizeable.noMax ? null : paginationOptions.sizeable.max != null ? paginationOptions.sizeable.max : max;
+            if (paginationOptions.sizeable.noMax != null && paginationOptions.sizeable.max != null) {
+                throw new TowerException("Please use either --no-max or --max as pagination size parameter");
+            }
+
+            max = paginationOptions.sizeable.noMax != null ? null : paginationOptions.sizeable.max != null ? paginationOptions.sizeable.max : max;
         }
 
         return max;
@@ -45,6 +49,10 @@ public class PaginationOptions {
         int offset = 0;
 
         if (paginationOptions.pageable != null) {
+
+            if (paginationOptions.pageable.page != null && paginationOptions.pageable.offset != null) {
+                throw new TowerException("Please use either --page or --offset as pagination parameter");
+            }
 
             offset = max == null ? offset : paginationOptions.pageable.offset != null ? paginationOptions.pageable.offset : offset;
 
