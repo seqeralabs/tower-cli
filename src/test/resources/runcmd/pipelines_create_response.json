@@ -1,0 +1,18 @@
+{
+  "pipeline": {
+    "pipelineId": 112055935685449,
+    "name": "pipelineNew",
+    "description": null,
+    "icon": null,
+    "repository": "https://github.com/grananda/nextflow-hello",
+    "userId": 9,
+    "userName": "jfernandez74",
+    "userFirstName": null,
+    "userLastName": null,
+    "orgId": 81702924135038,
+    "orgName": "org-jfernandez",
+    "workspaceId": 144996268157965,
+    "workspaceName": "wsp-jfernandez",
+    "visibility": "PRIVATE"
+  }
+}

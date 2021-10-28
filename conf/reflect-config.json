@@ -1537,6 +1537,12 @@
   "allDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.cli.responses.pipelines.PipelinesList",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.cli.responses.teams.TeamCreated",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,

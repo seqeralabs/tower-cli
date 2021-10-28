@@ -19,7 +19,7 @@ public class ExportCmd extends AbstractPipelinesCmd{
     @CommandLine.Option(names = {"--format"}, description = "Export file to json or yml format (default is json)")
     public String format = "json";
 
-    @CommandLine.Parameters(index = "0", paramLabel = "FILENAME", description = "File name to export", arity = "1")
+    @CommandLine.Parameters(index = "0", paramLabel = "FILENAME", description = "File name to export", arity = "0..1")
     String fileName = null;
 
     @Override
