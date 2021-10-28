@@ -1,7 +1,7 @@
 package io.seqera.tower.cli.commands.pipelines;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.responses.PipelinesUpdated;
+import io.seqera.tower.cli.responses.pipelines.PipelinesUpdated;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.ComputeEnv;

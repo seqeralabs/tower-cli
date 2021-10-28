@@ -1,4 +1,6 @@
-package io.seqera.tower.cli.responses;
+package io.seqera.tower.cli.responses.pipelines;
+
+import io.seqera.tower.cli.responses.Response;
 
 public class PipelinesCreated extends Response {
 

@@ -2,7 +2,7 @@ package io.seqera.tower.cli.commands.pipelines;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.PaginationOptions;
-import io.seqera.tower.cli.responses.PipelinesList;
+import io.seqera.tower.cli.responses.pipelines.PipelinesList;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.ListPipelinesResponse;
 import picocli.CommandLine;

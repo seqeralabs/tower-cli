@@ -1,7 +1,7 @@
 package io.seqera.tower.cli.commands.pipelines;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.responses.PipelinesDeleted;
+import io.seqera.tower.cli.responses.pipelines.PipelinesDeleted;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.PipelineDbDto;
 import picocli.CommandLine.Command;
