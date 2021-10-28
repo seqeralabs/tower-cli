@@ -1,6 +1,7 @@
 package io.seqera.tower.cli.commands.pipelines;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.responses.pipelines.PipelinesExport;
 import io.seqera.tower.cli.responses.pipelines.PipelinesView;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.DescribeLaunchResponse;
@@ -25,7 +26,7 @@ public class ViewCmd extends AbstractPipelinesCmd {
         PipelineDbDto pipe = pipelineByName(name);
         DescribeLaunchResponse resp = api().describePipelineLaunch(pipe.getPipelineId(), workspaceId());
 
-        return new PipelinesView(workspaceRef(), pipe, resp.getLaunch());
+        return export ? new PipelinesExport(pipe, resp.getLaunch()) : new PipelinesView(workspaceRef(), pipe, resp.getLaunch());
     }
 
 
