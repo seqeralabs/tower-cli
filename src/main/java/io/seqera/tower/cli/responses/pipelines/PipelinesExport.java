@@ -1,8 +1,9 @@
 package io.seqera.tower.cli.responses.pipelines;
 
-import java.io.PrintWriter;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 import io.seqera.tower.JSON;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.CreatePipelineRequest;
@@ -10,19 +11,28 @@ import io.seqera.tower.model.Launch;
 import io.seqera.tower.model.PipelineDbDto;
 import io.seqera.tower.model.WorkflowLaunchRequest;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Objects;
+
 public class PipelinesExport extends Response {
 
     public final PipelineDbDto pipeline;
     public final Launch launch;
+    public final String format;
+    public final String fileName;
 
-    public PipelinesExport(PipelineDbDto pipeline, Launch launch) {
+    public PipelinesExport(PipelineDbDto pipeline, Launch launch, String format, String fileName) {
         this.pipeline = pipeline;
         this.launch = launch;
+        this.format = format;
+        this.fileName = fileName;
     }
 
     @Override
-    public void toString(PrintWriter out) {
-        String configJson = "";
+    public String toString() {
+        String configOutput = "";
 
         WorkflowLaunchRequest workflowLaunchRequest = new WorkflowLaunchRequest();
         workflowLaunchRequest.setComputeEnvId(launch.getComputeEnv().getId());
@@ -48,12 +58,28 @@ public class PipelinesExport extends Response {
         createPipelineRequest.setIcon(pipeline.getIcon());
         createPipelineRequest.setLaunch(workflowLaunchRequest);
 
-        try{
-            configJson = new JSON().getContext(CreatePipelineRequest.class).writerWithDefaultPrettyPrinter().writeValueAsString(createPipelineRequest);
+        try {
+            if (Objects.equals(format, "yml")) {
+                ObjectMapper mapper = new ObjectMapper(new YAMLFactory().disable(YAMLGenerator.Feature.WRITE_DOC_START_MARKER));
+                configOutput = mapper.writeValueAsString(createPipelineRequest);
+            } else {
+                configOutput = new JSON().getContext(CreatePipelineRequest.class).writerWithDefaultPrettyPrinter().writeValueAsString(createPipelineRequest);
+            }
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
 
-        out.println(String.format("%n  Pipeline export configuration:%n%n%s%n", configJson.replaceAll("(?m)^", "     ")));
+        if (fileName != null) {
+            try {
+                BufferedWriter writer;
+                writer = new BufferedWriter(new FileWriter(fileName));
+                writer.write(configOutput);
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return configOutput;
     }
 }

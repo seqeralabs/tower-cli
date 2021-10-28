@@ -1144,6 +1144,18 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.pipelines.ExportCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.pipelines.ImportCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.pipelines.LaunchOptions",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -2432,6 +2444,9 @@
   "name":"java.sql.Connection"
 },
 {
+  "name":"java.sql.Date"
+},
+{
   "name":"java.sql.Driver"
 },
 {
@@ -2475,7 +2490,9 @@
 },
 {
   "name":"java.time.OffsetDateTime",
-  "methods":[{"name":"parse","parameterTypes":["java.lang.CharSequence"] }]
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
 },
 {
   "name":"java.time.OffsetTime",
@@ -2504,6 +2521,18 @@
 {
   "name":"java.time.ZonedDateTime",
   "methods":[{"name":"parse","parameterTypes":["java.lang.CharSequence"] }]
+},
+{
+  "name":"java.time.temporal.Temporal",
+  "allDeclaredMethods":true
+},
+{
+  "name":"java.time.temporal.TemporalAccessor",
+  "allDeclaredMethods":true
+},
+{
+  "name":"java.time.temporal.TemporalAdjuster",
+  "allDeclaredMethods":true
 },
 {
   "name":"java.util.Date"
