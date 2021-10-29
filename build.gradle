@@ -2,7 +2,8 @@ plugins {
     id 'java'
     id 'application'
     id 'jacoco'
-    id 'com.palantir.graal' version "0.9.0"
+    id 'com.palantir.graal' version '0.9.0'
+    id 'org.cadixdev.licenser' version '0.6.1'
 }
 
 repositories {
@@ -24,6 +25,17 @@ dependencies {
     testImplementation 'org.mock-server:mockserver-junit-jupiter:5.11.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
+}
+
+license {
+    header = project.file('HEADER.txt')
+    properties {
+        name = 'Seqera Labs'
+        year = 2021
+    }
+    exclude '**/*.properties'
+    exclude 'gradlew'
+    exclude 'conf/**'
 }
 
 String gitVersion() {
@@ -65,6 +77,7 @@ application {
 test {
     // Use junit platform for unit tests
     useJUnitPlatform()
+    dependsOn checkLicenses
 }
 
 graal {
