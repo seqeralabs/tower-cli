@@ -16,9 +16,12 @@ import io.seqera.tower.cli.responses.pipelines.PipelinesExport;
 import io.seqera.tower.cli.responses.pipelines.PipelinesList;
 import io.seqera.tower.cli.responses.pipelines.PipelinesUpdated;
 import io.seqera.tower.cli.responses.pipelines.PipelinesView;
+import io.seqera.tower.cli.utils.ModelHelper;
 import io.seqera.tower.model.ComputeEnv;
+import io.seqera.tower.model.CreatePipelineRequest;
 import io.seqera.tower.model.Launch;
 import io.seqera.tower.model.PipelineDbDto;
+import io.seqera.tower.model.WorkflowLaunchRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
@@ -511,126 +514,16 @@ class PipelinesCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(mock, "pipelines", "export", "-n", "sleep");
 
-        PipelineDbDto pipeline = parseJson("  {\n" +
-                "      \"pipelineId\": 183522618315672,\n" +
-                "      \"name\": \"sleep\",\n" +
-                "      \"description\": null,\n" +
-                "      \"icon\": null,\n" +
-                "      \"repository\": \"https://github.com/pditommaso/nf-sleep\",\n" +
-                "      \"userId\": 4,\n" +
-                "      \"userName\": \"jordi\",\n" +
-                "      \"userFirstName\": null,\n" +
-                "      \"userLastName\": null,\n" +
-                "      \"orgId\": null,\n" +
-                "      \"orgName\": null,\n" +
-                "      \"workspaceId\": null,\n" +
-                "      \"workspaceName\": null,\n" +
-                "      \"visibility\": null\n" +
-                "    }", PipelineDbDto.class);
+        WorkflowLaunchRequest workflowLaunchRequest = ModelHelper.createLaunchRequest(parseJson(new String(loadResource("launch"), StandardCharsets.UTF_8), Launch.class));
+        PipelineDbDto pipeline = parseJson(new String(loadResource("pipelines_sleep"), StandardCharsets.UTF_8), PipelineDbDto.class);
 
-        Launch launch = parseJson("{\n" +
-                "    \"id\": \"oRptz8ekYa3BSA4Nnx7Qn\",\n" +
-                "    \"computeEnv\": {\n" +
-                "      \"id\": \"vYOK4vn7spw7bHHWBDXZ2\",\n" +
-                "      \"name\": \"demo\",\n" +
-                "      \"description\": null,\n" +
-                "      \"platform\": \"aws-batch\",\n" +
-                "      \"config\": {\n" +
-                "        \"region\": \"eu-west-1\",\n" +
-                "        \"computeQueue\": \"TowerForge-vYOK4vn7spw7bHHWBDXZ2-work\",\n" +
-                "        \"computeJobRole\": null,\n" +
-                "        \"headQueue\": \"TowerForge-vYOK4vn7spw7bHHWBDXZ2-head\",\n" +
-                "        \"headJobRole\": null,\n" +
-                "        \"cliPath\": \"/home/ec2-user/miniconda/bin/aws\",\n" +
-                "        \"volumes\": [],\n" +
-                "        \"workDir\": \"s3://nextflow-ci/jordeu\",\n" +
-                "        \"preRunScript\": null,\n" +
-                "        \"postRunScript\": null,\n" +
-                "        \"headJobCpus\": null,\n" +
-                "        \"headJobMemoryMb\": null,\n" +
-                "        \"forge\": {\n" +
-                "          \"type\": \"SPOT\",\n" +
-                "          \"minCpus\": 0,\n" +
-                "          \"maxCpus\": 123,\n" +
-                "          \"gpuEnabled\": false,\n" +
-                "          \"ebsAutoScale\": true,\n" +
-                "          \"instanceTypes\": null,\n" +
-                "          \"allocStrategy\": null,\n" +
-                "          \"imageId\": null,\n" +
-                "          \"vpcId\": null,\n" +
-                "          \"subnets\": null,\n" +
-                "          \"securityGroups\": null,\n" +
-                "          \"fsxMount\": null,\n" +
-                "          \"fsxName\": null,\n" +
-                "          \"fsxSize\": null,\n" +
-                "          \"disposeOnDeletion\": true,\n" +
-                "          \"ec2KeyPair\": null,\n" +
-                "          \"allowBuckets\": null,\n" +
-                "          \"ebsBlockSize\": null,\n" +
-                "          \"fusionEnabled\": true,\n" +
-                "          \"bidPercentage\": null,\n" +
-                "          \"efsCreate\": null,\n" +
-                "          \"efsId\": null,\n" +
-                "          \"efsMount\": null\n" +
-                "        },\n" +
-                "        \"forgedResources\": [\n" +
-                "          {\n" +
-                "            \"IamRole\": \"arn:aws:iam::195996028523:role/TowerForge-vYOK4vn7spw7bHHWBDXZ2-ServiceRole\"\n" +
-                "          },\n" +
-                "          {\n" +
-                "            \"IamRole\": \"arn:aws:iam::195996028523:role/TowerForge-vYOK4vn7spw7bHHWBDXZ2-FleetRole\"\n" +
-                "          },\n" +
-                "          {\n" +
-                "            \"IamInstanceProfile\": \"arn:aws:iam::195996028523:instance-profile/TowerForge-vYOK4vn7spw7bHHWBDXZ2-InstanceRole\"\n" +
-                "          },\n" +
-                "          {\n" +
-                "            \"Ec2LaunchTemplate\": \"TowerForge-vYOK4vn7spw7bHHWBDXZ2\"\n" +
-                "          },\n" +
-                "          {\n" +
-                "            \"BatchEnv\": \"arn:aws:batch:eu-west-1:195996028523:compute-environment/TowerForge-vYOK4vn7spw7bHHWBDXZ2-head\"\n" +
-                "          },\n" +
-                "          {\n" +
-                "            \"BatchQueue\": \"arn:aws:batch:eu-west-1:195996028523:job-queue/TowerForge-vYOK4vn7spw7bHHWBDXZ2-head\"\n" +
-                "          },\n" +
-                "          {\n" +
-                "            \"BatchEnv\": \"arn:aws:batch:eu-west-1:195996028523:compute-environment/TowerForge-vYOK4vn7spw7bHHWBDXZ2-work\"\n" +
-                "          },\n" +
-                "          {\n" +
-                "            \"BatchQueue\": \"arn:aws:batch:eu-west-1:195996028523:job-queue/TowerForge-vYOK4vn7spw7bHHWBDXZ2-work\"\n" +
-                "          }\n" +
-                "        ],\n" +
-                "        \"platform\": \"aws-batch\"\n" +
-                "      },\n" +
-                "      \"dateCreated\": \"2021-09-08T06:00:06Z\",\n" +
-                "      \"lastUpdated\": \"2021-09-08T06:00:59Z\",\n" +
-                "      \"lastUsed\": null,\n" +
-                "      \"deleted\": null,\n" +
-                "      \"status\": \"AVAILABLE\",\n" +
-                "      \"message\": null,\n" +
-                "      \"primary\": null,\n" +
-                "      \"credentialsId\": \"6g0ER59L4ZoE5zpOmUP48D\"\n" +
-                "    },\n" +
-                "    \"pipeline\": \"https://github.com/pditommaso/nf-sleep\",\n" +
-                "    \"workDir\": \"s3://nextflow-ci/jordeu\",\n" +
-                "    \"revision\": null,\n" +
-                "    \"configText\": null,\n" +
-                "    \"paramsText\": \"timeout: 60\\n\",\n" +
-                "    \"preRunScript\": null,\n" +
-                "    \"postRunScript\": null,\n" +
-                "    \"mainScript\": null,\n" +
-                "    \"entryName\": null,\n" +
-                "    \"schemaName\": null,\n" +
-                "    \"resume\": false,\n" +
-                "    \"pullLatest\": false,\n" +
-                "    \"stubRun\": false,\n" +
-                "    \"sessionId\": null,\n" +
-                "    \"configProfiles\": null,\n" +
-                "    \"dateCreated\": \"2021-09-08T06:50:54Z\",\n" +
-                "    \"lastUpdated\": \"2021-09-08T06:50:54Z\"\n" +
-                "  }", Launch.class);
+        CreatePipelineRequest createPipelineRequest = new CreatePipelineRequest();
+        createPipelineRequest.setDescription(pipeline.getDescription());
+        createPipelineRequest.setIcon(pipeline.getIcon());
+        createPipelineRequest.setLaunch(workflowLaunchRequest);
 
         assertEquals("", out.stdErr);
-        assertEquals(new PipelinesExport(pipeline, launch, "json", null).toString(), out.stdOut);
+        assertEquals(new PipelinesExport(createPipelineRequest, null).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
