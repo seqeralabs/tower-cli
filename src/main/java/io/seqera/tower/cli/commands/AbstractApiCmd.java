@@ -4,6 +4,7 @@ import io.seqera.tower.ApiClient;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.api.DefaultApi;
 import io.seqera.tower.cli.Tower;
+import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
 import io.seqera.tower.cli.exceptions.NoComputeEnvironmentException;
 import io.seqera.tower.cli.exceptions.OrganizationNotFoundException;
 import io.seqera.tower.cli.exceptions.ShowUsageException;
@@ -11,6 +12,7 @@ import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.exceptions.WorkspaceNotFoundException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.ComputeEnv;
+import io.seqera.tower.model.ListComputeEnvsResponse;
 import io.seqera.tower.model.ListComputeEnvsResponseEntry;
 import io.seqera.tower.model.ListWorkspacesAndOrgResponse;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
@@ -191,6 +193,20 @@ public abstract class AbstractApiCmd extends AbstractCmd {
 
         return orgAndWorkspaceDbDtoList.stream().findFirst().orElseThrow(() -> new OrganizationNotFoundException(organizationName));
     }
+
+    protected ComputeEnv findComputeEnvironmentByName(String name, Long workspaceId) throws ApiException {
+        ListComputeEnvsResponse listComputeEnvsResponse = api().listComputeEnvs("", workspaceId);
+
+        ListComputeEnvsResponseEntry listComputeEnvsResponseEntry =  listComputeEnvsResponse
+                .getComputeEnvs()
+                .stream()
+                .filter(it -> Objects.equals(it.getName(), name))
+                .findFirst()
+                .orElseThrow(() -> new ComputeEnvNotFoundException(name, workspaceId));
+
+        return api().describeComputeEnv(listComputeEnvsResponseEntry.getId(), workspaceId()).getComputeEnv();
+    }
+
 
     private void loadUser() throws ApiException {
         User user = api().user().getUser();

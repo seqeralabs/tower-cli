@@ -1,0 +1,26 @@
+{
+  "computeEnvs": [
+    {
+      "id": "3xkkzYH2nbD3nZjrzKm0oR",
+      "name": "ce1",
+      "platform": "aws-batch",
+      "status": "AVAILABLE",
+      "message": null,
+      "lastUsed": "2021-10-06T08:08:53Z",
+      "primary": true,
+      "workspaceName": "wsp-jfernandez",
+      "visibility": "PRIVATE"
+    },
+    {
+      "id": "3xkkzYH2nbD3nZjrzKm0oS",
+      "name": "ce2",
+      "platform": "aws-batch",
+      "status": "AVAILABLE",
+      "message": null,
+      "lastUsed": "2021-10-06T08:08:53Z",
+      "primary": true,
+      "workspaceName": "wsp-jfernandez",
+      "visibility": "PRIVATE"
+    }
+  ]
+}
