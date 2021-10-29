@@ -531,7 +531,7 @@ class PipelinesCmdTest extends BaseCmdTest {
     void testImport(MockServerClient mock) throws IOException {
         mock.when(
                 request().withMethod("POST").withPath("/pipelines")
-                        .withBody(loadResource("pipelines_create"))
+                        .withBody("{\"name\":\"pipelineNew\",\"launch\":{\"computeEnvId\":\"3xkkzYH2nbD3nZjrzKm0oR\",\"pipeline\":\"https://github.com/grananda/nextflow-hello\",\"workDir\":\"s3://nextflow-ci/julio\",\"revision\":\"main\",\"resume\":false,\"pullLatest\":false,\"stubRun\":false}}")
                         .withContentType(MediaType.APPLICATION_JSON), exactly(1)
         ).respond(
                 response()
@@ -540,10 +540,10 @@ class PipelinesCmdTest extends BaseCmdTest {
                         .withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "pipelines", "import", tempFile(new String(loadResource("pipelines_create"), StandardCharsets.UTF_8), "data", ".json"), "-n", "pipelineNew");
+        ExecOut out = exec(mock, "pipelines", "import", tempFile(new String(loadResource("pipelines_create"), StandardCharsets.UTF_8), "data", ".json"), "-n", "pipelineNew", "-w", "144996268157965");
 
         assertEquals("", out.stdErr);
-        assertEquals(new PipelinesCreated(USER_WORKSPACE_NAME, "pipelineNew").toString(), out.stdOut);
+        assertEquals(new PipelinesCreated("144996268157965", "pipelineNew").toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

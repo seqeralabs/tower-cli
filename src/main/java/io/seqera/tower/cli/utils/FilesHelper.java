@@ -18,7 +18,7 @@ public class FilesHelper {
         return Files.readString(path);
     }
 
-    public static void saveString(String text, String fileName) {
+    public static void saveString(String fileName, String text) {
         try {
             BufferedWriter writer;
             writer = new BufferedWriter(new FileWriter(fileName));
