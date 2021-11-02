@@ -11,35 +11,22 @@
 
 package io.seqera.tower.cli.responses.pipelines;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import io.seqera.tower.JSON;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.cli.utils.FilesHelper;
-import io.seqera.tower.model.CreatePipelineRequest;
 
 public class PipelinesExport extends Response {
 
-    public final CreatePipelineRequest createPipelineRequest;
+    public final String configOutput;
     public final String fileName;
 
-    public PipelinesExport(CreatePipelineRequest createPipelineRequest, String fileName) {
-        this.createPipelineRequest = createPipelineRequest;
+    public PipelinesExport(String configOutput, String fileName) {
+        this.configOutput = configOutput;
         this.fileName = fileName;
     }
 
     @Override
     public String toString() {
-        String configOutput = "";
-
-        try {
-            configOutput = new JSON().getContext(CreatePipelineRequest.class).writerWithDefaultPrettyPrinter().writeValueAsString(createPipelineRequest);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
 
         if (fileName != null && !fileName.equals("-")) {
-            FilesHelper.saveString(fileName, configOutput);
-
             return ansi(String.format("%n  @|yellow Pipeline exported into '%s' |@%n", fileName));
         }
 

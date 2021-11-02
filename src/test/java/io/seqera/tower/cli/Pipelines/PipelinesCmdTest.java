@@ -15,6 +15,7 @@
 package io.seqera.tower.cli.Pipelines;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.seqera.tower.JSON;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.exceptions.MultiplePipelinesFoundException;
 import io.seqera.tower.cli.exceptions.NoComputeEnvironmentException;
@@ -533,8 +534,10 @@ class PipelinesCmdTest extends BaseCmdTest {
         createPipelineRequest.setIcon(pipeline.getIcon());
         createPipelineRequest.setLaunch(workflowLaunchRequest);
 
+        String configOutput = new JSON().getContext(CreatePipelineRequest.class).writerWithDefaultPrettyPrinter().writeValueAsString(createPipelineRequest);
+
         assertEquals("", out.stdErr);
-        assertEquals(new PipelinesExport(createPipelineRequest, null).toString(), out.stdOut);
+        assertEquals(new PipelinesExport(configOutput, null).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

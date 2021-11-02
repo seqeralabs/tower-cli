@@ -11,9 +11,16 @@
 
 package io.seqera.tower.cli.commands.computeenvs;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.ApiException;
+import io.seqera.tower.JSON;
+import io.seqera.tower.cli.commands.computeenvs.platforms.AwsBatchForgePlatform;
+import io.seqera.tower.cli.commands.computeenvs.platforms.AwsBatchManualPlatform;
 import io.seqera.tower.cli.responses.ComputeEnvs.ComputeEnvExport;
 import io.seqera.tower.cli.responses.Response;
+import io.seqera.tower.cli.utils.FilesHelper;
+import io.seqera.tower.model.AwsBatchConfig;
+import io.seqera.tower.model.ComputeConfig;
 import io.seqera.tower.model.ComputeEnv;
 import picocli.CommandLine;
 
@@ -40,6 +47,28 @@ public class ExportCmd extends AbstractComputeEnvCmd {
         computeEnv.setPlatform(ce.getPlatform());
         computeEnv.setConfig(ce.getConfig());
 
-        return new ComputeEnvExport(computeEnv.getConfig(), fileName);
+        // Remove forged resources
+        if (computeEnv.getConfig() instanceof AwsBatchConfig) {
+            AwsBatchConfig awsCfg = (AwsBatchConfig) computeEnv.getConfig();
+            if (awsCfg.getForge() != null) {
+                AwsBatchForgePlatform.clean(awsCfg);
+            } else {
+                AwsBatchManualPlatform.clean(awsCfg);
+            }
+        }
+
+        String configOutput = "";
+
+        try {
+            configOutput = new JSON().getContext(ComputeConfig.class).writerWithDefaultPrettyPrinter().writeValueAsString(computeEnv.getConfig());
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        if (fileName != null && !fileName.equals("-")) {
+            FilesHelper.saveString(fileName, configOutput);
+        }
+
+        return new ComputeEnvExport(configOutput, fileName);
     }
 }

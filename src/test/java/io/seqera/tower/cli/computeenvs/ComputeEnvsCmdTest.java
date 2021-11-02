@@ -16,6 +16,7 @@ package io.seqera.tower.cli.computeenvs;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.ApiException;
+import io.seqera.tower.JSON;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
 import io.seqera.tower.cli.responses.ComputeEnvCreated;
@@ -289,12 +290,9 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
 
         ComputeConfig computeConfig = parseJson("{\n" +
                 "      \"region\": \"eu-west-1\",\n" +
-                "      \"computeQueue\": \"TowerForge-isnEDBLvHDAIteOEF44ow-work\",\n" +
                 "      \"computeJobRole\": null,\n" +
-                "      \"headQueue\": \"TowerForge-isnEDBLvHDAIteOEF44ow-head\",\n" +
                 "      \"headJobRole\": null,\n" +
                 "      \"cliPath\": \"/home/ec2-user/miniconda/bin/aws\",\n" +
-                "      \"volumes\": [],\n" +
                 "      \"workDir\": \"s3://nextflow-ci/jordeu\",\n" +
                 "      \"preRunScript\": null,\n" +
                 "      \"postRunScript\": null,\n" +
@@ -325,32 +323,6 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
                 "        \"efsId\": null,\n" +
                 "        \"efsMount\": null\n" +
                 "      },\n" +
-                "      \"forgedResources\": [\n" +
-                "        {\n" +
-                "          \"IamRole\": \"arn:aws:iam::195996028523:role/TowerForge-isnEDBLvHDAIteOEF44ow-ServiceRole\"\n" +
-                "        },\n" +
-                "        {\n" +
-                "          \"IamRole\": \"arn:aws:iam::195996028523:role/TowerForge-isnEDBLvHDAIteOEF44ow-FleetRole\"\n" +
-                "        },\n" +
-                "        {\n" +
-                "          \"IamInstanceProfile\": \"arn:aws:iam::195996028523:instance-profile/TowerForge-isnEDBLvHDAIteOEF44ow-InstanceRole\"\n" +
-                "        },\n" +
-                "        {\n" +
-                "          \"Ec2LaunchTemplate\": \"TowerForge-isnEDBLvHDAIteOEF44ow\"\n" +
-                "        },\n" +
-                "        {\n" +
-                "          \"BatchEnv\": \"arn:aws:batch:eu-west-1:195996028523:compute-environment/TowerForge-isnEDBLvHDAIteOEF44ow-head\"\n" +
-                "        },\n" +
-                "        {\n" +
-                "          \"BatchQueue\": \"arn:aws:batch:eu-west-1:195996028523:job-queue/TowerForge-isnEDBLvHDAIteOEF44ow-head\"\n" +
-                "        },\n" +
-                "        {\n" +
-                "          \"BatchEnv\": \"arn:aws:batch:eu-west-1:195996028523:compute-environment/TowerForge-isnEDBLvHDAIteOEF44ow-work\"\n" +
-                "        },\n" +
-                "        {\n" +
-                "          \"BatchQueue\": \"arn:aws:batch:eu-west-1:195996028523:job-queue/TowerForge-isnEDBLvHDAIteOEF44ow-work\"\n" +
-                "        }\n" +
-                "      ],\n" +
                 "      \"discriminator\": \"aws-batch\"\n" +
                 "    },\n" +
                 "    \"lastUsed\": null,\n" +
@@ -360,8 +332,10 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
                 "    \"credentialsId\": \"6g0ER59L4ZoE5zpOmUP48D\"\n" +
                 "  }", ComputeConfig.class);
 
+        String configOutput = new JSON().getContext(ComputeConfig.class).writerWithDefaultPrettyPrinter().writeValueAsString(computeConfig);
+
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvExport(computeConfig, null).toString(), out.stdOut);
+        assertEquals(new ComputeEnvExport(configOutput, null).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
 
     }

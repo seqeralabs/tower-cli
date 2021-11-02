@@ -11,9 +11,12 @@
 
 package io.seqera.tower.cli.commands.pipelines;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.ApiException;
+import io.seqera.tower.JSON;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.pipelines.PipelinesExport;
+import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.cli.utils.ModelHelper;
 import io.seqera.tower.model.CreatePipelineRequest;
 import io.seqera.tower.model.DescribeLaunchResponse;
@@ -45,6 +48,18 @@ public class ExportCmd extends AbstractPipelinesCmd{
         createPipelineRequest.setIcon(pipeline.getIcon());
         createPipelineRequest.setLaunch(workflowLaunchRequest);
 
-        return new PipelinesExport(createPipelineRequest, fileName);
+        String configOutput = "";
+
+        try {
+            configOutput = new JSON().getContext(CreatePipelineRequest.class).writerWithDefaultPrettyPrinter().writeValueAsString(createPipelineRequest);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        if (fileName != null && !fileName.equals("-")) {
+            FilesHelper.saveString(fileName, configOutput);
+        }
+
+        return new PipelinesExport(configOutput, fileName);
     }
 }
