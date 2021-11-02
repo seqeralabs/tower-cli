@@ -554,6 +554,18 @@ class PipelinesCmdTest extends BaseCmdTest {
                         .withContentType(MediaType.APPLICATION_JSON)
         );
 
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"3xkkzYH2nbD3nZjrzKm0oR\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/3xkkzYH2nbD3nZjrzKm0oR"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_env_view")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
         ExecOut out = exec(mock, "pipelines", "import", tempFile(new String(loadResource("pipelines_create"), StandardCharsets.UTF_8), "data", ".json"), "-n", "pipelineNew");
 
         assertEquals("", out.stdErr);
@@ -561,4 +573,35 @@ class PipelinesCmdTest extends BaseCmdTest {
         assertEquals(0, out.exitCode);
     }
 
+    @Test
+    void testImportWithComputeEnv(MockServerClient mock) throws IOException {
+        mock.when(
+                request().withMethod("POST").withPath("/pipelines")
+                        .withBody("{\"name\":\"pipelineNew\",\"launch\":{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\",\"pipeline\":\"https://github.com/grananda/nextflow-hello\",\"workDir\":\"s3://nextflow-ci/julio\",\"revision\":\"main\",\"resume\":false,\"pullLatest\":false,\"stubRun\":false}}")
+                        .withContentType(MediaType.APPLICATION_JSON), exactly(1)
+        ).respond(
+                response()
+                        .withStatusCode(200)
+                        .withBody(loadResource("pipelines_create_response"))
+                        .withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"isnEDBLvHDAIteOEF44ow\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/isnEDBLvHDAIteOEF44ow"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_env_view")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "-v","pipelines", "import", tempFile(new String(loadResource("pipelines_create"), StandardCharsets.UTF_8), "data", ".json"), "-n", "pipelineNew", "-c", "demo");
+
+        assertEquals("", out.stdErr);
+        assertEquals(new PipelinesCreated(USER_WORKSPACE_NAME, "pipelineNew").toString(), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
 }
