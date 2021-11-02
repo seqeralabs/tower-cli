@@ -13,8 +13,11 @@ package io.seqera.tower.cli.responses.ComputeEnvs;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.JSON;
+import io.seqera.tower.cli.commands.computeenvs.platforms.AwsBatchForgePlatform;
+import io.seqera.tower.cli.commands.computeenvs.platforms.AwsBatchManualPlatform;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.FilesHelper;
+import io.seqera.tower.model.AwsBatchConfig;
 import io.seqera.tower.model.ComputeConfig;
 
 public class ComputeEnvExport extends Response {
@@ -30,6 +33,16 @@ public class ComputeEnvExport extends Response {
     @Override
     public String toString() {
         String configOutput = "";
+
+        // Remove forged resources
+        if (computeConfig instanceof AwsBatchConfig) {
+            AwsBatchConfig awsCfg = (AwsBatchConfig) computeConfig;
+            if (awsCfg.getForge() != null) {
+                AwsBatchForgePlatform.clean(awsCfg);
+            } else {
+                AwsBatchManualPlatform.clean(awsCfg);
+            }
+        }
 
         try {
             configOutput = new JSON().getContext(ComputeConfig.class).writerWithDefaultPrettyPrinter().writeValueAsString(computeConfig);

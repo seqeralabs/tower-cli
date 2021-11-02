@@ -37,8 +37,10 @@ public class PipelinesExport extends Response {
             e.printStackTrace();
         }
 
-        if (fileName != null) {
+        if (fileName != null && !fileName.equals("-")) {
             FilesHelper.saveString(fileName, configOutput);
+
+            return ansi(String.format("%n  @|yellow Pipeline exported into '%s' |@%n", fileName));
         }
 
         return configOutput;

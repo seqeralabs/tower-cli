@@ -43,6 +43,6 @@ public class ImportCmd extends AbstractCreateCmd {
 
     @Override
     protected Platform getPlatform() {
-        return null;
+        throw new UnsupportedOperationException("Unknown platform");
     }
 }
