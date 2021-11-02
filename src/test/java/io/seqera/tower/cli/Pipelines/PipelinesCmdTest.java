@@ -86,6 +86,8 @@ class PipelinesCmdTest extends BaseCmdTest {
     @Test
     void testUpdateComputeEnv(MockServerClient mock) {
 
+        mock.reset();
+
         mock.when(
                 request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "sleep_one_minute"), exactly(1)
         ).respond(
@@ -598,7 +600,7 @@ class PipelinesCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("compute_env_view")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "-v","pipelines", "import", tempFile(new String(loadResource("pipelines_create"), StandardCharsets.UTF_8), "data", ".json"), "-n", "pipelineNew", "-c", "demo");
+        ExecOut out = exec(mock, "pipelines", "import", tempFile(new String(loadResource("pipelines_create"), StandardCharsets.UTF_8), "data", ".json"), "-n", "pipelineNew", "-c", "demo");
 
         assertEquals("", out.stdErr);
         assertEquals(new PipelinesCreated(USER_WORKSPACE_NAME, "pipelineNew").toString(), out.stdOut);
