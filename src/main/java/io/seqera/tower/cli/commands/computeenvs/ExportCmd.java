@@ -15,7 +15,6 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.responses.ComputeEnvs.ComputeEnvExport;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.ComputeEnv;
-import io.seqera.tower.model.CreateComputeEnvRequest;
 import picocli.CommandLine;
 
 @CommandLine.Command(
@@ -41,9 +40,6 @@ public class ExportCmd extends AbstractComputeEnvCmd {
         computeEnv.setPlatform(ce.getPlatform());
         computeEnv.setConfig(ce.getConfig());
 
-        CreateComputeEnvRequest request = new CreateComputeEnvRequest();
-        request.setComputeEnv(computeEnv);
-
-        return new ComputeEnvExport(request, fileName);
+        return new ComputeEnvExport(computeEnv.getConfig(), fileName);
     }
 }

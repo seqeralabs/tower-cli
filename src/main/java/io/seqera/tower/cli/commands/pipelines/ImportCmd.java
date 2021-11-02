@@ -36,9 +36,6 @@ public class ImportCmd extends AbstractPipelinesCmd {
     @CommandLine.Option(names = {"-c", "--compute-env"}, description = "Compute environment name (defaults to json file defined environment)")
     public String computeEnv;
 
-    @CommandLine.Option(names = {"-w", "--workspace"}, description = "Workspace ID to create new pipeline", required = true)
-    public Long workspaceId = null;
-
     @CommandLine.Parameters(index = "0", paramLabel = "FILENAME", description = "File name to import", arity = "1")
     Path fileName = null;
 
@@ -50,12 +47,12 @@ public class ImportCmd extends AbstractPipelinesCmd {
         request.setName(name);
 
         if (computeEnv != null) {
-            ComputeEnv ce = findComputeEnvironmentByName(computeEnv, workspaceId);
+            ComputeEnv ce = findComputeEnvironmentByName(computeEnv, workspaceId());
             request.getLaunch().setComputeEnvId(ce.getId());
         }
 
-        api().createPipeline(request, workspaceId);
+        api().createPipeline(request, workspaceId());
 
-        return new PipelinesCreated(workspaceId.toString(), name);
+        return new PipelinesCreated(workspaceRef(), name);
     }
 }

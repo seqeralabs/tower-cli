@@ -30,7 +30,6 @@ import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import io.seqera.tower.model.User;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.logging.LoggingFeature;
-import picocli.CommandLine;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -206,7 +205,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     }
 
     protected ComputeEnv findComputeEnvironmentByName(String name, Long workspaceId) throws ApiException {
-        ListComputeEnvsResponse listComputeEnvsResponse = api().listComputeEnvs("", workspaceId);
+        ListComputeEnvsResponse listComputeEnvsResponse = api().listComputeEnvs(null, workspaceId);
 
         ListComputeEnvsResponseEntry listComputeEnvsResponseEntry =  listComputeEnvsResponse
                 .getComputeEnvs()

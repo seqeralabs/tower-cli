@@ -15,15 +15,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.JSON;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.FilesHelper;
-import io.seqera.tower.model.CreateComputeEnvRequest;
+import io.seqera.tower.model.ComputeConfig;
 
 public class ComputeEnvExport extends Response {
 
-    public final CreateComputeEnvRequest request;
+    public final ComputeConfig computeConfig;
     public final String fileName;
 
-    public ComputeEnvExport(CreateComputeEnvRequest request, String fileName) {
-        this.request = request;
+    public ComputeEnvExport(ComputeConfig computeConfig, String fileName) {
+        this.computeConfig = computeConfig;
         this.fileName = fileName;
     }
 
@@ -32,13 +32,15 @@ public class ComputeEnvExport extends Response {
         String configOutput = "";
 
         try {
-            configOutput = new JSON().getContext(CreateComputeEnvRequest.class).writerWithDefaultPrettyPrinter().writeValueAsString(request);
+            configOutput = new JSON().getContext(ComputeConfig.class).writerWithDefaultPrettyPrinter().writeValueAsString(computeConfig);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
 
-        if (fileName != null) {
+        if (fileName != null && !fileName.equals("-")) {
             FilesHelper.saveString(fileName, configOutput);
+
+            return ansi(String.format("%n  @|yellow Compute environment exported into '%s' |@%n", fileName));
         }
 
         return configOutput;

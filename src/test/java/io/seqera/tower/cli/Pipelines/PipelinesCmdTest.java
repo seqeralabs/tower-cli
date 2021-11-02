@@ -551,10 +551,10 @@ class PipelinesCmdTest extends BaseCmdTest {
                         .withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "pipelines", "import", tempFile(new String(loadResource("pipelines_create"), StandardCharsets.UTF_8), "data", ".json"), "-n", "pipelineNew", "-w", "144996268157965");
+        ExecOut out = exec(mock, "pipelines", "import", tempFile(new String(loadResource("pipelines_create"), StandardCharsets.UTF_8), "data", ".json"), "-n", "pipelineNew");
 
         assertEquals("", out.stdErr);
-        assertEquals(new PipelinesCreated("144996268157965", "pipelineNew").toString(), out.stdOut);
+        assertEquals(new PipelinesCreated(USER_WORKSPACE_NAME, "pipelineNew").toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
