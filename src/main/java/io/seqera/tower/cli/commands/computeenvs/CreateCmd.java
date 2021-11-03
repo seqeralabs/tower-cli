@@ -19,7 +19,6 @@ import io.seqera.tower.cli.commands.computeenvs.create.CreateAzureCmd;
 import io.seqera.tower.cli.commands.computeenvs.create.CreateEksCmd;
 import io.seqera.tower.cli.commands.computeenvs.create.CreateGkeCmd;
 import io.seqera.tower.cli.commands.computeenvs.create.CreateGoogleCmd;
-import io.seqera.tower.cli.commands.computeenvs.create.CreateJsonCmd;
 import io.seqera.tower.cli.commands.computeenvs.create.CreateK8sCmd;
 import io.seqera.tower.cli.commands.computeenvs.create.CreateLsfCmd;
 import io.seqera.tower.cli.commands.computeenvs.create.CreateSlurmCmd;
@@ -36,7 +35,6 @@ import java.io.IOException;
         subcommands = {
                 CreateK8sCmd.class,
                 CreateAwsCmd.class,
-                CreateJsonCmd.class,
                 CreateEksCmd.class,
                 CreateSlurmCmd.class,
                 CreateLsfCmd.class,

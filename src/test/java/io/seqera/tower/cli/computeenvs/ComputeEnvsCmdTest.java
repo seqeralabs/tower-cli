@@ -16,13 +16,16 @@ package io.seqera.tower.cli.computeenvs;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.ApiException;
+import io.seqera.tower.JSON;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
 import io.seqera.tower.cli.responses.ComputeEnvCreated;
 import io.seqera.tower.cli.responses.ComputeEnvDeleted;
 import io.seqera.tower.cli.responses.ComputeEnvList;
 import io.seqera.tower.cli.responses.ComputeEnvView;
+import io.seqera.tower.cli.responses.ComputeEnvs.ComputeEnvExport;
 import io.seqera.tower.model.AwsBatchConfig;
+import io.seqera.tower.model.ComputeConfig;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.ComputeEnvStatus;
 import io.seqera.tower.model.ForgeConfig;
@@ -263,8 +266,82 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testCreateFromJson(MockServerClient mock) throws IOException {
+    public void testCreateWithoutSubCommands(MockServerClient mock) {
+        ExecOut out = exec(mock, "compute-envs", "create");
+        assertEquals(-1, out.exitCode);
+        assertTrue(out.stdErr.contains("Missing Required Subcommand"));
+    }
 
+    @Test
+    public void testExport(MockServerClient mock) throws JsonProcessingException {
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_envs_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/3xkkzYH2nbD3nZjrzKm0oR"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_env_view")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "compute-envs", "export", "-n", "ce1");
+
+        ComputeConfig computeConfig = parseJson("{\n" +
+                "      \"region\": \"eu-west-1\",\n" +
+                "      \"computeJobRole\": null,\n" +
+                "      \"headJobRole\": null,\n" +
+                "      \"cliPath\": \"/home/ec2-user/miniconda/bin/aws\",\n" +
+                "      \"workDir\": \"s3://nextflow-ci/jordeu\",\n" +
+                "      \"preRunScript\": null,\n" +
+                "      \"postRunScript\": null,\n" +
+                "      \"headJobCpus\": null,\n" +
+                "      \"headJobMemoryMb\": null,\n" +
+                "      \"forge\": {\n" +
+                "        \"type\": \"SPOT\",\n" +
+                "        \"minCpus\": 0,\n" +
+                "        \"maxCpus\": 123,\n" +
+                "        \"gpuEnabled\": false,\n" +
+                "        \"ebsAutoScale\": true,\n" +
+                "        \"instanceTypes\": null,\n" +
+                "        \"allocStrategy\": null,\n" +
+                "        \"imageId\": null,\n" +
+                "        \"vpcId\": null,\n" +
+                "        \"subnets\": null,\n" +
+                "        \"securityGroups\": null,\n" +
+                "        \"fsxMount\": null,\n" +
+                "        \"fsxName\": null,\n" +
+                "        \"fsxSize\": null,\n" +
+                "        \"disposeOnDeletion\": true,\n" +
+                "        \"ec2KeyPair\": null,\n" +
+                "        \"allowBuckets\": null,\n" +
+                "        \"ebsBlockSize\": null,\n" +
+                "        \"fusionEnabled\": true,\n" +
+                "        \"bidPercentage\": null,\n" +
+                "        \"efsCreate\": null,\n" +
+                "        \"efsId\": null,\n" +
+                "        \"efsMount\": null\n" +
+                "      },\n" +
+                "      \"discriminator\": \"aws-batch\"\n" +
+                "    },\n" +
+                "    \"lastUsed\": null,\n" +
+                "    \"deleted\": null,\n" +
+                "    \"message\": null,\n" +
+                "    \"primary\": null,\n" +
+                "    \"credentialsId\": \"6g0ER59L4ZoE5zpOmUP48D\"\n" +
+                "  }", ComputeConfig.class);
+
+        String configOutput = new JSON().getContext(ComputeConfig.class).writerWithDefaultPrettyPrinter().writeValueAsString(computeConfig);
+
+        assertEquals("", out.stdErr);
+        assertEquals(new ComputeEnvExport(configOutput, null).toString(), out.stdOut);
+        assertEquals(0, out.exitCode);
+
+    }
+
+    @Test
+    public void testImport(MockServerClient mock) throws IOException {
         mock.when(
                 request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "aws-batch"), exactly(1)
         ).respond(
@@ -277,17 +354,12 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"3T6xWeFD63QIuzdAowvSTC\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "compute-envs", "create", "json", "-n", "json", "--config", tempFile(new String(loadResource("cejson"), StandardCharsets.UTF_8), "ce", "json"));
+//        ExecOut out = exec(mock, "compute-envs", "import", tempFile("{\"computeEnv\":{\"name\":\"ce3\",\"platform\":\"aws-batch\",\"config\":{\"region\":\"eu-west-1\",\"cliPath\":\"/home/ec2-user/miniconda/bin/aws\",\"workDir\":\"s3://nextflow-ci/jordeu\",\"forge\":{\"type\":\"SPOT\",\"minCpus\":0,\"maxCpus\":123,\"gpuEnabled\":false,\"ebsAutoScale\":true,\"disposeOnDeletion\":true,\"fusionEnabled\":false,\"efsCreate\":true},\"discriminator\":\"aws-batch\"},\"credentialsId\":\"6g0ER59L4ZoE5zpOmUP48D\"}}", "data", ".json"), "-n", "ce3", "-w", "144996268157965");
+        ExecOut out = exec(mock, "compute-envs", "import", tempFile(new String(loadResource("cejson"), StandardCharsets.UTF_8), "ce", "json"), "-n", "json", "-c", "6g0ER59L4ZoE5zpOmUP48D");
+
 
         assertEquals("", out.stdErr);
         assertEquals(new ComputeEnvCreated(ComputeEnv.PlatformEnum.AWS_BATCH.getValue(), "json", USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
-    }
-
-    @Test
-    public void testCreateWithoutSubCommands(MockServerClient mock) {
-        ExecOut out = exec(mock, "compute-envs", "create");
-        assertEquals(-1, out.exitCode);
-        assertTrue(out.stdErr.contains("Missing Required Subcommand"));
     }
 }

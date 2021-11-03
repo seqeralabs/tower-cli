@@ -9,20 +9,22 @@
  * defined by the Mozilla Public License, v. 2.0.
  */
 
-package io.seqera.tower.cli.responses;
+package io.seqera.tower.cli.responses.pipelines;
 
-public class PipelinesDeleted extends Response {
+import io.seqera.tower.cli.responses.Response;
 
-    public final String id;
+public class PipelinesUpdated extends Response {
+
     public final String workspaceRef;
+    public final String pipelineName;
 
-    public PipelinesDeleted(String id, String workspaceRef) {
-        this.id = id;
+    public PipelinesUpdated(String workspaceRef, String pipelineName) {
         this.workspaceRef = workspaceRef;
+        this.pipelineName = pipelineName;
     }
 
     @Override
     public String toString() {
-        return ansi(String.format("%n  @|yellow Pipeline '%s' deleted at %s workspace|@%n", id, workspaceRef));
+        return ansi(String.format("%n  @|yellow Pipeline '%s' updated at %s workspace|@%n", pipelineName, workspaceRef));
     }
 }

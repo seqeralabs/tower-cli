@@ -1,0 +1,12 @@
+{
+  "name": "pipelineNew",
+  "launch": {
+    "computeEnvId": "3xkkzYH2nbD3nZjrzKm0oR",
+    "pipeline": "https://github.com/grananda/nextflow-hello",
+    "workDir": "s3://nextflow-ci/julio",
+    "revision": "main",
+    "resume": false,
+    "pullLatest": false,
+    "stubRun": false
+  }
+}

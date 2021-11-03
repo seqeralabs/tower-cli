@@ -9,10 +9,11 @@
  * defined by the Mozilla Public License, v. 2.0.
  */
 
-package io.seqera.tower.cli.responses;
+package io.seqera.tower.cli.responses.pipelines;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.JSON;
+import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.ModelHelper;
 import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.Launch;

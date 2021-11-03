@@ -71,6 +71,7 @@ public abstract class AbstractWorkspaceCmd extends AbstractApiCmd {
 
         return orgAndWorkspaceDbDtoList.stream().findFirst();
     }
+
     private Optional<OrgAndWorkspaceDbDto> findOrgAndWorkspaceById(Long workspaceId) throws ApiException {
         ListWorkspacesAndOrgResponse workspacesAndOrgResponse = api().listWorkspacesUser(userId());
 
