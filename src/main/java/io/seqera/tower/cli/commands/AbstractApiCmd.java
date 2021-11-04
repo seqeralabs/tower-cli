@@ -95,19 +95,6 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         };
     }
 
-//    protected Long workspaceId() throws ApiException {
-//        if (workspaceId == null) {
-//            if (app().workspaceId != null) {
-//                workspaceId = app().workspaceId;
-//            } else {
-//                if (app().orgAndWorkspaceNames != null) {
-//                    loadOrgAndWorkspaceFromNames();
-//                }
-//            }
-//        }
-//        return workspaceId;
-//    }
-
     protected Long orgId(Long workspaceId) throws ApiException {
         if (orgId == null) {
             if (workspaceId != null) {
