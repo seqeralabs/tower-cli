@@ -1,46 +1,32 @@
-# Tower CLI app
+## Tower CLI
 
-Proof of concept of Tower command line client app based on Java native compilation, Micronaut HTTP declarative client and Tower domain classes
+Tower command line client allows to manage all the resources available at Tower. 
 
-## Installation
+### Installation
 
-From the last Github action at artifacts section, download the binary for your OS. Unzip it, give it execution permissions with `chmod +x ./tw` and move it into a folder that it's in your path (ex: `sudo mv ./tw /usr/local/bin/tw`)
+Tower CLI it is distributed as a single binary exacutable file. You only need to download your platform binary and execute it.
 
-## Build binary development version
+1. Download the latest release binary from [here](https://github.com/seqeralabs/tower-cli/releases)
+2. Enable execution permissions (`chmod +x ./tw` on Mac and Linux platforms)
+3. (OPTIONAL) Move it into a folder that is in your path.
 
-1. Download GraalVM (Java 11 version) from [this link](https://github.com/graalvm/graalvm-ce-builds/releases/tag/vm-20.2.0).
+### Quick start
 
-2. Install `native-image` tool:
+Before running the CLI:
+- You need to create a **personal access token** at Tower. See [here](https://help.tower.nf/api/overview/#authentication).
 
-    ```
-    gu install native-image
-    ``` 
+Running the CLI using your token:
+```
+./tw -t <your personal access token> ...
+```
 
-3. Create the native client:
+### Tips
 
-    ```
-     ./gradlew nativeImage
-    ```
+- Alternative you can define the `TOWER_ACCESS_TOKEN` environment variable, and then you don't need to pass the personal access token as an option.
+- If you are using an on premises Tower you can set the API url using `TOWER_API_ENDPOINT` environment variable or the `--url` option.
+- You can fix the workspace using the `TOWER_WORKSPACE_ID` environment variable.
 
-4. then run
-
-    ```
-    ./build/graal/tw
-    ```
-
-## Run non-binary development version
-
-You can run a non-binary development version running the script `./tw` at the root of this repository.
-
-## Configuration
-
-To use the command line you need to define these environment variables (they also can be provided using command line options):
-
-1. `TOWER_ACCESS_TOKEN`: (mandatory) the user access token
-2. `TOWER_WORKSPACE_ID`: (optional) the workspace id. Defaults to user workspace.
-3. `TOWER_API_ENDPOINT`: (optional) the Tower API URL. Defaults to `api.tower.nf` API.
-
-## Autocomplete
+### Autocomplete
 
 To install the autocomplete only for the current session run:
 
@@ -48,16 +34,17 @@ To install the autocomplete only for the current session run:
 source <(tw generate-completion) 
 ```
 
-## Tutorial
+To permanently add the autocomplete add the previous line to the init script of your shell manager (ie: `~/.bashrc`, `~/.zshrc` ...) 
+
+## Examples
+
+### Step by step
 
 Define Tower token and server URL (you can add this variable at your `.bashrc` profile if you do not want to set them on each session):
 
 ```
 export TOWER_ACCESS_TOKEN=[your personal token]
-export TOWER_SERVER_URL=https://scratch.staging-tower.xyz/api 
 ```
-
-_NOTE: If you don't set the `TOWER_WORKSPACE_ID` the user workspace will be used._
 
 First test that it is working
 
@@ -122,7 +109,7 @@ Update a launchpad pipeline
 tw pipelines update -n sleep_one_minute --params=<(echo 'timeout: 30')
 ```
 
-## Launch usage examples
+### Launch command
 
 Run a workspace defined pipeline with custom parameters file:
 
@@ -142,23 +129,9 @@ Run any Nextflow pipeline setting a profile.
 tw launch nf-core/sarek --profile test,docker --params ./myparams.yaml
 ```
 
-Select the compute environment that you want to use:
+Select a compute environment that you want to use:
 
 ```
 tw launch nf-core/sarek --compute-env "aws seqera" --profile test,docker
 ```
 
-### Development
-
-To force reload SNAPSHOT dependencies run:
-
-```
-./gradlew clean build --refresh-dependencies
-```
-
-### Credits & Links
-
-* [Szymon Stepniak YT tutorial](https://www.youtube.com/watch?v=RPdugI8eZgo)
-* [Szymon Stepniak example](https://github.com/wololock/gttp)
-* [Mitch Seymour's blog post](https://medium.com/@mitch.seymour/building-native-java-clis-with-graalvm-picocli-and-gradle-2e8a8388d70d)
-* [CLI applications with GraalVM Native Image](https://medium.com/graalvm/cli-applications-with-graalvm-native-image-d629a40aa0be)

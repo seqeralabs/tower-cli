@@ -1,6 +1,4 @@
 name: Tower CLI continuous build
-# read more here
-# https://help.github.com/en/articles/workflow-syntax-for-github-actions#on
 on:
   push:
     branches:
@@ -12,8 +10,10 @@ on:
 jobs:
 
   linux-image:
-    name: Tower CLI build Linux native image
+    name: Linux
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-latest
+    container: public.ecr.aws/seqera-labs/graalvm-static:latest
     timeout-minutes: 90
 
     steps:
@@ -25,11 +25,18 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Setup Java
-        uses: actions/setup-java@v1
+      - name: Install build-essentials
+        run: DEBIAN_FRONTEND=noninteractive apt update && apt install --assume-yes --no-install-recommends build-essential zlib1g-dev && rm -rf /var/lib/apt/lists/*
+
+      - name: Setup Graalvm
+        uses: DeLaGuardo/setup-graalvm@master
         with:
-          java-version: '11'
-          architecture: x64
+          graalvm: '21.2.0'
+          java: 'java11'
+          arch: 'amd64'
+
+      - name: Install native-image component
+        run: gu install native-image
 
       - name: Tests
         run: ./gradlew cleanTest test
@@ -42,22 +49,18 @@ jobs:
           path: build/reports/tests/test/
 
       - name: Build Native Image
-        run: ./gradlew nativeImage
-
-      - name: Extract version
-        run: echo "::set-output name=VERSION::$(cat src/main/resources/META-INF/build-info.properties | grep "version=" | cut -d= -f2)_$(cat src/main/resources/META-INF/build-info.properties | grep "commitId=" | cut -d= -f2)"
-        id: extract-version
+        run: ./gradlew nativeCompile
 
       - name: Upload linux native image artifact
         uses: actions/upload-artifact@v2
         with:
-          name: tw_${{ steps.extract-version.outputs.VERSION }}_linux
-          path: build/graal/tw
+          name: tw_linux
+          path: build/native/nativeCompile/tw
 
       - name: Binary tests
         run: ./gradlew cleanTest test
         env:
-          TOWER_CLI: build/graal/tw
+          TOWER_CLI: build/native/nativeCompile/tw
 
       - name: Binary tests reports
         uses: actions/upload-artifact@v2
@@ -67,7 +70,8 @@ jobs:
           path: build/reports/tests/test/
 
   mac-image:
-    name: Tower CLI build Mac native image
+    name: MAC
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: macos-latest
     timeout-minutes: 90
 
@@ -80,11 +84,15 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Setup Java
-        uses: actions/setup-java@v1
+      - name: Setup Graalvm
+        uses: DeLaGuardo/setup-graalvm@master
         with:
-          java-version: '11'
-          architecture: x64
+          graalvm: '21.2.0'
+          java: 'java11'
+          arch: 'amd64'
+
+      - name: Install native-image component
+        run: gu install native-image
 
       - name: Tests
         run: ./gradlew cleanTest test
@@ -97,22 +105,18 @@ jobs:
           path: build/reports/tests/test/
 
       - name: Build Native Image
-        run: ./gradlew nativeImage
-
-      - name: Extract version
-        run: echo "::set-output name=VERSION::$(cat src/main/resources/META-INF/build-info.properties | grep "version=" | cut -d= -f2)_$(cat src/main/resources/META-INF/build-info.properties | grep "commitId=" | cut -d= -f2)"
-        id: extract-version
+        run: ./gradlew nativeCompile
 
       - name: Upload Mac native image artifact
         uses: actions/upload-artifact@v2
         with:
-          name: tw_${{ steps.extract-version.outputs.VERSION }}_mac
-          path: build/graal/tw
+          name: tw_mac
+          path: build/native/nativeCompile/tw
 
       - name: Binary tests
         run: ./gradlew cleanTest test
         env:
-          TOWER_CLI: build/graal/tw
+          TOWER_CLI: build/native/nativeCompile/tw
 
       - name: Binary tests reports
         uses: actions/upload-artifact@v2
@@ -123,6 +127,7 @@ jobs:
 
   windows-image:
     name: Tower CLI build Windows native image
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: windows-latest
     timeout-minutes: 90
 
@@ -135,11 +140,21 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Setup Java
-        uses: actions/setup-java@v1
+      - name: Add MSVC dev setup
+        uses: ilammy/msvc-dev-cmd@v1.10.0
+
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.0.3
+
+      - name: Setup Graalvm
+        uses: DeLaGuardo/setup-graalvm@master
         with:
-          java-version: '11'
-          architecture: x64
+          graalvm: '21.2.0'
+          java: 'java11'
+          arch: 'amd64'
+
+      - name: Install native-image component
+        run: gu.cmd install native-image
 
       - name: Tests
         run: ./gradlew cleanTest test
@@ -152,22 +167,18 @@ jobs:
           path: build/reports/tests/test/
 
       - name: Build Native Image
-        run: ./gradlew nativeImage
-
-      - name: Extract version
-        run: echo "::set-output name=VERSION::$(cat src/main/resources/META-INF/build-info.properties | grep "version=" | cut -d= -f2)_$(cat src/main/resources/META-INF/build-info.properties | grep "commitId=" | cut -d= -f2)"
-        id: extract-version
+        run: ./gradlew nativeCompile
 
       - name: Upload Windows native image artifact
         uses: actions/upload-artifact@v2
         with:
-          name: tw_${{ steps.extract-version.outputs.VERSION }}_windows
-          path: build/graal/tw.exe
+          name: tw_windows
+          path: build/native/nativeCompile/tw.exe
 
       - name: Binary tests
         run: ./gradlew cleanTest test
         env:
-          TOWER_CLI: build/graal/tw.exe
+          TOWER_CLI: build/native/nativeCompile/tw.exe
 
       - name: Binary tests reports
         uses: actions/upload-artifact@v2
@@ -176,4 +187,34 @@ jobs:
           name: windows-binary-test-reports
           path: build/reports/tests/test/
 
+  release:
+    name: Release
+    if: "contains(github.event.head_commit.message, '[release]') && github.event.ref=='refs/heads/master'"
+    needs: [ linux-image, mac-image, windows-image ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
+      - name: Download all build artifacts
+        uses: actions/download-artifact@v2
+
+      - name: Setup Java for JReleaser
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Version
+        id: version
+        run: |
+          VERSION=$(cat ./VERSION)
+          echo "VERSION = $VERSION"
+          echo "::set-output name=VERSION::$VERSION"
+
+      - name: Run JReleaser
+        uses: jreleaser/release-action@v1
+        env:
+          JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JRELEASER_PROJECT_VERSION: ${{ steps.version.outputs.VERSION }}
