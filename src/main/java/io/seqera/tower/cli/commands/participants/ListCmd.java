@@ -13,9 +13,9 @@ package io.seqera.tower.cli.commands.participants;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.PaginationOptions;
+import io.seqera.tower.cli.commands.global.WorkspaceOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.participants.ParticipantsList;
-import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import io.seqera.tower.model.ParticipantDbDto;
 import io.seqera.tower.model.ParticipantType;
 import picocli.CommandLine;
@@ -29,6 +29,9 @@ import java.util.stream.Collectors;
         description = "List workspace participants"
 )
 public class ListCmd extends AbstractParticipantsCmd {
+
+    @CommandLine.Mixin
+    public WorkspaceOptions workspace;
 
     @CommandLine.Option(names = {"-t", "--type"}, description = "Participant type to list (MEMBER, TEAM, COLLABORATOR)")
     public ParticipantType type;
@@ -44,12 +47,12 @@ public class ListCmd extends AbstractParticipantsCmd {
         Integer max = PaginationOptions.getMax(paginationOptions);
         Integer offset = PaginationOptions.getOffset(paginationOptions, max);
 
-        List<ParticipantDbDto> response = api().listWorkspaceParticipants(orgId(), workspaceId(), max, offset, startsWith).getParticipants();
+        List<ParticipantDbDto> response = api().listWorkspaceParticipants(orgId(workspace.workspaceId), workspace.workspaceId, max, offset, startsWith).getParticipants();
 
         if (response != null && type != null) {
             response = response.stream().filter(it -> it.getType() == type).collect(Collectors.toList());
         }
 
-        return new ParticipantsList(orgName(), workspaceName(), response);
+        return new ParticipantsList(orgName(workspace.workspaceId), workspaceName(workspace.workspaceId), response);
     }
 }

@@ -12,13 +12,15 @@
 package io.seqera.tower.cli.commands.pipelines;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.responses.pipelines.PipelinesCreated;
+import io.seqera.tower.cli.commands.global.WorkspaceOptions;
 import io.seqera.tower.cli.responses.Response;
+import io.seqera.tower.cli.responses.pipelines.PipelinesCreated;
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.CreatePipelineRequest;
 import io.seqera.tower.model.CreatePipelineResponse;
 import io.seqera.tower.model.WorkflowLaunchRequest;
+import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Option;
@@ -31,6 +33,9 @@ import java.io.IOException;
         description = "Create a workspace pipeline"
 )
 public class CreateCmd extends AbstractPipelinesCmd {
+
+    @CommandLine.Mixin
+    public WorkspaceOptions workspace;
 
     @Option(names = {"-n", "--name"}, description = "Pipeline name", required = true)
     public String name;
@@ -48,7 +53,7 @@ public class CreateCmd extends AbstractPipelinesCmd {
     protected Response exec() throws ApiException, IOException {
 
         // Retrieve the provided computeEnv or use the primary if not provided
-        ComputeEnv ce = opts.computeEnv != null ? computeEnvByName(opts.computeEnv) : primaryComputeEnv();
+        ComputeEnv ce = opts.computeEnv != null ? computeEnvByName(workspace.workspaceId, opts.computeEnv) : primaryComputeEnv(workspace.workspaceId);
 
         // Use compute env values by default
         String workDirValue = opts.workDir == null ? ce.getConfig().getWorkDir() : opts.workDir;
@@ -77,9 +82,9 @@ public class CreateCmd extends AbstractPipelinesCmd {
                                 .entryName(opts.entryName)
                                 .schemaName(opts.schemaName)
                         )
-                , workspaceId()
+                , workspace.workspaceId
         );
 
-        return new PipelinesCreated(workspaceRef(), response.getPipeline().getName());
+        return new PipelinesCreated(workspaceRef(workspace.workspaceId), response.getPipeline().getName());
     }
 }

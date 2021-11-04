@@ -12,9 +12,10 @@
 package io.seqera.tower.cli.commands.participants;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.commands.global.OrgAndWorkspace;
+import io.seqera.tower.cli.commands.global.WorkspaceOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.participants.ParticipantChanged;
-import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import io.seqera.tower.model.ParticipantDbDto;
 import io.seqera.tower.model.ParticipantType;
 import io.seqera.tower.model.UpdateParticipantRoleRequest;
@@ -29,6 +30,9 @@ import java.io.IOException;
 )
 public class ChangeCmd extends AbstractParticipantsCmd {
 
+    @CommandLine.Mixin
+    public WorkspaceOptions workspace;
+
     @CommandLine.Option(names = {"-n", "--name"}, description = "Team name, username or email of existing organization team or member", required = true)
     public String name;
 
@@ -41,13 +45,13 @@ public class ChangeCmd extends AbstractParticipantsCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
 
-        ParticipantDbDto participant = findWorkspaceParticipant(orgId(), workspaceId(), name, type);
+        ParticipantDbDto participant = findWorkspaceParticipant(orgId(workspace.workspaceId), workspace.workspaceId, name, type);
 
         UpdateParticipantRoleRequest request = new UpdateParticipantRoleRequest();
         request.setRole(role);
 
-        api().updateWorkspaceParticipantRole(orgId(), workspaceId(), participant.getParticipantId(), request);
+        api().updateWorkspaceParticipantRole(orgId(workspace.workspaceId), workspace.workspaceId, participant.getParticipantId(), request);
 
-        return new ParticipantChanged(workspaceName(), name, role.getValue());
+        return new ParticipantChanged(workspaceName(workspace.workspaceId), name, role.getValue());
     }
 }

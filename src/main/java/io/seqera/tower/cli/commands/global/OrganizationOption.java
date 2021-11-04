@@ -9,16 +9,12 @@
  * defined by the Mozilla Public License, v. 2.0.
  */
 
-package io.seqera.tower.cli.commands.computeenvs;
+package io.seqera.tower.cli.commands.global;
 
-import io.seqera.tower.cli.commands.AbstractApiCmd;
-import picocli.CommandLine.Command;
+import picocli.CommandLine;
 
-@Command
-public abstract class AbstractComputeEnvCmd extends AbstractApiCmd {
-
-    public AbstractComputeEnvCmd() {
-    }
+public class OrganizationOption {
+    
+    @CommandLine.Option(names = {"-o", "--organization-id"}, description = "Organization numeric identifier (TOWER_ORGANIZATION_ID)", defaultValue = "${TOWER_ORGANIZATION_ID}")
+    public Long organizationId = null;
 }
-
-

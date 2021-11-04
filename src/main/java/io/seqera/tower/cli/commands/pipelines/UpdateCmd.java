@@ -12,8 +12,9 @@
 package io.seqera.tower.cli.commands.pipelines;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.responses.pipelines.PipelinesUpdated;
+import io.seqera.tower.cli.commands.global.WorkspaceOptions;
 import io.seqera.tower.cli.responses.Response;
+import io.seqera.tower.cli.responses.pipelines.PipelinesUpdated;
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.Launch;
@@ -21,6 +22,7 @@ import io.seqera.tower.model.PipelineDbDto;
 import io.seqera.tower.model.UpdatePipelineRequest;
 import io.seqera.tower.model.UpdatePipelineResponse;
 import io.seqera.tower.model.WorkflowLaunchRequest;
+import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Option;
@@ -34,6 +36,9 @@ import static io.seqera.tower.cli.utils.ModelHelper.coalesce;
         description = "Update a workspace pipeline"
 )
 public class UpdateCmd extends AbstractPipelinesCmd {
+
+    @CommandLine.Mixin
+    public WorkspaceOptions workspace;
 
     @Option(names = {"-n", "--name"}, description = "Pipeline name", required = true)
     public String name;
@@ -50,13 +55,13 @@ public class UpdateCmd extends AbstractPipelinesCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
 
-        PipelineDbDto pipe = pipelineByName(name);
+        PipelineDbDto pipe = pipelineByName(workspace.workspaceId, name);
 
         // Retrieve current launch
-        Launch launch = api().describePipelineLaunch(pipe.getPipelineId(), workspaceId()).getLaunch();
+        Launch launch = api().describePipelineLaunch(pipe.getPipelineId(), workspace.workspaceId).getLaunch();
 
         // Retrieve the provided computeEnv or use the primary if not provided
-        ComputeEnv ce = opts.computeEnv != null ? computeEnvByName(opts.computeEnv) : launch.getComputeEnv();
+        ComputeEnv ce = opts.computeEnv != null ? computeEnvByName(workspace.workspaceId, opts.computeEnv) : launch.getComputeEnv();
 
         UpdatePipelineResponse response = api().updatePipeline(
                 pipe.getPipelineId(),
@@ -80,9 +85,9 @@ public class UpdateCmd extends AbstractPipelinesCmd {
                                 .entryName(coalesce(opts.entryName, launch.getEntryName()))
                                 .schemaName(coalesce(opts.schemaName, launch.getSchemaName()))
                         )
-                , workspaceId()
+                , workspace.workspaceId
         );
 
-        return new PipelinesUpdated(workspaceRef(), response.getPipeline().getName());
+        return new PipelinesUpdated(workspaceRef(workspace.workspaceId), response.getPipeline().getName());
     }
 }

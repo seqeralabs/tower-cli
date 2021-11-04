@@ -28,7 +28,6 @@ import io.seqera.tower.cli.commands.RunsCmd;
 import io.seqera.tower.cli.commands.TeamsCmd;
 import io.seqera.tower.cli.commands.WorkspacesCmd;
 import picocli.CommandLine;
-import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
@@ -64,12 +63,6 @@ public class Tower extends AbstractCmd {
 
     @Option(names = {"-t", "--access-token"}, description = "Tower personal access token (TOWER_ACCESS_TOKEN)", defaultValue = "${TOWER_ACCESS_TOKEN}")
     public String token;
-
-    @Option(names = {"-i", "--workspace-id"}, description = "Workspace numeric identifier (TOWER_WORKSPACE_ID)", defaultValue = "${TOWER_WORKSPACE_ID}")
-    public Long workspaceId;
-
-    @ArgGroup(exclusive = false)
-    public OrgAndWorkspace orgAndWorkspaceNames;
 
     @Option(names = {"-u", "--url"}, description = "Tower server API endpoint URL. Defaults to tower.nf (TOWER_API_ENDPOINT)", defaultValue = "${TOWER_API_ENDPOINT:-https://api.tower.nf}", required = true)
     public String url;
@@ -107,13 +100,5 @@ public class Tower extends AbstractCmd {
 
     public PrintWriter getOut() {
         return spec.commandLine().getOut();
-    }
-
-    public static class OrgAndWorkspace {
-        @Option(names = {"-w", "--workspace"}, description = "Workspace name (case insensitive)", defaultValue = "${TOWER_WORKSPACE_NAME}")
-        public String workspace;
-
-        @Option(names = {"-o", "--organization"}, description = "Organization name (case insensitive)", defaultValue = "${TOWER_ORG_NAME}")
-        public String organization;
     }
 }

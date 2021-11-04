@@ -14,12 +14,14 @@ package io.seqera.tower.cli.commands.credentials.create;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.commands.credentials.providers.CredentialsProvider;
+import io.seqera.tower.cli.commands.global.WorkspaceOptions;
 import io.seqera.tower.cli.responses.CredentialsCreated;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.CreateCredentialsRequest;
 import io.seqera.tower.model.CreateCredentialsResponse;
 import io.seqera.tower.model.CredentialsSpec;
 import io.seqera.tower.model.SecurityKeys;
+import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
@@ -27,6 +29,9 @@ import java.io.IOException;
 
 @Command
 public abstract class AbstractCreateCmd<T extends SecurityKeys> extends AbstractApiCmd {
+
+    @CommandLine.Mixin
+    public WorkspaceOptions workspace;
 
     @Option(names = {"-n", "--name"}, description = "Credentials name", required = true)
     public String name;
@@ -41,9 +46,9 @@ public abstract class AbstractCreateCmd<T extends SecurityKeys> extends Abstract
                 .baseUrl(getProvider().baseUrl())
                 .provider(getProvider().type());
 
-        CreateCredentialsResponse resp = api().createCredentials(new CreateCredentialsRequest().credentials(specs), workspaceId());
+        CreateCredentialsResponse resp = api().createCredentials(new CreateCredentialsRequest().credentials(specs), workspace.workspaceId);
 
-        return new CredentialsCreated(getProvider().type().name(), resp.getCredentialsId(), name, workspaceRef());
+        return new CredentialsCreated(getProvider().type().name(), resp.getCredentialsId(), name, workspaceRef(workspace.workspaceId));
     }
 
     protected abstract CredentialsProvider getProvider();

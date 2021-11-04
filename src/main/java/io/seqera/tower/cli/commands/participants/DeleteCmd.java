@@ -11,21 +11,24 @@
 
 package io.seqera.tower.cli.commands.participants;
 
-import java.io.IOException;
-
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.commands.global.WorkspaceOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.participants.ParticipantDeleted;
-import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import io.seqera.tower.model.ParticipantDbDto;
 import io.seqera.tower.model.ParticipantType;
 import picocli.CommandLine;
+
+import java.io.IOException;
 
 @CommandLine.Command(
         name = "delete",
         description = "Delete a workspace participant"
 )
 public class DeleteCmd extends AbstractParticipantsCmd {
+
+    @CommandLine.Mixin
+    public WorkspaceOptions workspace;
 
     @CommandLine.Option(names = {"-n", "--name"}, description = "Team name, username or email of existing organization team or member", required = true)
     public String name;
@@ -35,9 +38,9 @@ public class DeleteCmd extends AbstractParticipantsCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        ParticipantDbDto participant = findWorkspaceParticipant(orgId(), workspaceId(), name, type);
-        api().deleteWorkspaceParticipant(orgId(), workspaceId(), participant.getParticipantId());
+        ParticipantDbDto participant = findWorkspaceParticipant(orgId(workspace.workspaceId), workspace.workspaceId, name, type);
+        api().deleteWorkspaceParticipant(orgId(workspace.workspaceId), workspace.workspaceId, participant.getParticipantId());
 
-        return new ParticipantDeleted(name, workspaceName());
+        return new ParticipantDeleted(name, workspaceName(workspace.workspaceId));
     }
 }

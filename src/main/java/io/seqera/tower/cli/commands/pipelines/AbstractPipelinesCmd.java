@@ -25,16 +25,16 @@ public abstract class AbstractPipelinesCmd extends AbstractApiCmd {
     public AbstractPipelinesCmd() {
     }
 
-    protected PipelineDbDto pipelineByName(String name) throws ApiException {
+    protected PipelineDbDto pipelineByName(Long workspaceId, String name) throws ApiException {
 
-        ListPipelinesResponse list = api().listPipelines(workspaceId(), null, null, name);
+        ListPipelinesResponse list = api().listPipelines(workspaceId, null, null, name);
 
         if (list.getPipelines().isEmpty()) {
-            throw new PipelineNotFoundException(name, workspaceRef());
+            throw new PipelineNotFoundException(name, workspaceRef(workspaceId));
         }
 
         if (list.getPipelines().size() > 1) {
-            throw new MultiplePipelinesFoundException(name, workspaceRef());
+            throw new MultiplePipelinesFoundException(name, workspaceRef(workspaceId));
         }
 
         return list.getPipelines().get(0);

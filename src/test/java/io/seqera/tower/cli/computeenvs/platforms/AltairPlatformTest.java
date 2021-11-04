@@ -41,7 +41,7 @@ class AltairPlatformTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "compute-envs", "create", "altair", "-n", "altair", "-w", "/home/jordeu/nf", "-u", "jordi", "-H", "ssh.mydomain.net", "-q", "normal");
+        ExecOut out = exec(mock, "compute-envs", "create", "altair", "-n", "altair", "--work-dir", "/home/jordeu/nf", "-u", "jordi", "-H", "ssh.mydomain.net", "-q", "normal");
 
         assertEquals("", out.stdErr);
         assertEquals(new ComputeEnvCreated("altair-platform", "altair", USER_WORKSPACE_NAME).toString(), out.stdOut);
@@ -63,7 +63,7 @@ class AltairPlatformTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "compute-envs", "create", "altair", "-n", "altair", "-w", "/home/jordeu/nf", "-u", "jordi", "-H", "ssh.mydomain.net", "-q", "normal", "--max-queue-size=200");
+        ExecOut out = exec(mock, "compute-envs", "create", "altair", "-n", "altair", "--work-dir", "/home/jordeu/nf", "-u", "jordi", "-H", "ssh.mydomain.net", "-q", "normal", "--max-queue-size=200");
 
         assertEquals("", out.stdErr);
         assertEquals(new ComputeEnvCreated("altair-platform", "altair", USER_WORKSPACE_NAME).toString(), out.stdOut);

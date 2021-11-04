@@ -12,12 +12,12 @@
 package io.seqera.tower.cli.commands.participants;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.commands.global.WorkspaceOptions;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.participants.ParticipantAdded;
 import io.seqera.tower.model.AddParticipantRequest;
 import io.seqera.tower.model.AddParticipantResponse;
-import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import io.seqera.tower.model.ParticipantType;
 import picocli.CommandLine;
 
@@ -29,6 +29,9 @@ import java.util.Objects;
         description = "Create a new workspace participant"
 )
 public class AddCmd extends AbstractParticipantsCmd {
+
+    @CommandLine.Mixin
+    public WorkspaceOptions workspace;
 
     @CommandLine.Option(names = {"-n", "--name"}, description = "Team name or username of existing organization team or member", required = true)
     public String name;
@@ -42,17 +45,17 @@ public class AddCmd extends AbstractParticipantsCmd {
         AddParticipantRequest request = new AddParticipantRequest();
 
         if (Objects.equals(type, ParticipantType.MEMBER)) {
-            request.setMemberId(findOrganizationMemberByName(orgId(), name).getMemberId());
+            request.setMemberId(findOrganizationMemberByName(orgId(workspace.workspaceId), name).getMemberId());
         } else if (Objects.equals(type, ParticipantType.TEAM)) {
-            request.setTeamId(findOrganizationTeamByName(orgId(), name).getTeamId());
+            request.setTeamId(findOrganizationTeamByName(orgId(workspace.workspaceId), name).getTeamId());
         } else if (Objects.equals(type, ParticipantType.COLLABORATOR)) {
-            request.setMemberId(findOrganizationCollaboratorByName(orgId(), name).getMemberId());
+            request.setMemberId(findOrganizationCollaboratorByName(orgId(workspace.workspaceId), name).getMemberId());
         } else {
             throw new TowerException("Unknown participant candidate type provided.");
         }
 
-        AddParticipantResponse response = api().createWorkspaceParticipant(orgId(), workspaceId(), request);
+        AddParticipantResponse response = api().createWorkspaceParticipant(orgId(workspace.workspaceId), workspace.workspaceId, request);
 
-        return new ParticipantAdded(response.getParticipant(), workspaceName());
+        return new ParticipantAdded(response.getParticipant(), workspaceName(workspace.workspaceId));
     }
 }

@@ -354,9 +354,7 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"3T6xWeFD63QIuzdAowvSTC\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-//        ExecOut out = exec(mock, "compute-envs", "import", tempFile("{\"computeEnv\":{\"name\":\"ce3\",\"platform\":\"aws-batch\",\"config\":{\"region\":\"eu-west-1\",\"cliPath\":\"/home/ec2-user/miniconda/bin/aws\",\"workDir\":\"s3://nextflow-ci/jordeu\",\"forge\":{\"type\":\"SPOT\",\"minCpus\":0,\"maxCpus\":123,\"gpuEnabled\":false,\"ebsAutoScale\":true,\"disposeOnDeletion\":true,\"fusionEnabled\":false,\"efsCreate\":true},\"discriminator\":\"aws-batch\"},\"credentialsId\":\"6g0ER59L4ZoE5zpOmUP48D\"}}", "data", ".json"), "-n", "ce3", "-w", "144996268157965");
-        ExecOut out = exec(mock, "compute-envs", "import", tempFile(new String(loadResource("cejson"), StandardCharsets.UTF_8), "ce", "json"), "-n", "json", "-c", "6g0ER59L4ZoE5zpOmUP48D");
-
+        ExecOut out = exec(mock, "compute-envs", "import", tempFile(new String(loadResource("cejson"), StandardCharsets.UTF_8), "ce", "json"), "-n", "json", "-i", "6g0ER59L4ZoE5zpOmUP48D");
 
         assertEquals("", out.stdErr);
         assertEquals(new ComputeEnvCreated(ComputeEnv.PlatformEnum.AWS_BATCH.getValue(), "json", USER_WORKSPACE_NAME).toString(), out.stdOut);

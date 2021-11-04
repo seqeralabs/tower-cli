@@ -12,10 +12,12 @@
 package io.seqera.tower.cli.commands.computeenvs;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.commands.global.WorkspaceOptions;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
 import io.seqera.tower.cli.responses.ComputeEnvView;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.DescribeComputeEnvResponse;
+import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
@@ -25,18 +27,21 @@ import picocli.CommandLine.Option;
 )
 public class ViewCmd extends AbstractComputeEnvCmd {
 
+    @CommandLine.Mixin
+    public WorkspaceOptions workspace;
+
     @Option(names = {"-i", "--id"}, description = "Compute environment identifier", required = true)
     public String id;
 
     @Override
     protected Response exec() throws ApiException {
         try {
-            DescribeComputeEnvResponse response = api().describeComputeEnv(id, workspaceId());
-            return new ComputeEnvView(id, workspaceRef(), response.getComputeEnv());
+            DescribeComputeEnvResponse response = api().describeComputeEnv(id, workspace.workspaceId);
+            return new ComputeEnvView(id, workspaceRef(workspace.workspaceId), response.getComputeEnv());
         } catch (ApiException e) {
             if (e.getCode() == 403) {
                 // Customize the forbidden message
-                throw new ComputeEnvNotFoundException(id, workspaceRef());
+                throw new ComputeEnvNotFoundException(id, workspaceRef(workspace.workspaceId));
             }
             throw e;
         }

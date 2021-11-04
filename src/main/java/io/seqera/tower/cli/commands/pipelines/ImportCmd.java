@@ -12,6 +12,7 @@
 package io.seqera.tower.cli.commands.pipelines;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.commands.global.WorkspaceOptions;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.pipelines.PipelinesCreated;
@@ -31,6 +32,9 @@ import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
 )
 public class ImportCmd extends AbstractPipelinesCmd {
 
+    @CommandLine.Mixin
+    public WorkspaceOptions workspace;
+
     @CommandLine.Option(names = {"-n", "--name"}, description = "Pipeline name", required = true)
     public String name;
 
@@ -48,18 +52,18 @@ public class ImportCmd extends AbstractPipelinesCmd {
         request.setName(name);
 
         if (computeEnv != null) {
-            ComputeEnv ce = findComputeEnvironmentByName(computeEnv, workspaceId());
+            ComputeEnv ce = findComputeEnvironmentByName(workspace.workspaceId, computeEnv);
             request.getLaunch().setComputeEnvId(ce.getId());
         } else {
             try {
-                api().describeComputeEnv(request.getLaunch().getComputeEnvId(), workspaceId());
+                api().describeComputeEnv(request.getLaunch().getComputeEnvId(), workspace.workspaceId);
             } catch (ApiException apiException) {
-                throw new ComputeEnvNotFoundException(request.getLaunch().getId(), workspaceId());
+                throw new ComputeEnvNotFoundException(request.getLaunch().getId(), workspace.workspaceId);
             }
         }
 
-        api().createPipeline(request, workspaceId());
+        api().createPipeline(request, workspace.workspaceId);
 
-        return new PipelinesCreated(workspaceRef(), name);
+        return new PipelinesCreated(workspaceRef(workspace.workspaceId), name);
     }
 }

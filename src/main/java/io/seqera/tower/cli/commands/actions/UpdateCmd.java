@@ -12,6 +12,7 @@
 package io.seqera.tower.cli.commands.actions;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.commands.global.WorkspaceOptions;
 import io.seqera.tower.cli.commands.pipelines.LaunchOptions;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
@@ -32,6 +33,10 @@ import java.util.Objects;
         description = "Update a Pipeline Action"
 )
 public class UpdateCmd extends AbstractActionsCmd {
+
+    @CommandLine.Mixin
+    public WorkspaceOptions workspace;
+
     @CommandLine.Option(names = {"-n", "--name"}, description = "Action name", required = true)
     public String actionName;
 
@@ -43,12 +48,12 @@ public class UpdateCmd extends AbstractActionsCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        ListActionsResponseActionInfo actionInfo = actionByName(actionName);
+        ListActionsResponseActionInfo actionInfo = actionByName(workspace.workspaceId, actionName);
 
-        Action action = api().describeAction(actionInfo.getId(), workspaceId()).getAction();
+        Action action = api().describeAction(actionInfo.getId(), workspace.workspaceId).getAction();
 
         // Retrieve the provided computeEnv or use the primary if not provided
-        ComputeEnv ce = opts.computeEnv != null ? computeEnvByName(opts.computeEnv) : action.getLaunch().getComputeEnv();
+        ComputeEnv ce = opts.computeEnv != null ? computeEnvByName(workspace.workspaceId, opts.computeEnv) : action.getLaunch().getComputeEnv();
 
         // Use compute env values by default
         String workDirValue = opts.workDir != null ? opts.workDir : action.getLaunch().getWorkDir();
@@ -78,9 +83,9 @@ public class UpdateCmd extends AbstractActionsCmd {
         request.setLaunch(workflowLaunchRequest);
 
         try {
-            api().updateAction(action.getId(), request, workspaceId());
+            api().updateAction(action.getId(), request, workspace.workspaceId);
         } catch (Exception e) {
-            throw new TowerException(String.format("Unable to update action '%s' for workspace '%s'", actionName, workspaceRef()));
+            throw new TowerException(String.format("Unable to update action '%s' for workspace '%s'", actionName, workspaceRef(workspace.workspaceId)));
         }
 
         if (status != null) {
@@ -89,12 +94,12 @@ public class UpdateCmd extends AbstractActionsCmd {
             }
 
             try {
-                api().pauseAction(action.getId(), workspaceId(), null);
+                api().pauseAction(action.getId(), workspace.workspaceId, null);
             } catch (Exception e) {
                 throw new TowerException(String.format("An error has occur while setting the action '%s' to '%s'", actionName, status.toUpperCase()));
             }
         }
 
-        return new ActionUpdate(actionName, workspaceRef(), action.getId());
+        return new ActionUpdate(actionName, workspaceRef(workspace.workspaceId), action.getId());
     }
 }

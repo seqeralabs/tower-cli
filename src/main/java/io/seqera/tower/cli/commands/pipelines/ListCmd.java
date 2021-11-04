@@ -13,8 +13,10 @@ package io.seqera.tower.cli.commands.pipelines;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.PaginationOptions;
-import io.seqera.tower.cli.responses.pipelines.PipelinesList;
+import io.seqera.tower.cli.commands.global.WorkspaceOptions;
+import io.seqera.tower.cli.exceptions.WorkspaceNotFoundException;
 import io.seqera.tower.cli.responses.Response;
+import io.seqera.tower.cli.responses.pipelines.PipelinesList;
 import io.seqera.tower.model.ListPipelinesResponse;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -27,6 +29,9 @@ import java.io.IOException;
 )
 public class ListCmd extends AbstractPipelinesCmd {
 
+    @CommandLine.Mixin
+    public WorkspaceOptions workspace;
+
     @CommandLine.Option(names = {"-f", "--filter"}, description = "Show only pipelines that contain the given word")
     public String filter;
 
@@ -38,7 +43,17 @@ public class ListCmd extends AbstractPipelinesCmd {
         Integer max = PaginationOptions.getMax(paginationOptions);
         Integer offset = PaginationOptions.getOffset(paginationOptions, max);
 
-        ListPipelinesResponse response = api().listPipelines(workspaceId(), max, offset, filter);
-        return new PipelinesList(workspaceRef(), response.getPipelines());
+        ListPipelinesResponse response = new ListPipelinesResponse();
+
+        try {
+           response = api().listPipelines(workspace.workspaceId, max, offset, filter);
+
+        } catch (ApiException apiException) {
+            if (apiException.getCode() == 404){
+                throw new WorkspaceNotFoundException(workspace.workspaceId);
+            }
+        }
+
+        return new PipelinesList(workspaceRef(workspace.workspaceId), response.getPipelines());
     }
 }

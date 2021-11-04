@@ -21,7 +21,7 @@ public class LaunchOptions {
     @Option(names = {"-c", "--compute-env"}, description = "Compute environment name (defaults to primary compute environment)")
     public String computeEnv;
 
-    @Option(names = {"-w", "--work-dir"}, description = "Path where the pipeline scratch data is stored")
+    @Option(names = {"--work-dir"}, description = "Path where the pipeline scratch data is stored")
     public String workDir;
 
     @Option(names = {"-p", "--profiles"}, split = ",", description = "One or more (separated by comma) configuration profile names you want to use for this pipeline execution")

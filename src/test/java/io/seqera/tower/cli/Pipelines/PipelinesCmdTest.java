@@ -203,7 +203,7 @@ class PipelinesCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"pipeline\":{\"pipelineId\":21697594587521,\"name\":\"staging\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/pditommaso/nf-sleep\",\"userId\":4,\"userName\":\"jordi\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null}}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "pipelines", "create", "-n", "staging", "-w", "s3://nextflow-ci/staging", "--pre-run", tempFile("pre_run_this", "pre", "sh"), "--post-run", tempFile("post_run_this", "post", "sh"), "https://github.com/pditommaso/nf-sleep");
+        ExecOut out = exec(mock, "pipelines", "create", "-n", "staging", "--work-dir", "s3://nextflow-ci/staging", "--pre-run", tempFile("pre_run_this", "pre", "sh"), "--post-run", tempFile("post_run_this", "post", "sh"), "https://github.com/pditommaso/nf-sleep");
 
         assertEquals("", out.stdErr);
         assertEquals(new PipelinesCreated(USER_WORKSPACE_NAME, "staging").toString(), out.stdOut);
@@ -483,7 +483,7 @@ class PipelinesCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"pipelines\":[],\"totalSize\":0}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "-w", "cli", "-o", "seqera", "pipelines", "list");
+        ExecOut out = exec(mock, "pipelines", "list", "-w", "222756650686576");
 
         assertEquals("", out.stdErr);
         assertEquals(chop(new PipelinesList(buildWorkspaceRef("Seqera", "cli"), List.of()).toString()), out.stdOut);
@@ -505,9 +505,9 @@ class PipelinesCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"orgsAndWorkspaces\":[{\"orgId\":166815615776895,\"orgName\":\"Seqera\",\"orgLogoUrl\":null,\"workspaceId\":null,\"workspaceName\":null},{\"orgId\":166815615776895,\"orgName\":\"Seqera\",\"orgLogoUrl\":null,\"workspaceId\":222756650686576,\"workspaceName\":\"cli\"}]}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "-w", "cli", "-o", "sequera", "pipelines", "list");
+        ExecOut out = exec(mock, "pipelines", "list", "-w", "222756650686577");
 
-        assertEquals(errorMessage(out.app, new WorkspaceNotFoundException("cli", "sequera")), out.stdErr);
+        assertEquals(errorMessage(out.app, new WorkspaceNotFoundException(222756650686577L)), out.stdErr);
         assertEquals("", out.stdOut);
         assertEquals(-1, out.exitCode);
     }
