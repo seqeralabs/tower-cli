@@ -4,7 +4,7 @@ Tower command line client allows to manage all the resources available at Tower.
 
 ### Installation
 
-Tower CLI it is distributed as a single binary exacutable file. You only need to download your platform binary and execute it.
+Tower CLI is distributed as a single binary exacutable file. Just execute it after downloading your platform binary.
 
 1. Download the latest release binary from [here](https://github.com/seqeralabs/tower-cli/releases)
 2. Enable execution permissions (`chmod +x ./tw` on Mac and Linux platforms)
@@ -22,9 +22,9 @@ Running the CLI using your token:
 
 ### Tips
 
-- Alternative you can define the `TOWER_ACCESS_TOKEN` environment variable, and then you don't need to pass the personal access token as an option.
-- If you are using an on premises Tower you can set the API url using `TOWER_API_ENDPOINT` environment variable or the `--url` option.
-- You can fix the workspace using the `TOWER_WORKSPACE_ID` environment variable.
+- To prevent passing your personal access token at every execution it is possible to define a `TOWER_ACCESS_TOKEN` environment variable.
+- If you are using an on premises Tower installation you can set the API url using `TOWER_API_ENDPOINT` environment variable or the `--url` option.
+- You can set the workspace using the `TOWER_WORKSPACE_ID` environment variable.
 
 ### Autocomplete
 
