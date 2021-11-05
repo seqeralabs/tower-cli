@@ -1046,6 +1046,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.global.WorkspaceOptions",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.members.AbstractMembersClass",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
@@ -1246,6 +1252,12 @@
 },
 {
   "name":"io.seqera.tower.cli.commands.runs.RunOptions",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.runs.RunViewOptions",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
@@ -1759,6 +1771,11 @@
   "allDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.model.CloudPriceModel",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true
+},
+{
   "name":"io.seqera.tower.model.ComputeConfig",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1931,6 +1948,12 @@
   "allDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.model.DescribeTaskResponse",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.model.DescribeUserResponse",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1973,6 +1996,12 @@
 },
 {
   "name":"io.seqera.tower.model.GetProgressResponse",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.model.GetWorkflowMetricsResponse",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true
@@ -2111,6 +2140,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.model.ListTasksResponse",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.model.ListTeamResponse",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -2223,6 +2258,12 @@
   "allDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.model.ResourceData",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.model.SSHSecurityKeys",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -2263,6 +2304,17 @@
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.model.Task",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.model.TaskStatus",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true
 },
 {
   "name":"io.seqera.tower.model.Team",
@@ -2386,6 +2438,12 @@
   "allDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.model.WorkflowMetrics",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.model.WorkflowStatus",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
@@ -2457,6 +2515,9 @@
   "name":"java.lang.Object",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
+},
+{
+  "name":"java.lang.Object[]"
 },
 {
   "name":"java.lang.String"
@@ -2730,16 +2791,16 @@
 {
   "name":"org.glassfish.jersey.internal.util.collection.ConcurrentHashMapV8",
   "fields":[
-    {"name":"baseCount", "allowUnsafeAccess":true}, 
-    {"name":"cellsBusy", "allowUnsafeAccess":true}, 
-    {"name":"sizeCtl", "allowUnsafeAccess":true}, 
-    {"name":"transferIndex", "allowUnsafeAccess":true}, 
-    {"name":"transferOrigin", "allowUnsafeAccess":true}
+    {"name":"baseCount"}, 
+    {"name":"cellsBusy"}, 
+    {"name":"sizeCtl"}, 
+    {"name":"transferIndex"}, 
+    {"name":"transferOrigin"}
   ]
 },
 {
   "name":"org.glassfish.jersey.internal.util.collection.ConcurrentHashMapV8$CounterCell",
-  "fields":[{"name":"value", "allowUnsafeAccess":true}]
+  "fields":[{"name":"value"}]
 },
 {
   "name":"org.glassfish.jersey.jackson.JacksonFeature",
