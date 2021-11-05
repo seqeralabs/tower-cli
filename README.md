@@ -36,7 +36,7 @@ source <(tw generate-completion)
 
 To permanently add the autocomplete add the previous line to the init script of your shell manager (ie: `~/.bashrc`, `~/.zshrc` ...) 
 
-## Examples
+## Usage
 
 ### Step by step
 
@@ -50,6 +50,12 @@ First test that it is working
 
 ```
 tw -h
+```
+
+Run a health check to verify that the CLI can connect to Tower
+
+```
+tw health
 ```
 
 Install the autocomplete on your current session
