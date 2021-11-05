@@ -42,11 +42,11 @@ import static io.seqera.tower.cli.utils.ModelHelper.createLaunchRequest;
 )
 public class LaunchesCmd extends AbstractRootCmd {
 
-    @CommandLine.Mixin
-    public WorkspaceOptions workspace;
-
     @Parameters(index = "0", paramLabel = "PIPELINE_OR_URL", description = "Workspace pipeline name or full pipeline URL", arity = "1")
     String pipeline;
+
+    @CommandLine.Mixin
+    public WorkspaceOptions workspace;
 
     @Option(names = {"--params"}, description = "Parameters file")
     Path params;

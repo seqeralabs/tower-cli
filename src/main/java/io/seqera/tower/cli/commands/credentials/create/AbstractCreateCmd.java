@@ -30,11 +30,11 @@ import java.io.IOException;
 @Command
 public abstract class AbstractCreateCmd<T extends SecurityKeys> extends AbstractApiCmd {
 
-    @CommandLine.Mixin
-    public WorkspaceOptions workspace;
-
     @Option(names = {"-n", "--name"}, description = "Credentials name", required = true)
     public String name;
+
+    @CommandLine.Mixin
+    public WorkspaceOptions workspace;
 
     @Override
     protected Response exec() throws ApiException, IOException {

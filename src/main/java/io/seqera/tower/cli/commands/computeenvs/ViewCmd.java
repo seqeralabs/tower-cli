@@ -27,11 +27,11 @@ import picocli.CommandLine.Option;
 )
 public class ViewCmd extends AbstractComputeEnvCmd {
 
-    @CommandLine.Mixin
-    public WorkspaceOptions workspace;
-
     @Option(names = {"-i", "--id"}, description = "Compute environment identifier", required = true)
     public String id;
+
+    @CommandLine.Mixin
+    public WorkspaceOptions workspace;
 
     @Override
     protected Response exec() throws ApiException {

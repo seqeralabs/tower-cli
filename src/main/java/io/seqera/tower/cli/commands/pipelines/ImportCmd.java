@@ -32,11 +32,11 @@ import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
 )
 public class ImportCmd extends AbstractPipelinesCmd {
 
-    @CommandLine.Mixin
-    public WorkspaceOptions workspace;
-
     @CommandLine.Option(names = {"-n", "--name"}, description = "Pipeline name", required = true)
     public String name;
+
+    @CommandLine.Mixin
+    public WorkspaceOptions workspace;
 
     @CommandLine.Option(names = {"-c", "--compute-env"}, description = "Compute environment name (defaults to json file defined environment)")
     public String computeEnv;

@@ -34,11 +34,11 @@ import java.util.Objects;
 )
 public class UpdateCmd extends AbstractActionsCmd {
 
-    @CommandLine.Mixin
-    public WorkspaceOptions workspace;
-
     @CommandLine.Option(names = {"-n", "--name"}, description = "Action name", required = true)
     public String actionName;
+
+    @CommandLine.Mixin
+    public WorkspaceOptions workspace;
 
     @CommandLine.Option(names = {"-s", "--status"}, description = "Action status (pause or active)")
     public String status;

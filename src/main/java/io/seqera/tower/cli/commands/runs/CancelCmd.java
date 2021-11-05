@@ -26,11 +26,11 @@ import java.io.IOException;
 )
 public class CancelCmd extends AbstractRunsCmd {
 
-    @CommandLine.Mixin
-    public WorkspaceOptions workspace;
-
     @CommandLine.Option(names = {"-i", "--id"}, description = "Pipeline's run identifier", required = true)
     public String id;
+
+    @CommandLine.Mixin
+    public WorkspaceOptions workspace;
 
     @Override
     protected Response exec() throws ApiException, IOException {

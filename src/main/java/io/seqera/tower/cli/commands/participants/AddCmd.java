@@ -30,14 +30,14 @@ import java.util.Objects;
 )
 public class AddCmd extends AbstractParticipantsCmd {
 
-    @CommandLine.Mixin
-    public WorkspaceOptions workspace;
-
     @CommandLine.Option(names = {"-n", "--name"}, description = "Team name or username of existing organization team or member", required = true)
     public String name;
 
     @CommandLine.Option(names = {"-t", "--type"}, description = "Type or participant (MEMBER, COLLABORATOR or TEAM)", required = true)
     public ParticipantType type;
+
+    @CommandLine.Mixin
+    public WorkspaceOptions workspace;
 
     @Override
     protected Response exec() throws ApiException, IOException {

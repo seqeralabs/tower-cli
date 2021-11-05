@@ -27,11 +27,11 @@ import picocli.CommandLine.Option;
 )
 public class ViewCmd extends AbstractPipelinesCmd {
 
-    @CommandLine.Mixin
-    public WorkspaceOptions workspace;
-
     @Option(names = {"-n", "--name"}, description = "Pipeline name", required = true)
     public String name;
+
+    @CommandLine.Mixin
+    public WorkspaceOptions workspace;
 
     @Override
     protected Response exec() throws ApiException {

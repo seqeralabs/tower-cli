@@ -25,6 +25,7 @@ import java.io.IOException;
         description = "Describe organization details"
 )
 public class ViewCmd extends AbstractOrganizationsCmd {
+
     @CommandLine.Option(names = {"-n", "--name"}, description = "Organization name", required = true)
     public String name;
 

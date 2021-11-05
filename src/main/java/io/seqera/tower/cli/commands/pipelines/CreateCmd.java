@@ -34,11 +34,12 @@ import java.io.IOException;
 )
 public class CreateCmd extends AbstractPipelinesCmd {
 
-    @CommandLine.Mixin
-    public WorkspaceOptions workspace;
-
     @Option(names = {"-n", "--name"}, description = "Pipeline name", required = true)
     public String name;
+
+
+    @CommandLine.Mixin
+    public WorkspaceOptions workspace;
 
     @Option(names = {"-d", "--description"}, description = "Pipeline description")
     public String description;

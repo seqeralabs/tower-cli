@@ -37,11 +37,11 @@ import static io.seqera.tower.cli.utils.ModelHelper.coalesce;
 )
 public class UpdateCmd extends AbstractPipelinesCmd {
 
-    @CommandLine.Mixin
-    public WorkspaceOptions workspace;
-
     @Option(names = {"-n", "--name"}, description = "Pipeline name", required = true)
     public String name;
+
+    @CommandLine.Mixin
+    public WorkspaceOptions workspace;
 
     @Option(names = {"-d", "--description"}, description = "Pipeline description")
     public String description;

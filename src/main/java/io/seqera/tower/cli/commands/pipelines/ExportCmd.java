@@ -31,11 +31,11 @@ import picocli.CommandLine;
 )
 public class ExportCmd extends AbstractPipelinesCmd{
 
-    @CommandLine.Mixin
-    public WorkspaceOptions workspace;
-
     @CommandLine.Option(names = {"-n", "--name"}, description = "Pipeline name", required = true)
     public String name;
+
+    @CommandLine.Mixin
+    public WorkspaceOptions workspace;
 
     @CommandLine.Parameters(index = "0", paramLabel = "FILENAME", description = "File name to export", arity = "0..1")
     String fileName = null;

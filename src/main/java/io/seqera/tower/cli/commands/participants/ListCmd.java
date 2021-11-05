@@ -30,11 +30,11 @@ import java.util.stream.Collectors;
 )
 public class ListCmd extends AbstractParticipantsCmd {
 
-    @CommandLine.Mixin
-    public WorkspaceOptions workspace;
-
     @CommandLine.Option(names = {"-t", "--type"}, description = "Participant type to list (MEMBER, TEAM, COLLABORATOR)")
     public ParticipantType type;
+
+    @CommandLine.Mixin
+    public WorkspaceOptions workspace;
 
     @CommandLine.Option(names = {"-f", "--filter"}, description = "Show only participants that it's name starts with the given word")
     public String startsWith;

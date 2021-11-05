@@ -37,11 +37,11 @@ import java.time.OffsetDateTime;
 )
 public class RelaunchCmd extends AbstractRunsCmd {
 
-    @CommandLine.Mixin
-    public WorkspaceOptions workspace;
-
     @Option(names = {"-i", "--id"}, description = "Pipeline's run id to relaunch", required = true)
     public String id;
+
+    @CommandLine.Mixin
+    public WorkspaceOptions workspace;
 
     @Option(names = {"--pipeline"}, description = "Pipeline to launch")
     public String pipeline;

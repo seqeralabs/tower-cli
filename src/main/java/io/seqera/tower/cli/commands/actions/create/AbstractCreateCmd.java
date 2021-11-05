@@ -30,14 +30,14 @@ import java.io.IOException;
 
 public abstract class AbstractCreateCmd extends AbstractApiCmd {
 
-    @CommandLine.Mixin
-    public WorkspaceOptions workspace;
-
     @CommandLine.Option(names = {"-n", "--name"}, description = "Action name", required = true)
     public String actionName;
 
     @CommandLine.Option(names = {"--pipeline"}, description = "Pipeline to launch", required = true)
     public String pipeline;
+
+    @CommandLine.Mixin
+    public WorkspaceOptions workspace;
 
     @CommandLine.Mixin
     public LaunchOptions opts;

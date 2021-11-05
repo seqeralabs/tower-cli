@@ -26,11 +26,11 @@ import picocli.CommandLine.Option;
 )
 public class DeleteCmd extends AbstractCredentialsCmd {
 
-    @CommandLine.Mixin
-    public WorkspaceOptions workspace;
-
     @Option(names = {"-i", "--id"}, description = "Credentials identifier", required = true)
     public String id;
+
+    @CommandLine.Mixin
+    public WorkspaceOptions workspace;
 
     @Override
     protected Response exec() throws ApiException {

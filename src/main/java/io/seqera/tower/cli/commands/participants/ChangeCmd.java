@@ -30,9 +30,6 @@ import java.io.IOException;
 )
 public class ChangeCmd extends AbstractParticipantsCmd {
 
-    @CommandLine.Mixin
-    public WorkspaceOptions workspace;
-
     @CommandLine.Option(names = {"-n", "--name"}, description = "Team name, username or email of existing organization team or member", required = true)
     public String name;
 
@@ -41,6 +38,9 @@ public class ChangeCmd extends AbstractParticipantsCmd {
 
     @CommandLine.Option(names = {"-r", "--role"}, description = "Workspace participant role (OWNER, ADMIN, MAINTAIN, LAUNCH or VIEW)", required = true)
     public WspRole role;
+
+    @CommandLine.Mixin
+    public WorkspaceOptions workspace;
 
     @Override
     protected Response exec() throws ApiException, IOException {

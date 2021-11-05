@@ -28,15 +28,14 @@ import picocli.CommandLine;
 )
 public class UpdateCmd extends AbstractMembersClass {
 
-
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization's name identifier", required = true)
-    public String organizationName;
-
     @CommandLine.Option(names = {"-u", "--user"}, description = "Username or email of user to update from organization's members", required = true)
     public String user;
 
     @CommandLine.Option(names = {"-r", "--role"}, description = "Member's organization role (OWNER, MEMBER or COLLABORATOR)", required = true)
     public OrgRole role;
+
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization's name identifier", required = true)
+    public String organizationName;
 
     @Override
     protected Response exec() throws ApiException, IOException {

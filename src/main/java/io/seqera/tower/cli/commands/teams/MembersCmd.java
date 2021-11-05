@@ -34,11 +34,11 @@ import java.io.IOException;
 )
 public class MembersCmd extends AbstractTeamsCmd {
 
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization's name identifier", required = true)
-    public String organizationName;
-
     @CommandLine.Option(names = {"-t", "--team"}, description = "Team's name", required = true)
     public String teamName;
+
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization's name identifier", required = true)
+    public String organizationName;
 
     @Override
     protected Response exec() throws ApiException, IOException {

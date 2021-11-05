@@ -30,11 +30,11 @@ import java.io.IOException;
 @Command
 public abstract class AbstractUpdateCmd extends AbstractApiCmd {
 
-    @CommandLine.Mixin
-    public WorkspaceOptions workspace;
-
     @CommandLine.Option(names = {"-i", "--id", "--credentials"}, required = true)
     public String id;
+
+    @CommandLine.Mixin
+    public WorkspaceOptions workspace;
 
     public AbstractUpdateCmd() {
     }

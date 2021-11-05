@@ -27,11 +27,11 @@ import java.io.IOException;
 )
 public class DeleteCmd extends AbstractActionsCmd {
 
-    @CommandLine.Mixin
-    public WorkspaceOptions workspace;
-
     @CommandLine.Option(names = {"-n", "--name"}, description = "Action name", required = true)
     public String actionName;
+
+    @CommandLine.Mixin
+    public WorkspaceOptions workspace;
 
     @Override
     protected Response exec() throws ApiException, IOException {

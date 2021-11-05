@@ -25,11 +25,11 @@ import picocli.CommandLine.Command;
 )
 public class DeleteCmd extends AbstractComputeEnvCmd {
 
-    @CommandLine.Mixin
-    public WorkspaceOptions workspace;
-
     @CommandLine.Option(names = {"-i", "--id"}, description = "Compute environment identifier", required = true)
     public String id;
+
+    @CommandLine.Mixin
+    public WorkspaceOptions workspace;
 
     @Override
     protected Response exec() throws ApiException {
