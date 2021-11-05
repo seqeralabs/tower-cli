@@ -31,7 +31,7 @@ jobs:
       - name: Setup Graalvm
         uses: DeLaGuardo/setup-graalvm@master
         with:
-          graalvm: '21.2.0'
+          graalvm: '21.3.0'
           java: 'java11'
           arch: 'amd64'
 
@@ -87,7 +87,7 @@ jobs:
       - name: Setup Graalvm
         uses: DeLaGuardo/setup-graalvm@master
         with:
-          graalvm: '21.2.0'
+          graalvm: '21.3.0'
           java: 'java11'
           arch: 'amd64'
 
@@ -149,7 +149,7 @@ jobs:
       - name: Setup Graalvm
         uses: DeLaGuardo/setup-graalvm@master
         with:
-          graalvm: '21.2.0'
+          graalvm: '21.3.0'
           java: 'java11'
           arch: 'amd64'
 
