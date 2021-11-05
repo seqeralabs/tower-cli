@@ -87,7 +87,14 @@ graalvmNative {
             imageName = 'tw'
             mainClass = 'io.seqera.tower.cli.Tower'
             configurationFileDirectories.from(file('conf'))
+
             buildArgs(DefaultNativePlatform.currentOperatingSystem.isLinux() ? ['--static', '--libc=musl'] : [])
+            buildArgs.add('--allow-incomplete-classpath')
+            buildArgs.add('--report-unsupported-elements-at-runtime')
+            buildArgs.add('-H:+AddAllCharsets')
+            buildArgs.add('-H:EnableURLProtocols=https,http')
+            buildArgs.add('-H:+ReportExceptionStackTraces')
+
         }
 
         test {
