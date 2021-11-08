@@ -30,31 +30,31 @@ abstract public class AbstractRunsCmd extends AbstractApiCmd {
     public AbstractRunsCmd() {
     }
 
-    protected Workflow workflowById(String id) throws ApiException {
-        DescribeWorkflowResponse workflowResponse = api().describeWorkflow(id, workspaceId());
+    protected Workflow workflowById(Long workspaceId, String id) throws ApiException {
+        DescribeWorkflowResponse workflowResponse = api().describeWorkflow(id, workspaceId);
 
         if (workflowResponse == null) {
-            throw new RunNotFoundException(id, workspaceRef());
+            throw new RunNotFoundException(id, workspaceRef(workspaceId));
         }
 
         return workflowResponse.getWorkflow();
     }
 
-    protected Launch launchById(String id) throws ApiException {
-        DescribeLaunchResponse launchResponse = api().describeLaunch(id, workspaceId());
+    protected Launch launchById(Long workspaceId, String id) throws ApiException {
+        DescribeLaunchResponse launchResponse = api().describeLaunch(id, workspaceId);
 
         if (launchResponse == null) {
-            throw new LaunchNotFoundException(id, workspaceRef());
+            throw new LaunchNotFoundException(id, workspaceRef(workspaceId));
         }
 
         return launchResponse.getLaunch();
     }
 
-    protected WorkflowLoad workflowLoadByWorkflowId(String id) throws ApiException {
-        GetProgressResponse getProgressResponse = api().describeWorkflowProgress(id, workspaceId());
+    protected WorkflowLoad workflowLoadByWorkflowId(Long workspaceId, String id) throws ApiException {
+        GetProgressResponse getProgressResponse = api().describeWorkflowProgress(id, workspaceId);
 
         if (getProgressResponse == null) {
-            throw new WorkflowProgressNotFoundException(id, workspaceRef());
+            throw new WorkflowProgressNotFoundException(id, workspaceRef(workspaceId));
         }
 
         return getProgressResponse.getProgress().getWorkflowProgress();

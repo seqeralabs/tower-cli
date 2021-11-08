@@ -27,11 +27,11 @@ import java.util.stream.Collectors;
 @CommandLine.Command
 public abstract class AbstractActionsCmd extends AbstractApiCmd {
 
-    protected ListActionsResponseActionInfo actionByName(String actionName) throws ApiException {
-        ListActionsResponse listActionResponse = api().listActions(workspaceId());
+    protected ListActionsResponseActionInfo actionByName(Long workspaceId, String actionName) throws ApiException {
+        ListActionsResponse listActionResponse = api().listActions(workspaceId);
 
         if (listActionResponse == null || listActionResponse.getActions() == null) {
-            throw new ActionNotFoundException(workspaceRef());
+            throw new ActionNotFoundException(workspaceRef(workspaceId));
         }
 
         List<ListActionsResponseActionInfo> listActionsResponseActionInfos = listActionResponse.getActions()
@@ -40,7 +40,7 @@ public abstract class AbstractActionsCmd extends AbstractApiCmd {
                 .collect(Collectors.toList());
 
         if (listActionsResponseActionInfos.isEmpty()) {
-            throw new ActionNotFoundException(actionName, workspaceRef());
+            throw new ActionNotFoundException(actionName, workspaceRef(workspaceId));
         }
 
         return listActionsResponseActionInfos.stream().findFirst().orElse(null);

@@ -41,7 +41,7 @@ class AzBatchManualPlatformTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "compute-envs", "create", "azure-batch", "manual", "-n", "azure-manual", "-l", "europe", "-w", "az://nextflow-ci/jordeu", "--compute-pool-name=tower_pool");
+        ExecOut out = exec(mock, "compute-envs", "create", "azure-batch", "manual", "-n", "azure-manual", "-l", "europe", "--work-dir", "az://nextflow-ci/jordeu", "--compute-pool-name=tower_pool");
 
         assertEquals("", out.stdErr);
         assertEquals(new ComputeEnvCreated("azure-batch", "azure-manual", USER_WORKSPACE_NAME).toString(), out.stdOut);
@@ -63,7 +63,7 @@ class AzBatchManualPlatformTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "compute-envs", "create", "azure-batch", "manual", "-n", "azure-manual", "-l", "europe", "-w", "az://nextflow-ci/jordeu", "--compute-pool-name=tower_pool", "--token-duration=24");
+        ExecOut out = exec(mock, "compute-envs", "create", "azure-batch", "manual", "-n", "azure-manual", "-l", "europe", "--work-dir", "az://nextflow-ci/jordeu", "--compute-pool-name=tower_pool", "--token-duration=24");
 
         assertEquals("", out.stdErr);
         assertEquals(new ComputeEnvCreated("azure-batch", "azure-manual", USER_WORKSPACE_NAME).toString(), out.stdOut);

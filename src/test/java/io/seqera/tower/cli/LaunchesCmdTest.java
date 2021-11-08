@@ -72,6 +72,8 @@ class LaunchesCmdTest extends BaseCmdTest {
     @Test
     void testMultiplePipelinesFound(MockServerClient mock) {
 
+        mock.reset();
+
         // Create server expectation
         mock.when(
                 request().withMethod("GET").withPath("/pipelines"), exactly(1)
@@ -187,7 +189,7 @@ class LaunchesCmdTest extends BaseCmdTest {
         );
 
         // Run the command
-        ExecOut out = exec(mock, "launch", "sarek", "-p", "test,docker", "-r", "develop", "-w", "/my_work_dir",
+        ExecOut out = exec(mock, "launch", "sarek", "-p", "test,docker", "-r", "develop", "--work-dir", "/my_work_dir",
                 "--config", tempFile("extra_config", "nextflow", "config"), "--pull-latest", "--stub-run",
                 "--pre-run", tempFile("pre_run_me", "pre", "sh"), "--post-run", tempFile("post_run_me", "post", "sh"),
                 "--main-script", "alternate.nf", "--entry-name", "dsl2", "--schema-name", "my_schema.json");
@@ -232,7 +234,7 @@ class LaunchesCmdTest extends BaseCmdTest {
         );
 
         // Run the command
-        ExecOut out = exec(mock, "-i", "222756650686576", "launch", "nextflow-io/hello");
+        ExecOut out = exec(mock, "launch", "nextflow-io/hello", "-w", "222756650686576");
 
         // Assert results
         assertEquals("", out.stdErr);

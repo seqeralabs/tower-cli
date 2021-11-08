@@ -16,6 +16,7 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.JSON;
 import io.seqera.tower.cli.commands.computeenvs.platforms.AwsBatchForgePlatform;
 import io.seqera.tower.cli.commands.computeenvs.platforms.AwsBatchManualPlatform;
+import io.seqera.tower.cli.commands.global.WorkspaceOptions;
 import io.seqera.tower.cli.responses.ComputeEnvs.ComputeEnvExport;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.FilesHelper;
@@ -33,12 +34,15 @@ public class ExportCmd extends AbstractComputeEnvCmd {
     @CommandLine.Option(names = {"-n", "--name"}, description = "Compute environment name", required = true)
     public String name;
 
+    @CommandLine.Mixin
+    public WorkspaceOptions workspace;
+
     @CommandLine.Parameters(index = "0", paramLabel = "FILENAME", description = "File name to export", arity = "0..1")
     String fileName = null;
 
     @Override
     protected Response exec() throws ApiException {
-        ComputeEnv ce = findComputeEnvironmentByName(name, workspaceId());
+        ComputeEnv ce = findComputeEnvironmentByName(workspace.workspaceId, name);
 
         ComputeEnv computeEnv = new ComputeEnv();
         computeEnv.setDescription(ce.getDescription());

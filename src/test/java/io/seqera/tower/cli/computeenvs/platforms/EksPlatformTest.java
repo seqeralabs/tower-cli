@@ -43,7 +43,7 @@ class EksPlatformTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "compute-envs", "create", "eks", "-n", "eks", "-w", "/workdir", "-r", "europe", "--cluster-name", "tower", "--namespace", "nf", "--head-account", "head", "--storage-claim", "nf");
+        ExecOut out = exec(mock, "compute-envs", "create", "eks", "-n", "eks", "--work-dir", "/workdir", "-r", "europe", "--cluster-name", "tower", "--namespace", "nf", "--head-account", "head", "--storage-claim", "nf");
 
         assertEquals("", out.stdErr);
         assertEquals(new ComputeEnvCreated("eks-platform", "eks", USER_WORKSPACE_NAME).toString(), out.stdOut);
@@ -65,7 +65,7 @@ class EksPlatformTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "compute-envs", "create", "eks", "-n", "eks", "-w", "/workdir", "-r", "europe", "--cluster-name", "tower", "--namespace", "nf", "--head-account", "head", "--storage-claim", "nf", "--storage-mount=/workdir");
+        ExecOut out = exec(mock, "compute-envs", "create", "eks", "-n", "eks", "--work-dir", "/workdir", "-r", "europe", "--cluster-name", "tower", "--namespace", "nf", "--head-account", "head", "--storage-claim", "nf", "--storage-mount=/workdir");
 
         assertEquals("", out.stdErr);
         assertEquals(new ComputeEnvCreated("eks-platform", "eks", USER_WORKSPACE_NAME).toString(), out.stdOut);

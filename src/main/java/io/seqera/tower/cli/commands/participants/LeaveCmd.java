@@ -11,14 +11,14 @@
 
 package io.seqera.tower.cli.commands.participants;
 
-import java.io.IOException;
-
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.commands.global.WorkspaceOptions;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.participants.ParticipantLeft;
-import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import picocli.CommandLine;
+
+import java.io.IOException;
 
 @CommandLine.Command(
         name = "leave",
@@ -26,13 +26,16 @@ import picocli.CommandLine;
 )
 public class LeaveCmd extends AbstractParticipantsCmd {
 
+    @CommandLine.Mixin
+    public WorkspaceOptions workspace;
+
     @Override
     protected Response exec() throws ApiException, IOException {
-        Long workspaceId = workspaceId();
+        Long workspaceId = workspace.workspaceId;
         if (workspaceId == null) {
             throw new TowerException("Missing workspace option.");
         }
-        api().leaveWorkspaceParticipant(orgId(), workspaceId());
-        return new ParticipantLeft(workspaceName());
+        api().leaveWorkspaceParticipant(orgId(workspace.workspaceId), workspace.workspaceId);
+        return new ParticipantLeft(workspaceName(workspace.workspaceId));
     }
 }

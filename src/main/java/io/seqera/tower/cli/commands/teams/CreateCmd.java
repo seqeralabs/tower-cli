@@ -28,11 +28,11 @@ import java.io.IOException;
 )
 public class CreateCmd extends AbstractTeamsCmd {
 
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization's name identifier", required = true)
-    public String organizationName;
-
     @CommandLine.Option(names = {"-n", "--name"}, description = "Team's name", required = true)
     public String teamName;
+
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization's name identifier", required = true)
+    public String organizationName;
 
     @CommandLine.Option(names = {"-d", "--description"}, description = "Team's description")
     public String teamDescription;

@@ -57,7 +57,7 @@ public class ParticipantsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("participants/participants_list")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "-o", "organization1", "-w", "workspace1", "participants", "list");
+        ExecOut out = exec(mock, "participants", "list", "-w", "75887156211589");
 
         assertEquals("", out.stdErr);
         assertEquals(chop(new ParticipantsList("organization1", "workspace1",
@@ -162,7 +162,7 @@ public class ParticipantsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("participants/participants_list")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "-o", "organization1", "-w", "workspace1", "participants", "list", "--offset", "1", "--max", "2");
+        ExecOut out = exec(mock, "participants", "list", "-w", "75887156211589", "--offset", "1", "--max", "2");
 
         assertEquals("", out.stdErr);
         assertEquals(chop(new ParticipantsList("organization1", "workspace1",
@@ -267,7 +267,7 @@ public class ParticipantsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("participants/participants_list")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "-o", "organization1", "-w", "workspace1", "participants", "list", "--page", "1", "--max", "2");
+        ExecOut out = exec(mock, "participants", "list", "-w", "75887156211589", "--page", "1", "--max", "2");
 
         assertEquals("", out.stdErr);
         assertEquals(chop(new ParticipantsList("organization1", "workspace1",
@@ -372,7 +372,7 @@ public class ParticipantsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("participants/participants_list")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "-o", "organization1", "-w", "workspace1", "participants", "list", "--page", "1", "--offset", "0", "--max", "2");
+        ExecOut out = exec(mock, "participants", "list", "-w", "75887156211589", "--page", "1", "--offset", "0", "--max", "2");
 
         assertEquals(errorMessage(out.app, new TowerException("Please use either --page or --offset as pagination parameter")), out.stdErr);
         assertEquals("", out.stdOut);
@@ -401,7 +401,7 @@ public class ParticipantsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("participants/participants_list")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "-o", "organization1", "-w", "workspace1", "participants", "list", "--page", "1", "--no-max", "--max", "2");
+        ExecOut out = exec(mock, "participants", "list", "-w", "75887156211589", "--page", "1", "--no-max", "--max", "2");
 
         assertEquals(errorMessage(out.app, new TowerException("Please use either --no-max or --max as pagination size parameter")), out.stdErr);
         assertEquals("", out.stdOut);
@@ -428,7 +428,7 @@ public class ParticipantsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("participants/participants_list")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "-o", "organization1", "-w", "workspace1", "participants", "list", "-t", "TEAM");
+        ExecOut out = exec(mock, "participants", "list", "-w", "75887156211589", "-t", "TEAM");
 
         assertEquals("", out.stdErr);
         assertEquals(chop(new ParticipantsList("organization1", "workspace1",
@@ -477,7 +477,7 @@ public class ParticipantsCmdTest extends BaseCmdTest {
                 response().withStatusCode(204)
         );
 
-        ExecOut out = exec(mock, "-o", "organization1", "-w", "workspace1", "participants", "delete", "-n", "julio", "-t", "MEMBER");
+        ExecOut out = exec(mock, "participants", "delete", "-w", "75887156211589", "-n", "julio", "-t", "MEMBER");
 
         assertEquals("", out.stdErr);
         assertEquals(new ParticipantDeleted("julio", "workspace1").toString(), out.stdOut);
@@ -510,7 +510,7 @@ public class ParticipantsCmdTest extends BaseCmdTest {
                 response().withStatusCode(204)
         );
 
-        ExecOut out = exec(mock, "-o", "organization1", "-w", "workspace1", "participants", "delete", "-n", "julio", "-t", "TEAM");
+        ExecOut out = exec(mock, "participants", "delete", "-w", "75887156211589", "-n", "julio", "-t", "TEAM");
 
         assertEquals("", out.stdErr);
         assertEquals(new ParticipantDeleted("julio", "workspace1").toString(), out.stdOut);
@@ -537,7 +537,7 @@ public class ParticipantsCmdTest extends BaseCmdTest {
                 response().withStatusCode(204)
         );
 
-        ExecOut out = exec(mock, "-o", "organization1", "-w", "workspace1", "participants", "leave");
+        ExecOut out = exec(mock, "participants", "leave", "-w", "75887156211589");
 
         assertEquals("", out.stdErr);
         assertEquals(new ParticipantLeft("workspace1").toString(), out.stdOut);
@@ -570,7 +570,7 @@ public class ParticipantsCmdTest extends BaseCmdTest {
                 response().withStatusCode(204)
         );
 
-        ExecOut out = exec(mock, "-o", "organization1", "-w", "workspace1", "participants", "change", "-n", "julio", "-r", "OWNER", "-t", "MEMBER");
+        ExecOut out = exec(mock, "participants", "change", "-w", "75887156211589", "-n", "julio", "-r", "OWNER", "-t", "MEMBER");
 
         assertEquals("", out.stdErr);
         assertEquals(new ParticipantChanged("workspace1", "julio", WspRole.OWNER.toString()).toString(), out.stdOut);
@@ -603,7 +603,7 @@ public class ParticipantsCmdTest extends BaseCmdTest {
                 response().withStatusCode(204)
         );
 
-        ExecOut out = exec(mock,  "-o", "organization1", "-w", "workspace1", "participants", "change", "-n", "julio", "-r", "OWNER", "-t", "TEAM");
+        ExecOut out = exec(mock, "participants", "change", "-w", "75887156211589", "-n", "julio", "-r", "OWNER", "-t", "TEAM");
 
         assertEquals("", out.stdErr);
         assertEquals(new ParticipantChanged("workspace1", "julio", WspRole.OWNER.toString()).toString(), out.stdOut);
@@ -636,7 +636,7 @@ public class ParticipantsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("participants/participant_add")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "-o", "organization1", "-w", "workspace1", "participants", "add", "-n", "julio", "-t", "MEMBER");
+        ExecOut out = exec(mock, "participants", "add", "-w", "75887156211589", "-n", "julio", "-t", "MEMBER");
 
         assertEquals("", out.stdErr);
         assertEquals(new ParticipantAdded(parseJson("{\n" +

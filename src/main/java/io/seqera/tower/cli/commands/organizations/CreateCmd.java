@@ -27,11 +27,11 @@ import java.io.IOException;
 )
 public class CreateCmd extends AbstractOrganizationsCmd {
 
-    @CommandLine.Mixin
-    OrganizationsOptions opts;
-
     @CommandLine.Option(names = {"-f", "--full-name"}, description = "Organization full name", required = true)
     public String fullName;
+
+    @CommandLine.Mixin
+    OrganizationsOptions opts;
 
     @Override
     protected Response exec() throws ApiException, IOException {

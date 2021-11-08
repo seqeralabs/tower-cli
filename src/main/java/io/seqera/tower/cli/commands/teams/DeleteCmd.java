@@ -25,11 +25,11 @@ import java.io.IOException;
 )
 public class DeleteCmd extends AbstractTeamsCmd {
 
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization's name identifier", required = true)
-    public String organizationName;
-
     @CommandLine.Option(names = {"-i", "--id"}, description = "Team's identifier", required = true)
     public Long teamId;
+
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization's name identifier", required = true)
+    public String organizationName;
 
     @Override
     protected Response exec() throws ApiException, IOException {

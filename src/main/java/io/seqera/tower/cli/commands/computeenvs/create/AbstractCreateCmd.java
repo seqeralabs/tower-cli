@@ -14,6 +14,7 @@ package io.seqera.tower.cli.commands.computeenvs.create;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.commands.computeenvs.platforms.Platform;
+import io.seqera.tower.cli.commands.global.WorkspaceOptions;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.ComputeEnvCreated;
 import io.seqera.tower.cli.responses.Response;
@@ -21,6 +22,7 @@ import io.seqera.tower.model.ComputeConfig;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.CreateComputeEnvRequest;
 import io.seqera.tower.model.Credentials;
+import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
@@ -32,7 +34,11 @@ public abstract class AbstractCreateCmd extends AbstractApiCmd {
 
     @Option(names = {"-n", "--name"}, description = "Compute environment name", required = true)
     public String name;
-    @Option(names = {"-c", "--credentials-id"}, description = "Credentials identifier (defaults to use the workspace credentials)")
+
+    @CommandLine.Mixin
+    public WorkspaceOptions workspace;
+
+    @Option(names = {"-i", "--id"}, description = "Credentials identifier (defaults to use the workspace credentials)")
     public String credentialsId;
 
     @Override
@@ -51,14 +57,14 @@ public abstract class AbstractCreateCmd extends AbstractApiCmd {
                                 .platform(platform)
                                 .credentialsId(credsId)
                                 .config(config)
-                ), workspaceId()
+                ), workspace.workspaceId
         );
 
-        return new ComputeEnvCreated(platform.getValue(), name, workspaceRef());
+        return new ComputeEnvCreated(platform.getValue(), name, workspaceRef(workspace.workspaceId));
     }
 
     private String findWorkspaceCredentials(ComputeEnv.PlatformEnum type) throws ApiException {
-        List<Credentials> credentials = api().listCredentials(workspaceId(), type.getValue()).getCredentials();
+        List<Credentials> credentials = api().listCredentials(workspace.workspaceId, type.getValue()).getCredentials();
         if (credentials.isEmpty()) {
             throw new TowerException("No valid credentials found at the workspace");
         }

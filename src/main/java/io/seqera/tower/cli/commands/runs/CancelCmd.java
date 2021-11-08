@@ -11,31 +11,36 @@
 
 package io.seqera.tower.cli.commands.runs;
 
-import java.io.IOException;
-
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.commands.global.WorkspaceOptions;
 import io.seqera.tower.cli.exceptions.RunNotFoundException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.RunCanceled;
 import picocli.CommandLine;
+
+import java.io.IOException;
 
 @CommandLine.Command(
         name = "cancel",
         description = "Cancel a pipeline's execution"
 )
 public class CancelCmd extends AbstractRunsCmd {
+
     @CommandLine.Option(names = {"-i", "--id"}, description = "Pipeline's run identifier", required = true)
     public String id;
+
+    @CommandLine.Mixin
+    public WorkspaceOptions workspace;
 
     @Override
     protected Response exec() throws ApiException, IOException {
         try {
-            api().cancelWorkflow(id, workspaceId(), null);
+            api().cancelWorkflow(id, workspace.workspaceId, null);
 
-            return new RunCanceled(id, workspaceRef());
+            return new RunCanceled(id, workspaceRef(workspace.workspaceId));
         } catch (ApiException e) {
             if (e.getCode() == 403) {
-                throw new RunNotFoundException(id, workspaceRef());
+                throw new RunNotFoundException(id, workspaceRef(workspace.workspaceId));
             }
             throw e;
         }

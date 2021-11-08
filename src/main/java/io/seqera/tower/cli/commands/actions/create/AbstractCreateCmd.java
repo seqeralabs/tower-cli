@@ -13,6 +13,7 @@ package io.seqera.tower.cli.commands.actions.create;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
+import io.seqera.tower.cli.commands.global.WorkspaceOptions;
 import io.seqera.tower.cli.commands.pipelines.LaunchOptions;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
@@ -36,12 +37,15 @@ public abstract class AbstractCreateCmd extends AbstractApiCmd {
     public String pipeline;
 
     @CommandLine.Mixin
+    public WorkspaceOptions workspace;
+
+    @CommandLine.Mixin
     public LaunchOptions opts;
 
     @Override
     protected Response exec() throws ApiException, IOException {
         // Retrieve the provided computeEnv or use the primary if not provided
-        ComputeEnv ce = opts.computeEnv != null ? computeEnvByName(opts.computeEnv) : primaryComputeEnv();
+        ComputeEnv ce = opts.computeEnv != null ? computeEnvByName(workspace.workspaceId, opts.computeEnv) : primaryComputeEnv(workspace.workspaceId);
 
         // Use compute env values by default
         String workDirValue = opts.workDir != null ? opts.workDir : ce.getConfig() != null ? ce.getConfig().getWorkDir() : null;
@@ -73,12 +77,12 @@ public abstract class AbstractCreateCmd extends AbstractApiCmd {
 
         CreateActionResponse response;
         try {
-            response = api().createAction(request, workspaceId());
+            response = api().createAction(request, workspace.workspaceId);
         } catch (Exception e) {
-            throw new TowerException(String.format("Unable to create action for workspace '%s'", workspaceRef()));
+            throw new TowerException(String.format("Unable to create action for workspace '%s'", workspaceRef(workspace.workspaceId)));
         }
 
-        return new ActionCreate(actionName, workspaceRef(), response.getActionId());
+        return new ActionCreate(actionName, workspaceRef(workspace.workspaceId), response.getActionId());
     }
 
     protected abstract ActionSource getSource();

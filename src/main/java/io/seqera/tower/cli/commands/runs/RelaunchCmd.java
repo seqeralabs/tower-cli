@@ -12,6 +12,7 @@
 package io.seqera.tower.cli.commands.runs;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.commands.global.WorkspaceOptions;
 import io.seqera.tower.cli.commands.pipelines.LaunchOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.RunSubmited;
@@ -22,6 +23,7 @@ import io.seqera.tower.model.SubmitWorkflowLaunchRequest;
 import io.seqera.tower.model.SubmitWorkflowLaunchResponse;
 import io.seqera.tower.model.Workflow;
 import io.seqera.tower.model.WorkflowLaunchRequest;
+import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Option;
@@ -38,6 +40,9 @@ public class RelaunchCmd extends AbstractRunsCmd {
     @Option(names = {"-i", "--id"}, description = "Pipeline's run id to relaunch", required = true)
     public String id;
 
+    @CommandLine.Mixin
+    public WorkspaceOptions workspace;
+
     @Option(names = {"--pipeline"}, description = "Pipeline to launch")
     public String pipeline;
 
@@ -49,12 +54,12 @@ public class RelaunchCmd extends AbstractRunsCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        Workflow workflow = workflowById(id);
-        Launch launch = launchById(workflow.getLaunchId());
+        Workflow workflow = workflowById(workspace.workspaceId, id);
+        Launch launch = launchById(workspace.workspaceId, workflow.getLaunchId());
 
         ComputeEnv ce = null;
         if (opts.computeEnv != null) {
-            ce = computeEnvByName(opts.computeEnv);
+            ce = computeEnvByName(workspace.workspaceId, opts.computeEnv);
         }
 
         WorkflowLaunchRequest workflowLaunchRequest = new WorkflowLaunchRequest()
@@ -80,17 +85,17 @@ public class RelaunchCmd extends AbstractRunsCmd {
         SubmitWorkflowLaunchRequest submitWorkflowLaunchRequest = new SubmitWorkflowLaunchRequest()
                 .launch(workflowLaunchRequest);
 
-        SubmitWorkflowLaunchResponse response = api().createWorkflowLaunch(submitWorkflowLaunchRequest, workspaceId());
+        SubmitWorkflowLaunchResponse response = api().createWorkflowLaunch(submitWorkflowLaunchRequest, workspace.workspaceId);
 
-        return new RunSubmited(response.getWorkflowId(), workflowWatchUrl(response.getWorkflowId()), workspaceRef());
+        return new RunSubmited(response.getWorkflowId(), workflowWatchUrl(response.getWorkflowId()), workspaceRef(workspace.workspaceId));
     }
 
     private String workflowWatchUrl(String workflowId) throws ApiException {
 
-        if (workspaceId() == null) {
+        if (workspace.workspaceId == null) {
             return String.format("%s/user/%s/watch/%s", serverUrl(), userName(), workflowId);
         }
 
-        return String.format("%s/orgs/%s/workspaces/%s/watch/%s", serverUrl(), orgName(), workspaceName(), workflowId);
+        return String.format("%s/orgs/%s/workspaces/%s/watch/%s", serverUrl(), orgName(workspace.workspaceId), workspaceName(workspace.workspaceId), workflowId);
     }
 }

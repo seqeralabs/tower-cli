@@ -12,6 +12,7 @@
 package io.seqera.tower.cli.commands.runs;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.commands.global.WorkspaceOptions;
 import io.seqera.tower.cli.exceptions.RunNotFoundException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.RunDeleted;
@@ -24,18 +25,22 @@ import java.io.IOException;
         description = "Delete a pipeline's execution"
 )
 public class DeleteCmd extends AbstractRunsCmd {
-    @CommandLine.Option(names = {"-i", "--id"}, description = "Pipeline's run identifier", required = true)
+
+    @CommandLine.Option(names = {"-i", "-id"}, description = "Pipeline's run identifier", required = true)
     public String id;
+
+    @CommandLine.Mixin
+    public WorkspaceOptions workspace;
 
     @Override
     protected Response exec() throws ApiException, IOException {
         try {
-            api().deleteWorkflow(id, workspaceId());
+            api().deleteWorkflow(id, workspace.workspaceId);
 
-            return new RunDeleted(id, workspaceRef());
+            return new RunDeleted(id, workspaceRef(workspace.workspaceId));
         } catch (ApiException e) {
             if (e.getCode() == 403) {
-                throw new RunNotFoundException(id, workspaceRef());
+                throw new RunNotFoundException(id, workspaceRef(workspace.workspaceId));
             }
             throw e;
         }

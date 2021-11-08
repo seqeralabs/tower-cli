@@ -14,6 +14,7 @@ package io.seqera.tower.cli.commands.credentials.update;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.commands.credentials.providers.CredentialsProvider;
+import io.seqera.tower.cli.commands.global.WorkspaceOptions;
 import io.seqera.tower.cli.exceptions.CredentialsNotFoundException;
 import io.seqera.tower.cli.responses.CredentialsUpdated;
 import io.seqera.tower.cli.responses.Response;
@@ -29,8 +30,11 @@ import java.io.IOException;
 @Command
 public abstract class AbstractUpdateCmd extends AbstractApiCmd {
 
-    @CommandLine.Option(names = {"-i", "--id"}, required = true)
+    @CommandLine.Option(names = {"-i", "--id", "--credentials"}, required = true)
     public String id;
+
+    @CommandLine.Mixin
+    public WorkspaceOptions workspace;
 
     public AbstractUpdateCmd() {
     }
@@ -40,12 +44,12 @@ public abstract class AbstractUpdateCmd extends AbstractApiCmd {
 
         // Check that exists
         try {
-            DescribeCredentialsResponse response = api().describeCredentials(id, workspaceId());
+            DescribeCredentialsResponse response = api().describeCredentials(id, workspace.workspaceId);
             return update(response.getCredentials());
         } catch (ApiException e) {
             if (e.getCode() == 403) {
                 // Customize the forbidden message
-                throw new CredentialsNotFoundException(id, workspaceRef());
+                throw new CredentialsNotFoundException(id, workspaceRef(workspace.workspaceId));
             }
             throw e;
         }
@@ -64,9 +68,9 @@ public abstract class AbstractUpdateCmd extends AbstractApiCmd {
                 .provider(getProvider().type())
                 .id(id);
 
-        api().updateCredentials(id, new UpdateCredentialsRequest().credentials(specs), workspaceId());
+        api().updateCredentials(id, new UpdateCredentialsRequest().credentials(specs), workspace.workspaceId);
 
-        return new CredentialsUpdated(getProvider().type().name(), name, workspaceRef());
+        return new CredentialsUpdated(getProvider().type().name(), name, workspaceRef(workspace.workspaceId));
     }
 
     protected abstract CredentialsProvider getProvider();

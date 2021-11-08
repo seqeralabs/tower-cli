@@ -12,6 +12,7 @@
 package io.seqera.tower.cli.commands.computeenvs;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.commands.global.WorkspaceOptions;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
 import io.seqera.tower.cli.responses.ComputeEnvDeleted;
 import io.seqera.tower.cli.responses.Response;
@@ -27,15 +28,18 @@ public class DeleteCmd extends AbstractComputeEnvCmd {
     @CommandLine.Option(names = {"-i", "--id"}, description = "Compute environment identifier", required = true)
     public String id;
 
+    @CommandLine.Mixin
+    public WorkspaceOptions workspace;
+
     @Override
     protected Response exec() throws ApiException {
         try {
-            api().deleteComputeEnv(id, workspaceId());
-            return new ComputeEnvDeleted(id, workspaceRef());
+            api().deleteComputeEnv(id, workspace.workspaceId);
+            return new ComputeEnvDeleted(id, workspaceRef(workspace.workspaceId));
         } catch (ApiException e) {
             if (e.getCode() == 403) {
                 // Customize the forbidden message
-                throw new ComputeEnvNotFoundException(id, workspaceRef());
+                throw new ComputeEnvNotFoundException(id, workspaceRef(workspace.workspaceId));
             }
             throw e;
         }
