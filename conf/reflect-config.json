@@ -551,6 +551,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.computeenvs.PrimaryCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.computeenvs.ViewCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -815,6 +821,23 @@
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.UnivaPlatform$AdvancedOptions",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
+},
+{
+  "name":"io.seqera.tower.cli.commands.computeenvs.primary.AbstractComputeEnvsPrimaryCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true
+},
+{
+  "name":"io.seqera.tower.cli.commands.computeenvs.primary.GetCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.computeenvs.primary.SetCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.AbstractCredentialsCmd",
@@ -1419,6 +1442,12 @@
 },
 {
   "name":"io.seqera.tower.cli.responses.ComputeEnvCreated",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.ComputeEnvList",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true
