@@ -39,7 +39,7 @@ public class ComputeEnvList extends Response {
 
         TableList table = new TableList(out, 5, "ID", "Status", "Platform", "Name", "Last activity").sortBy(0);
         table.setPrefix("    ");
-        computeEnvs.forEach(ce -> table.addRow(ce.getId(), ce.getStatus().getValue(), ce.getPlatform(), ce.getName(), formatTime(ce.getLastUsed())));
+        computeEnvs.forEach(ce -> table.addRow(String.format("%s %s", ce.getPrimary() != null && ce.getPrimary() ? "*" : "", ce.getId()), ce.getStatus().getValue(), ce.getPlatform(), ce.getName(), formatTime(ce.getLastUsed())));
         table.print();
         out.println("");
     }
