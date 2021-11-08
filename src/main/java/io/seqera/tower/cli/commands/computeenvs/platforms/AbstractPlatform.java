@@ -23,7 +23,7 @@ import java.nio.file.Path;
 
 public abstract class AbstractPlatform<T extends ComputeConfig> implements Platform {
 
-    @Option(names = {"-k", "--work-dir"}, description = "Work directory", required = true)
+    @Option(names = {"--work-dir"}, description = "Work directory", required = true)
     public String workDir;
 
     @ArgGroup(heading = "%nStaging options:%n", validate = false)
