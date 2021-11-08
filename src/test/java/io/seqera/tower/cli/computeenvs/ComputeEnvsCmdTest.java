@@ -212,7 +212,7 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("compute_env_view_aws_manual")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "--json", "compute-envs", "view", "-i", "53aWhB2qJroy0i51FOrFAC");
+        ExecOut out = exec(mock, "--output", "json", "compute-envs", "view", "-i", "53aWhB2qJroy0i51FOrFAC");
 
         assertEquals("", out.stdErr);
         assertEquals(prettyJson(new ComputeEnvView("53aWhB2qJroy0i51FOrFAC", USER_WORKSPACE_NAME,

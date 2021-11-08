@@ -512,7 +512,7 @@ class RunsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("launch_view")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "--json", "runs", "view", "-i", "5dAZoXrcmZXRO4");
+        ExecOut out = exec(mock, "--output", "json", "runs", "view", "-i", "5dAZoXrcmZXRO4");
 
         Workflow workflow = parseJson("{\n" +
                 "    \"id\": \"5mDfiUtqyptDib\",\n" +
