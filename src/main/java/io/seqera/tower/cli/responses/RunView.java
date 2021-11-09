@@ -196,8 +196,8 @@ public class RunView extends Response {
         }
 
         if (!processes.isEmpty()) {
-            out.println(ansi(String.format("%n    @|bold Processes|@")));
-            TableList tableProcess = new TableList(out, 2, "Name", "Completed");
+            out.println(ansi(String.format("%n    @|bold Completed processes|@")));
+            TableList tableProcess = new TableList(out, 2);
             tableProcess.setPrefix("    ");
             processes.forEach(it -> {
                 tableProcess.addRow(it.get("name").toString(), it.get("completedTasks").toString() + "/" + it.get("totalTasks").toString());
