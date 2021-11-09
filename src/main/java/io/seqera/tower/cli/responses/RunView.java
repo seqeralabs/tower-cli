@@ -165,16 +165,12 @@ public class RunView extends Response {
         }
 
         if (configText != null) {
-            out.println(ansi(String.format("%n    @|bold Configuration Text|@")));
-            out.println(ansi(String.format("%n    @|bold ------------------|@")));
-            out.println(ansi(String.format("%n    %s", configText)));
+            out.println(String.format("%n    Resolved configuration%n    ----------------------%n%s%n", configText.replaceAll("(?m)^", "     ")));
         }
 
         if (!params.isEmpty()) {
-            out.println(ansi(String.format("%n    @|bold Parameters|@")));
-            out.println(ansi(String.format("%n    @|bold ----------|@")));
             try {
-                out.println(ansi(String.format("%n    %s", JsonHelper.prettyJson(params))));
+                out.println(String.format("%n    Parameters%n    ---------%n%s%n", JsonHelper.prettyJson(params).replaceAll("(?m)^", "     ")));
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
