@@ -36,14 +36,14 @@ import java.util.concurrent.TimeUnit;
 )
 public class ViewCmd extends AbstractRunsCmd {
 
-    @CommandLine.Mixin
-    public RunViewOptions opts;
+    @CommandLine.Option(names = {"-i", "--id"}, description = "Pipeline's run identifier", required = true)
+    public String id;
 
     @CommandLine.Mixin
     public WorkspaceOptions workspace;
 
-    @CommandLine.Option(names = {"-i", "--id"}, description = "Pipeline's run identifier", required = true)
-    public String id;
+    @CommandLine.Mixin
+    public RunViewOptions opts;
 
     protected Response exec() throws ApiException {
         try {
@@ -76,9 +76,11 @@ public class ViewCmd extends AbstractRunsCmd {
             general.put("computeEnv", computeEnv.getName());
             general.put("nextflowVersion", workflow.getNextflow() != null ? workflow.getNextflow().getVersion() : null);
 
-            Map<String, Object> config = new HashMap<String, Object>();
+            List<String> configFiles = new ArrayList<>();
+            String configText = null;
             if (opts.config) {
-                config = workflow.getParams();
+                configFiles = workflow.getConfigFiles();
+                configText = workflow.getConfigText();
             }
 
             Map<String, Object> params = new HashMap<String, Object>();
@@ -187,7 +189,8 @@ public class ViewCmd extends AbstractRunsCmd {
             return new RunView(
                     workspaceRef,
                     general,
-                    config,
+                    configFiles,
+                    configText,
                     params,
                     command,
                     status,

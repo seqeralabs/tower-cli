@@ -11,10 +11,13 @@
 
 package io.seqera.tower.cli.responses;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import io.seqera.tower.cli.utils.JsonHelper;
 import io.seqera.tower.cli.utils.TableList;
 
 import java.io.PrintWriter;
 import java.time.OffsetDateTime;
+import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +26,8 @@ public class RunView extends Response {
 
     public final String workspaceRef;
     public final Map<String, Object> general;
-    public final Map<String, Object> config;
+    public final List<String> configFiles;
+    public final String configText;
     public final Map<String, Object> params;
     public final String command;
     public final Map<String, Object> status;
@@ -39,7 +43,8 @@ public class RunView extends Response {
     public RunView(
             String workspaceRef,
             Map<String, Object> general,
-            Map<String, Object> config,
+            List<String> configFiles,
+            String configText,
             Map<String, Object> params,
             String command,
             Map<String, Object> status,
@@ -54,7 +59,8 @@ public class RunView extends Response {
     ) {
         this.workspaceRef = workspaceRef;
         this.general = general;
-        this.config = config;
+        this.configFiles = configFiles;
+        this.configText = configText;
         this.params = params;
         this.command = command;
         this.status = status;
@@ -74,8 +80,12 @@ public class RunView extends Response {
 
         data.put("general", general);
 
-        if (!config.isEmpty()) {
-            data.put("configuration", config);
+        if (!configFiles.isEmpty()) {
+            data.put("configuration_files", configFiles);
+        }
+
+        if (configText != null) {
+            data.put("configuration_text", configText);
         }
 
         if (!params.isEmpty()) {
@@ -146,18 +156,33 @@ public class RunView extends Response {
         table.addRow("Nextflow Version", general.get("nextflowVersion") != null ? general.get("nextflowVersion").toString() : "No Nextflow version reported");
         table.print();
 
-        if (!config.isEmpty()) {
-            out.println(ansi(String.format("%n    @|bold Configuration|@")));
-            out.println(ansi(config.toString()));
+        if (!configFiles.isEmpty()) {
+            out.println(ansi(String.format("%n    @|bold Configuration Files|@")));
+            TableList tableConfigFiles = new TableList(out, 1);
+            tableConfigFiles.setPrefix("    ");
+            configFiles.forEach(tableConfigFiles::addRow);
+            tableConfigFiles.print();
+        }
+
+        if (configText != null) {
+            out.println(ansi(String.format("%n    @|bold Configuration Text|@")));
+            out.println(ansi(String.format("%n    @|bold ------------------|@")));
+            out.println(ansi(String.format("%n    %s", configText)));
         }
 
         if (!params.isEmpty()) {
             out.println(ansi(String.format("%n    @|bold Parameters|@")));
-            out.println(ansi(params.toString()));
+            out.println(ansi(String.format("%n    @|bold ----------|@")));
+            try {
+                out.println(ansi(String.format("%n    %s", JsonHelper.prettyJson(params))));
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
         }
 
         if (command != null) {
             out.println(ansi(String.format("%n    @|bold Command|@")));
+            out.println(ansi(String.format("%n    @|bold -------|@")));
             out.println(ansi(String.format("%n    %s", command)));
         }
 
@@ -188,8 +213,8 @@ public class RunView extends Response {
             out.println(ansi(String.format("%n    @|bold Stats|@")));
             TableList tableStats = new TableList(out, 2);
             tableStats.setPrefix("    ");
-            tableStats.addRow("Wall Time",  String.format("%.2f minutes",stats.get("wallTime")));
-            tableStats.addRow("CPU Time",  String.format("%.2f hours",stats.get("cpuTime")));
+            tableStats.addRow("Wall Time", String.format("%.2f minutes", stats.get("wallTime")));
+            tableStats.addRow("CPU Time", String.format("%.2f hours", stats.get("cpuTime")));
             tableStats.addRow("Total Memory", String.format("%.2f GB", stats.get("totalMemory")));
             tableStats.addRow("Read", String.format("%.2f GB", stats.get("read")));
             tableStats.addRow("Write", String.format("%.2f GB", stats.get("write")));

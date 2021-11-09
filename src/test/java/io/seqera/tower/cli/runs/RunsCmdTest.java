@@ -408,7 +408,8 @@ class RunsCmdTest extends BaseCmdTest {
         general.put("nextflowVersion", workflow.getNextflow() != null ? workflow.getNextflow().getVersion() : null);
 
         String workspaceRef = USER_WORKSPACE_NAME;
-        Map<String, Object> config = new HashMap<String, Object>();
+        List<String> configFiles = new ArrayList<>();
+        String configText = null;
         Map<String, Object> params = new HashMap<String, Object>();
         String command = null;
         Map<String, Object> status = new HashMap<>();
@@ -425,7 +426,8 @@ class RunsCmdTest extends BaseCmdTest {
         assertEquals(StringUtils.chop(new RunView(
                 workspaceRef,
                 general,
-                config,
+                configFiles,
+                configText,
                 params,
                 command,
                 status,
@@ -562,7 +564,8 @@ class RunsCmdTest extends BaseCmdTest {
         general.put("nextflowVersion", workflow.getNextflow() != null ? workflow.getNextflow().getVersion() : null);
 
         String workspaceRef = USER_WORKSPACE_NAME;
-        Map<String, Object> config = new HashMap<String, Object>();
+        List<String> configFiles = new ArrayList<>();
+        String configText = null;
         Map<String, Object> params = new HashMap<String, Object>();
         String command = null;
         Map<String, Object> status = new HashMap<>();
@@ -578,7 +581,8 @@ class RunsCmdTest extends BaseCmdTest {
         assertEquals("", out.stdErr);
         assertEquals(prettyJson(new RunView(workspaceRef,
                 general,
-                config,
+                configFiles,
+                configText,
                 params,
                 command,
                 status,
