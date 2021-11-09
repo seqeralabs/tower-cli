@@ -236,11 +236,6 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         availableComputeEnvsNameToId = new HashMap<>();
         for (ListComputeEnvsResponseEntry ce : api().listComputeEnvs("AVAILABLE", workspaceId).getComputeEnvs()) {
 
-            // Make the first compute environment the default if there is no primary set.
-            if (primaryComputeEnvId == null) {
-                primaryComputeEnvId = ce.getId();
-            }
-
             if (ce.getPrimary() != null && ce.getPrimary()) {
                 primaryComputeEnvId = ce.getId();
             }
