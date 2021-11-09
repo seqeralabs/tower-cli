@@ -37,10 +37,10 @@ public class CollaboratorsList extends Response {
             return;
         }
 
-        TableList table = new TableList(out, 4, "ID", "Username", "Email", "Role");
+        TableList table = new TableList(out, 3, "ID", "Username", "Email");
         table.setPrefix("    ");
         members.forEach(element -> {
-            table.addRow(element.getMemberId().toString(), element.getUserName(), element.getEmail(), element.getRole().toString());
+            table.addRow(element.getMemberId().toString(), element.getUserName(), element.getEmail());
         });
 
         table.print();

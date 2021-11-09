@@ -51,8 +51,7 @@ public class CollaboratorsCmdTest extends BaseCmdTest {
                         "      \"email\": \"jfernandez74@gmail.com\",\n" +
                         "      \"firstName\": null,\n" +
                         "      \"lastName\": null,\n" +
-                        "      \"avatar\": \"https://www.gravatar.com/avatar/7d3c1ee212a3465233e161b451fb4d05?d=404\",\n" +
-                        "      \"role\": \"collaborator\"\n" +
+                        "      \"avatar\": \"https://www.gravatar.com/avatar/7d3c1ee212a3465233e161b451fb4d05?d=404\"\n" +
                         "    }", MemberDbDto.class),
                 parseJson("{\n" +
                         "      \"memberId\": 255080245994226,\n" +
@@ -60,8 +59,7 @@ public class CollaboratorsCmdTest extends BaseCmdTest {
                         "      \"email\": \"julio@seqera.io\",\n" +
                         "      \"firstName\": null,\n" +
                         "      \"lastName\": null,\n" +
-                        "      \"avatar\": \"https://www.gravatar.com/avatar/72918a9f674eaa696729917bec58760b?d=404\",\n" +
-                        "      \"role\": \"collaborator\"\n" +
+                        "      \"avatar\": \"https://www.gravatar.com/avatar/72918a9f674eaa696729917bec58760b?d=404\"\n" +
                         "    }", MemberDbDto.class)
         )).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
