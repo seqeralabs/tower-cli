@@ -11,6 +11,9 @@
 
 package io.seqera.tower.cli.responses.ComputeEnvs;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.ComputeEnv;
 
@@ -22,6 +25,18 @@ public class ComputeEnvsPrimarySet extends Response {
     public ComputeEnvsPrimarySet(String workspaceRef, ComputeEnv computeEnv) {
         this.workspaceRef = workspaceRef;
         this.computeEnv = computeEnv;
+    }
+
+    @Override
+    public Object getJSON() {
+        Map<String, String> map = new HashMap<>();
+
+        map.put("id", computeEnv.getId());
+        map.put("name", computeEnv.getName());
+        map.put("credentials_id", computeEnv.getCredentialsId());
+        map.put("platform", computeEnv.getPlatform().getValue());
+
+        return map;
     }
 
     @Override
