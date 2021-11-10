@@ -35,10 +35,6 @@ public class RunView extends Response {
     public final Map<String, Object> stats;
     public final Map<String, Object> load;
     public final Map<String, Object> utilization;
-    public final List<Map<String, Object>> metricsMem;
-    public final List<Map<String, Object>> metricsCpu;
-    public final List<Map<String, Object>> metricsTime;
-    public final List<Map<String, Object>> metricsIo;
 
     public RunView(
             String workspaceRef,
@@ -51,11 +47,7 @@ public class RunView extends Response {
             List<Map<String, Object>> processes,
             Map<String, Object> stats,
             Map<String, Object> load,
-            Map<String, Object> utilization,
-            List<Map<String, Object>> metricsMem,
-            List<Map<String, Object>> metricsCpu,
-            List<Map<String, Object>> metricsTime,
-            List<Map<String, Object>> metricsIo
+            Map<String, Object> utilization
     ) {
         this.workspaceRef = workspaceRef;
         this.general = general;
@@ -68,10 +60,6 @@ public class RunView extends Response {
         this.stats = stats;
         this.load = load;
         this.utilization = utilization;
-        this.metricsMem = metricsMem;
-        this.metricsCpu = metricsCpu;
-        this.metricsTime = metricsTime;
-        this.metricsIo = metricsIo;
     }
 
     @Override
@@ -114,22 +102,6 @@ public class RunView extends Response {
 
         if (!utilization.isEmpty()) {
             data.put("utilization", utilization);
-        }
-
-        if (!metricsMem.isEmpty()) {
-            data.put("metricsMemory", metricsMem);
-        }
-
-        if (!metricsCpu.isEmpty()) {
-            data.put("metricsCpu", metricsCpu);
-        }
-
-        if (!metricsTime.isEmpty()) {
-            data.put("metricsTime", metricsTime);
-        }
-
-        if (!metricsIo.isEmpty()) {
-            data.put("metricsIo", metricsIo);
         }
 
         return data;
@@ -238,29 +210,6 @@ public class RunView extends Response {
             tableUtilization.addRow("Memory Efficiency", String.format("%.2f", utilization.get("memoryEfficiency")) + "%");
             tableUtilization.addRow("CPU Efficiency", String.format("%.2f", utilization.get("cpuEfficiency")) + "%");
             tableUtilization.print();
-        }
-
-        if (!metricsMem.isEmpty()) {
-            out.println(ansi(String.format("%n    @|bold Memory Metrics|@")));
-            out.println(ansi(String.format("%n    %s", metricsMem)));
-        }
-
-
-        if (!metricsCpu.isEmpty()) {
-            out.println(ansi(String.format("%n    @|bold CPU Metrics|@")));
-            out.println(ansi(String.format("%n    %s", metricsCpu)));
-        }
-
-
-        if (!metricsTime.isEmpty()) {
-            out.println(ansi(String.format("%n    @|bold Job Duration Metrics|@")));
-            out.println(ansi(String.format("%n    %s", metricsTime)));
-        }
-
-
-        if (!metricsIo.isEmpty()) {
-            out.println(ansi(String.format("%n    @|bold I/O Metrics|@")));
-            out.println(ansi(String.format("%n    %s", metricsIo)));
         }
     }
 }

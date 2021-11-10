@@ -13,6 +13,7 @@ package io.seqera.tower.cli.commands.runs;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptions;
+import io.seqera.tower.cli.commands.runs.metrics.MetricCmd;
 import io.seqera.tower.cli.exceptions.RunNotFoundException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.RunView;
@@ -32,7 +33,10 @@ import java.util.concurrent.TimeUnit;
 
 @CommandLine.Command(
         name = "view",
-        description = "View pipeline's runs"
+        description = "View pipeline's runs",
+        subcommands = {
+                MetricCmd.class,
+        }
 )
 public class ViewCmd extends AbstractRunsCmd {
 
@@ -56,11 +60,6 @@ public class ViewCmd extends AbstractRunsCmd {
             ProgressData progress = null;
             if (opts.processes || opts.stats || opts.load || opts.utilization) {
                 progress = api().describeWorkflowProgress(id, workspace.workspaceId).getProgress();
-            }
-
-            List<WorkflowMetrics> metrics = null;
-            if (opts.metricsCpu || opts.metricsMemory || opts.metricsIo || opts.metricsTime) {
-                metrics = api().describeWorkflowMetrics(id, workspace.workspaceId).getMetrics();
             }
 
             Map<String, Object> general = new HashMap<String, Object>();
@@ -139,53 +138,6 @@ public class ViewCmd extends AbstractRunsCmd {
                 utilization.put("cpuEfficiency", progress.getWorkflowProgress().getCpuEfficiency());
             }
 
-            List<Map<String, Object>> metricsMem = new ArrayList<>();
-            if (opts.metricsMemory) {
-                metrics.forEach(it -> {
-                    Map<String, Object> data = new HashMap<>();
-                    data.put("process", it.getProcess());
-                    data.put("memRaw", it.getMem());
-                    data.put("memUsage", it.getMemUsage());
-                    data.put("memVirtual", it.getVmem());
-
-                    metricsMem.add(data);
-                });
-            }
-
-            List<Map<String, Object>> metricsCpu = new ArrayList<>();
-            if (opts.metricsCpu) {
-                metrics.forEach(it -> {
-                    Map<String, Object> data = new HashMap<>();
-                    data.put("process", it.getProcess());
-                    data.put("cpuRaq", it.getCpu());
-                    data.put("cpuUsage", it.getCpuUsage());
-
-                    metricsCpu.add(data);
-                });
-            }
-
-            List<Map<String, Object>> metricsTime = new ArrayList<>();
-            if (opts.metricsTime) {
-                metrics.forEach(it -> {
-                    Map<String, Object> data = new HashMap<>();
-                    data.put("timeRaw", it.getTime());
-                    data.put("timeUsage", it.getTimeUsage());
-
-                    metricsTime.add(data);
-                });
-            }
-
-            List<Map<String, Object>> metricsIo = new ArrayList<>();
-            if (opts.metricsIo) {
-                metrics.forEach(it -> {
-                    Map<String, Object> data = new HashMap<>();
-                    data.put("writes", it.getWrites());
-                    data.put("reads", it.getReads());
-
-                    metricsIo.add(data);
-                });
-            }
-
             return new RunView(
                     workspaceRef,
                     general,
@@ -197,11 +149,7 @@ public class ViewCmd extends AbstractRunsCmd {
                     processes,
                     stats,
                     load,
-                    utilization,
-                    metricsMem,
-                    metricsCpu,
-                    metricsTime,
-                    metricsIo
+                    utilization
             );
 
         } catch (ApiException e) {
