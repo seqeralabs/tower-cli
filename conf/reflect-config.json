@@ -1297,6 +1297,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.runs.RunViewOptions",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.runs.ViewCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1823,6 +1829,11 @@
   "allDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.model.CloudPriceModel",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true
+},
+{
   "name":"io.seqera.tower.model.ComputeConfig",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1995,6 +2006,12 @@
   "allDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.model.DescribeTaskResponse",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.model.DescribeUserResponse",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -2037,6 +2054,12 @@
 },
 {
   "name":"io.seqera.tower.model.GetProgressResponse",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.model.GetWorkflowMetricsResponse",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true
@@ -2175,6 +2198,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.model.ListTasksResponse",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.model.ListTeamResponse",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -2287,6 +2316,12 @@
   "allDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.model.ResourceData",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.model.SSHSecurityKeys",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -2327,6 +2362,17 @@
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.model.Task",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.model.TaskStatus",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true
 },
 {
   "name":"io.seqera.tower.model.Team",
@@ -2450,6 +2496,12 @@
   "allDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.model.WorkflowMetrics",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.model.WorkflowStatus",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
@@ -2521,6 +2573,9 @@
   "name":"java.lang.Object",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
+},
+{
+  "name":"java.lang.Object[]"
 },
 {
   "name":"java.lang.String"

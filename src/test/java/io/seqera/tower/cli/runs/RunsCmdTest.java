@@ -31,8 +31,11 @@ import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static io.seqera.tower.cli.commands.AbstractApiCmd.USER_WORKSPACE_NAME;
 import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
@@ -304,6 +307,12 @@ class RunsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("launch_view")).withContentType(MediaType.APPLICATION_JSON)
         );
 
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/isnEDBLvHDAIteOEF44ow"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_env_view")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
         ExecOut out = exec(mock, "runs", "view", "-i", "5dAZoXrcmZXRO4");
 
         Workflow workflow = parseJson("{\n" +
@@ -385,110 +394,52 @@ class RunsCmdTest extends BaseCmdTest {
                 "      \"cpuEfficiency\": 0\n" +
                 "    }", WorkflowLoad.class);
 
-        Launch launch = parseJson("{\n" +
-                "    \"id\": \"5SCyEXKrCqFoGzOXGpesr5\",\n" +
-                "    \"computeEnv\": {\n" +
-                "      \"id\": \"3xkkzYH2nbD3nZjrzKm0oR\",\n" +
-                "      \"name\": \"ce-aws-144996268157965\",\n" +
-                "      \"description\": null,\n" +
-                "      \"platform\": \"aws-batch\",\n" +
-                "      \"config\": {\n" +
-                "        \"region\": \"eu-west-1\",\n" +
-                "        \"computeQueue\": \"TowerForge-3xkkzYH2nbD3nZjrzKm0oR-work\",\n" +
-                "        \"computeJobRole\": null,\n" +
-                "        \"headQueue\": \"TowerForge-3xkkzYH2nbD3nZjrzKm0oR-head\",\n" +
-                "        \"headJobRole\": null,\n" +
-                "        \"cliPath\": \"/home/ec2-user/miniconda/bin/aws\",\n" +
-                "        \"volumes\": [],\n" +
-                "        \"workDir\": \"s3://nextflow-ci/julio\",\n" +
-                "        \"preRunScript\": null,\n" +
-                "        \"postRunScript\": null,\n" +
-                "        \"headJobCpus\": null,\n" +
-                "        \"headJobMemoryMb\": null,\n" +
-                "        \"forge\": {\n" +
-                "          \"type\": \"SPOT\",\n" +
-                "          \"minCpus\": 0,\n" +
-                "          \"maxCpus\": 1,\n" +
-                "          \"gpuEnabled\": false,\n" +
-                "          \"ebsAutoScale\": true,\n" +
-                "          \"instanceTypes\": [],\n" +
-                "          \"allocStrategy\": null,\n" +
-                "          \"imageId\": null,\n" +
-                "          \"vpcId\": null,\n" +
-                "          \"subnets\": [],\n" +
-                "          \"securityGroups\": [],\n" +
-                "          \"fsxMount\": null,\n" +
-                "          \"fsxName\": null,\n" +
-                "          \"fsxSize\": null,\n" +
-                "          \"disposeOnDeletion\": true,\n" +
-                "          \"ec2KeyPair\": null,\n" +
-                "          \"allowBuckets\": [],\n" +
-                "          \"ebsBlockSize\": null,\n" +
-                "          \"fusionEnabled\": false,\n" +
-                "          \"bidPercentage\": null,\n" +
-                "          \"efsCreate\": false,\n" +
-                "          \"efsId\": null,\n" +
-                "          \"efsMount\": null\n" +
-                "        },\n" +
-                "        \"forgedResources\": [\n" +
-                "          {\n" +
-                "            \"IamRole\": \"arn:aws:iam::195996028523:role/TowerForge-3xkkzYH2nbD3nZjrzKm0oR-ServiceRole\"\n" +
-                "          },\n" +
-                "          {\n" +
-                "            \"IamRole\": \"arn:aws:iam::195996028523:role/TowerForge-3xkkzYH2nbD3nZjrzKm0oR-FleetRole\"\n" +
-                "          },\n" +
-                "          {\n" +
-                "            \"IamInstanceProfile\": \"arn:aws:iam::195996028523:instance-profile/TowerForge-3xkkzYH2nbD3nZjrzKm0oR-InstanceRole\"\n" +
-                "          },\n" +
-                "          {\n" +
-                "            \"Ec2LaunchTemplate\": \"TowerForge-3xkkzYH2nbD3nZjrzKm0oR\"\n" +
-                "          },\n" +
-                "          {\n" +
-                "            \"BatchEnv\": \"arn:aws:batch:eu-west-1:195996028523:compute-environment/TowerForge-3xkkzYH2nbD3nZjrzKm0oR-head\"\n" +
-                "          },\n" +
-                "          {\n" +
-                "            \"BatchQueue\": \"arn:aws:batch:eu-west-1:195996028523:job-queue/TowerForge-3xkkzYH2nbD3nZjrzKm0oR-head\"\n" +
-                "          },\n" +
-                "          {\n" +
-                "            \"BatchEnv\": \"arn:aws:batch:eu-west-1:195996028523:compute-environment/TowerForge-3xkkzYH2nbD3nZjrzKm0oR-work\"\n" +
-                "          },\n" +
-                "          {\n" +
-                "            \"BatchQueue\": \"arn:aws:batch:eu-west-1:195996028523:job-queue/TowerForge-3xkkzYH2nbD3nZjrzKm0oR-work\"\n" +
-                "          }\n" +
-                "        ],\n" +
-                "        \"platform\": \"aws-batch\"\n" +
-                "      },\n" +
-                "      \"dateCreated\": \"2021-09-21T12:56:19Z\",\n" +
-                "      \"lastUpdated\": \"2021-09-21T12:57:03Z\",\n" +
-                "      \"lastUsed\": \"2021-09-22T12:51:18Z\",\n" +
-                "      \"deleted\": null,\n" +
-                "      \"status\": \"AVAILABLE\",\n" +
-                "      \"message\": null,\n" +
-                "      \"primary\": null,\n" +
-                "      \"credentialsId\": \"33Qc0pYMGcVImw6zc2xpLn\"\n" +
-                "    },\n" +
-                "    \"pipeline\": \"https://github.com/grananda/nextflow-hello\",\n" +
-                "    \"workDir\": \"s3://nextflow-ci/julio\",\n" +
-                "    \"revision\": \"main\",\n" +
-                "    \"sessionId\": \"722eae42-f9e7-4631-9e9b-d77ed473071e\",\n" +
-                "    \"configProfiles\": [],\n" +
-                "    \"configText\": null,\n" +
-                "    \"paramsText\": null,\n" +
-                "    \"preRunScript\": null,\n" +
-                "    \"postRunScript\": null,\n" +
-                "    \"mainScript\": null,\n" +
-                "    \"entryName\": null,\n" +
-                "    \"schemaName\": null,\n" +
-                "    \"resume\": false,\n" +
-                "    \"pullLatest\": false,\n" +
-                "    \"stubRun\": false,\n" +
-                "    \"resumeDir\": \"s3://nextflow-ci/julio\",\n" +
-                "    \"resumeCommitId\": null,\n" +
-                "    \"dateCreated\": \"2021-09-22T11:43:46Z\"\n" +
-                "  }", Launch.class);
+        Map<String, Object> general = new HashMap<String, Object>();
+        general.put("id", workflow.getId());
+        general.put("runName", workflow.getRunName());
+        general.put("startingDate", workflow.getStart());
+        general.put("commitId", workflow.getCommitId());
+        general.put("sessionId", workflow.getSessionId());
+        general.put("username", workflow.getUserName());
+        general.put("workdir", workflow.getWorkDir());
+        general.put("container", workflow.getContainer());
+        general.put("executors", workflowLoad.getExecutors() != null ? String.join(", ", workflowLoad.getExecutors()) : null);
+        general.put("computeEnv", "ce-aws-144996268157965");
+        general.put("nextflowVersion", workflow.getNextflow() != null ? workflow.getNextflow().getVersion() : null);
+
+        String workspaceRef = USER_WORKSPACE_NAME;
+        List<String> configFiles = new ArrayList<>();
+        String configText = null;
+        Map<String, Object> params = new HashMap<String, Object>();
+        String command = null;
+        Map<String, Object> status = new HashMap<>();
+        List<Map<String, Object>> processes = new ArrayList<>();
+        Map<String, Object> stats = new HashMap<>();
+        Map<String, Object> load = new HashMap<>();
+        Map<String, Object> utilization = new HashMap<>();
+        List<Map<String, Object>> metricsMem = new ArrayList<>();
+        List<Map<String, Object>> metricsCpu = new ArrayList<>();
+        List<Map<String, Object>> metricsTime = new ArrayList<>();
+        List<Map<String, Object>> metricsIo = new ArrayList<>();
 
         assertEquals("", out.stdErr);
-        assertEquals(StringUtils.chop(new RunView("5dAZoXrcmZXRO4", USER_WORKSPACE_NAME, workflow, workflowLoad, launch.getComputeEnv()).toString()), out.stdOut);
+        assertEquals(StringUtils.chop(new RunView(
+                workspaceRef,
+                general,
+                configFiles,
+                configText,
+                params,
+                command,
+                status,
+                processes,
+                stats,
+                load,
+                utilization,
+                metricsMem,
+                metricsCpu,
+                metricsTime,
+                metricsIo
+        ).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -510,6 +461,12 @@ class RunsCmdTest extends BaseCmdTest {
                 request().withMethod("GET").withPath("/launch/5SCyEXKrCqFoGzOXGpesr5"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("launch_view")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/isnEDBLvHDAIteOEF44ow"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_env_view")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         ExecOut out = exec(mock, "--json", "runs", "view", "-i", "5dAZoXrcmZXRO4");
@@ -593,110 +550,51 @@ class RunsCmdTest extends BaseCmdTest {
                 "      \"cpuEfficiency\": 0\n" +
                 "    }", WorkflowLoad.class);
 
-        Launch launch = parseJson("{\n" +
-                "    \"id\": \"5SCyEXKrCqFoGzOXGpesr5\",\n" +
-                "    \"computeEnv\": {\n" +
-                "      \"id\": \"3xkkzYH2nbD3nZjrzKm0oR\",\n" +
-                "      \"name\": \"ce-aws-144996268157965\",\n" +
-                "      \"description\": null,\n" +
-                "      \"platform\": \"aws-batch\",\n" +
-                "      \"config\": {\n" +
-                "        \"region\": \"eu-west-1\",\n" +
-                "        \"computeQueue\": \"TowerForge-3xkkzYH2nbD3nZjrzKm0oR-work\",\n" +
-                "        \"computeJobRole\": null,\n" +
-                "        \"headQueue\": \"TowerForge-3xkkzYH2nbD3nZjrzKm0oR-head\",\n" +
-                "        \"headJobRole\": null,\n" +
-                "        \"cliPath\": \"/home/ec2-user/miniconda/bin/aws\",\n" +
-                "        \"volumes\": [],\n" +
-                "        \"workDir\": \"s3://nextflow-ci/julio\",\n" +
-                "        \"preRunScript\": null,\n" +
-                "        \"postRunScript\": null,\n" +
-                "        \"headJobCpus\": null,\n" +
-                "        \"headJobMemoryMb\": null,\n" +
-                "        \"forge\": {\n" +
-                "          \"type\": \"SPOT\",\n" +
-                "          \"minCpus\": 0,\n" +
-                "          \"maxCpus\": 1,\n" +
-                "          \"gpuEnabled\": false,\n" +
-                "          \"ebsAutoScale\": true,\n" +
-                "          \"instanceTypes\": [],\n" +
-                "          \"allocStrategy\": null,\n" +
-                "          \"imageId\": null,\n" +
-                "          \"vpcId\": null,\n" +
-                "          \"subnets\": [],\n" +
-                "          \"securityGroups\": [],\n" +
-                "          \"fsxMount\": null,\n" +
-                "          \"fsxName\": null,\n" +
-                "          \"fsxSize\": null,\n" +
-                "          \"disposeOnDeletion\": true,\n" +
-                "          \"ec2KeyPair\": null,\n" +
-                "          \"allowBuckets\": [],\n" +
-                "          \"ebsBlockSize\": null,\n" +
-                "          \"fusionEnabled\": false,\n" +
-                "          \"bidPercentage\": null,\n" +
-                "          \"efsCreate\": false,\n" +
-                "          \"efsId\": null,\n" +
-                "          \"efsMount\": null\n" +
-                "        },\n" +
-                "        \"forgedResources\": [\n" +
-                "          {\n" +
-                "            \"IamRole\": \"arn:aws:iam::195996028523:role/TowerForge-3xkkzYH2nbD3nZjrzKm0oR-ServiceRole\"\n" +
-                "          },\n" +
-                "          {\n" +
-                "            \"IamRole\": \"arn:aws:iam::195996028523:role/TowerForge-3xkkzYH2nbD3nZjrzKm0oR-FleetRole\"\n" +
-                "          },\n" +
-                "          {\n" +
-                "            \"IamInstanceProfile\": \"arn:aws:iam::195996028523:instance-profile/TowerForge-3xkkzYH2nbD3nZjrzKm0oR-InstanceRole\"\n" +
-                "          },\n" +
-                "          {\n" +
-                "            \"Ec2LaunchTemplate\": \"TowerForge-3xkkzYH2nbD3nZjrzKm0oR\"\n" +
-                "          },\n" +
-                "          {\n" +
-                "            \"BatchEnv\": \"arn:aws:batch:eu-west-1:195996028523:compute-environment/TowerForge-3xkkzYH2nbD3nZjrzKm0oR-head\"\n" +
-                "          },\n" +
-                "          {\n" +
-                "            \"BatchQueue\": \"arn:aws:batch:eu-west-1:195996028523:job-queue/TowerForge-3xkkzYH2nbD3nZjrzKm0oR-head\"\n" +
-                "          },\n" +
-                "          {\n" +
-                "            \"BatchEnv\": \"arn:aws:batch:eu-west-1:195996028523:compute-environment/TowerForge-3xkkzYH2nbD3nZjrzKm0oR-work\"\n" +
-                "          },\n" +
-                "          {\n" +
-                "            \"BatchQueue\": \"arn:aws:batch:eu-west-1:195996028523:job-queue/TowerForge-3xkkzYH2nbD3nZjrzKm0oR-work\"\n" +
-                "          }\n" +
-                "        ],\n" +
-                "        \"platform\": \"aws-batch\"\n" +
-                "      },\n" +
-                "      \"dateCreated\": \"2021-09-21T12:56:19Z\",\n" +
-                "      \"lastUpdated\": \"2021-09-21T12:57:03Z\",\n" +
-                "      \"lastUsed\": \"2021-09-22T12:51:18Z\",\n" +
-                "      \"deleted\": null,\n" +
-                "      \"status\": \"AVAILABLE\",\n" +
-                "      \"message\": null,\n" +
-                "      \"primary\": null,\n" +
-                "      \"credentialsId\": \"33Qc0pYMGcVImw6zc2xpLn\"\n" +
-                "    },\n" +
-                "    \"pipeline\": \"https://github.com/grananda/nextflow-hello\",\n" +
-                "    \"workDir\": \"s3://nextflow-ci/julio\",\n" +
-                "    \"revision\": \"main\",\n" +
-                "    \"sessionId\": \"722eae42-f9e7-4631-9e9b-d77ed473071e\",\n" +
-                "    \"configProfiles\": [],\n" +
-                "    \"configText\": null,\n" +
-                "    \"paramsText\": null,\n" +
-                "    \"preRunScript\": null,\n" +
-                "    \"postRunScript\": null,\n" +
-                "    \"mainScript\": null,\n" +
-                "    \"entryName\": null,\n" +
-                "    \"schemaName\": null,\n" +
-                "    \"resume\": false,\n" +
-                "    \"pullLatest\": false,\n" +
-                "    \"stubRun\": false,\n" +
-                "    \"resumeDir\": \"s3://nextflow-ci/julio\",\n" +
-                "    \"resumeCommitId\": null,\n" +
-                "    \"dateCreated\": \"2021-09-22T11:43:46Z\"\n" +
-                "  }", Launch.class);
+        Map<String, Object> general = new HashMap<String, Object>();
+        general.put("id", workflow.getId());
+        general.put("runName", workflow.getRunName());
+        general.put("startingDate", workflow.getStart());
+        general.put("commitId", workflow.getCommitId());
+        general.put("sessionId", workflow.getSessionId());
+        general.put("username", workflow.getUserName());
+        general.put("workdir", workflow.getWorkDir());
+        general.put("container", workflow.getContainer());
+        general.put("executors", workflowLoad.getExecutors() != null ? String.join(", ", workflowLoad.getExecutors()) : null);
+        general.put("computeEnv", "ce-aws-144996268157965");
+        general.put("nextflowVersion", workflow.getNextflow() != null ? workflow.getNextflow().getVersion() : null);
+
+        String workspaceRef = USER_WORKSPACE_NAME;
+        List<String> configFiles = new ArrayList<>();
+        String configText = null;
+        Map<String, Object> params = new HashMap<String, Object>();
+        String command = null;
+        Map<String, Object> status = new HashMap<>();
+        List<Map<String, Object>> processes = new ArrayList<>();
+        Map<String, Object> stats = new HashMap<>();
+        Map<String, Object> load = new HashMap<>();
+        Map<String, Object> utilization = new HashMap<>();
+        List<Map<String, Object>> metricsMem = new ArrayList<>();
+        List<Map<String, Object>> metricsCpu = new ArrayList<>();
+        List<Map<String, Object>> metricsTime = new ArrayList<>();
+        List<Map<String, Object>> metricsIo = new ArrayList<>();
 
         assertEquals("", out.stdErr);
-        assertEquals(prettyJson(new RunView("5dAZoXrcmZXRO4", USER_WORKSPACE_NAME, workflow, workflowLoad, launch.getComputeEnv()).getJSON()), out.stdOut);
+        assertEquals(prettyJson(new RunView(workspaceRef,
+                general,
+                configFiles,
+                configText,
+                params,
+                command,
+                status,
+                processes,
+                stats,
+                load,
+                utilization,
+                metricsMem,
+                metricsCpu,
+                metricsTime,
+                metricsIo).getJSON()), out.stdOut);
+
         assertEquals(0, out.exitCode);
     }
 
