@@ -165,12 +165,12 @@ public class RunView extends Response {
         }
 
         if (configText != null) {
-            out.println(String.format("%n    Resolved configuration%n    ----------------------%n%s%n", configText.replaceAll("(?m)^", "     ")));
+            out.println(ansi(String.format("%n    @|bold Resolved Configuration|@%n    ----------------------%n%s%n", configText.replaceAll("(?m)^", "     "))));
         }
 
         if (!params.isEmpty()) {
             try {
-                out.println(String.format("%n    Parameters%n    ---------%n%s%n", JsonHelper.prettyJson(params).replaceAll("(?m)^", "     ")));
+                out.println(ansi(String.format("%n    @|bold Parameters|@%n    ----------%n%s%n", JsonHelper.prettyJson(params).replaceAll("(?m)^", "     "))));
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
@@ -178,8 +178,8 @@ public class RunView extends Response {
 
         if (command != null) {
             out.println(ansi(String.format("%n    @|bold Command|@")));
-            out.println(ansi(String.format("%n    @|bold -------|@")));
-            out.println(ansi(String.format("%n    %s", command)));
+            out.println(ansi("    -------"));
+            out.println(ansi(String.format("     %s", command)));
         }
 
         if (!status.isEmpty()) {
