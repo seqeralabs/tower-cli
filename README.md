@@ -72,8 +72,8 @@ It is mandatory to provide the Tower access to `tw` and it can be made available
 
 If required, you can also set the following non-mandatory environment variables using one of the methods outlined above:
 
-- `TOWER_WORKSPACE_ID`: Workspace id. Defaults to the user workspace.
-- `TOWER_API_ENDPOINT`: Tower API URL. Default `api.tower.nf`.
+- `TOWER_WORKSPACE_ID`: Workspace id. Default: user workspace.
+- `TOWER_API_ENDPOINT`: Tower API URL. Default: `api.tower.nf`.
 
 > You can find the `TOWER_WORKSPACE_ID` for a given organisation in its **Workspaces** page as highlighted in [this image](assets/img/workspace_id.png).
 
@@ -158,71 +158,101 @@ tw \
     https://github.com/pditommaso/nf-sleep
 ```
 
-Pipelines consists of a pipeline repository, launch parameters, and a Compute Environment. When no Compute Environment is specified, the primary one is used.
+Pipelines consist of a pipeline repository, launch parameters, and a Compute Environment. When a Compute Environment is not specified the primary one is used.
 
 > The `params` option should be a YAML or JSON file. Here we use a Bash pipe to convert a command into a YAML file automatically.
 
 ## 9. Launch it!
 
 ```bash
-tw launch sleepy-flow
+tw \
+    launch \
+    my_sleepy_pipeline
 ```
 
 ## 10. Change launch parameters
 
-Launch the pipeline with different parameters.
+Launch the pipeline with different parameters:
 
 ```bash
-tw launch sleepy-flow --params=<(echo 'timeout: 30') 
+tw \
+    launch \
+    my_sleepy_pipeline \
+    --params=<(echo 'timeout: 30')
 ```
 
 ## 11. Update a pipeline
 
-Pipelines can be modified with new launch parameters using the `update` command.
+The default launch parameters can be changed using the `update` command:
 
 ```bash
-tw pipelines update -n sleepy-flow --params=<(echo 'timeout: 30')
+tw \
+    pipelines \
+    update \
+    --name=my_sleepy_pipeline \
+    --params=<(echo 'timeout: 30')
 ```
 
 ## 12. Launch a pipeline directly
 
-It possible to directly launch Git pipelines that have not been added to a workspace as Pipelines.
+It is also possible to directly launch pipelines that have not been explicitly added to a Tower Workspace by:
+
+1. Using the short name for the pipeline on GitHub:
 
 ```bash
 tw launch nextflow-io/hello
+```
+
+2. Using the full URL to the pipeline:
+
+```bash
+tw launch https://github.com/nextflow-io/hello
 ```
 
 # Launch Examples
 
 The `tw launch` command provides a similar user experience to `nextflow run` with the benefits of using Tower.
 
-1. Run a workspace Pipeline with a custom parameters file.
+1. Run a Pipeline pre-defined in a Tower Workspace with a custom parameters file:
 
     ```bash
-    tw launch sarek --params ./myparams.yaml
+    tw \
+        launch \
+        my_sleepy_pipeline \
+        --params=./my_params.yaml
     ```
 
-2. Run any Nextflow pipeline using the primary Compute Environment.
+2. Run any Nextflow pipeline using the primary Compute Environment:
 
     ```bash
-    tw launch nextflow-io/hello
+    tw \
+        launch \
+        nf-core/rnaseq
     ```
 
-3. Run any Nextflow pipeline setting a profile.
+3. Run any Nextflow pipeline on a specific Compute Environment:
 
     ```bash
-    tw launch nf-core/sarek --profile test,docker --params ./myparams.yaml
+    tw \
+        launch \
+        nf-core/rnaseq \
+        --compute-env=my_aws_ce
     ```
 
-4. Select a specific Compute Environment.
+4. Run any Nextflow pipeline and adjust the default profile and parameters:
 
     ```bash
-    tw launch nf-core/sarek --compute-env "aws-ce" --profile test,docker
+    tw \
+        launch \
+        nf-core/rnaseq \
+        --profile=test,docker \
+        --params=./my_params.yaml \
+        --compute-env=my_aws_ce
     ```
 
-# Activate autocomplete
+# Activate autocompletion
 
-It is possible to activate autocomplete in your current session.
+You can activate option autocompletion in your current session with the command below:
 
 ```bash
 source <(tw generate-completion)
@@ -230,11 +260,11 @@ source <(tw generate-completion)
 
 # Build binary development versions
 
-Tower CLI is based on a Java GraalVM native compilation to produce a platform binary executable.
+The Tower CLI is a platform binary executable created by a native compilation from Java GraalVM.
 
-1. Download GraalVM (Java 11 version) from [this link](https://github.com/graalvm/graalvm-ce-builds/releases/tag/vm-20.2.0).
+1. Download GraalVM (Java 11 version) from [here](https://github.com/graalvm/graalvm-ce-builds/releases/tag/vm-20.2.0).
 
-2. Install `native-image` tool:
+2. Install `native-image`:
 
     ```bash
     gu install native-image
@@ -246,7 +276,7 @@ Tower CLI is based on a Java GraalVM native compilation to produce a platform bi
     ./gradlew nativeImage
     ```
 
-4. then run
+4. Run `tw`:
 
     ```bash
     ./build/graal/tw
@@ -254,7 +284,7 @@ Tower CLI is based on a Java GraalVM native compilation to produce a platform bi
 
 # Using non-binary development versions
 
-You can run a non-binary development version running the `./tw` script in the root of this repository.
+You can run a non-binary development version by executing the [`./tw`](tw) script in the root of this repository.
 
 # License
 
