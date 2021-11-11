@@ -11,9 +11,7 @@
 
 package io.seqera.tower.cli.responses;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.commands.runs.metrics.MetricColumn;
-import io.seqera.tower.cli.utils.JsonHelper;
 import io.seqera.tower.cli.utils.TableList;
 
 import java.io.PrintWriter;

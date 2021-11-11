@@ -13,12 +13,14 @@ package io.seqera.tower.cli.runs;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
+import io.seqera.tower.cli.commands.runs.metrics.MetricColumn;
 import io.seqera.tower.cli.responses.RunViewMetrics;
 import org.junit.jupiter.api.Test;
 import org.apache.commons.lang3.StringUtils;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +40,14 @@ public class MetricsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("runs/runs_metrics")).withContentType(MediaType.APPLICATION_JSON)
         );
 
+        List<MetricColumn> cols = new ArrayList<>();
+        cols.add(MetricColumn.mean);
+        cols.add(MetricColumn.min);
+        cols.add(MetricColumn.max);
+        cols.add(MetricColumn.q1);
+        cols.add(MetricColumn.q2);
+        cols.add(MetricColumn.q3);
+
         List<Map<String, Object>> metricsMem = parseJson(new String(loadResource("runs/mem")), List.class);
         List<Map<String, Object>> metricsCpu = parseJson(new String(loadResource("runs/cpu")), List.class);
         List<Map<String, Object>> metricsTime = parseJson(new String(loadResource("runs/time")), List.class);
@@ -45,7 +55,7 @@ public class MetricsCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(mock,"runs", "view", "-i", "5dAZoXrcmZXRO4", "metrics");
         assertEquals("", out.stdErr);
-        assertEquals(StringUtils.chop(new RunViewMetrics(metricsMem, metricsCpu, metricsTime, metricsIo).toString()), out.stdOut);
+        assertEquals(StringUtils.chop(new RunViewMetrics(cols, metricsMem, metricsCpu, metricsTime, metricsIo).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 }

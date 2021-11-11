@@ -35,10 +35,10 @@ public class MetricCmd extends AbstractRunsCmd {
     @CommandLine.Option(names = {"-f", "--filter"}, description = "Filters by process name")
     public String filter = "";
 
-    @CommandLine.Option(names = {"-t", "--type"}, split = ",", description = "Process metric types separated by comma: 'cpu','mem','time','reads','writes' (default is 'cpu','mem','time'). Use * for all.")
+    @CommandLine.Option(names = {"-t", "--type"}, split = ",", description = "Process metric types separated by comma: 'cpu','mem','time','io' (default displays all.)")
     public List<MetricType> type;
 
-    @CommandLine.Option(names = {"-c", "--columns"}, split = ",", description = "Process metric columns to display: 'mean','min','q1','q2','q3','max' (default is 'mean','min','q1','q2','q3','max'). Use * for all.")
+    @CommandLine.Option(names = {"-c", "--columns"}, split = ",", description = "Process metric columns to display: 'mean','min','max','q1','q2','q3' (default displays all.)")
     public List<MetricColumn> columns;
 
     @CommandLine.ParentCommand
@@ -47,7 +47,7 @@ public class MetricCmd extends AbstractRunsCmd {
     @Override
     protected Response exec() throws ApiException {
         type = type == null ? List.of(MetricType.cpu, MetricType.mem, MetricType.time, MetricType.io) : type;
-        columns = columns == null ? List.of(MetricColumn.mean, MetricColumn.min, MetricColumn.q1, MetricColumn.q2, MetricColumn.q3, MetricColumn.max) : columns;
+        columns = columns == null ? List.of(MetricColumn.mean, MetricColumn.min, MetricColumn.max, MetricColumn.q1, MetricColumn.q2, MetricColumn.q3) : columns;
 
         List<WorkflowMetrics> metrics = api().describeWorkflowMetrics(parentCommand.id, parentCommand.workspace.workspaceId).getMetrics();
 
