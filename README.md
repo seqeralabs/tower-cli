@@ -105,7 +105,7 @@ List the credentials available in the workspace.
 
 Create a Compute Environment for AWS Batch with automatic provisioning of cloud compute resources. 
 
-    $ tw compute-envs create aws -n aws-ce -r eu-west-1 --max-cpus=256 -w s3://<bucket-name>
+    $ tw compute-envs create aws-batch forge -n aws-ce -r eu-west-1 --max-cpus=256 -w s3://<bucket-name>
 
 * This create all the required AWS Batch resources in the AWS Ireland region (eu-west-1) with a maximum total of 256 CPUs. 
 
