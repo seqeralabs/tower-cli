@@ -1,8 +1,8 @@
 # Nextflow Tower CLI
 
-`tw` is [Tower](https://landing.tower.nf/) (a.k.a Nextflow Tower) on the command line. It brings Tower concepts including Pipelines, Actions and Compute Environments to the terminal.
+`tw` is [Tower](https://landing.tower.nf/) on the command line. It brings Tower concepts including Pipelines, Actions and Compute Environments to the terminal.
 
-Tower is a full-stack application for the management of data pipelines and compute resources. It enables collaborative data analysis at scale, on-premises or in any cloud infrastructure.
+Tower (a.k.a Nextflow Tower) is a full-stack application for the management of data pipelines and compute resources. It enables collaborative data analysis at scale, on-premises or in any cloud infrastructure.
 
 The Tower CLI (a.k.a Nextflow Tower CLI) interacts with instances of Tower, providing an interface to launch pipelines, manage cloud resources and administer the application directly from the terminal.
 
