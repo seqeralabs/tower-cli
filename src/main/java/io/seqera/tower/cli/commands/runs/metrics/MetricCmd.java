@@ -56,12 +56,13 @@ public class MetricCmd extends AbstractRunsCmd {
             metrics.forEach(it -> {
                 Map<String, Object> data = new HashMap<>();
                 if (it.getProcess().contains(filter)) {
-                    data.put("process", it.getProcess());
                     data.put("memRaw", it.getMem() != null ? processColumns(it.getMem()) : null);
                     data.put("memUsage", it.getMemUsage() != null ? processColumns(it.getMemUsage()) : null);
                     data.put("memVirtual", it.getVmem() != null ? processColumns(it.getVmem()) : null);
 
-                    metricsMem.add(data);
+                    Map<String, Object> process = new HashMap<>();
+                    process.put(it.getProcess(), data);
+                    metricsMem.add(process);
                 }
 
             });
@@ -72,11 +73,12 @@ public class MetricCmd extends AbstractRunsCmd {
             metrics.forEach(it -> {
                 Map<String, Object> data = new HashMap<>();
                 if (it.getProcess().contains(filter)) {
-                    data.put("process", it.getProcess());
                     data.put("cpuRaq", it.getCpu() != null ? processColumns(it.getCpu()) : null);
                     data.put("cpuUsage", it.getCpuUsage() != null ? processColumns(it.getCpuUsage()) : null);
 
-                    metricsCpu.add(data);
+                    Map<String, Object> process = new HashMap<>();
+                    process.put(it.getProcess(), data);
+                    metricsCpu.add(process);
                 }
             });
         }
@@ -86,11 +88,12 @@ public class MetricCmd extends AbstractRunsCmd {
             metrics.forEach(it -> {
                 Map<String, Object> data = new HashMap<>();
                 if (it.getProcess().contains(filter)) {
-                    data.put("process", it.getProcess());
                     data.put("timeRaw", it.getTime() != null ? processColumns(it.getTime()) : null);
                     data.put("timeUsage", it.getTimeUsage() != null ? processColumns(it.getTimeUsage()) : null);
 
-                    metricsTime.add(data);
+                    Map<String, Object> process = new HashMap<>();
+                    process.put(it.getProcess(), data);
+                    metricsTime.add(process);
                 }
             });
         }
@@ -100,16 +103,17 @@ public class MetricCmd extends AbstractRunsCmd {
             metrics.forEach(it -> {
                 Map<String, Object> data = new HashMap<>();
                 if (it.getProcess().contains(filter)) {
-                    data.put("process", it.getProcess());
                     data.put("writes", it.getWrites() != null ? processColumns(it.getWrites()) : null);
                     data.put("reads", it.getReads() != null ? processColumns(it.getReads()) : null);
 
-                    metricsIo.add(data);
+                    Map<String, Object> process = new HashMap<>();
+                    process.put(it.getProcess(), data);
+                    metricsIo.add(process);
                 }
             });
         }
 
-        return new RunViewMetrics(metricsMem, metricsCpu, metricsTime, metricsIo);
+        return new RunViewMetrics(columns, metricsMem, metricsCpu, metricsTime, metricsIo);
     }
 
     private Map<String, Object> processColumns(ResourceData resourceData) {

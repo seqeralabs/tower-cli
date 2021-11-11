@@ -14,6 +14,7 @@ package io.seqera.tower.cli.utils;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Map;
 
 public class TableList {
 
