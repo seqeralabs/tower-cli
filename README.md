@@ -1,4 +1,3 @@
-
 # Nextflow Tower CLI
 
 `tw` is [Tower](https://landing.tower.nf/) (a.k.a Nextflow Tower) on the command line. It brings Tower concepts including Pipelines, Actions and Compute Environments to the terminal.
@@ -60,7 +59,7 @@ It is mandatory to provide the Tower access to `tw` and it can be made available
 1. Export it directly into your terminal before you run `tw`:
 
     ```bash
-    export TOWER_ACCESS_TOKEN=[your access token]
+    export TOWER_ACCESS_TOKEN=<your access token>
     ```
 
 2. Add the above `export` command to a file such as `.bashrc` which means that it will be automatically injected into your environment whenever you open a terminal.
@@ -68,7 +67,7 @@ It is mandatory to provide the Tower access to `tw` and it can be made available
 3. Specify it as a parameter when running `tw`:
 
     ```bash
-    tw --access-token=[your access token] <OTHER_OPTIONS>
+    tw --access-token=<your access token> <other options>
     ```
 
 If required, you can also set the following non-mandatory environment variables using one of the methods outlined above:
@@ -105,7 +104,13 @@ tw --help
 To launch pipelines on AWS Batch, you will need to add credentials to the appropriate Tower Workspace.
 
 ```bash
-tw credentials create aws -n aws -a <aws access key> -s <aws secret key>
+tw \
+    credentials \
+    create \
+    aws \
+    --name=my_aws_creds \
+    --access-key=<aws access key> \
+    --secret-key=<aws secret key>
 ```
 
 > See the [IAM policy](https://github.com/seqeralabs/nf-tower-aws/tree/master/forge) for Tower Forge for recommendations on AWS Batch permissions.
@@ -120,29 +125,42 @@ tw credentials list
 
 ## 7. Provision a Compute Environment
 
-Create a Compute Environment for AWS Batch with automatic provisioning of cloud compute resources.
+Create a Compute Environment for AWS Batch with automatic provisioning of cloud computing resources:
 
 ```bash
-tw compute-envs create aws -n aws-ce -r eu-west-1 --max-cpus=256 -w s3://<bucket-name>
+tw \
+    compute-envs \
+    create \
+    aws-batch \
+    forge \
+    --name=my_aws_ce \
+    --region=eu-west-1 \
+    --max-cpus=256 \
+    --work-dir=s3://<bucket name>
 ```
 
-- This create all the required AWS Batch resources in the AWS Ireland region (eu-west-1) with a maximum total of 256 CPUs.
+The above command will create all of the required AWS Batch resources in the AWS Ireland (`eu-west-1`) region with a total of 256 CPUs provisioned in the compute environment. An existing S3 bucket will be used as the work directory when running Nextflow.
 
-- An existing S3 bucket will be used as a work directory.
+More comprehensive details about Tower Forge can be obtained from the [user documentation](https://help.tower.nf/compute-envs/aws-batch/#forge).
 
-- See the [user documentation](https://help.tower.nf/compute-envs/aws-batch/#forge) for complete details of Tower Forge.
+> If you have multiple credentials matching the same compute environment then you will need to provide the `--credentials-id` obtained by running `tw credentials list`.
 
 ## 8. Create a pipeline
 
-Add a pre-configured pipeline that can be reused.
+Create a pre-configured pipeline that can be re-used later:
 
 ```bash
-tw pipelines create -n sleepy-flow --params=<(echo 'timeout: 60') https://github.com/pditommaso/nf-sleep
+tw \
+    pipelines \
+    create \
+    --name=my_sleepy_pipeline \
+    --params=<(echo 'timeout: 60') \
+    https://github.com/pditommaso/nf-sleep
 ```
 
-*The `params` option should be a YAML or JSON file. Here we use a Bash pipe to convert a command into a YAML file automatically.*
+Pipelines consists of a pipeline repository, launch parameters, and a Compute Environment. When no Compute Environment is specified, the primary one is used.
 
-Pipelines consists of a pipeline repository, launch parameters, and a Compute Environment. When no Compute Environment is specified, the primary CE is used.
+> The `params` option should be a YAML or JSON file. Here we use a Bash pipe to convert a command into a YAML file automatically.
 
 ## 9. Launch it!
 
