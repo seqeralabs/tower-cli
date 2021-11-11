@@ -151,31 +151,37 @@ Launch Examples
 
 The `tw launch` command provides a similar user experience to `nextflow run` with the benefits of using Tower.
 
-1. Run a workspace Pipeline with a custom parameters file
+1. Run a workspace Pipeline with a custom parameters file.
 
+    ```
     $ tw launch sarek --params ./myparams.yaml
+    ```
 
-2. Run any Nextflow workflow using the primary Compute Environment
+2. Run any Nextflow workflow using the primary Compute Environment.
 
-    $ tw launch nextflow-io/hello 
+    ```
+    $ tw launch nextflow-io/hello
+    ```
 
-3. Run any Nextflow pipeline setting a profile
+3. Run any Nextflow pipeline setting a profile.
 
+    ```
     $ tw launch nf-core/sarek --profile test,docker --params ./myparams.yaml
+    ```
 
-4. Select a specific Compute Environment
+4. Select a specific Compute Environment.
 
+    ```
     $ tw launch nf-core/sarek --compute-env "aws-ce" --profile test,docker
-
+    
 
 Activate autocomplete
 ---------------------
 
 It is possible to activate autocomplete in your current session.
 
-    ```
-    $source <(tw generate-completion)
-    ```
+    $ source <(tw generate-completion)
+
 
 
 Build binary development versions
