@@ -18,17 +18,17 @@ The key features of the Tower CLI are:
 
 For more information on Tower, see the [user documentation](https://help.tower.nf) on the Tower Cloud website.
 
-# Availability
+## Availability
 
 Tower CLI can be installed on macOS, Windows, and Linux.
 
 It is compatible with [Tower Cloud](https://tower.nf/) and Tower Enterprise versions 21.08 and later.
 
-# Getting Started
+## Getting Started
 
 This guide covers the installation and configuration of the CLI, cloud infrastructure provisioning and launching pipelines into an AWS Batch compute environment.
 
-## 1. Installation
+### 1. Installation
 
 1. Download the latest version for your OS from the assets in the [releases](https://github.com/seqeralabs/tower-cli/releases) page.
 
@@ -50,7 +50,7 @@ This guide covers the installation and configuration of the CLI, cloud infrastru
     sudo mv tw /usr/local/bin/
     ```
 
-## 2. Configuration
+### 2. Configuration
 
 If you haven't got one already, create a Tower access token using the [Tower](https://tower.nf/) web interface via the **Your Tokens** page in your profile.
 
@@ -77,7 +77,7 @@ If required, you can also set the following non-mandatory environment variables 
 
 > You can find the `TOWER_WORKSPACE_ID` for a given organisation in its **Workspaces** page as highlighted in [this image](assets/img/workspace_id.png).
 
-## 3. Health check
+### 3. Health check
 
 Confirm the installation, configuration and connection is working as expected:
 
@@ -91,7 +91,7 @@ $ tw health
      Authentication API credential's token | OK
 ```
 
-## 4. View available commands
+### 4. View available commands
 
 Use the `-h` or `--help` parameter to list the available commands and their associated options.
 
@@ -99,7 +99,7 @@ Use the `-h` or `--help` parameter to list the available commands and their asso
 tw --help
 ```
 
-## 5. Add credentials
+### 5. Add credentials
 
 To launch pipelines on AWS Batch, you will need to add credentials to the appropriate Tower Workspace.
 
@@ -115,7 +115,7 @@ tw \
 
 > See the [IAM policy](https://github.com/seqeralabs/nf-tower-aws/tree/master/forge) for Tower Forge for recommendations on AWS Batch permissions.
 
-## 6. List credentials
+### 6. List credentials
 
 List the credentials available in the workspace.
 
@@ -123,7 +123,7 @@ List the credentials available in the workspace.
 tw credentials list
 ```
 
-## 7. Provision a Compute Environment
+### 7. Provision a Compute Environment
 
 Create a Compute Environment for AWS Batch with automatic provisioning of cloud computing resources:
 
@@ -145,7 +145,7 @@ More comprehensive details about Tower Forge can be obtained from the [user docu
 
 > If you have multiple credentials matching the same compute environment then you will need to provide the `--credentials-id` obtained by running `tw credentials list`.
 
-## 8. Create a pipeline
+### 8. Create a pipeline
 
 Create a pre-configured pipeline that can be re-used later:
 
@@ -162,7 +162,7 @@ Pipelines consist of a pipeline repository, launch parameters, and a Compute Env
 
 > The `params` option should be a YAML or JSON file. Here we use a Bash pipe to convert a command into a YAML file automatically.
 
-## 9. Launch it!
+### 9. Launch it!
 
 ```bash
 tw \
@@ -170,7 +170,7 @@ tw \
     my_sleepy_pipeline
 ```
 
-## 10. Change launch parameters
+### 10. Change launch parameters
 
 Launch the pipeline with different parameters:
 
@@ -181,7 +181,7 @@ tw \
     --params=<(echo 'timeout: 30')
 ```
 
-## 11. Update a pipeline
+### 11. Update a pipeline
 
 The default launch parameters can be changed using the `update` command:
 
@@ -193,23 +193,23 @@ tw \
     --params=<(echo 'timeout: 30')
 ```
 
-## 12. Launch a pipeline directly
+### 12. Launch a pipeline directly
 
 It is also possible to directly launch pipelines that have not been explicitly added to a Tower Workspace by:
 
 1. Using the short name for the pipeline on GitHub:
 
-```bash
-tw launch nextflow-io/hello
-```
+    ```bash
+    tw launch nextflow-io/hello
+    ```
 
 2. Using the full URL to the pipeline:
 
-```bash
-tw launch https://github.com/nextflow-io/hello
-```
+    ```bash
+    tw launch https://github.com/nextflow-io/hello
+    ```
 
-# Launch Examples
+## Launch Examples
 
 The `tw launch` command provides a similar user experience to `nextflow run` with the benefits of using Tower.
 
@@ -250,7 +250,7 @@ The `tw launch` command provides a similar user experience to `nextflow run` wit
         --compute-env=my_aws_ce
     ```
 
-# Activate autocompletion
+## Activate autocompletion
 
 You can activate option autocompletion in your current session with the command below:
 
@@ -258,7 +258,7 @@ You can activate option autocompletion in your current session with the command 
 source <(tw generate-completion)
 ```
 
-# Build binary development versions
+## Build binary development versions
 
 The Tower CLI is a platform binary executable created by a native compilation from Java GraalVM.
 
@@ -282,10 +282,10 @@ The Tower CLI is a platform binary executable created by a native compilation fr
     ./build/graal/tw
     ```
 
-# Using non-binary development versions
+## Using non-binary development versions
 
 You can run a non-binary development version by executing the [`./tw`](tw) script in the root of this repository.
 
-# License
+## License
 
 [Mozilla Public License v2.0](https://github.com/seqeralabs/tower-cli/blob/master/LICENSE.txt)
