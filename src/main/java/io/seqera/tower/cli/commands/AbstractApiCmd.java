@@ -15,6 +15,7 @@ import io.seqera.tower.ApiClient;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.api.DefaultApi;
 import io.seqera.tower.cli.Tower;
+import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
 import io.seqera.tower.cli.exceptions.NoComputeEnvironmentException;
 import io.seqera.tower.cli.exceptions.OrganizationNotFoundException;
@@ -236,11 +237,6 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         availableComputeEnvsNameToId = new HashMap<>();
         for (ListComputeEnvsResponseEntry ce : api().listComputeEnvs("AVAILABLE", workspaceId).getComputeEnvs()) {
 
-            // Make the first compute environment the default if there is no primary set.
-            if (primaryComputeEnvId == null) {
-                primaryComputeEnvId = ce.getId();
-            }
-
             if (ce.getPrimary() != null && ce.getPrimary()) {
                 primaryComputeEnvId = ce.getId();
             }
@@ -260,7 +256,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     public Integer call() {
         try {
             Response response = exec();
-            if (app().json) {
+            if (app().output == OutputType.json) {
                 app().getOut().println(prettyJson(response.getJSON()));
             } else {
                 response.toString(app().getOut());

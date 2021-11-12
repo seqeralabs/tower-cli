@@ -137,16 +137,12 @@ public class RunView extends Response {
         }
 
         if (configText != null) {
-            out.println(ansi(String.format("%n    @|bold Configuration Text|@")));
-            out.println(ansi(String.format("%n    @|bold ------------------|@")));
-            out.println(ansi(String.format("%n    %s", configText)));
+            out.println(ansi(String.format("%n    @|bold Resolved Configuration|@%n    ----------------------%n%s%n", configText.replaceAll("(?m)^", "     "))));
         }
 
         if (!params.isEmpty()) {
-            out.println(ansi(String.format("%n    @|bold Parameters|@")));
-            out.println(ansi(String.format("%n    @|bold ----------|@")));
             try {
-                out.println(ansi(String.format("%n    %s", JsonHelper.prettyJson(params))));
+                out.println(ansi(String.format("%n    @|bold Parameters|@%n    ----------%n%s%n", JsonHelper.prettyJson(params).replaceAll("(?m)^", "     "))));
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
@@ -154,8 +150,8 @@ public class RunView extends Response {
 
         if (command != null) {
             out.println(ansi(String.format("%n    @|bold Command|@")));
-            out.println(ansi(String.format("%n    @|bold -------|@")));
-            out.println(ansi(String.format("%n    %s", command)));
+            out.println(ansi("    -------"));
+            out.println(ansi(String.format("     %s", command)));
         }
 
         if (!status.isEmpty()) {
@@ -172,8 +168,8 @@ public class RunView extends Response {
         }
 
         if (!processes.isEmpty()) {
-            out.println(ansi(String.format("%n    @|bold Processes|@")));
-            TableList tableProcess = new TableList(out, 2, "Name", "Completed");
+            out.println(ansi(String.format("%n    @|bold Completed processes|@")));
+            TableList tableProcess = new TableList(out, 2);
             tableProcess.setPrefix("    ");
             processes.forEach(it -> {
                 tableProcess.addRow(it.get("name").toString(), it.get("completedTasks").toString() + "/" + it.get("totalTasks").toString());

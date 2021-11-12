@@ -54,7 +54,7 @@ public class LaunchesCmd extends AbstractRootCmd {
     @Option(names = {"-c", "--compute-env"}, description = "Compute environment name (defaults to workspace primary)")
     String computeEnv;
 
-    @Option(names = {"-k", "--work-dir"}, description = "Working directory")
+    @Option(names = {"--work-dir"}, description = "Working directory")
     String workDir;
 
     @Option(names = {"-p", "--profile"}, split = ",", description = "Configuration profiles")
