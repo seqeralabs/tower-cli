@@ -413,7 +413,7 @@ class PipelinesCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{ \"pipelines\": [], \"totalSize\": 0 }").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "--json", "pipelines", "list");
+        ExecOut out = exec(mock, "--output", "json", "pipelines", "list");
 
         assertEquals("", out.stdErr);
         assertEquals(prettyJson(new PipelinesList(USER_WORKSPACE_NAME, List.of()).getJSON()), out.stdOut);

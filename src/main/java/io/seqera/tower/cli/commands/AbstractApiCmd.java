@@ -15,6 +15,7 @@ import io.seqera.tower.ApiClient;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.api.DefaultApi;
 import io.seqera.tower.cli.Tower;
+import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
 import io.seqera.tower.cli.exceptions.NoComputeEnvironmentException;
 import io.seqera.tower.cli.exceptions.OrganizationNotFoundException;
@@ -255,7 +256,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     public Integer call() {
         try {
             Response response = exec();
-            if (app().json) {
+            if (app().output == OutputType.json) {
                 app().getOut().println(prettyJson(response.getJSON()));
             } else {
                 response.toString(app().getOut());
