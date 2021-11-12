@@ -30,7 +30,7 @@ import java.util.Map;
         name = "metrics",
         description = "Display pipeline's run metrics"
 )
-public class MetricCmd extends AbstractRunsCmd {
+public class MetricsCmd extends AbstractRunsCmd {
 
     @CommandLine.Option(names = {"-f", "--filter"}, description = "Filters by process name")
     public String filter = "";

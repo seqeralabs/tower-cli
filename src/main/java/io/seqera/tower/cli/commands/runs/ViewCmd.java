@@ -13,7 +13,7 @@ package io.seqera.tower.cli.commands.runs;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptions;
-import io.seqera.tower.cli.commands.runs.metrics.MetricCmd;
+import io.seqera.tower.cli.commands.runs.metrics.MetricsCmd;
 import io.seqera.tower.cli.exceptions.RunNotFoundException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.RunView;
@@ -22,7 +22,6 @@ import io.seqera.tower.model.Launch;
 import io.seqera.tower.model.ProgressData;
 import io.seqera.tower.model.Workflow;
 import io.seqera.tower.model.WorkflowLoad;
-import io.seqera.tower.model.WorkflowMetrics;
 import picocli.CommandLine;
 
 import java.util.ArrayList;
@@ -35,7 +34,7 @@ import java.util.concurrent.TimeUnit;
         name = "view",
         description = "View pipeline's runs",
         subcommands = {
-                MetricCmd.class,
+                MetricsCmd.class,
         }
 )
 public class ViewCmd extends AbstractRunsCmd {
