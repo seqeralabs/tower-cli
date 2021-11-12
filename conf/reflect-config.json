@@ -99,6 +99,12 @@
   "allDeclaredMethods":true
 },
 {
+  "name":"io.seqera.tower.cli.commands.CollaboratorsCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.ComputeEnvCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -258,6 +264,17 @@
 },
 {
   "name":"io.seqera.tower.cli.commands.actions.create.CreateTowerCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.collaborators.AbstractCollaboratorsCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true
+},
+{
+  "name":"io.seqera.tower.cli.commands.collaborators.ListCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
@@ -551,6 +568,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.computeenvs.PrimaryCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.computeenvs.ViewCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -817,6 +840,23 @@
   "allDeclaredMethods":true
 },
 {
+  "name":"io.seqera.tower.cli.commands.computeenvs.primary.AbstractComputeEnvsPrimaryCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true
+},
+{
+  "name":"io.seqera.tower.cli.commands.computeenvs.primary.GetCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.computeenvs.primary.SetCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.credentials.AbstractCredentialsCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
@@ -1046,6 +1086,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.global.WorkspaceOptions",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.members.AbstractMembersClass",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
@@ -1251,6 +1297,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.runs.RunViewOptions",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.runs.ViewCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1418,7 +1470,19 @@
   "allDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.cli.responses.ComputeEnvList",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.cli.responses.ComputeEnvs.ComputeEnvExport",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.ComputeEnvs.ComputeEnvsPrimaryGet",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true
@@ -1520,6 +1584,12 @@
 },
 {
   "name":"io.seqera.tower.cli.responses.actions.ActionsView",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.collaborators.CollaboratorsList",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true
@@ -1759,6 +1829,11 @@
   "allDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.model.CloudPriceModel",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true
+},
+{
   "name":"io.seqera.tower.model.ComputeConfig",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1931,6 +2006,12 @@
   "allDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.model.DescribeTaskResponse",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.model.DescribeUserResponse",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1973,6 +2054,12 @@
 },
 {
   "name":"io.seqera.tower.model.GetProgressResponse",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.model.GetWorkflowMetricsResponse",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true
@@ -2111,6 +2198,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.model.ListTasksResponse",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.model.ListTeamResponse",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -2223,6 +2316,12 @@
   "allDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.model.ResourceData",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.model.SSHSecurityKeys",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -2263,6 +2362,17 @@
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.model.Task",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.model.TaskStatus",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true
 },
 {
   "name":"io.seqera.tower.model.Team",
@@ -2386,6 +2496,12 @@
   "allDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.model.WorkflowMetrics",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.model.WorkflowStatus",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
@@ -2457,6 +2573,9 @@
   "name":"java.lang.Object",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
+},
+{
+  "name":"java.lang.Object[]"
 },
 {
   "name":"java.lang.String"
@@ -2730,16 +2849,16 @@
 {
   "name":"org.glassfish.jersey.internal.util.collection.ConcurrentHashMapV8",
   "fields":[
-    {"name":"baseCount", "allowUnsafeAccess":true}, 
-    {"name":"cellsBusy", "allowUnsafeAccess":true}, 
-    {"name":"sizeCtl", "allowUnsafeAccess":true}, 
-    {"name":"transferIndex", "allowUnsafeAccess":true}, 
-    {"name":"transferOrigin", "allowUnsafeAccess":true}
+    {"name":"baseCount"}, 
+    {"name":"cellsBusy"}, 
+    {"name":"sizeCtl"}, 
+    {"name":"transferIndex"}, 
+    {"name":"transferOrigin"}
   ]
 },
 {
   "name":"org.glassfish.jersey.internal.util.collection.ConcurrentHashMapV8$CounterCell",
-  "fields":[{"name":"value", "allowUnsafeAccess":true}]
+  "fields":[{"name":"value"}]
 },
 {
   "name":"org.glassfish.jersey.jackson.JacksonFeature",

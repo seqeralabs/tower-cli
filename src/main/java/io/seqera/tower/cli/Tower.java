@@ -17,6 +17,7 @@ package io.seqera.tower.cli;
 
 import io.seqera.tower.cli.commands.AbstractCmd;
 import io.seqera.tower.cli.commands.ActionsCmd;
+import io.seqera.tower.cli.commands.CollaboratorsCmd;
 import io.seqera.tower.cli.commands.ComputeEnvsCmd;
 import io.seqera.tower.cli.commands.CredentialsCmd;
 import io.seqera.tower.cli.commands.HealthCheckCmd;
@@ -45,6 +46,7 @@ import static picocli.AutoComplete.GenerateCompletion;
         description = "Nextflow Tower CLI",
         subcommands = {
                 ActionsCmd.class,
+                CollaboratorsCmd.class,
                 ComputeEnvsCmd.class,
                 CredentialsCmd.class,
                 GenerateCompletion.class,
