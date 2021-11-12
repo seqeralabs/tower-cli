@@ -29,10 +29,10 @@ public class RunList extends Response {
 
     @Override
     public void toString(PrintWriter out) {
-        out.println(ansi(String.format("%n  @|bold Pipeline's runs at %s workspace:|@%n", workspaceRef)));
+        out.println(ansi(String.format("%n  @|bold Pipeline runs at %s workspace:|@%n", workspaceRef)));
 
         if (workflows.isEmpty()) {
-            out.println(ansi("    @|yellow No pipeline's runs found|@"));
+            out.println(ansi("    @|yellow No pipeline runs found|@"));
             return;
         }
 

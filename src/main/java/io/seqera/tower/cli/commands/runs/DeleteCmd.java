@@ -22,11 +22,11 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "delete",
-        description = "Delete a pipeline's execution"
+        description = "Delete a pipeline execution"
 )
 public class DeleteCmd extends AbstractRunsCmd {
 
-    @CommandLine.Option(names = {"-i", "-id"}, description = "Pipeline's run identifier", required = true)
+    @CommandLine.Option(names = {"-i", "-id"}, description = "Pipeline run identifier", required = true)
     public String id;
 
     @CommandLine.Mixin

@@ -25,10 +25,10 @@ import java.io.IOException;
 )
 public class DeleteCmd extends AbstractTeamsCmd {
 
-    @CommandLine.Option(names = {"-i", "--id"}, description = "Team's identifier", required = true)
+    @CommandLine.Option(names = {"-i", "--id"}, description = "Team identifier", required = true)
     public Long teamId;
 
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization's name identifier", required = true)
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name identifier", required = true)
     public String organizationName;
 
     @Override

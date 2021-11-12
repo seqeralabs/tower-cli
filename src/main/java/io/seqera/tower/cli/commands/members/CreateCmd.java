@@ -27,10 +27,10 @@ import picocli.CommandLine;
 )
 public class CreateCmd extends AbstractMembersClass {
 
-    @CommandLine.Option(names = {"-u", "--user"}, description = "User email to add as organization's member", required = true)
+    @CommandLine.Option(names = {"-u", "--user"}, description = "User email to add as organization member", required = true)
     public String user;
 
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization's name identifier", required = true)
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name identifier", required = true)
     public String organizationName;
 
     @Override
