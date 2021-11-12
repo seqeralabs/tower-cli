@@ -18,7 +18,7 @@ import java.util.List;
 
 public class LaunchOptions {
 
-    @Option(names = {"-c", "--compute-env"}, description = "Compute environment name (defaults to primary compute environment)")
+    @Option(names = {"-c", "--compute-env"}, description = "Compute environment name [default: primary compute environment]")
     public String computeEnv;
 
     @Option(names = {"--work-dir"}, description = "Path where the pipeline scratch data is stored")

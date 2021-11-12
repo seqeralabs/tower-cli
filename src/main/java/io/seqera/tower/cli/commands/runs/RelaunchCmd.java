@@ -46,7 +46,7 @@ public class RelaunchCmd extends AbstractRunsCmd {
     @Option(names = {"--pipeline"}, description = "Pipeline to launch")
     public String pipeline;
 
-    @Option(names = {"--no-resume"}, description = "Not to resume the pipeline's run (true as default)")
+    @Option(names = {"--no-resume"}, description = "Not to resume the pipeline's run [default: true]")
     public boolean resume = true;
 
     @Mixin
