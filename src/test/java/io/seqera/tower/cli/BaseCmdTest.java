@@ -55,6 +55,15 @@ public abstract class BaseCmdTest {
         }
     }
 
+    protected byte[] loadResource(String name, String ext) {
+        try {
+            return this.getClass().getResourceAsStream("/runcmd/" + name + "." + ext).readAllBytes();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     protected String tempFile(String content, String prefix, String suffix) throws IOException {
         Path file = Files.createTempFile(tempDir, prefix, suffix);
         Files.writeString(file, content);
