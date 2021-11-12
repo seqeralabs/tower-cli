@@ -25,7 +25,7 @@ import java.io.IOException;
 )
 public class LeaveCmd extends AbstractMembersClass {
 
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization's name identifier", required = true)
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name identifier", required = true)
     public String organizationName;
 
     @Override

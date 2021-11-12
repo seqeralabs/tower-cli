@@ -152,7 +152,7 @@ public class LaunchesCmd extends AbstractRootCmd {
 
     public static class AdvancedOptions {
 
-        @Option(names = {"--config"}, description = "Additional Nextflow config settings can be provided in the above field. These settings will be included in the nextflow.config file for this execution")
+        @Option(names = {"--config"}, description = "Additional Nextflow config settings can be provided in the above field. These settings will be included in the `nextflow.config` file for this execution")
         public Path config;
 
         @Option(names = {"--pre-run"}, description = "Pre-run script")
@@ -161,7 +161,7 @@ public class LaunchesCmd extends AbstractRootCmd {
         @Option(names = {"--post-run"}, description = "Post-run script")
         public Path postRunScript;
 
-        @Option(names = {"--pull-latest"}, description = "Enabling this option Nextflow pulls the latest version from the Git repository before run the pipeline")
+        @Option(names = {"--pull-latest"}, description = "Enable Nextflow to pull the latest repository version before running the pipeline")
         public Boolean pullLatest;
 
         @Option(names = {"--stub-run"}, description = "Execute the workflow replacing process scripts with command stubs")

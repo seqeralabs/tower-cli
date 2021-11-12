@@ -23,7 +23,7 @@ public class RunCanceled extends Response{
 
     @Override
     public String toString() {
-        return ansi(String.format("%n  @|yellow Pipeline's run '%s' canceled at %s workspace|@%n", id, workspaceRef));
+        return ansi(String.format("%n  @|yellow Pipeline run '%s' canceled at %s workspace|@%n", id, workspaceRef));
     }
 
 }

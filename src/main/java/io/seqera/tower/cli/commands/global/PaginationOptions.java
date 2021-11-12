@@ -27,10 +27,10 @@ public class PaginationOptions {
     public Sizeable sizeable;
 
     public static class Pageable {
-        @CommandLine.Option(names = {"--page"}, description = "Page to display to display [default: 1]")
+        @CommandLine.Option(names = {"--page"}, description = "Pages to display [default: 1]")
         public Integer page;
 
-        @CommandLine.Option(names = {"--offset"}, description = "Rows record's offset [default: 0]")
+        @CommandLine.Option(names = {"--offset"}, description = "Rows record offset [default: 0]")
         public Integer offset;
     }
 

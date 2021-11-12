@@ -43,7 +43,7 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
     @Option(names = {"--gpu"}, description = "Deploys GPU enabled Ec2 instances")
     public boolean gpu;
 
-    @Option(names = {"--allow-buckets"}, split = ",", paramLabel = "<bucket>", description = "List separated by comma any S3 bucket or path, other than pipeline work directory, to which it should be granted read-write permission from this environment.")
+    @Option(names = {"--allow-buckets"}, split = ",", paramLabel = "<bucket>", description = "Comma-separated list of S3 buckets or paths other than pipeline work directory that should be granted read-write permission from this environment")
     public List<String> allowBuckets;
 
     @Option(names = "--preserve-resources", description = "Enable this if you want to preserve the Batch compute resources created by Tower independently from the lifecycle of this compute environment")
@@ -172,10 +172,10 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
         @Option(names = {"--vpc-id"}, description = "VPC identifier")
         public String vpcId;
 
-        @Option(names = {"--subnets"}, split = ",", paramLabel = "<subnet>", description = "One or more subnets (separated by comma) in your VPC that can be used to isolate the EC2 resources from each other or from the Internet.")
+        @Option(names = {"--subnets"}, split = ",", paramLabel = "<subnet>", description = "Comma-separated list of one or more subnets in your VPC that can be used to isolate the EC2 resources from each other or from the Internet.")
         public List<String> subnets;
 
-        @Option(names = {"--security-groups"}, split = ",", paramLabel = "<group>", description = "One or more security groups (separated by comma) that defines a set of firewall rules to control the traffic for your EC2 compute nodes.")
+        @Option(names = {"--security-groups"}, split = ",", paramLabel = "<group>", description = "Comma-separated list of one or more security groups that defines a set of firewall rules to control the traffic for your EC2 compute nodes.")
         public List<String> securityGroups;
 
         @Option(names = {"--ami-id"}, description = "Ths option allows you to use your own AMI. Note however it must be an AWS Linux-2 ECS-optimised image and meet the compute resource AMI specification [default: latest approved version of the Amazon ECS-optimized AMI]")

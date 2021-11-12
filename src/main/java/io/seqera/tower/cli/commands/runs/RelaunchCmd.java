@@ -33,11 +33,11 @@ import java.time.OffsetDateTime;
 
 @Command(
         name = "relaunch",
-        description = "Create a pipeline's run"
+        description = "Create a pipeline run"
 )
 public class RelaunchCmd extends AbstractRunsCmd {
 
-    @Option(names = {"-i", "--id"}, description = "Pipeline's run id to relaunch", required = true)
+    @Option(names = {"-i", "--id"}, description = "Pipeline run id to relaunch", required = true)
     public String id;
 
     @CommandLine.Mixin
@@ -46,7 +46,7 @@ public class RelaunchCmd extends AbstractRunsCmd {
     @Option(names = {"--pipeline"}, description = "Pipeline to launch")
     public String pipeline;
 
-    @Option(names = {"--no-resume"}, description = "Not to resume the pipeline's run [default: true]")
+    @Option(names = {"--no-resume"}, description = "Do not resume the pipeline run [default: true]")
     public boolean resume = true;
 
     @Mixin

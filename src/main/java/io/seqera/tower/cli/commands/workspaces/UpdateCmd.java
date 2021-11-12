@@ -26,7 +26,7 @@ import java.io.IOException;
 
 @Command(
         name = "update",
-        description = "Update an existing organization's workspace"
+        description = "Update an existing organization workspace"
 )
 public class UpdateCmd extends AbstractWorkspaceCmd {
 

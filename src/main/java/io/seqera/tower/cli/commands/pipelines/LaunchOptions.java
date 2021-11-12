@@ -24,10 +24,10 @@ public class LaunchOptions {
     @Option(names = {"--work-dir"}, description = "Path where the pipeline scratch data is stored")
     public String workDir;
 
-    @Option(names = {"-p", "--profiles"}, split = ",", description = "One or more (separated by comma) configuration profile names you want to use for this pipeline execution")
+    @Option(names = {"-p", "--profiles"}, split = ",", description = "Comma-separated list of one or more configuration profile names you want to use for this pipeline execution")
     public List<String> profiles;
 
-    @Option(names = {"--params"}, description = "Pipeline parameters using either JSON or YML file")
+    @Option(names = {"--params"}, description = "Pipeline parameters in either JSON or YML format")
     public Path params;
 
     @Option(names = {"--revision"}, description = "A valid repository commit Id, tag or branch name")
@@ -42,7 +42,7 @@ public class LaunchOptions {
     @Option(names = {"--post-run"}, description = "Bash script that is executed in the same environment where Nextflow runs immediately after the pipeline completion")
     public Path postRunScript;
 
-    @Option(names = {"--pull-latest"}, description = "Enabling this option Nextflow pulls the latest version from the Git repository before run the pipeline")
+    @Option(names = {"--pull-latest"}, description = "Enable Nextflow to pull the latest repository version before running the pipeline")
     public Boolean pullLatest;
 
     @Option(names = {"--stub-run"}, description = "Execute the workflow replacing process scripts with command stubs")
