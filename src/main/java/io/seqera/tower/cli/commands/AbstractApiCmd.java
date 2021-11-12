@@ -261,7 +261,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     public Integer call() {
         try {
             Response response = exec();
-            if (app().output != null && Objects.equals(app().output, OutputType.json)) {
+            if (app().output == OutputType.json) {
                 app().getOut().println(prettyJson(response.getJSON()));
             } else {
                 response.toString(app().getOut());
