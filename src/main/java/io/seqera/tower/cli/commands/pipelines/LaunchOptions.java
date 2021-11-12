@@ -36,10 +36,10 @@ public class LaunchOptions {
     @Option(names = {"--config"}, description = "Additional Nextflow config settings file")
     public Path config;
 
-    @Option(names = {"--pre-run"}, description = "Bash script that's executed in the same environment where Nextflow runs just before the pipeline is launched")
+    @Option(names = {"--pre-run"}, description = "Bash script that is executed in the same environment where Nextflow runs just before the pipeline is launched")
     public Path preRunScript;
 
-    @Option(names = {"--post-run"}, description = "Bash script that's executed in the same environment where Nextflow runs immediately after the pipeline completion")
+    @Option(names = {"--post-run"}, description = "Bash script that is executed in the same environment where Nextflow runs immediately after the pipeline completion")
     public Path postRunScript;
 
     @Option(names = {"--pull-latest"}, description = "Enabling this option Nextflow pulls the latest version from the Git repository before run the pipeline")

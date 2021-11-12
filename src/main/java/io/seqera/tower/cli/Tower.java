@@ -74,7 +74,7 @@ public class Tower extends AbstractCmd {
     @Option(names = {"-o", "--output"}, description = "Show output in defined format (only the 'json' option is available at the moment)")
     public OutputType output;
 
-    @Option(names = {"-v", "--verbose"}, description = "Shows HTTP request/response logs at stderr")
+    @Option(names = {"-v", "--verbose"}, description = "Show HTTP request/response logs at stderr")
     public boolean verbose;
 
     public Tower() {
