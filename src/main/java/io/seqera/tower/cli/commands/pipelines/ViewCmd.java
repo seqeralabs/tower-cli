@@ -23,11 +23,11 @@ import picocli.CommandLine.Option;
 
 @Command(
         name = "view",
-        description = "View pipeline details"
+        description = "View pipeline details."
 )
 public class ViewCmd extends AbstractPipelinesCmd {
 
-    @Option(names = {"-n", "--name"}, description = "Pipeline name", required = true)
+    @Option(names = {"-n", "--name"}, description = "Pipeline name.", required = true)
     public String name;
 
     @CommandLine.Mixin

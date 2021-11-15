@@ -22,7 +22,7 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "primary",
-        description = "Sets or gets a primary compute environment within current workspace",
+        description = "Sets or gets a primary compute environment within current workspace.",
         subcommands = {
                 GetCmd.class,
                 SetCmd.class,

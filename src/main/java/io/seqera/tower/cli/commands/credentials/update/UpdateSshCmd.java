@@ -18,7 +18,7 @@ import picocli.CommandLine.Mixin;
 
 @Command(
         name = "ssh",
-        description = "Update SSH workspace credentials"
+        description = "Update SSH workspace credentials."
 )
 public class UpdateSshCmd extends AbstractUpdateCmd {
 

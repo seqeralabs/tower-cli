@@ -38,29 +38,29 @@ import static io.seqera.tower.cli.utils.ModelHelper.createLaunchRequest;
 
 @Command(
         name = "launch",
-        description = "Launch a Nextflow pipeline"
+        description = "Launch a Nextflow pipeline execution."
 )
 public class LaunchesCmd extends AbstractRootCmd {
 
-    @Parameters(index = "0", paramLabel = "PIPELINE_OR_URL", description = "Workspace pipeline name or full pipeline URL", arity = "1")
+    @Parameters(index = "0", paramLabel = "PIPELINE_OR_URL", description = "Workspace pipeline name or full pipeline URL.", arity = "1")
     String pipeline;
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
-    @Option(names = {"--params"}, description = "Parameters file")
+    @Option(names = {"--params"}, description = "Parameters file.")
     Path params;
 
-    @Option(names = {"-c", "--compute-env"}, description = "Compute environment name [default: primary workspace]")
+    @Option(names = {"-c", "--compute-env"}, description = "Compute environment name [default: primary workspace].")
     String computeEnv;
 
-    @Option(names = {"--work-dir"}, description = "Working directory")
+    @Option(names = {"--work-dir"}, description = "Working directory.")
     String workDir;
 
-    @Option(names = {"-p", "--profile"}, split = ",", description = "Configuration profiles")
+    @Option(names = {"-p", "--profile"}, split = ",", description = "Configuration profiles.")
     List<String> profile;
 
-    @Option(names = {"-r", "--revision"}, description = "A valid repository commit Id, tag or branch name")
+    @Option(names = {"-r", "--revision"}, description = "A valid repository commit Id, tag or branch name.")
     String revision;
 
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
@@ -152,28 +152,28 @@ public class LaunchesCmd extends AbstractRootCmd {
 
     public static class AdvancedOptions {
 
-        @Option(names = {"--config"}, description = "Additional Nextflow config settings can be provided in the above field. These settings will be included in the `nextflow.config` file for this execution")
+        @Option(names = {"--config"}, description = "Additional Nextflow config settings can be provided in the above field. These settings will be included in the `nextflow.config` file for this execution.")
         public Path config;
 
-        @Option(names = {"--pre-run"}, description = "Pre-run script")
+        @Option(names = {"--pre-run"}, description = "Pre-run script.")
         public Path preRunScript;
 
-        @Option(names = {"--post-run"}, description = "Post-run script")
+        @Option(names = {"--post-run"}, description = "Post-run script.")
         public Path postRunScript;
 
-        @Option(names = {"--pull-latest"}, description = "Enable Nextflow to pull the latest repository version before running the pipeline")
+        @Option(names = {"--pull-latest"}, description = "Enable Nextflow to pull the latest repository version before running the pipeline.")
         public Boolean pullLatest;
 
-        @Option(names = {"--stub-run"}, description = "Execute the workflow replacing process scripts with command stubs")
+        @Option(names = {"--stub-run"}, description = "Execute the workflow replacing process scripts with command stubs.")
         public Boolean stubRun;
 
-        @Option(names = {"--main-script"}, description = "Specify the pipeline main script file if different from `main.nf`")
+        @Option(names = {"--main-script"}, description = "Specify the pipeline main script file if different from `main.nf`.")
         public String mainScript;
 
-        @Option(names = {"--entry-name"}, description = "Specify the main workflow name to be executed when using DLS2 syntax")
+        @Option(names = {"--entry-name"}, description = "Specify the main workflow name to be executed when using DLS2 syntax.")
         public String entryName;
 
-        @Option(names = {"--schema-name"}, description = "Enter schema name")
+        @Option(names = {"--schema-name"}, description = "Enter schema name.")
         public String schemaName;
 
     }

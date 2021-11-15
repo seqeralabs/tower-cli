@@ -26,14 +26,14 @@ import java.util.Objects;
 
 @CommandLine.Command(
         name = "add",
-        description = "Create a new workspace participant"
+        description = "Create a new workspace participant."
 )
 public class AddCmd extends AbstractParticipantsCmd {
 
-    @CommandLine.Option(names = {"-n", "--name"}, description = "Team name or username for existing organization member", required = true)
+    @CommandLine.Option(names = {"-n", "--name"}, description = "Team name, username or email for existing organization member.", required = true)
     public String name;
 
-    @CommandLine.Option(names = {"-t", "--type"}, description = "Type of participant (MEMBER, COLLABORATOR or TEAM)", required = true)
+    @CommandLine.Option(names = {"-t", "--type"}, description = "Type of participant (MEMBER, COLLABORATOR or TEAM).", required = true)
     public ParticipantType type;
 
     @CommandLine.Mixin

@@ -25,14 +25,14 @@ import java.io.IOException;
 
 @Command(
         name = "list",
-        description = "List workspace pipelines"
+        description = "List workspace pipelines."
 )
 public class ListCmd extends AbstractPipelinesCmd {
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
-    @CommandLine.Option(names = {"-f", "--filter"}, description = "Show only pipelines that contain the given word")
+    @CommandLine.Option(names = {"-f", "--filter"}, description = "Show only pipelines that contain the given word.")
     public String filter;
 
     @CommandLine.Mixin

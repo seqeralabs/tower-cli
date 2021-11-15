@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 
 @CommandLine.Command(
         name = "view",
-        description = "View pipeline's runs",
+        description = "View pipeline's runs.",
         subcommands = {
                 DownloadCmd.class,
                 MetricsCmd.class,
@@ -41,7 +41,7 @@ import java.util.concurrent.TimeUnit;
 )
 public class ViewCmd extends AbstractRunsCmd {
 
-    @CommandLine.Option(names = {"-i", "--id"}, description = "Pipeline run identifier", required = true)
+    @CommandLine.Option(names = {"-i", "--id"}, description = "Pipeline run identifier.", required = true)
     public String id;
 
     @CommandLine.Mixin

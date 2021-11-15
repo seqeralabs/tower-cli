@@ -15,6 +15,6 @@ import picocli.CommandLine;
 
 public class OrganizationOption {
     
-    @CommandLine.Option(names = {"-o", "--organization-id"}, description = "Organization numeric identifier (TOWER_ORGANIZATION_ID)", defaultValue = "${TOWER_ORGANIZATION_ID}")
+    @CommandLine.Option(names = {"-o", "--organization-id"}, description = "Organization numeric identifier (TOWER_ORGANIZATION_ID).", defaultValue = "${TOWER_ORGANIZATION_ID}")
     public Long organizationId = null;
 }

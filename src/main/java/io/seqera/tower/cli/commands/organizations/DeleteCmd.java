@@ -22,10 +22,10 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "delete",
-        description = "Delete an organization"
+        description = "Delete an organization."
 )
 public class DeleteCmd extends AbstractOrganizationsCmd {
-    @CommandLine.Option(names = {"-n", "--name"}, description = "Organization name", required = true)
+    @CommandLine.Option(names = {"-n", "--name"}, description = "Organization name.", required = true)
     public String name;
 
     @Override

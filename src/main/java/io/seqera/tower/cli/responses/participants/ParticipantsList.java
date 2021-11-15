@@ -40,14 +40,11 @@ public class ParticipantsList extends Response {
             return;
         }
 
-        TableList table = new TableList(out, 3, "Participant Type", "Name", "Workspace Role").sortBy(0);
+        TableList table = new TableList(out, 4, "ID", "Participant Type", "Name", "Workspace Role").sortBy(0);
         table.setPrefix("    ");
         participants.forEach(element -> {
-            if (element.getType() == ParticipantType.TEAM) {
-                table.addRow(element.getType().toString(), element.getTeamName(), element.getWspRole().toString());
-            } else {
-                table.addRow(element.getType().toString(), element.getUserName() + " (" + element.getEmail() + ")", element.getWspRole().toString());
-            }
+            String name = element.getType() == ParticipantType.TEAM ?  element.getTeamName() : element.getUserName() + " (" + element.getEmail() + ")";
+            table.addRow(element.getParticipantId().toString(), element.getType().toString(), name, element.getWspRole().toString());
         });
 
         table.print();

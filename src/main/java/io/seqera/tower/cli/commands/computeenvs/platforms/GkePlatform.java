@@ -22,19 +22,19 @@ import java.io.IOException;
 
 public class GkePlatform extends AbstractPlatform<GkeComputeConfig> {
 
-    @Option(names = {"-r", "--region"}, description = "AWS region", required = true)
+    @Option(names = {"-r", "--region"}, description = "AWS region.", required = true)
     public String region;
 
-    @Option(names = {"--cluster-name"}, description = "The AWS EKS cluster name", required = true)
+    @Option(names = {"--cluster-name"}, description = "The AWS EKS cluster name.", required = true)
     public String clusterName;
 
-    @Option(names = {"--namespace"}, description = "Namespace", required = true)
+    @Option(names = {"--namespace"}, description = "Namespace.", required = true)
     public String namespace;
 
-    @Option(names = {"--head-account"}, description = "Head service account", required = true)
+    @Option(names = {"--head-account"}, description = "Head service account.", required = true)
     public String headAccount;
 
-    @Option(names = {"--storage-claim"}, description = "Storage claim name")
+    @Option(names = {"--storage-claim"}, description = "Storage claim name.")
     public String storageClaim;
 
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)

@@ -18,7 +18,7 @@ import picocli.CommandLine.Mixin;
 
 @Command(
         name = "gke",
-        description = "Create new Google GKE compute environment"
+        description = "Create new Google GKE compute environment."
 )
 public class CreateGkeCmd extends AbstractCreateCmd {
 

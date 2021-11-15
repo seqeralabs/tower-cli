@@ -23,14 +23,14 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "list",
-        description = "List all pipeline runs"
+        description = "List all pipeline runs."
 )
 public class ListCmd extends AbstractRunsCmd {
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
-    @CommandLine.Option(names = {"-f", "--filter"}, description = "Show only pipeline runs with names that start with the given word")
+    @CommandLine.Option(names = {"-f", "--filter"}, description = "Show only pipeline runs with names that start with the given word.")
     public String startsWith;
 
     @CommandLine.Mixin

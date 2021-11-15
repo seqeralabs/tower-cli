@@ -22,14 +22,14 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "list",
-        description = "List all the collaborators of a given organization"
+        description = "List all the collaborators of a given organization."
 )
 public class ListCmd extends AbstractCollaboratorsCmd {
 
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization identifier", required = true)
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization identifier.", required = true)
     public Long organizationId;
 
-    @CommandLine.Option(names = {"-f", "--filter"}, description = "Only show members with usernames that start with the given word")
+    @CommandLine.Option(names = {"-f", "--filter"}, description = "Only show members with usernames that start with the given word.")
     public String startsWith;
 
     @CommandLine.Mixin

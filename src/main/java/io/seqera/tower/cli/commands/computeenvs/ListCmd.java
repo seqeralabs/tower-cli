@@ -23,7 +23,7 @@ import java.io.IOException;
 
 @Command(
         name = "list",
-        description = "List all workspace compute environments"
+        description = "List all workspace compute environments."
 )
 public class ListCmd extends AbstractComputeEnvCmd {
 

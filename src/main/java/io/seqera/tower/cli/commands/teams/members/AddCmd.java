@@ -26,11 +26,11 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "add",
-        description = "Add a team member"
+        description = "Add a team member."
 )
 public class AddCmd extends AbstractApiCmd {
 
-    @CommandLine.Option(names = {"-m", "--member"}, description = "New member username or email", required = true)
+    @CommandLine.Option(names = {"-m", "--member"}, description = "New member username or email.", required = true)
     public String userNameOrEmail;
 
     @CommandLine.ParentCommand

@@ -30,17 +30,17 @@ import java.util.Objects;
 
 @CommandLine.Command(
         name = "update",
-        description = "Update a Pipeline Action"
+        description = "Update a Pipeline Action."
 )
 public class UpdateCmd extends AbstractActionsCmd {
 
-    @CommandLine.Option(names = {"-n", "--name"}, description = "Action name", required = true)
+    @CommandLine.Option(names = {"-n", "--name"}, description = "Action name.", required = true)
     public String actionName;
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
-    @CommandLine.Option(names = {"-s", "--status"}, description = "Action status (pause or active)")
+    @CommandLine.Option(names = {"-s", "--status"}, description = "Action status (pause or active).")
     public String status;
 
     @CommandLine.Mixin

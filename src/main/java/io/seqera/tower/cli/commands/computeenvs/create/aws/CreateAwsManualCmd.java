@@ -19,7 +19,7 @@ import picocli.CommandLine.Mixin;
 
 @Command(
         name = "manual",
-        description = "Create new AWS Batch compute environment using an existing environment"
+        description = "Create new AWS Batch compute environment using an existing environment."
 )
 public class CreateAwsManualCmd extends AbstractCreateCmd {
 

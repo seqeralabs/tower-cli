@@ -18,7 +18,7 @@ import picocli.CommandLine.Mixin;
 
 @Command(
         name = "google",
-        description = "Create new Google workspace credentials"
+        description = "Create new Google workspace credentials."
 )
 public class CreateGoogleCmd extends AbstractCreateCmd {
 

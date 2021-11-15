@@ -30,10 +30,10 @@ import java.io.IOException;
 
 public abstract class AbstractCreateCmd extends AbstractApiCmd {
 
-    @CommandLine.Option(names = {"-n", "--name"}, description = "Action name", required = true)
+    @CommandLine.Option(names = {"-n", "--name"}, description = "Action name.", required = true)
     public String actionName;
 
-    @CommandLine.Option(names = {"--pipeline"}, description = "Pipeline to launch", required = true)
+    @CommandLine.Option(names = {"--pipeline"}, description = "Pipeline to launch.", required = true)
     public String pipeline;
 
     @CommandLine.Mixin

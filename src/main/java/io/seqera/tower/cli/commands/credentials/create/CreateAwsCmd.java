@@ -19,7 +19,7 @@ import picocli.CommandLine.Mixin;
 
 @Command(
         name = "aws",
-        description = "Create new AWS workspace credentials"
+        description = "Create new AWS workspace credentials."
 )
 public class CreateAwsCmd extends AbstractCreateCmd<AwsSecurityKeys> {
 

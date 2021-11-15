@@ -24,11 +24,11 @@ import java.io.IOException;
 
 @Command(
         name = "delete",
-        description = "Delete a workspace pipeline"
+        description = "Delete a workspace pipeline."
 )
 public class DeleteCmd extends AbstractPipelinesCmd {
 
-    @Option(names = {"-n", "--name"}, description = "Pipeline name", required = true)
+    @Option(names = {"-n", "--name"}, description = "Pipeline name.", required = true)
     public String name;
 
     @CommandLine.Mixin

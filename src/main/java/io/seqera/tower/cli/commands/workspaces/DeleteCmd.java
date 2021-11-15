@@ -23,7 +23,7 @@ import java.io.IOException;
 
 @Command(
         name = "delete",
-        description = "Delete an organization workspace"
+        description = "Delete an organization workspace."
 )
 public class DeleteCmd extends AbstractWorkspaceCmd {
 

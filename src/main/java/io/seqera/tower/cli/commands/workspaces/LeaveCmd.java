@@ -22,7 +22,7 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "leave",
-        description = "Leave workspace"
+        description = "Leave workspace."
 )
 public class LeaveCmd extends AbstractWorkspaceCmd {
 

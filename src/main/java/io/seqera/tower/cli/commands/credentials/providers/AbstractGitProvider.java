@@ -17,7 +17,7 @@ import picocli.CommandLine.Option;
 
 public abstract class AbstractGitProvider<T extends SecurityKeys> extends AbstractProvider<T> {
 
-    @Option(names = {"--base-url"}, description = "Repository base URL", order = 10)
+    @Option(names = {"--base-url"}, description = "Repository base URL.", order = 10)
     public String baseUrl;
 
     public AbstractGitProvider(ProviderEnum type) {

@@ -18,7 +18,7 @@ import picocli.CommandLine.Mixin;
 
 @Command(
         name = "azure",
-        description = "Create new Azure workspace credentials"
+        description = "Create new Azure workspace credentials."
 )
 public class CreateAzureCmd extends AbstractCreateCmd {
 

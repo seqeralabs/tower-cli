@@ -23,14 +23,14 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "delete",
-        description = "Delete a workspace participant"
+        description = "Delete a workspace participant."
 )
 public class DeleteCmd extends AbstractParticipantsCmd {
 
-    @CommandLine.Option(names = {"-n", "--name"}, description = "Team name, username or email for existing organization member", required = true)
+    @CommandLine.Option(names = {"-n", "--name"}, description = "Team name, username or email for existing organization member.", required = true)
     public String name;
 
-    @CommandLine.Option(names = {"-t", "--type"}, description = "Type of participant (MEMBER, COLLABORATOR or TEAM)", required = true)
+    @CommandLine.Option(names = {"-t", "--type"}, description = "Type of participant (MEMBER, COLLABORATOR or TEAM).", required = true)
     public ParticipantType type;
 
     @CommandLine.Mixin
