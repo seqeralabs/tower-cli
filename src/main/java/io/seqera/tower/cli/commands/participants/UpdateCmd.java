@@ -14,7 +14,7 @@ package io.seqera.tower.cli.commands.participants;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceRequiredOptions;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.cli.responses.participants.ParticipantChanged;
+import io.seqera.tower.cli.responses.participants.ParticipantUpdated;
 import io.seqera.tower.model.ParticipantDbDto;
 import io.seqera.tower.model.ParticipantType;
 import io.seqera.tower.model.UpdateParticipantRoleRequest;
@@ -24,10 +24,10 @@ import picocli.CommandLine;
 import java.io.IOException;
 
 @CommandLine.Command(
-        name = "change",
+        name = "update",
         description = "Update a participant role"
 )
-public class ChangeCmd extends AbstractParticipantsCmd {
+public class UpdateCmd extends AbstractParticipantsCmd {
 
     @CommandLine.Option(names = {"-n", "--name"}, description = "Team name, username or email for existing organization member", required = true)
     public String name;
@@ -51,6 +51,6 @@ public class ChangeCmd extends AbstractParticipantsCmd {
 
         api().updateWorkspaceParticipantRole(orgId(workspace.workspaceId), workspace.workspaceId, participant.getParticipantId(), request);
 
-        return new ParticipantChanged(workspaceName(workspace.workspaceId), name, role.getValue());
+        return new ParticipantUpdated(workspaceName(workspace.workspaceId), name, role.getValue());
     }
 }

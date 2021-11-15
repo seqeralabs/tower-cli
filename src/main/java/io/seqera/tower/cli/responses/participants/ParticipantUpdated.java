@@ -13,13 +13,13 @@ package io.seqera.tower.cli.responses.participants;
 
 import io.seqera.tower.cli.responses.Response;
 
-public class ParticipantChanged extends Response {
+public class ParticipantUpdated extends Response {
 
     final public String workspaceName;
     final public String name;
     final public String role;
 
-    public ParticipantChanged(String workspaceName, String name, String role) {
+    public ParticipantUpdated(String workspaceName, String name, String role) {
         this.workspaceName = workspaceName;
         this.name = name;
         this.role = role;
