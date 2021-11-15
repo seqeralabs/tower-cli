@@ -106,7 +106,7 @@ To launch pipelines on AWS Batch, you will need to add credentials to the approp
 ```bash
 tw \
     credentials \
-    create \
+    add \
     aws \
     --name=my_aws_creds \
     --access-key=<aws access key> \
@@ -125,12 +125,12 @@ tw credentials list
 
 ### 7. Provision a Compute Environment
 
-Create a Compute Environment for AWS Batch with automatic provisioning of cloud computing resources:
+Add a Compute Environment for AWS Batch with automatic provisioning of cloud computing resources:
 
 ```bash
 tw \
     compute-envs \
-    create \
+    add \
     aws-batch \
     forge \
     --name=my_aws_ce \
@@ -145,14 +145,14 @@ More comprehensive details about Tower Forge can be obtained from the [user docu
 
 > If you have multiple credentials matching the same compute environment then you will need to provide the `--credentials-id` obtained by running `tw credentials list`.
 
-### 8. Create a pipeline
+### 8. Add a pipeline
 
-Create a pre-configured pipeline that can be re-used later:
+Add a pre-configured pipeline that can be re-used later:
 
 ```bash
 tw \
     pipelines \
-    create \
+    add \
     --name=my_sleepy_pipeline \
     --params=<(echo 'timeout: 60') \
     https://github.com/pditommaso/nf-sleep

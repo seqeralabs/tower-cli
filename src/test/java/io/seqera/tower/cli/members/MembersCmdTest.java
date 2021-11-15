@@ -14,7 +14,7 @@ package io.seqera.tower.cli.members;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.exceptions.TowerException;
-import io.seqera.tower.cli.responses.members.MembersCreated;
+import io.seqera.tower.cli.responses.members.MembersAdded;
 import io.seqera.tower.cli.responses.members.MembersDeleted;
 import io.seqera.tower.cli.responses.members.MembersLeave;
 import io.seqera.tower.cli.responses.members.MembersList;
@@ -236,7 +236,7 @@ public class MembersCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testCreateMembers(MockServerClient mock) throws JsonProcessingException {
+    void testAddMembers(MockServerClient mock) throws JsonProcessingException {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -252,13 +252,13 @@ public class MembersCmdTest extends BaseCmdTest {
         mock.when(
                 request().withMethod("PUT").withPath("/orgs/27736513644467/members/add"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResource("members/member_create")).withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(loadResource("members/member_add")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "members", "create", "-o", "organization1", "-u", "julio123");
+        ExecOut out = exec(mock, "members", "add", "-o", "organization1", "-u", "julio123");
 
         assertEquals("", out.stdErr);
-        assertEquals(new MembersCreated("organization1", parseJson("{\n" +
+        assertEquals(new MembersAdded("organization1", parseJson("{\n" +
                 "    \"memberId\": 440905637173,\n" +
                 "    \"userName\": \"julio123\",\n" +
                 "    \"email\": \"julio123@seqera.io\",\n" +

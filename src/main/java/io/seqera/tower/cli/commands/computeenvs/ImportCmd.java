@@ -12,7 +12,7 @@
 package io.seqera.tower.cli.commands.computeenvs;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.commands.computeenvs.create.AbstractCreateCmd;
+import io.seqera.tower.cli.commands.computeenvs.add.AbstractAddCmd;
 import io.seqera.tower.cli.commands.computeenvs.platforms.Platform;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.FilesHelper;
@@ -27,9 +27,9 @@ import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
 
 @CommandLine.Command(
         name = "import",
-        description = "Create a compute environment from file content"
+        description = "Add a compute environment from file content"
 )
-public class ImportCmd extends AbstractCreateCmd {
+public class ImportCmd extends AbstractAddCmd {
 
     @CommandLine.Parameters(index = "0", paramLabel = "FILENAME", description = "File name to import", arity = "1")
     Path fileName = null;
@@ -38,7 +38,7 @@ public class ImportCmd extends AbstractCreateCmd {
     protected Response exec() throws ApiException, IOException {
         ComputeConfig configObj = parseJson(FilesHelper.readString(fileName), ComputeConfig.class);
         ComputeEnv.PlatformEnum platform = ComputeEnv.PlatformEnum.fromValue(configObj.getDiscriminator());
-        return createComputeEnv(platform, configObj);
+        return addComputeEnv(platform, configObj);
     }
 
     @Override

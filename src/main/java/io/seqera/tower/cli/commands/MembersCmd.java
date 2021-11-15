@@ -11,7 +11,7 @@
 
 package io.seqera.tower.cli.commands;
 
-import io.seqera.tower.cli.commands.members.CreateCmd;
+import io.seqera.tower.cli.commands.members.AddCmd;
 import io.seqera.tower.cli.commands.members.DeleteCmd;
 import io.seqera.tower.cli.commands.members.LeaveCmd;
 import io.seqera.tower.cli.commands.members.ListCmd;
@@ -23,7 +23,7 @@ import picocli.CommandLine;
         description = "Manage organization members",
         subcommands = {
                 ListCmd.class,
-                CreateCmd.class,
+                AddCmd.class,
                 DeleteCmd.class,
                 UpdateCmd.class,
                 LeaveCmd.class,

@@ -26,7 +26,7 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "members",
-        description = "Add or remove team members",
+        description = "Add or delete team members",
         subcommands = {
                 AddCmd.class,
                 DeleteCmd.class,

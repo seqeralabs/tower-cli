@@ -15,7 +15,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.exceptions.OrganizationNotFoundException;
 import io.seqera.tower.cli.exceptions.TowerException;
-import io.seqera.tower.cli.responses.teams.TeamCreated;
+import io.seqera.tower.cli.responses.teams.TeamAdded;
 import io.seqera.tower.cli.responses.teams.TeamDeleted;
 import io.seqera.tower.cli.responses.teams.TeamsList;
 import io.seqera.tower.model.TeamDbDto;
@@ -293,7 +293,7 @@ public class TeamsCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testCreate(MockServerClient mock) {
+    void testAdd(MockServerClient mock) {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -309,18 +309,18 @@ public class TeamsCmdTest extends BaseCmdTest {
         mock.when(
                 request().withMethod("POST").withPath("/orgs/27736513644467/teams"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResource("teams/teams_create")).withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(loadResource("teams/teams_add")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "teams", "create", "-o", "organization1", "-n", "team-test");
+        ExecOut out = exec(mock, "teams", "add", "-o", "organization1", "-n", "team-test");
 
         assertEquals("", out.stdErr);
-        assertEquals(new TeamCreated("organization1", "team-test").toString(), out.stdOut);
+        assertEquals(new TeamAdded("organization1", "team-test").toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
     @Test
-    void testCreateWithOrganizationNotFound(MockServerClient mock) {
+    void testAddWithOrganizationNotFound(MockServerClient mock) {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -333,7 +333,7 @@ public class TeamsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "teams", "create", "-o", "organization-not-found", "-n", "team-test");
+        ExecOut out = exec(mock, "teams", "add", "-o", "organization-not-found", "-n", "team-test");
 
         assertEquals(errorMessage(out.app, new OrganizationNotFoundException("organization-not-found")), out.stdErr);
         assertEquals("", out.stdOut);

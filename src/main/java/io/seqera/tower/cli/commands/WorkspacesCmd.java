@@ -11,7 +11,7 @@
 
 package io.seqera.tower.cli.commands;
 
-import io.seqera.tower.cli.commands.workspaces.CreateCmd;
+import io.seqera.tower.cli.commands.workspaces.AddCmd;
 import io.seqera.tower.cli.commands.workspaces.DeleteCmd;
 import io.seqera.tower.cli.commands.workspaces.LeaveCmd;
 import io.seqera.tower.cli.commands.workspaces.ListCmd;
@@ -25,7 +25,7 @@ import picocli.CommandLine;
         subcommands = {
                 ListCmd.class,
                 DeleteCmd.class,
-                CreateCmd.class,
+                AddCmd.class,
                 UpdateCmd.class,
                 ViewCmd.class,
                 LeaveCmd.class,

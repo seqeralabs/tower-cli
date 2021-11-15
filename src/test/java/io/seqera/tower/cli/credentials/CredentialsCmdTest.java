@@ -139,7 +139,7 @@ class CredentialsCmdTest extends BaseCmdTest {
     @Test
     void testMissingSubcommand(MockServerClient mock) {
 
-        ExecOut out = exec(mock, "credentials","create");
+        ExecOut out = exec(mock, "credentials","add");
 
         if (out.app != null) {
             assertEquals("", out.stdOut);

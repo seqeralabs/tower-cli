@@ -17,7 +17,7 @@ package io.seqera.tower.cli.credentials.providers;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.exceptions.CredentialsNotFoundException;
-import io.seqera.tower.cli.responses.CredentialsCreated;
+import io.seqera.tower.cli.responses.CredentialsAdded;
 import io.seqera.tower.cli.responses.CredentialsUpdated;
 import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
@@ -32,7 +32,7 @@ import static org.mockserver.model.HttpResponse.response;
 class AwsProviderTest extends BaseCmdTest {
 
     @Test
-    void testCreateWithOnlyAssumeRole(MockServerClient mock) {
+    void testAddWithOnlyAssumeRole(MockServerClient mock) {
 
         // Create server expectation
         mock.when(
@@ -42,17 +42,17 @@ class AwsProviderTest extends BaseCmdTest {
         );
 
         // Run the command
-        ExecOut out = exec(mock, "credentials", "create", "aws", "--name=test_credentials", "--assume-role-arn=arn_role");
+        ExecOut out = exec(mock, "credentials", "add", "aws", "--name=test_credentials", "--assume-role-arn=arn_role");
 
         // Assert results
         assertEquals("", out.stdErr);
-        assertEquals(new CredentialsCreated("aws", "6Kyn17toiABGu47qpBXsVX", "test_credentials", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new CredentialsAdded("aws", "6Kyn17toiABGu47qpBXsVX", "test_credentials", USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
 
     }
 
     @Test
-    void testCreate(MockServerClient mock) {
+    void testAdd(MockServerClient mock) {
 
         mock.when(
                 request().withMethod("POST").withPath("/credentials").withBody("{\"credentials\":{\"keys\":{\"accessKey\":\"access_key\",\"secretKey\":\"secret_key\"},\"name\":\"aws\",\"provider\":\"aws\"}}"), exactly(1)
@@ -60,10 +60,10 @@ class AwsProviderTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"credentialsId\":\"1cz5A8cuBkB5iJliCwJCFU\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "credentials", "create", "aws", "-n", "aws", "-a", "access_key", "-s", "secret_key");
+        ExecOut out = exec(mock, "credentials", "add", "aws", "-n", "aws", "-a", "access_key", "-s", "secret_key");
 
         assertEquals("", out.stdErr);
-        assertEquals(new CredentialsCreated("aws", "1cz5A8cuBkB5iJliCwJCFU", "aws", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new CredentialsAdded("aws", "1cz5A8cuBkB5iJliCwJCFU", "aws", USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
 
     }
