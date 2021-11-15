@@ -12,8 +12,9 @@
 package io.seqera.tower.cli.commands;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.responses.HealthCheckResponse;
+import io.seqera.tower.cli.responses.InfoResponse;
 import io.seqera.tower.cli.responses.Response;
+import io.seqera.tower.model.DescribeUserResponse;
 import io.seqera.tower.model.ServiceInfoResponse;
 import picocli.CommandLine;
 
@@ -24,27 +25,35 @@ import java.util.Map;
 import java.util.Properties;
 
 @CommandLine.Command(
-        name = "health",
-        description = "Check system health status"
+        name = "info",
+        description = "System info and health status"
 )
-public class HealthCheckCmd extends AbstractRootCmd {
+public class InfoCmd extends AbstractRootCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
         int connectionCheck = 1;
         int versionCheck = -1;
         int credentialsCheck = -1;
 
-        ModuleDescriptor.Version systemApiVersion = null;
-        ModuleDescriptor.Version requiredApiVersion = null;
+        String userName = null;
+        String towerVersion = null;
+        String cliVersion = null;
+        ModuleDescriptor.Version towerApiVersion = null;
+        ModuleDescriptor.Version cliApiVersion = null;
+
+        // Cli parameters
+        Properties props = getCliProperties();
+        cliApiVersion = ModuleDescriptor.Version.parse(props.get("versionApi").toString());
+        cliVersion = String.format("%s (%s)", props.get("version"), props.get("commitId"));
 
         try {
             ServiceInfoResponse infoResponse = api().info();
 
             if (infoResponse.getServiceInfo() != null && infoResponse.getServiceInfo().getApiVersion() != null) {
-                systemApiVersion = ModuleDescriptor.Version.parse(infoResponse.getServiceInfo().getApiVersion());
-                requiredApiVersion = ModuleDescriptor.Version.parse(getVersionApi());
+                towerApiVersion = ModuleDescriptor.Version.parse(infoResponse.getServiceInfo().getApiVersion());
+                towerVersion = infoResponse.getServiceInfo().getVersion();
 
-                versionCheck = systemApiVersion.compareTo(requiredApiVersion) >= 0 ? 1 : 0;
+                versionCheck = towerApiVersion.compareTo(cliApiVersion) >= 0 ? 1 : 0;
             }
         } catch (Exception e) {
             connectionCheck = 0;
@@ -52,7 +61,8 @@ public class HealthCheckCmd extends AbstractRootCmd {
 
         if (connectionCheck == 1) {
             try {
-                api().user();
+                DescribeUserResponse resp = api().user();
+                userName = resp.getUser().getUserName();
                 credentialsCheck = 1;
             } catch (ApiException apiException) {
                 if (apiException.getCode() == 401) {
@@ -62,17 +72,19 @@ public class HealthCheckCmd extends AbstractRootCmd {
         }
 
         Map<String, String> opts = new HashMap<>();
-        opts.put("requiredApiVersion", requiredApiVersion != null ? requiredApiVersion.toString() : null);
-        opts.put("systemApiVersion", systemApiVersion != null ? systemApiVersion.toString() : null);
-        opts.put("serverUrl", this.serverUrl());
+        opts.put("cliApiVersion", cliApiVersion != null ? cliApiVersion.toString() : null);
+        opts.put("cliVersion", cliVersion);
+        opts.put("towerApiVersion", towerApiVersion != null ? towerApiVersion.toString() : null);
+        opts.put("towerApiEndpoint", this.apiUrl());
+        opts.put("towerVersion", towerVersion);
+        opts.put("userName", userName);
 
-        return new HealthCheckResponse(connectionCheck, versionCheck, credentialsCheck, opts);
+        return new InfoResponse(connectionCheck, versionCheck, credentialsCheck, opts);
     }
 
-    private String getVersionApi() throws IOException {
+    private Properties getCliProperties() throws IOException {
         Properties properties = new Properties();
         properties.load(this.getClass().getResourceAsStream("/META-INF/build-info.properties"));
-
-        return properties.get("versionApi").toString();
+        return properties;
     }
 }

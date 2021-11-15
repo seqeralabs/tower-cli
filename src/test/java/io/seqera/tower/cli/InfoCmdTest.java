@@ -11,13 +11,15 @@
 
 package io.seqera.tower.cli;
 
-import io.seqera.tower.cli.responses.HealthCheckResponse;
+import io.seqera.tower.cli.responses.InfoResponse;
 import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import static org.apache.commons.lang3.StringUtils.chop;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,15 +27,15 @@ import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
-public class HealthCheckCmdTest extends BaseCmdTest {
+public class InfoCmdTest extends BaseCmdTest {
 
     @Test
-    void testHealthStatus(MockServerClient mock) {
+    void testInfo(MockServerClient mock) throws IOException {
         mock.reset();
         mock.when(
                 request().withMethod("GET").withPath("/service-info"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResource("health/service-info")).withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(loadResource("info/service-info")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
@@ -43,24 +45,27 @@ public class HealthCheckCmdTest extends BaseCmdTest {
         );
 
         Map<String, String> opts = new HashMap<>();
-        opts.put("requiredApiVersion", "1.6");
-        opts.put("systemApiVersion", "1.6");
-        opts.put("serverUrl", "http://localhost:"+mock.getPort());
+        opts.put("cliVersion", getCliVersion() );
+        opts.put("cliApiVersion", "1.6");
+        opts.put("towerApiVersion", "1.6.0");
+        opts.put("towerVersion", "21.10.0");
+        opts.put("towerApiEndpoint", "http://localhost:"+mock.getPort());
+        opts.put("userName", "jordi");
 
-        ExecOut out = exec(mock, "health");
+        ExecOut out = exec(mock, "info");
 
         assertEquals("", out.stdErr);
         assertEquals(0, out.exitCode);
-        assertEquals(chop(new HealthCheckResponse(1,1,1, opts).toString()), out.stdOut);
+        assertEquals(chop(new InfoResponse(1,1,1, opts).toString()), out.stdOut);
     }
 
     @Test
-    void testHealthStatusTokenFail(MockServerClient mock) {
+    void testInfoStatusTokenFail(MockServerClient mock) throws IOException {
         mock.reset();
         mock.when(
                 request().withMethod("GET").withPath("/service-info"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResource("health/service-info")).withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(loadResource("info/service-info")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
@@ -69,25 +74,28 @@ public class HealthCheckCmdTest extends BaseCmdTest {
                 response().withStatusCode(401)
         );
 
-        ExecOut out = exec(mock, "health");
+        ExecOut out = exec(mock, "info");
 
         Map<String, String> opts = new HashMap<>();
-        opts.put("requiredApiVersion", "1.6");
-        opts.put("systemApiVersion", "1.6");
-        opts.put("serverUrl", "http://localhost:"+mock.getPort());
+        opts.put("cliVersion", getCliVersion() );
+        opts.put("cliApiVersion", "1.6");
+        opts.put("towerApiVersion", "1.6.0");
+        opts.put("towerVersion", "21.10.0");
+        opts.put("towerApiEndpoint", "http://localhost:"+mock.getPort());
+        opts.put("userName", null);
 
         assertEquals("", out.stdErr);
         assertEquals(-1, out.exitCode);
-        assertEquals(chop(new HealthCheckResponse(1,1,0, opts).toString()), out.stdOut);
+        assertEquals(chop(new InfoResponse(1,1,0, opts).toString()), out.stdOut);
     }
 
     @Test
-    void testHealthVersionFail(MockServerClient mock) {
+    void testInfoVersionFail(MockServerClient mock) throws IOException {
         mock.reset();
         mock.when(
                 request().withMethod("GET").withPath("/service-info"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResource("health/service-info-obsolete")).withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(loadResource("info/service-info-obsolete")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
@@ -96,23 +104,26 @@ public class HealthCheckCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "health");
+        ExecOut out = exec(mock, "info");
 
         Map<String, String> opts = new HashMap<>();
-        opts.put("requiredApiVersion", "1.6");
-        opts.put("systemApiVersion", "0.1");
-        opts.put("serverUrl", "http://localhost:"+mock.getPort());
+        opts.put("cliVersion", getCliVersion() );
+        opts.put("cliApiVersion", "1.6");
+        opts.put("towerApiVersion", "0.1");
+        opts.put("towerVersion", "21.10.0");
+        opts.put("towerApiEndpoint", "http://localhost:"+mock.getPort());
+        opts.put("userName", "jordi");
 
         assertEquals("", out.stdErr);
         assertEquals(-1, out.exitCode);
-        assertEquals(chop(new HealthCheckResponse(1,0,1, opts).toString()), out.stdOut);
+        assertEquals(chop(new InfoResponse(1,0,1, opts).toString()), out.stdOut);
     }
 
     @Test
-    void testHealthStatusUrlFail(MockServerClient mock) {
+    void testInfoStatusUrlFail(MockServerClient mock) throws IOException {
         mock.reset();
         mock.when(
-                request().withMethod("GET").withPath("health/service-info"), exactly(1)
+                request().withMethod("GET").withPath("info/service-info"), exactly(1)
         ).respond(
                 response().withContentType(MediaType.HTML_UTF_8)
         );
@@ -123,15 +134,24 @@ public class HealthCheckCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withContentType(MediaType.HTML_UTF_8)
         );
 
-        ExecOut out = exec(mock, "health");
+        ExecOut out = exec(mock, "info");
 
         Map<String, String> opts = new HashMap<>();
-        opts.put("requiredApiVersion", "1.6");
-        opts.put("systemApiVersion", "1.6");
-        opts.put("serverUrl", "http://localhost:"+mock.getPort());
+        opts.put("cliVersion", getCliVersion() );
+        opts.put("cliApiVersion", "1.6");
+        opts.put("towerApiVersion", null);
+        opts.put("towerVersion", null);
+        opts.put("towerApiEndpoint", "http://localhost:"+mock.getPort());
+        opts.put("userName", null);
 
         assertEquals("", out.stdErr);
         assertEquals(-1, out.exitCode);
-        assertEquals(chop(new HealthCheckResponse(0,-1,-1, opts).toString()), out.stdOut);
+        assertEquals(chop(new InfoResponse(0,-1,-1, opts).toString()), out.stdOut);
+    }
+
+    private String getCliVersion() throws IOException {
+        Properties props = new Properties();
+        props.load(this.getClass().getResourceAsStream("/META-INF/build-info.properties"));
+        return String.format("%s (%s)", props.get("version"), props.get("commitId"));
     }
 }

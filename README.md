@@ -82,7 +82,7 @@ If required, you can also set the following non-mandatory environment variables 
 Confirm the installation, configuration and connection is working as expected:
 
 ```console
-$ tw health
+$ tw info
 
     System health status
     ---------------------------------------+------------------

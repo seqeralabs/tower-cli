@@ -166,6 +166,10 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         return serverUrl;
     }
 
+    protected String apiUrl() {
+        return app().url;
+    }
+
     protected OrgAndWorkspaceDbDto findOrganizationByName(String organizationName) throws ApiException {
         ListWorkspacesAndOrgResponse workspacesAndOrgResponse = api().listWorkspacesUser(userId());
 
