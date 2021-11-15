@@ -18,7 +18,7 @@ import picocli.CommandLine.Mixin;
 
 @Command(
         name = "github",
-        description = "Create new Github workspace credentials"
+        description = "Create new Github workspace credentials."
 )
 public class CreateGithubCmd extends AbstractCreateCmd {
 

@@ -23,11 +23,11 @@ import picocli.CommandLine.Option;
 
 @Command(
         name = "view",
-        description = "View compute environment"
+        description = "View compute environment."
 )
 public class ViewCmd extends AbstractComputeEnvCmd {
 
-    @Option(names = {"-i", "--id"}, description = "Compute environment identifier", required = true)
+    @Option(names = {"-i", "--id"}, description = "Compute environment identifier.", required = true)
     public String id;
 
     @CommandLine.Mixin

@@ -22,7 +22,7 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "get",
-        description = "Gets a workspace primary compute environment"
+        description = "Gets a workspace primary compute environment."
 )
 public class GetCmd extends AbstractComputeEnvsPrimaryCmd {
 

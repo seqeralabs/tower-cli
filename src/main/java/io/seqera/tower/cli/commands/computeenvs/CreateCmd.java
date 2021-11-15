@@ -31,7 +31,7 @@ import java.io.IOException;
 
 @Command(
         name = "create",
-        description = "Create new compute environment",
+        description = "Create new compute environment.",
         subcommands = {
                 CreateK8sCmd.class,
                 CreateAwsCmd.class,

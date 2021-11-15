@@ -18,7 +18,7 @@ import picocli.CommandLine.Mixin;
 
 @Command(
         name = "bitbucket",
-        description = "Create new Bitbucket workspace credentials"
+        description = "Create new Bitbucket workspace credentials."
 )
 public class CreateBitbucketCmd extends AbstractCreateCmd {
 

@@ -22,7 +22,7 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "list",
-        description = "List the available Pipeline Actions for the authenticated user or given workspace"
+        description = "List the available Pipeline Actions for the authenticated user or given workspace."
 )
 public class ListCmd extends AbstractActionsCmd {
 

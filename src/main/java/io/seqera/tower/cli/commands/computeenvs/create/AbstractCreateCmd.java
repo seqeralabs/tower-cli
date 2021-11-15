@@ -32,13 +32,13 @@ import java.util.List;
 @Command
 public abstract class AbstractCreateCmd extends AbstractApiCmd {
 
-    @Option(names = {"-n", "--name"}, description = "Compute environment name", required = true)
+    @Option(names = {"-n", "--name"}, description = "Compute environment name.", required = true)
     public String name;
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
-    @Option(names = {"-i", "--id"}, description = "Credentials identifier [default: workspace credentials]")
+    @Option(names = {"-i", "--id"}, description = "Credentials identifier [default: workspace credentials].")
     public String credentialsId;
 
     @Override

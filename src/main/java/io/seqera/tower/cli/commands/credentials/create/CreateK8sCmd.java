@@ -18,7 +18,7 @@ import picocli.CommandLine.Mixin;
 
 @Command(
         name = "k8s",
-        description = "Create new Kubernetes workspace credentials"
+        description = "Create new Kubernetes workspace credentials."
 )
 public class CreateK8sCmd extends AbstractCreateCmd {
 

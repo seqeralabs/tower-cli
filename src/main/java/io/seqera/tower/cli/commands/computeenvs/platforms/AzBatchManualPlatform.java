@@ -22,7 +22,7 @@ import java.io.IOException;
 
 public class AzBatchManualPlatform extends AbstractPlatform<AzBatchConfig> {
 
-    @Option(names = {"-l", "--location"}, description = "The Azure location where the workload will be deployed", required = true)
+    @Option(names = {"-l", "--location"}, description = "The Azure location where the workload will be deployed.", required = true)
     public String location;
 
     @Option(names = {"--compute-pool-name"}, description = "The Azure Batch compute pool to be used to run the Nextflow jobs. This needs to be a pre-configured Batch compute pool which includes the azcopy command line (see the Tower documentation for details).", required = true)
@@ -58,10 +58,10 @@ public class AzBatchManualPlatform extends AbstractPlatform<AzBatchConfig> {
 
     public static class AdvancedOptions {
 
-        @Option(names = {"--jobs-cleanup"}, description = "Enable the automatic deletion of Batch jobs created by the pipeline execution (ON_SUCESS, ALWAYS, NEVER)")
+        @Option(names = {"--jobs-cleanup"}, description = "Enable the automatic deletion of Batch jobs created by the pipeline execution (ON_SUCESS, ALWAYS, NEVER).")
         public JobCleanupPolicy jobsCleanup;
 
-        @Option(names = {"--token-duration"}, description = "The duration of the shared access signature token created by Nextflow when the 'sasToken' option is not specified [default: 12h]")
+        @Option(names = {"--token-duration"}, description = "The duration of the shared access signature token created by Nextflow when the 'sasToken' option is not specified [default: 12h].")
         public String tokenDuration;
 
     }

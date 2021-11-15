@@ -20,7 +20,7 @@ import picocli.CommandLine.Command;
 
 @Command(
         name = "azure-batch",
-        description = "Create new Azure Batch compute environments",
+        description = "Create new Azure Batch compute environments.",
         subcommands = {
                 CreateAzureForgeCmd.class,
                 CreateAzureManualCmd.class,

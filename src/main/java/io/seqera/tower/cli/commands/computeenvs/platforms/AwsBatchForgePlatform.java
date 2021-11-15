@@ -25,28 +25,28 @@ import java.util.List;
 
 public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
 
-    @Option(names = {"-r", "--region"}, description = "AWS region", required = true)
+    @Option(names = {"-r", "--region"}, description = "AWS region.", required = true)
     public String region;
 
-    @Option(names = {"--max-cpus"}, description = "The maximum number of CPUs provisioned in this environment", required = true)
+    @Option(names = {"--max-cpus"}, description = "The maximum number of CPUs provisioned in this environment.", required = true)
     public Integer maxCpus;
 
-    @Option(names = {"--provisioning-model"}, description = "VMs provisioning model. 'EC2' deploys uninterruptible Ec2 instances. 'SPOT' uses interruptible Ec2 instances", required = true, defaultValue = "SPOT")
+    @Option(names = {"--provisioning-model"}, description = "VMs provisioning model. 'EC2' deploys uninterruptible Ec2 instances. 'SPOT' uses interruptible Ec2 instances.", required = true, defaultValue = "SPOT")
     public TypeEnum provisioningModel;
 
-    @Option(names = {"--no-ebs-auto-scale"}, description = "Disable the provisioning of EBS auto-expandable disk")
+    @Option(names = {"--no-ebs-auto-scale"}, description = "Disable the provisioning of EBS auto-expandable disk.")
     public boolean noEbsAutoScale;
 
-    @Option(names = {"--fusion"}, description = "With Fusion enabled, S3 buckets specified in the Pipeline work directory and Allowed S3 Buckets fields will be accessible in the compute nodes storage using the file path /fusion/s3/BUCKET_NAME")
+    @Option(names = {"--fusion"}, description = "With Fusion enabled, S3 buckets specified in the Pipeline work directory and Allowed S3 Buckets fields will be accessible in the compute nodes storage using the file path /fusion/s3/BUCKET_NAME.")
     public boolean fusion;
 
-    @Option(names = {"--gpu"}, description = "Deploys GPU enabled Ec2 instances")
+    @Option(names = {"--gpu"}, description = "Deploys GPU enabled Ec2 instances.")
     public boolean gpu;
 
-    @Option(names = {"--allow-buckets"}, split = ",", paramLabel = "<bucket>", description = "Comma-separated list of S3 buckets or paths other than pipeline work directory that should be granted read-write permission from this environment")
+    @Option(names = {"--allow-buckets"}, split = ",", paramLabel = "<bucket>", description = "Comma-separated list of S3 buckets or paths other than pipeline work directory that should be granted read-write permission from this environment.")
     public List<String> allowBuckets;
 
-    @Option(names = "--preserve-resources", description = "Enable this if you want to preserve the Batch compute resources created by Tower independently from the lifecycle of this compute environment")
+    @Option(names = "--preserve-resources", description = "Enable this if you want to preserve the Batch compute resources created by Tower independently from the lifecycle of this compute environment.")
     public boolean preserveResources;
 
     @ArgGroup(heading = "%nEFS filesystem options:%n", validate = false)
@@ -138,26 +138,26 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
 
     static class EfsFileSystem {
 
-        @Option(names = {"--create-efs"}, description = "A OneZone EFS without backup will be created. EC2 instances can run on a different zone and inter-region transfer fees will be billed. If you want to remove transfer costs, restrict to only one subnet at advanced options")
+        @Option(names = {"--create-efs"}, description = "A OneZone EFS without backup will be created. EC2 instances can run on a different zone and inter-region transfer fees will be billed. If you want to remove transfer costs, restrict to only one subnet at advanced options.")
         public boolean createEfs;
 
-        @Option(names = {"--efs-id"}, description = "Enter the EFS file system id e.g. fs-0123456789")
+        @Option(names = {"--efs-id"}, description = "Enter the EFS file system id e.g. fs-0123456789.")
         public String efsId;
 
-        @Option(names = {"--efs-mount"}, description = "Enter the EFS mount path [default: pipeline work directory]")
+        @Option(names = {"--efs-mount"}, description = "Enter the EFS mount path [default: pipeline work directory].")
         public String efsMount;
 
     }
 
     static class FsxFileSystem {
 
-        @Option(names = {"--fsx-size"}, description = "Enter the FSx storage capacity in GB (minimum 1,200 GB or increments of 2,400 GB)")
+        @Option(names = {"--fsx-size"}, description = "Enter the FSx storage capacity in GB (minimum 1,200 GB or increments of 2,400 GB).")
         public Integer fsxSize;
 
-        @Option(names = {"--fsx-dns"}, description = "Enter the FSx file system DNS name e.g. 'fs-0123456789.fsx.eu-west-1.amazonaws.com'")
+        @Option(names = {"--fsx-dns"}, description = "Enter the FSx file system DNS name e.g. 'fs-0123456789.fsx.eu-west-1.amazonaws.com'.")
         public String fsxDns;
 
-        @Option(names = {"--fsx-mount"}, description = "Enter the FSx mount path [default: pipeline work directory]")
+        @Option(names = {"--fsx-mount"}, description = "Enter the FSx mount path [default: pipeline work directory].")
         public String fsxMount;
 
     }
@@ -169,7 +169,7 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
         @Option(names = {"--alloc-strategy"}, description = "Allocation Strategies allow you to choose how Batch launches instances on your behalf. AWS recommends BEST_FIT_PROGRESSIVE for On-Demand CEs and SPOT_CAPACITY_OPTIMIZED for Spot CEs.")
         public AllocStrategyEnum allocStrategy;
 
-        @Option(names = {"--vpc-id"}, description = "VPC identifier")
+        @Option(names = {"--vpc-id"}, description = "VPC identifier.")
         public String vpcId;
 
         @Option(names = {"--subnets"}, split = ",", paramLabel = "<subnet>", description = "Comma-separated list of one or more subnets in your VPC that can be used to isolate the EC2 resources from each other or from the Internet.")
@@ -178,34 +178,34 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
         @Option(names = {"--security-groups"}, split = ",", paramLabel = "<group>", description = "Comma-separated list of one or more security groups that defines a set of firewall rules to control the traffic for your EC2 compute nodes.")
         public List<String> securityGroups;
 
-        @Option(names = {"--ami-id"}, description = "Ths option allows you to use your own AMI. Note however it must be an AWS Linux-2 ECS-optimised image and meet the compute resource AMI specification [default: latest approved version of the Amazon ECS-optimized AMI]")
+        @Option(names = {"--ami-id"}, description = "Ths option allows you to use your own AMI. Note however it must be an AWS Linux-2 ECS-optimised image and meet the compute resource AMI specification [default: latest approved version of the Amazon ECS-optimized AMI].")
         public String amiId;
 
         @Option(names = {"--key-pair"}, description = "The EC2 key pair to be installed in the compute nodes to access via SSH.")
         public String keyPair;
 
-        @Option(names = {"--min-cpus"}, description = "The minimum number of CPUs provisioned in this environment that will remain active and you will be billed regardless of whether you are running any workloads")
+        @Option(names = {"--min-cpus"}, description = "The minimum number of CPUs provisioned in this environment that will remain active and you will be billed regardless of whether you are running any workloads.")
         public Integer minCpus;
 
-        @Option(names = {"--head-job-cpus"}, description = "The number of CPUs to be allocated for the Nextflow runner job")
+        @Option(names = {"--head-job-cpus"}, description = "The number of CPUs to be allocated for the Nextflow runner job.")
         public Integer headJobCpus;
 
-        @Option(names = {"--head-job-memory"}, description = "The number of MiB of memory reserved for the Nextflow runner job")
+        @Option(names = {"--head-job-memory"}, description = "The number of MiB of memory reserved for the Nextflow runner job.")
         public Integer headJobMemoryMb;
 
-        @Option(names = {"--head-job-role"}, description = "IAM role to fine-grained control permissions for the Nextflow runner job")
+        @Option(names = {"--head-job-role"}, description = "IAM role to fine-grained control permissions for the Nextflow runner job.")
         public String headJobRole;
 
-        @Option(names = {"--compute-job-role"}, description = "IAM role to fine-grained control permissions for jobs submitted by Nextflow")
+        @Option(names = {"--compute-job-role"}, description = "IAM role to fine-grained control permissions for jobs submitted by Nextflow.")
         public String computeJobRole;
 
-        @Option(names = {"--ebs-blocksize"}, description = "This field controls the initial size of the EBS auto-expandable volume. New blocks of the same size are added as necessary when the volume is running out of free space [default: 50 GB]")
+        @Option(names = {"--ebs-blocksize"}, description = "This field controls the initial size of the EBS auto-expandable volume. New blocks of the same size are added as necessary when the volume is running out of free space [default: 50 GB].")
         public Integer ebsBlockSize;
 
-        @Option(names = {"--bid-percentage"}, description = "The maximum percentage that a Spot Instance price can be when compared with the On-Demand price for that instance type before instances are launched. For example, if your maximum percentage is 20%%, then the Spot price must be less than 20%% of the current On-Demand price for that Amazon EC2 instance. You always pay the lowest (market) price and never more than your maximum percentage [default: 100%% of the On-Demand price]")
+        @Option(names = {"--bid-percentage"}, description = "The maximum percentage that a Spot Instance price can be when compared with the On-Demand price for that instance type before instances are launched. For example, if your maximum percentage is 20%%, then the Spot price must be less than 20%% of the current On-Demand price for that Amazon EC2 instance. You always pay the lowest (market) price and never more than your maximum percentage [default: 100%% of the On-Demand price].")
         public Integer bidPercentage;
 
-        @Option(names = {"--cli-path"}, description = "Nextflow requires the AWS CLI installed in the Ec2 instances. Use this field to specify the path")
+        @Option(names = {"--cli-path"}, description = "Nextflow requires the AWS CLI installed in the Ec2 instances. Use this field to specify the path.")
         public String cliPath;
 
     }

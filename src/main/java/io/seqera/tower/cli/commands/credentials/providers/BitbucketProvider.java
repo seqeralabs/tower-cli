@@ -19,10 +19,10 @@ import java.io.IOException;
 
 public class BitbucketProvider extends AbstractGitProvider<BitBucketSecurityKeys> {
 
-    @Option(names = {"-u", "--username"}, description = "Bitbucket username", required = true)
+    @Option(names = {"-u", "--username"}, description = "Bitbucket username.", required = true)
     public String userName;
 
-    @Option(names = {"-p", "--password"}, description = "Bitbucket App password", arity = "0..1", interactive = true, required = true)
+    @Option(names = {"-p", "--password"}, description = "Bitbucket App password.", arity = "0..1", interactive = true, required = true)
     public String password;
 
     public BitbucketProvider() {

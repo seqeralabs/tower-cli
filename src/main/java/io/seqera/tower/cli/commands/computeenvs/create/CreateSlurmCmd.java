@@ -18,7 +18,7 @@ import picocli.CommandLine.Mixin;
 
 @Command(
         name = "slurm",
-        description = "Create new Slurm compute environment"
+        description = "Create new Slurm compute environment."
 )
 public class CreateSlurmCmd extends AbstractCreateCmd {
 

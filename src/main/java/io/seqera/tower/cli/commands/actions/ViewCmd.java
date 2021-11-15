@@ -23,11 +23,11 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "view",
-        description = "Describe an existing Pipeline Action"
+        description = "Describe an existing Pipeline Action."
 )
 public class ViewCmd extends AbstractActionsCmd {
 
-    @CommandLine.Option(names = {"-n", "--name"}, description = "Action name", required = true)
+    @CommandLine.Option(names = {"-n", "--name"}, description = "Action name.", required = true)
     public String actionName;
 
     @CommandLine.Mixin

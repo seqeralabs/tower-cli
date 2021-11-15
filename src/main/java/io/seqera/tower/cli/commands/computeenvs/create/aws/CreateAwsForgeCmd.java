@@ -19,7 +19,7 @@ import picocli.CommandLine.Mixin;
 
 @Command(
         name = "forge",
-        description = "Create new AWS Batch compute environment with automatic provisioning of compute resources"
+        description = "Create new AWS Batch compute environment with automatic provisioning of compute resources."
 )
 public class CreateAwsForgeCmd extends AbstractCreateCmd {
 

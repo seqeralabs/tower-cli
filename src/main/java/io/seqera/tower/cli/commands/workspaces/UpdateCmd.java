@@ -28,17 +28,17 @@ import java.io.IOException;
 
 @Command(
         name = "update",
-        description = "Update an existing organization workspace"
+        description = "Update an existing organization workspace."
 )
 public class UpdateCmd extends AbstractWorkspaceCmd {
 
     @Mixin
     public WorkspaceRequiredOptions workspace;
 
-    @Option(names = {"-f", "--fullName"}, description = "The workspace full name")
+    @Option(names = {"-f", "--fullName"}, description = "The workspace full name.")
     public String workspaceFullName;
 
-    @Option(names = {"-d", "--description"}, description = "The workspace description")
+    @Option(names = {"-d", "--description"}, description = "The workspace description.")
     public String description;
 
     @Override

@@ -25,7 +25,7 @@ import java.util.Properties;
 
 @CommandLine.Command(
         name = "health",
-        description = "Check system health status"
+        description = "Check system health status."
 )
 public class HealthCheckCmd extends AbstractRootCmd {
     @Override
