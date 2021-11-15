@@ -30,25 +30,32 @@ import java.io.IOException;
         description = "Create a new organization workspace"
 )
 public class CreateCmd extends AbstractWorkspaceCmd {
-    @Mixin
-    WorkspaceOptions opts;
+
+    @CommandLine.Option(names = {"-o", "--org", "--organization"}, description = "The workspace organization name", required = true)
+    public String organizationName;
+
+    @CommandLine.Option(names = {"-n", "--name"}, description = "The workspace short name. Only alphanumeric, dash and underscore characters are allowed", required = true)
+    public String workspaceName;
+
+    @CommandLine.Option(names = {"-f", "--full-name"}, description = "The workspace full name", required = true)
+    public String workspaceFullName;
+
+    @CommandLine.Option(names = {"-d", "--description"}, description = "The workspace description")
+    public String description;
 
     @Override
     protected Response exec() throws ApiException, IOException {
         Workspace workspace = new Workspace();
-        workspace.setName(opts.workspaceName);
-        workspace.setFullName(opts.workspaceFullName);
-        workspace.setDescription(opts.description);
+        workspace.setName(workspaceName);
+        workspace.setFullName(workspaceFullName);
+        workspace.setDescription(description);
         workspace.setVisibility(Visibility.PRIVATE);
 
         CreateWorkspaceRequest request = new CreateWorkspaceRequest().workspace(workspace);
-
-        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = organizationByName(opts.organizationName);
-
-        api().workspaceValidate(orgAndWorkspaceDbDto.getOrgId(), opts.workspaceName);
-
+        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = organizationByName(organizationName);
+        api().workspaceValidate(orgAndWorkspaceDbDto.getOrgId(), workspaceName);
         CreateWorkspaceResponse response = api().createWorkspace(orgAndWorkspaceDbDto.getOrgId(), request);
 
-        return new WorkspaceCreated(response.getWorkspace().getName(), opts.organizationName, response.getWorkspace().getVisibility());
+        return new WorkspaceCreated(response.getWorkspace().getName(), organizationName, response.getWorkspace().getVisibility());
     }
 }
