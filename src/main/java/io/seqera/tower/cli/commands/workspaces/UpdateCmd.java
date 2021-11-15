@@ -13,6 +13,7 @@ package io.seqera.tower.cli.commands.workspaces;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceRequiredOptions;
+import io.seqera.tower.cli.exceptions.ShowUsageException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.workspaces.WorkspaceUpdated;
 import io.seqera.tower.model.DescribeWorkspaceResponse;
@@ -42,14 +43,28 @@ public class UpdateCmd extends AbstractWorkspaceCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
+
+        if (workspaceFullName == null && description == null) {
+            throw new ShowUsageException(getSpec(), "Required at least one option to update");
+        }
+
         OrgAndWorkspaceDbDto ws = workspaceById(workspace.workspaceId);
-        UpdateWorkspaceRequest request = new UpdateWorkspaceRequest();
+
+        DescribeWorkspaceResponse response = api().describeWorkspace(ws.getOrgId(), ws.getWorkspaceId());
+        UpdateWorkspaceRequest request = new UpdateWorkspaceRequest()
+                .fullName(response.getWorkspace().getFullName())
+                .description(response.getWorkspace().getDescription());
+
         if (workspaceFullName != null) {
             request.setFullName(workspaceFullName);
         }
-        request.setDescription(description);
+
+        if (description != null) {
+            request.setDescription(description);
+        }
+
         request.setVisibility(Visibility.PRIVATE);
-        DescribeWorkspaceResponse response = api().updateWorkspace(ws.getOrgId(), ws.getWorkspaceId(), request);
+        response = api().updateWorkspace(ws.getOrgId(), ws.getWorkspaceId(), request);
 
         return new WorkspaceUpdated(response.getWorkspace().getName(), ws.getOrgName(), response.getWorkspace().getVisibility());
     }
