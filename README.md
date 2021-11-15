@@ -4,7 +4,7 @@
 
 Tower is a full-stack application for the management of data pipelines and compute resources. It enables collaborative data analysis at scale, on-premises or in any cloud.
 
-The Tower CLI interacts with Tower, providing an interface to launch pipelines, manage cloud resources and administer your analaysis.
+The Tower CLI interacts with Tower, providing an interface to launch pipelines, manage cloud resources and administer your analysis.
 
 ![tw](assets/img/tw-screenshot.png)
 
