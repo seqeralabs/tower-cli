@@ -51,14 +51,11 @@ public abstract class BaseCmdTest {
     }
 
     protected byte[] loadResource(String name, String ext) {
-        try {
-            InputStream stream = this.getClass().getResourceAsStream("/runcmd/" + name + "." + ext);
-            byte[] data = stream.readAllBytes();
-            stream.close();
-
-            return data;
+        try (InputStream stream = this.getClass().getResourceAsStream("/runcmd/" + name + "." + ext)) {
+            return stream.readAllBytes();
         } catch (IOException e) {
             e.printStackTrace();
+
             return null;
         }
     }

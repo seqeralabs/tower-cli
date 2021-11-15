@@ -17,18 +17,22 @@ import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.seqera.tower.cli.commands.runs.download.enums.RunDownloadFileType;
+
 public class RunFileDownloaded extends Response {
 
     public final File file;
+    public final RunDownloadFileType type;
 
-    public RunFileDownloaded(File file) {
+    public RunFileDownloaded(File file, RunDownloadFileType type) {
         this.file = file;
+        this.type = type;
     }
 
     @Override
     public Object getJSON() {
         Map<String, Object> data = new HashMap<>();
-        data.put("log", readFile());
+        data.put(type.name(), readFile());
 
         return data;
     }
@@ -43,7 +47,6 @@ public class RunFileDownloaded extends Response {
 
         try {
             outcome = Files.readString(file.toPath());
-            System.out.println(file.getPath());
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

@@ -70,6 +70,6 @@ public class DownloadCmd extends AbstractRunsCmd {
             file = api().downloadWorkflowTaskLog(parentCommand.id, task, fileName, parentCommand.workspace.workspaceId);
         }
 
-        return new RunFileDownloaded(file);
+        return new RunFileDownloaded(file, type);
     }
 }

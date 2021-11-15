@@ -14,6 +14,7 @@ package io.seqera.tower.cli.runs;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.BaseCmdTest;
+import io.seqera.tower.cli.commands.runs.download.enums.RunDownloadFileType;
 import io.seqera.tower.cli.exceptions.RunNotFoundException;
 import io.seqera.tower.cli.exceptions.ShowUsageException;
 import io.seqera.tower.cli.exceptions.TowerException;
@@ -675,7 +676,7 @@ class RunsCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(mock, "runs", "view", "-i", "5dAZoXrcmZXRO4", "download");
         assertEquals("", out.stdErr);
-        assertEquals(new RunFileDownloaded(file).toString(), out.stdOut);
+        assertEquals(new RunFileDownloaded(file, RunDownloadFileType.stdout).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -692,7 +693,7 @@ class RunsCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(mock, "-v", "runs", "view", "-i", "5dAZoXrcmZXRO4", "download", "-t", "5");
         assertEquals("", out.stdErr);
-        assertEquals(new RunFileDownloaded(file).toString(), out.stdOut);
+        assertEquals(new RunFileDownloaded(file, RunDownloadFileType.stdout).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 }
