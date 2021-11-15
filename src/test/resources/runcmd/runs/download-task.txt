@@ -1,0 +1,17 @@
+nxf-scratch-dir ip-172-31-40-30.eu-west-1.compute.internal:/tmp/nxf.F4DwCH46pD
+salmon/
+salmon/complete_ref_lens.bin
+salmon/pre_indexing.log
+salmon/versionInfo.json
+salmon/duplicate_clusters.tsv
+salmon/mphf.bin
+salmon/pos.bin
+salmon/reflengths.bin
+salmon/ctable.bin
+salmon/refseq.bin
+salmon/rank.bin
+salmon/refAccumLengths.bin
+salmon/ctg_offsets.bin
+salmon/seq.bin
+salmon/ref_indexing.log
+salmon/info.json

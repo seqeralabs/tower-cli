@@ -14,11 +14,13 @@ package io.seqera.tower.cli.runs;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.BaseCmdTest;
+import io.seqera.tower.cli.commands.runs.download.enums.RunDownloadFileType;
 import io.seqera.tower.cli.exceptions.RunNotFoundException;
 import io.seqera.tower.cli.exceptions.ShowUsageException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.RunCanceled;
 import io.seqera.tower.cli.responses.RunDeleted;
+import io.seqera.tower.cli.responses.RunFileDownloaded;
 import io.seqera.tower.cli.responses.RunList;
 import io.seqera.tower.cli.responses.RunSubmited;
 import io.seqera.tower.cli.responses.RunView;
@@ -31,6 +33,8 @@ import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -657,5 +661,39 @@ class RunsCmdTest extends BaseCmdTest {
             assertEquals("", out.stdOut);
             assertEquals(-1, out.exitCode);
         }
+    }
+
+    @Test
+    void testDownloadLog(MockServerClient mock) throws IOException {
+        mock.when(
+                request().withMethod("GET").withPath("/workflow/5dAZoXrcmZXRO4/download")
+                        .withQueryStringParameter("fileName", "nf-5dAZoXrcmZXRO4.txt"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("runs/download", "txt")).withContentType(MediaType.APPLICATION_BINARY)
+        );
+
+        File file = new File(tempFile(new String(loadResource("runs/download", "txt")), "5dAZoXrcmZXRO", "txt"));
+
+        ExecOut out = exec(mock, "runs", "view", "-i", "5dAZoXrcmZXRO4", "download");
+        assertEquals("", out.stdErr);
+        assertEquals(new RunFileDownloaded(file, RunDownloadFileType.stdout).toString(), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testDownloadTaskLog(MockServerClient mock) throws IOException {
+        mock.when(
+                request().withMethod("GET").withPath("/workflow/5dAZoXrcmZXRO4/download/5")
+                        .withQueryStringParameter("fileName", ".command.out"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("runs/download-task", "txt")).withContentType(MediaType.APPLICATION_BINARY)
+        );
+
+        File file = new File(tempFile(new String(loadResource("runs/download-task", "txt")), "5dAZoXrcmZXRO", "txt"));
+
+        ExecOut out = exec(mock, "runs", "view", "-i", "5dAZoXrcmZXRO4", "download", "-t", "5");
+        assertEquals("", out.stdErr);
+        assertEquals(new RunFileDownloaded(file, RunDownloadFileType.stdout).toString(), out.stdOut);
+        assertEquals(0, out.exitCode);
     }
 }
