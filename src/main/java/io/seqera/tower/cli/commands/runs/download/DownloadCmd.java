@@ -15,6 +15,7 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.runs.AbstractRunsCmd;
 import io.seqera.tower.cli.commands.runs.ViewCmd;
 import io.seqera.tower.cli.commands.runs.download.enums.RunDownloadFileType;
+import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.RunFileDownloaded;
 import picocli.CommandLine;
@@ -28,7 +29,7 @@ import java.io.IOException;
 )
 public class DownloadCmd extends AbstractRunsCmd {
 
-    @CommandLine.Option(names = {"--type"}, description = "File type to download. Options are console, log, error (for tasks only) and timeline (workflow only) (default is console)")
+    @CommandLine.Option(names = {"--type"}, description = "File type to download. Options are stdout, log, stderr (for tasks only) and timeline (workflow only) (default is stdout)")
     public RunDownloadFileType type;
 
     @CommandLine.Option(names = {"-t"}, description = "Task identifier")
@@ -49,6 +50,8 @@ public class DownloadCmd extends AbstractRunsCmd {
                 fileName = String.format("nf-%s.log", parentCommand.id);
             } else if (type == RunDownloadFileType.timeline) {
                 fileName = String.format("timeline-%s.html", parentCommand.id);
+            } else if (type == RunDownloadFileType.stderr) {
+                throw new TowerException("Error file is not available for pipeline's runs");
             }
 
             file = api().downloadWorkflowLog(parentCommand.id, fileName, parentCommand.workspace.workspaceId);
@@ -58,8 +61,10 @@ public class DownloadCmd extends AbstractRunsCmd {
 
             if (type == RunDownloadFileType.log) {
                 fileName = ".command.log";
-            } else if (type == RunDownloadFileType.error) {
+            } else if (type == RunDownloadFileType.stderr) {
                 fileName = ".command.err";
+            } else if (type == RunDownloadFileType.timeline) {
+                throw new TowerException("Timeline file is not available for tasks");
             }
 
             file = api().downloadWorkflowTaskLog(parentCommand.id, task, fileName, parentCommand.workspace.workspaceId);

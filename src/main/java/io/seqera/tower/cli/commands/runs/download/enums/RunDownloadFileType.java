@@ -12,5 +12,5 @@
 package io.seqera.tower.cli.commands.runs.download.enums;
 
 public enum RunDownloadFileType {
-    console, log, timeline, error
+    stdout, log, timeline, stderr
 }
