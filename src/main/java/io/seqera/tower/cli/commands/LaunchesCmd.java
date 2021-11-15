@@ -38,7 +38,7 @@ import static io.seqera.tower.cli.utils.ModelHelper.createLaunchRequest;
 
 @Command(
         name = "launch",
-        description = "Launch a Nextflow pipeline"
+        description = "Launch a Nextflow pipeline execution."
 )
 public class LaunchesCmd extends AbstractRootCmd {
 
