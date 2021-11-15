@@ -417,10 +417,6 @@ class RunsCmdTest extends BaseCmdTest {
         Map<String, Object> stats = new HashMap<>();
         Map<String, Object> load = new HashMap<>();
         Map<String, Object> utilization = new HashMap<>();
-        List<Map<String, Object>> metricsMem = new ArrayList<>();
-        List<Map<String, Object>> metricsCpu = new ArrayList<>();
-        List<Map<String, Object>> metricsTime = new ArrayList<>();
-        List<Map<String, Object>> metricsIo = new ArrayList<>();
 
         assertEquals("", out.stdErr);
         assertEquals(StringUtils.chop(new RunView(
@@ -434,11 +430,7 @@ class RunsCmdTest extends BaseCmdTest {
                 processes,
                 stats,
                 load,
-                utilization,
-                metricsMem,
-                metricsCpu,
-                metricsTime,
-                metricsIo
+                utilization
         ).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
@@ -573,10 +565,6 @@ class RunsCmdTest extends BaseCmdTest {
         Map<String, Object> stats = new HashMap<>();
         Map<String, Object> load = new HashMap<>();
         Map<String, Object> utilization = new HashMap<>();
-        List<Map<String, Object>> metricsMem = new ArrayList<>();
-        List<Map<String, Object>> metricsCpu = new ArrayList<>();
-        List<Map<String, Object>> metricsTime = new ArrayList<>();
-        List<Map<String, Object>> metricsIo = new ArrayList<>();
 
         assertEquals("", out.stdErr);
         assertEquals(prettyJson(new RunView(workspaceRef,
@@ -589,11 +577,7 @@ class RunsCmdTest extends BaseCmdTest {
                 processes,
                 stats,
                 load,
-                utilization,
-                metricsMem,
-                metricsCpu,
-                metricsTime,
-                metricsIo).getJSON()), out.stdOut);
+                utilization).getJSON()), out.stdOut);
 
         assertEquals(0, out.exitCode);
     }
