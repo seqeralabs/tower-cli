@@ -240,7 +240,7 @@ public class ActionsCmdTest extends BaseCmdTest {
         ExecOut out = exec(mock, "actions", "view", "-n", "test");
 
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
         assertEquals(errorMessage(out.app, new ActionNotFoundException("test", USER_WORKSPACE_NAME)), out.stdErr);
     }
 
@@ -257,7 +257,7 @@ public class ActionsCmdTest extends BaseCmdTest {
         ExecOut out = exec(mock, "actions", "view", "-n", "test");
 
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
         assertEquals(errorMessage(out.app, new ActionNotFoundException("test", USER_WORKSPACE_NAME)), out.stdErr);
     }
 
@@ -303,7 +303,7 @@ public class ActionsCmdTest extends BaseCmdTest {
         ExecOut out = exec(mock, "actions", "delete", "-n", "hello");
 
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
         assertEquals(errorMessage(out.app, new TowerException(String.format("Unable to delete action '%s' for workspace '%s'", "hello", USER_WORKSPACE_NAME))), out.stdErr);
     }
 
@@ -321,7 +321,7 @@ public class ActionsCmdTest extends BaseCmdTest {
         ExecOut out = exec(mock, "actions", "delete", "-n", "test");
 
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
         assertEquals(errorMessage(out.app, new ActionNotFoundException("test", USER_WORKSPACE_NAME)), out.stdErr);
     }
 
@@ -379,7 +379,7 @@ public class ActionsCmdTest extends BaseCmdTest {
         ExecOut out = exec(mock, "actions", "create", "github", "-n", "new-action", "--pipeline", "https://github.com/pditommaso/nf-sleep");
 
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
         assertEquals(errorMessage(out.app, new TowerException(String.format("Unable to create action for workspace '%s'", USER_WORKSPACE_NAME))), out.stdErr);
     }
 
@@ -461,7 +461,7 @@ public class ActionsCmdTest extends BaseCmdTest {
         ExecOut out = exec(mock, "actions", "update", "-n", "hello");
 
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
         assertEquals(errorMessage(out.app, new TowerException(String.format("Unable to update action '%s' for workspace '%s'", "hello", USER_WORKSPACE_NAME))), out.stdErr);
     }
 
@@ -549,7 +549,7 @@ public class ActionsCmdTest extends BaseCmdTest {
         ExecOut out = exec(mock, "actions", "update", "-n", "hello", "-s", "active");
 
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
         assertEquals(errorMessage(out.app, new TowerException(String.format("The action is already set to '%s'", "ACTIVE"))), out.stdErr);
     }
 
@@ -598,14 +598,14 @@ public class ActionsCmdTest extends BaseCmdTest {
         ExecOut out = exec(mock, "actions", "update", "-n", "hello", "-s", "pause");
 
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
         assertEquals(errorMessage(out.app, new TowerException(String.format("An error has occur while setting the action '%s' to '%s'", "hello", "PAUSE"))), out.stdErr);
     }
 
     @Test
     public void testCreateWithoutSubCommands(MockServerClient mock) {
         ExecOut out = exec(mock, "actions", "create");
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
         assertTrue(out.stdErr.contains("Missing Required Subcommand"));
     }
 }

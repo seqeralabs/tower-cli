@@ -80,7 +80,7 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
 
         assertEquals(errorMessage(out.app, new ApiException(401, "Unauthorized")), out.stdErr);
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
     }
 
     @Test
@@ -95,7 +95,7 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
 
         assertEquals(errorMessage(out.app, new ComputeEnvNotFoundException("vYOK4vn7spw7bHHWBDXZ3", USER_WORKSPACE_NAME)), out.stdErr);
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
     }
 
     @Test
@@ -249,7 +249,7 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
 
         assertEquals(errorMessage(out.app, new ComputeEnvNotFoundException("isnEDBLvHDAIteOEF44or", USER_WORKSPACE_NAME)), out.stdErr);
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
     }
 
     @Test
@@ -264,13 +264,13 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
 
         assertEquals(errorMessage(out.app, new ApiException(401, "Unauthorized")), out.stdErr);
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
     }
 
     @Test
     public void testCreateWithoutSubCommands(MockServerClient mock) {
         ExecOut out = exec(mock, "compute-envs", "create");
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
         assertTrue(out.stdErr.contains("Missing Required Subcommand"));
     }
 
