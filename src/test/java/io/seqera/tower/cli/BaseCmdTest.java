@@ -47,16 +47,7 @@ public abstract class BaseCmdTest {
     Path tempDir;
 
     protected byte[] loadResource(String name) {
-        try {
-            InputStream stream = this.getClass().getResourceAsStream("/runcmd/" + name + ".json");
-            byte[] data = stream.readAllBytes();
-            stream.close();
-
-            return data;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return loadResource(name, "json");
     }
 
     protected byte[] loadResource(String name, String ext) {
