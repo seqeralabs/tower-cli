@@ -2,15 +2,15 @@
 
 `tw` is [Tower](https://landing.tower.nf/) on the command line. It brings Tower concepts including Pipelines, Actions and Compute Environments to the terminal.
 
-Tower (a.k.a Nextflow Tower) is a full-stack application for the management of data pipelines and compute resources. It enables collaborative data analysis at scale, on-premises or in any cloud infrastructure.
+Tower is a full-stack application for the management of data pipelines and compute resources. It enables collaborative data analysis at scale, on-premises or in any cloud.
 
-The Tower CLI (a.k.a Nextflow Tower CLI) interacts with instances of Tower, providing an interface to launch pipelines, manage cloud resources and administer the application directly from the terminal.
+The Tower CLI interacts with Tower, providing an interface to launch pipelines, manage cloud resources and administer your analaysis.
 
 ![tw](assets/img/tw-screenshot.png)
 
-The key features of the Tower CLI are:
+The key features are:
 
-- **A Nextflow-like experience**: Tower CLI provides a developer friendly environment. Pipelines can be launched on the CLI as with Nextflow but utilizing all of the benefits of Tower such as monitoring, logging, resource provisioning, dataset management and collaborative sharing.
+- **A Nextflow-like experience**: Tower CLI provides a developer friendly environment. Pipelines can be launched with the CLI similar to Nextflow but with the benefits of Tower such as monitoring, logging, resource provisioning, dataset management and collaborative sharing.
 
 - **Infrastructure as Code**: All Tower resources including Pipelines and Compute Environments can be described in a declarative manner. This allows a complete definition of an analysis environment that can be versioned and treated as code. It greatly simplifies sharing and re-use of configuration as well as routine administration.
 
@@ -52,30 +52,30 @@ This guide covers the installation and configuration of the CLI, cloud infrastru
 
 ### 2. Configuration
 
-If you haven't got one already, create a Tower access token using the [Tower](https://tower.nf/) web interface via the **Your Tokens** page in your profile.
+Create a Tower access token using the [Tower](https://tower.nf/) web interface via the **Your Tokens** page in your profile.
 
-It is mandatory to provide the Tower access to `tw` and it can be made available in a number of ways:
+Providing `tw` access to Tower with your access token can be achieved in several ways:
 
-1. Export it directly into your terminal before you run `tw`:
+1. Export it directly into your terminal:
 
     ```bash
     export TOWER_ACCESS_TOKEN=<your access token>
     ```
 
-2. Add the above `export` command to a file such as `.bashrc` which means that it will be automatically injected into your environment whenever you open a terminal.
+2. Add the above `export` command to a file such as `.bashrc` to be automatically added into your environment.
 
-3. Specify it as a parameter when running `tw`:
+3. Specify your token as a parameter when running `tw`:
 
     ```bash
     tw --access-token=<your access token> <other options>
     ```
 
-If required, you can also set the following non-mandatory environment variables using one of the methods outlined above:
+If required, you can configure the following non-mandatory environment variables using the same methods above:
 
-- `TOWER_WORKSPACE_ID`: Workspace id. Default: user workspace.
+- `TOWER_WORKSPACE_ID`: Workspace id. Default: The user workspace.
 - `TOWER_API_ENDPOINT`: Tower API URL. Default: `api.tower.nf`.
 
-> You can find the `TOWER_WORKSPACE_ID` for a given organisation in its **Workspaces** page as highlighted in [this image](assets/img/workspace_id.png).
+> You can find the `TOWER_WORKSPACE_ID` for a given organisation in its **Workspaces** page as shown in [this image](assets/img/workspace_id.png).
 
 ### 3. Health check
 
@@ -104,13 +104,7 @@ tw --help
 To launch pipelines on AWS Batch, you will need to add credentials to the appropriate Tower Workspace.
 
 ```bash
-tw \
-    credentials \
-    create \
-    aws \
-    --name=my_aws_creds \
-    --access-key=<aws access key> \
-    --secret-key=<aws secret key>
+tw credentials create aws --name=my_aws_creds --access-key=<aws access key> --secret-key=<aws secret key>
 ```
 
 > See the [IAM policy](https://github.com/seqeralabs/nf-tower-aws/tree/master/forge) for Tower Forge for recommendations on AWS Batch permissions.
@@ -128,34 +122,21 @@ tw credentials list
 Create a Compute Environment for AWS Batch with automatic provisioning of cloud computing resources:
 
 ```bash
-tw \
-    compute-envs \
-    create \
-    aws-batch \
-    forge \
-    --name=my_aws_ce \
-    --region=eu-west-1 \
-    --max-cpus=256 \
-    --work-dir=s3://<bucket name>
+tw compute-envs create aws-batch forge --name=my_aws_ce --region=eu-west-1 --max-cpus=256 --work-dir=s3://<bucket name>
 ```
 
 The above command will create all of the required AWS Batch resources in the AWS Ireland (`eu-west-1`) region with a total of 256 CPUs provisioned in the compute environment. An existing S3 bucket will be used as the work directory when running Nextflow.
 
-More comprehensive details about Tower Forge can be obtained from the [user documentation](https://help.tower.nf/compute-envs/aws-batch/#forge).
+Comprehensive details about Tower Forge are availible in the [user documentation](https://help.tower.nf/compute-envs/aws-batch/#forge).
 
-> If you have multiple credentials matching the same compute environment then you will need to provide the `--credentials-id` obtained by running `tw credentials list`.
+> If you have multiple credentials matching the same compute environment, you will need to provide the `--credentials-id` obtained by running `tw credentials list`.
 
 ### 8. Create a pipeline
 
 Create a pre-configured pipeline that can be re-used later:
 
 ```bash
-tw \
-    pipelines \
-    create \
-    --name=my_sleepy_pipeline \
-    --params=<(echo 'timeout: 60') \
-    https://github.com/pditommaso/nf-sleep
+tw pipelines create --name=my_sleepy_pipeline --params=<(echo 'timeout: 60') https://github.com/pditommaso/nf-sleep
 ```
 
 Pipelines consist of a pipeline repository, launch parameters, and a Compute Environment. When a Compute Environment is not specified the primary one is used.
@@ -165,9 +146,7 @@ Pipelines consist of a pipeline repository, launch parameters, and a Compute Env
 ### 9. Launch it!
 
 ```bash
-tw \
-    launch \
-    my_sleepy_pipeline
+tw launch my_sleepy_pipeline
 ```
 
 ### 10. Change launch parameters
@@ -175,10 +154,7 @@ tw \
 Launch the pipeline with different parameters:
 
 ```bash
-tw \
-    launch \
-    my_sleepy_pipeline \
-    --params=<(echo 'timeout: 30')
+tw launch my_sleepy_pipeline --params=<(echo 'timeout: 30')
 ```
 
 ### 11. Update a pipeline
@@ -186,11 +162,7 @@ tw \
 The default launch parameters can be changed using the `update` command:
 
 ```bash
-tw \
-    pipelines \
-    update \
-    --name=my_sleepy_pipeline \
-    --params=<(echo 'timeout: 30')
+tw pipelines update --name=my_sleepy_pipeline --params=<(echo 'timeout: 30')
 ```
 
 ### 12. Launch a pipeline directly
@@ -216,38 +188,25 @@ The `tw launch` command provides a similar user experience to `nextflow run` wit
 1. Run a Pipeline pre-defined in a Tower Workspace with a custom parameters file:
 
     ```bash
-    tw \
-        launch \
-        my_sleepy_pipeline \
-        --params=./my_params.yaml
+    tw launch my_sleepy_pipeline --params=./my_params.yaml
     ```
 
 2. Run any Nextflow pipeline using the primary Compute Environment:
 
     ```bash
-    tw \
-        launch \
-        nf-core/rnaseq
+    tw launch nf-core/rnaseq
     ```
 
 3. Run any Nextflow pipeline on a specific Compute Environment:
 
     ```bash
-    tw \
-        launch \
-        nf-core/rnaseq \
-        --compute-env=my_aws_ce
+    tw launch nf-core/rnaseq --compute-env=my_aws_ce
     ```
 
 4. Run any Nextflow pipeline and adjust the default profile and parameters:
 
     ```bash
-    tw \
-        launch \
-        nf-core/rnaseq \
-        --profile=test,docker \
-        --params=./my_params.yaml \
-        --compute-env=my_aws_ce
+    tw launch nf-core/rnaseq --profile=test,docker --params=./my_params.yaml --compute-env=my_aws_ce
     ```
 
 ## Activate autocompletion
