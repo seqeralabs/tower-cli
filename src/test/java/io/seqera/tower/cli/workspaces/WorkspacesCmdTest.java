@@ -128,33 +128,6 @@ public class WorkspacesCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testDelete(MockServerClient mock) {
-        mock.when(
-                request().withMethod("GET").withPath("/user"), exactly(1)
-        ).respond(
-                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
-        );
-
-        mock.when(
-                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
-        ).respond(
-                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
-        );
-
-        mock.when(
-                request().withMethod("DELETE").withPath("/orgs/27736513644467/workspaces/75887156211589"), exactly(1)
-        ).respond(
-                response().withStatusCode(204)
-        );
-
-        ExecOut out = exec(mock, "workspaces", "delete", "-n", "workspace1", "-o", "organization1");
-
-        assertEquals("", out.stdErr);
-        assertEquals(new WorkspaceDeleted("workspace1", "organization1").toString(), out.stdOut);
-        assertEquals(0, out.exitCode);
-    }
-
-    @Test
     void testDeleteById(MockServerClient mock) {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
@@ -174,7 +147,7 @@ public class WorkspacesCmdTest extends BaseCmdTest {
                 response().withStatusCode(204)
         );
 
-        ExecOut out = exec(mock, "workspaces", "delete", "-i", "75887156211589");
+        ExecOut out = exec(mock, "workspaces", "delete", "-w", "75887156211589");
 
         assertEquals("", out.stdErr);
         assertEquals(new WorkspaceDeleted("workspace1", "organization1").toString(), out.stdOut);
@@ -201,46 +174,11 @@ public class WorkspacesCmdTest extends BaseCmdTest {
                 response().withStatusCode(204)
         );
 
-        ExecOut out = exec(mock, "workspaces", "delete", "-n", "workspace", "-o", "organization");
+        ExecOut out = exec(mock, "workspaces", "delete", "-w", "7588715621158");
 
-        assertEquals(errorMessage(out.app, new WorkspaceNotFoundException("workspace", "organization")), out.stdErr);
+        assertEquals(errorMessage(out.app, new WorkspaceNotFoundException(7588715621158L)), out.stdErr);
         assertEquals("", out.stdOut);
         assertEquals(-1, out.exitCode);
-    }
-
-    @Test
-    void testView(MockServerClient mock) throws JsonProcessingException {
-        mock.when(
-                request().withMethod("GET").withPath("/user"), exactly(1)
-        ).respond(
-                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
-        );
-
-        mock.when(
-                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
-        ).respond(
-                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
-        );
-
-        mock.when(
-                request().withMethod("GET").withPath("/orgs/27736513644467/workspaces/75887156211589"), exactly(1)
-        ).respond(
-                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_view")).withContentType(MediaType.APPLICATION_JSON)
-        );
-
-        ExecOut out = exec(mock, "workspaces", "view", "-n", "workspace1", "-o", "organization1");
-
-        assertEquals("", out.stdErr);
-        assertEquals(chop(new WorkspaceView(parseJson("{\n" +
-                "    \"id\": 75887156211589,\n" +
-                "    \"name\": \"workspace1\",\n" +
-                "    \"fullName\": \"workspace 1\",\n" +
-                "    \"description\": \"Workspace description\",\n" +
-                "    \"visibility\": \"PRIVATE\",\n" +
-                "    \"dateCreated\": \"2021-09-21T12:54:03Z\",\n" +
-                "    \"lastUpdated\": \"2021-09-21T12:54:03Z\"\n" +
-                "  }", Workspace.class)).toString()), out.stdOut);
-        assertEquals(0, out.exitCode);
     }
 
     @Test
@@ -263,7 +201,7 @@ public class WorkspacesCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_view")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "workspaces", "view", "-i", "75887156211589");
+        ExecOut out = exec(mock, "workspaces", "view", "-w", "75887156211589");
 
         assertEquals("", out.stdErr);
         assertEquals(chop(new WorkspaceView(parseJson("{\n" +
@@ -292,9 +230,9 @@ public class WorkspacesCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"orgsAndWorkspaces\": []}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "workspaces", "view", "-n", "workspace1", "-o", "organization1");
+        ExecOut out = exec(mock, "workspaces", "view", "-w", "7588715621158");
 
-        assertEquals(errorMessage(out.app, new WorkspaceNotFoundException("workspace1", "organization1")), out.stdErr);
+        assertEquals(errorMessage(out.app, new WorkspaceNotFoundException(7588715621158L)), out.stdErr);
         assertEquals("", out.stdOut);
         assertEquals(-1, out.exitCode);
     }
@@ -354,33 +292,6 @@ public class WorkspacesCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void updateTest(MockServerClient mock) {
-        mock.when(
-                request().withMethod("GET").withPath("/user"), exactly(1)
-        ).respond(
-                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
-        );
-
-        mock.when(
-                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
-        ).respond(
-                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
-        );
-
-        mock.when(
-                request().withMethod("PUT").withPath("/orgs/27736513644467/workspaces/75887156211589"), exactly(1)
-        ).respond(
-                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_update_response")).withContentType(MediaType.APPLICATION_JSON)
-        );
-
-        ExecOut out = exec(mock, "workspaces", "update", "-n", "workspace1", "-o", "organization1", "-f", "wsp-new", "-d", "workspace description");
-
-        assertEquals("", out.stdErr);
-        assertEquals(new WorkspaceUpdated("workspace1", "organization1", Visibility.PRIVATE).toString(), out.stdOut);
-        assertEquals(0, out.exitCode);
-    }
-
-    @Test
     void updateTestById(MockServerClient mock) {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
@@ -395,12 +306,18 @@ public class WorkspacesCmdTest extends BaseCmdTest {
         );
 
         mock.when(
+                request().withMethod("GET").withPath("/orgs/27736513644467/workspaces/75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_view")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
                 request().withMethod("PUT").withPath("/orgs/27736513644467/workspaces/75887156211589"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_update_response")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "workspaces", "update", "-i", "75887156211589", "-f", "wsp-new", "-d", "workspace description");
+        ExecOut out = exec(mock, "-v", "workspaces", "update", "-w", "75887156211589", "-f", "wsp-new", "-d", "workspace description");
 
         assertEquals("", out.stdErr);
         assertEquals(new WorkspaceUpdated("workspace1", "organization1", Visibility.PRIVATE).toString(), out.stdOut);
@@ -421,9 +338,9 @@ public class WorkspacesCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"orgsAndWorkspaces\": []}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "workspaces", "update", "-n", "workspace1", "-o", "organization1", "-f", "wsp-new", "-d", "workspace description");
+        ExecOut out = exec(mock, "workspaces", "update", "-w", "7588715621158", "-f", "wsp-new", "-d", "workspace description");
 
-        assertEquals(errorMessage(out.app, new WorkspaceNotFoundException("workspace1", "organization1")), out.stdErr);
+        assertEquals(errorMessage(out.app, new WorkspaceNotFoundException(7588715621158L)), out.stdErr);
         assertEquals("", out.stdOut);
         assertEquals(-1, out.exitCode);
     }
@@ -448,34 +365,7 @@ public class WorkspacesCmdTest extends BaseCmdTest {
                 response().withStatusCode(204)
         );
 
-        ExecOut out = exec(mock, "workspaces", "leave", "-i", "75887156211589");
-
-        assertEquals("", out.stdErr);
-        assertEquals(new ParticipantLeft("workspace1").toString(), out.stdOut);
-        assertEquals(0, out.exitCode);
-    }
-
-    @Test
-    void leaveWorkspaceAsParticipantByName(MockServerClient mock) {
-        mock.when(
-                request().withMethod("GET").withPath("/user"), exactly(1)
-        ).respond(
-                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
-        );
-
-        mock.when(
-                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
-        ).respond(
-                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
-        );
-
-        mock.when(
-                request().withMethod("DELETE").withPath("/orgs/27736513644467/workspaces/75887156211589/participants"), exactly(1)
-        ).respond(
-                response().withStatusCode(204)
-        );
-
-        ExecOut out = exec(mock, "workspaces", "leave", "-o", "organization1", "-n", "workspace1");
+        ExecOut out = exec(mock, "workspaces", "leave", "-w", "75887156211589");
 
         assertEquals("", out.stdErr);
         assertEquals(new ParticipantLeft("workspace1").toString(), out.stdOut);
