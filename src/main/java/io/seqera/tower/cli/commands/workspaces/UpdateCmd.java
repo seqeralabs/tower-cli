@@ -12,6 +12,8 @@
 package io.seqera.tower.cli.commands.workspaces;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.commands.global.WorkspaceRequiredOptions;
+import io.seqera.tower.cli.exceptions.ShowUsageException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.workspaces.WorkspaceUpdated;
 import io.seqera.tower.model.DescribeWorkspaceResponse;
@@ -31,7 +33,7 @@ import java.io.IOException;
 public class UpdateCmd extends AbstractWorkspaceCmd {
 
     @Mixin
-    public WorkspacesMatchOptions ws;
+    public WorkspaceRequiredOptions workspace;
 
     @Option(names = {"-f", "--fullName"}, description = "The workspace full name")
     public String workspaceFullName;
@@ -41,24 +43,30 @@ public class UpdateCmd extends AbstractWorkspaceCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto;
 
-        if (ws.match.byId != null) {
-            orgAndWorkspaceDbDto = workspaceById(ws.match.byId.workspaceId);
-        } else {
-            orgAndWorkspaceDbDto = orgAndWorkspaceByName(ws.match.byName.workspaceName, ws.match.byName.organizationName);
+        if (workspaceFullName == null && description == null) {
+            throw new ShowUsageException(getSpec(), "Required at least one option to update");
         }
 
-        UpdateWorkspaceRequest request = new UpdateWorkspaceRequest();
+        OrgAndWorkspaceDbDto ws = workspaceById(workspace.workspaceId);
+
+        DescribeWorkspaceResponse response = api().describeWorkspace(ws.getOrgId(), ws.getWorkspaceId());
+        UpdateWorkspaceRequest request = new UpdateWorkspaceRequest()
+                .fullName(response.getWorkspace().getFullName())
+                .description(response.getWorkspace().getDescription());
+
         if (workspaceFullName != null) {
             request.setFullName(workspaceFullName);
         }
-        request.setDescription(description);
+
+        if (description != null) {
+            request.setDescription(description);
+        }
+
         request.setVisibility(Visibility.PRIVATE);
+        response = api().updateWorkspace(ws.getOrgId(), ws.getWorkspaceId(), request);
 
-        DescribeWorkspaceResponse response = api().updateWorkspace(orgAndWorkspaceDbDto.getOrgId(), orgAndWorkspaceDbDto.getWorkspaceId(), request);
-
-        return new WorkspaceUpdated(response.getWorkspace().getName(), orgAndWorkspaceDbDto.getOrgName(), response.getWorkspace().getVisibility());
+        return new WorkspaceUpdated(response.getWorkspace().getName(), ws.getOrgName(), response.getWorkspace().getVisibility());
     }
 }
 

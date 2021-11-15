@@ -13,7 +13,7 @@ package io.seqera.tower.cli.commands.runs;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.PaginationOptions;
-import io.seqera.tower.cli.commands.global.WorkspaceOptions;
+import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.RunList;
 import io.seqera.tower.model.ListWorkflowsResponse;
@@ -28,7 +28,7 @@ import java.io.IOException;
 public class ListCmd extends AbstractRunsCmd {
 
     @CommandLine.Mixin
-    public WorkspaceOptions workspace;
+    public WorkspaceOptionalOptions workspace;
 
     @CommandLine.Option(names = {"-f", "--filter"}, description = "Show only pipeline runs with names that start with the given word")
     public String startsWith;
