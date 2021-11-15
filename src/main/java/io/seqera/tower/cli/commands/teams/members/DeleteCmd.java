@@ -25,7 +25,7 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "delete",
-        description = "Delete a team's members"
+        description = "Delete a team member"
 )
 public class DeleteCmd extends AbstractApiCmd {
 

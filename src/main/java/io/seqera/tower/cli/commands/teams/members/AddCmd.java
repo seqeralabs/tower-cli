@@ -26,7 +26,7 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "add",
-        description = "Adds a team's members"
+        description = "Add a team member"
 )
 public class AddCmd extends AbstractApiCmd {
 

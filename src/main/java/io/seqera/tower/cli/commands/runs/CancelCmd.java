@@ -22,11 +22,11 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "cancel",
-        description = "Cancel a pipeline's execution"
+        description = "Cancel a pipeline execution"
 )
 public class CancelCmd extends AbstractRunsCmd {
 
-    @CommandLine.Option(names = {"-i", "--id"}, description = "Pipeline's run identifier", required = true)
+    @CommandLine.Option(names = {"-i", "--id"}, description = "Pipeline run identifier", required = true)
     public String id;
 
     @CommandLine.Mixin

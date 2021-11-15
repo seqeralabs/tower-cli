@@ -38,7 +38,7 @@ public class ImportCmd extends AbstractPipelinesCmd {
     @CommandLine.Mixin
     public WorkspaceOptions workspace;
 
-    @CommandLine.Option(names = {"-c", "--compute-env"}, description = "Compute environment name (defaults to json file defined environment)")
+    @CommandLine.Option(names = {"-c", "--compute-env"}, description = "Compute environment name [default: as defined in json environment file]")
     public String computeEnv;
 
     @CommandLine.Parameters(index = "0", paramLabel = "FILENAME", description = "File name to import", arity = "1")

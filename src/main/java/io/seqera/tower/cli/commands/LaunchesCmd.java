@@ -38,7 +38,7 @@ import static io.seqera.tower.cli.utils.ModelHelper.createLaunchRequest;
 
 @Command(
         name = "launch",
-        description = "Run a Nextflow pipeline"
+        description = "Launch a Nextflow pipeline"
 )
 public class LaunchesCmd extends AbstractRootCmd {
 
@@ -51,7 +51,7 @@ public class LaunchesCmd extends AbstractRootCmd {
     @Option(names = {"--params"}, description = "Parameters file")
     Path params;
 
-    @Option(names = {"-c", "--compute-env"}, description = "Compute environment name (defaults to workspace primary)")
+    @Option(names = {"-c", "--compute-env"}, description = "Compute environment name [default: primary workspace]")
     String computeEnv;
 
     @Option(names = {"--work-dir"}, description = "Working directory")
@@ -152,7 +152,7 @@ public class LaunchesCmd extends AbstractRootCmd {
 
     public static class AdvancedOptions {
 
-        @Option(names = {"--config"}, description = "Additional Nextflow config settings can be provided in the above field. These settings will be included in the nextflow.config file for this execution")
+        @Option(names = {"--config"}, description = "Additional Nextflow config settings can be provided in the above field. These settings will be included in the `nextflow.config` file for this execution")
         public Path config;
 
         @Option(names = {"--pre-run"}, description = "Pre-run script")
@@ -161,7 +161,7 @@ public class LaunchesCmd extends AbstractRootCmd {
         @Option(names = {"--post-run"}, description = "Post-run script")
         public Path postRunScript;
 
-        @Option(names = {"--pull-latest"}, description = "Enabling this option Nextflow pulls the latest version from the Git repository before run the pipeline")
+        @Option(names = {"--pull-latest"}, description = "Enable Nextflow to pull the latest repository version before running the pipeline")
         public Boolean pullLatest;
 
         @Option(names = {"--stub-run"}, description = "Execute the workflow replacing process scripts with command stubs")

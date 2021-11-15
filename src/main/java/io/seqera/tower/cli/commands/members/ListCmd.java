@@ -23,14 +23,14 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "list",
-        description = "List all the teams of a given organization"
+        description = "List all the teams in a given organization"
 )
 public class ListCmd extends AbstractMembersClass {
 
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization's name identifier", required = true)
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name identifier", required = true)
     public String organizationName;
 
-    @CommandLine.Option(names = {"-f", "--filter"}, description = "Show only members with usernames that starts with the given word")
+    @CommandLine.Option(names = {"-f", "--filter"}, description = "Only show members with usernames that start with the given word")
     public String startsWith;
 
     @CommandLine.Mixin

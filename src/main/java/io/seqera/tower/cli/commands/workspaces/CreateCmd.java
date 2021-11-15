@@ -27,7 +27,7 @@ import java.io.IOException;
 
 @Command(
         name = "create",
-        description = "Create a new organization's workspace"
+        description = "Create a new organization workspace"
 )
 public class CreateCmd extends AbstractWorkspaceCmd {
     @Mixin
