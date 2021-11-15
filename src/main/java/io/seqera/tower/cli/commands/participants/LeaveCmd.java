@@ -12,7 +12,7 @@
 package io.seqera.tower.cli.commands.participants;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.commands.global.WorkspaceOptions;
+import io.seqera.tower.cli.commands.global.WorkspaceRequiredOptions;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.participants.ParticipantLeft;
@@ -27,14 +27,10 @@ import java.io.IOException;
 public class LeaveCmd extends AbstractParticipantsCmd {
 
     @CommandLine.Mixin
-    public WorkspaceOptions workspace;
+    public WorkspaceRequiredOptions workspace;
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        Long workspaceId = workspace.workspaceId;
-        if (workspaceId == null) {
-            throw new TowerException("Missing workspace option.");
-        }
         api().leaveWorkspaceParticipant(orgId(workspace.workspaceId), workspace.workspaceId);
         return new ParticipantLeft(workspaceName(workspace.workspaceId));
     }

@@ -12,7 +12,7 @@
 package io.seqera.tower.cli.commands.computeenvs;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.commands.global.WorkspaceOptions;
+import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
 import io.seqera.tower.cli.responses.ComputeEnvView;
 import io.seqera.tower.cli.responses.Response;
@@ -31,7 +31,7 @@ public class ViewCmd extends AbstractComputeEnvCmd {
     public String id;
 
     @CommandLine.Mixin
-    public WorkspaceOptions workspace;
+    public WorkspaceOptionalOptions workspace;
 
     @Override
     protected Response exec() throws ApiException {

@@ -9,14 +9,14 @@
  * defined by the Mozilla Public License, v. 2.0.
  */
 
-package io.seqera.tower.cli.commands.computeenvs.primary;
+package io.seqera.tower.cli.commands.global;
 
-import io.seqera.tower.cli.commands.computeenvs.AbstractComputeEnvCmd;
-import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import picocli.CommandLine;
 
-public class AbstractComputeEnvsPrimaryCmd extends AbstractComputeEnvCmd {
+public class WorkspaceOptionalOptions {
+    public static final String DESCRIPTION = "Workspace numeric identifier (TOWER_WORKSPACE_ID)";
+    public static final String DEFAULT_VALUE = "${TOWER_WORKSPACE_ID}";
 
-    @CommandLine.Mixin
-    public WorkspaceOptionalOptions workspace;
+    @CommandLine.Option(names = {"-w", "--workspace"}, description = DESCRIPTION, defaultValue = DEFAULT_VALUE)
+    public Long workspaceId = null;
 }

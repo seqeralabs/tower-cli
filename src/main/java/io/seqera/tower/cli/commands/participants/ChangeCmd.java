@@ -12,8 +12,7 @@
 package io.seqera.tower.cli.commands.participants;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.commands.global.OrgAndWorkspace;
-import io.seqera.tower.cli.commands.global.WorkspaceOptions;
+import io.seqera.tower.cli.commands.global.WorkspaceRequiredOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.participants.ParticipantChanged;
 import io.seqera.tower.model.ParticipantDbDto;
@@ -40,7 +39,7 @@ public class ChangeCmd extends AbstractParticipantsCmd {
     public WspRole role;
 
     @CommandLine.Mixin
-    public WorkspaceOptions workspace;
+    public WorkspaceRequiredOptions workspace;
 
     @Override
     protected Response exec() throws ApiException, IOException {

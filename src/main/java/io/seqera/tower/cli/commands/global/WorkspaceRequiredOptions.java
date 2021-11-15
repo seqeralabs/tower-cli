@@ -13,8 +13,8 @@ package io.seqera.tower.cli.commands.global;
 
 import picocli.CommandLine;
 
-public class WorkspaceOptions {
+public class WorkspaceRequiredOptions {
 
-    @CommandLine.Option(names = {"-w", "--workspace"}, description = "Workspace numeric identifier (TOWER_WORKSPACE_ID)", defaultValue = "${TOWER_WORKSPACE_ID}")
+    @CommandLine.Option(names = {"-w", "--workspace"}, description = WorkspaceOptionalOptions.DESCRIPTION, defaultValue = WorkspaceOptionalOptions.DEFAULT_VALUE, required = true)
     public Long workspaceId = null;
 }
