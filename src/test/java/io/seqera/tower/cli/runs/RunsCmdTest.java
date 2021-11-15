@@ -691,7 +691,7 @@ class RunsCmdTest extends BaseCmdTest {
 
         File file = new File(tempFile(new String(loadResource("runs/download-task", "txt")), "5dAZoXrcmZXRO", "txt"));
 
-        ExecOut out = exec(mock, "-v", "runs", "view", "-i", "5dAZoXrcmZXRO4", "download", "-t", "5");
+        ExecOut out = exec(mock, "runs", "view", "-i", "5dAZoXrcmZXRO4", "download", "-t", "5");
         assertEquals("", out.stdErr);
         assertEquals(new RunFileDownloaded(file, RunDownloadFileType.stdout).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
