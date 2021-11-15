@@ -30,15 +30,12 @@ public class DeleteCmd extends AbstractParticipantsCmd {
     @CommandLine.Option(names = {"-n", "--name"}, description = "Team name, username or email for existing organization member.", required = true)
     public String name;
 
-    @CommandLine.Option(names = {"-t", "--type"}, description = "Type of participant (MEMBER, COLLABORATOR or TEAM).", required = true)
-    public ParticipantType type;
-
     @CommandLine.Mixin
     public WorkspaceRequiredOptions workspace;
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        ParticipantDbDto participant = findWorkspaceParticipant(orgId(workspace.workspaceId), workspace.workspaceId, name, type);
+        ParticipantDbDto participant = findWorkspaceParticipant(orgId(workspace.workspaceId), workspace.workspaceId, name);
         api().deleteWorkspaceParticipant(orgId(workspace.workspaceId), workspace.workspaceId, participant.getParticipantId());
 
         return new ParticipantDeleted(name, workspaceName(workspace.workspaceId));

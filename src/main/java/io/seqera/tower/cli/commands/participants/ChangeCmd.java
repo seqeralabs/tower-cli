@@ -32,9 +32,6 @@ public class ChangeCmd extends AbstractParticipantsCmd {
     @CommandLine.Option(names = {"-n", "--name"}, description = "Team name, username or email for existing organization member.", required = true)
     public String name;
 
-    @CommandLine.Option(names = {"-t", "--type"}, description = "Type of participant (MEMBER, COLLABORATOR or TEAM).", required = true)
-    public ParticipantType type;
-
     @CommandLine.Option(names = {"-r", "--role"}, description = "Workspace participant role (OWNER, ADMIN, MAINTAIN, LAUNCH or VIEW).", required = true)
     public WspRole role;
 
@@ -44,8 +41,7 @@ public class ChangeCmd extends AbstractParticipantsCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
 
-        ParticipantDbDto participant = findWorkspaceParticipant(orgId(workspace.workspaceId), workspace.workspaceId, name, type);
-
+        ParticipantDbDto participant = findWorkspaceParticipant(orgId(workspace.workspaceId), workspace.workspaceId, name);
         UpdateParticipantRoleRequest request = new UpdateParticipantRoleRequest();
         request.setRole(role);
 

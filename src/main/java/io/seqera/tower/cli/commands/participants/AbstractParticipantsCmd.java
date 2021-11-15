@@ -115,11 +115,11 @@ public class AbstractParticipantsCmd extends AbstractApiCmd {
         throw new TeamNotFoundException(orgId, name);
     }
 
-    protected ParticipantDbDto findWorkspaceParticipant(Long organizationId, Long workspaceId, String name, ParticipantType type) throws ApiException {
+    protected ParticipantDbDto findWorkspaceParticipant(Long organizationId, Long workspaceId, String name) throws ApiException {
         ListParticipantsResponse listParticipantsResponse = api().listWorkspaceParticipants(organizationId, workspaceId, null, null, name);
 
         if (listParticipantsResponse.getParticipants() != null) {
-            ParticipantDbDto participant = listParticipantsResponse.getParticipants().stream().filter(it -> it.getType() == type).findFirst().orElse(null);
+            ParticipantDbDto participant = listParticipantsResponse.getParticipants().stream().findFirst().orElse(null);
 
             if (participant != null) {
                 return participant;
