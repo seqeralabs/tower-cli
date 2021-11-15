@@ -9,10 +9,8 @@
  * defined by the Mozilla Public License, v. 2.0.
  */
 
-package io.seqera.tower.cli.exceptions;
+package io.seqera.tower.cli.commands.runs.metrics;
 
-public class RunNotFoundException extends TowerException {
-    public RunNotFoundException(String name, String workspaceRef) {
-        super(String.format("Pipeline run '%s' not found at %s workspace", name, workspaceRef));
-    }
+public enum MetricColumn {
+    mean, min, q1, q2, q3, max
 }

@@ -28,7 +28,7 @@ public class GoogleLifeSciencesPlatform extends AbstractPlatform<GoogleLifeScien
     @Option(names = {"--zones"}, split = ",", description = "One or more zones where the workload will be executed. If specified, it has priority over the region setting.")
     public List<String> zones;
 
-    @Option(names = {"--location"}, description = "The location where the job executions are deployed to Cloud Life Sciences API (default: the same as the region or the zones specified)")
+    @Option(names = {"--location"}, description = "The location where the job executions are deployed to Cloud Life Sciences API [default: same as the specified region/zone]")
     public String location;
 
     @Option(names = {"--preemptible"}, description = "Use preemptible virtual machines")
@@ -83,7 +83,7 @@ public class GoogleLifeSciencesPlatform extends AbstractPlatform<GoogleLifeScien
         @Option(names = {"--nfs-target"}, description = "The Filestore instance IP address and share file name e.g. 1.2.3.4:/my_share_name")
         public String nfsTarget;
 
-        @Option(names = {"--nfs-mount"}, description = "Specify the NFS mount path. It should be the same as the pipeline work directory or a parent path of it (defaults to the pipeline work directory root path if omitted).")
+        @Option(names = {"--nfs-mount"}, description = "Specify the NFS mount path. It should be the same as the pipeline work directory or a parent path of it [default: pipeline work directory]")
         public String nfsMount;
 
     }

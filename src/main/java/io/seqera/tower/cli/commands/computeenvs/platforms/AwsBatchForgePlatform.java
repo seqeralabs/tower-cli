@@ -43,7 +43,7 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
     @Option(names = {"--gpu"}, description = "Deploys GPU enabled Ec2 instances")
     public boolean gpu;
 
-    @Option(names = {"--allow-buckets"}, split = ",", paramLabel = "<bucket>", description = "List separated by comma any S3 bucket or path, other than pipeline work directory, to which it should be granted read-write permission from this environment.")
+    @Option(names = {"--allow-buckets"}, split = ",", paramLabel = "<bucket>", description = "Comma-separated list of S3 buckets or paths other than pipeline work directory that should be granted read-write permission from this environment")
     public List<String> allowBuckets;
 
     @Option(names = "--preserve-resources", description = "Enable this if you want to preserve the Batch compute resources created by Tower independently from the lifecycle of this compute environment")
@@ -141,10 +141,10 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
         @Option(names = {"--create-efs"}, description = "A OneZone EFS without backup will be created. EC2 instances can run on a different zone and inter-region transfer fees will be billed. If you want to remove transfer costs, restrict to only one subnet at advanced options")
         public boolean createEfs;
 
-        @Option(names = {"--efs-id"}, description = "Enter the EFS file system id (ex: fs-0123456789)")
+        @Option(names = {"--efs-id"}, description = "Enter the EFS file system id e.g. fs-0123456789")
         public String efsId;
 
-        @Option(names = {"--efs-mount"}, description = "Enter the EFS mount path (defaults to the pipeline work directory root path if omitted)")
+        @Option(names = {"--efs-mount"}, description = "Enter the EFS mount path [default: pipeline work directory]")
         public String efsMount;
 
     }
@@ -154,10 +154,10 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
         @Option(names = {"--fsx-size"}, description = "Enter the FSx storage capacity in GB (minimum 1,200 GB or increments of 2,400 GB)")
         public Integer fsxSize;
 
-        @Option(names = {"--fsx-dns"}, description = "Enter the FSx file system DNS name (ex: fs-0123456789.fsx.eu-west-1.amazonaws.com)")
+        @Option(names = {"--fsx-dns"}, description = "Enter the FSx file system DNS name e.g. 'fs-0123456789.fsx.eu-west-1.amazonaws.com'")
         public String fsxDns;
 
-        @Option(names = {"--fsx-mount"}, description = "Enter the FSx mount path (defaults to the pipeline work directory root path if omitted)")
+        @Option(names = {"--fsx-mount"}, description = "Enter the FSx mount path [default: pipeline work directory]")
         public String fsxMount;
 
     }
@@ -172,13 +172,13 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
         @Option(names = {"--vpc-id"}, description = "VPC identifier")
         public String vpcId;
 
-        @Option(names = {"--subnets"}, split = ",", paramLabel = "<subnet>", description = "One or more subnets (separated by comma) in your VPC that can be used to isolate the EC2 resources from each other or from the Internet.")
+        @Option(names = {"--subnets"}, split = ",", paramLabel = "<subnet>", description = "Comma-separated list of one or more subnets in your VPC that can be used to isolate the EC2 resources from each other or from the Internet.")
         public List<String> subnets;
 
-        @Option(names = {"--security-groups"}, split = ",", paramLabel = "<group>", description = "One or more security groups (separated by comma) that defines a set of firewall rules to control the traffic for your EC2 compute nodes.")
+        @Option(names = {"--security-groups"}, split = ",", paramLabel = "<group>", description = "Comma-separated list of one or more security groups that defines a set of firewall rules to control the traffic for your EC2 compute nodes.")
         public List<String> securityGroups;
 
-        @Option(names = {"--ami-id"}, description = "Ths option allows you to use your own AMI. Note however it must be an AWS Linux-2 ECS-optimised image and meet the compute resource AMI specification. By default Tower uses the latest approved version of the Amazon ECS-optimized AMI for compute resources.")
+        @Option(names = {"--ami-id"}, description = "Ths option allows you to use your own AMI. Note however it must be an AWS Linux-2 ECS-optimised image and meet the compute resource AMI specification [default: latest approved version of the Amazon ECS-optimized AMI]")
         public String amiId;
 
         @Option(names = {"--key-pair"}, description = "The EC2 key pair to be installed in the compute nodes to access via SSH.")
@@ -199,10 +199,10 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
         @Option(names = {"--compute-job-role"}, description = "IAM role to fine-grained control permissions for jobs submitted by Nextflow")
         public String computeJobRole;
 
-        @Option(names = {"--ebs-blocksize"}, description = "This field controls the initial size of the EBS auto-expandable volume (default: 50 GB). New blocks of the same size are added as necessary when the volume is running out of free space.")
+        @Option(names = {"--ebs-blocksize"}, description = "This field controls the initial size of the EBS auto-expandable volume. New blocks of the same size are added as necessary when the volume is running out of free space [default: 50 GB]")
         public Integer ebsBlockSize;
 
-        @Option(names = {"--bid-percentage"}, description = "The maximum percentage that a Spot Instance price can be when compared with the On-Demand price for that instance type before instances are launched. For example, if your maximum percentage is 20%%, then the Spot price must be less than 20%% of the current On-Demand price for that Amazon EC2 instance. You always pay the lowest (market) price and never more than your maximum percentage. If you leave this field empty, the default value is 100%% of the On-Demand price.")
+        @Option(names = {"--bid-percentage"}, description = "The maximum percentage that a Spot Instance price can be when compared with the On-Demand price for that instance type before instances are launched. For example, if your maximum percentage is 20%%, then the Spot price must be less than 20%% of the current On-Demand price for that Amazon EC2 instance. You always pay the lowest (market) price and never more than your maximum percentage [default: 100%% of the On-Demand price]")
         public Integer bidPercentage;
 
         @Option(names = {"--cli-path"}, description = "Nextflow requires the AWS CLI installed in the Ec2 instances. Use this field to specify the path")

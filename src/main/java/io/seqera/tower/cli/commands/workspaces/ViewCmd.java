@@ -23,7 +23,7 @@ import java.io.IOException;
 
 @Command(
         name = "view",
-        description = "Describe an existing organization's workspace"
+        description = "Describe an existing organization workspace"
 )
 public class ViewCmd extends AbstractWorkspaceCmd {
 

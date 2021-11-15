@@ -23,6 +23,6 @@ public class RunDeleted extends Response {
 
     @Override
     public String toString() {
-        return ansi(String.format("%n  @|yellow Pipeline's run '%s' deleted at %s workspace|@%n", id, workspaceRef));
+        return ansi(String.format("%n  @|yellow Pipeline run '%s' deleted at %s workspace|@%n", id, workspaceRef));
     }
 }
