@@ -43,8 +43,12 @@ public class RunFileDownloaded extends Response {
 
         try {
             outcome = Files.readString(file.toPath());
+            System.out.println(file.getPath());
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            File obj = new File(file.getPath());
+            obj.delete();
         }
 
         return outcome;
