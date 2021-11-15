@@ -33,13 +33,29 @@ public class AddCmd extends AbstractParticipantsCmd {
     @CommandLine.Option(names = {"-n", "--name"}, description = "Team name, username or email for existing organization member.", required = true)
     public String name;
 
+    @CommandLine.Option(names = {"-t", "--type"}, description = "Type of participant (MEMBER, COLLABORATOR or TEAM).", required = true)
+    public ParticipantType type;
+
     @CommandLine.Mixin
     public WorkspaceRequiredOptions workspace;
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        AddParticipantRequest request = new AddParticipantRequest().userNameOrEmail(name);
+
+        AddParticipantRequest request = new AddParticipantRequest();
+
+        if (Objects.equals(type, ParticipantType.MEMBER)) {
+            request.setMemberId(findOrganizationMemberByName(orgId(workspace.workspaceId), name).getMemberId());
+        } else if (Objects.equals(type, ParticipantType.TEAM)) {
+            request.setTeamId(findOrganizationTeamByName(orgId(workspace.workspaceId), name).getTeamId());
+        } else if (Objects.equals(type, ParticipantType.COLLABORATOR)) {
+            request.setMemberId(findOrganizationCollaboratorByName(orgId(workspace.workspaceId), name).getMemberId());
+        } else {
+            throw new TowerException("Unknown participant candidate type provided.");
+        }
+
         AddParticipantResponse response = api().createWorkspaceParticipant(orgId(workspace.workspaceId), workspace.workspaceId, request);
+
         return new ParticipantAdded(response.getParticipant(), workspaceName(workspace.workspaceId));
     }
 }
