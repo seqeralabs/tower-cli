@@ -12,7 +12,7 @@
 package io.seqera.tower.cli.commands.pipelines;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.commands.global.WorkspaceOptions;
+import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.pipelines.PipelinesCreated;
 import io.seqera.tower.cli.utils.FilesHelper;
@@ -39,7 +39,7 @@ public class CreateCmd extends AbstractPipelinesCmd {
 
 
     @CommandLine.Mixin
-    public WorkspaceOptions workspace;
+    public WorkspaceOptionalOptions workspace;
 
     @Option(names = {"-d", "--description"}, description = "Pipeline description")
     public String description;

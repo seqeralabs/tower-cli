@@ -14,7 +14,7 @@ package io.seqera.tower.cli.commands.computeenvs.create;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.commands.computeenvs.platforms.Platform;
-import io.seqera.tower.cli.commands.global.WorkspaceOptions;
+import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.ComputeEnvCreated;
 import io.seqera.tower.cli.responses.Response;
@@ -36,7 +36,7 @@ public abstract class AbstractCreateCmd extends AbstractApiCmd {
     public String name;
 
     @CommandLine.Mixin
-    public WorkspaceOptions workspace;
+    public WorkspaceOptionalOptions workspace;
 
     @Option(names = {"-i", "--id"}, description = "Credentials identifier [default: workspace credentials]")
     public String credentialsId;
