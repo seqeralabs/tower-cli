@@ -14,6 +14,8 @@ package io.seqera.tower.cli.responses;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RunFileDownloaded extends Response {
 
@@ -24,7 +26,19 @@ public class RunFileDownloaded extends Response {
     }
 
     @Override
+    public Object getJSON() {
+        Map<String, Object> data = new HashMap<>();
+        data.put("log", readFile());
+
+        return data;
+    }
+
+    @Override
     public String toString() {
+        return ansi(readFile());
+    }
+
+    private String readFile() {
         String outcome = null;
 
         try {
@@ -33,6 +47,6 @@ public class RunFileDownloaded extends Response {
             e.printStackTrace();
         }
 
-        return ansi(outcome);
+        return outcome;
     }
 }
