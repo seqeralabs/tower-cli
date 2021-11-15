@@ -26,10 +26,10 @@ import picocli.CommandLine;
 )
 public class ListCmd extends AbstractCollaboratorsCmd {
 
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization's identifier", required = true)
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization identifier", required = true)
     public Long organizationId;
 
-    @CommandLine.Option(names = {"-f", "--filter"}, description = "Show only members with usernames that starts with the given word")
+    @CommandLine.Option(names = {"-f", "--filter"}, description = "Only show members with usernames that start with the given word")
     public String startsWith;
 
     @CommandLine.Mixin

@@ -38,7 +38,7 @@ public abstract class AbstractCreateCmd extends AbstractApiCmd {
     @CommandLine.Mixin
     public WorkspaceOptions workspace;
 
-    @Option(names = {"-i", "--id"}, description = "Credentials identifier (defaults to use the workspace credentials)")
+    @Option(names = {"-i", "--id"}, description = "Credentials identifier [default: workspace credentials]")
     public String credentialsId;
 
     @Override
