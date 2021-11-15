@@ -317,7 +317,7 @@ public class WorkspacesCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_update_response")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "-v", "workspaces", "update", "-w", "75887156211589", "-f", "wsp-new", "-d", "workspace description");
+        ExecOut out = exec(mock, "workspaces", "update", "-w", "75887156211589", "-f", "wsp-new", "-d", "workspace description");
 
         assertEquals("", out.stdErr);
         assertEquals(new WorkspaceUpdated("workspace1", "organization1", Visibility.PRIVATE).toString(), out.stdOut);
