@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 
 @CommandLine.Command(
         name = "list",
-        description = "List available organizations"
+        description = "List available organizations."
 )
 public class ListCmd extends AbstractOrganizationsCmd {
     @Override

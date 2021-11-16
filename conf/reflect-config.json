@@ -33,6 +33,10 @@
   "name":"com.fasterxml.jackson.databind.ser.Serializers[]"
 },
 {
+  "name":"com.fasterxml.jackson.databind.ser.std.FileSerializer",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"com.sun.crypto.provider.AESCipher$General",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -129,6 +133,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.InfoCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.LaunchCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -210,7 +220,7 @@
   "allDeclaredMethods":true
 },
 {
-  "name":"io.seqera.tower.cli.commands.actions.CreateCmd",
+  "name":"io.seqera.tower.cli.commands.actions.AddCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
@@ -252,18 +262,18 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.actions.create.AbstractCreateCmd",
+  "name":"io.seqera.tower.cli.commands.actions.add.AbstractAddCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
 },
 {
-  "name":"io.seqera.tower.cli.commands.actions.create.CreateGitHubCmd",
+  "name":"io.seqera.tower.cli.commands.actions.add.AddGitHubCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.actions.create.CreateTowerCmd",
+  "name":"io.seqera.tower.cli.commands.actions.add.AddTowerCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
@@ -285,7 +295,7 @@
   "allDeclaredMethods":true
 },
 {
-  "name":"io.seqera.tower.cli.commands.computeenv.CreateCmd",
+  "name":"io.seqera.tower.cli.commands.computeenv.AddCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
@@ -309,84 +319,84 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.computeenv.create.AbstractCreateCmd",
+  "name":"io.seqera.tower.cli.commands.computeenv.add.AbstractAddCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
 },
 {
-  "name":"io.seqera.tower.cli.commands.computeenv.create.CreateAltairCmd",
+  "name":"io.seqera.tower.cli.commands.computeenv.add.AddAltairCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.computeenv.create.CreateAwsCmd",
+  "name":"io.seqera.tower.cli.commands.computeenv.add.AddAwsCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.computeenv.create.CreateAwsManualCmd",
+  "name":"io.seqera.tower.cli.commands.computeenv.add.AddAwsManualCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.computeenv.create.CreateAzureCmd",
+  "name":"io.seqera.tower.cli.commands.computeenv.add.AddAzureCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.computeenv.create.CreateAzureManualCmd",
+  "name":"io.seqera.tower.cli.commands.computeenv.add.AddAzureManualCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.computeenv.create.CreateEksCmd",
+  "name":"io.seqera.tower.cli.commands.computeenv.add.AddEksCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.computeenv.create.CreateGkeCmd",
+  "name":"io.seqera.tower.cli.commands.computeenv.add.AddGkeCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.computeenv.create.CreateGoogleCmd",
+  "name":"io.seqera.tower.cli.commands.computeenv.add.AddGoogleCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.computeenv.create.CreateJsonCmd",
+  "name":"io.seqera.tower.cli.commands.computeenv.add.AddJsonCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.computeenv.create.CreateK8sCmd",
+  "name":"io.seqera.tower.cli.commands.computeenv.add.AddK8sCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.computeenv.create.CreateLsfCmd",
+  "name":"io.seqera.tower.cli.commands.computeenv.add.AddLsfCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.computeenv.create.CreateSlurmCmd",
+  "name":"io.seqera.tower.cli.commands.computeenv.add.AddSlurmCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.computeenv.create.CreateUgeCmd",
+  "name":"io.seqera.tower.cli.commands.computeenv.add.AddUgeCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
@@ -538,7 +548,7 @@
   "allDeclaredMethods":true
 },
 {
-  "name":"io.seqera.tower.cli.commands.computeenvs.CreateCmd",
+  "name":"io.seqera.tower.cli.commands.computeenvs.AddCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
@@ -580,108 +590,108 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.computeenvs.create.AbstractCreateCmd",
+  "name":"io.seqera.tower.cli.commands.computeenvs.add.AbstractAddCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
 },
 {
-  "name":"io.seqera.tower.cli.commands.computeenvs.create.CreateAltairCmd",
+  "name":"io.seqera.tower.cli.commands.computeenvs.add.AddAltairCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.computeenvs.create.CreateAwsCmd",
+  "name":"io.seqera.tower.cli.commands.computeenvs.add.AddAwsCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.computeenvs.create.CreateAwsManualCmd",
+  "name":"io.seqera.tower.cli.commands.computeenvs.add.AddAwsManualCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.computeenvs.create.CreateAzureCmd",
+  "name":"io.seqera.tower.cli.commands.computeenvs.add.AddAzureCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.computeenvs.create.CreateAzureManualCmd",
+  "name":"io.seqera.tower.cli.commands.computeenvs.add.AddAzureManualCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.computeenvs.create.CreateEksCmd",
+  "name":"io.seqera.tower.cli.commands.computeenvs.add.AddEksCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.computeenvs.create.CreateGkeCmd",
+  "name":"io.seqera.tower.cli.commands.computeenvs.add.AddGkeCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.computeenvs.create.CreateGoogleCmd",
+  "name":"io.seqera.tower.cli.commands.computeenvs.add.AddGoogleCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.computeenvs.create.CreateJsonCmd",
+  "name":"io.seqera.tower.cli.commands.computeenvs.add.AddJsonCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.computeenvs.create.CreateK8sCmd",
+  "name":"io.seqera.tower.cli.commands.computeenvs.add.AddK8sCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.computeenvs.create.CreateLsfCmd",
+  "name":"io.seqera.tower.cli.commands.computeenvs.add.AddLsfCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.computeenvs.create.CreateSlurmCmd",
+  "name":"io.seqera.tower.cli.commands.computeenvs.add.AddSlurmCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.computeenvs.create.CreateUgeCmd",
+  "name":"io.seqera.tower.cli.commands.computeenvs.add.AddUgeCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.computeenvs.create.aws.CreateAwsForgeCmd",
+  "name":"io.seqera.tower.cli.commands.computeenvs.add.aws.AddAwsForgeCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.computeenvs.create.aws.CreateAwsManualCmd",
+  "name":"io.seqera.tower.cli.commands.computeenvs.add.aws.AddAwsManualCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.computeenvs.create.azure.CreateAzureForgeCmd",
+  "name":"io.seqera.tower.cli.commands.computeenvs.add.azure.AddAzureForgeCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.computeenvs.create.azure.CreateAzureManualCmd",
+  "name":"io.seqera.tower.cli.commands.computeenvs.add.azure.AddAzureManualCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
@@ -862,7 +872,7 @@
   "allDeclaredMethods":true
 },
 {
-  "name":"io.seqera.tower.cli.commands.credentials.CreateCmd",
+  "name":"io.seqera.tower.cli.commands.credentials.AddCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
@@ -886,54 +896,54 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.credentials.create.AbstractCreateCmd",
+  "name":"io.seqera.tower.cli.commands.credentials.add.AbstractAddCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
 },
 {
-  "name":"io.seqera.tower.cli.commands.credentials.create.CreateAwsCmd",
+  "name":"io.seqera.tower.cli.commands.credentials.add.AddAwsCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.credentials.create.CreateAzureCmd",
+  "name":"io.seqera.tower.cli.commands.credentials.add.AddAzureCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.credentials.create.CreateBitbucketCmd",
+  "name":"io.seqera.tower.cli.commands.credentials.add.AddBitbucketCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.credentials.create.CreateGithubCmd",
+  "name":"io.seqera.tower.cli.commands.credentials.add.AddGithubCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.credentials.create.CreateGitlabCmd",
+  "name":"io.seqera.tower.cli.commands.credentials.add.AddGitlabCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.credentials.create.CreateGoogleCmd",
+  "name":"io.seqera.tower.cli.commands.credentials.add.AddGoogleCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.credentials.create.CreateK8sCmd",
+  "name":"io.seqera.tower.cli.commands.credentials.add.AddK8sCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.credentials.create.CreateSshCmd",
+  "name":"io.seqera.tower.cli.commands.credentials.add.AddSshCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
@@ -1086,7 +1096,19 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.global.WorkspaceOptions",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.global.WorkspaceRequiredOptions",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
@@ -1097,7 +1119,7 @@
   "allDeclaredMethods":true
 },
 {
-  "name":"io.seqera.tower.cli.commands.members.CreateCmd",
+  "name":"io.seqera.tower.cli.commands.members.AddCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
@@ -1132,7 +1154,7 @@
   "allDeclaredMethods":true
 },
 {
-  "name":"io.seqera.tower.cli.commands.organizations.CreateCmd",
+  "name":"io.seqera.tower.cli.commands.organizations.AddCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
@@ -1209,12 +1231,18 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.participants.UpdateCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.pipelines.AbstractPipelinesCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
 },
 {
-  "name":"io.seqera.tower.cli.commands.pipelines.CreateCmd",
+  "name":"io.seqera.tower.cli.commands.pipelines.AddCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
@@ -1309,6 +1337,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.runs.download.DownloadCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.runs.metrics.MetricCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1332,7 +1366,7 @@
   "allDeclaredMethods":true
 },
 {
-  "name":"io.seqera.tower.cli.commands.teams.CreateCmd",
+  "name":"io.seqera.tower.cli.commands.teams.AddCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
@@ -1373,7 +1407,7 @@
   "allDeclaredMethods":true
 },
 {
-  "name":"io.seqera.tower.cli.commands.workspaces.CreateCmd",
+  "name":"io.seqera.tower.cli.commands.workspaces.AddCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
@@ -1482,7 +1516,7 @@
   "allDeclaredConstructors":true
 },
 {
-  "name":"io.seqera.tower.cli.responses.ComputeEnvCreated",
+  "name":"io.seqera.tower.cli.responses.ComputeEnvAdded",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true
@@ -1541,13 +1575,19 @@
   "allDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.cli.responses.RunFileDownloaded",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.cli.responses.RunList",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true
 },
 {
-  "name":"io.seqera.tower.cli.responses.Workspaces.WorkspaceCreated",
+  "name":"io.seqera.tower.cli.responses.Workspaces.WorkspaceAdded",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true
@@ -1577,7 +1617,7 @@
   "allDeclaredConstructors":true
 },
 {
-  "name":"io.seqera.tower.cli.responses.actions.ActionsCreate",
+  "name":"io.seqera.tower.cli.responses.actions.ActionsAdd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true
@@ -1613,7 +1653,7 @@
   "allDeclaredConstructors":true
 },
 {
-  "name":"io.seqera.tower.cli.responses.members.MembersCreated",
+  "name":"io.seqera.tower.cli.responses.members.MembersAdded",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true
@@ -1673,7 +1713,7 @@
   "allDeclaredConstructors":true
 },
 {
-  "name":"io.seqera.tower.cli.responses.pipelines.PipelinesCreated",
+  "name":"io.seqera.tower.cli.responses.pipelines.PipelinesAdded",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true
@@ -1691,7 +1731,7 @@
   "allDeclaredConstructors":true
 },
 {
-  "name":"io.seqera.tower.cli.responses.teams.TeamCreated",
+  "name":"io.seqera.tower.cli.responses.teams.TeamAdded",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true
@@ -2558,6 +2598,12 @@
   "methods":[{"name":"readPassword","parameterTypes":["java.lang.String","java.lang.Object[]"] }]
 },
 {
+  "name":"java.io.File",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"java.io.Serializable",
   "allDeclaredMethods":true
 },
@@ -2952,16 +2998,16 @@
 {
   "name":"org.glassfish.jersey.internal.util.collection.ConcurrentHashMapV8",
   "fields":[
-    {"name":"baseCount"}, 
-    {"name":"cellsBusy"}, 
-    {"name":"sizeCtl"}, 
-    {"name":"transferIndex"}, 
-    {"name":"transferOrigin"}
+    {"name":"baseCount", "allowUnsafeAccess":true}, 
+    {"name":"cellsBusy", "allowUnsafeAccess":true}, 
+    {"name":"sizeCtl", "allowUnsafeAccess":true}, 
+    {"name":"transferIndex", "allowUnsafeAccess":true}, 
+    {"name":"transferOrigin", "allowUnsafeAccess":true}
   ]
 },
 {
   "name":"org.glassfish.jersey.internal.util.collection.ConcurrentHashMapV8$CounterCell",
-  "fields":[{"name":"value"}]
+  "fields":[{"name":"value", "allowUnsafeAccess":true}]
 },
 {
   "name":"org.glassfish.jersey.jackson.JacksonFeature",

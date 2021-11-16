@@ -13,7 +13,7 @@ package io.seqera.tower.cli.commands.participants;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.PaginationOptions;
-import io.seqera.tower.cli.commands.global.WorkspaceOptions;
+import io.seqera.tower.cli.commands.global.WorkspaceRequiredOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.participants.ParticipantsList;
 import io.seqera.tower.model.ParticipantDbDto;
@@ -26,17 +26,17 @@ import java.util.stream.Collectors;
 
 @CommandLine.Command(
         name = "list",
-        description = "List workspace participants"
+        description = "List workspace participants."
 )
 public class ListCmd extends AbstractParticipantsCmd {
 
-    @CommandLine.Option(names = {"-t", "--type"}, description = "Participant type to list (MEMBER, TEAM, COLLABORATOR)")
+    @CommandLine.Option(names = {"-t", "--type"}, description = "Participant type to list (MEMBER, TEAM, COLLABORATOR).")
     public ParticipantType type;
 
     @CommandLine.Mixin
-    public WorkspaceOptions workspace;
+    public WorkspaceRequiredOptions workspace;
 
-    @CommandLine.Option(names = {"-f", "--filter"}, description = "Show only participants that it's name starts with the given word")
+    @CommandLine.Option(names = {"-f", "--filter"}, description = "Show only participants that it's name starts with the given word.")
     public String startsWith;
 
     @CommandLine.Mixin

@@ -12,7 +12,7 @@
 package io.seqera.tower.cli.commands.actions;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.commands.global.WorkspaceOptions;
+import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.actions.ActionsView;
 import io.seqera.tower.model.DescribeActionResponse;
@@ -23,15 +23,15 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "view",
-        description = "Describe an existing Pipeline Action"
+        description = "Describe an existing Pipeline Action."
 )
 public class ViewCmd extends AbstractActionsCmd {
 
-    @CommandLine.Option(names = {"-n", "--name"}, description = "Action name", required = true)
+    @CommandLine.Option(names = {"-n", "--name"}, description = "Action name.", required = true)
     public String actionName;
 
     @CommandLine.Mixin
-    public WorkspaceOptions workspace;
+    public WorkspaceOptionalOptions workspace;
 
     @Override
     protected Response exec() throws ApiException, IOException {

@@ -23,7 +23,7 @@ import java.nio.file.Path;
 
 public abstract class AbstractPlatform<T extends ComputeConfig> implements Platform {
 
-    @Option(names = {"--work-dir"}, description = "Work directory", required = true)
+    @Option(names = {"--work-dir"}, description = "Work directory.", required = true)
     public String workDir;
 
     @ArgGroup(heading = "%nStaging options:%n", validate = false)
@@ -56,10 +56,10 @@ public abstract class AbstractPlatform<T extends ComputeConfig> implements Platf
     public abstract T computeConfig() throws ApiException, IOException;
 
     public static class StagingOptions {
-        @Option(names = {"--pre-run"}, description = "Pre-run script")
+        @Option(names = {"--pre-run"}, description = "Pre-run script.")
         public Path preRunScript;
 
-        @Option(names = {"--post-run"}, description = "Post-run script")
+        @Option(names = {"--post-run"}, description = "Post-run script.")
         public Path postRunScript;
     }
 

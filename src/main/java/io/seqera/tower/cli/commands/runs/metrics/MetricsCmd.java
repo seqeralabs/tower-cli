@@ -28,17 +28,17 @@ import java.util.Map;
 
 @CommandLine.Command(
         name = "metrics",
-        description = "Display pipeline's run metrics"
+        description = "Display pipeline's run metrics."
 )
 public class MetricsCmd extends AbstractRunsCmd {
 
-    @CommandLine.Option(names = {"-f", "--filter"}, description = "Filters by process name")
+    @CommandLine.Option(names = {"-f", "--filter"}, description = "Filters by process name.")
     public String filter = "";
 
-    @CommandLine.Option(names = {"-t", "--type"}, split = ",", description = "Process metric types separated by comma: 'cpu','mem','time','io' (default displays all.)")
+    @CommandLine.Option(names = {"-t", "--type"}, split = ",", description = "Process metric types separated by comma: 'cpu','mem','time','io' (default displays all.).")
     public List<MetricType> type;
 
-    @CommandLine.Option(names = {"-c", "--columns"}, split = ",", description = "Process metric columns to display: 'mean','min','max','q1','q2','q3' (default displays all.)")
+    @CommandLine.Option(names = {"-c", "--columns"}, split = ",", description = "Process metric columns to display: 'mean','min','max','q1','q2','q3' (default displays all.).")
     public List<MetricColumn> columns;
 
     @CommandLine.ParentCommand

@@ -12,10 +12,10 @@
 package io.seqera.tower.cli.commands.pipelines;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.commands.global.WorkspaceOptions;
+import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.cli.responses.pipelines.PipelinesCreated;
+import io.seqera.tower.cli.responses.pipelines.PipelinesAdded;
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.CreatePipelineRequest;
@@ -28,20 +28,20 @@ import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
 
 @CommandLine.Command(
         name = "import",
-        description = "Create a workspace pipeline from file content"
+        description = "Add a workspace pipeline from file content."
 )
 public class ImportCmd extends AbstractPipelinesCmd {
 
-    @CommandLine.Option(names = {"-n", "--name"}, description = "Pipeline name", required = true)
+    @CommandLine.Option(names = {"-n", "--name"}, description = "Pipeline name.", required = true)
     public String name;
 
     @CommandLine.Mixin
-    public WorkspaceOptions workspace;
+    public WorkspaceOptionalOptions workspace;
 
-    @CommandLine.Option(names = {"-c", "--compute-env"}, description = "Compute environment name [default: as defined in json environment file]")
+    @CommandLine.Option(names = {"-c", "--compute-env"}, description = "Compute environment name [default: as defined in json environment file].")
     public String computeEnv;
 
-    @CommandLine.Parameters(index = "0", paramLabel = "FILENAME", description = "File name to import", arity = "1")
+    @CommandLine.Parameters(index = "0", paramLabel = "FILENAME", description = "File name to import.", arity = "1")
     Path fileName = null;
 
     @Override
@@ -64,6 +64,6 @@ public class ImportCmd extends AbstractPipelinesCmd {
 
         api().createPipeline(request, workspace.workspaceId);
 
-        return new PipelinesCreated(workspaceRef(workspace.workspaceId), name);
+        return new PipelinesAdded(workspaceRef(workspace.workspaceId), name);
     }
 }

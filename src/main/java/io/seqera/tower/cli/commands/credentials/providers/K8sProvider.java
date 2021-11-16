@@ -45,7 +45,7 @@ public class K8sProvider extends AbstractProvider<K8sSecurityKeys> {
 
     public static class Keys {
 
-        @Option(names = {"-t", "--token"}, description = "Service account token")
+        @Option(names = {"-t", "--token"}, description = "Service account token.")
         public String token;
 
         @ArgGroup(exclusive = false)
@@ -54,10 +54,10 @@ public class K8sProvider extends AbstractProvider<K8sSecurityKeys> {
 
     public static class ClientCerts {
 
-        @Option(names = {"-c", "--certificate"}, description = "Client certificate file")
+        @Option(names = {"-c", "--certificate"}, description = "Client certificate file.")
         public Path certificate;
 
-        @Option(names = {"-k", "--private-key"}, description = "Client key file")
+        @Option(names = {"-k", "--private-key"}, description = "Client key file.")
         public Path privateKey;
     }
 }

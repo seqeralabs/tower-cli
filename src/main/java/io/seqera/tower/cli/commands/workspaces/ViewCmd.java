@@ -12,6 +12,7 @@
 package io.seqera.tower.cli.commands.workspaces;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.commands.global.WorkspaceRequiredOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.workspaces.WorkspaceView;
 import io.seqera.tower.model.DescribeWorkspaceResponse;
@@ -23,25 +24,17 @@ import java.io.IOException;
 
 @Command(
         name = "view",
-        description = "Describe an existing organization workspace"
+        description = "Describe an existing organization workspace."
 )
 public class ViewCmd extends AbstractWorkspaceCmd {
 
     @Mixin
-    public WorkspacesMatchOptions ws;
+    public WorkspaceRequiredOptions workspace;
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto;
-
-        if (ws.match.byId != null) {
-            orgAndWorkspaceDbDto = workspaceById(ws.match.byId.workspaceId);
-        } else {
-            orgAndWorkspaceDbDto = orgAndWorkspaceByName(ws.match.byName.workspaceName, ws.match.byName.organizationName);
-        }
-
-        DescribeWorkspaceResponse response = api().describeWorkspace(orgAndWorkspaceDbDto.getOrgId(), orgAndWorkspaceDbDto.getWorkspaceId());
-
+        OrgAndWorkspaceDbDto ws = workspaceById(workspace.workspaceId);;
+        DescribeWorkspaceResponse response = api().describeWorkspace(ws.getOrgId(), ws.getWorkspaceId());
         return new WorkspaceView(response.getWorkspace());
     }
 }

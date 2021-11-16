@@ -12,7 +12,7 @@
 package io.seqera.tower.cli.commands.pipelines;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.commands.global.WorkspaceOptions;
+import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.pipelines.PipelinesDeleted;
 import io.seqera.tower.model.PipelineDbDto;
@@ -24,15 +24,15 @@ import java.io.IOException;
 
 @Command(
         name = "delete",
-        description = "Delete a workspace pipeline"
+        description = "Delete a workspace pipeline."
 )
 public class DeleteCmd extends AbstractPipelinesCmd {
 
-    @Option(names = {"-n", "--name"}, description = "Pipeline name", required = true)
+    @Option(names = {"-n", "--name"}, description = "Pipeline name.", required = true)
     public String name;
 
     @CommandLine.Mixin
-    public WorkspaceOptions workspace;
+    public WorkspaceOptionalOptions workspace;
 
     @Override
     protected Response exec() throws ApiException, IOException {

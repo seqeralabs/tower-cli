@@ -12,11 +12,11 @@
 package io.seqera.tower.cli.commands.computeenvs.primary;
 
 import io.seqera.tower.cli.commands.computeenvs.AbstractComputeEnvCmd;
-import io.seqera.tower.cli.commands.global.WorkspaceOptions;
+import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import picocli.CommandLine;
 
 public class AbstractComputeEnvsPrimaryCmd extends AbstractComputeEnvCmd {
 
     @CommandLine.Mixin
-    public WorkspaceOptions workspace;
+    public WorkspaceOptionalOptions workspace;
 }

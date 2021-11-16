@@ -12,7 +12,7 @@
 package io.seqera.tower.cli.commands.credentials;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.commands.global.WorkspaceOptions;
+import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.responses.CredentialsList;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.ListCredentialsResponse;
@@ -23,12 +23,12 @@ import java.io.IOException;
 
 @Command(
         name = "list",
-        description = "List all workspace credentials"
+        description = "List all workspace credentials."
 )
 public class ListCmd extends AbstractCredentialsCmd {
 
     @CommandLine.Mixin
-    public WorkspaceOptions workspace;
+    public WorkspaceOptionalOptions workspace;
 
     @Override
     protected Response exec() throws ApiException, IOException {

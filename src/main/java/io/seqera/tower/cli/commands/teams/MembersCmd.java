@@ -26,7 +26,7 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "members",
-        description = "Add or remove team members",
+        description = "Add or delete team members.",
         subcommands = {
                 AddCmd.class,
                 DeleteCmd.class,
@@ -34,10 +34,10 @@ import java.io.IOException;
 )
 public class MembersCmd extends AbstractTeamsCmd {
 
-    @CommandLine.Option(names = {"-t", "--team"}, description = "Team name", required = true)
+    @CommandLine.Option(names = {"-t", "--team"}, description = "Team name.", required = true)
     public String teamName;
 
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name identifier", required = true)
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name identifier.", required = true)
     public String organizationName;
 
     @Override

@@ -12,6 +12,7 @@
 package io.seqera.tower.cli.commands.workspaces;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.commands.global.WorkspaceRequiredOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.workspaces.WorkspaceDeleted;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
@@ -22,26 +23,17 @@ import java.io.IOException;
 
 @Command(
         name = "delete",
-        description = "Delete an organization workspace"
+        description = "Delete an organization workspace."
 )
 public class DeleteCmd extends AbstractWorkspaceCmd {
 
     @Mixin
-    public WorkspacesMatchOptions ws;
+    public WorkspaceRequiredOptions workspace;
 
     @Override
     protected Response exec() throws ApiException, IOException {
-
-        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto;
-
-        if (ws.match.byId != null) {
-            orgAndWorkspaceDbDto = workspaceById(ws.match.byId.workspaceId);
-        } else {
-            orgAndWorkspaceDbDto = orgAndWorkspaceByName(ws.match.byName.workspaceName, ws.match.byName.organizationName);
-        }
-
-        api().deleteWorkspace(orgAndWorkspaceDbDto.getOrgId(), orgAndWorkspaceDbDto.getWorkspaceId());
-
-        return new WorkspaceDeleted(orgAndWorkspaceDbDto.getWorkspaceName(), orgAndWorkspaceDbDto.getOrgName());
+        OrgAndWorkspaceDbDto ws = workspaceById(workspace.workspaceId);
+        api().deleteWorkspace(ws.getOrgId(), ws.getWorkspaceId());
+        return new WorkspaceDeleted(ws.getWorkspaceName(), ws.getOrgName());
     }
 }

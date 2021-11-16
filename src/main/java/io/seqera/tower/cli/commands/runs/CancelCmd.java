@@ -12,7 +12,7 @@
 package io.seqera.tower.cli.commands.runs;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.commands.global.WorkspaceOptions;
+import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.exceptions.RunNotFoundException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.RunCanceled;
@@ -22,15 +22,15 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "cancel",
-        description = "Cancel a pipeline execution"
+        description = "Cancel a pipeline execution."
 )
 public class CancelCmd extends AbstractRunsCmd {
 
-    @CommandLine.Option(names = {"-i", "--id"}, description = "Pipeline run identifier", required = true)
+    @CommandLine.Option(names = {"-i", "--id"}, description = "Pipeline run identifier.", required = true)
     public String id;
 
     @CommandLine.Mixin
-    public WorkspaceOptions workspace;
+    public WorkspaceOptionalOptions workspace;
 
     @Override
     protected Response exec() throws ApiException, IOException {

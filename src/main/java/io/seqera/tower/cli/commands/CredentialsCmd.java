@@ -11,7 +11,7 @@
 
 package io.seqera.tower.cli.commands;
 
-import io.seqera.tower.cli.commands.credentials.CreateCmd;
+import io.seqera.tower.cli.commands.credentials.AddCmd;
 import io.seqera.tower.cli.commands.credentials.DeleteCmd;
 import io.seqera.tower.cli.commands.credentials.ListCmd;
 import io.seqera.tower.cli.commands.credentials.UpdateCmd;
@@ -20,9 +20,9 @@ import picocli.CommandLine.Command;
 
 @Command(
         name = "credentials",
-        description = "Manage workspace credentials",
+        description = "Manage workspace credentials.",
         subcommands = {
-                CreateCmd.class,
+                AddCmd.class,
                 UpdateCmd.class,
                 DeleteCmd.class,
                 ListCmd.class

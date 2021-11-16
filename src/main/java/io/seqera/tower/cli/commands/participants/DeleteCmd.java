@@ -12,7 +12,7 @@
 package io.seqera.tower.cli.commands.participants;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.commands.global.WorkspaceOptions;
+import io.seqera.tower.cli.commands.global.WorkspaceRequiredOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.participants.ParticipantDeleted;
 import io.seqera.tower.model.ParticipantDbDto;
@@ -23,18 +23,18 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "delete",
-        description = "Delete a workspace participant"
+        description = "Delete a workspace participant."
 )
 public class DeleteCmd extends AbstractParticipantsCmd {
 
-    @CommandLine.Option(names = {"-n", "--name"}, description = "Team name, username or email for existing organization member", required = true)
+    @CommandLine.Option(names = {"-n", "--name"}, description = "Team name, username or email for existing organization member.", required = true)
     public String name;
 
-    @CommandLine.Option(names = {"-t", "--type"}, description = "Type of participant (MEMBER, COLLABORATOR or TEAM)", required = true)
+    @CommandLine.Option(names = {"-t", "--type"}, description = "Type of participant (MEMBER, COLLABORATOR or TEAM).", required = true)
     public ParticipantType type;
 
     @CommandLine.Mixin
-    public WorkspaceOptions workspace;
+    public WorkspaceRequiredOptions workspace;
 
     @Override
     protected Response exec() throws ApiException, IOException {

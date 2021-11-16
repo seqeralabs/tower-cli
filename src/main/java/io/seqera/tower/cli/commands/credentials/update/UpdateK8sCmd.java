@@ -18,7 +18,7 @@ import picocli.CommandLine.Mixin;
 
 @Command(
         name = "k8s",
-        description = "Update Kubernetes workspace credentials"
+        description = "Update Kubernetes workspace credentials."
 )
 public class UpdateK8sCmd extends AbstractUpdateCmd {
 

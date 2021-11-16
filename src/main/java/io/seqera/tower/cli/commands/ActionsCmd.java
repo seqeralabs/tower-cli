@@ -11,7 +11,7 @@
 
 package io.seqera.tower.cli.commands;
 
-import io.seqera.tower.cli.commands.actions.CreateCmd;
+import io.seqera.tower.cli.commands.actions.AddCmd;
 import io.seqera.tower.cli.commands.actions.DeleteCmd;
 import io.seqera.tower.cli.commands.actions.ListCmd;
 import io.seqera.tower.cli.commands.actions.UpdateCmd;
@@ -20,12 +20,12 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "actions",
-        description = "Manage actions",
+        description = "Manage actions.",
         subcommands = {
                 ListCmd.class,
                 ViewCmd.class,
                 DeleteCmd.class,
-                CreateCmd.class,
+                AddCmd.class,
                 UpdateCmd.class,
         }
 )

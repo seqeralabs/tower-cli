@@ -25,14 +25,14 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "update",
-        description = "Update organization details"
+        description = "Update organization details."
 )
 public class UpdateCmd extends AbstractOrganizationsCmd {
 
     @CommandLine.Mixin
     OrganizationsOptions opts;
 
-    @CommandLine.Option(names = {"-f", "--full-name"}, description = "Organization full name")
+    @CommandLine.Option(names = {"-f", "--full-name"}, description = "Organization full name.")
     public String fullName;
 
     @Override

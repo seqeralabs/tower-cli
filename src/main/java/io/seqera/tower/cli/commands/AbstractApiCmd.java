@@ -31,6 +31,7 @@ import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import io.seqera.tower.model.User;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.logging.LoggingFeature;
+import picocli.CommandLine;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -71,7 +72,12 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         return (Tower) getSpec().root().userObject();
     }
 
-    protected DefaultApi api() {
+    protected DefaultApi api() throws ApiException {
+
+        // Check we are using HTTPS (unless 'insecure' option is enabled)
+        if (!app().insecure && !app().url.startsWith("https")) {
+            throw new TowerException(String.format("You are trying to connect to an insecure server: %s%n        if you want to force the connection use '--insecure'. NOT RECOMMENDED!", app().url));
+        }
 
         if (api == null) {
             ApiClient client = buildApiClient();
@@ -164,6 +170,10 @@ public abstract class AbstractApiCmd extends AbstractCmd {
             serverUrl = app().url.replaceFirst("api\\.", "").replaceFirst("/api", "");
         }
         return serverUrl;
+    }
+
+    protected String apiUrl() {
+        return app().url;
     }
 
     protected OrgAndWorkspaceDbDto findOrganizationByName(String organizationName) throws ApiException {
@@ -266,7 +276,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
             errorMessage(app(), e);
         }
 
-        return -1;
+        return CommandLine.ExitCode.SOFTWARE;
     }
 
     protected Response exec() throws ApiException, IOException {

@@ -12,7 +12,7 @@
 package io.seqera.tower.cli.commands.participants;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.commands.global.WorkspaceOptions;
+import io.seqera.tower.cli.commands.global.WorkspaceRequiredOptions;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.participants.ParticipantAdded;
@@ -26,18 +26,18 @@ import java.util.Objects;
 
 @CommandLine.Command(
         name = "add",
-        description = "Create a new workspace participant"
+        description = "Add a new workspace participant."
 )
 public class AddCmd extends AbstractParticipantsCmd {
 
-    @CommandLine.Option(names = {"-n", "--name"}, description = "Team name or username for existing organization member", required = true)
+    @CommandLine.Option(names = {"-n", "--name"}, description = "Team name, username or email for existing organization member.", required = true)
     public String name;
 
-    @CommandLine.Option(names = {"-t", "--type"}, description = "Type of participant (MEMBER, COLLABORATOR or TEAM)", required = true)
+    @CommandLine.Option(names = {"-t", "--type"}, description = "Type of participant (MEMBER, COLLABORATOR or TEAM).", required = true)
     public ParticipantType type;
 
     @CommandLine.Mixin
-    public WorkspaceOptions workspace;
+    public WorkspaceRequiredOptions workspace;
 
     @Override
     protected Response exec() throws ApiException, IOException {

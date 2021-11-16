@@ -20,7 +20,7 @@ import io.seqera.tower.cli.commands.ActionsCmd;
 import io.seqera.tower.cli.commands.CollaboratorsCmd;
 import io.seqera.tower.cli.commands.ComputeEnvsCmd;
 import io.seqera.tower.cli.commands.CredentialsCmd;
-import io.seqera.tower.cli.commands.HealthCheckCmd;
+import io.seqera.tower.cli.commands.InfoCmd;
 import io.seqera.tower.cli.commands.LaunchesCmd;
 import io.seqera.tower.cli.commands.MembersCmd;
 import io.seqera.tower.cli.commands.OrganizationsCmd;
@@ -43,14 +43,14 @@ import static picocli.AutoComplete.GenerateCompletion;
 
 @Command(
         name = "tw",
-        description = "Nextflow Tower CLI",
+        description = "Nextflow Tower CLI.",
         subcommands = {
                 ActionsCmd.class,
                 CollaboratorsCmd.class,
                 ComputeEnvsCmd.class,
                 CredentialsCmd.class,
                 GenerateCompletion.class,
-                HealthCheckCmd.class,
+                InfoCmd.class,
                 LaunchesCmd.class,
                 MembersCmd.class,
                 OrganizationsCmd.class,
@@ -65,17 +65,20 @@ public class Tower extends AbstractCmd {
     @Spec
     public CommandSpec spec;
 
-    @Option(names = {"-t", "--access-token"}, description = "Tower personal access token (TOWER_ACCESS_TOKEN)", defaultValue = "${TOWER_ACCESS_TOKEN}", required = true)
+    @Option(names = {"-t", "--access-token"}, description = "Tower personal access token (TOWER_ACCESS_TOKEN).", defaultValue = "${TOWER_ACCESS_TOKEN}", required = true)
     public String token;
 
-    @Option(names = {"-u", "--url"}, description = "Tower server API endpoint URL (TOWER_API_ENDPOINT) [default: 'tower.nf']", defaultValue = "${TOWER_API_ENDPOINT:-https://api.tower.nf}", required = true)
+    @Option(names = {"-u", "--url"}, description = "Tower server API endpoint URL (TOWER_API_ENDPOINT) [default: 'tower.nf'].", defaultValue = "${TOWER_API_ENDPOINT:-https://api.tower.nf}", required = true)
     public String url;
 
-    @Option(names = {"-o", "--output"}, description = "Show output in defined format (only the 'json' option is available at the moment)")
+    @Option(names = {"-o", "--output"}, description = "Show output in defined format (only the 'json' option is available at the moment).")
     public OutputType output;
 
-    @Option(names = {"-v", "--verbose"}, description = "Show HTTP request/response logs at stderr")
+    @Option(names = {"-v", "--verbose"}, description = "Show HTTP request/response logs at stderr.")
     public boolean verbose;
+
+    @Option(names = {"--insecure"}, description = "Explicitly allow to connect to a non-SSL secured Tower server (this is not recommended).")
+    public boolean insecure;
 
     public Tower() {
     }
