@@ -77,7 +77,7 @@ public class HealthCheckCmdTest extends BaseCmdTest {
         opts.put("serverUrl", "http://localhost:"+mock.getPort());
 
         assertEquals("", out.stdErr);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
         assertEquals(chop(new HealthCheckResponse(1,1,0, opts).toString()), out.stdOut);
     }
 
@@ -104,7 +104,7 @@ public class HealthCheckCmdTest extends BaseCmdTest {
         opts.put("serverUrl", "http://localhost:"+mock.getPort());
 
         assertEquals("", out.stdErr);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
         assertEquals(chop(new HealthCheckResponse(1,0,1, opts).toString()), out.stdOut);
     }
 
@@ -131,7 +131,7 @@ public class HealthCheckCmdTest extends BaseCmdTest {
         opts.put("serverUrl", "http://localhost:"+mock.getPort());
 
         assertEquals("", out.stdErr);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
         assertEquals(chop(new HealthCheckResponse(0,-1,-1, opts).toString()), out.stdOut);
     }
 }

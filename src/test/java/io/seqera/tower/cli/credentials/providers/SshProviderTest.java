@@ -61,7 +61,7 @@ class SshProviderTest extends BaseCmdTest {
 
         assertEquals(errorMessage(out.app, new ApiException(400, "", null, "{\"message\":\"Unrecognised SSH private key type\"}")), out.stdErr);
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
 
     }
 

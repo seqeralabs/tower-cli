@@ -178,7 +178,7 @@ public class WorkspacesCmdTest extends BaseCmdTest {
 
         assertEquals(errorMessage(out.app, new WorkspaceNotFoundException(7588715621158L)), out.stdErr);
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
     }
 
     @Test
@@ -234,7 +234,7 @@ public class WorkspacesCmdTest extends BaseCmdTest {
 
         assertEquals(errorMessage(out.app, new WorkspaceNotFoundException(7588715621158L)), out.stdErr);
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
     }
 
     @Test
@@ -288,7 +288,7 @@ public class WorkspacesCmdTest extends BaseCmdTest {
 
         assertEquals(errorMessage(out.app, new OrganizationNotFoundException("organization1")), out.stdErr);
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
     }
 
     @Test
@@ -342,7 +342,7 @@ public class WorkspacesCmdTest extends BaseCmdTest {
 
         assertEquals(errorMessage(out.app, new WorkspaceNotFoundException(7588715621158L)), out.stdErr);
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
     }
 
     @Test
