@@ -76,7 +76,9 @@ public class InfoResponse extends Response {
         out.println("");
     }
 
-    private String getOpt(String key, String defVal) {
+   private String getOpt(String key, String defaultValue){
+        return opts.getOrDefault(key, defaultValue);
+    }
         String res = opts.get(key);
         if (res != null) {
             return res;
