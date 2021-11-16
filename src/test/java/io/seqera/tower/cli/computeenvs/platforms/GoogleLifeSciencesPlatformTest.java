@@ -12,7 +12,7 @@
 package io.seqera.tower.cli.computeenvs.platforms;
 
 import io.seqera.tower.cli.BaseCmdTest;
-import io.seqera.tower.cli.responses.ComputeEnvCreated;
+import io.seqera.tower.cli.responses.ComputeEnvAdded;
 import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
@@ -29,7 +29,7 @@ import static org.mockserver.model.HttpResponse.response;
 class GoogleLifeSciencesPlatformTest extends BaseCmdTest {
 
     @Test
-    void testCreate(MockServerClient mock) throws IOException {
+    void testAdd(MockServerClient mock) throws IOException {
 
         mock.when(
                 request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "google-lifesciences"), exactly(1)
@@ -43,15 +43,15 @@ class GoogleLifeSciencesPlatformTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "compute-envs", "create", "google-ls", "-n", "google", "--work-dir", "gs://workdir", "-r", "europe");
+        ExecOut out = exec(mock, "compute-envs", "add", "google-ls", "-n", "google", "--work-dir", "gs://workdir", "-r", "europe");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvCreated("google-lifesciences", "google", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("google-lifesciences", "google", USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
     @Test
-    void testCreateWithAdvancedOptions(MockServerClient mock) throws IOException {
+    void testAddWithAdvancedOptions(MockServerClient mock) throws IOException {
 
         mock.when(
                 request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "google-lifesciences"), exactly(1)
@@ -65,15 +65,15 @@ class GoogleLifeSciencesPlatformTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "compute-envs", "create", "google-ls", "-n", "google", "--work-dir", "gs://workdir", "-r", "europe", "--use-private-address");
+        ExecOut out = exec(mock, "compute-envs", "add", "google-ls", "-n", "google", "--work-dir", "gs://workdir", "-r", "europe", "--use-private-address");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvCreated("google-lifesciences", "google", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("google-lifesciences", "google", USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
     @Test
-    void testCreateWithFileStore(MockServerClient mock) {
+    void testAddWithFileStore(MockServerClient mock) {
 
         mock.when(
                 request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "google-lifesciences"), exactly(1)
@@ -87,10 +87,10 @@ class GoogleLifeSciencesPlatformTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "compute-envs", "create", "google-ls", "-n", "google", "--work-dir", "gs://workdir", "-r", "europe", "--nfs-target=1.2.3.4:/my_share_name");
+        ExecOut out = exec(mock, "compute-envs", "add", "google-ls", "-n", "google", "--work-dir", "gs://workdir", "-r", "europe", "--nfs-target=1.2.3.4:/my_share_name");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvCreated("google-lifesciences", "google", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("google-lifesciences", "google", USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

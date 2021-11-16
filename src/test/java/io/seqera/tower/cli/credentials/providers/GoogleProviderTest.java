@@ -15,7 +15,7 @@
 package io.seqera.tower.cli.credentials.providers;
 
 import io.seqera.tower.cli.BaseCmdTest;
-import io.seqera.tower.cli.responses.CredentialsCreated;
+import io.seqera.tower.cli.responses.CredentialsAdded;
 import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
@@ -32,7 +32,7 @@ import static org.mockserver.model.HttpResponse.response;
 class GoogleProviderTest extends BaseCmdTest {
 
     @Test
-    void testCreate(MockServerClient mock) throws IOException {
+    void testAdd(MockServerClient mock) throws IOException {
 
         mock.when(
                 request().withMethod("POST").withPath("/credentials").withBody("{\"credentials\":{\"keys\":{\"data\":\"private_key\"},\"name\":\"google\",\"provider\":\"google\"}}"), exactly(1)
@@ -40,10 +40,10 @@ class GoogleProviderTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"credentialsId\":\"1cz5A8cuBkB5iJliCwJCFU\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "credentials", "create", "google", "-n", "google", "-k", tempFile("private_key", "id_rsa", ""));
+        ExecOut out = exec(mock, "credentials", "add", "google", "-n", "google", "-k", tempFile("private_key", "id_rsa", ""));
 
         assertEquals("", out.stdErr);
-        assertEquals(new CredentialsCreated("google", "1cz5A8cuBkB5iJliCwJCFU", "google", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new CredentialsAdded("google", "1cz5A8cuBkB5iJliCwJCFU", "google", USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
 
     }
@@ -51,7 +51,7 @@ class GoogleProviderTest extends BaseCmdTest {
     @Test
     void testFileNotFound(MockServerClient mock) {
 
-        ExecOut out = exec(mock, "credentials", "create", "google", "-n", "google", "-k", "random_path_not_found.key");
+        ExecOut out = exec(mock, "credentials", "add", "google", "-n", "google", "-k", "random_path_not_found.key");
 
         assertEquals(errorMessage(out.app, new NoSuchFileException("random_path_not_found.key")), out.stdErr);
         assertEquals("", out.stdOut);

@@ -16,7 +16,7 @@ import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.exceptions.OrganizationNotFoundException;
 import io.seqera.tower.cli.exceptions.WorkspaceNotFoundException;
 import io.seqera.tower.cli.responses.participants.ParticipantLeft;
-import io.seqera.tower.cli.responses.workspaces.WorkspaceCreated;
+import io.seqera.tower.cli.responses.workspaces.WorkspaceAdded;
 import io.seqera.tower.cli.responses.workspaces.WorkspaceDeleted;
 import io.seqera.tower.cli.responses.workspaces.WorkspaceList;
 import io.seqera.tower.cli.responses.workspaces.WorkspaceUpdated;
@@ -238,7 +238,7 @@ public class WorkspacesCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void createTest(MockServerClient mock) {
+    void testAdd(MockServerClient mock) {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -260,18 +260,18 @@ public class WorkspacesCmdTest extends BaseCmdTest {
         mock.when(
                 request().withMethod("POST").withPath("/orgs/27736513644467/workspaces"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_create_response")).withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_add_response")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "workspaces", "create", "-n", "wspNew", "-o", "organization1", "-f", "wsp-new", "-d", "workspace description");
+        ExecOut out = exec(mock, "workspaces", "add", "-n", "wspNew", "-o", "organization1", "-f", "wsp-new", "-d", "workspace description");
 
         assertEquals("", out.stdErr);
-        assertEquals(new WorkspaceCreated("wspNew", "organization1", Visibility.PRIVATE).toString(), out.stdOut);
+        assertEquals(new WorkspaceAdded("wspNew", "organization1", Visibility.PRIVATE).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
     @Test
-    void createTestOrganizationNotFound(MockServerClient mock) {
+    void testAddOrganizationNotFound(MockServerClient mock) {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -284,7 +284,7 @@ public class WorkspacesCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"orgsAndWorkspaces\": []}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "workspaces", "create", "-n", "wspNew", "-o", "organization1", "-f", "wsp-new", "-d", "workspace description");
+        ExecOut out = exec(mock, "workspaces", "add", "-n", "wspNew", "-o", "organization1", "-f", "wsp-new", "-d", "workspace description");
 
         assertEquals(errorMessage(out.app, new OrganizationNotFoundException("organization1")), out.stdErr);
         assertEquals("", out.stdOut);

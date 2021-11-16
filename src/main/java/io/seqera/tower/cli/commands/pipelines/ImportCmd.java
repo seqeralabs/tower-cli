@@ -15,7 +15,7 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.cli.responses.pipelines.PipelinesCreated;
+import io.seqera.tower.cli.responses.pipelines.PipelinesAdded;
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.CreatePipelineRequest;
@@ -28,7 +28,7 @@ import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
 
 @CommandLine.Command(
         name = "import",
-        description = "Create a workspace pipeline from file content."
+        description = "Add a workspace pipeline from file content."
 )
 public class ImportCmd extends AbstractPipelinesCmd {
 
@@ -64,6 +64,6 @@ public class ImportCmd extends AbstractPipelinesCmd {
 
         api().createPipeline(request, workspace.workspaceId);
 
-        return new PipelinesCreated(workspaceRef(workspace.workspaceId), name);
+        return new PipelinesAdded(workspaceRef(workspace.workspaceId), name);
     }
 }

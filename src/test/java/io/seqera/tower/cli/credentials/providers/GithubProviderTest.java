@@ -15,7 +15,7 @@
 package io.seqera.tower.cli.credentials.providers;
 
 import io.seqera.tower.cli.BaseCmdTest;
-import io.seqera.tower.cli.responses.CredentialsCreated;
+import io.seqera.tower.cli.responses.CredentialsAdded;
 import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
@@ -29,7 +29,7 @@ import static org.mockserver.model.HttpResponse.response;
 class GithubProviderTest extends BaseCmdTest {
 
     @Test
-    void testCreate(MockServerClient mock) {
+    void testAdd(MockServerClient mock) {
 
         mock.when(
                 request().withMethod("POST").withPath("/credentials").withBody("{\"credentials\":{\"keys\":{\"username\":\"jordi@seqera.io\",\"password\":\"mysecret\"},\"name\":\"github\",\"provider\":\"github\"}}"), exactly(1)
@@ -37,10 +37,10 @@ class GithubProviderTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"credentialsId\":\"1cz5A8cuBkB5iJliCwJCFU\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "credentials", "create", "github", "-n", "github", "-u", "jordi@seqera.io", "-p", "mysecret");
+        ExecOut out = exec(mock, "credentials", "add", "github", "-n", "github", "-u", "jordi@seqera.io", "-p", "mysecret");
 
         assertEquals("", out.stdErr);
-        assertEquals(new CredentialsCreated("github", "1cz5A8cuBkB5iJliCwJCFU", "github", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new CredentialsAdded("github", "1cz5A8cuBkB5iJliCwJCFU", "github", USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
 
     }

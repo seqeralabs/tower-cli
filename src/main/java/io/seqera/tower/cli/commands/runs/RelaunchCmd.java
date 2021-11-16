@@ -34,7 +34,7 @@ import java.time.OffsetDateTime;
 
 @Command(
         name = "relaunch",
-        description = "Create a pipeline run."
+        description = "Add a pipeline run."
 )
 public class RelaunchCmd extends AbstractRunsCmd {
 

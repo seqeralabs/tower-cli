@@ -82,7 +82,7 @@ If required, you can configure the following non-mandatory environment variables
 Confirm the installation, configuration and connection is working as expected:
 
 ```console
-$ tw health
+$ tw info
 
     System health status
     ---------------------------------------+------------------
@@ -104,7 +104,7 @@ tw --help
 To launch pipelines on AWS Batch, you will need to add credentials to the appropriate Tower Workspace.
 
 ```bash
-tw credentials create aws --name=my_aws_creds --access-key=<aws access key> --secret-key=<aws secret key>
+tw credentials add aws --name=my_aws_creds --access-key=<aws access key> --secret-key=<aws secret key>
 ```
 
 > See the [IAM policy](https://github.com/seqeralabs/nf-tower-aws/tree/master/forge) for Tower Forge for recommendations on AWS Batch permissions.
@@ -122,7 +122,7 @@ tw credentials list
 Create a Compute Environment for AWS Batch with automatic provisioning of cloud computing resources:
 
 ```bash
-tw compute-envs create aws-batch forge --name=my_aws_ce --region=eu-west-1 --max-cpus=256 --work-dir=s3://<bucket name>
+tw compute-envs add aws-batch forge --name=my_aws_ce --region=eu-west-1 --max-cpus=256 --work-dir=s3://<bucket name>
 ```
 
 The above command will create all of the required AWS Batch resources in the AWS Ireland (`eu-west-1`) region with a total of 256 CPUs provisioned in the compute environment. An existing S3 bucket will be used as the work directory when running Nextflow.
@@ -131,12 +131,12 @@ Comprehensive details about Tower Forge are availible in the [user documentation
 
 > If you have multiple credentials matching the same compute environment, you will need to provide the `--credentials-id` obtained by running `tw credentials list`.
 
-### 8. Create a pipeline
+### 8. Add a pipeline
 
-Create a pre-configured pipeline that can be re-used later:
+Add a pre-configured pipeline that can be re-used later:
 
 ```bash
-tw pipelines create --name=my_sleepy_pipeline --params=<(echo 'timeout: 60') https://github.com/pditommaso/nf-sleep
+tw pipelines add --name=my_sleepy_pipeline --params=<(echo 'timeout: 60') https://github.com/pditommaso/nf-sleep
 ```
 
 Pipelines consist of a pipeline repository, launch parameters, and a Compute Environment. When a Compute Environment is not specified the primary one is used.

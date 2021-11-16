@@ -26,7 +26,7 @@ import java.util.Objects;
 
 @CommandLine.Command(
         name = "add",
-        description = "Create a new workspace participant."
+        description = "Add a new workspace participant."
 )
 public class AddCmd extends AbstractParticipantsCmd {
 

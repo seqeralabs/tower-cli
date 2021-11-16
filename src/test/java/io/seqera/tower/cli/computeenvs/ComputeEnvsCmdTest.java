@@ -19,7 +19,7 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.JSON;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
-import io.seqera.tower.cli.responses.ComputeEnvCreated;
+import io.seqera.tower.cli.responses.ComputeEnvAdded;
 import io.seqera.tower.cli.responses.ComputeEnvDeleted;
 import io.seqera.tower.cli.responses.ComputeEnvList;
 import io.seqera.tower.cli.responses.ComputeEnvView;
@@ -268,8 +268,8 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
     }
 
     @Test
-    public void testCreateWithoutSubCommands(MockServerClient mock) {
-        ExecOut out = exec(mock, "compute-envs", "create");
+    public void testAddWithoutSubCommands(MockServerClient mock) {
+        ExecOut out = exec(mock, "compute-envs", "add");
         assertEquals(1, out.exitCode);
         assertTrue(out.stdErr.contains("Missing Required Subcommand"));
     }
@@ -359,7 +359,7 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
         ExecOut out = exec(mock, "compute-envs", "import", tempFile(new String(loadResource("cejson"), StandardCharsets.UTF_8), "ce", "json"), "-n", "json", "-i", "6g0ER59L4ZoE5zpOmUP48D");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvCreated(ComputeEnv.PlatformEnum.AWS_BATCH.getValue(), "json", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded(ComputeEnv.PlatformEnum.AWS_BATCH.getValue(), "json", USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

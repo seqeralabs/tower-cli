@@ -16,7 +16,7 @@ package io.seqera.tower.cli.credentials.providers;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.BaseCmdTest;
-import io.seqera.tower.cli.responses.CredentialsCreated;
+import io.seqera.tower.cli.responses.CredentialsAdded;
 import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
@@ -32,7 +32,7 @@ import static org.mockserver.model.HttpResponse.response;
 class SshProviderTest extends BaseCmdTest {
 
     @Test
-    void testCreate(MockServerClient mock) throws IOException {
+    void testAdd(MockServerClient mock) throws IOException {
 
         mock.when(
                 request().withMethod("POST").withPath("/credentials").withBody("{\"credentials\":{\"keys\":{\"privateKey\":\"privat_key\",\"passphrase\":\"my_secret\"},\"name\":\"ssh\",\"provider\":\"ssh\"}}"), exactly(1)
@@ -40,10 +40,10 @@ class SshProviderTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"credentialsId\":\"1cz5A8cuBkB5iJliCwJCFU\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "credentials", "create", "ssh", "-n", "ssh", "-k", tempFile("privat_key", "id_rsa", ""), "-p", "my_secret");
+        ExecOut out = exec(mock, "credentials", "add", "ssh", "-n", "ssh", "-k", tempFile("privat_key", "id_rsa", ""), "-p", "my_secret");
 
         assertEquals("", out.stdErr);
-        assertEquals(new CredentialsCreated("ssh", "1cz5A8cuBkB5iJliCwJCFU", "ssh", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new CredentialsAdded("ssh", "1cz5A8cuBkB5iJliCwJCFU", "ssh", USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
 
     }
@@ -57,7 +57,7 @@ class SshProviderTest extends BaseCmdTest {
                 response().withStatusCode(400).withBody("{\"message\":\"Unrecognised SSH private key type\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "credentials", "create", "ssh", "-n", "ssh", "-k", tempFile("invalid_private_key", "id_rsa", ""), "-p", "my_secret");
+        ExecOut out = exec(mock, "credentials", "add", "ssh", "-n", "ssh", "-k", tempFile("invalid_private_key", "id_rsa", ""), "-p", "my_secret");
 
         assertEquals(errorMessage(out.app, new ApiException(400, "", null, "{\"message\":\"Unrecognised SSH private key type\"}")), out.stdErr);
         assertEquals("", out.stdOut);

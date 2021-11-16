@@ -15,7 +15,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.participants.ParticipantAdded;
-import io.seqera.tower.cli.responses.participants.ParticipantChanged;
+import io.seqera.tower.cli.responses.participants.ParticipantUpdated;
 import io.seqera.tower.cli.responses.participants.ParticipantDeleted;
 import io.seqera.tower.cli.responses.participants.ParticipantLeft;
 import io.seqera.tower.cli.responses.participants.ParticipantsList;
@@ -545,7 +545,7 @@ public class ParticipantsCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testChangeMemberParticipantRole(MockServerClient mock) {
+    void testUpdateMemberParticipantRole(MockServerClient mock) {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -570,15 +570,15 @@ public class ParticipantsCmdTest extends BaseCmdTest {
                 response().withStatusCode(204)
         );
 
-        ExecOut out = exec(mock, "participants", "change", "-w", "75887156211589", "-n", "julio", "-r", "OWNER", "-t", "MEMBER");
+        ExecOut out = exec(mock, "participants", "update", "-w", "75887156211589", "-n", "julio", "-r", "OWNER", "-t", "MEMBER");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ParticipantChanged("workspace1", "julio", WspRole.OWNER.toString()).toString(), out.stdOut);
+        assertEquals(new ParticipantUpdated("workspace1", "julio", WspRole.OWNER.toString()).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
     @Test
-    void testChangeTeamParticipantRole(MockServerClient mock) {
+    void testUpdateTeamParticipantRole(MockServerClient mock) {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -603,10 +603,10 @@ public class ParticipantsCmdTest extends BaseCmdTest {
                 response().withStatusCode(204)
         );
 
-        ExecOut out = exec(mock, "participants", "change", "-w", "75887156211589", "-n", "julio", "-r", "OWNER", "-t", "TEAM");
+        ExecOut out = exec(mock, "participants", "update", "-w", "75887156211589", "-n", "julio", "-r", "OWNER", "-t", "TEAM");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ParticipantChanged("workspace1", "julio", WspRole.OWNER.toString()).toString(), out.stdOut);
+        assertEquals(new ParticipantUpdated("workspace1", "julio", WspRole.OWNER.toString()).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
