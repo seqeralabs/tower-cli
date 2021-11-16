@@ -77,13 +77,11 @@ public class InfoResponse extends Response {
     }
 
    private String getOpt(String key, String defaultValue){
-        return opts.getOrDefault(key, defaultValue);
-    }
         String res = opts.get(key);
         if (res != null) {
             return res;
         }
-        return defVal;
+        return defaultValue;
     }
 
     @Override
