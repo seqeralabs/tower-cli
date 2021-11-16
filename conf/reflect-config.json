@@ -1321,6 +1321,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.runs.tasks.TasksCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.teams.AbstractTeamsCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
@@ -1873,6 +1879,18 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.model.ComputePlatformDto",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.model.ConfigEnvVariable",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.model.CreateActionRequest",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -2126,6 +2144,12 @@
 {
   "name":"io.seqera.tower.model.JobCleanupPolicy$Adapter",
   "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.model.JobInfoDto",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
 },
 {
   "name":"io.seqera.tower.model.K8sComputeConfig",
@@ -2555,6 +2579,12 @@
   "allDeclaredMethods":true
 },
 {
+  "name":"java.lang.Double",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"java.lang.Enum",
   "allDeclaredMethods":true
 },
@@ -2662,12 +2692,21 @@
   "methods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
 },
 {
+  "name":"java.time.DayOfWeek",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true
+},
+{
   "name":"java.time.Duration",
-  "methods":[{"name":"parse","parameterTypes":["java.lang.CharSequence"] }]
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
 },
 {
   "name":"java.time.Instant",
-  "methods":[{"name":"parse","parameterTypes":["java.lang.CharSequence"] }]
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
 },
 {
   "name":"java.time.LocalDate",
@@ -2675,11 +2714,20 @@
 },
 {
   "name":"java.time.LocalDateTime",
-  "methods":[{"name":"parse","parameterTypes":["java.lang.CharSequence"] }]
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
 },
 {
   "name":"java.time.LocalTime",
-  "methods":[{"name":"parse","parameterTypes":["java.lang.CharSequence"] }]
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"java.time.Month",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true
 },
 {
   "name":"java.time.MonthDay",
@@ -2709,15 +2757,25 @@
 },
 {
   "name":"java.time.ZoneId",
-  "methods":[{"name":"of","parameterTypes":["java.lang.String"] }]
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true
 },
 {
   "name":"java.time.ZoneOffset",
-  "methods":[{"name":"of","parameterTypes":["java.lang.String"] }]
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"java.time.ZoneOffset[]"
 },
 {
   "name":"java.time.ZonedDateTime",
   "methods":[{"name":"parse","parameterTypes":["java.lang.CharSequence"] }]
+},
+{
+  "name":"java.time.chrono.ChronoLocalDateTime",
+  "allDeclaredMethods":true
 },
 {
   "name":"java.time.temporal.Temporal",
@@ -2730,6 +2788,36 @@
 {
   "name":"java.time.temporal.TemporalAdjuster",
   "allDeclaredMethods":true
+},
+{
+  "name":"java.time.temporal.TemporalAmount",
+  "allDeclaredMethods":true
+},
+{
+  "name":"java.time.zone.ZoneOffsetTransition",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"java.time.zone.ZoneOffsetTransitionRule",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"java.time.zone.ZoneOffsetTransitionRule$TimeDefinition",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true
+},
+{
+  "name":"java.time.zone.ZoneOffsetTransitionRule[]"
+},
+{
+  "name":"java.time.zone.ZoneRules",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
 },
 {
   "name":"java.util.Date"
@@ -2787,6 +2875,9 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true
+},
+{
+  "name":"long[]"
 },
 {
   "name":"org.glassfish.hk2.internal.PerThreadContext",
@@ -3037,6 +3128,12 @@
 },
 {
   "name":"org.jvnet.hk2.internal.ServiceLocatorRuntimeImpl",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"org.openapitools.jackson.nullable.JsonNullable",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true
