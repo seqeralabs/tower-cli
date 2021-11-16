@@ -86,7 +86,7 @@ graalvmNative {
             mainClass = 'io.seqera.tower.cli.Tower'
             configurationFileDirectories.from(file('conf'))
 
-            buildArgs(DefaultNativePlatform.currentOperatingSystem.isLinux() ? ['--static', '--libc=musl'] : [])
+            buildArgs(org.gradle.nativeplatform.platform.internal.DefaultNativePlatform.currentOperatingSystem.isLinux() ? ['--static', '--libc=musl'] : [])
             buildArgs.add('--allow-incomplete-classpath')
             buildArgs.add('--report-unsupported-elements-at-runtime')
             buildArgs.add('-H:+AddAllCharsets')
