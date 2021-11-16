@@ -18,8 +18,10 @@ import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.exceptions.ApiExceptionMessage;
 import io.seqera.tower.cli.exceptions.ShowUsageException;
 import io.seqera.tower.cli.exceptions.TowerException;
+import org.glassfish.jersey.message.internal.MessageBodyProviderNotFoundException;
 import picocli.CommandLine;
 
+import javax.ws.rs.ProcessingException;
 import java.io.PrintWriter;
 import java.nio.file.NoSuchFileException;
 
@@ -71,6 +73,11 @@ public class ErrorReporting {
                 default:
                     print(err, decodeMessage(ex));
             }
+            return;
+        }
+
+        if (e instanceof ProcessingException) {
+            print(err, "Connection error. Check the connection using the command 'tw info'.");
             return;
         }
 
