@@ -1,0 +1,16 @@
+[
+  {
+    "taskId": 1,
+    "submit": "2021-11-10T14:39:27Z",
+    "container": "biocontainers/biocontainers:v1.2.0_cv1",
+    "nativeId": "f33fef73-e928-45ad-93df-beab52386e59",
+    "process": "NFCORE_RNASEQ:RNASEQ:PREPARE_GENOME:GUNZIP_ADDITIONAL_FASTA"
+  },
+  {
+    "taskId": 2,
+    "submit": "2021-11-10T14:39:31Z",
+    "container": "biocontainers/biocontainers:v1.2.0_cv1",
+    "nativeId": "754ff5d5-f484-497c-8464-886c460271e5",
+    "process": "NFCORE_RNASEQ:RNASEQ:PREPARE_GENOME:UNTAR_STAR_INDEX"
+  }
+]
