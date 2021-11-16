@@ -18,7 +18,7 @@ import picocli.CommandLine.Mixin;
 
 @Command(
         name = "lsf",
-        description = "Add new IBM LSF compute environment"
+        description = "Add new IBM LSF compute environment."
 )
 public class AddLsfCmd extends AbstractAddCmd {
 

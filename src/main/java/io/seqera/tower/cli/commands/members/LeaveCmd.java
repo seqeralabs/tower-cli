@@ -21,11 +21,11 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "leave",
-        description = "Leave an organization"
+        description = "Leave an organization."
 )
 public class LeaveCmd extends AbstractMembersClass {
 
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name identifier", required = true)
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name identifier.", required = true)
     public String organizationName;
 
     @Override

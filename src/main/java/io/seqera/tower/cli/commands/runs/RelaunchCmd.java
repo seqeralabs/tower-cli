@@ -34,20 +34,20 @@ import java.time.OffsetDateTime;
 
 @Command(
         name = "relaunch",
-        description = "Add a pipeline run"
+        description = "Add a pipeline run."
 )
 public class RelaunchCmd extends AbstractRunsCmd {
 
-    @Option(names = {"-i", "--id"}, description = "Pipeline run id to relaunch", required = true)
+    @Option(names = {"-i", "--id"}, description = "Pipeline run id to relaunch.", required = true)
     public String id;
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
-    @Option(names = {"--pipeline"}, description = "Pipeline to launch")
+    @Option(names = {"--pipeline"}, description = "Pipeline to launch.")
     public String pipeline;
 
-    @Option(names = {"--no-resume"}, description = "Do not resume the pipeline run")
+    @Option(names = {"--no-resume"}, description = "Do not resume the pipeline run.")
     public boolean noResume;
 
     @Mixin

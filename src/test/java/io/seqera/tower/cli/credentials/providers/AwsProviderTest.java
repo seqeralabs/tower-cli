@@ -102,7 +102,7 @@ class AwsProviderTest extends BaseCmdTest {
 
         assertEquals(errorMessage(out.app, new CredentialsNotFoundException("kfKx9xRgzpIIZrbCMOcU5", USER_WORKSPACE_NAME)), out.stdErr);
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
     }
 
     @Test
@@ -117,7 +117,7 @@ class AwsProviderTest extends BaseCmdTest {
 
         assertEquals(errorMessage(out.app, new ApiException(401, "Unauthorized")), out.stdErr);
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
     }
 
 }

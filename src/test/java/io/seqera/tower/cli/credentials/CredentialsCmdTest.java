@@ -67,7 +67,7 @@ class CredentialsCmdTest extends BaseCmdTest {
 
         assertEquals(errorMessage(out.app, new CredentialsNotFoundException("1cz5A8cuBkB5iKKiCwJCFU", USER_WORKSPACE_NAME)), out.stdErr);
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
     }
 
     @Test
@@ -121,7 +121,7 @@ class CredentialsCmdTest extends BaseCmdTest {
 
         assertEquals(errorMessage(out.app, new ApiException(401, "Unauthorized")), out.stdErr);
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
     }
 
     @Test
@@ -132,7 +132,7 @@ class CredentialsCmdTest extends BaseCmdTest {
         if (out.app != null) {
             assertEquals(errorMessage(out.app, new ShowUsageException(out.app.spec.subcommands().get("credentials").getCommandSpec())), out.stdErr);
             assertEquals("", out.stdOut);
-            assertEquals(-1, out.exitCode);
+            assertEquals(1, out.exitCode);
         }
     }
 
@@ -143,7 +143,7 @@ class CredentialsCmdTest extends BaseCmdTest {
 
         if (out.app != null) {
             assertEquals("", out.stdOut);
-            assertEquals(-1, out.exitCode);
+            assertEquals(1, out.exitCode);
             assertTrue(out.stdErr.contains("Missing Required Subcommand"));
         }
     }

@@ -31,6 +31,7 @@ import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import io.seqera.tower.model.User;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.logging.LoggingFeature;
+import picocli.CommandLine;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -270,7 +271,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
             errorMessage(app(), e);
         }
 
-        return -1;
+        return CommandLine.ExitCode.SOFTWARE;
     }
 
     protected Response exec() throws ApiException, IOException {

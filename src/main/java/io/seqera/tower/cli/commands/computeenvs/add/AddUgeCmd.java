@@ -18,7 +18,7 @@ import picocli.CommandLine.Mixin;
 
 @Command(
         name = "uge",
-        description = "Add new UNIVA grid engine compute environment"
+        description = "Add new UNIVA grid engine compute environment."
 )
 public class AddUgeCmd extends AbstractAddCmd {
 

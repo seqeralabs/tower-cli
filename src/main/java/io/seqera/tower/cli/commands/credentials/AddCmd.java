@@ -28,7 +28,7 @@ import java.io.IOException;
 
 @Command(
         name = "add",
-        description = "Add new workspace credentials",
+        description = "Add new workspace credentials.",
         subcommands = {
                 AddAwsCmd.class,
                 AddGoogleCmd.class,

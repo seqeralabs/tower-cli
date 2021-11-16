@@ -27,11 +27,11 @@ import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
 
 @CommandLine.Command(
         name = "import",
-        description = "Add a compute environment from file content"
+        description = "Add a compute environment from file content."
 )
 public class ImportCmd extends AbstractAddCmd {
 
-    @CommandLine.Parameters(index = "0", paramLabel = "FILENAME", description = "File name to import", arity = "1")
+    @CommandLine.Parameters(index = "0", paramLabel = "FILENAME", description = "File name to import.", arity = "1")
     Path fileName = null;
 
     @Override

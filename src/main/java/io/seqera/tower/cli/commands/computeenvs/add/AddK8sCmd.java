@@ -18,7 +18,7 @@ import picocli.CommandLine.Mixin;
 
 @Command(
         name = "k8s",
-        description = "Add new Kubernetes compute environment"
+        description = "Add new Kubernetes compute environment."
 )
 public class AddK8sCmd extends AbstractAddCmd {
 

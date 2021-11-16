@@ -14,6 +14,7 @@ package io.seqera.tower.cli.commands.runs;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.commands.runs.metrics.MetricsCmd;
+import io.seqera.tower.cli.commands.runs.download.DownloadCmd;
 import io.seqera.tower.cli.exceptions.RunNotFoundException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.RunView;
@@ -32,14 +33,15 @@ import java.util.concurrent.TimeUnit;
 
 @CommandLine.Command(
         name = "view",
-        description = "View pipeline runs",
+        description = "View pipeline's runs.",
         subcommands = {
+                DownloadCmd.class,
                 MetricsCmd.class,
         }
 )
 public class ViewCmd extends AbstractRunsCmd {
 
-    @CommandLine.Option(names = {"-i", "--id"}, description = "Pipeline run identifier", required = true)
+    @CommandLine.Option(names = {"-i", "--id"}, description = "Pipeline run identifier.", required = true)
     public String id;
 
     @CommandLine.Mixin

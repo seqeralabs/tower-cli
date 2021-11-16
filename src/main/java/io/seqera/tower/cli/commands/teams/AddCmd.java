@@ -24,17 +24,17 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "add",
-        description = "Add a new organization team"
+        description = "Add a new organization team."
 )
 public class AddCmd extends AbstractTeamsCmd {
 
-    @CommandLine.Option(names = {"-n", "--name"}, description = "Team name", required = true)
+    @CommandLine.Option(names = {"-n", "--name"}, description = "Team name.", required = true)
     public String teamName;
 
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name identifier", required = true)
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name identifier.", required = true)
     public String organizationName;
 
-    @CommandLine.Option(names = {"-d", "--description"}, description = "Team description")
+    @CommandLine.Option(names = {"-d", "--description"}, description = "Team description.")
     public String teamDescription;
 
     @Override

@@ -16,7 +16,7 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "tower",
-        description = "Add a Tower action"
+        description = "Add a Tower action."
 )
 public class AddTowerCmd extends AbstractAddCmd {
     @Override

@@ -18,7 +18,7 @@ import picocli.CommandLine.Mixin;
 
 @Command(
         name = "gitlab",
-        description = "Add new Gitlab workspace credentials"
+        description = "Add new Gitlab workspace credentials."
 )
 public class AddGitlabCmd extends AbstractAddCmd {
 

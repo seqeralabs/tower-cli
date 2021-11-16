@@ -18,7 +18,7 @@ import picocli.CommandLine.Mixin;
 
 @Command(
         name = "bitbucket",
-        description = "Update Bitbucket workspace credentials"
+        description = "Update Bitbucket workspace credentials."
 )
 public class UpdateBitbucketCmd extends AbstractUpdateCmd {
 

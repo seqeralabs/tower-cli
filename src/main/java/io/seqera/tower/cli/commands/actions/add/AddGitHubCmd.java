@@ -16,7 +16,7 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "github",
-        description = "Add a GitHub action"
+        description = "Add a GitHub action."
 )
 public class AddGitHubCmd extends AbstractAddCmd {
     @Override

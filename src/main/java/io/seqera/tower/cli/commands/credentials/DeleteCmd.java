@@ -22,11 +22,11 @@ import picocli.CommandLine.Option;
 
 @Command(
         name = "delete",
-        description = "Delete workspace credentials"
+        description = "Delete workspace credentials."
 )
 public class DeleteCmd extends AbstractCredentialsCmd {
 
-    @Option(names = {"-i", "--id"}, description = "Credentials identifier", required = true)
+    @Option(names = {"-i", "--id"}, description = "Credentials identifier.", required = true)
     public String id;
 
     @CommandLine.Mixin

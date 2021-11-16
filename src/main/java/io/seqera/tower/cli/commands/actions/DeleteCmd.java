@@ -23,11 +23,11 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "delete",
-        description = "Delete a Pipeline Action"
+        description = "Delete a Pipeline Action."
 )
 public class DeleteCmd extends AbstractActionsCmd {
 
-    @CommandLine.Option(names = {"-n", "--name"}, description = "Action name", required = true)
+    @CommandLine.Option(names = {"-n", "--name"}, description = "Action name.", required = true)
     public String actionName;
 
     @CommandLine.Mixin

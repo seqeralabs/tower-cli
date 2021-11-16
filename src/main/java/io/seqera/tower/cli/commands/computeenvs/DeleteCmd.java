@@ -21,11 +21,11 @@ import picocli.CommandLine.Command;
 
 @Command(
         name = "delete",
-        description = "Delete compute environment"
+        description = "Delete compute environment."
 )
 public class DeleteCmd extends AbstractComputeEnvCmd {
 
-    @CommandLine.Option(names = {"-i", "--id"}, description = "Compute environment identifier", required = true)
+    @CommandLine.Option(names = {"-i", "--id"}, description = "Compute environment identifier.", required = true)
     public String id;
 
     @CommandLine.Mixin

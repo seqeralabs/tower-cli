@@ -19,7 +19,7 @@ import picocli.CommandLine.Mixin;
 
 @Command(
         name = "forge",
-        description = "Add new Azure Batch compute environment with automatic provisioning of compute resources"
+        description = "Add new Azure Batch compute environment with automatic provisioning of compute resources."
 )
 public class AddAzureForgeCmd extends AbstractAddCmd {
 

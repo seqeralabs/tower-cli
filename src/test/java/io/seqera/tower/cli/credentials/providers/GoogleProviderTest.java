@@ -55,7 +55,7 @@ class GoogleProviderTest extends BaseCmdTest {
 
         assertEquals(errorMessage(out.app, new NoSuchFileException("random_path_not_found.key")), out.stdErr);
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
     }
 
 }

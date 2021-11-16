@@ -19,7 +19,7 @@ import picocli.CommandLine.Mixin;
 
 @Command(
         name = "manual",
-        description = "Add new Azure Batch compute environment using an existing environment"
+        description = "Add new Azure Batch compute environment using an existing environment."
 )
 public class AddAzureManualCmd extends AbstractAddCmd {
 

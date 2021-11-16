@@ -33,23 +33,23 @@ import static io.seqera.tower.cli.utils.ModelHelper.coalesce;
 
 @Command(
         name = "update",
-        description = "Update a workspace pipeline"
+        description = "Update a workspace pipeline."
 )
 public class UpdateCmd extends AbstractPipelinesCmd {
 
-    @Option(names = {"-n", "--name"}, description = "Pipeline name", required = true)
+    @Option(names = {"-n", "--name"}, description = "Pipeline name.", required = true)
     public String name;
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
-    @Option(names = {"-d", "--description"}, description = "Pipeline description")
+    @Option(names = {"-d", "--description"}, description = "Pipeline description.")
     public String description;
 
     @Mixin
     public LaunchOptions opts;
 
-    @Option(names = {"--pipeline"}, description = "Nextflow pipeline URL")
+    @Option(names = {"--pipeline"}, description = "Nextflow pipeline URL.")
     public String pipeline;
 
     @Override

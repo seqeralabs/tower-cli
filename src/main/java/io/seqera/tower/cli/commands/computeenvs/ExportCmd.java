@@ -27,17 +27,17 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "export",
-        description = "Export compute environment for further creation"
+        description = "Export compute environment for further creation."
 )
 public class ExportCmd extends AbstractComputeEnvCmd {
 
-    @CommandLine.Option(names = {"-n", "--name"}, description = "Compute environment name", required = true)
+    @CommandLine.Option(names = {"-n", "--name"}, description = "Compute environment name.", required = true)
     public String name;
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
-    @CommandLine.Parameters(index = "0", paramLabel = "FILENAME", description = "File name to export", arity = "0..1")
+    @CommandLine.Parameters(index = "0", paramLabel = "FILENAME", description = "File name to export.", arity = "0..1")
     String fileName = null;
 
     @Override

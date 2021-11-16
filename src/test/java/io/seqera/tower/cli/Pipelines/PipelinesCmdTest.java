@@ -224,7 +224,7 @@ class PipelinesCmdTest extends BaseCmdTest {
 
         assertEquals(errorMessage(out.app, new NoComputeEnvironmentException(USER_WORKSPACE_NAME)), out.stdErr);
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
 
     }
 
@@ -261,7 +261,7 @@ class PipelinesCmdTest extends BaseCmdTest {
 
         assertEquals(errorMessage(out.app, new PipelineNotFoundException("sleep_all", USER_WORKSPACE_NAME)), out.stdErr);
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
     }
 
     @Test
@@ -276,7 +276,7 @@ class PipelinesCmdTest extends BaseCmdTest {
 
         assertEquals(errorMessage(out.app, new MultiplePipelinesFoundException("hello", USER_WORKSPACE_NAME)), out.stdErr);
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
     }
 
     @Test
@@ -367,7 +367,7 @@ class PipelinesCmdTest extends BaseCmdTest {
 
         assertEquals(errorMessage(out.app, new TowerException("Please use either --page or --offset as pagination parameter")), out.stdErr);
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
     }
 
     @Test
@@ -385,7 +385,7 @@ class PipelinesCmdTest extends BaseCmdTest {
 
         assertEquals(errorMessage(out.app, new TowerException("Please use either --no-max or --max as pagination size parameter")), out.stdErr);
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
     }
 
     @Test
@@ -509,7 +509,7 @@ class PipelinesCmdTest extends BaseCmdTest {
 
         assertEquals(errorMessage(out.app, new WorkspaceNotFoundException(222756650686577L)), out.stdErr);
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
     }
 
     @Test

@@ -18,7 +18,7 @@ import picocli.CommandLine.Mixin;
 
 @Command(
         name = "altair",
-        description = "Add new Altair PBS Pro compute environment"
+        description = "Add new Altair PBS Pro compute environment."
 )
 public class AddAltairCmd extends AbstractAddCmd {
 

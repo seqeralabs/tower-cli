@@ -26,20 +26,20 @@ import java.io.IOException;
 
 @Command(
         name = "add",
-        description = "Add a new organization workspace"
+        description = "Add a new organization workspace."
 )
 public class AddCmd extends AbstractWorkspaceCmd {
 
-    @CommandLine.Option(names = {"-o", "--org", "--organization"}, description = "The workspace organization name", required = true)
+    @CommandLine.Option(names = {"-o", "--org", "--organization"}, description = "The workspace organization name.", required = true)
     public String organizationName;
 
-    @CommandLine.Option(names = {"-n", "--name"}, description = "The workspace short name. Only alphanumeric, dash and underscore characters are allowed", required = true)
+    @CommandLine.Option(names = {"-n", "--name"}, description = "The workspace short name. Only alphanumeric, dash and underscore characters are allowed.", required = true)
     public String workspaceName;
 
-    @CommandLine.Option(names = {"-f", "--full-name"}, description = "The workspace full name", required = true)
+    @CommandLine.Option(names = {"-f", "--full-name"}, description = "The workspace full name.", required = true)
     public String workspaceFullName;
 
-    @CommandLine.Option(names = {"-d", "--description"}, description = "The workspace description")
+    @CommandLine.Option(names = {"-d", "--description"}, description = "The workspace description.")
     public String description;
 
     @Override

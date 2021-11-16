@@ -149,7 +149,7 @@ public class OrganizationsCmsTest extends BaseCmdTest {
         ExecOut out = exec(mock, "organizations", "view", "-n", "organization11");
 
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
         assertEquals(errorMessage(out.app, new OrganizationNotFoundException("organization11")), out.stdErr);
     }
 
@@ -197,7 +197,7 @@ public class OrganizationsCmsTest extends BaseCmdTest {
         ExecOut out = exec(mock, "organizations", "delete", "-n", "organization11");
 
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
         assertEquals(errorMessage(out.app, new OrganizationNotFoundException("organization11")), out.stdErr);
     }
 
@@ -224,7 +224,7 @@ public class OrganizationsCmsTest extends BaseCmdTest {
         ExecOut out = exec(mock, "organizations", "delete", "-n", "organization1");
 
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
         assertEquals(errorMessage(out.app, new TowerException("Organization organization1 could not be deleted")), out.stdErr);
     }
 
@@ -265,7 +265,7 @@ public class OrganizationsCmsTest extends BaseCmdTest {
         ExecOut out = exec(mock, "organizations", "add", "-n", "sample-organization", "-f", "sample organization");
 
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
     }
 
     @Test
@@ -323,6 +323,6 @@ public class OrganizationsCmsTest extends BaseCmdTest {
         ExecOut out = exec(mock, "organizations", "update", "-n", "organization1", "-f", "sample organization");
 
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
     }
 }

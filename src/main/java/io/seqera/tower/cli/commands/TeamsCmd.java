@@ -20,7 +20,7 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "teams",
-        description = "Manage organization teams",
+        description = "Manage organization teams.",
         subcommands = {
                 ListCmd.class,
                 AddCmd.class,

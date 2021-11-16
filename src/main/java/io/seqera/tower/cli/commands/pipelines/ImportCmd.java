@@ -28,20 +28,20 @@ import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
 
 @CommandLine.Command(
         name = "import",
-        description = "Add a workspace pipeline from file content"
+        description = "Add a workspace pipeline from file content."
 )
 public class ImportCmd extends AbstractPipelinesCmd {
 
-    @CommandLine.Option(names = {"-n", "--name"}, description = "Pipeline name", required = true)
+    @CommandLine.Option(names = {"-n", "--name"}, description = "Pipeline name.", required = true)
     public String name;
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
-    @CommandLine.Option(names = {"-c", "--compute-env"}, description = "Compute environment name [default: as defined in json environment file]")
+    @CommandLine.Option(names = {"-c", "--compute-env"}, description = "Compute environment name [default: as defined in json environment file].")
     public String computeEnv;
 
-    @CommandLine.Parameters(index = "0", paramLabel = "FILENAME", description = "File name to import", arity = "1")
+    @CommandLine.Parameters(index = "0", paramLabel = "FILENAME", description = "File name to import.", arity = "1")
     Path fileName = null;
 
     @Override

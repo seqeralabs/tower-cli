@@ -18,7 +18,7 @@ import picocli.CommandLine.Mixin;
 
 @Command(
         name = "eks",
-        description = "Add new Amazon EKS compute environment"
+        description = "Add new Amazon EKS compute environment."
 )
 public class AddEksCmd extends AbstractAddCmd {
 

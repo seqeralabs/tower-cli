@@ -85,7 +85,7 @@ public class InfoCmdTest extends BaseCmdTest {
         opts.put("userName", null);
 
         assertEquals("", out.stdErr);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
         assertEquals(chop(new InfoResponse(1,1,0, opts).toString()), out.stdOut);
     }
 
@@ -115,7 +115,7 @@ public class InfoCmdTest extends BaseCmdTest {
         opts.put("userName", "jordi");
 
         assertEquals("", out.stdErr);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
         assertEquals(chop(new InfoResponse(1,0,1, opts).toString()), out.stdOut);
     }
 
@@ -145,7 +145,7 @@ public class InfoCmdTest extends BaseCmdTest {
         opts.put("userName", null);
 
         assertEquals("", out.stdErr);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
         assertEquals(chop(new InfoResponse(0,-1,-1, opts).toString()), out.stdOut);
     }
 

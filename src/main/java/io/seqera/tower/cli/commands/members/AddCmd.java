@@ -23,14 +23,14 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "add",
-        description = "Add a new organization member"
+        description = "Add a new organization member."
 )
 public class AddCmd extends AbstractMembersClass {
 
-    @CommandLine.Option(names = {"-u", "--user"}, description = "User email to add as organization member", required = true)
+    @CommandLine.Option(names = {"-u", "--user"}, description = "User email to add as organization member.", required = true)
     public String user;
 
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name identifier", required = true)
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name identifier.", required = true)
     public String organizationName;
 
     @Override

@@ -43,10 +43,10 @@ public class AwsProvider extends AbstractProvider<AwsSecurityKeys> {
 
     public static class Keys {
 
-        @Option(names = {"-a", "--access-key"}, description = "The AWS access key required to access the desired service")
+        @Option(names = {"-a", "--access-key"}, description = "The AWS access key required to access the desired service.")
         String accessKey;
 
-        @Option(names = {"-s", "--secret-key"}, description = "The AWS secret key required to access the desired service")
+        @Option(names = {"-s", "--secret-key"}, description = "The AWS secret key required to access the desired service.")
         String secretKey;
     }
 }

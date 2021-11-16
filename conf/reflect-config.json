@@ -33,6 +33,10 @@
   "name":"com.fasterxml.jackson.databind.ser.Serializers[]"
 },
 {
+  "name":"com.fasterxml.jackson.databind.ser.std.FileSerializer",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"com.sun.crypto.provider.AESCipher$General",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -1333,6 +1337,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.runs.download.DownloadCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.runs.metrics.MetricCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1554,6 +1564,12 @@
 },
 {
   "name":"io.seqera.tower.cli.responses.RunDeleted",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.RunFileDownloaded",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true
@@ -2556,6 +2572,12 @@
 {
   "name":"java.io.Console",
   "methods":[{"name":"readPassword","parameterTypes":["java.lang.String","java.lang.Object[]"] }]
+},
+{
+  "name":"java.io.File",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
 },
 {
   "name":"java.io.Serializable",

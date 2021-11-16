@@ -48,7 +48,7 @@ class LaunchesCmdTest extends BaseCmdTest {
         // Assert results
         assertEquals(errorMessage(out.app, new ApiException(401, "Unauthorized")), out.stdErr);
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
     }
 
     @Test
@@ -66,7 +66,7 @@ class LaunchesCmdTest extends BaseCmdTest {
 
         // Assert results
         assertEquals(errorMessage(out.app, new InvalidResponseException("Pipeline 'hello' not found on this workspace.")), out.stdErr);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
     }
 
     @Test
@@ -86,7 +86,7 @@ class LaunchesCmdTest extends BaseCmdTest {
 
         // Assert results
         assertEquals(errorMessage(out.app, new InvalidResponseException("Multiple pipelines match 'hello'")), out.stdErr);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
     }
 
     @Test

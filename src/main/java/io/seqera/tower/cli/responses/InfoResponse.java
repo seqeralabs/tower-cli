@@ -12,6 +12,7 @@
 package io.seqera.tower.cli.responses;
 
 import io.seqera.tower.cli.utils.TableList;
+import picocli.CommandLine;
 
 import java.io.PrintWriter;
 import java.util.Map;
@@ -85,6 +86,6 @@ public class InfoResponse extends Response {
 
     @Override
     public int getExitCode() {
-        return (connectionCheck + versionCheck + credentialsCheck == 3) ? 0 : -1;
+        return (connectionCheck + versionCheck + credentialsCheck == 3) ? CommandLine.ExitCode.OK : CommandLine.ExitCode.SOFTWARE;
     }
 }

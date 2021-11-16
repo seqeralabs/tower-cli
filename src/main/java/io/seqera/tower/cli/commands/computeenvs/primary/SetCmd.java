@@ -24,11 +24,11 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "set",
-        description = "Sets a workspace compute environment as primary"
+        description = "Sets a workspace compute environment as primary."
 )
 public class SetCmd extends AbstractComputeEnvsPrimaryCmd {
 
-    @CommandLine.Option(names = {"-i", "--id"}, description = "Compute environment identifier", required = true)
+    @CommandLine.Option(names = {"-i", "--id"}, description = "Compute environment identifier.", required = true)
     public String id;
 
     @Override
