@@ -77,6 +77,9 @@ public class Tower extends AbstractCmd {
     @Option(names = {"-v", "--verbose"}, description = "Show HTTP request/response logs at stderr.")
     public boolean verbose;
 
+    @Option(names = {"--insecure"}, description = "Explicitly allow to connect to a non-SSL secured Tower server (this is not recommended).")
+    public boolean insecure;
+
     public Tower() {
     }
 
