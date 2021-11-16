@@ -1587,6 +1587,12 @@
   "allDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.cli.responses.RunTasksView",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.cli.responses.Workspaces.WorkspaceAdded",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,

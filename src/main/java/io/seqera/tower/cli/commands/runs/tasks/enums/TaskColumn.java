@@ -11,29 +11,32 @@
 
 package io.seqera.tower.cli.commands.runs.tasks.enums;
 
+import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.function.Function;
 
+import io.seqera.tower.cli.utils.FormatHelper;
 import io.seqera.tower.model.Task;
 
 public enum TaskColumn {
-    taskId("ID", true, Task::getTaskId),
-    status("Status", false, Task::getStatus),
-    submit("Submit", true, Task::getSubmit, t -> ((OffsetDateTime) t).format(DateTimeFormatter.RFC_1123_DATE_TIME)),
-    container("Container", true, Task::getContainer),
-    nativeId("Native ID", true, Task::getNativeId),
-    process("Process", true, Task::getProcess),
-    tag("Tag", false, Task::getTag),
-    hash("Hash", false, Task::getHash),
-    exit("Exit", false, Task::getExit);
+    taskId("task_id", true, Task::getTaskId),
+    process("process", true, Task::getProcess),
+    tag("tag", true, Task::getTag),
+    status("status", true, Task::getStatus),
+    hash("hash", false, Task::getHash),
+    exit("exit", false, Task::getExit),
+    container("container", false, Task::getContainer),
+    nativeId("native_id", false, Task::getNativeId),
+    submit("submit", false, Task::getSubmit, compose(Task::getSubmit, FormatHelper::formatDate)),
+    duration( "duration", false, Task::getDuration, compose(Task::getDuration, FormatHelper::formatDurationMillis));
 
     private final String description;
     private final boolean fixed;
     private final Function<Task, Object> objectFunction;
-    private final Function<Object, String> prettyprint;
+    private final Function<Task, String> prettyprint;
 
-    TaskColumn(String description, boolean fixed, Function<Task, Object> objectFunction, Function<Object, String> prettyprint) {
+    TaskColumn(String description, boolean fixed, Function<Task, Object> objectFunction, Function<Task, String> prettyprint) {
         this.description = description;
         this.fixed = fixed;
         this.objectFunction = objectFunction;
@@ -44,7 +47,7 @@ public enum TaskColumn {
         this.description = description;
         this.fixed = fixed;
         this.objectFunction = objectFunction;
-        prettyprint = Object::toString;
+        prettyprint = objectFunction.andThen(Object::toString);
     }
 
     public String getDescription() {
@@ -55,11 +58,15 @@ public enum TaskColumn {
         return fixed;
     }
 
-    public Function<Object, String> getPrettyPrint() {
+    public Function<Task, String> getPrettyPrint() {
         return prettyprint;
     }
 
     public Function<Task, Object> getObject() {
         return objectFunction;
+    }
+
+    private static <A, B, C> Function<A, C> compose(Function<A, B> f1, Function<B, C> f2) {
+        return f1.andThen(f2);
     }
 }

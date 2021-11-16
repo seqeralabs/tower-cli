@@ -35,7 +35,7 @@ import java.util.stream.Stream;
 )
 public class TasksCmd extends AbstractRunsCmd {
 
-    @CommandLine.Option(names = {"-c", "--columns"}, split = ",", description = "Additional task columns to display: tag,hash,status,exit")
+    @CommandLine.Option(names = {"-c", "--columns"}, split = ",", description = "Additional task columns to display: hash,exit,container,native_id,submit,duration")
     public List<TaskColumn> columns;
 
     @CommandLine.Option(names = {"-f", "--filter"}, description = "Only show task with parameters that start with the given word")
@@ -60,9 +60,7 @@ public class TasksCmd extends AbstractRunsCmd {
         List<List<String>> tasks = new ArrayList<>();
         Objects.requireNonNull(response.getTasks()).forEach(it -> {
             Task task = it.getTask();
-
-            List<String> items = cols.stream().map(colItem -> colItem.getPrettyPrint().apply(colItem.getObject().apply(task))).collect(Collectors.toList());
-
+            List<String> items = cols.stream().map(colItem -> colItem.getPrettyPrint().apply(task)).collect(Collectors.toList());
             tasks.add(items);
         });
 

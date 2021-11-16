@@ -32,7 +32,7 @@ public class RunTasksView extends Response {
     public void toString(PrintWriter out) {
         out.println(ansi(String.format("%n  @|bold Pipeline's run %s tasks:|@%n", runId)));
 
-        TableList table = new TableList(out, columns.size(), columns.toArray(new String[0])).sortBy(0);
+        TableList table = new TableList(out, columns.size(), columns.toArray(new String[0]));
         table.setPrefix("    ");
         tasks.forEach(it -> {
             table.addRow(it.toArray(new String[0]));
