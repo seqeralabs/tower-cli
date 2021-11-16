@@ -88,7 +88,7 @@ public abstract class BaseCmdTest {
         cmd.setOut(new PrintWriter(stdOut));
         cmd.setErr(new PrintWriter(stdErr));
 
-        int exitCode = cmd.execute(ArrayUtils.insert(0, args, String.format("--url=%s", url(mock)), String.format("--access-token=%s", token())));
+        int exitCode = cmd.execute(ArrayUtils.insert(0, args, "--insecure", String.format("--url=%s", url(mock)), String.format("--access-token=%s", token())));
 
         return new ExecOut()
                 .app(cmd.getCommand())
@@ -107,7 +107,7 @@ public abstract class BaseCmdTest {
             PrintWriter errWriter = new PrintWriter(stdErr);
 
             ProcessBuilder builder = new ProcessBuilder();
-            builder.command(ArrayUtils.insert(0, args, command, String.format("--url=%s", url(mock)), String.format("--access-token=%s", token())));
+            builder.command(ArrayUtils.insert(0, args, command, "--insecure", String.format("--url=%s", url(mock)), String.format("--access-token=%s", token())));
             Process process = builder.start();
 
             StreamGobbler consumeOut = new StreamGobbler(process.getInputStream(), outWriter::println);
