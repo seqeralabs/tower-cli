@@ -1,7 +1,7 @@
 project:
   name: tw
   description: Tower CLI
-  longDescription: Tower CLI ctool to manage Tower from the command line
+  longDescription: Tower CLI tool to manage Tower from the command line
   website: https://github.com/seqeralabs/tower-cli
   authors:
     - Seqera Labs
@@ -12,7 +12,7 @@ project:
 release:
   github:
     overwrite: true
-    draft: false
+    draft: true
     prerelease:
       pattern: .*-beta
     changelog:
