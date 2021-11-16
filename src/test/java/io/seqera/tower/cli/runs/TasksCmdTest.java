@@ -52,17 +52,17 @@ public class TasksCmdTest extends BaseCmdTest {
         List<List<String>> tasks = new ArrayList<>();
         List<String> item1 = new ArrayList<>();
         item1.add("1");
-        item1.add("Wed, 10 Nov 2021 14:39:27 GMT");
-        item1.add("biocontainers/biocontainers:v1.2.0_cv1");
-        item1.add("f33fef73-e928-45ad-93df-beab52386e59");
         item1.add("NFCORE_RNASEQ:RNASEQ:PREPARE_GENOME:GUNZIP_ADDITIONAL_FASTA");
+        item1.add("gfp.fa.gz");
+        item1.add("COMPLETED");
+
 
         List<String> item2 = new ArrayList<>();
         item2.add("2");
-        item2.add("Wed, 10 Nov 2021 14:39:31 GMT");
-        item2.add("biocontainers/biocontainers:v1.2.0_cv1");
-        item2.add("754ff5d5-f484-497c-8464-886c460271e5");
         item2.add("NFCORE_RNASEQ:RNASEQ:PREPARE_GENOME:UNTAR_STAR_INDEX");
+        item2.add("star.tar.gz");
+        item2.add("COMPLETED");
+
 
         tasks.add(item1);
         tasks.add(item2);
