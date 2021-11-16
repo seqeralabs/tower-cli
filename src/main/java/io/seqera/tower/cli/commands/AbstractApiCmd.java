@@ -15,7 +15,6 @@ import io.seqera.tower.ApiClient;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.api.DefaultApi;
 import io.seqera.tower.cli.Tower;
-import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
 import io.seqera.tower.cli.exceptions.NoComputeEnvironmentException;
 import io.seqera.tower.cli.exceptions.OrganizationNotFoundException;
@@ -41,8 +40,8 @@ import java.util.Objects;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static io.seqera.tower.cli.utils.ErrorReporting.errorMessage;
-import static io.seqera.tower.cli.utils.JsonHelper.prettyJson;
+import static io.seqera.tower.cli.utils.ResponseHelper.errorMessage;
+import static io.seqera.tower.cli.utils.ResponseHelper.outputFormat;
 
 public abstract class AbstractApiCmd extends AbstractCmd {
 
@@ -265,13 +264,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     @Override
     public Integer call() {
         try {
-            Response response = exec();
-            if (app().output == OutputType.json) {
-                app().getOut().println(prettyJson(response.getJSON()));
-            } else {
-                response.toString(app().getOut());
-            }
-            return response.getExitCode();
+            return outputFormat(app().getOut(), exec(), app().output);
         } catch (Exception e) {
             errorMessage(app(), e);
         }

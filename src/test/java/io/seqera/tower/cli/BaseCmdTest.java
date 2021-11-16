@@ -14,7 +14,10 @@
  */
 package io.seqera.tower.cli;
 
-import io.seqera.tower.cli.utils.ErrorReporting;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import io.seqera.tower.cli.commands.enums.OutputType;
+import io.seqera.tower.cli.responses.Response;
+import io.seqera.tower.cli.utils.ResponseHelper;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,6 +25,7 @@ import org.junit.jupiter.api.io.TempDir;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.junit.jupiter.MockServerExtension;
 import picocli.CommandLine;
+import picocli.CommandLine.ExitCode;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -39,6 +43,8 @@ import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 
 import static io.seqera.tower.cli.Tower.buildCommandLine;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 @ExtendWith(MockServerExtension.class)
 public abstract class BaseCmdTest {
@@ -75,10 +81,14 @@ public abstract class BaseCmdTest {
     }
 
     protected ExecOut exec(MockServerClient mock, String... args) {
+        return exec(OutputType.console, mock, args);
+    }
+
+    protected ExecOut exec(OutputType format, MockServerClient mock, String... args) {
 
         // Run binary command line
         if (System.getenv().containsKey("TOWER_CLI")) {
-            return execBinary(mock, System.getenv("TOWER_CLI"), args);
+            return execBinary(format, mock, System.getenv("TOWER_CLI"), args);
         }
 
         // Run java version
@@ -88,7 +98,7 @@ public abstract class BaseCmdTest {
         cmd.setOut(new PrintWriter(stdOut));
         cmd.setErr(new PrintWriter(stdErr));
 
-        int exitCode = cmd.execute(ArrayUtils.insert(0, args, "--insecure", String.format("--url=%s", url(mock)), String.format("--access-token=%s", token())));
+        int exitCode = cmd.execute(buildArgs(format, mock, args));
 
         return new ExecOut()
                 .app(cmd.getCommand())
@@ -97,7 +107,15 @@ public abstract class BaseCmdTest {
                 .exitCode(exitCode);
     }
 
-    private ExecOut execBinary(MockServerClient mock, String command, String... args) {
+    private String[] buildArgs(OutputType format, MockServerClient mock, String... args) {
+        String[] result = ArrayUtils.insert(0, args, "--insecure", String.format("--url=%s", url(mock)), String.format("--access-token=%s", token()));
+        if (format != OutputType.console)  {
+            return ArrayUtils.insert(0, result, String.format("--output=%s", format));
+        }
+        return result;
+    }
+
+    private ExecOut execBinary(OutputType format, MockServerClient mock, String command, String... args) {
 
         try {
             StringWriter stdOut = new StringWriter();
@@ -107,7 +125,7 @@ public abstract class BaseCmdTest {
             PrintWriter errWriter = new PrintWriter(stdErr);
 
             ProcessBuilder builder = new ProcessBuilder();
-            builder.command(ArrayUtils.insert(0, args, command, "--insecure", String.format("--url=%s", url(mock)), String.format("--access-token=%s", token())));
+            builder.command(ArrayUtils.insert(0, buildArgs(format, mock, args), command));
             Process process = builder.start();
 
             StreamGobbler consumeOut = new StreamGobbler(process.getInputStream(), outWriter::println);
@@ -145,8 +163,28 @@ public abstract class BaseCmdTest {
 
     protected String errorMessage(Tower app, Exception e) {
         StringWriter out = new StringWriter();
-        ErrorReporting.errorMessage(app, new PrintWriter(out), e);
+        ResponseHelper.errorMessage(new PrintWriter(out), e);
         return StringUtils.chop(out.toString());
+    }
+
+    protected void assertOutput(OutputType format, Response expectedResponse, ExecOut realOutput) {
+        StringWriter writer = new StringWriter();
+        try {
+            int expectedExitCode = ResponseHelper.outputFormat(new PrintWriter(writer), expectedResponse, format);
+            String expectedOut = StringUtils.chop(writer.toString());
+
+            // Check empty stderr
+            assertEquals("", expectedExitCode == ExitCode.OK ? realOutput.stdErr : realOutput.stdOut);
+
+            // Check expected stdout
+            assertEquals(expectedOut, expectedExitCode == ExitCode.OK ? realOutput.stdOut : realOutput.stdErr);
+
+            // Check expected exit code
+            assertEquals(expectedExitCode, realOutput.exitCode);
+
+        } catch (JsonProcessingException e) {
+            fail(e);
+        }
     }
 
     public static class ExecOut {

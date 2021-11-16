@@ -15,9 +15,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.StringUtil;
 import io.seqera.tower.cli.Tower;
+import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.ApiExceptionMessage;
 import io.seqera.tower.cli.exceptions.ShowUsageException;
 import io.seqera.tower.cli.exceptions.TowerException;
+import io.seqera.tower.cli.responses.Response;
 import org.glassfish.jersey.message.internal.MessageBodyProviderNotFoundException;
 import picocli.CommandLine;
 
@@ -26,17 +28,27 @@ import java.io.PrintWriter;
 import java.nio.file.NoSuchFileException;
 
 import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
+import static io.seqera.tower.cli.utils.JsonHelper.prettyJson;
 
-public class ErrorReporting {
+public class ResponseHelper {
 
-    private ErrorReporting() {
+    private ResponseHelper() {
+    }
+
+    public static int outputFormat(PrintWriter out, Response response, OutputType outputType) throws JsonProcessingException {
+        if (outputType == OutputType.json) {
+            out.println(prettyJson(response.getJSON()));
+        } else {
+            response.toString(out);
+        }
+        return response.getExitCode();
     }
 
     public static void errorMessage(Tower app, Exception e) {
-        errorMessage(app, app.getErr(), e);
+        errorMessage(app.getErr(), e);
     }
 
-    public static void errorMessage(Tower app, PrintWriter err, Exception e) {
+    public static void errorMessage(PrintWriter err, Exception e) {
 
         if (e instanceof ShowUsageException) {
 

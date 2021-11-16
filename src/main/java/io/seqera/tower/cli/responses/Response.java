@@ -49,6 +49,7 @@ public abstract class Response {
         return value.format(DateTimeFormatter.RFC_1123_DATE_TIME);
     }
 
+    @JsonIgnore
     public int getExitCode() {
         return CommandLine.ExitCode.OK;
     }
