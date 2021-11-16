@@ -48,7 +48,7 @@ class LaunchesCmdTest extends BaseCmdTest {
         // Assert results
         assertEquals(errorMessage(out.app, new ApiException(401, "Unauthorized")), out.stdErr);
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
     }
 
     @Test
@@ -66,11 +66,13 @@ class LaunchesCmdTest extends BaseCmdTest {
 
         // Assert results
         assertEquals(errorMessage(out.app, new InvalidResponseException("Pipeline 'hello' not found on this workspace.")), out.stdErr);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
     }
 
     @Test
     void testMultiplePipelinesFound(MockServerClient mock) {
+
+        mock.reset();
 
         // Create server expectation
         mock.when(
@@ -84,7 +86,7 @@ class LaunchesCmdTest extends BaseCmdTest {
 
         // Assert results
         assertEquals(errorMessage(out.app, new InvalidResponseException("Multiple pipelines match 'hello'")), out.stdErr);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
     }
 
     @Test
@@ -130,7 +132,7 @@ class LaunchesCmdTest extends BaseCmdTest {
         mock.when(
                 request().withMethod("GET").withPath("/compute-envs").withQueryStringParameter("status", "AVAILABLE"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"1uJweHHZTo7gydE6pyDt7x\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":null,\"visibility\":null},{\"id\":\"3bBgyqQrehvoihCVjunUaJ\",\"name\":\"google\",\"platform\":\"google-lifesciences\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":null,\"visibility\":null},{\"id\":\"53aWhB2qJroy0i51FOrFAC\",\"name\":\"manual\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":null,\"visibility\":null},{\"id\":\"7TZgco4ZknMHk4W4DzB8dH\",\"name\":\"google\",\"platform\":\"google-lifesciences\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":null,\"visibility\":null},{\"id\":\"NDEIULtY1a08q16osv8kg\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":null,\"visibility\":null},{\"id\":\"isnEDBLvHDAIteOEF44ow\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"1uJweHHZTo7gydE6pyDt7x\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null},{\"id\":\"3bBgyqQrehvoihCVjunUaJ\",\"name\":\"google\",\"platform\":\"google-lifesciences\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":null,\"visibility\":null},{\"id\":\"53aWhB2qJroy0i51FOrFAC\",\"name\":\"manual\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":null,\"visibility\":null},{\"id\":\"7TZgco4ZknMHk4W4DzB8dH\",\"name\":\"google\",\"platform\":\"google-lifesciences\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":null,\"visibility\":null},{\"id\":\"NDEIULtY1a08q16osv8kg\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":null,\"visibility\":null},{\"id\":\"isnEDBLvHDAIteOEF44ow\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
@@ -187,7 +189,7 @@ class LaunchesCmdTest extends BaseCmdTest {
         );
 
         // Run the command
-        ExecOut out = exec(mock, "launch", "sarek", "-p", "test,docker", "-r", "develop", "-w", "/my_work_dir",
+        ExecOut out = exec(mock, "launch", "sarek", "-p", "test,docker", "-r", "develop", "--work-dir", "/my_work_dir",
                 "--config", tempFile("extra_config", "nextflow", "config"), "--pull-latest", "--stub-run",
                 "--pre-run", tempFile("pre_run_me", "pre", "sh"), "--post-run", tempFile("post_run_me", "post", "sh"),
                 "--main-script", "alternate.nf", "--entry-name", "dsl2", "--schema-name", "my_schema.json");
@@ -204,7 +206,7 @@ class LaunchesCmdTest extends BaseCmdTest {
         mock.when(
                 request().withMethod("GET").withPath("/compute-envs").withQueryStringParameter("status", "AVAILABLE").withQueryStringParameter("workspaceId", "222756650686576"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"4iqCDE6C2Stq0jzBsHJvHn\",\"name\":\"aws\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":\"cli\",\"visibility\":\"PRIVATE\"}]}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"4iqCDE6C2Stq0jzBsHJvHn\",\"name\":\"aws\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":\"cli\",\"visibility\":\"PRIVATE\"}]}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
@@ -232,7 +234,7 @@ class LaunchesCmdTest extends BaseCmdTest {
         );
 
         // Run the command
-        ExecOut out = exec(mock, "-i", "222756650686576", "launch", "nextflow-io/hello");
+        ExecOut out = exec(mock, "launch", "nextflow-io/hello", "-w", "222756650686576");
 
         // Assert results
         assertEquals("", out.stdErr);

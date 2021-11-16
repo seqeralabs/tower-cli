@@ -19,11 +19,13 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.JSON;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
-import io.seqera.tower.cli.responses.ComputeEnvCreated;
+import io.seqera.tower.cli.responses.ComputeEnvAdded;
 import io.seqera.tower.cli.responses.ComputeEnvDeleted;
 import io.seqera.tower.cli.responses.ComputeEnvList;
 import io.seqera.tower.cli.responses.ComputeEnvView;
 import io.seqera.tower.cli.responses.ComputeEnvs.ComputeEnvExport;
+import io.seqera.tower.cli.responses.ComputeEnvs.ComputeEnvsPrimaryGet;
+import io.seqera.tower.cli.responses.ComputeEnvs.ComputeEnvsPrimarySet;
 import io.seqera.tower.model.AwsBatchConfig;
 import io.seqera.tower.model.ComputeConfig;
 import io.seqera.tower.model.ComputeEnv;
@@ -78,7 +80,7 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
 
         assertEquals(errorMessage(out.app, new ApiException(401, "Unauthorized")), out.stdErr);
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
     }
 
     @Test
@@ -93,7 +95,7 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
 
         assertEquals(errorMessage(out.app, new ComputeEnvNotFoundException("vYOK4vn7spw7bHHWBDXZ3", USER_WORKSPACE_NAME)), out.stdErr);
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
     }
 
     @Test
@@ -212,7 +214,7 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("compute_env_view_aws_manual")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "--json", "compute-envs", "view", "-i", "53aWhB2qJroy0i51FOrFAC");
+        ExecOut out = exec(mock, "--output", "json", "compute-envs", "view", "-i", "53aWhB2qJroy0i51FOrFAC");
 
         assertEquals("", out.stdErr);
         assertEquals(prettyJson(new ComputeEnvView("53aWhB2qJroy0i51FOrFAC", USER_WORKSPACE_NAME,
@@ -247,7 +249,7 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
 
         assertEquals(errorMessage(out.app, new ComputeEnvNotFoundException("isnEDBLvHDAIteOEF44or", USER_WORKSPACE_NAME)), out.stdErr);
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
     }
 
     @Test
@@ -262,13 +264,13 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
 
         assertEquals(errorMessage(out.app, new ApiException(401, "Unauthorized")), out.stdErr);
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
     }
 
     @Test
-    public void testCreateWithoutSubCommands(MockServerClient mock) {
-        ExecOut out = exec(mock, "compute-envs", "create");
-        assertEquals(-1, out.exitCode);
+    public void testAddWithoutSubCommands(MockServerClient mock) {
+        ExecOut out = exec(mock, "compute-envs", "add");
+        assertEquals(1, out.exitCode);
         assertTrue(out.stdErr.contains("Missing Required Subcommand"));
     }
 
@@ -354,12 +356,56 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"3T6xWeFD63QIuzdAowvSTC\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-//        ExecOut out = exec(mock, "compute-envs", "import", tempFile("{\"computeEnv\":{\"name\":\"ce3\",\"platform\":\"aws-batch\",\"config\":{\"region\":\"eu-west-1\",\"cliPath\":\"/home/ec2-user/miniconda/bin/aws\",\"workDir\":\"s3://nextflow-ci/jordeu\",\"forge\":{\"type\":\"SPOT\",\"minCpus\":0,\"maxCpus\":123,\"gpuEnabled\":false,\"ebsAutoScale\":true,\"disposeOnDeletion\":true,\"fusionEnabled\":false,\"efsCreate\":true},\"discriminator\":\"aws-batch\"},\"credentialsId\":\"6g0ER59L4ZoE5zpOmUP48D\"}}", "data", ".json"), "-n", "ce3", "-w", "144996268157965");
-        ExecOut out = exec(mock, "compute-envs", "import", tempFile(new String(loadResource("cejson"), StandardCharsets.UTF_8), "ce", "json"), "-n", "json", "-c", "6g0ER59L4ZoE5zpOmUP48D");
-
+        ExecOut out = exec(mock, "compute-envs", "import", tempFile(new String(loadResource("cejson"), StandardCharsets.UTF_8), "ce", "json"), "-n", "json", "-i", "6g0ER59L4ZoE5zpOmUP48D");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvCreated(ComputeEnv.PlatformEnum.AWS_BATCH.getValue(), "json", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded(ComputeEnv.PlatformEnum.AWS_BATCH.getValue(), "json", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    public void getPrimary(MockServerClient mock) throws JsonProcessingException {
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"isnEDBLvHDAIteOEF44ow\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/isnEDBLvHDAIteOEF44ow"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_env_view")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "compute-envs", "primary", "get");
+
+        ComputeEnv ce = parseJson("{\"id\":\"isnEDBLvHDAIteOEF44ow\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}", ComputeEnv.class);
+
+        assertEquals("", out.stdErr);
+        assertEquals(new ComputeEnvsPrimaryGet(USER_WORKSPACE_NAME, ce).toString(), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    public void setPrimary(MockServerClient mock) throws JsonProcessingException {
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/isnEDBLvHDAIteOEF44ow"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_env_view")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/compute-envs/isnEDBLvHDAIteOEF44ow/primary"), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(mock, "compute-envs", "primary", "set", "-i", "isnEDBLvHDAIteOEF44ow");
+
+        ComputeEnv ce = parseJson("{\"id\":\"isnEDBLvHDAIteOEF44ow\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}", ComputeEnv.class);
+
+        assertEquals("", out.stdErr);
+        assertEquals(new ComputeEnvsPrimarySet(USER_WORKSPACE_NAME, ce).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 }

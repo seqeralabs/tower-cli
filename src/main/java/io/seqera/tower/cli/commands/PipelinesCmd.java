@@ -11,7 +11,7 @@
 
 package io.seqera.tower.cli.commands;
 
-import io.seqera.tower.cli.commands.pipelines.CreateCmd;
+import io.seqera.tower.cli.commands.pipelines.AddCmd;
 import io.seqera.tower.cli.commands.pipelines.DeleteCmd;
 import io.seqera.tower.cli.commands.pipelines.ExportCmd;
 import io.seqera.tower.cli.commands.pipelines.ImportCmd;
@@ -23,10 +23,10 @@ import picocli.CommandLine.Command;
 
 @Command(
         name = "pipelines",
-        description = "Manage workspace pipelines launchpad",
+        description = "Manage workspace pipeline launchpad.",
         subcommands = {
                 ListCmd.class,
-                CreateCmd.class,
+                AddCmd.class,
                 DeleteCmd.class,
                 ViewCmd.class,
                 UpdateCmd.class,

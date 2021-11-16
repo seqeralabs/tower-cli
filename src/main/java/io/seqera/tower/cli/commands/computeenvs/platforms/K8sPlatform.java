@@ -23,19 +23,19 @@ import java.nio.file.Path;
 
 public class K8sPlatform extends AbstractPlatform<K8sComputeConfig> {
 
-    @Option(names = {"-s", "--server"}, description = "Master server", required = true)
+    @Option(names = {"-s", "--server"}, description = "Master server.", required = true)
     public String server;
 
-    @Option(names = {"--namespace"}, description = "Namespace", required = true)
+    @Option(names = {"--namespace"}, description = "Namespace.", required = true)
     public String namespace;
 
-    @Option(names = {"--ssl-cert"}, description = "SSL certificate", required = true)
+    @Option(names = {"--ssl-cert"}, description = "SSL certificate.", required = true)
     public Path sslCert;
 
-    @Option(names = {"--head-account"}, description = "Head service account", required = true)
+    @Option(names = {"--head-account"}, description = "Head service account.", required = true)
     public String headAccount;
 
-    @Option(names = {"--storage-claim"}, description = "Storage claim name", required = true)
+    @Option(names = {"--storage-claim"}, description = "Storage claim name.", required = true)
     public String storageClaim;
 
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
@@ -71,19 +71,19 @@ public class K8sPlatform extends AbstractPlatform<K8sComputeConfig> {
     }
 
     public static class AdvancedOptions {
-        @Option(names = {"--storage-mount"}, description = "Storage mount path")
+        @Option(names = {"--storage-mount"}, description = "Storage mount path.")
         public String storageMount;
 
-        @Option(names = {"--compute-account"}, description = "Compute service account")
+        @Option(names = {"--compute-account"}, description = "Compute service account.")
         public String computeAccount;
 
-        @Option(names = "--pod-cleanup", description = "Pod cleanup policy (ON_SUCCESS, ALWAYS, NEVER)")
+        @Option(names = "--pod-cleanup", description = "Pod cleanup policy (ON_SUCCESS, ALWAYS, NEVER).")
         public PodCleanupPolicy podCleanup;
 
-        @Option(names = {"--head-pod-spec"}, description = "Custom head pod specs file")
+        @Option(names = {"--head-pod-spec"}, description = "Custom head pod specs file.")
         public Path headPodSpec;
 
-        @Option(names = {"--service-pod-spec"}, description = "Custom service pod specs file")
+        @Option(names = {"--service-pod-spec"}, description = "Custom service pod specs file.")
         public Path servicePodSpec;
     }
 }

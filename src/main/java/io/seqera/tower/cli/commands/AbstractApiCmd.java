@@ -15,6 +15,7 @@ import io.seqera.tower.ApiClient;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.api.DefaultApi;
 import io.seqera.tower.cli.Tower;
+import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
 import io.seqera.tower.cli.exceptions.NoComputeEnvironmentException;
 import io.seqera.tower.cli.exceptions.OrganizationNotFoundException;
@@ -30,6 +31,7 @@ import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import io.seqera.tower.model.User;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.logging.LoggingFeature;
+import picocli.CommandLine;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -70,7 +72,12 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         return (Tower) getSpec().root().userObject();
     }
 
-    protected DefaultApi api() {
+    protected DefaultApi api() throws ApiException {
+
+        // Check we are using HTTPS (unless 'insecure' option is enabled)
+        if (!app().insecure && !app().url.startsWith("https")) {
+            throw new TowerException(String.format("You are trying to connect to an insecure server: %s%n        if you want to force the connection use '--insecure'. NOT RECOMMENDED!", app().url));
+        }
 
         if (api == null) {
             ApiClient client = buildApiClient();
@@ -95,25 +102,12 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         };
     }
 
-    protected Long workspaceId() throws ApiException {
-        if (workspaceId == null) {
-            if (app().workspaceId != null) {
-                workspaceId = app().workspaceId;
-            } else {
-                if (app().orgAndWorkspaceNames != null) {
-                    loadOrgAndWorkspaceFromNames();
-                }
-            }
-        }
-        return workspaceId;
-    }
-
-    protected Long orgId() throws ApiException {
+    protected Long orgId(Long workspaceId) throws ApiException {
         if (orgId == null) {
-            if (app().workspaceId != null) {
-                loadOrgAndWorkspaceFromIds();
+            if (workspaceId != null) {
+                loadOrgAndWorkspaceFromIds(workspaceId);
             } else {
-                loadOrgAndWorkspaceFromNames();
+                loadOrgAndWorkspaceFromNames(workspaceId);
             }
         }
         return orgId;
@@ -133,50 +127,42 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         return userName;
     }
 
-    protected String orgName() throws ApiException {
+    protected String orgName(Long workspaceId) throws ApiException {
         if (orgName == null) {
-            if (app().orgAndWorkspaceNames == null) {
-                loadOrgAndWorkspaceFromIds();
-            } else {
-                orgName = app().orgAndWorkspaceNames.organization;
-            }
+            loadOrgAndWorkspaceFromIds(workspaceId);
         }
         return orgName;
     }
 
-    protected String workspaceName() throws ApiException {
+    protected String workspaceName(Long workspaceId) throws ApiException {
         if (workspaceName == null) {
-            if (app().orgAndWorkspaceNames == null) {
-                loadOrgAndWorkspaceFromIds();
-            } else {
-                workspaceName = app().orgAndWorkspaceNames.workspace;
-            }
+            loadOrgAndWorkspaceFromIds(workspaceId);
         }
         return workspaceName;
     }
 
-    protected ComputeEnv computeEnvByName(String name) throws ApiException {
+    protected ComputeEnv computeEnvByName(Long workspaceId, String name) throws ApiException {
         if (availableComputeEnvsNameToId == null) {
-            loadAvailableComputeEnvs();
+            loadAvailableComputeEnvs(workspaceId);
         }
 
         if (availableComputeEnvsNameToId.containsKey(name)) {
-            return api().describeComputeEnv(availableComputeEnvsNameToId.get(name), workspaceId()).getComputeEnv();
+            return api().describeComputeEnv(availableComputeEnvsNameToId.get(name), workspaceId).getComputeEnv();
         }
 
         throw new TowerException(String.format("Compute environment '%s' is not available", name));
     }
 
-    protected ComputeEnv primaryComputeEnv() throws ApiException {
+    protected ComputeEnv primaryComputeEnv(Long workspaceId) throws ApiException {
         if (primaryComputeEnvId == null) {
-            loadAvailableComputeEnvs();
+            loadAvailableComputeEnvs(workspaceId);
         }
 
         if (primaryComputeEnvId == null) {
-            throw new NoComputeEnvironmentException(workspaceRef());
+            throw new NoComputeEnvironmentException(workspaceRef(workspaceId));
         }
 
-        return api().describeComputeEnv(primaryComputeEnvId, workspaceId()).getComputeEnv();
+        return api().describeComputeEnv(primaryComputeEnvId, workspaceId).getComputeEnv();
     }
 
     protected String serverUrl() {
@@ -184,6 +170,10 @@ public abstract class AbstractApiCmd extends AbstractCmd {
             serverUrl = app().url.replaceFirst("api\\.", "").replaceFirst("/api", "");
         }
         return serverUrl;
+    }
+
+    protected String apiUrl() {
+        return app().url;
     }
 
     protected OrgAndWorkspaceDbDto findOrganizationByName(String organizationName) throws ApiException {
@@ -204,7 +194,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         return orgAndWorkspaceDbDtoList.stream().findFirst().orElseThrow(() -> new OrganizationNotFoundException(organizationName));
     }
 
-    protected ComputeEnv findComputeEnvironmentByName(String name, Long workspaceId) throws ApiException {
+    protected ComputeEnv findComputeEnvironmentByName( Long workspaceId, String name) throws ApiException {
         ListComputeEnvsResponse listComputeEnvsResponse = api().listComputeEnvs(null, workspaceId);
 
         ListComputeEnvsResponseEntry listComputeEnvsResponseEntry =  listComputeEnvsResponse
@@ -214,7 +204,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
                 .findFirst()
                 .orElseThrow(() -> new ComputeEnvNotFoundException(name, workspaceId));
 
-        return api().describeComputeEnv(listComputeEnvsResponseEntry.getId(), workspaceId()).getComputeEnv();
+        return api().describeComputeEnv(listComputeEnvsResponseEntry.getId(), workspaceId).getComputeEnv();
     }
 
 
@@ -224,10 +214,9 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         userId = user.getId();
     }
 
-    private void loadOrgAndWorkspaceFromIds() throws ApiException {
-        Long workspaceId = workspaceId();
+    private void loadOrgAndWorkspaceFromIds(Long workspaceId) throws ApiException {
         for (OrgAndWorkspaceDbDto ow : api().listWorkspacesUser(userId()).getOrgsAndWorkspaces()) {
-            if ((workspaceId == null && ow.getWorkspaceId() == null) || (workspaceId != null && workspaceId().equals(ow.getWorkspaceId()))) {
+            if ((workspaceId == null && ow.getWorkspaceId() == null) || (workspaceId != null && workspaceId.equals(ow.getWorkspaceId()))) {
                 workspaceName = ow.getWorkspaceName();
                 orgId = ow.getOrgId();
                 orgName = ow.getOrgName();
@@ -238,9 +227,9 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         throw new WorkspaceNotFoundException(workspaceId);
     }
 
-    private void loadOrgAndWorkspaceFromNames() throws ApiException {
-        String wName = workspaceName();
-        String oName = orgName();
+    private void loadOrgAndWorkspaceFromNames(Long workspaceId) throws ApiException {
+        String wName = workspaceName(workspaceId);
+        String oName = orgName(workspaceId);
         for (OrgAndWorkspaceDbDto ow : api().listWorkspacesUser(userId()).getOrgsAndWorkspaces()) {
             if (wName.equalsIgnoreCase(ow.getWorkspaceName()) && oName.equalsIgnoreCase(ow.getOrgName())) {
                 workspaceName = ow.getWorkspaceName();
@@ -254,14 +243,9 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         throw new WorkspaceNotFoundException(workspaceName, orgName);
     }
 
-    private void loadAvailableComputeEnvs() throws ApiException {
+    private void loadAvailableComputeEnvs(Long workspaceId) throws ApiException {
         availableComputeEnvsNameToId = new HashMap<>();
-        for (ListComputeEnvsResponseEntry ce : api().listComputeEnvs("AVAILABLE", workspaceId()).getComputeEnvs()) {
-
-            // Make the first compute environment the default if there is no primary set.
-            if (primaryComputeEnvId == null) {
-                primaryComputeEnvId = ce.getId();
-            }
+        for (ListComputeEnvsResponseEntry ce : api().listComputeEnvs("AVAILABLE", workspaceId).getComputeEnvs()) {
 
             if (ce.getPrimary() != null && ce.getPrimary()) {
                 primaryComputeEnvId = ce.getId();
@@ -270,19 +254,19 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         }
     }
 
-    protected String workspaceRef() throws ApiException {
+    protected String workspaceRef(Long workspaceId) throws ApiException {
         //TODO Use a WorkspaceRef class instead of this method?
-        if (workspaceId() == null) {
+        if (workspaceId == null) {
             return USER_WORKSPACE_NAME;
         }
-        return buildWorkspaceRef(orgName(), workspaceName());
+        return buildWorkspaceRef(orgName(workspaceId), workspaceName(workspaceId));
     }
 
     @Override
     public Integer call() {
         try {
             Response response = exec();
-            if (app().json) {
+            if (app().output == OutputType.json) {
                 app().getOut().println(prettyJson(response.getJSON()));
             } else {
                 response.toString(app().getOut());
@@ -292,7 +276,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
             errorMessage(app(), e);
         }
 
-        return -1;
+        return CommandLine.ExitCode.SOFTWARE;
     }
 
     protected Response exec() throws ApiException, IOException {

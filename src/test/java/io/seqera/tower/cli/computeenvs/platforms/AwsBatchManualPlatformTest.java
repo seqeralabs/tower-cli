@@ -12,7 +12,7 @@
 package io.seqera.tower.cli.computeenvs.platforms;
 
 import io.seqera.tower.cli.BaseCmdTest;
-import io.seqera.tower.cli.responses.ComputeEnvCreated;
+import io.seqera.tower.cli.responses.ComputeEnvAdded;
 import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
@@ -27,7 +27,7 @@ import static org.mockserver.model.HttpResponse.response;
 class AwsBatchManualPlatformTest extends BaseCmdTest {
 
     @Test
-    void testCreate(MockServerClient mock) {
+    void testAdd(MockServerClient mock) {
 
         mock.when(
                 request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "aws-batch"), exactly(1)
@@ -41,15 +41,15 @@ class AwsBatchManualPlatformTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "compute-envs", "create", "aws-batch", "manual", "-n", "manual", "-r", "eu-west-1", "-w", "s3://nextflow-ci/jordeu", "--head-queue", "TowerForge-isnEDBLvHDAIteOEF44ow-head", "--compute-queue", "TowerForge-isnEDBLvHDAIteOEF44ow-work");
+        ExecOut out = exec(mock, "compute-envs", "add", "aws-batch", "manual", "-n", "manual", "-r", "eu-west-1", "--work-dir", "s3://nextflow-ci/jordeu", "--head-queue", "TowerForge-isnEDBLvHDAIteOEF44ow-head", "--compute-queue", "TowerForge-isnEDBLvHDAIteOEF44ow-work");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvCreated("aws-batch", "manual", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("aws-batch", "manual", USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
     @Test
-    void testCreateAdvanceOptions(MockServerClient mock) {
+    void testAddAdvanceOptions(MockServerClient mock) {
 
         mock.when(
                 request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "aws-batch"), exactly(1)
@@ -63,10 +63,10 @@ class AwsBatchManualPlatformTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "compute-envs", "create", "aws-batch", "manual", "-n", "manual", "-r", "eu-west-1", "-w", "s3://nextflow-ci/jordeu", "--head-queue", "TowerForge-isnEDBLvHDAIteOEF44ow-head", "--compute-queue", "TowerForge-isnEDBLvHDAIteOEF44ow-work", "--cli-path=/bin/aws");
+        ExecOut out = exec(mock, "compute-envs", "add", "aws-batch", "manual", "-n", "manual", "-r", "eu-west-1", "--work-dir", "s3://nextflow-ci/jordeu", "--head-queue", "TowerForge-isnEDBLvHDAIteOEF44ow-head", "--compute-queue", "TowerForge-isnEDBLvHDAIteOEF44ow-work", "--cli-path=/bin/aws");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvCreated("aws-batch", "manual", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("aws-batch", "manual", USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

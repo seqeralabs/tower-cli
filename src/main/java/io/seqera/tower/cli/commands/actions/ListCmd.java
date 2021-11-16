@@ -11,22 +11,27 @@
 
 package io.seqera.tower.cli.commands.actions;
 
-import java.io.IOException;
-
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.actions.ActionsList;
 import io.seqera.tower.model.ListActionsResponse;
 import picocli.CommandLine;
 
+import java.io.IOException;
+
 @CommandLine.Command(
         name = "list",
-        description = "List the available Pipeline Actions for the authenticated user or given workspace"
+        description = "List the available Pipeline Actions for the authenticated user or given workspace."
 )
 public class ListCmd extends AbstractActionsCmd {
+
+    @CommandLine.Mixin
+    public WorkspaceOptionalOptions workspace;
+
     @Override
     protected Response exec() throws ApiException, IOException {
-        ListActionsResponse response = api().listActions(workspaceId());
+        ListActionsResponse response = api().listActions(workspace.workspaceId);
 
         return new ActionsList(response.getActions(), userName());
     }

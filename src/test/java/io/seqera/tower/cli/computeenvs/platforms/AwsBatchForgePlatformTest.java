@@ -12,7 +12,7 @@
 package io.seqera.tower.cli.computeenvs.platforms;
 
 import io.seqera.tower.cli.BaseCmdTest;
-import io.seqera.tower.cli.responses.ComputeEnvCreated;
+import io.seqera.tower.cli.responses.ComputeEnvAdded;
 import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
@@ -27,7 +27,7 @@ import static org.mockserver.model.HttpResponse.response;
 class AwsBatchForgePlatformTest extends BaseCmdTest {
 
     @Test
-    void testCreate(MockServerClient mock) {
+    void testAdd(MockServerClient mock) {
 
         mock.when(
                 request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "aws-batch"), exactly(1)
@@ -41,15 +41,15 @@ class AwsBatchForgePlatformTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "compute-envs", "create", "aws-batch", "forge", "-n", "demo", "-r", "eu-west-1", "-w", "s3://nextflow-ci/jordeu", "--max-cpus=123", "--fusion");
+        ExecOut out = exec(mock, "compute-envs", "add", "aws-batch", "forge", "-n", "demo", "-r", "eu-west-1", "--work-dir", "s3://nextflow-ci/jordeu", "--max-cpus=123", "--fusion");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvCreated("aws-batch", "demo", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("aws-batch", "demo", USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
     @Test
-    void testCreateWithEFS(MockServerClient mock) {
+    void testAddWithEFS(MockServerClient mock) {
 
         mock.when(
                 request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "aws-batch"), exactly(1)
@@ -63,15 +63,15 @@ class AwsBatchForgePlatformTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "compute-envs", "create", "aws-batch", "forge", "-n", "demo", "-r", "eu-west-1", "-w", "s3://nextflow-ci/jordeu", "--max-cpus=123", "--create-efs");
+        ExecOut out = exec(mock, "compute-envs", "add", "aws-batch", "forge", "-n", "demo", "-r", "eu-west-1", "--work-dir", "s3://nextflow-ci/jordeu", "--max-cpus=123", "--create-efs");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvCreated("aws-batch", "demo", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("aws-batch", "demo", USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
     @Test
-    void testCreateWithFSX(MockServerClient mock) {
+    void testAddWithFSX(MockServerClient mock) {
 
         mock.when(
                 request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "aws-batch"), exactly(1)
@@ -85,15 +85,15 @@ class AwsBatchForgePlatformTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "compute-envs", "create", "aws-batch", "forge", "-n", "demo", "-r", "eu-west-1", "-w", "/workdir", "--max-cpus=123", "--fsx-size=1200");
+        ExecOut out = exec(mock, "compute-envs", "add", "aws-batch", "forge", "-n", "demo", "-r", "eu-west-1", "--work-dir", "/workdir", "--max-cpus=123", "--fsx-size=1200");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvCreated("aws-batch", "demo", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("aws-batch", "demo", USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
     @Test
-    void testCreateWithAdvanced(MockServerClient mock) {
+    void testAddWithAdvanced(MockServerClient mock) {
 
         mock.when(
                 request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "aws-batch"), exactly(1)
@@ -107,10 +107,10 @@ class AwsBatchForgePlatformTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "compute-envs", "create", "aws-batch", "forge", "-n", "demo", "-r", "eu-west-1", "-w", "s3://nextflow-ci/jordeu", "--max-cpus=123", "--fusion", "--cli-path=/bin/aws", "--min-cpus=8", "--allow-buckets=bkt1,bkt2");
+        ExecOut out = exec(mock, "compute-envs", "add", "aws-batch", "forge", "-n", "demo", "-r", "eu-west-1", "--work-dir", "s3://nextflow-ci/jordeu", "--max-cpus=123", "--fusion", "--cli-path=/bin/aws", "--min-cpus=8", "--allow-buckets=bkt1,bkt2");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvCreated("aws-batch", "demo", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("aws-batch", "demo", USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

@@ -15,7 +15,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.exceptions.OrganizationNotFoundException;
 import io.seqera.tower.cli.exceptions.TowerException;
-import io.seqera.tower.cli.responses.organizations.OrganizationsCreated;
+import io.seqera.tower.cli.responses.organizations.OrganizationsAdded;
 import io.seqera.tower.cli.responses.organizations.OrganizationsDeleted;
 import io.seqera.tower.cli.responses.organizations.OrganizationsList;
 import io.seqera.tower.cli.responses.organizations.OrganizationsUpdated;
@@ -149,7 +149,7 @@ public class OrganizationsCmsTest extends BaseCmdTest {
         ExecOut out = exec(mock, "organizations", "view", "-n", "organization11");
 
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
         assertEquals(errorMessage(out.app, new OrganizationNotFoundException("organization11")), out.stdErr);
     }
 
@@ -197,7 +197,7 @@ public class OrganizationsCmsTest extends BaseCmdTest {
         ExecOut out = exec(mock, "organizations", "delete", "-n", "organization11");
 
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
         assertEquals(errorMessage(out.app, new OrganizationNotFoundException("organization11")), out.stdErr);
     }
 
@@ -224,22 +224,22 @@ public class OrganizationsCmsTest extends BaseCmdTest {
         ExecOut out = exec(mock, "organizations", "delete", "-n", "organization1");
 
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
         assertEquals(errorMessage(out.app, new TowerException("Organization organization1 could not be deleted")), out.stdErr);
     }
 
     @Test
-    void testCreateOrganization(MockServerClient mock) throws JsonProcessingException {
+    void testAddOrganization(MockServerClient mock) throws JsonProcessingException {
         mock.when(
                 request().withMethod("POST").withPath("/orgs"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResource("organizations/organizations_create_response")).withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(loadResource("organizations/organizations_add_response")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "organizations", "create", "-n", "sample-organization", "-f", "sample organization");
+        ExecOut out = exec(mock, "organizations", "add", "-n", "sample-organization", "-f", "sample organization");
 
         assertEquals("", out.stdErr);
-        assertEquals(new OrganizationsCreated(parseJson("{\n" +
+        assertEquals(new OrganizationsAdded(parseJson("{\n" +
                 "    \"orgId\": 275484385882108,\n" +
                 "    \"name\": \"sample-organization\",\n" +
                 "    \"fullName\": \"sample organization\",\n" +
@@ -255,17 +255,17 @@ public class OrganizationsCmsTest extends BaseCmdTest {
     }
 
     @Test
-    void testCreateOrganizationError(MockServerClient mock) {
+    void testAddOrganizationError(MockServerClient mock) {
         mock.when(
                 request().withMethod("POST").withPath("/orgs"), exactly(1)
         ).respond(
                 response().withStatusCode(500)
         );
 
-        ExecOut out = exec(mock, "organizations", "create", "-n", "sample-organization", "-f", "sample organization");
+        ExecOut out = exec(mock, "organizations", "add", "-n", "sample-organization", "-f", "sample organization");
 
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
     }
 
     @Test
@@ -323,6 +323,6 @@ public class OrganizationsCmsTest extends BaseCmdTest {
         ExecOut out = exec(mock, "organizations", "update", "-n", "organization1", "-f", "sample organization");
 
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
     }
 }

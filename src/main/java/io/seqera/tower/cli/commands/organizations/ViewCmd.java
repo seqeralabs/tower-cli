@@ -22,10 +22,11 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "view",
-        description = "Describe organization details"
+        description = "Describe organization details."
 )
 public class ViewCmd extends AbstractOrganizationsCmd {
-    @CommandLine.Option(names = {"-n", "--name"}, description = "Organization name", required = true)
+
+    @CommandLine.Option(names = {"-n", "--name"}, description = "Organization name.", required = true)
     public String name;
 
     @Override

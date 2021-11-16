@@ -12,7 +12,7 @@
 package io.seqera.tower.cli.computeenvs.platforms;
 
 import io.seqera.tower.cli.BaseCmdTest;
-import io.seqera.tower.cli.responses.ComputeEnvCreated;
+import io.seqera.tower.cli.responses.ComputeEnvAdded;
 import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
@@ -29,7 +29,7 @@ import static org.mockserver.model.HttpResponse.response;
 class K8sPlatformTest extends BaseCmdTest {
 
     @Test
-    void testCreate(MockServerClient mock) throws IOException {
+    void testAdd(MockServerClient mock) throws IOException {
 
         mock.when(
                 request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "k8s-platform"), exactly(1)
@@ -43,15 +43,15 @@ class K8sPlatformTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "compute-envs", "create", "k8s", "-n", "k8s", "-w", "/workdir", "-s", "k8s.mydomain.net", "--namespace", "nf", "--ssl-cert", tempFile("ssl_cert", "", ".crt"), "--head-account", "head", "--storage-claim", "nf");
+        ExecOut out = exec(mock, "compute-envs", "add", "k8s", "-n", "k8s", "--work-dir", "/workdir", "-s", "k8s.mydomain.net", "--namespace", "nf", "--ssl-cert", tempFile("ssl_cert", "", ".crt"), "--head-account", "head", "--storage-claim", "nf");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvCreated("k8s-platform", "k8s", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("k8s-platform", "k8s", USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
     @Test
-    void testCreateWithAdvancedOptions(MockServerClient mock) throws IOException {
+    void testAddWithAdvancedOptions(MockServerClient mock) throws IOException {
 
         mock.when(
                 request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "k8s-platform"), exactly(1)
@@ -65,15 +65,15 @@ class K8sPlatformTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "compute-envs", "create", "k8s", "-n", "k8s", "-w", "/workdir", "-s", "k8s.mydomain.net", "--namespace", "nf", "--ssl-cert", tempFile("ssl_cert", "", ".crt"), "--head-account", "head", "--storage-claim", "nf", "--storage-mount", "/workdir");
+        ExecOut out = exec(mock, "compute-envs", "add", "k8s", "-n", "k8s", "--work-dir", "/workdir", "-s", "k8s.mydomain.net", "--namespace", "nf", "--ssl-cert", tempFile("ssl_cert", "", ".crt"), "--head-account", "head", "--storage-claim", "nf", "--storage-mount", "/workdir");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvCreated("k8s-platform", "k8s", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("k8s-platform", "k8s", USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
     @Test
-    void testCreateWithStaging(MockServerClient mock) throws IOException {
+    void testAddWithStaging(MockServerClient mock) throws IOException {
 
         mock.when(
                 request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "k8s-platform"), exactly(1)
@@ -87,10 +87,10 @@ class K8sPlatformTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "compute-envs", "create", "k8s", "-n", "k8s", "-w", "/workdir", "-s", "k8s.mydomain.net", "--namespace", "nf", "--ssl-cert", tempFile("ssl_cert", "", ".crt"), "--head-account", "head", "--storage-claim", "nf", "--pre-run", tempFile("pre_run_me", "pre", "sh"), "--post-run", tempFile("post_run_me", "post", "sh"));
+        ExecOut out = exec(mock, "compute-envs", "add", "k8s", "-n", "k8s", "--work-dir", "/workdir", "-s", "k8s.mydomain.net", "--namespace", "nf", "--ssl-cert", tempFile("ssl_cert", "", ".crt"), "--head-account", "head", "--storage-claim", "nf", "--pre-run", tempFile("pre_run_me", "pre", "sh"), "--post-run", tempFile("post_run_me", "post", "sh"));
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvCreated("k8s-platform", "k8s", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("k8s-platform", "k8s", USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

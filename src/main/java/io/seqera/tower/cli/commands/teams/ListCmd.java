@@ -23,11 +23,11 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "list",
-        description = "List all the teams of a given organization"
+        description = "List all the teams in a given organization."
 )
 public class ListCmd extends AbstractTeamsCmd {
 
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization's name identifier", required = true)
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name identifier.", required = true)
     public String organizationName;
 
     @CommandLine.Mixin

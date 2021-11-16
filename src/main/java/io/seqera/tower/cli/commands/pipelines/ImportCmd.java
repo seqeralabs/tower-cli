@@ -12,9 +12,10 @@
 package io.seqera.tower.cli.commands.pipelines;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.cli.responses.pipelines.PipelinesCreated;
+import io.seqera.tower.cli.responses.pipelines.PipelinesAdded;
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.CreatePipelineRequest;
@@ -27,17 +28,20 @@ import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
 
 @CommandLine.Command(
         name = "import",
-        description = "Create a workspace pipeline from file content"
+        description = "Add a workspace pipeline from file content."
 )
 public class ImportCmd extends AbstractPipelinesCmd {
 
-    @CommandLine.Option(names = {"-n", "--name"}, description = "Pipeline name", required = true)
+    @CommandLine.Option(names = {"-n", "--name"}, description = "Pipeline name.", required = true)
     public String name;
 
-    @CommandLine.Option(names = {"-c", "--compute-env"}, description = "Compute environment name (defaults to json file defined environment)")
+    @CommandLine.Mixin
+    public WorkspaceOptionalOptions workspace;
+
+    @CommandLine.Option(names = {"-c", "--compute-env"}, description = "Compute environment name [default: as defined in json environment file].")
     public String computeEnv;
 
-    @CommandLine.Parameters(index = "0", paramLabel = "FILENAME", description = "File name to import", arity = "1")
+    @CommandLine.Parameters(index = "0", paramLabel = "FILENAME", description = "File name to import.", arity = "1")
     Path fileName = null;
 
     @Override
@@ -48,18 +52,18 @@ public class ImportCmd extends AbstractPipelinesCmd {
         request.setName(name);
 
         if (computeEnv != null) {
-            ComputeEnv ce = findComputeEnvironmentByName(computeEnv, workspaceId());
+            ComputeEnv ce = findComputeEnvironmentByName(workspace.workspaceId, computeEnv);
             request.getLaunch().setComputeEnvId(ce.getId());
         } else {
             try {
-                api().describeComputeEnv(request.getLaunch().getComputeEnvId(), workspaceId());
+                api().describeComputeEnv(request.getLaunch().getComputeEnvId(), workspace.workspaceId);
             } catch (ApiException apiException) {
-                throw new ComputeEnvNotFoundException(request.getLaunch().getId(), workspaceId());
+                throw new ComputeEnvNotFoundException(request.getLaunch().getId(), workspace.workspaceId);
             }
         }
 
-        api().createPipeline(request, workspaceId());
+        api().createPipeline(request, workspace.workspaceId);
 
-        return new PipelinesCreated(workspaceRef(), name);
+        return new PipelinesAdded(workspaceRef(workspace.workspaceId), name);
     }
 }

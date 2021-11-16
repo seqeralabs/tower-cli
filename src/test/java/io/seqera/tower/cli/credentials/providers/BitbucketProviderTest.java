@@ -15,7 +15,7 @@
 package io.seqera.tower.cli.credentials.providers;
 
 import io.seqera.tower.cli.BaseCmdTest;
-import io.seqera.tower.cli.responses.CredentialsCreated;
+import io.seqera.tower.cli.responses.CredentialsAdded;
 import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
@@ -29,7 +29,7 @@ import static org.mockserver.model.HttpResponse.response;
 class BitbucketProviderTest extends BaseCmdTest {
 
     @Test
-    void testCreate(MockServerClient mock) {
+    void testAdd(MockServerClient mock) {
 
         mock.when(
                 request().withMethod("POST").withPath("/credentials").withBody("{\"credentials\":{\"keys\":{\"username\":\"jordi@seqera.io\",\"password\":\"mysecret\"},\"name\":\"bitbucket\",\"provider\":\"bitbucket\"}}"), exactly(1)
@@ -37,10 +37,10 @@ class BitbucketProviderTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"credentialsId\":\"1cz5A8cuBkB5iJliCwJCFU\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "credentials", "create", "bitbucket", "-n", "bitbucket", "-u", "jordi@seqera.io", "-p", "mysecret");
+        ExecOut out = exec(mock, "credentials", "add", "bitbucket", "-n", "bitbucket", "-u", "jordi@seqera.io", "-p", "mysecret");
 
         assertEquals("", out.stdErr);
-        assertEquals(new CredentialsCreated("bitbucket", "1cz5A8cuBkB5iJliCwJCFU", "bitbucket", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new CredentialsAdded("bitbucket", "1cz5A8cuBkB5iJliCwJCFU", "bitbucket", USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
 
     }

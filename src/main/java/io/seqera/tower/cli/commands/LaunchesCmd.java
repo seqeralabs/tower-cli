@@ -12,6 +12,7 @@
 package io.seqera.tower.cli.commands;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.exceptions.InvalidResponseException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.RunSubmited;
@@ -21,6 +22,7 @@ import io.seqera.tower.model.ListPipelinesResponse;
 import io.seqera.tower.model.SubmitWorkflowLaunchRequest;
 import io.seqera.tower.model.SubmitWorkflowLaunchResponse;
 import io.seqera.tower.model.WorkflowLaunchRequest;
+import picocli.CommandLine;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -36,26 +38,29 @@ import static io.seqera.tower.cli.utils.ModelHelper.createLaunchRequest;
 
 @Command(
         name = "launch",
-        description = "Run a Nextflow pipeline"
+        description = "Launch a Nextflow pipeline execution."
 )
 public class LaunchesCmd extends AbstractRootCmd {
 
-    @Parameters(index = "0", paramLabel = "PIPELINE_OR_URL", description = "Workspace pipeline name or full pipeline URL", arity = "1")
+    @Parameters(index = "0", paramLabel = "PIPELINE_OR_URL", description = "Workspace pipeline name or full pipeline URL.", arity = "1")
     String pipeline;
 
-    @Option(names = {"--params"}, description = "Parameters file")
+    @CommandLine.Mixin
+    public WorkspaceOptionalOptions workspace;
+
+    @Option(names = {"--params"}, description = "Parameters file.")
     Path params;
 
-    @Option(names = {"-c", "--compute-env"}, description = "Compute environment name (defaults to workspace primary)")
+    @Option(names = {"-c", "--compute-env"}, description = "Compute environment name [default: primary workspace].")
     String computeEnv;
 
-    @Option(names = {"-w", "--work-dir"}, description = "Working directory")
+    @Option(names = {"--work-dir"}, description = "Working directory.")
     String workDir;
 
-    @Option(names = {"-p", "--profile"}, split = ",", description = "Configuration profiles")
+    @Option(names = {"-p", "--profile"}, split = ",", description = "Configuration profiles.")
     List<String> profile;
 
-    @Option(names = {"-r", "--revision"}, description = "A valid repository commit Id, tag or branch name")
+    @Option(names = {"-r", "--revision"}, description = "A valid repository commit Id, tag or branch name.")
     String revision;
 
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
@@ -80,7 +85,7 @@ public class LaunchesCmd extends AbstractRootCmd {
     protected Response runNextflowPipeline() throws ApiException, IOException {
 
         // Retrieve the provided computeEnv or use the primary if not provided
-        ComputeEnv ce = computeEnv != null ? computeEnvByName(computeEnv) : primaryComputeEnv();
+        ComputeEnv ce = computeEnv != null ? computeEnvByName(workspace.workspaceId, computeEnv) : primaryComputeEnv(workspace.workspaceId);
 
         return submitWorkflow(updateLaunchRequest(new WorkflowLaunchRequest()
                 .pipeline(pipeline)
@@ -108,7 +113,7 @@ public class LaunchesCmd extends AbstractRootCmd {
     }
 
     protected Response runTowerPipeline() throws ApiException, IOException {
-        ListPipelinesResponse pipelines = api().listPipelines(workspaceId(), 2, 0, pipeline);
+        ListPipelinesResponse pipelines = api().listPipelines(workspace.workspaceId, 2, 0, pipeline);
         if (pipelines.getTotalSize() == 0) {
             throw new InvalidResponseException(String.format("Pipeline '%s' not found on this workspace.", pipeline));
         }
@@ -118,24 +123,24 @@ public class LaunchesCmd extends AbstractRootCmd {
         }
 
         Long pipelineId = pipelines.getPipelines().get(0).getPipelineId();
-        Launch launch = api().describePipelineLaunch(pipelineId, workspaceId()).getLaunch();
+        Launch launch = api().describePipelineLaunch(pipelineId, workspace.workspaceId).getLaunch();
 
         return submitWorkflow(updateLaunchRequest(createLaunchRequest(launch)));
     }
 
     protected Response submitWorkflow(WorkflowLaunchRequest launch) throws ApiException {
-        SubmitWorkflowLaunchResponse response = api().createWorkflowLaunch(new SubmitWorkflowLaunchRequest().launch(launch), workspaceId());
+        SubmitWorkflowLaunchResponse response = api().createWorkflowLaunch(new SubmitWorkflowLaunchRequest().launch(launch), workspace.workspaceId);
         String workflowId = response.getWorkflowId();
-        return new RunSubmited(workflowId, workflowWatchUrl(workflowId), workspaceRef());
+        return new RunSubmited(workflowId, workflowWatchUrl(workflowId), workspaceRef(workspace.workspaceId));
     }
 
     private String workflowWatchUrl(String workflowId) throws ApiException {
 
-        if (workspaceId() == null) {
+        if (workspace.workspaceId == null) {
             return String.format("%s/user/%s/watch/%s", serverUrl(), userName(), workflowId);
         }
 
-        return String.format("%s/orgs/%s/workspaces/%s/watch/%s", serverUrl(), orgName(), workspaceName(), workflowId);
+        return String.format("%s/orgs/%s/workspaces/%s/watch/%s", serverUrl(), orgName(workspace.workspaceId), workspaceName(workspace.workspaceId), workflowId);
     }
 
     private AdvancedOptions adv() {
@@ -147,28 +152,28 @@ public class LaunchesCmd extends AbstractRootCmd {
 
     public static class AdvancedOptions {
 
-        @Option(names = {"--config"}, description = "Additional Nextflow config settings can be provided in the above field. These settings will be included in the nextflow.config file for this execution")
+        @Option(names = {"--config"}, description = "Additional Nextflow config settings can be provided in the above field. These settings will be included in the `nextflow.config` file for this execution.")
         public Path config;
 
-        @Option(names = {"--pre-run"}, description = "Pre-run script")
+        @Option(names = {"--pre-run"}, description = "Pre-run script.")
         public Path preRunScript;
 
-        @Option(names = {"--post-run"}, description = "Post-run script")
+        @Option(names = {"--post-run"}, description = "Post-run script.")
         public Path postRunScript;
 
-        @Option(names = {"--pull-latest"}, description = "Enabling this option Nextflow pulls the latest version from the Git repository before run the pipeline")
+        @Option(names = {"--pull-latest"}, description = "Enable Nextflow to pull the latest repository version before running the pipeline.")
         public Boolean pullLatest;
 
-        @Option(names = {"--stub-run"}, description = "Execute the workflow replacing process scripts with command stubs")
+        @Option(names = {"--stub-run"}, description = "Execute the workflow replacing process scripts with command stubs.")
         public Boolean stubRun;
 
-        @Option(names = {"--main-script"}, description = "Specify the pipeline main script file if different from `main.nf`")
+        @Option(names = {"--main-script"}, description = "Specify the pipeline main script file if different from `main.nf`.")
         public String mainScript;
 
-        @Option(names = {"--entry-name"}, description = "Specify the main workflow name to be executed when using DLS2 syntax")
+        @Option(names = {"--entry-name"}, description = "Specify the main workflow name to be executed when using DLS2 syntax.")
         public String entryName;
 
-        @Option(names = {"--schema-name"}, description = "Enter schema name")
+        @Option(names = {"--schema-name"}, description = "Enter schema name.")
         public String schemaName;
 
     }

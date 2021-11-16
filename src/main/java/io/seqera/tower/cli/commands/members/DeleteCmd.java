@@ -22,15 +22,15 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "delete",
-        description = "Delete an organization member"
+        description = "Delete an organization member."
 )
 public class DeleteCmd extends AbstractMembersClass{
 
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization's name identifier", required = true)
-    public String organizationName;
-
-    @CommandLine.Option(names = {"-u", "--user"}, description = "Username or email of user to delete from organization's members", required = true)
+    @CommandLine.Option(names = {"-u", "--user"}, description = "Username or email to delete from organization members.", required = true)
     public String user;
+
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name identifier.", required = true)
+    public String organizationName;
 
     @Override
     protected Response exec() throws ApiException, IOException {

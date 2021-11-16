@@ -12,7 +12,7 @@
 package io.seqera.tower.cli.computeenvs.platforms;
 
 import io.seqera.tower.cli.BaseCmdTest;
-import io.seqera.tower.cli.responses.ComputeEnvCreated;
+import io.seqera.tower.cli.responses.ComputeEnvAdded;
 import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
@@ -27,7 +27,7 @@ import static org.mockserver.model.HttpResponse.response;
 class SlurmPlatformTest extends BaseCmdTest {
 
     @Test
-    void testCreate(MockServerClient mock) {
+    void testAdd(MockServerClient mock) {
 
         mock.when(
                 request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "slurm-platform"), exactly(1)
@@ -41,15 +41,15 @@ class SlurmPlatformTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "compute-envs", "create", "slurm", "-n", "slurm", "-w", "/home/jordeu/nf", "-u", "jordi", "-H", "ssh.mydomain.net", "-q", "normal");
+        ExecOut out = exec(mock, "compute-envs", "add", "slurm", "-n", "slurm", "--work-dir", "/home/jordeu/nf", "-u", "jordi", "-H", "ssh.mydomain.net", "-q", "normal");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvCreated("slurm-platform", "slurm", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("slurm-platform", "slurm", USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
     @Test
-    void testCreateWithAdvancedOptions(MockServerClient mock) {
+    void testAddWithAdvancedOptions(MockServerClient mock) {
 
         mock.when(
                 request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "slurm-platform"), exactly(1)
@@ -63,10 +63,10 @@ class SlurmPlatformTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "compute-envs", "create", "slurm", "-n", "slurm", "-w", "/home/jordeu/nf", "-u", "jordi", "-H", "ssh.mydomain.net", "-q", "normal", "--max-queue-size=200");
+        ExecOut out = exec(mock, "compute-envs", "add", "slurm", "-n", "slurm", "--work-dir", "/home/jordeu/nf", "-u", "jordi", "-H", "ssh.mydomain.net", "-q", "normal", "--max-queue-size=200");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvCreated("slurm-platform", "slurm", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("slurm-platform", "slurm", USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

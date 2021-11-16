@@ -11,28 +11,33 @@
 
 package io.seqera.tower.cli.commands.actions;
 
-import java.io.IOException;
-
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.actions.ActionsView;
 import io.seqera.tower.model.DescribeActionResponse;
 import io.seqera.tower.model.ListActionsResponseActionInfo;
 import picocli.CommandLine;
 
+import java.io.IOException;
+
 @CommandLine.Command(
         name = "view",
-        description = "Describe an existing Pipeline Action"
+        description = "Describe an existing Pipeline Action."
 )
 public class ViewCmd extends AbstractActionsCmd {
-    @CommandLine.Option(names = {"-n", "--name"}, description = "Action name", required = true)
+
+    @CommandLine.Option(names = {"-n", "--name"}, description = "Action name.", required = true)
     public String actionName;
+
+    @CommandLine.Mixin
+    public WorkspaceOptionalOptions workspace;
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        ListActionsResponseActionInfo listActionsResponseActionInfo = actionByName(actionName);
+        ListActionsResponseActionInfo listActionsResponseActionInfo = actionByName(workspace.workspaceId, actionName);
 
-        DescribeActionResponse response = api().describeAction(listActionsResponseActionInfo.getId(), workspaceId());
+        DescribeActionResponse response = api().describeAction(listActionsResponseActionInfo.getId(), workspace.workspaceId);
 
         return new ActionsView(response.getAction());
     }

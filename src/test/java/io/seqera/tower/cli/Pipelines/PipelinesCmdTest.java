@@ -22,7 +22,7 @@ import io.seqera.tower.cli.exceptions.NoComputeEnvironmentException;
 import io.seqera.tower.cli.exceptions.PipelineNotFoundException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.exceptions.WorkspaceNotFoundException;
-import io.seqera.tower.cli.responses.pipelines.PipelinesCreated;
+import io.seqera.tower.cli.responses.pipelines.PipelinesAdded;
 import io.seqera.tower.cli.responses.pipelines.PipelinesDeleted;
 import io.seqera.tower.cli.responses.pipelines.PipelinesExport;
 import io.seqera.tower.cli.responses.pipelines.PipelinesList;
@@ -125,12 +125,12 @@ class PipelinesCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testCreate(MockServerClient mock) throws IOException {
+    void testAdd(MockServerClient mock) throws IOException {
 
         mock.when(
                 request().withMethod("GET").withPath("/compute-envs").withQueryStringParameter("status", "AVAILABLE"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
@@ -145,16 +145,16 @@ class PipelinesCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"pipeline\":{\"pipelineId\":18388134856008,\"name\":\"sleep_one_minute\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/pditommaso/nf-sleep\",\"userId\":4,\"userName\":\"jordi\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null}}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "pipelines", "create", "-n", "sleep_one_minute", "--params", tempFile("timeout: 60\n", "params", ".yml"), "https://github.com/pditommaso/nf-sleep");
+        ExecOut out = exec(mock, "pipelines", "add", "-n", "sleep_one_minute", "--params", tempFile("timeout: 60\n", "params", ".yml"), "https://github.com/pditommaso/nf-sleep");
 
         assertEquals("", out.stdErr);
-        assertEquals(new PipelinesCreated(USER_WORKSPACE_NAME, "sleep_one_minute").toString(), out.stdOut);
+        assertEquals(new PipelinesAdded(USER_WORKSPACE_NAME, "sleep_one_minute").toString(), out.stdOut);
         assertEquals(0, out.exitCode);
 
     }
 
     @Test
-    void testCreateWithComputeEnv(MockServerClient mock) {
+    void testAddWithComputeEnv(MockServerClient mock) {
 
         mock.when(
                 request().withMethod("GET").withPath("/compute-envs").withQueryStringParameter("status", "AVAILABLE"), exactly(1)
@@ -174,21 +174,21 @@ class PipelinesCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"pipeline\":{\"pipelineId\":18388134856008,\"name\":\"demo\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/pditommaso/nf-sleep\",\"userId\":4,\"userName\":\"jordi\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null}}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "pipelines", "create", "-n", "demo", "-c", "demo", "https://github.com/pditommaso/nf-sleep");
+        ExecOut out = exec(mock, "pipelines", "add", "-n", "demo", "-c", "demo", "https://github.com/pditommaso/nf-sleep");
 
         assertEquals("", out.stdErr);
-        assertEquals(new PipelinesCreated(USER_WORKSPACE_NAME, "demo").toString(), out.stdOut);
+        assertEquals(new PipelinesAdded(USER_WORKSPACE_NAME, "demo").toString(), out.stdOut);
         assertEquals(0, out.exitCode);
 
     }
 
     @Test
-    void testCreateWithStagingScripts(MockServerClient mock) throws IOException {
+    void testAddWithStagingScripts(MockServerClient mock) throws IOException {
 
         mock.when(
                 request().withMethod("GET").withPath("/compute-envs").withQueryStringParameter("status", "AVAILABLE"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
@@ -203,10 +203,10 @@ class PipelinesCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"pipeline\":{\"pipelineId\":21697594587521,\"name\":\"staging\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/pditommaso/nf-sleep\",\"userId\":4,\"userName\":\"jordi\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null}}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "pipelines", "create", "-n", "staging", "-w", "s3://nextflow-ci/staging", "--pre-run", tempFile("pre_run_this", "pre", "sh"), "--post-run", tempFile("post_run_this", "post", "sh"), "https://github.com/pditommaso/nf-sleep");
+        ExecOut out = exec(mock, "pipelines", "add", "-n", "staging", "--work-dir", "s3://nextflow-ci/staging", "--pre-run", tempFile("pre_run_this", "pre", "sh"), "--post-run", tempFile("post_run_this", "post", "sh"), "https://github.com/pditommaso/nf-sleep");
 
         assertEquals("", out.stdErr);
-        assertEquals(new PipelinesCreated(USER_WORKSPACE_NAME, "staging").toString(), out.stdOut);
+        assertEquals(new PipelinesAdded(USER_WORKSPACE_NAME, "staging").toString(), out.stdOut);
         assertEquals(0, out.exitCode);
 
     }
@@ -220,11 +220,11 @@ class PipelinesCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"computeEnvs\":[]}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "pipelines", "create", "-n", "sleep_one_minute", "https://github.com/pditommaso/nf-sleep");
+        ExecOut out = exec(mock, "pipelines", "add", "-n", "sleep_one_minute", "https://github.com/pditommaso/nf-sleep");
 
         assertEquals(errorMessage(out.app, new NoComputeEnvironmentException(USER_WORKSPACE_NAME)), out.stdErr);
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
 
     }
 
@@ -261,7 +261,7 @@ class PipelinesCmdTest extends BaseCmdTest {
 
         assertEquals(errorMessage(out.app, new PipelineNotFoundException("sleep_all", USER_WORKSPACE_NAME)), out.stdErr);
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
     }
 
     @Test
@@ -276,7 +276,7 @@ class PipelinesCmdTest extends BaseCmdTest {
 
         assertEquals(errorMessage(out.app, new MultiplePipelinesFoundException("hello", USER_WORKSPACE_NAME)), out.stdErr);
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
     }
 
     @Test
@@ -367,7 +367,7 @@ class PipelinesCmdTest extends BaseCmdTest {
 
         assertEquals(errorMessage(out.app, new TowerException("Please use either --page or --offset as pagination parameter")), out.stdErr);
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
     }
 
     @Test
@@ -385,7 +385,7 @@ class PipelinesCmdTest extends BaseCmdTest {
 
         assertEquals(errorMessage(out.app, new TowerException("Please use either --no-max or --max as pagination size parameter")), out.stdErr);
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
     }
 
     @Test
@@ -413,7 +413,7 @@ class PipelinesCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{ \"pipelines\": [], \"totalSize\": 0 }").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "--json", "pipelines", "list");
+        ExecOut out = exec(mock, "--output", "json", "pipelines", "list");
 
         assertEquals("", out.stdErr);
         assertEquals(prettyJson(new PipelinesList(USER_WORKSPACE_NAME, List.of()).getJSON()), out.stdOut);
@@ -483,7 +483,7 @@ class PipelinesCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"pipelines\":[],\"totalSize\":0}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "-w", "cli", "-o", "seqera", "pipelines", "list");
+        ExecOut out = exec(mock, "pipelines", "list", "-w", "222756650686576");
 
         assertEquals("", out.stdErr);
         assertEquals(chop(new PipelinesList(buildWorkspaceRef("Seqera", "cli"), List.of()).toString()), out.stdOut);
@@ -505,11 +505,11 @@ class PipelinesCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"orgsAndWorkspaces\":[{\"orgId\":166815615776895,\"orgName\":\"Seqera\",\"orgLogoUrl\":null,\"workspaceId\":null,\"workspaceName\":null},{\"orgId\":166815615776895,\"orgName\":\"Seqera\",\"orgLogoUrl\":null,\"workspaceId\":222756650686576,\"workspaceName\":\"cli\"}]}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "-w", "cli", "-o", "sequera", "pipelines", "list");
+        ExecOut out = exec(mock, "pipelines", "list", "-w", "222756650686577");
 
-        assertEquals(errorMessage(out.app, new WorkspaceNotFoundException("cli", "sequera")), out.stdErr);
+        assertEquals(errorMessage(out.app, new WorkspaceNotFoundException(222756650686577L)), out.stdErr);
         assertEquals("", out.stdOut);
-        assertEquals(-1, out.exitCode);
+        assertEquals(1, out.exitCode);
     }
 
     @Test
@@ -552,7 +552,7 @@ class PipelinesCmdTest extends BaseCmdTest {
         ).respond(
                 response()
                         .withStatusCode(200)
-                        .withBody(loadResource("pipelines_create_response"))
+                        .withBody(loadResource("pipelines_add_response"))
                         .withContentType(MediaType.APPLICATION_JSON)
         );
 
@@ -568,10 +568,10 @@ class PipelinesCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("compute_env_view")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "pipelines", "import", tempFile(new String(loadResource("pipelines_create"), StandardCharsets.UTF_8), "data", ".json"), "-n", "pipelineNew");
+        ExecOut out = exec(mock, "pipelines", "import", tempFile(new String(loadResource("pipelines_add"), StandardCharsets.UTF_8), "data", ".json"), "-n", "pipelineNew");
 
         assertEquals("", out.stdErr);
-        assertEquals(new PipelinesCreated(USER_WORKSPACE_NAME, "pipelineNew").toString(), out.stdOut);
+        assertEquals(new PipelinesAdded(USER_WORKSPACE_NAME, "pipelineNew").toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -584,7 +584,7 @@ class PipelinesCmdTest extends BaseCmdTest {
         ).respond(
                 response()
                         .withStatusCode(200)
-                        .withBody(loadResource("pipelines_create_response"))
+                        .withBody(loadResource("pipelines_add_response"))
                         .withContentType(MediaType.APPLICATION_JSON)
         );
 
@@ -600,10 +600,10 @@ class PipelinesCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("compute_env_view")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "pipelines", "import", tempFile(new String(loadResource("pipelines_create"), StandardCharsets.UTF_8), "data", ".json"), "-n", "pipelineNew", "-c", "demo");
+        ExecOut out = exec(mock, "pipelines", "import", tempFile(new String(loadResource("pipelines_add"), StandardCharsets.UTF_8), "data", ".json"), "-n", "pipelineNew", "-c", "demo");
 
         assertEquals("", out.stdErr);
-        assertEquals(new PipelinesCreated(USER_WORKSPACE_NAME, "pipelineNew").toString(), out.stdOut);
+        assertEquals(new PipelinesAdded(USER_WORKSPACE_NAME, "pipelineNew").toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 }

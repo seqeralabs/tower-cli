@@ -12,7 +12,7 @@
 package io.seqera.tower.cli.computeenvs.platforms;
 
 import io.seqera.tower.cli.BaseCmdTest;
-import io.seqera.tower.cli.responses.ComputeEnvCreated;
+import io.seqera.tower.cli.responses.ComputeEnvAdded;
 import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
@@ -29,7 +29,7 @@ import static org.mockserver.model.HttpResponse.response;
 class GkePlatformTest extends BaseCmdTest {
 
     @Test
-    void testCreate(MockServerClient mock) throws IOException {
+    void testAdd(MockServerClient mock) throws IOException {
 
         mock.when(
                 request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "gke-platform"), exactly(1)
@@ -43,15 +43,15 @@ class GkePlatformTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "compute-envs", "create", "gke", "-n", "gke", "-w", "/workdir", "-r", "europe", "--cluster-name", "tower", "--namespace", "nf", "--head-account", "head", "--storage-claim", "nf");
+        ExecOut out = exec(mock, "compute-envs", "add", "gke", "-n", "gke", "--work-dir", "/workdir", "-r", "europe", "--cluster-name", "tower", "--namespace", "nf", "--head-account", "head", "--storage-claim", "nf");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvCreated("gke-platform", "gke", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("gke-platform", "gke", USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
     @Test
-    void testCreateWithAdvancedOptions(MockServerClient mock) throws IOException {
+    void testAddWithAdvancedOptions(MockServerClient mock) throws IOException {
 
         mock.when(
                 request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "gke-platform"), exactly(1)
@@ -65,10 +65,10 @@ class GkePlatformTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "compute-envs", "create", "gke", "-n", "gke", "-w", "/workdir", "-r", "europe", "--cluster-name", "tower", "--namespace", "nf", "--head-account", "head", "--storage-claim", "nf", "--storage-mount=/workdir");
+        ExecOut out = exec(mock, "compute-envs", "add", "gke", "-n", "gke", "--work-dir", "/workdir", "-r", "europe", "--cluster-name", "tower", "--namespace", "nf", "--head-account", "head", "--storage-claim", "nf", "--storage-mount=/workdir");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvCreated("gke-platform", "gke", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("gke-platform", "gke", USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

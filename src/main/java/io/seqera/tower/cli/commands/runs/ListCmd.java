@@ -13,6 +13,7 @@ package io.seqera.tower.cli.commands.runs;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.PaginationOptions;
+import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.RunList;
 import io.seqera.tower.model.ListWorkflowsResponse;
@@ -22,11 +23,14 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "list",
-        description = "List all pipeline's runs"
+        description = "List all pipeline runs."
 )
 public class ListCmd extends AbstractRunsCmd {
 
-    @CommandLine.Option(names = {"-f", "--filter"}, description = "Show only pipeline's runs that it's name starts with the given word")
+    @CommandLine.Mixin
+    public WorkspaceOptionalOptions workspace;
+
+    @CommandLine.Option(names = {"-f", "--filter"}, description = "Show only pipeline runs with names that start with the given word.")
     public String startsWith;
 
     @CommandLine.Mixin
@@ -37,7 +41,7 @@ public class ListCmd extends AbstractRunsCmd {
         Integer max = PaginationOptions.getMax(paginationOptions);
         Integer offset = PaginationOptions.getOffset(paginationOptions, max);
 
-        ListWorkflowsResponse response = api().listWorkflows(workspaceId(), max, offset, startsWith);
-        return new RunList(workspaceRef(), response.getWorkflows());
+        ListWorkflowsResponse response = api().listWorkflows(workspace.workspaceId, max, offset, startsWith);
+        return new RunList(workspaceRef(workspace.workspaceId), response.getWorkflows());
     }
 }

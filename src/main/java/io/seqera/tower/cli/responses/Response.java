@@ -50,7 +50,7 @@ public abstract class Response {
     }
 
     public int getExitCode() {
-        return 0;
+        return CommandLine.ExitCode.OK;
     }
 
 }

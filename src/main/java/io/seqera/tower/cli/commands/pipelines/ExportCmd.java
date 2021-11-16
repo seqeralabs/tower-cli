@@ -14,6 +14,7 @@ package io.seqera.tower.cli.commands.pipelines;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.JSON;
+import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.pipelines.PipelinesExport;
 import io.seqera.tower.cli.utils.FilesHelper;
@@ -26,20 +27,23 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "export",
-        description = "Export a workspace pipeline for further creation"
+        description = "Export a workspace pipeline for further creation."
 )
 public class ExportCmd extends AbstractPipelinesCmd{
 
-    @CommandLine.Option(names = {"-n", "--name"}, description = "Pipeline name", required = true)
+    @CommandLine.Option(names = {"-n", "--name"}, description = "Pipeline name.", required = true)
     public String name;
 
-    @CommandLine.Parameters(index = "0", paramLabel = "FILENAME", description = "File name to export", arity = "0..1")
+    @CommandLine.Mixin
+    public WorkspaceOptionalOptions workspace;
+
+    @CommandLine.Parameters(index = "0", paramLabel = "FILENAME", description = "File name to export.", arity = "0..1")
     String fileName = null;
 
     @Override
     protected Response exec() throws ApiException {
-        PipelineDbDto pipeline = pipelineByName(name);
-        DescribeLaunchResponse resp = api().describePipelineLaunch(pipeline.getPipelineId(), workspaceId());
+        PipelineDbDto pipeline = pipelineByName(workspace.workspaceId, name);
+        DescribeLaunchResponse resp = api().describePipelineLaunch(pipeline.getPipelineId(), workspace.workspaceId);
 
         WorkflowLaunchRequest workflowLaunchRequest = ModelHelper.createLaunchRequest(resp.getLaunch());
 

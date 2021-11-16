@@ -27,18 +27,18 @@ public class PaginationOptions {
     public Sizeable sizeable;
 
     public static class Pageable {
-        @CommandLine.Option(names = {"--page"}, description = "Page to display to display (default is 1)")
+        @CommandLine.Option(names = {"--page"}, description = "Pages to display [default: 1].")
         public Integer page;
 
-        @CommandLine.Option(names = {"--offset"}, description = "Rows record's offset (default is 0)")
+        @CommandLine.Option(names = {"--offset"}, description = "Rows record offset [default: 0].")
         public Integer offset;
     }
 
     public static class Sizeable {
-        @CommandLine.Option(names = {"--max"}, description = "Maximum number of records to display (default is " + MAX + ")")
+        @CommandLine.Option(names = {"--max"}, description = "Maximum number of records to display [default: ." + MAX + "]")
         public Integer max;
 
-        @CommandLine.Option(names = {"--no-max"}, description = "Show all records")
+        @CommandLine.Option(names = {"--no-max"}, description = "Show all records.")
         public Boolean noMax;
     }
 
