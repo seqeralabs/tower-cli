@@ -1,9 +1,5 @@
 [
 {
-  "name":"apple.security.AppleProvider",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"byte[]"
 },
 {
@@ -62,21 +58,6 @@
   "allDeclaredMethods":true
 },
 {
-  "name":"io.seqera.tower.cli.Tower$OrgAndWorkspace",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.autocomplete.AutocompleteCmd",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true
-},
-{
-  "name":"io.seqera.tower.cli.autocomplete.WorkspacePipelinesCompletion",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"io.seqera.tower.cli.commands.AbstractApiCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
@@ -98,18 +79,7 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.BaseCmd",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true
-},
-{
   "name":"io.seqera.tower.cli.commands.CollaboratorsCmd",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.ComputeEnvCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
@@ -127,27 +97,10 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.HealthCheckCmd",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"io.seqera.tower.cli.commands.InfoCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.LaunchCmd",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.LaunchCmd$AdvancedOptions",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true
 },
 {
   "name":"io.seqera.tower.cli.commands.LaunchesCmd",
@@ -185,12 +138,6 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.RunCmd",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"io.seqera.tower.cli.commands.RunsCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -198,12 +145,6 @@
 },
 {
   "name":"io.seqera.tower.cli.commands.TeamsCmd",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.WorkspaceCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
@@ -232,19 +173,7 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.actions.LaunchCmd",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"io.seqera.tower.cli.commands.actions.ListCmd",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.actions.PauseCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
@@ -290,268 +219,9 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.computeenv.AbstractComputeEnvCmd",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.AddCmd",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.DeleteCmd",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.ListCmd",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.ViewCmd",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.add.AbstractAddCmd",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.add.AddAltairCmd",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.add.AddAwsCmd",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.add.AddAwsManualCmd",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.add.AddAzureCmd",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.add.AddAzureManualCmd",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.add.AddEksCmd",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.add.AddGkeCmd",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.add.AddGoogleCmd",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.add.AddJsonCmd",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.add.AddK8sCmd",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.add.AddLsfCmd",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.add.AddSlurmCmd",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.add.AddUgeCmd",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.platforms.AbstractPlatform",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.platforms.AbstractPlatform$StagingOptions",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.platforms.AwsBatchForgePlatform",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.platforms.AwsBatchForgePlatform$AdvancedOptions",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.platforms.AwsBatchForgePlatform$EfsFileSystem",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.platforms.AwsBatchForgePlatform$FsxFileSystem",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.platforms.AwsBatchManualPlatform",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.platforms.AwsBatchManualPlatform$AdvancedOptions",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.platforms.AzBatchForgePlatform",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.platforms.AzBatchForgePlatform$AdvancedOptions",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.platforms.AzBatchManualPlatform",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.platforms.AzBatchManualPlatform$AdvancedOptions",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.platforms.EksPlatform",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.platforms.EksPlatform$AdvancedOptions",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.platforms.GkePlatform",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.platforms.GoogleLifeSciencesPlatform",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.platforms.GoogleLifeSciencesPlatform$AdvancedOptions",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.platforms.GoogleLifeSciencesPlatform$Filestore",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.platforms.K8sPlatform",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.platforms.K8sPlatform$AdvancedOptions",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.platforms.LsfPlatform",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.platforms.LsfPlatform$AdvancedOptions",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.platforms.SlurmPlatform",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.platforms.SlurmPlatform$AdvancedOptions",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.platforms.UnivaPlatform",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenv.platforms.UnivaPlatform$AdvancedOptions",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true
-},
-{
   "name":"io.seqera.tower.cli.commands.computeenvs.AbstractComputeEnvCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenvs.AddCmd",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.DeleteCmd",
@@ -607,19 +277,7 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.computeenvs.add.AddAwsManualCmd",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"io.seqera.tower.cli.commands.computeenvs.add.AddAzureCmd",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenvs.add.AddAzureManualCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
@@ -638,12 +296,6 @@
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.add.AddGoogleCmd",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenvs.add.AddJsonCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
@@ -1102,12 +754,6 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.global.WorkspaceOptions",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"io.seqera.tower.cli.commands.global.WorkspaceRequiredOptions",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1201,12 +847,6 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.participants.ChangeCmd",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"io.seqera.tower.cli.commands.participants.DeleteCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1220,12 +860,6 @@
 },
 {
   "name":"io.seqera.tower.cli.commands.participants.ListCmd",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.participants.ParticipantsOptions",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
@@ -1319,12 +953,6 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.runs.RunOptions",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"io.seqera.tower.cli.commands.runs.RunViewOptions",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1338,12 +966,6 @@
 },
 {
   "name":"io.seqera.tower.cli.commands.runs.download.DownloadCmd",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.runs.metrics.MetricCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
@@ -1419,16 +1041,6 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.workspaces.DeleteCmd$DeleteById",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true
-},
-{
-  "name":"io.seqera.tower.cli.commands.workspaces.DeleteCmd$DeleteByName",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true
-},
-{
   "name":"io.seqera.tower.cli.commands.workspaces.LeaveCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1447,64 +1059,7 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.workspaces.UpdateCmd$UpdateById",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true
-},
-{
-  "name":"io.seqera.tower.cli.commands.workspaces.UpdateCmd$UpdateByName",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true
-},
-{
   "name":"io.seqera.tower.cli.commands.workspaces.ViewCmd",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.workspaces.WorkspaceOptions",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.workspaces.WorkspacesDeleteOptions",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.workspaces.WorkspacesDeleteOptions$DeleteById",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.workspaces.WorkspacesDeleteOptions$DeleteByName",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.workspaces.WorkspacesMatchOptions",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.workspaces.WorkspacesMatchOptions$ByNameOrId",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true
-},
-{
-  "name":"io.seqera.tower.cli.commands.workspaces.WorkspacesMatchOptions$MatchById",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.workspaces.WorkspacesMatchOptions$MatchByName",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
@@ -1546,18 +1101,6 @@
   "allDeclaredConstructors":true
 },
 {
-  "name":"io.seqera.tower.cli.responses.HealthCheckResponse",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
-},
-{
-  "name":"io.seqera.tower.cli.responses.PipelinesList",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
-},
-{
   "name":"io.seqera.tower.cli.responses.Response",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
@@ -1593,42 +1136,6 @@
   "allDeclaredConstructors":true
 },
 {
-  "name":"io.seqera.tower.cli.responses.Workspaces.WorkspaceAdded",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
-},
-{
-  "name":"io.seqera.tower.cli.responses.Workspaces.WorkspaceDeleted",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
-},
-{
-  "name":"io.seqera.tower.cli.responses.Workspaces.WorkspaceList",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
-},
-{
-  "name":"io.seqera.tower.cli.responses.Workspaces.WorkspaceUpdated",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
-},
-{
-  "name":"io.seqera.tower.cli.responses.Workspaces.WorkspaceView",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
-},
-{
-  "name":"io.seqera.tower.cli.responses.actions.ActionsAdd",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
-},
-{
   "name":"io.seqera.tower.cli.responses.actions.ActionsDelete",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1636,12 +1143,6 @@
 },
 {
   "name":"io.seqera.tower.cli.responses.actions.ActionsList",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
-},
-{
-  "name":"io.seqera.tower.cli.responses.actions.ActionsUpdate",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true
@@ -1690,12 +1191,6 @@
 },
 {
   "name":"io.seqera.tower.cli.responses.participants.ParticipantAdded",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
-},
-{
-  "name":"io.seqera.tower.cli.responses.participants.ParticipantChanged",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true
@@ -1900,8 +1395,7 @@
 {
   "name":"io.seqera.tower.model.ComputeConfig",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "allDeclaredMethods":true
 },
 {
   "name":"io.seqera.tower.model.ComputeEnv",
@@ -1919,10 +1413,6 @@
   "name":"io.seqera.tower.model.ComputeEnvStatus",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
-},
-{
-  "name":"io.seqera.tower.model.ComputeEnvStatus$Adapter",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.ComputePlatformDto",
@@ -2188,10 +1678,6 @@
   "allDeclaredMethods":true
 },
 {
-  "name":"io.seqera.tower.model.JobCleanupPolicy$Adapter",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"io.seqera.tower.model.JobInfoDto",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -2365,11 +1851,6 @@
   "allDeclaredConstructors":true
 },
 {
-  "name":"io.seqera.tower.model.ParticipantType",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true
-},
-{
   "name":"io.seqera.tower.model.PipelineDbDto",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -2380,10 +1861,6 @@
   "name":"io.seqera.tower.model.PodCleanupPolicy",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
-},
-{
-  "name":"io.seqera.tower.model.PodCleanupPolicy$Adapter",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.ProcessLoad",

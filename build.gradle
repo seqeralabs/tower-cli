@@ -2,8 +2,8 @@ plugins {
     id 'java'
     id 'application'
     id 'jacoco'
-    id 'com.palantir.graal' version '0.9.0'
     id 'org.cadixdev.licenser' version '0.6.1'
+    id 'org.graalvm.buildtools.native'
 }
 
 repositories {
@@ -14,8 +14,8 @@ repositories {
 dependencies {
     implementation 'javax.activation:activation:1.1.1'
     implementation 'org.slf4j:slf4j-api:1.7.32'
-    implementation 'ch.qos.logback:logback-core:1.2.5'
-    implementation 'ch.qos.logback:logback-classic:1.2.5'
+    implementation 'ch.qos.logback:logback-core:1.2.6'
+    implementation 'ch.qos.logback:logback-classic:1.2.6'
     implementation 'io.seqera:tower-java-sdk:1.1.0'
     implementation 'info.picocli:picocli:4.6.1'
     annotationProcessor 'info.picocli:picocli-codegen:4.6.1'
@@ -23,8 +23,8 @@ dependencies {
     testImplementation 'org.mock-server:mockserver-client-java:5.11.2'
     testImplementation 'org.mock-server:mockserver-netty:5.11.2'
     testImplementation 'org.mock-server:mockserver-junit-jupiter:5.11.2'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 }
 
 license {
@@ -61,15 +61,14 @@ task buildInfo {
 }
 
 compileJava {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.toVersion("11")
+    targetCompatibility = JavaVersion.toVersion("11")
     options.compilerArgs += ["-Aproject=${project.name}"]
     dependsOn buildInfo
 }
 
 application {
-    // Define the main class for the application.
-    mainClassName = 'io.seqera.tower.cli.Tower'
+    mainClass.set('io.seqera.tower.cli.Tower')
     applicationDefaultJvmArgs = ["-agentlib:native-image-agent=config-merge-dir=conf/"]
 }
 
@@ -80,19 +79,27 @@ test {
     dependsOn checkLicenses
 }
 
-graal {
-    graalVersion '21.1.0'
-    javaVersion '11'
-    mainClass 'io.seqera.tower.cli.Tower'
-    outputName 'tw'
-    option '--no-fallback'
-    option '--no-server'
-    option '--allow-incomplete-classpath'
-    option '--report-unsupported-elements-at-runtime'
-    option '-H:+AddAllCharsets'
-    option '-H:EnableURLProtocols=https,http'
-    option '-H:ConfigurationFileDirectories=conf/'
-    option '-H:+ReportExceptionStackTraces'
+graalvmNative {
+    binaries {
+        main {
+            imageName = 'tw'
+            mainClass = 'io.seqera.tower.cli.Tower'
+            configurationFileDirectories.from(file('conf'))
+
+            buildArgs(org.gradle.nativeplatform.platform.internal.DefaultNativePlatform.currentOperatingSystem.isLinux() ? ['--static', '--libc=musl'] : [])
+            buildArgs.add('--allow-incomplete-classpath')
+            buildArgs.add('--report-unsupported-elements-at-runtime')
+            buildArgs.add('-H:+AddAllCharsets')
+            buildArgs.add('-H:EnableURLProtocols=https,http')
+            buildArgs.add('-H:+ReportExceptionStackTraces')
+
+        }
+
+        test {
+            verbose = true
+            agent = true
+        }
+    }
 }
 
 configurations.all {
