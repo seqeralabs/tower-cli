@@ -32,19 +32,14 @@ This guide covers the installation and configuration of the CLI, cloud infrastru
 
 1. Download the latest version for your OS from the assets in the [releases](https://github.com/seqeralabs/tower-cli/releases) page.
 
-2. Unzip the binary file:
+2. Rename and make the file executable:
 
     ```bash
-    unzip tw*.zip
-    ```
-
-3. Make the file executable:
-
-    ```bash
+    mv tw-* tw
     chmod +x ./tw
     ```
 
-4. Move the file to a directory accessible by your `$PATH` variable:
+3. Move the file to a directory accessible by your `$PATH` variable:
 
     ```bash
     sudo mv tw /usr/local/bin/
