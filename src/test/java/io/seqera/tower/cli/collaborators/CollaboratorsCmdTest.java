@@ -9,7 +9,6 @@
  * defined by the Mozilla Public License, v. 2.0.
  */
 
-
 package io.seqera.tower.cli.collaborators;
 
 import com.fasterxml.jackson.core.JsonProcessingException;

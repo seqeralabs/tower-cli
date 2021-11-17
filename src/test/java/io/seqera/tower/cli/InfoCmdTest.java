@@ -46,8 +46,8 @@ public class InfoCmdTest extends BaseCmdTest {
 
         Map<String, String> opts = new HashMap<>();
         opts.put("cliVersion", getCliVersion() );
-        opts.put("cliApiVersion", "1.6");
-        opts.put("towerApiVersion", "1.6.0");
+        opts.put("cliApiVersion", getCliApiVersion());
+        opts.put("towerApiVersion", "1.7.0");
         opts.put("towerVersion", "21.10.0");
         opts.put("towerApiEndpoint", "http://localhost:"+mock.getPort());
         opts.put("userName", "jordi");
@@ -78,8 +78,8 @@ public class InfoCmdTest extends BaseCmdTest {
 
         Map<String, String> opts = new HashMap<>();
         opts.put("cliVersion", getCliVersion() );
-        opts.put("cliApiVersion", "1.6");
-        opts.put("towerApiVersion", "1.6.0");
+        opts.put("cliApiVersion", getCliApiVersion());
+        opts.put("towerApiVersion", "1.7.0");
         opts.put("towerVersion", "21.10.0");
         opts.put("towerApiEndpoint", "http://localhost:"+mock.getPort());
         opts.put("userName", null);
@@ -108,7 +108,7 @@ public class InfoCmdTest extends BaseCmdTest {
 
         Map<String, String> opts = new HashMap<>();
         opts.put("cliVersion", getCliVersion() );
-        opts.put("cliApiVersion", "1.6");
+        opts.put("cliApiVersion", getCliApiVersion());
         opts.put("towerApiVersion", "0.1");
         opts.put("towerVersion", "21.10.0");
         opts.put("towerApiEndpoint", "http://localhost:"+mock.getPort());
@@ -138,7 +138,7 @@ public class InfoCmdTest extends BaseCmdTest {
 
         Map<String, String> opts = new HashMap<>();
         opts.put("cliVersion", getCliVersion() );
-        opts.put("cliApiVersion", "1.6");
+        opts.put("cliApiVersion", getCliApiVersion());
         opts.put("towerApiVersion", null);
         opts.put("towerVersion", null);
         opts.put("towerApiEndpoint", "http://localhost:"+mock.getPort());
@@ -153,5 +153,11 @@ public class InfoCmdTest extends BaseCmdTest {
         Properties props = new Properties();
         props.load(this.getClass().getResourceAsStream("/META-INF/build-info.properties"));
         return String.format("%s (%s)", props.get("version"), props.get("commitId"));
+    }
+
+    private String getCliApiVersion() throws IOException {
+        Properties props = new Properties();
+        props.load(this.getClass().getResourceAsStream("/META-INF/build-info.properties"));
+        return String.format("%s", props.get("versionApi"));
     }
 }
