@@ -11,13 +11,10 @@
 
 package io.seqera.tower.cli.commands.runs.tasks.enums;
 
-import java.time.Duration;
-import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.function.Function;
-
 import io.seqera.tower.cli.utils.FormatHelper;
 import io.seqera.tower.model.Task;
+
+import java.util.function.Function;
 
 public enum TaskColumn {
     taskId("task_id", true, Task::getTaskId),
