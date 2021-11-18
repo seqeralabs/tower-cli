@@ -31,7 +31,7 @@ import java.util.stream.Stream;
 
 @CommandLine.Command(
         name = "tasks",
-        description = "Display pipeline's run task details"
+        description = "Display pipeline's run tasks"
 )
 public class TasksCmd extends AbstractRunsCmd {
 
@@ -60,7 +60,9 @@ public class TasksCmd extends AbstractRunsCmd {
         List<List<String>> tasks = new ArrayList<>();
         Objects.requireNonNull(response.getTasks()).forEach(it -> {
             Task task = it.getTask();
-            List<String> items = cols.stream().map(colItem -> colItem.getPrettyPrint().apply(task)).collect(Collectors.toList());
+            List<String> items = cols.stream().map(colItem -> {
+                return colItem.getObject().apply(task) != null ? colItem.getPrettyPrint().apply(task) : null;
+            }).collect(Collectors.toList());
             tasks.add(items);
         });
 

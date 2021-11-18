@@ -29,7 +29,16 @@ public enum TaskColumn {
     container("container", false, Task::getContainer),
     nativeId("native_id", false, Task::getNativeId),
     submit("submit", false, Task::getSubmit, compose(Task::getSubmit, FormatHelper::formatDate)),
-    duration( "duration", false, Task::getDuration, compose(Task::getDuration, FormatHelper::formatDurationMillis));
+    duration("duration", false, Task::getDuration, compose(Task::getDuration, FormatHelper::formatDurationMillis)),
+    realtime("realtime", false, Task::getRealtime),
+    pcpu("pcpu", false, Task::getPcpu),
+    pmem("pmem", false, Task::getPmem),
+    peakRss("peakRss", false, Task::getPeakRss),
+    peakVmem("peakVmem", false, Task::getPeakVmem),
+    rchar("rchar", false, Task::getRchar),
+    wchar("wchar", false, Task::getWchar),
+    volCtxt("volCtxt", false, Task::getVolCtxt),
+    invCtxt("invCtxt", false, Task::getInvCtxt);
 
     private final String description;
     private final boolean fixed;

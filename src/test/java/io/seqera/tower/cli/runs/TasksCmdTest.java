@@ -14,19 +14,17 @@ package io.seqera.tower.cli.runs;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.runs.tasks.enums.TaskColumn;
-import org.junit.jupiter.api.Test;
 import io.seqera.tower.cli.responses.RunTasksView;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
@@ -60,7 +58,7 @@ public class TasksCmdTest extends BaseCmdTest {
         List<String> item2 = new ArrayList<>();
         item2.add("2");
         item2.add("NFCORE_RNASEQ:RNASEQ:PREPARE_GENOME:UNTAR_STAR_INDEX");
-        item2.add("star.tar.gz");
+        item2.add(null);
         item2.add("COMPLETED");
 
 
