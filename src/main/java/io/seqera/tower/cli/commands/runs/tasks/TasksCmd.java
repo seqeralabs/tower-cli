@@ -60,9 +60,7 @@ public class TasksCmd extends AbstractRunsCmd {
         List<List<String>> tasks = new ArrayList<>();
         Objects.requireNonNull(response.getTasks()).forEach(it -> {
             Task task = it.getTask();
-            List<String> items = cols.stream().map(colItem -> {
-                return colItem.getObject().apply(task) != null ? colItem.getPrettyPrint().apply(task) : null;
-            }).collect(Collectors.toList());
+            List<String> items = cols.stream().map(colItem -> colItem.getObject().apply(task) != null ? colItem.getPrettyPrint().apply(task) : null).collect(Collectors.toList());
             tasks.add(items);
         });
 
