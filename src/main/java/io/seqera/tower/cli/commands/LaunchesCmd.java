@@ -96,6 +96,7 @@ public class LaunchesCmd extends AbstractRootCmd {
 
     private WorkflowLaunchRequest updateLaunchRequest(WorkflowLaunchRequest base) throws IOException {
         return new WorkflowLaunchRequest()
+                .id(base.getId())
                 .pipeline(base.getPipeline())
                 .computeEnvId(base.getComputeEnvId())
                 .workDir(coalesce(workDir, base.getWorkDir()))
