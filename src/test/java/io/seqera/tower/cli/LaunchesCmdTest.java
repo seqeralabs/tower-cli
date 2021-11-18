@@ -106,7 +106,7 @@ class LaunchesCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/workflow/launch").withBody("{\"launch\":{\"computeEnvId\":\"4X7YrYJp9B1d1DUpfur7DS\",\"pipeline\":\"https://github.com/nf-core/sarek\",\"workDir\":\"/efs\",\"pullLatest\":false,\"stubRun\":false}}"), exactly(1)
+                request().withMethod("POST").withPath("/workflow/launch").withBody("{\"launch\":{\"id\":\"5nmCvXcarkvv8tELMF4KyY\",\"computeEnvId\":\"4X7YrYJp9B1d1DUpfur7DS\",\"pipeline\":\"https://github.com/nf-core/sarek\",\"workDir\":\"/efs\",\"pullLatest\":false,\"stubRun\":false}}"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("workflow_launch")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -177,7 +177,7 @@ class LaunchesCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/workflow/launch").withBody("{\"launch\":{\"computeEnvId\":\"4X7YrYJp9B1d1DUpfur7DS\",\"pipeline\":\"https://github.com/nf-core/sarek\",\"workDir\":\"/my_work_dir\",\"revision\":\"develop\",\"configProfiles\":[\"test\",\"docker\"],\"configText\":\"extra_config\",\"preRunScript\":\"pre_run_me\",\"postRunScript\":\"post_run_me\",\"mainScript\":\"alternate.nf\",\"entryName\":\"dsl2\",\"schemaName\":\"my_schema.json\",\"pullLatest\":true,\"stubRun\":true}}"), exactly(1)
+                request().withMethod("POST").withPath("/workflow/launch").withBody("{\"launch\":{\"id\":\"5nmCvXcarkvv8tELMF4KyY\",\"computeEnvId\":\"4X7YrYJp9B1d1DUpfur7DS\",\"pipeline\":\"https://github.com/nf-core/sarek\",\"workDir\":\"/my_work_dir\",\"revision\":\"develop\",\"configProfiles\":[\"test\",\"docker\"],\"configText\":\"extra_config\",\"preRunScript\":\"pre_run_me\",\"postRunScript\":\"post_run_me\",\"mainScript\":\"alternate.nf\",\"entryName\":\"dsl2\",\"schemaName\":\"my_schema.json\",\"pullLatest\":true,\"stubRun\":true}}"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("workflow_launch")).withContentType(MediaType.APPLICATION_JSON)
         );
