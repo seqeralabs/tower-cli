@@ -84,15 +84,15 @@ public class TaskView extends Response {
         tableGeneral.print();
 
         if (command != null) {
-            out.println(ansi(String.format("%n    @|bold Command|@")));
+            out.println(ansi(String.format("%n     @|bold Command|@")));
             out.println(ansi("    -------"));
-            out.println(ansi(String.format("    %s", command.replaceAll("\n", "\n    "))));
+            out.println(ansi(String.format("     %s", command.trim().replaceAll("\n", String.format("%n     ")))));
         }
 
         if (environment != null) {
-            out.println(ansi(String.format("%n    @|bold Environment|@")));
+            out.println(ansi(String.format("%n     @|bold Environment|@")));
             out.println(ansi("    -----------"));
-            out.println(ansi(String.format("    %s", environment.replaceAll("\n", "\n    "))));
+            out.println(ansi(String.format("     %s", environment.trim().replaceAll("\n", String.format("%n     ")))));
         }
 
         if (!times.isEmpty()) {
