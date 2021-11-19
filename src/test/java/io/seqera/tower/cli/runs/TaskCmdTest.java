@@ -39,7 +39,7 @@ public class TaskCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("runs/task_detail")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "-v","runs", "view", "-i", "5J9pBnWd6uoC3w", "task", "-t", "1", "--execution-time", "--resources-requested", "--resources-usage");
+        ExecOut out = exec(mock,"runs", "view", "-i", "5J9pBnWd6uoC3w", "task", "-t", "1", "--execution-time", "--resources-requested", "--resources-usage");
 
         Task task = parseJson(new String(loadResource("runs/task_object")), Task.class);
 
