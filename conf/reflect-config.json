@@ -2218,6 +2218,14 @@
   "name":"java.lang.annotation.Annotation[]"}
 ,
 {
+  "name":"java.lang.constant.Constable",
+  "queryAllDeclaredMethods":true}
+,
+{
+  "name":"java.lang.constant.ConstantDesc",
+  "queryAllDeclaredMethods":true}
+,
+{
   "name":"java.lang.reflect.AccessibleObject",
   "fields":[{"name":"override"}]}
 ,

@@ -92,8 +92,8 @@ public class TaskCmd extends AbstractRunsCmd {
         map.put("submit", task.getSubmit() != null ? task.getSubmit() : "-");
         map.put("start", task.getStart() != null ? task.getStart() : "-");
         map.put("complete", task.getComplete() != null ? task.getComplete() : "-");
-        map.put("duration", task.getDuration() != null ? TimeUnit.MILLISECONDS.toSeconds(task.getDuration()) / 60D : null);
-        map.put("realtime", task.getRealtime() != null ? TimeUnit.MILLISECONDS.toSeconds(task.getRealtime()) * 1D : null);
+        map.put("duration", task.getDuration() != null ? task.getDuration() : null);
+        map.put("realtime", task.getRealtime() != null ? task.getRealtime() : null);
 
         return map;
     }
@@ -104,14 +104,14 @@ public class TaskCmd extends AbstractRunsCmd {
         map.put("container", task.getContainer());
         map.put("queue", task.getQueue());
         map.put("cpus", task.getCpus() != null ? task.getCpus().toString() : null);
-        map.put("memory", task.getMemory() != null ? task.getMemory() / 1024 / 1024 / 1024D : null);
-        map.put("disk", task.getDisk() != null ? task.getDisk() / 1024 / 1024 / 1024D : null);
-        map.put("time", task.getTime() != null ? TimeUnit.MILLISECONDS.toMinutes(task.getTime()) / 60D : null);
+        map.put("memory", task.getMemory() != null ? task.getMemory() : null);
+        map.put("disk", task.getDisk() != null ? task.getDisk() : null);
+        map.put("time", task.getTime() != null ? task.getTime() : null);
         map.put("executor", task.getExecutor());
         map.put("machineType", task.getMachineType());
         map.put("cloudZone", task.getCloudZone());
         map.put("priceModel", task.getPriceModel() != null ? task.getPriceModel().getValue() : null);
-        map.put("cost", task.getCost() != null ? task.getCost() : 0);
+        map.put("cost", task.getCost() != null ? task.getCost().doubleValue() : 0);
 
         return map;
     }
@@ -120,16 +120,16 @@ public class TaskCmd extends AbstractRunsCmd {
         Map<String, Object> map = new HashMap<>();
 
         map.put("pcpu", task.getPcpu() != null ? task.getPcpu() : 0);
-        map.put("rss", task.getRss() != null ? task.getRss() / 1024D : null);
-        map.put("peakRss", task.getPeakRss() != null ? task.getPeakRss() / 1024D : null);
-        map.put("vmem", task.getVmem() != null ? task.getVmem() / 1024D : null);
-        map.put("peakVmem", task.getPeakVmem() != null ? task.getPeakVmem() / 1024D : null);
-        map.put("rchar", task.getRchar() != null ? task.getRchar() / 1024D : null);
-        map.put("wchar", task.getWchar() != null ? task.getWchar() / 1024D : null);
-        map.put("readBytes", task.getReadBytes() != null ? task.getReadBytes() / 1024D : null);
-        map.put("writeBytes", task.getWriteBytes() != null ? task.getWriteBytes() / 1024D : null);
-        map.put("syscr", task.getSyscr() != null ? task.getSyscr() / 1024D : null);
-        map.put("syscw", task.getSyscw() != null ? task.getSyscw() / 1024D : null);
+        map.put("rss", task.getRss() != null ? task.getRss() : null);
+        map.put("peakRss", task.getPeakRss() != null ? task.getPeakRss() : null);
+        map.put("vmem", task.getVmem() != null ? task.getVmem() : null);
+        map.put("peakVmem", task.getPeakVmem() != null ? task.getPeakVmem() : null);
+        map.put("rchar", task.getRchar() != null ? task.getRchar() : null);
+        map.put("wchar", task.getWchar() != null ? task.getWchar() : null);
+        map.put("readBytes", task.getReadBytes() != null ? task.getReadBytes() : null);
+        map.put("writeBytes", task.getWriteBytes() != null ? task.getWriteBytes() : null);
+        map.put("syscr", task.getSyscr() != null ? task.getSyscr() : null);
+        map.put("syscw", task.getSyscw() != null ? task.getSyscw() : null);
         map.put("volCtxt", task.getVolCtxt() != null ? task.getVolCtxt() * 1D : null);
         map.put("invCtxt", task.getInvCtxt() != null ? task.getInvCtxt() * 1D : null);
 

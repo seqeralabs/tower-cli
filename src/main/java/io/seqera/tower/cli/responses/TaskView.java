@@ -86,62 +86,62 @@ public class TaskView extends Response {
 
         if (command != null) {
             out.println(ansi(String.format("%n     @|bold Command|@")));
-            out.println(ansi("    -------"));
+            out.println(ansi("    ---------"));
             out.println(ansi(String.format("     %s", command.trim().replaceAll("\n", String.format("%n     ")))));
         }
 
         if (environment != null) {
             out.println(ansi(String.format("%n     @|bold Environment|@")));
-            out.println(ansi("    -----------"));
+            out.println(ansi("    -------------"));
             out.println(ansi(String.format("     %s", environment.trim().replaceAll("\n", String.format("%n     ")))));
         }
 
         if (!times.isEmpty()) {
-            out.println(ansi(String.format("%n%n    @|bold  %s|@", "Execution time")));
-            TableList tableTime = new TableList(out, 2);
+            out.println(ansi(String.format("%n%n    @|bold  %s|@%n", "Execution time")));
+            TableList tableTime = new TableList(out, 3, "Label", "Value", "Description");
             tableTime.setPrefix("    ");
-            tableTime.addRow("Date submitted", times.get("submit") != null ? FormatHelper.formatTime((OffsetDateTime) times.get("submit")) : "-");
-            tableTime.addRow("Date started", times.get("start") != null ? FormatHelper.formatTime((OffsetDateTime) times.get("start")) : "-");
-            tableTime.addRow("Date completed", times.get("complete") != null ? FormatHelper.formatTime((OffsetDateTime) times.get("complete")) : "-");
-            tableTime.addRow("Time elapsed since the submission", times.get("duration") != null ? String.format("%.2f minutes", times.get("duration")) : "-");
-            tableTime.addRow("Task execution time", times.get("realtime") != null ? String.format("%.2f seconds", times.get("realtime")) : "-");
+            tableTime.addRow("submit", FormatHelper.formatTime((OffsetDateTime) times.get("submit")), "Timestamp when the task has been submitted");
+            tableTime.addRow("start", FormatHelper.formatTime((OffsetDateTime) times.get("start")), "Timestamp when the task execution has started");
+            tableTime.addRow("complete", FormatHelper.formatTime((OffsetDateTime) times.get("complete")), "Timestamp when task execution has completed");
+            tableTime.addRow("duration", FormatHelper.formatDurationMillis((Long) times.get("duration")), "Time elapsed to complete since the submission i.e. including scheduling time");
+            tableTime.addRow("realtime", FormatHelper.formatDurationMillis((Long) times.get("realtime")), "Task execution time i.e. delta between completion and start timestamp i.e. compute wall-time\n");
             tableTime.print();
         }
 
         if (!resources.isEmpty()) {
-            out.println(ansi(String.format("%n%n    @|bold  %s|@", "Resources requested")));
-            TableList tableResource = new TableList(out, 2);
-            tableResource.addRow("Container image name", resources.get("container") != null ? resources.get("container").toString() : "-");
-            tableResource.addRow("Queue to run the process on", resources.get("queue") != null ? resources.get("queue").toString() : "-");
-            tableResource.addRow("CPU number for execution", resources.get("cpus") != null ? resources.get("cpus").toString() : "-");
-            tableResource.addRow("Memory for execution", resources.get("memory") != null ? String.format("%.2f GB", resources.get("memory")) : "-");
-            tableResource.addRow("Disk space for execution", resources.get("disk") != null ? String.format("%.2f GB", resources.get("disk")) : "-");
-            tableResource.addRow("Time for task execution", resources.get("time") != null ? String.format("%.2f h", resources.get("time")) : "-");
-            tableResource.addRow("Nextflow executor used", resources.get("executor") != null ? resources.get("executor").toString() : "-");
-            tableResource.addRow("Virtual machine type", resources.get("machineType") != null ? resources.get("machineType").toString() : "-");
-            tableResource.addRow("Cloud zone to execute job", resources.get("cloudZone") != null ? resources.get("cloudZone").toString() : "-");
-            tableResource.addRow("Price model used to charge computation", resources.get("priceModel") != null ? resources.get("priceModel").toString() : "-");
-            tableResource.addRow("Estimated cost to compute task", resources.get("cost") != null ? String.format("$%s", resources.get("cost")) : "-");
+            out.println(ansi(String.format("%n%n     @|bold  %s|@%n", "Resources requested")));
+            TableList tableResource = new TableList(out, 3, "Label", "Value", "Description");
+            tableResource.addRow("container", resources.get("container") != null ? resources.get("container").toString() : "", "Container image name used to execute the task");
+            tableResource.addRow("queue", resources.get("queue") != null ? resources.get("queue").toString() : "", "The queue that the executor attempted to run the process on");
+            tableResource.addRow("cpus", resources.get("cpus") != null ? resources.get("cpus").toString() : "", "The cpus number request for the task execution");
+            tableResource.addRow("memory", FormatHelper.formatBits((Long) resources.get("memory")), "The memory request for the task execution");
+            tableResource.addRow("Disk space for execution", FormatHelper.formatBits((Long) resources.get("disk")), "The disk space request for the task execution");
+            tableResource.addRow("time", FormatHelper.formatDurationMillis((Long) resources.get("time")), "The time request for the task execution");
+            tableResource.addRow("executor", resources.get("executor") != null ? resources.get("executor").toString() : "", "The Nextflow executor used to carry out this task");
+            tableResource.addRow("machineType", resources.get("machineType") != null ? resources.get("machineType").toString() : "", "The virtual machine type used to carry out by this task");
+            tableResource.addRow("cloudZone", resources.get("cloudZone") != null ? resources.get("cloudZone").toString() : "", "The cloud zone where the job get executed");
+            tableResource.addRow("priceModel", resources.get("priceModel") != null ? resources.get("priceModel").toString() : "", "The price model used to charge the job computation");
+            tableResource.addRow("cost", FormatHelper.formatCost((Double) resources.get("cost")), "The estimated cost to compute this task");
             tableResource.setPrefix("    ");
             tableResource.print();
         }
 
         if (!usage.isEmpty()) {
-            out.println(ansi(String.format("%n%n    @|bold  %s|@", "Resources usage")));
-            TableList tableUsage = new TableList(out, 2);
-            tableUsage.addRow("Percentage of CPU used", usage.get("pcpu") != null ? String.format("%.2f%%", usage.get("pcpu")) : "-");
-            tableUsage.addRow("Real memory size", usage.get("rss") != null ? String.format("%.2f KB", usage.get("rss")) : "-");
-            tableUsage.addRow("Peak of real memory", usage.get("peakRss") != null ? String.format("%.2f KB", usage.get("peakRss")) : "-");
-            tableUsage.addRow("Virtual memory size", usage.get("vmem") != null ? String.format("%.2f KB", usage.get("vmem")) : "-");
-            tableUsage.addRow("Peak of virtual memory", usage.get("peakVmem") != null ? String.format("%.2f KB", usage.get("peakVmem")) : "-");
-            tableUsage.addRow("Bytes read by process", usage.get("rchar") != null ? String.format("%.2f KB", usage.get("rchar")) : "-");
-            tableUsage.addRow("Bytes process by process", usage.get("wchar") != null ? String.format("%.2f KB", usage.get("wchar")) : "-");
-            tableUsage.addRow("Bytes directly read from disk", usage.get("readBytes") != null ? String.format("%.2f KB", usage.get("readBytes")) : "-");
-            tableUsage.addRow("Bytes originally dirtied in the page-cache", usage.get("writeBytes") != null ? String.format("%.2f", usage.get("writeBytes")) : "-");
-            tableUsage.addRow("Read-like system call invocations", usage.get("syscr") != null ? String.format("%.2f KB", usage.get("syscr")) : "-");
-            tableUsage.addRow("Write-like system call invocations", usage.get("syscw") != null ? String.format("%.2f KB", usage.get("syscw")) : "-");
-            tableUsage.addRow("Voluntary context switches", usage.get("volCtxt") != null ? String.format("%.0f", usage.get("volCtxt")) : "-");
-            tableUsage.addRow("Involuntary context switches", usage.get("invCtxt") != null ? String.format("%.0f", usage.get("invCtxt")) : "-");
+            out.println(ansi(String.format("%n%n     @|bold  %s|@%n", "Resources usage")));
+            TableList tableUsage = new TableList(out, 3, "Label", "Value", "Description");
+            tableUsage.addRow("pcpu", FormatHelper.formatPercentage((Double) usage.get("pcpu")), "Percentage of CPU used by the process");
+            tableUsage.addRow("rss", FormatHelper.formatBits((Long) usage.get("rss")), "Real memory (resident set) size of the process");
+            tableUsage.addRow("peakRss", FormatHelper.formatBits((Long) usage.get("peakRss")), "Peak of real memory");
+            tableUsage.addRow("vmem", FormatHelper.formatBits((Long) usage.get("vmem")), "Virtual memory size of the process");
+            tableUsage.addRow("peakVmem", FormatHelper.formatBits((Long) usage.get("peakVmem")), "Peak of virtual memory");
+            tableUsage.addRow("rchar", FormatHelper.formatBits((Long) usage.get("rchar")), "Number of bytes the process read, using any read-like system call from files, pipes, tty, etc");
+            tableUsage.addRow("wchar", FormatHelper.formatBits((Long) usage.get("wchar")), "Number of bytes the process wrote, using any write-like system call");
+            tableUsage.addRow("readBytes", FormatHelper.formatBits((Long) usage.get("readBytes")), "Number of bytes the process directly read from disk");
+            tableUsage.addRow("writeBytes", FormatHelper.formatBits((Long) usage.get("writeBytes")), "Number of bytes the process originally dirtied in the page-cache (assuming they will go to disk later)");
+            tableUsage.addRow("syscr", FormatHelper.formatBits((Long) usage.get("syscr")), "Number of read-like system call invocations that the process performed");
+            tableUsage.addRow("syscw", FormatHelper.formatBits((Long) usage.get("syscw")), "Number of write-like system call invocations that the process performed");
+            tableUsage.addRow("volCtxts", usage.get("volCtxt") != null ? usage.get("volCtxt").toString() : "", "Number of voluntary context switches");
+            tableUsage.addRow("invCtxt", usage.get("invCtxt") != null ? usage.get("invCtxt").toString() : "", "Number of involuntary context switches");
 
             tableUsage.setPrefix("    ");
             tableUsage.print();

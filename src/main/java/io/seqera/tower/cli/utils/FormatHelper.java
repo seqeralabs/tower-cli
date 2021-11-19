@@ -52,4 +52,58 @@ public class FormatHelper {
 
         return value.format(DateTimeFormatter.RFC_1123_DATE_TIME);
     }
+
+    public static String formatBits(Long value) {
+        if (value == null) {
+            return "";
+        }
+
+        Double amount = null;
+        String metric;
+
+        amount = value / 1024 / 1024 / 1024D;
+        metric = "GB";
+
+        if (amount <= 1) {
+            amount = value / 1024 / 1024D;
+            metric = "MB";
+        }
+
+        if (amount <= 1) {
+            amount = value / 1024D;
+            metric = "KB";
+        }
+
+        if (amount <= 1) {
+            amount = value * 1D;
+            metric = "B";
+        }
+
+        return String.format("%.2f %s", amount, metric);
+    }
+
+    public static String formatCost(Double value) {
+        if (value == null) {
+            return "";
+        }
+
+        return String.format("$%f", value);
+    }
+
+    public static String formatPercentage(Double value) {
+        if (value == null) {
+            return "";
+        }
+
+        return String.format("%.2f%%", value);
+    }
+
+    public static String formatDecimal(Double value) {
+        if (value == null) {
+            return "";
+        }
+
+        return String.format("%.2f", value);
+    }
+
 }
