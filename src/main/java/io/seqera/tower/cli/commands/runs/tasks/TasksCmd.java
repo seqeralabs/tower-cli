@@ -31,11 +31,11 @@ import java.util.stream.Stream;
 
 @CommandLine.Command(
         name = "tasks",
-        description = "Display pipeline's run tasks"
+        description = "Display pipeline's run tasks."
 )
 public class TasksCmd extends AbstractRunsCmd {
 
-    @CommandLine.Option(names = {"-c", "--columns"}, split = ",", description = "Additional task columns to display: hash,exit,container,native_id,submit,duration")
+    @CommandLine.Option(names = {"-c", "--columns"}, split = ",", description = "Additional task columns to display: ${COMPLETION-CANDIDATES}")
     public List<TaskColumn> columns;
 
     @CommandLine.Option(names = {"-f", "--filter"}, description = "Only show task with parameters that start with the given word")

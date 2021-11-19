@@ -44,4 +44,12 @@ public class FormatHelper {
 
         return result;
     }
+
+    public static String formatTime(OffsetDateTime value) {
+        if (value == null) {
+            return "never";
+        }
+
+        return value.format(DateTimeFormatter.RFC_1123_DATE_TIME);
+    }
 }

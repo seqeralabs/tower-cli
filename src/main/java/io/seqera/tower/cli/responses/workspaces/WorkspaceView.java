@@ -12,6 +12,7 @@
 package io.seqera.tower.cli.responses.workspaces;
 
 import io.seqera.tower.cli.responses.Response;
+import io.seqera.tower.cli.utils.FormatHelper;
 import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.Workspace;
 
@@ -36,8 +37,8 @@ public class WorkspaceView extends Response {
         table.addRow("Full Name", workspace.getFullName());
         table.addRow("Description", workspace.getDescription());
         table.addRow("Visibility", workspace.getVisibility().toString());
-        table.addRow("Date Created", formatTime(workspace.getDateCreated()));
-        table.addRow("Last Updated", formatTime(workspace.getLastUpdated()));
+        table.addRow("Date Created", FormatHelper.formatTime(workspace.getDateCreated()));
+        table.addRow("Last Updated", FormatHelper.formatTime(workspace.getLastUpdated()));
         table.print();
         out.println("");
     }

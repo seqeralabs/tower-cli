@@ -12,6 +12,7 @@
 package io.seqera.tower.cli.responses;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.seqera.tower.cli.utils.FormatHelper;
 import io.seqera.tower.cli.utils.JsonHelper;
 import io.seqera.tower.cli.utils.TableList;
 
@@ -117,7 +118,7 @@ public class RunView extends Response {
         table.setPrefix("    ");
         table.addRow("ID", general.get("id").toString());
         table.addRow("Run name", general.get("runName").toString());
-        table.addRow("Starting date", general.get("startingDate") != null ? formatTime((OffsetDateTime) general.get("startingDate")) : "No date reported");
+        table.addRow("Starting date", general.get("startingDate") != null ? FormatHelper.formatTime((OffsetDateTime) general.get("startingDate")) : "No date reported");
         table.addRow("Commit ID", general.get("commitId") != null ? general.get("commitId").toString() : "No commit ID reported");
         table.addRow("Session ID", general.get("sessionId").toString());
         table.addRow("Username", general.get("username").toString());

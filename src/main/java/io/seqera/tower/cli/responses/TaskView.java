@@ -11,6 +11,7 @@
 
 package io.seqera.tower.cli.responses;
 
+import io.seqera.tower.cli.utils.FormatHelper;
 import io.seqera.tower.cli.utils.TableList;
 
 import java.io.PrintWriter;
@@ -79,7 +80,7 @@ public class TaskView extends Response {
         tableGeneral.setPrefix("    ");
         tableGeneral.addRow("Task ID", general.get("taskId").toString());
         tableGeneral.addRow("ID", general.get("id").toString());
-        tableGeneral.addRow("Working Directory", general.get("workDir").toString());
+        tableGeneral.addRow("Work directory", general.get("workDir").toString());
         tableGeneral.addRow("Status", general.get("status").toString());
         tableGeneral.print();
 
@@ -99,9 +100,9 @@ public class TaskView extends Response {
             out.println(ansi(String.format("%n%n    @|bold  %s|@", "Execution time")));
             TableList tableTime = new TableList(out, 2);
             tableTime.setPrefix("    ");
-            tableTime.addRow("Date submitted", times.get("submit") != null ? formatTime((OffsetDateTime) times.get("submit")) : "-");
-            tableTime.addRow("Date started", times.get("start") != null ? formatTime((OffsetDateTime) times.get("start")) : "-");
-            tableTime.addRow("Date completed", times.get("complete") != null ? formatTime((OffsetDateTime) times.get("complete")) : "-");
+            tableTime.addRow("Date submitted", times.get("submit") != null ? FormatHelper.formatTime((OffsetDateTime) times.get("submit")) : "-");
+            tableTime.addRow("Date started", times.get("start") != null ? FormatHelper.formatTime((OffsetDateTime) times.get("start")) : "-");
+            tableTime.addRow("Date completed", times.get("complete") != null ? FormatHelper.formatTime((OffsetDateTime) times.get("complete")) : "-");
             tableTime.addRow("Time elapsed since the submission", times.get("duration") != null ? String.format("%.2f minutes", times.get("duration")) : "-");
             tableTime.addRow("Task execution time", times.get("realtime") != null ? String.format("%.2f seconds", times.get("realtime")) : "-");
             tableTime.print();
