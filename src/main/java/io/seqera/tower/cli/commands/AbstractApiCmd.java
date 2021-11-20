@@ -52,7 +52,6 @@ public abstract class AbstractApiCmd extends AbstractCmd {
 
     private Long userId;
     private String userName;
-    private Long workspaceId;
     private Long orgId;
     private String orgName;
     private String workspaceName;
@@ -283,7 +282,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         throw new ShowUsageException(getSpec());
     }
 
-    protected String workflowWatchUrlPrefix() throws ApiException {
+    protected String workflowWatchUrlPrefix(Long workspaceId) throws ApiException {
         if (workspaceId == null) {
             return String.format("%s/user/%s/watch/", serverUrl(), userName());
         }

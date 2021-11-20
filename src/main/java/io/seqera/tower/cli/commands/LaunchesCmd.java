@@ -132,11 +132,11 @@ public class LaunchesCmd extends AbstractRootCmd {
     protected Response submitWorkflow(WorkflowLaunchRequest launch) throws ApiException {
         SubmitWorkflowLaunchResponse response = api().createWorkflowLaunch(new SubmitWorkflowLaunchRequest().launch(launch), workspace.workspaceId);
         String workflowId = response.getWorkflowId();
-        return new RunSubmited(workflowId, workflowWatchUrl(workflowId), workspaceRef(workspace.workspaceId));
+        return new RunSubmited(workflowId, workflowWatchUrl(workflowId, workspace.workspaceId), workspaceRef(workspace.workspaceId));
     }
 
-    private String workflowWatchUrl(String workflowId) throws ApiException {
-        return String.format("%s%s", workflowWatchUrlPrefix(), workflowId);
+    private String workflowWatchUrl(String workflowId, Long workspaceId) throws ApiException {
+        return String.format("%s%s", workflowWatchUrlPrefix(workspaceId), workflowId);
     }
 
     private AdvancedOptions adv() {

@@ -42,6 +42,6 @@ public class ListCmd extends AbstractRunsCmd {
         Integer offset = PaginationOptions.getOffset(paginationOptions, max);
 
         ListWorkflowsResponse response = api().listWorkflows(workspace.workspaceId, max, offset, startsWith);
-        return new RunList(workspaceRef(workspace.workspaceId), response.getWorkflows(), workflowWatchUrlPrefix());
+        return new RunList(workspaceRef(workspace.workspaceId), response.getWorkflows(), workflowWatchUrlPrefix(workspace.workspaceId));
     }
 }
