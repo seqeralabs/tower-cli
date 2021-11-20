@@ -11,6 +11,8 @@
 
 package io.seqera.tower.cli.utils;
 
+import picocli.CommandLine;
+
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
@@ -43,5 +45,35 @@ public class FormatHelper {
         }
 
         return result;
+    }
+
+    private static final boolean ANSI_ENABLED = CommandLine.Help.Ansi.AUTO.enabled();
+    public static String formatWorkflowId(String workflowId, String workflowWatchUrlPrefix) {
+        if (ANSI_ENABLED) {
+            String link = String.format("%s%s", workflowWatchUrlPrefix, workflowId);
+            return "\u001b]8;;" + link + "\u001b\\" + workflowId + "\u001b]8;;\u001b\\";
+        }
+        return workflowId;
+    }
+
+    public static String formatWorkflowStatus(String status) {
+
+        if ("SUCCEEDED".equals(status)) {
+            return ansi("@|fg(green) SUCCEEDED|@");
+        }
+
+        if ("FAILED".equals(status)) {
+            return ansi("@|fg(red) FAILED|@");
+        }
+
+        if ("CANCELLED".equals(status)) {
+            return ansi("@|fg(white) CANCELLED|@");
+        }
+
+        return status;
+    }
+
+    private static String ansi(String value) {
+        return CommandLine.Help.Ansi.AUTO.string(value);
     }
 }

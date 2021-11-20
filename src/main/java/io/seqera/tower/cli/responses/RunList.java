@@ -11,6 +11,8 @@
 
 package io.seqera.tower.cli.responses;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.seqera.tower.cli.utils.FormatHelper;
 import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.ListWorkflowsResponseListWorkflowsElement;
 
@@ -22,9 +24,13 @@ public class RunList extends Response {
     public final String workspaceRef;
     public final List<ListWorkflowsResponseListWorkflowsElement> workflows;
 
-    public RunList(String workspaceRef, List<ListWorkflowsResponseListWorkflowsElement> runs) {
+    @JsonIgnore
+    public final String workflowWatchUrlPrefix;
+
+    public RunList(String workspaceRef, List<ListWorkflowsResponseListWorkflowsElement> runs, String workflowWatchUrlPrefix) {
         this.workspaceRef = workspaceRef;
         this.workflows = runs;
+        this.workflowWatchUrlPrefix = workflowWatchUrlPrefix;
     }
 
     @Override
@@ -39,8 +45,8 @@ public class RunList extends Response {
         TableList table = new TableList(out, 6, "ID", "Status", "Project Name", "Run Name", "Username", "Submit Date");
         table.setPrefix("    ");
         workflows.forEach(wf -> table.addRow(
-                wf.getWorkflow().getId(),
-                wf.getWorkflow().getStatus() != null ? wf.getWorkflow().getStatus().getValue() : "Not reported",
+                FormatHelper.formatWorkflowId(wf.getWorkflow().getId(), this.workflowWatchUrlPrefix),
+                FormatHelper.formatWorkflowStatus(wf.getWorkflow().getStatus() != null ? wf.getWorkflow().getStatus().getValue() : "Not reported"),
                 wf.getWorkflow().getProjectName(),
                 wf.getWorkflow().getRunName(),
                 wf.getWorkflow().getUserName(),

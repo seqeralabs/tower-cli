@@ -121,6 +121,12 @@ class RunsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("workflow_list")).withContentType(MediaType.APPLICATION_JSON)
         );
 
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
         ExecOut out = exec(mock, "runs", "list");
 
         assertEquals("", out.stdErr);
@@ -149,7 +155,7 @@ class RunsCmdTest extends BaseCmdTest {
                         "        \"runName\": \"spontaneous_easley\"\n" +
                         "      }\n" +
                         "    }", ListWorkflowsResponseListWorkflowsElement.class)
-        )).toString()), out.stdOut);
+        ), "TODO").toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -162,6 +168,12 @@ class RunsCmdTest extends BaseCmdTest {
                         .withQueryStringParameter("max", "2"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("workflow_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         ExecOut out = exec(mock, "runs", "list", "--offset", "1", "--max", "2");
@@ -192,7 +204,7 @@ class RunsCmdTest extends BaseCmdTest {
                         "        \"runName\": \"spontaneous_easley\"\n" +
                         "      }\n" +
                         "    }", ListWorkflowsResponseListWorkflowsElement.class)
-        )).toString()), out.stdOut);
+        ), "TODO").toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -205,6 +217,12 @@ class RunsCmdTest extends BaseCmdTest {
                         .withQueryStringParameter("max", "2"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("workflow_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         ExecOut out = exec(mock, "runs", "list", "--page", "1", "--max", "2");
@@ -235,20 +253,12 @@ class RunsCmdTest extends BaseCmdTest {
                         "        \"runName\": \"spontaneous_easley\"\n" +
                         "      }\n" +
                         "    }", ListWorkflowsResponseListWorkflowsElement.class)
-        )).toString()), out.stdOut);
+        ), "TODO").toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
     @Test
-    void testListWithConflictingPageable(MockServerClient mock) throws JsonProcessingException {
-
-        mock.when(
-                request().withMethod("GET").withPath("/workflow")
-                        .withQueryStringParameter("offset", "0")
-                        .withQueryStringParameter("max", "2"), exactly(1)
-        ).respond(
-                response().withStatusCode(200).withBody(loadResource("workflow_list")).withContentType(MediaType.APPLICATION_JSON)
-        );
+    void testListWithConflictingPageable(MockServerClient mock) {
 
         ExecOut out = exec(mock, "runs", "list", "--page", "1", "--offset", "0", "--max", "2");
 
@@ -258,15 +268,7 @@ class RunsCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testListWithConflictingSizeable(MockServerClient mock) throws JsonProcessingException {
-
-        mock.when(
-                request().withMethod("GET").withPath("/workflow")
-                        .withQueryStringParameter("offset", "0")
-                        .withQueryStringParameter("max", "2"), exactly(1)
-        ).respond(
-                response().withStatusCode(200).withBody(loadResource("workflow_list")).withContentType(MediaType.APPLICATION_JSON)
-        );
+    void testListWithConflictingSizeable(MockServerClient mock) {
 
         ExecOut out = exec(mock, "runs", "list", "--page", "1", "--no-max", "--max", "2");
 
@@ -284,10 +286,16 @@ class RunsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"workflows\": []}").withContentType(MediaType.APPLICATION_JSON)
         );
 
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
         ExecOut out = exec(mock, "runs", "list");
 
         assertEquals("", out.stdErr);
-        assertEquals(chop(new RunList(USER_WORKSPACE_NAME, List.of()).toString()), out.stdOut);
+        assertEquals(chop(new RunList(USER_WORKSPACE_NAME, List.of(), "TODO").toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

@@ -283,4 +283,11 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         throw new ShowUsageException(getSpec());
     }
 
+    protected String workflowWatchUrlPrefix() throws ApiException {
+        if (workspaceId == null) {
+            return String.format("%s/user/%s/watch/", serverUrl(), userName());
+        }
+        return String.format("%s/orgs/%s/workspaces/%s/watch/", serverUrl(), orgName(workspaceId), workspaceName(workspaceId));
+    }
+
 }

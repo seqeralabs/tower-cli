@@ -136,12 +136,7 @@ public class LaunchesCmd extends AbstractRootCmd {
     }
 
     private String workflowWatchUrl(String workflowId) throws ApiException {
-
-        if (workspace.workspaceId == null) {
-            return String.format("%s/user/%s/watch/%s", serverUrl(), userName(), workflowId);
-        }
-
-        return String.format("%s/orgs/%s/workspaces/%s/watch/%s", serverUrl(), orgName(workspace.workspaceId), workspaceName(workspace.workspaceId), workflowId);
+        return String.format("%s%s", workflowWatchUrlPrefix(), workflowId);
     }
 
     private AdvancedOptions adv() {
