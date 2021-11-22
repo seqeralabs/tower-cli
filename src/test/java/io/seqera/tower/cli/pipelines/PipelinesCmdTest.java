@@ -292,14 +292,14 @@ class PipelinesCmdTest extends BaseCmdTest {
         );
 
         ExecOut out = exec(format, mock, "pipelines", "list");
-        assertOutput(format, new PipelinesList(USER_WORKSPACE_NAME, List.of(
+        assertOutput(format, out, new PipelinesList(USER_WORKSPACE_NAME, List.of(
                 new PipelineDbDto()
                         .pipelineId(183522618315672L)
                         .name("sleep_one_minute")
                         .repository("https://github.com/pditommaso/nf-sleep")
                         .userId(4L)
                         .userName("jordi")
-        )), out);
+        )));
     }
 
     @Test

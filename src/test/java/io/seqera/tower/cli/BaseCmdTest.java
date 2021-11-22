@@ -167,7 +167,7 @@ public abstract class BaseCmdTest {
         return StringUtils.chop(out.toString());
     }
 
-    protected void assertOutput(OutputType format, Response expectedResponse, ExecOut realOutput) {
+    protected void assertOutput(OutputType format, ExecOut realOutput, Response expectedResponse) {
         StringWriter writer = new StringWriter();
         try {
             int expectedExitCode = ResponseHelper.outputFormat(new PrintWriter(writer), expectedResponse, format);
