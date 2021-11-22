@@ -78,8 +78,8 @@ public class TaskCmd extends AbstractRunsCmd {
     public static Map<String, Object> parseGeneralData(Task task) {
         Map<String, Object> map = new HashMap<>();
 
-        map.put("taskId", task.getTaskId() != null ? task.getTaskId() : "-");
-        map.put("id", task.getId() != null ? task.getId() : "-");
+        map.put("taskId", task.getTaskId() != null ? task.getTaskId() : null);
+        map.put("id", task.getId() != null ? task.getId() : null);
         map.put("workDir", task.getWorkdir());
         map.put("status", task.getStatus().getValue());
 
@@ -89,9 +89,9 @@ public class TaskCmd extends AbstractRunsCmd {
     public static Map<String, Object> parseExecutionTimeData(Task task) {
         Map<String, Object> map = new HashMap<>();
 
-        map.put("submit", task.getSubmit() != null ? task.getSubmit() : "-");
-        map.put("start", task.getStart() != null ? task.getStart() : "-");
-        map.put("complete", task.getComplete() != null ? task.getComplete() : "-");
+        map.put("submit", task.getSubmit() != null ? task.getSubmit() : null);
+        map.put("start", task.getStart() != null ? task.getStart() : null);
+        map.put("complete", task.getComplete() != null ? task.getComplete() : null);
         map.put("duration", task.getDuration() != null ? task.getDuration() : null);
         map.put("realtime", task.getRealtime() != null ? task.getRealtime() : null);
 

@@ -17,15 +17,12 @@ import io.seqera.tower.cli.commands.runs.AbstractRunsCmd;
 import io.seqera.tower.cli.commands.runs.ViewCmd;
 import io.seqera.tower.cli.commands.runs.tasks.enums.TaskColumn;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.cli.responses.RunTasksView;
+import io.seqera.tower.cli.responses.TasksView;
 import io.seqera.tower.model.ListTasksResponse;
-import io.seqera.tower.model.Task;
 import picocli.CommandLine;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -55,15 +52,9 @@ public class TasksCmd extends AbstractRunsCmd {
 
         Integer max = PaginationOptions.getMax(paginationOptions);
         Integer offset = PaginationOptions.getOffset(paginationOptions, max);
+
         ListTasksResponse response = api().listWorkflowTasks(parentCommand.id, parentCommand.workspace.workspaceId, max, offset, startsWith);
 
-        List<List<String>> tasks = new ArrayList<>();
-        Objects.requireNonNull(response.getTasks()).forEach(it -> {
-            Task task = it.getTask();
-            List<String> items = cols.stream().map(colItem -> colItem.getObject().apply(task) != null ? colItem.getPrettyPrint().apply(task) : null).collect(Collectors.toList());
-            tasks.add(items);
-        });
-
-        return new RunTasksView(parentCommand.id, cols.stream().map(TaskColumn::getDescription).collect(Collectors.toList()), tasks);
+        return new TasksView(parentCommand.id, cols, response);
     }
 }

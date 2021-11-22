@@ -3,6 +3,9 @@
   "name":"[B"}
 ,
 {
+  "name":"[C"}
+,
+{
   "name":"[Lcom.fasterxml.jackson.databind.deser.Deserializers;"}
 ,
 {
@@ -22,6 +25,9 @@
 ,
 {
   "name":"[Ljava.lang.String;"}
+,
+{
+  "name":"[Ljava.math.BigDecimal;"}
 ,
 {
   "name":"[Lsun.security.pkcs.SignerInfo;"}
@@ -1046,6 +1052,11 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]}
 ,
 {
+  "name":"io.seqera.tower.cli.commands.runs.tasks.enums.TaskColumn",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true}
+,
+{
   "name":"io.seqera.tower.cli.commands.teams.AbstractTeamsCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true}
@@ -1197,6 +1208,12 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true}
+,
+{
+  "name":"io.seqera.tower.cli.responses.TasksView",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true}
 ,
 {
   "name":"io.seqera.tower.cli.responses.actions.ActionsDelete",
@@ -2228,6 +2245,12 @@
 {
   "name":"java.lang.reflect.AccessibleObject",
   "fields":[{"name":"override"}]}
+,
+{
+  "name":"java.math.BigDecimal",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true}
 ,
 {
   "name":"java.nio.file.Path"}
