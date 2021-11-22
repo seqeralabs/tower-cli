@@ -13,6 +13,7 @@ package io.seqera.tower.cli.participants;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
+import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.participants.ParticipantAdded;
 import io.seqera.tower.cli.responses.participants.ParticipantUpdated;
@@ -22,6 +23,8 @@ import io.seqera.tower.cli.responses.participants.ParticipantsList;
 import io.seqera.tower.model.ParticipantDbDto;
 import io.seqera.tower.model.WspRole;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 
@@ -35,10 +38,11 @@ import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
-public class ParticipantsCmdTest extends BaseCmdTest {
+class ParticipantsCmdTest extends BaseCmdTest {
 
-    @Test
-    void testListAllParticipants(MockServerClient mock) throws JsonProcessingException {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testList(OutputType format, MockServerClient mock) throws JsonProcessingException {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -57,10 +61,9 @@ public class ParticipantsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("participants/participants_list")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "participants", "list", "-w", "75887156211589");
+        ExecOut out = exec(format, mock, "participants", "list", "-w", "75887156211589");
 
-        assertEquals("", out.stdErr);
-        assertEquals(chop(new ParticipantsList("organization1", "workspace1",
+        assertOutput(format, out, new ParticipantsList("organization1", "workspace1",
                 Arrays.asList(
                         parseJson("{\n" +
                                 "      \"participantId\": 48516118433516,\n" +
@@ -136,12 +139,11 @@ public class ParticipantsCmdTest extends BaseCmdTest {
                                 "      \"type\": \"TEAM\",\n" +
                                 "      \"teamAvatarUrl\": null,\n" +
                                 "      \"userAvatarUrl\": null\n" +
-                                "    }", ParticipantDbDto.class))).toString()), out.stdOut);
-        assertEquals(0, out.exitCode);
+                                "    }", ParticipantDbDto.class))));
     }
 
     @Test
-    void testListAllParticipantsWithOffset(MockServerClient mock) throws JsonProcessingException {
+    void testListWithOffset(MockServerClient mock) throws JsonProcessingException {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -246,7 +248,7 @@ public class ParticipantsCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testListAllParticipantsWithPage(MockServerClient mock) throws JsonProcessingException {
+    void testListWithPage(MockServerClient mock) throws JsonProcessingException {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -409,7 +411,7 @@ public class ParticipantsCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testListTeamsParticipants(MockServerClient mock) throws JsonProcessingException {
+    void testListTeam(MockServerClient mock) throws JsonProcessingException {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -451,8 +453,9 @@ public class ParticipantsCmdTest extends BaseCmdTest {
         assertEquals(0, out.exitCode);
     }
 
-    @Test
-    void testDeleteMemberParticipant(MockServerClient mock) {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testDeleteMemberParticipant(OutputType format, MockServerClient mock) {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -477,15 +480,12 @@ public class ParticipantsCmdTest extends BaseCmdTest {
                 response().withStatusCode(204)
         );
 
-        ExecOut out = exec(mock, "participants", "delete", "-w", "75887156211589", "-n", "julio", "-t", "MEMBER");
-
-        assertEquals("", out.stdErr);
-        assertEquals(new ParticipantDeleted("julio", "workspace1").toString(), out.stdOut);
-        assertEquals(0, out.exitCode);
+        ExecOut out = exec(format, mock, "participants", "delete", "-w", "75887156211589", "-n", "julio", "-t", "MEMBER");
+        assertOutput(format, out, new ParticipantDeleted("julio", "workspace1"));
     }
 
     @Test
-    void testDeleteTeamParticipant(MockServerClient mock) {
+    void testDeleteTeam(MockServerClient mock) {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -517,8 +517,9 @@ public class ParticipantsCmdTest extends BaseCmdTest {
         assertEquals(0, out.exitCode);
     }
 
-    @Test
-    void testLeaveAsParticipant(MockServerClient mock) {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testLeave(OutputType format, MockServerClient mock) {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -537,15 +538,13 @@ public class ParticipantsCmdTest extends BaseCmdTest {
                 response().withStatusCode(204)
         );
 
-        ExecOut out = exec(mock, "participants", "leave", "-w", "75887156211589");
-
-        assertEquals("", out.stdErr);
-        assertEquals(new ParticipantLeft("workspace1").toString(), out.stdOut);
-        assertEquals(0, out.exitCode);
+        ExecOut out = exec(format, mock, "participants", "leave", "-w", "75887156211589");
+        assertOutput(format, out, new ParticipantLeft("workspace1"));
     }
 
-    @Test
-    void testUpdateMemberParticipantRole(MockServerClient mock) {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testUpdateMemberParticipantRole(OutputType format, MockServerClient mock) {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -570,11 +569,8 @@ public class ParticipantsCmdTest extends BaseCmdTest {
                 response().withStatusCode(204)
         );
 
-        ExecOut out = exec(mock, "participants", "update", "-w", "75887156211589", "-n", "julio", "-r", "OWNER", "-t", "MEMBER");
-
-        assertEquals("", out.stdErr);
-        assertEquals(new ParticipantUpdated("workspace1", "julio", WspRole.OWNER.toString()).toString(), out.stdOut);
-        assertEquals(0, out.exitCode);
+        ExecOut out = exec(format, mock, "participants", "update", "-w", "75887156211589", "-n", "julio", "-r", "OWNER", "-t", "MEMBER");
+        assertOutput(format, out, new ParticipantUpdated("workspace1", "julio", WspRole.OWNER.toString()));
     }
 
     @Test
@@ -610,8 +606,9 @@ public class ParticipantsCmdTest extends BaseCmdTest {
         assertEquals(0, out.exitCode);
     }
 
-    @Test
-    void testCreateMemberParticipantRole(MockServerClient mock) throws JsonProcessingException {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testCreateMemberParticipantRole(OutputType format, MockServerClient mock) throws JsonProcessingException {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -636,10 +633,9 @@ public class ParticipantsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("participants/participant_add")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "participants", "add", "-w", "75887156211589", "-n", "julio", "-t", "MEMBER");
+        ExecOut out = exec(format, mock, "participants", "add", "-w", "75887156211589", "-n", "julio", "-t", "MEMBER");
 
-        assertEquals("", out.stdErr);
-        assertEquals(new ParticipantAdded(parseJson("{\n" +
+        assertOutput(format, out, new ParticipantAdded(parseJson("{\n" +
                 "    \"participantId\": 110330443206779,\n" +
                 "    \"memberId\": 80726606082762,\n" +
                 "    \"userName\": \"julio\",\n" +
@@ -653,7 +649,6 @@ public class ParticipantsCmdTest extends BaseCmdTest {
                 "    \"type\": \"MEMBER\",\n" +
                 "    \"teamAvatarUrl\": null,\n" +
                 "    \"userAvatarUrl\": null\n" +
-                "  }", ParticipantDbDto.class), "workspace1").toString(), out.stdOut);
-        assertEquals(0, out.exitCode);
+                "  }", ParticipantDbDto.class), "workspace1"));
     }
 }

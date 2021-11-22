@@ -287,7 +287,7 @@ class WorkspacesCmdTest extends BaseCmdTest {
 
     @ParameterizedTest
     @EnumSource(OutputType.class)
-    void updateTestById(OutputType format, MockServerClient mock) {
+    void testUpdateById(OutputType format, MockServerClient mock) {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -317,7 +317,7 @@ class WorkspacesCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void updateTestWorkspaceNotFound(MockServerClient mock) {
+    void testUpdateWorkspaceNotFound(MockServerClient mock) {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -339,7 +339,7 @@ class WorkspacesCmdTest extends BaseCmdTest {
 
     @ParameterizedTest
     @EnumSource(OutputType.class)
-    void leaveWorkspaceAsParticipantById(OutputType format, MockServerClient mock) {
+    void testLeaveWorkspaceAsParticipantById(OutputType format, MockServerClient mock) {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
