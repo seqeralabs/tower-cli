@@ -34,7 +34,7 @@ public class TaskCmd extends AbstractRunsCmd {
     @CommandLine.ParentCommand
     public ViewCmd parentCommand;
 
-    @CommandLine.Option(names = {"-t"}, description = "Pipeline's run task identifier", required = true)
+    @CommandLine.Option(names = {"-t"}, description = "Pipeline's run task identifier.", required = true)
     public Long id;
 
     @CommandLine.Option(names = {"--execution-time"}, description = "Task execution time data.")

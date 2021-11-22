@@ -97,20 +97,20 @@ public class TaskView extends Response {
         }
 
         if (!times.isEmpty()) {
-            out.println(ansi(String.format("%n%n    @|bold  %s|@%n", "Execution time")));
-            TableList tableTime = new TableList(out, 3, "Label", "Value", "Description");
+            out.println(ansi(String.format("%n%n    @|bold  Execution time|@")));
+            TableList tableTime = new TableList(out, 3);
             tableTime.setPrefix("    ");
             tableTime.addRow("submit", FormatHelper.formatTime((OffsetDateTime) times.get("submit")), "Timestamp when the task has been submitted");
             tableTime.addRow("start", FormatHelper.formatTime((OffsetDateTime) times.get("start")), "Timestamp when the task execution has started");
             tableTime.addRow("complete", FormatHelper.formatTime((OffsetDateTime) times.get("complete")), "Timestamp when task execution has completed");
             tableTime.addRow("duration", FormatHelper.formatDurationMillis((Long) times.get("duration")), "Time elapsed to complete since the submission i.e. including scheduling time");
-            tableTime.addRow("realtime", FormatHelper.formatDurationMillis((Long) times.get("realtime")), "Task execution time i.e. delta between completion and start timestamp i.e. compute wall-time\n");
+            tableTime.addRow("realtime", FormatHelper.formatDurationMillis((Long) times.get("realtime")), "Task execution time i.e. delta between completion and start timestamp i.e. compute wall-time");
             tableTime.print();
         }
 
         if (!resources.isEmpty()) {
-            out.println(ansi(String.format("%n%n     @|bold  %s|@%n", "Resources requested")));
-            TableList tableResource = new TableList(out, 3, "Label", "Value", "Description");
+            out.println(ansi(String.format("%n%n    @|bold  Resources requested|@")));
+            TableList tableResource = new TableList(out, 3);
             tableResource.addRow("container", resources.get("container") != null ? resources.get("container").toString() : "", "Container image name used to execute the task");
             tableResource.addRow("queue", resources.get("queue") != null ? resources.get("queue").toString() : "", "The queue that the executor attempted to run the process on");
             tableResource.addRow("cpus", resources.get("cpus") != null ? resources.get("cpus").toString() : "", "The cpus number request for the task execution");
@@ -127,8 +127,8 @@ public class TaskView extends Response {
         }
 
         if (!usage.isEmpty()) {
-            out.println(ansi(String.format("%n%n     @|bold  %s|@%n", "Resources usage")));
-            TableList tableUsage = new TableList(out, 3, "Label", "Value", "Description");
+            out.println(ansi(String.format("%n%n    @|bold  Resources usage|@")));
+            TableList tableUsage = new TableList(out, 3);
             tableUsage.addRow("pcpu", FormatHelper.formatPercentage((Double) usage.get("pcpu")), "Percentage of CPU used by the process");
             tableUsage.addRow("rss", FormatHelper.formatBits((Long) usage.get("rss")), "Real memory (resident set) size of the process");
             tableUsage.addRow("peakRss", FormatHelper.formatBits((Long) usage.get("peakRss")), "Peak of real memory");
