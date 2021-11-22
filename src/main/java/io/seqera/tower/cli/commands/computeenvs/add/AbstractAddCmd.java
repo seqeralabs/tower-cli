@@ -47,8 +47,9 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
     }
 
     protected ComputeEnvAdded addComputeEnv(ComputeEnv.PlatformEnum platform, ComputeConfig config) throws ApiException {
+        Long wspId = workspaceId(workspace.workspace);
 
-        String credsId = credentialsId == null ? findWorkspaceCredentials(platform) : credentialsId;
+        String credsId = credentialsId == null ? findWorkspaceCredentials(platform, wspId) : credentialsId;
 
         api().createComputeEnv(
                 new CreateComputeEnvRequest().computeEnv(
@@ -57,14 +58,14 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
                                 .platform(platform)
                                 .credentialsId(credsId)
                                 .config(config)
-                ), workspace.workspaceId
+                ), wspId
         );
 
-        return new ComputeEnvAdded(platform.getValue(), name, workspaceRef(workspace.workspaceId));
+        return new ComputeEnvAdded(platform.getValue(), name, workspaceRef(wspId));
     }
 
-    private String findWorkspaceCredentials(ComputeEnv.PlatformEnum type) throws ApiException {
-        List<Credentials> credentials = api().listCredentials(workspace.workspaceId, type.getValue()).getCredentials();
+    private String findWorkspaceCredentials(ComputeEnv.PlatformEnum type, Long wspId) throws ApiException {
+        List<Credentials> credentials = api().listCredentials(wspId, type.getValue()).getCredentials();
         if (credentials.isEmpty()) {
             throw new TowerException("No valid credentials found at the workspace");
         }

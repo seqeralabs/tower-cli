@@ -16,5 +16,5 @@ import picocli.CommandLine;
 public class WorkspaceRequiredOptions {
 
     @CommandLine.Option(names = {"-w", "--workspace"}, description = WorkspaceOptionalOptions.DESCRIPTION, defaultValue = WorkspaceOptionalOptions.DEFAULT_VALUE, required = true)
-    public Long workspaceId = null;
+    public String workspace = null;
 }

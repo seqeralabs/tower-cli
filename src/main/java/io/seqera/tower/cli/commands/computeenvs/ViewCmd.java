@@ -35,13 +35,15 @@ public class ViewCmd extends AbstractComputeEnvCmd {
 
     @Override
     protected Response exec() throws ApiException {
+        Long wspId = workspaceId(workspace.workspace);
+        
         try {
-            DescribeComputeEnvResponse response = api().describeComputeEnv(id, workspace.workspaceId);
-            return new ComputeEnvView(id, workspaceRef(workspace.workspaceId), response.getComputeEnv());
+            DescribeComputeEnvResponse response = api().describeComputeEnv(id, wspId);
+            return new ComputeEnvView(id, workspaceRef(wspId), response.getComputeEnv());
         } catch (ApiException e) {
             if (e.getCode() == 403) {
                 // Customize the forbidden message
-                throw new ComputeEnvNotFoundException(id, workspaceRef(workspace.workspaceId));
+                throw new ComputeEnvNotFoundException(id, workspaceRef(wspId));
             }
             throw e;
         }

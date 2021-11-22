@@ -18,5 +18,5 @@ public class WorkspaceOptionalOptions {
     public static final String DEFAULT_VALUE = "${TOWER_WORKSPACE_ID}";
 
     @CommandLine.Option(names = {"-w", "--workspace"}, description = DESCRIPTION, defaultValue = DEFAULT_VALUE)
-    public Long workspaceId = null;
+    public String workspace = null;
 }

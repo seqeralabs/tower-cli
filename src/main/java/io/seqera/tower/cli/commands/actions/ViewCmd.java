@@ -35,9 +35,11 @@ public class ViewCmd extends AbstractActionsCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        ListActionsResponseActionInfo listActionsResponseActionInfo = actionByName(workspace.workspaceId, actionName);
+        Long wspId = workspaceId(workspace.workspace);
 
-        DescribeActionResponse response = api().describeAction(listActionsResponseActionInfo.getId(), workspace.workspaceId);
+        ListActionsResponseActionInfo listActionsResponseActionInfo = actionByName(wspId, actionName);
+
+        DescribeActionResponse response = api().describeAction(listActionsResponseActionInfo.getId(), wspId);
 
         return new ActionsView(response.getAction());
     }
