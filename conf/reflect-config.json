@@ -1351,6 +1351,12 @@
   "allDeclaredConstructors":true}
 ,
 {
+  "name":"io.seqera.tower.cli.responses.participants.ParticipantUpdated",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true}
+,
+{
   "name":"io.seqera.tower.cli.responses.participants.ParticipantsList",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
