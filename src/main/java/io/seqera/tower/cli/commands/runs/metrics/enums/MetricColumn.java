@@ -9,8 +9,8 @@
  * defined by the Mozilla Public License, v. 2.0.
  */
 
-package io.seqera.tower.cli.commands.runs.metrics;
+package io.seqera.tower.cli.commands.runs.metrics.enums;
 
-public enum MetricType {
-    cpu, mem, time, io
+public enum MetricColumn {
+    mean, min, q1, q2, q3, max
 }

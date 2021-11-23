@@ -11,6 +11,7 @@
 
 package io.seqera.tower.cli.responses;
 
+import io.seqera.tower.cli.utils.FormatHelper;
 import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.ListWorkflowsResponseListWorkflowsElement;
 
@@ -44,7 +45,7 @@ public class RunList extends Response {
                 wf.getWorkflow().getProjectName(),
                 wf.getWorkflow().getRunName(),
                 wf.getWorkflow().getUserName(),
-                formatTime(wf.getWorkflow().getSubmit())
+                FormatHelper.formatTime(wf.getWorkflow().getSubmit())
         ));
         table.print();
         out.println("");

@@ -16,6 +16,7 @@ import java.io.PrintWriter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.JSON;
 import io.seqera.tower.cli.responses.Response;
+import io.seqera.tower.cli.utils.FormatHelper;
 import io.seqera.tower.cli.utils.ModelHelper;
 import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.Action;
@@ -48,9 +49,9 @@ public class ActionsView extends Response {
         table.addRow("Pipeline URL", action.getLaunch().getPipeline());
         table.addRow("Source", action.getSource().toString());
         table.addRow("Hook URL", action.getHookUrl());
-        table.addRow("Last event", formatTime(action.getLastSeen()));
-        table.addRow("Date created", formatTime(action.getDateCreated()));
-        table.addRow("Last event", formatTime(action.getLastSeen()));
+        table.addRow("Last event", FormatHelper.formatTime(action.getLastSeen()));
+        table.addRow("Date created", FormatHelper.formatTime(action.getDateCreated()));
+        table.addRow("Last event", FormatHelper.formatTime(action.getLastSeen()));
         table.print();
 
         out.println(String.format("%n  Configuration:%n%n%s%n", configJson.replaceAll("(?m)^", "     ")));
