@@ -13,6 +13,7 @@ package io.seqera.tower.cli.commands.workspaces;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
+import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.exceptions.WorkspaceNotFoundException;
 import io.seqera.tower.model.ListWorkspacesAndOrgResponse;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
@@ -61,6 +62,23 @@ public abstract class AbstractWorkspaceCmd extends AbstractApiCmd {
         }
 
         return orgAndWorkspaceDbDtoList.stream().findFirst();
+    }
+
+    protected OrgAndWorkspaceDbDto fetchOrgAndWorkspaceDbDto(WorkspaceRefOptions workspaceRefOptions) throws ApiException {
+        OrgAndWorkspaceDbDto ws;
+
+        if (workspaceRefOptions.workspace.workspaceId != null) {
+            ws = workspaceById(workspaceRefOptions.workspace.workspaceId);
+        } else {
+            if (workspaceRefOptions.workspace.workspaceName.contains(WORKSPACE_REF_SEPARATOR)) {
+                String[] wspRef = workspaceRefOptions.workspace.workspaceName.split(WORKSPACE_REF_SEPARATOR);
+                ws = findOrgAndWorkspaceByName(wspRef[0], wspRef[1]);
+            } else {
+                throw new TowerException("Invalid workspace namespace");
+            }
+        }
+
+        return ws;
     }
 }
 
