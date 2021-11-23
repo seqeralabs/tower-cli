@@ -15,6 +15,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.runs.AbstractRunsCmd;
 import io.seqera.tower.cli.commands.runs.ViewCmd;
+import io.seqera.tower.cli.commands.runs.metrics.enums.MetricColumn;
+import io.seqera.tower.cli.commands.runs.metrics.enums.MetricType;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.RunViewMetrics;
 import io.seqera.tower.model.ResourceData;
@@ -35,10 +37,10 @@ public class MetricsCmd extends AbstractRunsCmd {
     @CommandLine.Option(names = {"-f", "--filter"}, description = "Filters by process name.")
     public String filter = "";
 
-    @CommandLine.Option(names = {"-t", "--type"}, split = ",", description = "Process metric types separated by comma: 'cpu','mem','time','io' (default displays all.).")
+    @CommandLine.Option(names = {"-t", "--type"}, split = ",", description = "Process metric types separated by comma: ${COMPLETION-CANDIDATES} (default displays all.)")
     public List<MetricType> type;
 
-    @CommandLine.Option(names = {"-c", "--columns"}, split = ",", description = "Process metric columns to display: 'mean','min','max','q1','q2','q3' (default displays all.).")
+    @CommandLine.Option(names = {"-c", "--columns"}, split = ",", description = "Process metric columns to display: ${COMPLETION-CANDIDATES} (default displays all.)")
     public List<MetricColumn> columns;
 
     @CommandLine.ParentCommand

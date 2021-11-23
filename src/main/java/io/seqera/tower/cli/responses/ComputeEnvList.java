@@ -11,6 +11,7 @@
 
 package io.seqera.tower.cli.responses;
 
+import io.seqera.tower.cli.utils.FormatHelper;
 import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.ListComputeEnvsResponseEntry;
 
@@ -39,7 +40,7 @@ public class ComputeEnvList extends Response {
 
         TableList table = new TableList(out, 5, "ID", "Status", "Platform", "Name", "Last activity").sortBy(0);
         table.setPrefix("    ");
-        computeEnvs.forEach(ce -> table.addRow(String.format("%s %s", ce.getPrimary() != null && ce.getPrimary() ? "*" : " ", ce.getId()), ce.getStatus().getValue(), ce.getPlatform(), ce.getName(), formatTime(ce.getLastUsed())));
+        computeEnvs.forEach(ce -> table.addRow(String.format("%s %s", ce.getPrimary() != null && ce.getPrimary() ? "*" : " ", ce.getId()), ce.getStatus().getValue(), ce.getPlatform(), ce.getName(), FormatHelper.formatTime(ce.getLastUsed())));
         table.print();
         out.println("");
     }

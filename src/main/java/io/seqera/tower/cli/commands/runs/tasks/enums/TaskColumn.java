@@ -11,13 +11,10 @@
 
 package io.seqera.tower.cli.commands.runs.tasks.enums;
 
-import java.time.Duration;
-import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.function.Function;
-
 import io.seqera.tower.cli.utils.FormatHelper;
 import io.seqera.tower.model.Task;
+
+import java.util.function.Function;
 
 public enum TaskColumn {
     taskId("task_id", true, Task::getTaskId),
@@ -29,7 +26,16 @@ public enum TaskColumn {
     container("container", false, Task::getContainer),
     nativeId("native_id", false, Task::getNativeId),
     submit("submit", false, Task::getSubmit, compose(Task::getSubmit, FormatHelper::formatDate)),
-    duration( "duration", false, Task::getDuration, compose(Task::getDuration, FormatHelper::formatDurationMillis));
+    duration("duration", false, Task::getDuration, compose(Task::getDuration, FormatHelper::formatDurationMillis)),
+    realtime("realtime", false, Task::getRealtime, compose(Task::getRealtime, FormatHelper::formatDurationMillis)),
+    pcpu("pcpu", false, Task::getPcpu, compose(Task::getPcpu, FormatHelper::formatPercentage)),
+    pmem("pmem", false, Task::getPmem, compose(Task::getPmem, FormatHelper::formatPercentage)),
+    peakRss("peakRss", false, Task::getPeakRss, compose(Task::getPeakRss, FormatHelper::formatBits)),
+    peakVmem("peakVmem", false, Task::getPeakVmem, compose(Task::getPeakVmem, FormatHelper::formatBits)),
+    rchar("rchar", false, Task::getRchar, compose(Task::getRchar, FormatHelper::formatBits)),
+    wchar("wchar", false, Task::getWchar, compose(Task::getWchar, FormatHelper::formatDurationMillis)),
+    volCtxt("volCtxt", false, Task::getVolCtxt),
+    invCtxt("invCtxt", false, Task::getInvCtxt);
 
     private final String description;
     private final boolean fixed;

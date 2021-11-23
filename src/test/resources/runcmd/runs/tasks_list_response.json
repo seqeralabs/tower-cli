@@ -96,7 +96,7 @@
         "volCtxt": 40017,
         "invCtxt": 25123,
         "process": "NFCORE_RNASEQ:RNASEQ:PREPARE_GENOME:UNTAR_STAR_INDEX",
-        "tag": "star.tar.gz",
+        "tag": null,
         "script": "\ntar \\\n    -xzvf \\\n     \\\n    star.tar.gz\n\ncat <<-END_VERSIONS > versions.yml\nUNTAR_STAR_INDEX:\n    untar: $(echo $(tar --version 2>&1) | sed 's/^.*(GNU tar) //; s/ Copyright.*$//')\nEND_VERSIONS\n",
         "duration": 418678,
         "module": [],

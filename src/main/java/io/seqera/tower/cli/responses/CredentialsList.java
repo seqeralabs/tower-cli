@@ -11,6 +11,7 @@
 
 package io.seqera.tower.cli.responses;
 
+import io.seqera.tower.cli.utils.FormatHelper;
 import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.Credentials;
 
@@ -39,7 +40,7 @@ public class CredentialsList extends Response {
 
         TableList table = new TableList(out, 4, "ID", "Provider", "Name", "Last activity").sortBy(0);
         table.setPrefix("    ");
-        credentials.forEach(element -> table.addRow(element.getId(), element.getProvider().getValue(), element.getName(), formatTime(element.getLastUsed())));
+        credentials.forEach(element -> table.addRow(element.getId(), element.getProvider().getValue(), element.getName(), FormatHelper.formatTime(element.getLastUsed())));
 
         table.print();
         out.println("");

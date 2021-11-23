@@ -41,14 +41,6 @@ public abstract class Response {
         return CommandLine.Help.Ansi.AUTO.string(value);
     }
 
-    protected String formatTime(OffsetDateTime value) {
-        if (value == null) {
-            return "never";
-        }
-
-        return value.format(DateTimeFormatter.RFC_1123_DATE_TIME);
-    }
-
     @JsonIgnore
     public int getExitCode() {
         return CommandLine.ExitCode.OK;

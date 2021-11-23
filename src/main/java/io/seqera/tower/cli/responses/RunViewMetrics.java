@@ -11,7 +11,7 @@
 
 package io.seqera.tower.cli.responses;
 
-import io.seqera.tower.cli.commands.runs.metrics.MetricColumn;
+import io.seqera.tower.cli.commands.runs.metrics.enums.MetricColumn;
 import io.seqera.tower.cli.utils.TableList;
 
 import java.io.PrintWriter;

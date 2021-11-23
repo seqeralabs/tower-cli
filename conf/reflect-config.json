@@ -27,16 +27,14 @@
   "name":"[Ljava.lang.String;"}
 ,
 {
-  "name":"[Ljava.lang.annotation.Annotation;"}
-,
-{
-  "name":"[Ljava.util.Locale;"}
-,
-{
-  "name":"[Ljavax.ws.rs.core.MediaType;"}
+  "name":"[Ljava.math.BigDecimal;"}
 ,
 {
   "name":"[Lsun.security.pkcs.SignerInfo;"}
+,
+{
+  "name":"apple.security.AppleProvider",
+  "methods":[{"name":"<init>","parameterTypes":[] }]}
 ,
 {
   "name":"byte[]"}
@@ -76,7 +74,27 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]}
 ,
 {
+  "name":"com.sun.crypto.provider.ARCFOURCipher",
+  "methods":[{"name":"<init>","parameterTypes":[] }]}
+,
+{
+  "name":"com.sun.crypto.provider.ChaCha20Cipher$ChaCha20Poly1305",
+  "methods":[{"name":"<init>","parameterTypes":[] }]}
+,
+{
+  "name":"com.sun.crypto.provider.DESCipher",
+  "methods":[{"name":"<init>","parameterTypes":[] }]}
+,
+{
+  "name":"com.sun.crypto.provider.DESedeCipher",
+  "methods":[{"name":"<init>","parameterTypes":[] }]}
+,
+{
   "name":"com.sun.crypto.provider.DHParameters",
+  "methods":[{"name":"<init>","parameterTypes":[] }]}
+,
+{
+  "name":"com.sun.crypto.provider.GaloisCounterMode$AESGCM",
   "methods":[{"name":"<init>","parameterTypes":[] }]}
 ,
 {
@@ -265,7 +283,7 @@
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.AddCmd",
   "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
+  "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]}
 ,
 {
@@ -1022,10 +1040,21 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]}
 ,
 {
+  "name":"io.seqera.tower.cli.commands.runs.tasks.TaskCmd",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]}
+,
+{
   "name":"io.seqera.tower.cli.commands.runs.tasks.TasksCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]}
+,
+{
+  "name":"io.seqera.tower.cli.commands.runs.tasks.enums.TaskColumn",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true}
 ,
 {
   "name":"io.seqera.tower.cli.commands.teams.AbstractTeamsCmd",
@@ -1122,12 +1151,6 @@
   "allDeclaredConstructors":true}
 ,
 {
-  "name":"io.seqera.tower.cli.responses.ComputeEnvDeleted",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true}
-,
-{
   "name":"io.seqera.tower.cli.responses.ComputeEnvList",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1146,22 +1169,10 @@
   "allDeclaredConstructors":true}
 ,
 {
-  "name":"io.seqera.tower.cli.responses.CredentialsDeleted",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true}
-,
-{
   "name":"io.seqera.tower.cli.responses.CredentialsList",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true}
-,
-{
-  "name":"io.seqera.tower.cli.responses.InfoResponse",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true}
 ,
 {
   "name":"io.seqera.tower.cli.responses.Response",
@@ -1193,25 +1204,13 @@
   "allDeclaredConstructors":true}
 ,
 {
-  "name":"io.seqera.tower.cli.responses.RunSubmited",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true}
-,
-{
   "name":"io.seqera.tower.cli.responses.RunTasksView",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true}
 ,
 {
-  "name":"io.seqera.tower.cli.responses.actions.ActionAdd",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true}
-,
-{
-  "name":"io.seqera.tower.cli.responses.actions.ActionUpdate",
+  "name":"io.seqera.tower.cli.responses.TasksView",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true}
@@ -1271,36 +1270,6 @@
   "allDeclaredConstructors":true}
 ,
 {
-  "name":"io.seqera.tower.cli.responses.organizations.OrganizationsAdded",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true}
-,
-{
-  "name":"io.seqera.tower.cli.responses.organizations.OrganizationsDeleted",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true}
-,
-{
-  "name":"io.seqera.tower.cli.responses.organizations.OrganizationsList",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true}
-,
-{
-  "name":"io.seqera.tower.cli.responses.organizations.OrganizationsUpdated",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true}
-,
-{
-  "name":"io.seqera.tower.cli.responses.organizations.OrganizationsView",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true}
-,
-{
   "name":"io.seqera.tower.cli.responses.participants.ParticipantAdded",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1317,12 +1286,6 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true}
-,
-{
-  "name":"io.seqera.tower.cli.responses.participants.ParticipantUpdated",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true}
 ,
 {
   "name":"io.seqera.tower.cli.responses.participants.ParticipantsList",
@@ -1385,34 +1348,10 @@
   "allDeclaredConstructors":true}
 ,
 {
-  "name":"io.seqera.tower.cli.responses.workspaces.WorkspaceAdded",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true}
-,
-{
-  "name":"io.seqera.tower.cli.responses.workspaces.WorkspaceDeleted",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true}
-,
-{
   "name":"io.seqera.tower.cli.responses.workspaces.WorkspaceList",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true}
-,
-{
-  "name":"io.seqera.tower.cli.responses.workspaces.WorkspaceUpdated",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true}
-,
-{
-  "name":"io.seqera.tower.cli.responses.workspaces.WorkspaceView",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true}
 ,
 {
   "name":"io.seqera.tower.cli.utils.VersionProvider",
@@ -1683,7 +1622,8 @@
   "name":"io.seqera.tower.model.DescribeComputeEnvResponse",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true}
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]}
 ,
 {
   "name":"io.seqera.tower.model.DescribeCredentialsResponse",
@@ -1866,13 +1806,15 @@
   "name":"io.seqera.tower.model.ListComputeEnvsResponse",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true}
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]}
 ,
 {
   "name":"io.seqera.tower.model.ListComputeEnvsResponseEntry",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true}
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]}
 ,
 {
   "name":"io.seqera.tower.model.ListCredentialsResponse",
@@ -1983,19 +1925,11 @@
   "allDeclaredConstructors":true}
 ,
 {
-  "name":"io.seqera.tower.model.ParticipantType",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "methods":[
-    {"name":"fromValue","parameterTypes":["java.lang.String"] }, 
-    {"name":"getValue","parameterTypes":[] }
-  ]}
-,
-{
   "name":"io.seqera.tower.model.PipelineDbDto",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true}
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]}
 ,
 {
   "name":"io.seqera.tower.model.PodCleanupPolicy",
@@ -2059,7 +1993,8 @@
   "name":"io.seqera.tower.model.SubmitWorkflowLaunchResponse",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true}
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]}
 ,
 {
   "name":"io.seqera.tower.model.Task",
@@ -2300,8 +2235,22 @@
   "name":"java.lang.annotation.Annotation[]"}
 ,
 {
+  "name":"java.lang.constant.Constable",
+  "queryAllDeclaredMethods":true}
+,
+{
+  "name":"java.lang.constant.ConstantDesc",
+  "queryAllDeclaredMethods":true}
+,
+{
   "name":"java.lang.reflect.AccessibleObject",
   "fields":[{"name":"override"}]}
+,
+{
+  "name":"java.math.BigDecimal",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true}
 ,
 {
   "name":"java.nio.file.Path"}
