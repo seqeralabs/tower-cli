@@ -13,7 +13,6 @@ package io.seqera.tower.cli.commands.participants;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceRequiredOptions;
-import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.participants.ParticipantLeft;
 import picocli.CommandLine;
@@ -31,7 +30,9 @@ public class LeaveCmd extends AbstractParticipantsCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        api().leaveWorkspaceParticipant(orgId(workspace.workspaceId), workspace.workspaceId);
-        return new ParticipantLeft(workspaceName(workspace.workspaceId));
+        Long wspId = workspaceId(workspace.workspace);
+
+        api().leaveWorkspaceParticipant(orgId(wspId), wspId);
+        return new ParticipantLeft(workspaceName(wspId));
     }
 }

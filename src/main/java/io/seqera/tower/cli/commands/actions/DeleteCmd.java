@@ -35,14 +35,16 @@ public class DeleteCmd extends AbstractActionsCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        ListActionsResponseActionInfo listActionsResponseActionInfo = actionByName(workspace.workspaceId, actionName);
+        Long wspId = workspaceId(workspace.workspace);
+
+        ListActionsResponseActionInfo listActionsResponseActionInfo = actionByName(wspId, actionName);
 
         try {
-            api().deleteAction(listActionsResponseActionInfo.getId(), workspace.workspaceId);
+            api().deleteAction(listActionsResponseActionInfo.getId(), wspId);
         } catch (Exception e) {
-            throw new TowerException(String.format("Unable to delete action '%s' for workspace '%s'", actionName, workspaceRef(workspace.workspaceId)));
+            throw new TowerException(String.format("Unable to delete action '%s' for workspace '%s'", actionName, workspaceRef(wspId)));
         }
 
-        return new ActionsDelete(actionName, workspaceRef(workspace.workspaceId));
+        return new ActionsDelete(actionName, workspaceRef(wspId));
     }
 }

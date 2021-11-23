@@ -31,7 +31,9 @@ public class ListCmd extends AbstractActionsCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        ListActionsResponse response = api().listActions(workspace.workspaceId);
+        Long wspId = workspaceId(workspace.workspace);
+
+        ListActionsResponse response = api().listActions(wspId);
 
         return new ActionsList(response.getActions(), userName());
     }

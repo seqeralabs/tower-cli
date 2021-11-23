@@ -29,28 +29,6 @@ public class AbstractOrganizationsCmd extends AbstractApiCmd {
     public AbstractOrganizationsCmd() {
     }
 
-    protected List<OrgAndWorkspaceDbDto> organizationsByUser() throws ApiException {
-        ListWorkspacesAndOrgResponse workspacesAndOrgResponse = api().listWorkspacesUser(userId());
-
-        if (workspacesAndOrgResponse.getOrgsAndWorkspaces() == null) {
-            throw new UserOrganizationsNotFoundException(userName());
-        }
-
-        List<OrgAndWorkspaceDbDto> orgAndWorkspaceDbDtoList = workspacesAndOrgResponse
-                .getOrgsAndWorkspaces()
-                .stream()
-                .filter(
-                        item -> Objects.equals(item.getWorkspaceId(), null)
-                )
-                .collect(Collectors.toList());
-
-        if (orgAndWorkspaceDbDtoList.isEmpty()) {
-            throw new UserOrganizationsNotFoundException(userName());
-        }
-
-        return orgAndWorkspaceDbDtoList;
-    }
-
     protected OrgAndWorkspaceDbDto organizationByName(String organizationName) throws ApiException {
         ListWorkspacesAndOrgResponse workspacesAndOrgResponse = api().listWorkspacesUser(userId());
 

@@ -38,9 +38,11 @@ public class DeleteCmd extends AbstractParticipantsCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        ParticipantDbDto participant = findWorkspaceParticipant(orgId(workspace.workspaceId), workspace.workspaceId, name, type);
-        api().deleteWorkspaceParticipant(orgId(workspace.workspaceId), workspace.workspaceId, participant.getParticipantId());
+        Long wspId = workspaceId(workspace.workspace);
 
-        return new ParticipantDeleted(name, workspaceName(workspace.workspaceId));
+        ParticipantDbDto participant = findWorkspaceParticipant(orgId(wspId), wspId, name, type);
+        api().deleteWorkspaceParticipant(orgId(wspId), wspId, participant.getParticipantId());
+
+        return new ParticipantDeleted(name, workspaceName(wspId));
     }
 }

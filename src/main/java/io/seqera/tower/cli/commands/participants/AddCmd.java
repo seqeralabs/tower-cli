@@ -41,21 +41,22 @@ public class AddCmd extends AbstractParticipantsCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
-
         AddParticipantRequest request = new AddParticipantRequest();
 
+        Long wspId = workspaceId(workspace.workspace);
+
         if (Objects.equals(type, ParticipantType.MEMBER)) {
-            request.setMemberId(findOrganizationMemberByName(orgId(workspace.workspaceId), name).getMemberId());
+            request.setMemberId(findOrganizationMemberByName(orgId(wspId), name).getMemberId());
         } else if (Objects.equals(type, ParticipantType.TEAM)) {
-            request.setTeamId(findOrganizationTeamByName(orgId(workspace.workspaceId), name).getTeamId());
+            request.setTeamId(findOrganizationTeamByName(orgId(wspId), name).getTeamId());
         } else if (Objects.equals(type, ParticipantType.COLLABORATOR)) {
-            request.setMemberId(findOrganizationCollaboratorByName(orgId(workspace.workspaceId), name).getMemberId());
+            request.setMemberId(findOrganizationCollaboratorByName(orgId(wspId), name).getMemberId());
         } else {
             throw new TowerException("Unknown participant candidate type provided.");
         }
 
-        AddParticipantResponse response = api().createWorkspaceParticipant(orgId(workspace.workspaceId), workspace.workspaceId, request);
+        AddParticipantResponse response = api().createWorkspaceParticipant(orgId(wspId), wspId, request);
 
-        return new ParticipantAdded(response.getParticipant(), workspaceName(workspace.workspaceId));
+        return new ParticipantAdded(response.getParticipant(), workspaceName(wspId));
     }
 }

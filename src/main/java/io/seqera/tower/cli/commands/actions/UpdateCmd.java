@@ -48,12 +48,14 @@ public class UpdateCmd extends AbstractActionsCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        ListActionsResponseActionInfo actionInfo = actionByName(workspace.workspaceId, actionName);
+        Long wspId = workspaceId(workspace.workspace);
 
-        Action action = api().describeAction(actionInfo.getId(), workspace.workspaceId).getAction();
+        ListActionsResponseActionInfo actionInfo = actionByName(wspId, actionName);
+
+        Action action = api().describeAction(actionInfo.getId(), wspId).getAction();
 
         // Retrieve the provided computeEnv or use the primary if not provided
-        ComputeEnv ce = opts.computeEnv != null ? computeEnvByName(workspace.workspaceId, opts.computeEnv) : action.getLaunch().getComputeEnv();
+        ComputeEnv ce = opts.computeEnv != null ? computeEnvByName(wspId, opts.computeEnv) : action.getLaunch().getComputeEnv();
 
         // Use compute env values by default
         String workDirValue = opts.workDir != null ? opts.workDir : action.getLaunch().getWorkDir();
@@ -83,9 +85,9 @@ public class UpdateCmd extends AbstractActionsCmd {
         request.setLaunch(workflowLaunchRequest);
 
         try {
-            api().updateAction(action.getId(), request, workspace.workspaceId);
+            api().updateAction(action.getId(), request, wspId);
         } catch (Exception e) {
-            throw new TowerException(String.format("Unable to update action '%s' for workspace '%s'", actionName, workspaceRef(workspace.workspaceId)));
+            throw new TowerException(String.format("Unable to update action '%s' for workspace '%s'", actionName, workspaceRef(wspId)));
         }
 
         if (status != null) {
@@ -94,12 +96,12 @@ public class UpdateCmd extends AbstractActionsCmd {
             }
 
             try {
-                api().pauseAction(action.getId(), workspace.workspaceId, null);
+                api().pauseAction(action.getId(), wspId, null);
             } catch (Exception e) {
                 throw new TowerException(String.format("An error has occur while setting the action '%s' to '%s'", actionName, status.toUpperCase()));
             }
         }
 
-        return new ActionUpdate(actionName, workspaceRef(workspace.workspaceId), action.getId());
+        return new ActionUpdate(actionName, workspaceRef(wspId), action.getId());
     }
 }

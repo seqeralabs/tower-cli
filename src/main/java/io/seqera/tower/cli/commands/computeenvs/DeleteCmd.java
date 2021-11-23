@@ -33,13 +33,15 @@ public class DeleteCmd extends AbstractComputeEnvCmd {
 
     @Override
     protected Response exec() throws ApiException {
+        Long wspId = workspaceId(workspace.workspace);
+        
         try {
-            api().deleteComputeEnv(id, workspace.workspaceId);
-            return new ComputeEnvDeleted(id, workspaceRef(workspace.workspaceId));
+            api().deleteComputeEnv(id, wspId);
+            return new ComputeEnvDeleted(id, workspaceRef(wspId));
         } catch (ApiException e) {
             if (e.getCode() == 403) {
                 // Customize the forbidden message
-                throw new ComputeEnvNotFoundException(id, workspaceRef(workspace.workspaceId));
+                throw new ComputeEnvNotFoundException(id, workspaceRef(wspId));
             }
             throw e;
         }
