@@ -29,7 +29,7 @@ import java.io.IOException;
 )
 public class DownloadCmd extends AbstractRunsCmd {
 
-    @CommandLine.Option(names = {"--type"}, description = "File type to download. Options are stdout, log, stderr (for tasks only) and timeline (workflow only) (default is stdout).")
+    @CommandLine.Option(names = {"--type"}, description = "File type to download. Options are stdout, log, stderr (for tasks only) and timeline (workflow only) (default is stdout).", defaultValue = "stdout")
     public RunDownloadFileType type;
 
     @CommandLine.Option(names = {"-t"}, description = "Task identifier.")

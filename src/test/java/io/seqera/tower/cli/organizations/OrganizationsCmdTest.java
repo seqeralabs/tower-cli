@@ -13,6 +13,7 @@ package io.seqera.tower.cli.organizations;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
+import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.OrganizationNotFoundException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.organizations.OrganizationsAdded;
@@ -23,6 +24,8 @@ import io.seqera.tower.cli.responses.organizations.OrganizationsView;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import io.seqera.tower.model.OrganizationDbDto;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 
@@ -36,10 +39,11 @@ import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
-public class OrganizationsCmsTest extends BaseCmdTest {
+class OrganizationsCmdTest extends BaseCmdTest {
 
-    @Test
-    void testListOrganization(MockServerClient mock) throws JsonProcessingException {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testList(OutputType format, MockServerClient mock) throws JsonProcessingException {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -52,10 +56,8 @@ public class OrganizationsCmsTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "organizations", "list");
-
-        assertEquals("", out.stdErr);
-        assertEquals(chop(new OrganizationsList("jordi", Arrays.asList(parseJson(" {\n" +
+        ExecOut out = exec(format, mock, "organizations", "list");
+        assertOutput(format, out, new OrganizationsList("jordi", Arrays.asList(parseJson(" {\n" +
                         "      \"orgId\": 27736513644467,\n" +
                         "      \"orgName\": \"organization1\",\n" +
                         "      \"orgLogoUrl\": null,\n" +
@@ -69,12 +71,11 @@ public class OrganizationsCmsTest extends BaseCmdTest {
                         "      \"workspaceId\": null,\n" +
                         "      \"workspaceName\": null\n" +
                         "    }", OrgAndWorkspaceDbDto.class)
-        )).toString()), out.stdOut);
-        assertEquals(0, out.exitCode);
+        )));
     }
 
     @Test
-    void testListOrganizationEmpty(MockServerClient mock) {
+    void testListEmpty(MockServerClient mock) {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -94,8 +95,9 @@ public class OrganizationsCmsTest extends BaseCmdTest {
         assertEquals(0, out.exitCode);
     }
 
-    @Test
-    void testViewOrganization(MockServerClient mock) throws JsonProcessingException {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testView(OutputType format, MockServerClient mock) throws JsonProcessingException {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -114,10 +116,8 @@ public class OrganizationsCmsTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("organizations/organizations_view")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "organizations", "view", "-n", "organization1");
-
-        assertEquals("", out.stdErr);
-        assertEquals(chop(new OrganizationsView(parseJson("{\n" +
+        ExecOut out = exec(format, mock, "organizations", "view", "-n", "organization1");
+        assertOutput(format, out, new OrganizationsView(parseJson("{\n" +
                 "    \"orgId\": 27736513644467,\n" +
                 "    \"name\": \"organization1\",\n" +
                 "    \"fullName\": \"organization1\",\n" +
@@ -128,12 +128,11 @@ public class OrganizationsCmsTest extends BaseCmdTest {
                 "    \"logoUrl\": null,\n" +
                 "    \"memberId\": null,\n" +
                 "    \"memberRole\": null\n" +
-                "  }", OrganizationDbDto.class)).toString()), out.stdOut);
-        assertEquals(0, out.exitCode);
+                "  }", OrganizationDbDto.class)));
     }
 
     @Test
-    void testViewOrganizationNotFound(MockServerClient mock) {
+    void testViewNotFound(MockServerClient mock) {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -153,8 +152,9 @@ public class OrganizationsCmsTest extends BaseCmdTest {
         assertEquals(errorMessage(out.app, new OrganizationNotFoundException("organization11")), out.stdErr);
     }
 
-    @Test
-    void testDeleteOrganization(MockServerClient mock) {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testDelete(OutputType format, MockServerClient mock) {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -173,15 +173,12 @@ public class OrganizationsCmsTest extends BaseCmdTest {
                 response().withStatusCode(204)
         );
 
-        ExecOut out = exec(mock, "organizations", "delete", "-n", "organization1");
-
-        assertEquals("", out.stdErr);
-        assertEquals(new OrganizationsDeleted("organization1").toString(), out.stdOut);
-        assertEquals(0, out.exitCode);
+        ExecOut out = exec(format, mock, "organizations", "delete", "-n", "organization1");
+        assertOutput(format, out, new OrganizationsDeleted(27736513644467L, "organization1"));
     }
 
     @Test
-    void testDeleteOrganizationNotFound(MockServerClient mock) {
+    void testDeleteNotFound(MockServerClient mock) {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -202,7 +199,7 @@ public class OrganizationsCmsTest extends BaseCmdTest {
     }
 
     @Test
-    void testDeleteOrganizationError(MockServerClient mock) {
+    void testDeleteError(MockServerClient mock) {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -228,18 +225,17 @@ public class OrganizationsCmsTest extends BaseCmdTest {
         assertEquals(errorMessage(out.app, new TowerException("Organization organization1 could not be deleted")), out.stdErr);
     }
 
-    @Test
-    void testAddOrganization(MockServerClient mock) throws JsonProcessingException {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAdd(OutputType format, MockServerClient mock) throws JsonProcessingException {
         mock.when(
                 request().withMethod("POST").withPath("/orgs"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("organizations/organizations_add_response")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "organizations", "add", "-n", "sample-organization", "-f", "sample organization");
-
-        assertEquals("", out.stdErr);
-        assertEquals(new OrganizationsAdded(parseJson("{\n" +
+        ExecOut out = exec(format, mock, "organizations", "add", "-n", "sample-organization", "-f", "sample organization");
+        assertOutput(format, out, new OrganizationsAdded(parseJson("{\n" +
                 "    \"orgId\": 275484385882108,\n" +
                 "    \"name\": \"sample-organization\",\n" +
                 "    \"fullName\": \"sample organization\",\n" +
@@ -250,12 +246,11 @@ public class OrganizationsCmsTest extends BaseCmdTest {
                 "    \"logoUrl\": null,\n" +
                 "    \"memberId\": null,\n" +
                 "    \"memberRole\": null\n" +
-                "  }", OrganizationDbDto.class)).toString(), out.stdOut);
-        assertEquals(0, out.exitCode);
+                "  }", OrganizationDbDto.class)));
     }
 
     @Test
-    void testAddOrganizationError(MockServerClient mock) {
+    void testAddError(MockServerClient mock) {
         mock.when(
                 request().withMethod("POST").withPath("/orgs"), exactly(1)
         ).respond(
@@ -268,8 +263,10 @@ public class OrganizationsCmsTest extends BaseCmdTest {
         assertEquals(1, out.exitCode);
     }
 
-    @Test
-    void testUpdateOrganization(MockServerClient mock) {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testUpdate(OutputType format, MockServerClient mock) {
+        mock.reset();
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -294,15 +291,13 @@ public class OrganizationsCmsTest extends BaseCmdTest {
                 response().withStatusCode(204)
         );
 
-        ExecOut out = exec(mock, "organizations", "update", "-n", "organization1", "-f", "sample organization");
-
-        assertEquals("", out.stdErr);
-        assertEquals(new OrganizationsUpdated("organization1").toString(), out.stdOut);
-        assertEquals(0, out.exitCode);
+        ExecOut out = exec(format, mock, "organizations", "update", "-n", "organization1", "-f", "sample organization");
+        assertOutput(format, out, new OrganizationsUpdated(27736513644467L, "organization1"));
     }
 
     @Test
-    void testUpdateOrganizationError(MockServerClient mock) {
+    void testUpdateError(MockServerClient mock) {
+        mock.reset();
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(

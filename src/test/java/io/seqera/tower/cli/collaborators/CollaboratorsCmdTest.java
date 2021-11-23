@@ -13,9 +13,12 @@ package io.seqera.tower.cli.collaborators;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
+import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.responses.collaborators.CollaboratorsList;
 import io.seqera.tower.model.MemberDbDto;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 
@@ -28,10 +31,11 @@ import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
-public class CollaboratorsCmdTest extends BaseCmdTest {
+class CollaboratorsCmdTest extends BaseCmdTest {
 
-    @Test
-    void testListCollaborators(MockServerClient mock) throws JsonProcessingException {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testListCollaborators(OutputType format, MockServerClient mock) throws JsonProcessingException {
         mock.when(
                 request().withMethod("GET").withPath("/orgs/27736513644467/collaborators")
                         .withQueryStringParameter("max", "100")
@@ -40,17 +44,16 @@ public class CollaboratorsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("collaborators/collaborators_list")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "collaborators", "list", "-o", "27736513644467");
-
-        assertEquals("", out.stdErr);
-        assertEquals(chop(new CollaboratorsList(27736513644467L, Arrays.asList(
+        ExecOut out = exec(format, mock, "collaborators", "list", "-o", "27736513644467");
+        assertOutput(format, out, new CollaboratorsList(27736513644467L, Arrays.asList(
                 parseJson(" {\n" +
                         "      \"memberId\": 175703974560466,\n" +
                         "      \"userName\": \"jfernandez74\",\n" +
                         "      \"email\": \"jfernandez74@gmail.com\",\n" +
                         "      \"firstName\": null,\n" +
                         "      \"lastName\": null,\n" +
-                        "      \"avatar\": \"https://www.gravatar.com/avatar/7d3c1ee212a3465233e161b451fb4d05?d=404\"\n" +
+                        "      \"avatar\": \"https://www.gravatar.com/avatar/7d3c1ee212a3465233e161b451fb4d05?d=404\",\n" +
+                        "      \"role\" : \"collaborator\"" +
                         "    }", MemberDbDto.class),
                 parseJson("{\n" +
                         "      \"memberId\": 255080245994226,\n" +
@@ -58,9 +61,9 @@ public class CollaboratorsCmdTest extends BaseCmdTest {
                         "      \"email\": \"julio@seqera.io\",\n" +
                         "      \"firstName\": null,\n" +
                         "      \"lastName\": null,\n" +
-                        "      \"avatar\": \"https://www.gravatar.com/avatar/72918a9f674eaa696729917bec58760b?d=404\"\n" +
+                        "      \"avatar\": \"https://www.gravatar.com/avatar/72918a9f674eaa696729917bec58760b?d=404\",\n" +
+                        "      \"role\" : \"collaborator\"" +
                         "    }", MemberDbDto.class)
-        )).toString()), out.stdOut);
-        assertEquals(0, out.exitCode);
+        )));
     }
 }

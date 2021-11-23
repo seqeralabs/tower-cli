@@ -45,7 +45,7 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
-        
+
         // Retrieve the provided computeEnv or use the primary if not provided
         ComputeEnv ce = opts.computeEnv != null ? computeEnvByName(wspId, opts.computeEnv) : primaryComputeEnv(wspId);
 

@@ -38,6 +38,6 @@ public class DeleteCmd extends AbstractOrganizationsCmd {
             throw new TowerException(String.format("Organization %s could not be deleted", name));
         }
 
-        return new OrganizationsDeleted(name);
+        return new OrganizationsDeleted(orgAndWorkspaceDbDto.getOrgId(), name);
     }
 }

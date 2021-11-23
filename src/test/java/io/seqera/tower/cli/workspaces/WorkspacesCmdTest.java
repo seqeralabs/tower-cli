@@ -13,6 +13,7 @@ package io.seqera.tower.cli.workspaces;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
+import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.OrganizationNotFoundException;
 import io.seqera.tower.cli.exceptions.WorkspaceNotFoundException;
 import io.seqera.tower.cli.responses.participants.ParticipantLeft;
@@ -25,6 +26,8 @@ import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import io.seqera.tower.model.Visibility;
 import org.junit.jupiter.api.Test;
 import io.seqera.tower.model.Workspace;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 
@@ -38,10 +41,11 @@ import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
-public class WorkspacesCmdTest extends BaseCmdTest {
+class WorkspacesCmdTest extends BaseCmdTest {
 
-    @Test
-    void testList(MockServerClient mock) throws JsonProcessingException {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testList(OutputType format, MockServerClient mock) throws JsonProcessingException {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -54,11 +58,8 @@ public class WorkspacesCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "workspaces", "list");
-
-
-        assertEquals("", out.stdErr);
-        assertEquals(chop(new WorkspaceList("jordi", Arrays.asList(parseJson(" {\n" +
+        ExecOut out = exec(format, mock, "workspaces", "list");
+        assertOutput(format, out, new WorkspaceList("jordi", Arrays.asList(parseJson(" {\n" +
                         "      \"orgId\": 27736513644467,\n" +
                         "      \"orgName\": \"organization1\",\n" +
                         "      \"orgLogoUrl\": null,\n" +
@@ -72,12 +73,12 @@ public class WorkspacesCmdTest extends BaseCmdTest {
                         "      \"workspaceId\": 75887156211590,\n" +
                         "      \"workspaceName\": \"workspace2\"\n" +
                         "    }", OrgAndWorkspaceDbDto.class)
-        )).toString()), out.stdOut);
-        assertEquals(0, out.exitCode);
+        )));
     }
 
-    @Test
-    void testListByOrganization(MockServerClient mock) throws JsonProcessingException {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testListByOrganization(OutputType format, MockServerClient mock) throws JsonProcessingException {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -90,19 +91,17 @@ public class WorkspacesCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "workspaces", "list", "-o", "organization1");
+        ExecOut out = exec(format, mock, "workspaces", "list", "-o", "organization1");
 
 
-        assertEquals("", out.stdErr);
-        assertEquals(chop(new WorkspaceList("jordi", List.of(parseJson(" {\n" +
+        assertOutput(format, out, new WorkspaceList("jordi", List.of(parseJson(" {\n" +
                 "      \"orgId\": 27736513644467,\n" +
                 "      \"orgName\": \"organization1\",\n" +
                 "      \"orgLogoUrl\": null,\n" +
                 "      \"workspaceId\": 75887156211589,\n" +
                 "      \"workspaceName\": \"workspace1\"\n" +
                 "    }", OrgAndWorkspaceDbDto.class)
-        )).toString()), out.stdOut);
-        assertEquals(0, out.exitCode);
+        )));
     }
 
     @Test
@@ -127,8 +126,9 @@ public class WorkspacesCmdTest extends BaseCmdTest {
         assertEquals(0, out.exitCode);
     }
 
-    @Test
-    void testDeleteById(MockServerClient mock) {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testDeleteById(OutputType format, MockServerClient mock) {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -147,11 +147,8 @@ public class WorkspacesCmdTest extends BaseCmdTest {
                 response().withStatusCode(204)
         );
 
-        ExecOut out = exec(mock, "workspaces", "delete", "-w", "75887156211589");
-
-        assertEquals("", out.stdErr);
-        assertEquals(new WorkspaceDeleted("workspace1", "organization1").toString(), out.stdOut);
-        assertEquals(0, out.exitCode);
+        ExecOut out = exec(format, mock, "workspaces", "delete", "-w", "75887156211589");
+        assertOutput(format, out, new WorkspaceDeleted("workspace1", "organization1"));
     }
 
     @Test
@@ -181,8 +178,9 @@ public class WorkspacesCmdTest extends BaseCmdTest {
         assertEquals(1, out.exitCode);
     }
 
-    @Test
-    void testViewById(MockServerClient mock) throws JsonProcessingException {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testViewById(OutputType format, MockServerClient mock) throws JsonProcessingException {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -201,10 +199,9 @@ public class WorkspacesCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_view")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "workspaces", "view", "-w", "75887156211589");
+        ExecOut out = exec(format, mock, "workspaces", "view", "-w", "75887156211589");
 
-        assertEquals("", out.stdErr);
-        assertEquals(chop(new WorkspaceView(parseJson("{\n" +
+        assertOutput(format, out, new WorkspaceView(parseJson("{\n" +
                 "    \"id\": 75887156211589,\n" +
                 "    \"name\": \"workspace1\",\n" +
                 "    \"fullName\": \"workspace 1\",\n" +
@@ -212,8 +209,7 @@ public class WorkspacesCmdTest extends BaseCmdTest {
                 "    \"visibility\": \"PRIVATE\",\n" +
                 "    \"dateCreated\": \"2021-09-21T12:54:03Z\",\n" +
                 "    \"lastUpdated\": \"2021-09-21T12:54:03Z\"\n" +
-                "  }", Workspace.class)).toString()), out.stdOut);
-        assertEquals(0, out.exitCode);
+                "  }", Workspace.class)));
     }
 
     @Test
@@ -237,8 +233,9 @@ public class WorkspacesCmdTest extends BaseCmdTest {
         assertEquals(1, out.exitCode);
     }
 
-    @Test
-    void testAdd(MockServerClient mock) {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAdd(OutputType format, MockServerClient mock) {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -263,11 +260,8 @@ public class WorkspacesCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_add_response")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "workspaces", "add", "-n", "wspNew", "-o", "organization1", "-f", "wsp-new", "-d", "workspace description");
-
-        assertEquals("", out.stdErr);
-        assertEquals(new WorkspaceAdded("wspNew", "organization1", Visibility.PRIVATE).toString(), out.stdOut);
-        assertEquals(0, out.exitCode);
+        ExecOut out = exec(format, mock, "workspaces", "add", "-n", "wspNew", "-o", "organization1", "-f", "wsp-new", "-d", "workspace description");
+        assertOutput(format, out, new WorkspaceAdded("wspNew", "organization1", Visibility.PRIVATE));
     }
 
     @Test
@@ -291,8 +285,9 @@ public class WorkspacesCmdTest extends BaseCmdTest {
         assertEquals(1, out.exitCode);
     }
 
-    @Test
-    void updateTestById(MockServerClient mock) {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testUpdateById(OutputType format, MockServerClient mock) {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -317,15 +312,12 @@ public class WorkspacesCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_update_response")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "workspaces", "update", "-w", "75887156211589", "-f", "wsp-new", "-d", "workspace description");
-
-        assertEquals("", out.stdErr);
-        assertEquals(new WorkspaceUpdated("workspace1", "organization1", Visibility.PRIVATE).toString(), out.stdOut);
-        assertEquals(0, out.exitCode);
+        ExecOut out = exec(format, mock, "workspaces", "update", "-w", "75887156211589", "-f", "wsp-new", "-d", "workspace description");
+        assertOutput(format, out, new WorkspaceUpdated("workspace1", "organization1", Visibility.PRIVATE));
     }
 
     @Test
-    void updateTestWorkspaceNotFound(MockServerClient mock) {
+    void testUpdateWorkspaceNotFound(MockServerClient mock) {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -345,8 +337,9 @@ public class WorkspacesCmdTest extends BaseCmdTest {
         assertEquals(1, out.exitCode);
     }
 
-    @Test
-    void leaveWorkspaceAsParticipantById(MockServerClient mock) {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testLeaveWorkspaceAsParticipantById(OutputType format, MockServerClient mock) {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -365,11 +358,8 @@ public class WorkspacesCmdTest extends BaseCmdTest {
                 response().withStatusCode(204)
         );
 
-        ExecOut out = exec(mock, "workspaces", "leave", "-w", "75887156211589");
-
-        assertEquals("", out.stdErr);
-        assertEquals(new ParticipantLeft("workspace1").toString(), out.stdOut);
-        assertEquals(0, out.exitCode);
+        ExecOut out = exec(format, mock, "workspaces", "leave", "-w", "75887156211589");
+        assertOutput(format, out, new ParticipantLeft("workspace1"));
     }
 
     @Test

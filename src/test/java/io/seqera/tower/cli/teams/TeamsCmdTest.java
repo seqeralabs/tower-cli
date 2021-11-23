@@ -13,6 +13,7 @@ package io.seqera.tower.cli.teams;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
+import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.OrganizationNotFoundException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.teams.TeamAdded;
@@ -20,6 +21,8 @@ import io.seqera.tower.cli.responses.teams.TeamDeleted;
 import io.seqera.tower.cli.responses.teams.TeamsList;
 import io.seqera.tower.model.TeamDbDto;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 
@@ -33,10 +36,11 @@ import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
-public class TeamsCmdTest extends BaseCmdTest {
+class TeamsCmdTest extends BaseCmdTest {
 
-    @Test
-    void testList(MockServerClient mock) throws JsonProcessingException {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testList(OutputType format, MockServerClient mock) throws JsonProcessingException {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -55,10 +59,8 @@ public class TeamsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("teams/teams_list")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "teams", "list", "-o", "organization1");
-
-        assertEquals("", out.stdErr);
-        assertEquals(chop(new TeamsList("organization1", Arrays.asList(
+        ExecOut out = exec(format, mock, "teams", "list", "-o", "organization1");
+        assertOutput(format, out, new TeamsList("organization1", Arrays.asList(
                 parseJson(" {\n" +
                         "      \"teamId\": 249211453903161,\n" +
                         "      \"name\": \"team-test-3\",\n" +
@@ -87,8 +89,7 @@ public class TeamsCmdTest extends BaseCmdTest {
                         "      \"avatarUrl\": null,\n" +
                         "      \"membersCount\": 1\n" +
                         "    }", TeamDbDto.class)
-        )).toString()), out.stdOut);
-        assertEquals(0, out.exitCode);
+        )));
     }
 
     @Test
@@ -292,8 +293,9 @@ public class TeamsCmdTest extends BaseCmdTest {
         assertEquals(0, out.exitCode);
     }
 
-    @Test
-    void testAdd(MockServerClient mock) {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAdd(OutputType format, MockServerClient mock) {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -312,11 +314,8 @@ public class TeamsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("teams/teams_add")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "teams", "add", "-o", "organization1", "-n", "team-test");
-
-        assertEquals("", out.stdErr);
-        assertEquals(new TeamAdded("organization1", "team-test").toString(), out.stdOut);
-        assertEquals(0, out.exitCode);
+        ExecOut out = exec(format, mock, "teams", "add", "-o", "organization1", "-n", "team-test");
+        assertOutput(format, out, new TeamAdded("organization1", "team-test"));
     }
 
     @Test
@@ -340,8 +339,9 @@ public class TeamsCmdTest extends BaseCmdTest {
         assertEquals(1, out.exitCode);
     }
 
-    @Test
-    void testDeleteTeam(MockServerClient mock) {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testDeleteTeam(OutputType format, MockServerClient mock) {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -360,10 +360,7 @@ public class TeamsCmdTest extends BaseCmdTest {
                 response().withStatusCode(204)
         );
 
-        ExecOut out = exec(mock, "teams", "delete", "-o", "organization1", "-i", "69076469523589");
-
-        assertEquals("", out.stdErr);
-        assertEquals(new TeamDeleted("organization1", "69076469523589").toString(), out.stdOut);
-        assertEquals(0, out.exitCode);
+        ExecOut out = exec(format, mock, "teams", "delete", "-o", "organization1", "-i", "69076469523589");
+        assertOutput(format, out, new TeamDeleted("organization1", "69076469523589"));
     }
 }

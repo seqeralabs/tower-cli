@@ -21,8 +21,8 @@ import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Command(
@@ -38,15 +38,15 @@ public class ListCmd extends AbstractWorkspaceCmd {
     protected Response exec() throws ApiException, IOException {
         ListWorkspacesAndOrgResponse response = api().listWorkspacesUser(userId());
 
-        if (organizationName != null && response.getOrgsAndWorkspaces() != null) {
-            List<OrgAndWorkspaceDbDto> responseOrg = response.getOrgsAndWorkspaces()
-                    .stream()
-                    .filter(item -> Objects.equals(item.getOrgName(), organizationName))
-                    .collect(Collectors.toList());
-
-            return new WorkspaceList(userName(), responseOrg);
+        if (response.getOrgsAndWorkspaces() == null) {
+            return new WorkspaceList(userName(), Collections.emptyList());
         }
 
-        return new WorkspaceList(userName(), response.getOrgsAndWorkspaces());
+        List<OrgAndWorkspaceDbDto> responseOrg = response.getOrgsAndWorkspaces()
+                .stream()
+                .filter(v -> v.getWorkspaceId() != null && (organizationName == null || organizationName.equals(v.getOrgName()))
+                ).collect(Collectors.toList());
+
+        return new WorkspaceList(userName(), responseOrg);
     }
 }

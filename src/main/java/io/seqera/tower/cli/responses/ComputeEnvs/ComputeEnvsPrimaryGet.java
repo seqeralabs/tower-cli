@@ -33,7 +33,6 @@ public class ComputeEnvsPrimaryGet extends Response {
 
         map.put("id", computeEnv.getId());
         map.put("name", computeEnv.getName());
-        map.put("credentials_id", computeEnv.getCredentialsId());
         map.put("platform", computeEnv.getPlatform().getValue());
 
         return map;

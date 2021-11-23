@@ -41,6 +41,7 @@ public abstract class Response {
         return CommandLine.Help.Ansi.AUTO.string(value);
     }
 
+    @JsonIgnore
     public int getExitCode() {
         return CommandLine.ExitCode.OK;
     }

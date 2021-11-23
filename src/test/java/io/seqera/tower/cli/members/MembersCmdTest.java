@@ -13,6 +13,7 @@ package io.seqera.tower.cli.members;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
+import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.members.MembersAdded;
 import io.seqera.tower.cli.responses.members.MembersDeleted;
@@ -21,6 +22,8 @@ import io.seqera.tower.cli.responses.members.MembersList;
 import io.seqera.tower.cli.responses.members.MembersUpdate;
 import io.seqera.tower.model.MemberDbDto;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 
@@ -33,10 +36,11 @@ import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
-public class MembersCmdTest extends BaseCmdTest {
+class MembersCmdTest extends BaseCmdTest {
 
-    @Test
-    void testListMembers(MockServerClient mock) throws JsonProcessingException {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testList(OutputType format, MockServerClient mock) throws JsonProcessingException {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -55,10 +59,8 @@ public class MembersCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("members/members_list")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "members", "list", "-o", "organization1");
-
-        assertEquals("", out.stdErr);
-        assertEquals(chop(new MembersList("organization1", Arrays.asList(
+        ExecOut out = exec(format, mock, "members", "list", "-o", "organization1");
+        assertOutput(format, out, new MembersList("organization1", Arrays.asList(
                 parseJson(" {\n" +
                         "      \"memberId\": 175703974560466,\n" +
                         "      \"userName\": \"jfernandez74\",\n" +
@@ -77,12 +79,11 @@ public class MembersCmdTest extends BaseCmdTest {
                         "      \"avatar\": \"https://www.gravatar.com/avatar/72918a9f674eaa696729917bec58760b?d=404\",\n" +
                         "      \"role\": \"member\"\n" +
                         "    }", MemberDbDto.class)
-        )).toString()), out.stdOut);
-        assertEquals(0, out.exitCode);
+        )));
     }
 
     @Test
-    void testListMembersWithOffset(MockServerClient mock) throws JsonProcessingException {
+    void testListWithOffset(MockServerClient mock) throws JsonProcessingException {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -130,7 +131,7 @@ public class MembersCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testListMembersWithPage(MockServerClient mock) throws JsonProcessingException {
+    void testListWithPage(MockServerClient mock) throws JsonProcessingException {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -235,8 +236,9 @@ public class MembersCmdTest extends BaseCmdTest {
         assertEquals(1, out.exitCode);
     }
 
-    @Test
-    void testAddMembers(MockServerClient mock) throws JsonProcessingException {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAdd(OutputType format, MockServerClient mock) throws JsonProcessingException {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -255,10 +257,9 @@ public class MembersCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("members/member_add")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "members", "add", "-o", "organization1", "-u", "julio123");
+        ExecOut out = exec(format, mock, "members", "add", "-o", "organization1", "-u", "julio123");
 
-        assertEquals("", out.stdErr);
-        assertEquals(new MembersAdded("organization1", parseJson("{\n" +
+        assertOutput(format, out, new MembersAdded("organization1", parseJson("{\n" +
                 "    \"memberId\": 440905637173,\n" +
                 "    \"userName\": \"julio123\",\n" +
                 "    \"email\": \"julio123@seqera.io\",\n" +
@@ -266,12 +267,12 @@ public class MembersCmdTest extends BaseCmdTest {
                 "    \"lastName\": null,\n" +
                 "    \"avatar\": null,\n" +
                 "    \"role\": \"member\"\n" +
-                "  }", MemberDbDto.class)).toString(), out.stdOut);
-        assertEquals(0, out.exitCode);
+                "  }", MemberDbDto.class)));
     }
 
-    @Test
-    void testDeleteMembers(MockServerClient mock) {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testDelete(OutputType format, MockServerClient mock) {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -296,15 +297,13 @@ public class MembersCmdTest extends BaseCmdTest {
                 response().withStatusCode(204)
         );
 
-        ExecOut out = exec(mock, "members", "delete", "-o", "organization1", "-u", "julio@seqera.io");
-
-        assertEquals("", out.stdErr);
-        assertEquals(new MembersDeleted("julio@seqera.io", "organization1").toString(), out.stdOut);
-        assertEquals(0, out.exitCode);
+        ExecOut out = exec(format, mock, "members", "delete", "-o", "organization1", "-u", "julio@seqera.io");
+        assertOutput(format, out, new MembersDeleted("julio@seqera.io", "organization1"));
     }
 
-    @Test
-    void testUpdateMembers(MockServerClient mock) {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testUpdate(OutputType format, MockServerClient mock) {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -329,15 +328,13 @@ public class MembersCmdTest extends BaseCmdTest {
                 response().withStatusCode(204)
         );
 
-        ExecOut out = exec(mock, "members", "update", "-o", "organization1", "-u", "julio@seqera.io", "-r", "OWNER");
-
-        assertEquals("", out.stdErr);
-        assertEquals(new MembersUpdate("julio@seqera.io", "organization1", "owner").toString(), out.stdOut);
-        assertEquals(0, out.exitCode);
+        ExecOut out = exec(format, mock, "members", "update", "-o", "organization1", "-u", "julio@seqera.io", "-r", "OWNER");
+        assertOutput(format, out, new MembersUpdate("julio@seqera.io", "organization1", "owner"));
     }
 
-    @Test
-    void testLeaveMembers(MockServerClient mock) {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testLeave(OutputType format, MockServerClient mock) {
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -356,10 +353,7 @@ public class MembersCmdTest extends BaseCmdTest {
                 response().withStatusCode(204)
         );
 
-        ExecOut out = exec(mock, "members", "leave", "-o", "organization1");
-
-        assertEquals("", out.stdErr);
-        assertEquals(new MembersLeave("organization1").toString(), out.stdOut);
-        assertEquals(0, out.exitCode);
+        ExecOut out = exec(format, mock, "members", "leave", "-o", "organization1");
+        assertOutput(format, out, new MembersLeave("organization1"));
     }
 }

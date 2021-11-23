@@ -11,8 +11,11 @@
 
 package io.seqera.tower.cli;
 
+import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.responses.InfoResponse;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 
@@ -29,8 +32,9 @@ import static org.mockserver.model.HttpResponse.response;
 
 public class InfoCmdTest extends BaseCmdTest {
 
-    @Test
-    void testInfo(MockServerClient mock) throws IOException {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testInfo(OutputType format, MockServerClient mock) throws IOException {
         mock.reset();
         mock.when(
                 request().withMethod("GET").withPath("/service-info"), exactly(1)
@@ -52,11 +56,9 @@ public class InfoCmdTest extends BaseCmdTest {
         opts.put("towerApiEndpoint", "http://localhost:"+mock.getPort());
         opts.put("userName", "jordi");
 
-        ExecOut out = exec(mock, "info");
+        ExecOut out = exec(format, mock, "info");
 
-        assertEquals("", out.stdErr);
-        assertEquals(0, out.exitCode);
-        assertEquals(chop(new InfoResponse(1,1,1, opts).toString()), out.stdOut);
+        assertOutput(format, out, new InfoResponse(1,1,1, opts));
     }
 
     @Test

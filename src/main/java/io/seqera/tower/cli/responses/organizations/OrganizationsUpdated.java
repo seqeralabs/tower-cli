@@ -12,19 +12,20 @@
 package io.seqera.tower.cli.responses.organizations;
 
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.model.Visibility;
 
 public class OrganizationsUpdated extends Response {
 
-    public final String organizationName;
+    public final Long orgId;
+    public final String name;
 
-    public OrganizationsUpdated(String organizationName) {
-        this.organizationName = organizationName;
+    public OrganizationsUpdated(Long orgId, String name) {
+        this.orgId = orgId;
+        this.name = name;
     }
 
     @Override
     public String toString() {
-        return ansi(String.format("%n  @|yellow Organization '%s' was updated|@%n", organizationName));
+        return ansi(String.format("%n  @|yellow Organization '%s' was updated|@%n", name));
     }
 
 }
