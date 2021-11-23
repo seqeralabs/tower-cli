@@ -13,12 +13,14 @@ package io.seqera.tower.cli.responses;
 
 import io.seqera.tower.cli.commands.runs.tasks.enums.TaskColumn;
 import io.seqera.tower.cli.utils.TableList;
+import io.seqera.tower.model.DescribeTaskResponse;
 import io.seqera.tower.model.ListTasksResponse;
 import io.seqera.tower.model.Task;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -26,48 +28,42 @@ public class TasksView extends Response {
 
     public final String runId;
     public final List<TaskColumn> columns;
-    public final ListTasksResponse response;
+    public final List<Task> tasks;
 
-    public TasksView(String runId, List<TaskColumn> columns, ListTasksResponse response) {
+    public TasksView(String runId, List<TaskColumn> columns, List<Task> tasks) {
         this.runId = runId;
         this.columns = columns;
-        this.response = response;
+        this.tasks = tasks;
     }
 
     @Override
     public Object getJSON() {
-        List<List<String>> tasks = new ArrayList<>();
-
-        Objects.requireNonNull(response.getTasks()).forEach(it -> {
-            Task task = it.getTask();
-            List<String> items = columns.stream()
-                    .map(colItem -> colItem.getObject().apply(task) != null ? colItem.getObject().apply(task).toString() : null)
-                    .collect(Collectors.toList());
-            tasks.add(items);
-        });
-
-        return tasks;
+        return Objects.requireNonNull(tasks).stream().map(
+                task -> columns.stream()
+                    .filter(col -> col.getObject().apply(task) != null)
+                    .collect(
+                            Collectors.toUnmodifiableMap(TaskColumn::name, col -> col.getObject().apply(task))
+                    )
+        ).collect(Collectors.toList());
     }
 
     @Override
     public void toString(PrintWriter out) {
         List<String> cols = columns.stream().map(TaskColumn::getDescription).collect(Collectors.toList());
+        List<List<String>> result = new ArrayList<>();
 
-        List<List<String>> tasks = new ArrayList<>();
-
-        Objects.requireNonNull(response.getTasks()).forEach(it -> {
-            Task task = it.getTask();
+        Objects.requireNonNull(tasks).forEach(task -> {
             List<String> items = columns.stream()
                     .map(colItem -> colItem.getObject().apply(task) != null ? colItem.getPrettyPrint().apply(task) : null)
                     .collect(Collectors.toList());
-            tasks.add(items);
+            result.add(items);
         });
 
         out.println(ansi(String.format("%n  @|bold Pipeline's run %s tasks:|@%n", runId)));
 
         TableList table = new TableList(out, cols.size(), cols.toArray(new String[0]));
         table.setPrefix("    ");
-        tasks.forEach(it -> {
+        result.forEach(it -> {
             table.addRow(it.toArray(new String[0]));
         });
         table.print();

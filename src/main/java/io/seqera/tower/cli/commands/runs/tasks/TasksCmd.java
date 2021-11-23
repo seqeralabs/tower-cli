@@ -18,11 +18,15 @@ import io.seqera.tower.cli.commands.runs.ViewCmd;
 import io.seqera.tower.cli.commands.runs.tasks.enums.TaskColumn;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.TasksView;
+import io.seqera.tower.model.DescribeTaskResponse;
 import io.seqera.tower.model.ListTasksResponse;
+import io.seqera.tower.model.Task;
 import picocli.CommandLine;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -54,7 +58,11 @@ public class TasksCmd extends AbstractRunsCmd {
         Integer offset = PaginationOptions.getOffset(paginationOptions, max);
 
         ListTasksResponse response = api().listWorkflowTasks(parentCommand.id, parentCommand.workspace.workspaceId, max, offset, startsWith);
-
-        return new TasksView(parentCommand.id, cols, response);
+        List<Task> tasks = new ArrayList<>();
+        for (DescribeTaskResponse describeTaskResponse : Objects.requireNonNull(response.getTasks())) {
+            Task task = describeTaskResponse.getTask();
+            tasks.add(task);
+        }
+        return new TasksView(parentCommand.id, cols, tasks);
     }
 }
