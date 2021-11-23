@@ -61,14 +61,14 @@ class WorkspacesCmdTest extends BaseCmdTest {
         ExecOut out = exec(format, mock, "workspaces", "list");
         assertOutput(format, out, new WorkspaceList("jordi", Arrays.asList(parseJson(" {\n" +
                         "      \"orgId\": 27736513644467,\n" +
-                        "      \"name\": \"organization1\",\n" +
+                        "      \"orgName\": \"organization1\",\n" +
                         "      \"orgLogoUrl\": null,\n" +
                         "      \"workspaceId\": 75887156211589,\n" +
                         "      \"workspaceName\": \"workspace1\"\n" +
                         "    }", OrgAndWorkspaceDbDto.class),
                 parseJson("{\n" +
                         "      \"orgId\": 37736513644467,\n" +
-                        "      \"name\": \"organization2\",\n" +
+                        "      \"orgName\": \"organization2\",\n" +
                         "      \"orgLogoUrl\": null,\n" +
                         "      \"workspaceId\": 75887156211590,\n" +
                         "      \"workspaceName\": \"workspace2\"\n" +
@@ -96,7 +96,7 @@ class WorkspacesCmdTest extends BaseCmdTest {
 
         assertOutput(format, out, new WorkspaceList("jordi", List.of(parseJson(" {\n" +
                 "      \"orgId\": 27736513644467,\n" +
-                "      \"name\": \"organization1\",\n" +
+                "      \"orgName\": \"organization1\",\n" +
                 "      \"orgLogoUrl\": null,\n" +
                 "      \"workspaceId\": 75887156211589,\n" +
                 "      \"workspaceName\": \"workspace1\"\n" +

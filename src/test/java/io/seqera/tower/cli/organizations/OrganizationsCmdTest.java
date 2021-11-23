@@ -59,14 +59,14 @@ class OrganizationsCmdTest extends BaseCmdTest {
         ExecOut out = exec(format, mock, "organizations", "list");
         assertOutput(format, out, new OrganizationsList("jordi", Arrays.asList(parseJson(" {\n" +
                         "      \"orgId\": 27736513644467,\n" +
-                        "      \"name\": \"organization1\",\n" +
+                        "      \"orgName\": \"organization1\",\n" +
                         "      \"orgLogoUrl\": null,\n" +
                         "      \"workspaceId\": null,\n" +
                         "      \"workspaceName\": null\n" +
                         "    }", OrgAndWorkspaceDbDto.class),
                 parseJson(" {\n" +
                         "      \"orgId\": 37736513644467,\n" +
-                        "      \"name\": \"organization2\",\n" +
+                        "      \"orgName\": \"organization2\",\n" +
                         "      \"orgLogoUrl\": null,\n" +
                         "      \"workspaceId\": null,\n" +
                         "      \"workspaceName\": null\n" +

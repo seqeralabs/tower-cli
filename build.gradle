@@ -99,7 +99,7 @@ graalvmNative {
 
         test {
             verbose = true
-            agent = true
+            agent = false
         }
     }
 }
