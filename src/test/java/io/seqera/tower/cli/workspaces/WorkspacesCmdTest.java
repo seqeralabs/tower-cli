@@ -129,6 +129,8 @@ class WorkspacesCmdTest extends BaseCmdTest {
     @ParameterizedTest
     @EnumSource(OutputType.class)
     void testDeleteById(OutputType format, MockServerClient mock) {
+        mock.reset();
+
         mock.when(
                 request().withMethod("GET").withPath("/user"), exactly(1)
         ).respond(
@@ -330,7 +332,7 @@ class WorkspacesCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"orgsAndWorkspaces\": []}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "workspaces", "update", "-w", "7588715621158", "-f", "wsp-new", "-d", "workspace description");
+        ExecOut out = exec(mock, "workspaces", "update", "-i", "7588715621158", "-f", "wsp-new", "-d", "workspace description");
 
         assertEquals(errorMessage(out.app, new WorkspaceNotFoundException(7588715621158L)), out.stdErr);
         assertEquals("", out.stdOut);

@@ -1148,6 +1148,18 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]}
 ,
 {
+  "name":"io.seqera.tower.cli.commands.workspaces.WorkspaceRefOptions",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]}
+,
+{
+  "name":"io.seqera.tower.cli.commands.workspaces.WorkspaceRefOptions$WorkspaceRef",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]}
+,
+{
   "name":"io.seqera.tower.cli.exceptions.ApiExceptionMessage",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
