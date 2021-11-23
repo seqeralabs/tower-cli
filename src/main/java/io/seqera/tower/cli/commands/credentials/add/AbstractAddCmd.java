@@ -38,6 +38,7 @@ public abstract class AbstractAddCmd<T extends SecurityKeys> extends AbstractApi
 
     @Override
     protected Response exec() throws ApiException, IOException {
+        Long wspId = workspaceId(workspace.workspace);
 
         CredentialsSpec specs = new CredentialsSpec();
         specs
@@ -46,9 +47,9 @@ public abstract class AbstractAddCmd<T extends SecurityKeys> extends AbstractApi
                 .baseUrl(getProvider().baseUrl())
                 .provider(getProvider().type());
 
-        CreateCredentialsResponse resp = api().createCredentials(new CreateCredentialsRequest().credentials(specs), workspace.workspaceId);
+        CreateCredentialsResponse resp = api().createCredentials(new CreateCredentialsRequest().credentials(specs), wspId);
 
-        return new CredentialsAdded(getProvider().type().name(), resp.getCredentialsId(), name, workspaceRef(workspace.workspaceId));
+        return new CredentialsAdded(getProvider().type().name(), resp.getCredentialsId(), name, workspaceRef(wspId));
     }
 
     protected abstract CredentialsProvider getProvider();

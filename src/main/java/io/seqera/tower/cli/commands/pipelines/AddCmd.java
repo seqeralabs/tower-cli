@@ -52,9 +52,10 @@ public class AddCmd extends AbstractPipelinesCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
+        Long wspId = workspaceId(workspace.workspace);
 
         // Retrieve the provided computeEnv or use the primary if not provided
-        ComputeEnv ce = opts.computeEnv != null ? computeEnvByName(workspace.workspaceId, opts.computeEnv) : primaryComputeEnv(workspace.workspaceId);
+        ComputeEnv ce = opts.computeEnv != null ? computeEnvByName(wspId, opts.computeEnv) : primaryComputeEnv(wspId);
 
         // Use compute env values by default
         String workDirValue = opts.workDir == null ? ce.getConfig().getWorkDir() : opts.workDir;
@@ -83,9 +84,9 @@ public class AddCmd extends AbstractPipelinesCmd {
                                 .entryName(opts.entryName)
                                 .schemaName(opts.schemaName)
                         )
-                , workspace.workspaceId
+                , wspId
         );
 
-        return new PipelinesAdded(workspaceRef(workspace.workspaceId), response.getPipeline().getName());
+        return new PipelinesAdded(workspaceRef(wspId), response.getPipeline().getName());
     }
 }

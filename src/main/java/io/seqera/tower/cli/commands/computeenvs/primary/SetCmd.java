@@ -33,11 +33,12 @@ public class SetCmd extends AbstractComputeEnvsPrimaryCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
+        Long wspId = workspaceId(workspace.workspace);
 
-        DescribeComputeEnvResponse describeComputeEnvResponse = api().describeComputeEnv(id, workspace.workspaceId);
+        DescribeComputeEnvResponse describeComputeEnvResponse = api().describeComputeEnv(id, wspId);
 
-        api().updateComputeEnvPrimary(id, workspace.workspaceId, null);
+        api().updateComputeEnvPrimary(id, wspId, null);
 
-        return new ComputeEnvsPrimarySet(workspaceRef(workspace.workspaceId), describeComputeEnvResponse.getComputeEnv());
+        return new ComputeEnvsPrimarySet(workspaceRef(wspId), describeComputeEnvResponse.getComputeEnv());
     }
 }

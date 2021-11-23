@@ -41,21 +41,22 @@ public abstract class AbstractUpdateCmd extends AbstractApiCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
+        Long wspId = workspaceId(workspace.workspace);
 
         // Check that exists
         try {
-            DescribeCredentialsResponse response = api().describeCredentials(id, workspace.workspaceId);
-            return update(response.getCredentials());
+            DescribeCredentialsResponse response = api().describeCredentials(id, wspId);
+            return update(response.getCredentials(), wspId);
         } catch (ApiException e) {
             if (e.getCode() == 403) {
                 // Customize the forbidden message
-                throw new CredentialsNotFoundException(id, workspaceRef(workspace.workspaceId));
+                throw new CredentialsNotFoundException(id, workspaceRef(wspId));
             }
             throw e;
         }
     }
 
-    protected Response update(Credentials creds) throws ApiException, IOException {
+    protected Response update(Credentials creds, Long wspId) throws ApiException, IOException {
 
         //TODO do we want to allow to change the name? name must be unique at workspace level?
         String name = creds.getName();
@@ -68,9 +69,9 @@ public abstract class AbstractUpdateCmd extends AbstractApiCmd {
                 .provider(getProvider().type())
                 .id(id);
 
-        api().updateCredentials(id, new UpdateCredentialsRequest().credentials(specs), workspace.workspaceId);
+        api().updateCredentials(id, new UpdateCredentialsRequest().credentials(specs), wspId);
 
-        return new CredentialsUpdated(getProvider().type().name(), name, workspaceRef(workspace.workspaceId));
+        return new CredentialsUpdated(getProvider().type().name(), name, workspaceRef(wspId));
     }
 
     protected abstract CredentialsProvider getProvider();

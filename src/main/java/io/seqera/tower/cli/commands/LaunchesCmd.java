@@ -71,31 +71,32 @@ public class LaunchesCmd extends AbstractRootCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
+        Long wspId = workspaceId(workspace.workspace);
 
         // If the pipeline has at least one backslash consider it an external pipeline.
         if (pipeline.contains("/")) {
-            return runNextflowPipeline();
+            return runNextflowPipeline(wspId);
         }
 
         // Otherwise run pipelines defined at current workspace
-        return runTowerPipeline();
+        return runTowerPipeline(wspId);
 
     }
 
-    protected Response runNextflowPipeline() throws ApiException, IOException {
-
+    protected Response runNextflowPipeline(Long wspId) throws ApiException, IOException {
         // Retrieve the provided computeEnv or use the primary if not provided
-        ComputeEnv ce = computeEnv != null ? computeEnvByName(workspace.workspaceId, computeEnv) : primaryComputeEnv(workspace.workspaceId);
+        ComputeEnv ce = computeEnv != null ? computeEnvByName(wspId, computeEnv) : primaryComputeEnv(wspId);
 
         return submitWorkflow(updateLaunchRequest(new WorkflowLaunchRequest()
                 .pipeline(pipeline)
                 .computeEnvId(ce.getId())
                 .workDir(ce.getConfig().getWorkDir())
-        ));
+        ), wspId);
     }
 
     private WorkflowLaunchRequest updateLaunchRequest(WorkflowLaunchRequest base) throws IOException {
         return new WorkflowLaunchRequest()
+                .id(base.getId())
                 .pipeline(base.getPipeline())
                 .computeEnvId(base.getComputeEnvId())
                 .workDir(coalesce(workDir, base.getWorkDir()))
@@ -112,8 +113,8 @@ public class LaunchesCmd extends AbstractRootCmd {
                 .schemaName(coalesce(adv().schemaName, base.getSchemaName()));
     }
 
-    protected Response runTowerPipeline() throws ApiException, IOException {
-        ListPipelinesResponse pipelines = api().listPipelines(workspace.workspaceId, 2, 0, pipeline);
+    protected Response runTowerPipeline(Long wspId) throws ApiException, IOException {
+        ListPipelinesResponse pipelines = api().listPipelines(wspId, 2, 0, pipeline);
         if (pipelines.getTotalSize() == 0) {
             throw new InvalidResponseException(String.format("Pipeline '%s' not found on this workspace.", pipeline));
         }
@@ -123,24 +124,24 @@ public class LaunchesCmd extends AbstractRootCmd {
         }
 
         Long pipelineId = pipelines.getPipelines().get(0).getPipelineId();
-        Launch launch = api().describePipelineLaunch(pipelineId, workspace.workspaceId).getLaunch();
+        Launch launch = api().describePipelineLaunch(pipelineId, wspId).getLaunch();
 
-        return submitWorkflow(updateLaunchRequest(createLaunchRequest(launch)));
+        return submitWorkflow(updateLaunchRequest(createLaunchRequest(launch)), wspId);
     }
 
-    protected Response submitWorkflow(WorkflowLaunchRequest launch) throws ApiException {
-        SubmitWorkflowLaunchResponse response = api().createWorkflowLaunch(new SubmitWorkflowLaunchRequest().launch(launch), workspace.workspaceId);
+    protected Response submitWorkflow(WorkflowLaunchRequest launch, Long wspId) throws ApiException {
+        SubmitWorkflowLaunchResponse response = api().createWorkflowLaunch(new SubmitWorkflowLaunchRequest().launch(launch), wspId);
         String workflowId = response.getWorkflowId();
-        return new RunSubmited(workflowId, workflowWatchUrl(workflowId), workspaceRef(workspace.workspaceId));
+        return new RunSubmited(workflowId, workflowWatchUrl(workflowId, wspId), workspaceRef(wspId));
     }
 
-    private String workflowWatchUrl(String workflowId) throws ApiException {
+    private String workflowWatchUrl(String workflowId, Long wspId) throws ApiException {
 
-        if (workspace.workspaceId == null) {
+        if (wspId == null) {
             return String.format("%s/user/%s/watch/%s", serverUrl(), userName(), workflowId);
         }
 
-        return String.format("%s/orgs/%s/workspaces/%s/watch/%s", serverUrl(), orgName(workspace.workspaceId), workspaceName(workspace.workspaceId), workflowId);
+        return String.format("%s/orgs/%s/workspaces/%s/watch/%s", serverUrl(), orgName(wspId), workspaceName(wspId), workflowId);
     }
 
     private AdvancedOptions adv() {

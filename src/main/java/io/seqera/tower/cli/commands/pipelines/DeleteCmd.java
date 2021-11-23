@@ -36,8 +36,10 @@ public class DeleteCmd extends AbstractPipelinesCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        PipelineDbDto pipe = pipelineByName(workspace.workspaceId, name);
-        api().deletePipeline(pipe.getPipelineId(), workspace.workspaceId);
-        return new PipelinesDeleted(pipe.getName(), workspaceRef(workspace.workspaceId));
+        Long wspId = workspaceId(workspace.workspace);
+        
+        PipelineDbDto pipe = pipelineByName(wspId, name);
+        api().deletePipeline(pipe.getPipelineId(), wspId);
+        return new PipelinesDeleted(pipe.getName(), workspaceRef(wspId));
     }
 }

@@ -362,4 +362,31 @@ class WorkspacesCmdTest extends BaseCmdTest {
         assertOutput(format, out, new ParticipantLeft("workspace1"));
     }
 
+    @Test
+    void leaveWorkspaceAsParticipantByIdAndWorkspaceReference(MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(2)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("DELETE").withPath("/orgs/27736513644467/workspaces/75887156211589/participants"), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(mock, "workspaces", "leave", "-w", "organization1/workspace1");
+
+        assertEquals("", out.stdErr);
+        assertEquals(new ParticipantLeft("workspace1").toString(), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
+
 }

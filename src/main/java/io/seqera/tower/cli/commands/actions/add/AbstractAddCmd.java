@@ -44,8 +44,10 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
+        Long wspId = workspaceId(workspace.workspace);
+
         // Retrieve the provided computeEnv or use the primary if not provided
-        ComputeEnv ce = opts.computeEnv != null ? computeEnvByName(workspace.workspaceId, opts.computeEnv) : primaryComputeEnv(workspace.workspaceId);
+        ComputeEnv ce = opts.computeEnv != null ? computeEnvByName(wspId, opts.computeEnv) : primaryComputeEnv(wspId);
 
         // Use compute env values by default
         String workDirValue = opts.workDir != null ? opts.workDir : ce.getConfig() != null ? ce.getConfig().getWorkDir() : null;
@@ -76,9 +78,13 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
         request.setLaunch(workflowLaunchRequest);
 
         CreateActionResponse response;
-        response = api().createAction(request, workspace.workspaceId);
+        try {
+            response = api().createAction(request, wspId);
+        } catch (Exception e) {
+            throw new TowerException(String.format("Unable to add action for workspace '%s'", workspaceRef(wspId)));
+        }
 
-        return new ActionAdd(actionName, workspaceRef(workspace.workspaceId), response.getActionId());
+        return new ActionAdd(actionName, workspaceRef(wspId), response.getActionId());
     }
 
     protected abstract ActionSource getSource();

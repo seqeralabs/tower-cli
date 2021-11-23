@@ -40,20 +40,21 @@ public class ListCmd extends AbstractPipelinesCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
+        Long wspId = workspaceId(workspace.workspace);
         Integer max = PaginationOptions.getMax(paginationOptions);
         Integer offset = PaginationOptions.getOffset(paginationOptions, max);
 
         ListPipelinesResponse response = new ListPipelinesResponse();
 
         try {
-           response = api().listPipelines(workspace.workspaceId, max, offset, filter);
+           response = api().listPipelines(wspId, max, offset, filter);
 
         } catch (ApiException apiException) {
             if (apiException.getCode() == 404){
-                throw new WorkspaceNotFoundException(workspace.workspaceId);
+                throw new WorkspaceNotFoundException(wspId);
             }
         }
 
-        return new PipelinesList(workspaceRef(workspace.workspaceId), response.getPipelines());
+        return new PipelinesList(workspaceRef(wspId), response.getPipelines());
     }
 }

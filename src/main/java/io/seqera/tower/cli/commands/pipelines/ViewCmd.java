@@ -35,8 +35,9 @@ public class ViewCmd extends AbstractPipelinesCmd {
 
     @Override
     protected Response exec() throws ApiException {
-        PipelineDbDto pipe = pipelineByName(workspace.workspaceId, name);
-        DescribeLaunchResponse resp = api().describePipelineLaunch(pipe.getPipelineId(), workspace.workspaceId);
-        return new PipelinesView(workspaceRef(workspace.workspaceId), pipe, resp.getLaunch());
+        Long wspId = workspaceId(workspace.workspace);
+        PipelineDbDto pipe = pipelineByName(wspId, name);
+        DescribeLaunchResponse resp = api().describePipelineLaunch(pipe.getPipelineId(), wspId);
+        return new PipelinesView(workspaceRef(wspId), pipe, resp.getLaunch());
     }
 }

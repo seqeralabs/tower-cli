@@ -32,7 +32,9 @@ public class DeleteCmd extends AbstractWorkspaceCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        OrgAndWorkspaceDbDto ws = workspaceById(workspace.workspaceId);
+        Long wspId = workspaceId(workspace.workspace);
+        
+        OrgAndWorkspaceDbDto ws = workspaceById(wspId);
         api().deleteWorkspace(ws.getOrgId(), ws.getWorkspaceId());
         return new WorkspaceDeleted(ws.getWorkspaceName(), ws.getOrgName());
     }
