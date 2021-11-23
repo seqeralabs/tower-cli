@@ -26,6 +26,11 @@ public class OrganizationsView extends Response {
     }
 
     @Override
+    public Object getJSON() {
+        return organization;
+    }
+
+    @Override
     public void toString(PrintWriter out) {
         out.println(ansi(String.format("%n  @|bold Details for organization '%s'|@%n", organization.getFullName())));
 

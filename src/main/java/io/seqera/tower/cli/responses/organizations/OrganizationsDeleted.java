@@ -15,14 +15,16 @@ import io.seqera.tower.cli.responses.Response;
 
 public class OrganizationsDeleted extends Response {
 
-    public final String organizationRef;
+    public final Long orgId;
+    public final String name;
 
-    public OrganizationsDeleted(String organizationRef) {
-        this.organizationRef = organizationRef;
+    public OrganizationsDeleted(Long orgId, String name) {
+        this.orgId = orgId;
+        this.name = name;
     }
 
     @Override
     public String toString() {
-        return ansi(String.format("%n  @|yellow Organization '%s' deleted|@%n", organizationRef));
+        return ansi(String.format("%n  @|yellow Organization '%s' deleted|@%n", name));
     }
 }

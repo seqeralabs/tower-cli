@@ -51,6 +51,6 @@ public class UpdateCmd extends AbstractOrganizationsCmd {
 
         api().updateOrganization(orgAndWorkspaceDbDto.getOrgId(), request);
 
-        return new OrganizationsUpdated(opts.name);
+        return new OrganizationsUpdated(orgAndWorkspaceDbDto.getOrgId(), opts.name);
     }
 }

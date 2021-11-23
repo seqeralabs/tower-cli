@@ -76,11 +76,7 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
         request.setLaunch(workflowLaunchRequest);
 
         CreateActionResponse response;
-        try {
-            response = api().createAction(request, workspace.workspaceId);
-        } catch (Exception e) {
-            throw new TowerException(String.format("Unable to add action for workspace '%s'", workspaceRef(workspace.workspaceId)));
-        }
+        response = api().createAction(request, workspace.workspaceId);
 
         return new ActionAdd(actionName, workspaceRef(workspace.workspaceId), response.getActionId());
     }

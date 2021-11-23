@@ -59,14 +59,14 @@ class OrganizationsCmdTest extends BaseCmdTest {
         ExecOut out = exec(format, mock, "organizations", "list");
         assertOutput(format, out, new OrganizationsList("jordi", Arrays.asList(parseJson(" {\n" +
                         "      \"orgId\": 27736513644467,\n" +
-                        "      \"orgName\": \"organization1\",\n" +
+                        "      \"name\": \"organization1\",\n" +
                         "      \"orgLogoUrl\": null,\n" +
                         "      \"workspaceId\": null,\n" +
                         "      \"workspaceName\": null\n" +
                         "    }", OrgAndWorkspaceDbDto.class),
                 parseJson(" {\n" +
                         "      \"orgId\": 37736513644467,\n" +
-                        "      \"orgName\": \"organization2\",\n" +
+                        "      \"name\": \"organization2\",\n" +
                         "      \"orgLogoUrl\": null,\n" +
                         "      \"workspaceId\": null,\n" +
                         "      \"workspaceName\": null\n" +
@@ -174,7 +174,7 @@ class OrganizationsCmdTest extends BaseCmdTest {
         );
 
         ExecOut out = exec(format, mock, "organizations", "delete", "-n", "organization1");
-        assertOutput(format, out, new OrganizationsDeleted("organization1"));
+        assertOutput(format, out, new OrganizationsDeleted(27736513644467L, "organization1"));
     }
 
     @Test
@@ -292,7 +292,7 @@ class OrganizationsCmdTest extends BaseCmdTest {
         );
 
         ExecOut out = exec(format, mock, "organizations", "update", "-n", "organization1", "-f", "sample organization");
-        assertOutput(format, out, new OrganizationsUpdated("organization1"));
+        assertOutput(format, out, new OrganizationsUpdated(27736513644467L, "organization1"));
     }
 
     @Test
