@@ -55,16 +55,18 @@ public class ViewCmd extends AbstractRunsCmd {
     public RunViewOptions opts;
 
     protected Response exec() throws ApiException {
+        Long wspId = workspaceId(workspace.workspace);
+        
         try {
-            String workspaceRef = workspaceRef(workspace.workspaceId);
-            Workflow workflow = workflowById(workspace.workspaceId, id);
-            WorkflowLoad workflowLoad = workflowLoadByWorkflowId(workspace.workspaceId, id);
-            Launch launch = launchById(workspace.workspaceId, workflow.getLaunchId());
+            String workspaceRef = workspaceRef(wspId);
+            Workflow workflow = workflowById(wspId, id);
+            WorkflowLoad workflowLoad = workflowLoadByWorkflowId(wspId, id);
+            Launch launch = launchById(wspId, workflow.getLaunchId());
             ComputeEnv computeEnv = launch.getComputeEnv();
 
             ProgressData progress = null;
             if (opts.processes || opts.stats || opts.load || opts.utilization) {
-                progress = api().describeWorkflowProgress(id, workspace.workspaceId).getProgress();
+                progress = api().describeWorkflowProgress(id, wspId).getProgress();
             }
 
             Map<String, Object> general = new HashMap<String, Object>();
@@ -160,7 +162,7 @@ public class ViewCmd extends AbstractRunsCmd {
         } catch (ApiException e) {
             if (e.getCode() == 403) {
                 // Customize the forbidden message
-                throw new RunNotFoundException(id, workspaceRef(workspace.workspaceId));
+                throw new RunNotFoundException(id, workspaceRef(wspId));
             }
 
             throw e;

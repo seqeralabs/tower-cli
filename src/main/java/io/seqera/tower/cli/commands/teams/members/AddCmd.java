@@ -38,7 +38,7 @@ public class AddCmd extends AbstractApiCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = parent.findOrganizationByName(parent.organizationName);
+        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = findOrganizationByName(parent.organizationName);
 
         TeamDbDto team = parent.findTeamByName(orgAndWorkspaceDbDto.getOrgId(), parent.teamName);
 

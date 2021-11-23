@@ -28,8 +28,10 @@ public class GetCmd extends AbstractComputeEnvsPrimaryCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        ComputeEnv primary = primaryComputeEnv(workspace.workspaceId);
+        Long wspId = workspaceId(workspace.workspace);
+        
+        ComputeEnv primary = primaryComputeEnv(wspId);
 
-        return new ComputeEnvsPrimaryGet(workspaceRef(workspace.workspaceId), primary);
+        return new ComputeEnvsPrimaryGet(workspaceRef(wspId), primary);
     }
 }

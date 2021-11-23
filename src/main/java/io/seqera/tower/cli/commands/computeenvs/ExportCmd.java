@@ -42,7 +42,9 @@ public class ExportCmd extends AbstractComputeEnvCmd {
 
     @Override
     protected Response exec() throws ApiException {
-        ComputeEnv ce = findComputeEnvironmentByName(workspace.workspaceId, name);
+        Long wspId = workspaceId(workspace.workspace);
+        
+        ComputeEnv ce = findComputeEnvironmentByName(wspId, name);
 
         ComputeEnv computeEnv = new ComputeEnv();
         computeEnv.setDescription(ce.getDescription());

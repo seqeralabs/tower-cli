@@ -54,14 +54,15 @@ public class UpdateCmd extends AbstractPipelinesCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
+        Long wspId = workspaceId(workspace.workspace);
 
-        PipelineDbDto pipe = pipelineByName(workspace.workspaceId, name);
+        PipelineDbDto pipe = pipelineByName(wspId, name);
 
         // Retrieve current launch
-        Launch launch = api().describePipelineLaunch(pipe.getPipelineId(), workspace.workspaceId).getLaunch();
+        Launch launch = api().describePipelineLaunch(pipe.getPipelineId(), wspId).getLaunch();
 
         // Retrieve the provided computeEnv or use the primary if not provided
-        ComputeEnv ce = opts.computeEnv != null ? computeEnvByName(workspace.workspaceId, opts.computeEnv) : launch.getComputeEnv();
+        ComputeEnv ce = opts.computeEnv != null ? computeEnvByName(wspId, opts.computeEnv) : launch.getComputeEnv();
 
         UpdatePipelineResponse response = api().updatePipeline(
                 pipe.getPipelineId(),
@@ -85,9 +86,9 @@ public class UpdateCmd extends AbstractPipelinesCmd {
                                 .entryName(coalesce(opts.entryName, launch.getEntryName()))
                                 .schemaName(coalesce(opts.schemaName, launch.getSchemaName()))
                         )
-                , workspace.workspaceId
+                , wspId
         );
 
-        return new PipelinesUpdated(workspaceRef(workspace.workspaceId), response.getPipeline().getName());
+        return new PipelinesUpdated(workspaceRef(wspId), response.getPipeline().getName());
     }
 }

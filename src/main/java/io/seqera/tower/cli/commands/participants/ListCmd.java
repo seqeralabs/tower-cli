@@ -47,12 +47,14 @@ public class ListCmd extends AbstractParticipantsCmd {
         Integer max = PaginationOptions.getMax(paginationOptions);
         Integer offset = PaginationOptions.getOffset(paginationOptions, max);
 
-        List<ParticipantDbDto> response = api().listWorkspaceParticipants(orgId(workspace.workspaceId), workspace.workspaceId, max, offset, startsWith).getParticipants();
+        Long wspId = workspaceId(workspace.workspace);
+
+        List<ParticipantDbDto> response = api().listWorkspaceParticipants(orgId(wspId), wspId, max, offset, startsWith).getParticipants();
 
         if (response != null && type != null) {
             response = response.stream().filter(it -> it.getType() == type).collect(Collectors.toList());
         }
 
-        return new ParticipantsList(orgName(workspace.workspaceId), workspaceName(workspace.workspaceId), response);
+        return new ParticipantsList(orgName(wspId), workspaceName(wspId), response);
     }
 }

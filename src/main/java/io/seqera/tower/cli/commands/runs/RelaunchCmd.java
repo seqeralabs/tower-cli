@@ -55,17 +55,18 @@ public class RelaunchCmd extends AbstractRunsCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
+        Long wspId = workspaceId(workspace.workspace);
 
         if (!noResume && opts.workDir != null) {
             throw new TowerException("Not allowed to change '--work-dir' option when resuming. Use '--no-resume' if you want to relaunch into a different working directory without resuming.");
         }
 
-        Workflow workflow = workflowById(workspace.workspaceId, id);
-        Launch launch = launchById(workspace.workspaceId, workflow.getLaunchId());
+        Workflow workflow = workflowById(wspId, id);
+        Launch launch = launchById(wspId, workflow.getLaunchId());
 
         ComputeEnv ce = null;
         if (opts.computeEnv != null) {
-            ce = computeEnvByName(workspace.workspaceId, opts.computeEnv);
+            ce = computeEnvByName(wspId, opts.computeEnv);
         }
 
         WorkflowLaunchRequest workflowLaunchRequest = new WorkflowLaunchRequest()
@@ -95,17 +96,17 @@ public class RelaunchCmd extends AbstractRunsCmd {
         SubmitWorkflowLaunchRequest submitWorkflowLaunchRequest = new SubmitWorkflowLaunchRequest()
                 .launch(workflowLaunchRequest);
 
-        SubmitWorkflowLaunchResponse response = api().createWorkflowLaunch(submitWorkflowLaunchRequest, workspace.workspaceId);
+        SubmitWorkflowLaunchResponse response = api().createWorkflowLaunch(submitWorkflowLaunchRequest, wspId);
 
-        return new RunSubmited(response.getWorkflowId(), workflowWatchUrl(response.getWorkflowId()), workspaceRef(workspace.workspaceId));
+        return new RunSubmited(response.getWorkflowId(), workflowWatchUrl(response.getWorkflowId(), wspId), workspaceRef(wspId));
     }
 
-    private String workflowWatchUrl(String workflowId) throws ApiException {
+    private String workflowWatchUrl(String workflowId, Long wspId) throws ApiException {
 
-        if (workspace.workspaceId == null) {
+        if (wspId == null) {
             return String.format("%s/user/%s/watch/%s", serverUrl(), userName(), workflowId);
         }
 
-        return String.format("%s/orgs/%s/workspaces/%s/watch/%s", serverUrl(), orgName(workspace.workspaceId), workspaceName(workspace.workspaceId), workflowId);
+        return String.format("%s/orgs/%s/workspaces/%s/watch/%s", serverUrl(), orgName(wspId), workspaceName(wspId), workflowId);
     }
 }

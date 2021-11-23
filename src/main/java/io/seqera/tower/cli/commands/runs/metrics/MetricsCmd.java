@@ -48,10 +48,12 @@ public class MetricsCmd extends AbstractRunsCmd {
 
     @Override
     protected Response exec() throws ApiException {
+        Long wspId = workspaceId(parentCommand.workspace.workspace);
+
         type = type == null ? List.of(MetricType.cpu, MetricType.mem, MetricType.time, MetricType.io) : type;
         columns = columns == null ? List.of(MetricColumn.mean, MetricColumn.min, MetricColumn.max, MetricColumn.q1, MetricColumn.q2, MetricColumn.q3) : columns;
 
-        List<WorkflowMetrics> metrics = api().describeWorkflowMetrics(parentCommand.id, parentCommand.workspace.workspaceId).getMetrics();
+        List<WorkflowMetrics> metrics = api().describeWorkflowMetrics(parentCommand.id, wspId).getMetrics();
 
         List<Map<String, Object>> metricsMem = new ArrayList<>();
         if (type.contains(MetricType.mem)) {

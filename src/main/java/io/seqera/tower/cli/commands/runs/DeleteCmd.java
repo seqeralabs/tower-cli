@@ -34,13 +34,15 @@ public class DeleteCmd extends AbstractRunsCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
+        Long wspId = workspaceId(workspace.workspace);
+        
         try {
-            api().deleteWorkflow(id, workspace.workspaceId);
+            api().deleteWorkflow(id, wspId);
 
-            return new RunDeleted(id, workspaceRef(workspace.workspaceId));
+            return new RunDeleted(id, workspaceRef(wspId));
         } catch (ApiException e) {
             if (e.getCode() == 403) {
-                throw new RunNotFoundException(id, workspaceRef(workspace.workspaceId));
+                throw new RunNotFoundException(id, workspaceRef(wspId));
             }
             throw e;
         }

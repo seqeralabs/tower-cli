@@ -43,12 +43,13 @@ public class UpdateCmd extends AbstractWorkspaceCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
+        Long wspId = workspaceId(workspace.workspace);
 
         if (workspaceFullName == null && description == null) {
             throw new ShowUsageException(getSpec(), "Required at least one option to update");
         }
 
-        OrgAndWorkspaceDbDto ws = workspaceById(workspace.workspaceId);
+        OrgAndWorkspaceDbDto ws = workspaceById(wspId);
 
         DescribeWorkspaceResponse response = api().describeWorkspace(ws.getOrgId(), ws.getWorkspaceId());
         UpdateWorkspaceRequest request = new UpdateWorkspaceRequest()

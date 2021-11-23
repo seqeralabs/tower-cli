@@ -50,6 +50,8 @@ public class TasksCmd extends AbstractRunsCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
+        Long wspId = workspaceId(parentCommand.workspace.workspace);
+
         List<TaskColumn> cols = Stream.of(TaskColumn.values())
                 .filter(it -> it.isFixed() || (columns != null && columns.contains(it)))
                 .collect(Collectors.toList());
@@ -57,7 +59,7 @@ public class TasksCmd extends AbstractRunsCmd {
         Integer max = PaginationOptions.getMax(paginationOptions);
         Integer offset = PaginationOptions.getOffset(paginationOptions, max);
 
-        ListTasksResponse response = api().listWorkflowTasks(parentCommand.id, parentCommand.workspace.workspaceId, max, offset, startsWith);
+        ListTasksResponse response = api().listWorkflowTasks(parentCommand.id, wspId, max, offset, startsWith);
         List<Task> tasks = new ArrayList<>();
         for (DescribeTaskResponse describeTaskResponse : Objects.requireNonNull(response.getTasks())) {
             Task task = describeTaskResponse.getTask();
