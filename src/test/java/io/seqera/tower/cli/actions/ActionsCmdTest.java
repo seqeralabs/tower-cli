@@ -272,6 +272,12 @@ class ActionsCmdTest extends BaseCmdTest {
         );
 
         mock.when(
+                request().withMethod("GET").withPath("/actions/57byWxhmUDLLWIF4J97XEP"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("actions/action_view")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
                 request().withMethod("DELETE").withPath("/actions/57byWxhmUDLLWIF4J97XEP"), exactly(1)
         ).respond(
                 response().withStatusCode(204)
@@ -289,6 +295,12 @@ class ActionsCmdTest extends BaseCmdTest {
                 request().withMethod("GET").withPath("/actions"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("actions/actions_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/actions/57byWxhmUDLLWIF4J97XEP"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("actions/action_view")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
@@ -413,7 +425,7 @@ class ActionsCmdTest extends BaseCmdTest {
                 response().withStatusCode(204)
         );
 
-        ExecOut out = exec(format, mock, "actions", "update", "-n", "hello");
+        ExecOut out = exec(format, mock, "-v", "actions", "update", "-n", "hello");
         assertOutput(format, out, new ActionUpdate("hello", USER_WORKSPACE_NAME, "57byWxhmUDLLWIF4J97XEP"));
     }
 

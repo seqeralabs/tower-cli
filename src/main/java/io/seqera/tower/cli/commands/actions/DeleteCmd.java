@@ -16,7 +16,7 @@ import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.actions.ActionsDelete;
-import io.seqera.tower.model.ListActionsResponseActionInfo;
+import io.seqera.tower.model.DescribeActionResponse;
 import picocli.CommandLine;
 
 import java.io.IOException;
@@ -27,8 +27,8 @@ import java.io.IOException;
 )
 public class DeleteCmd extends AbstractActionsCmd {
 
-    @CommandLine.Option(names = {"-n", "--name"}, description = "Action name.", required = true)
-    public String actionName;
+    @CommandLine.Mixin
+    ActionRefOptions actionRefOptions;
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
@@ -37,14 +37,14 @@ public class DeleteCmd extends AbstractActionsCmd {
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
 
-        ListActionsResponseActionInfo listActionsResponseActionInfo = actionByName(wspId, actionName);
+        DescribeActionResponse response = fetchDescribeActionResponse(actionRefOptions, wspId);
 
         try {
-            api().deleteAction(listActionsResponseActionInfo.getId(), wspId);
+            api().deleteAction(response.getAction().getId(), wspId);
         } catch (Exception e) {
-            throw new TowerException(String.format("Unable to delete action '%s' for workspace '%s'", actionName, workspaceRef(wspId)));
+            throw new TowerException(String.format("Unable to delete action '%s' for workspace '%s'", response.getAction().getName(), workspaceRef(wspId)));
         }
 
-        return new ActionsDelete(actionName, workspaceRef(wspId));
+        return new ActionsDelete(response.getAction().getName(), workspaceRef(wspId));
     }
 }
