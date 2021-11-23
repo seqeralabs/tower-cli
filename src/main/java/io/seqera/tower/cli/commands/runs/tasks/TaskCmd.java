@@ -23,7 +23,6 @@ import picocli.CommandLine;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 @CommandLine.Command(
         name = "task",
@@ -49,8 +48,9 @@ public class TaskCmd extends AbstractRunsCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
+        Long wspId = workspaceId(parentCommand.workspace.workspace);
 
-        DescribeTaskResponse response = api().describeWorkflowTask(parentCommand.id, id, parentCommand.workspace.workspaceId);
+        DescribeTaskResponse response = api().describeWorkflowTask(parentCommand.id, id, wspId);
         Task task = response.getTask();
 
         Map<String, Object> general = TaskCmd.parseGeneralData(task);

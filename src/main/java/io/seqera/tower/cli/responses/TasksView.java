@@ -13,14 +13,11 @@ package io.seqera.tower.cli.responses;
 
 import io.seqera.tower.cli.commands.runs.tasks.enums.TaskColumn;
 import io.seqera.tower.cli.utils.TableList;
-import io.seqera.tower.model.DescribeTaskResponse;
-import io.seqera.tower.model.ListTasksResponse;
 import io.seqera.tower.model.Task;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
