@@ -15,16 +15,16 @@ import io.seqera.tower.cli.responses.Response;
 
 public class ActionsDelete extends Response {
 
-    public final String actionName;
+    public final String actionRef;
     public final String workspaceRef;
 
-    public ActionsDelete(String actionName, String workspaceRef) {
-        this.actionName = actionName;
+    public ActionsDelete(String actionRef, String workspaceRef) {
+        this.actionRef = actionRef;
         this.workspaceRef = workspaceRef;
     }
 
     @Override
     public String toString() {
-        return ansi(String.format("%n  @|yellow Pipeline action '%s' deleted at %s workspace|@%n", actionName, workspaceRef));
+        return ansi(String.format("%n  @|yellow Pipeline action '%s' deleted at %s workspace|@%n", actionRef, workspaceRef));
     }
 }

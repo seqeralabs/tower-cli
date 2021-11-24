@@ -16,7 +16,7 @@ import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.actions.ActionsDelete;
-import io.seqera.tower.model.DescribeActionResponse;
+import io.seqera.tower.model.ListActionsResponseActionInfo;
 import picocli.CommandLine;
 
 import java.io.IOException;
@@ -35,16 +35,25 @@ public class DeleteCmd extends AbstractActionsCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
+        String id;
+        String actionRef;
         Long wspId = workspaceId(workspace.workspace);
 
-        DescribeActionResponse response = fetchDescribeActionResponse(actionRefOptions, wspId);
-
-        try {
-            api().deleteAction(response.getAction().getId(), wspId);
-        } catch (Exception e) {
-            throw new TowerException(String.format("Unable to delete action '%s' for workspace '%s'", response.getAction().getName(), workspaceRef(wspId)));
+        if (actionRefOptions.action.actionId != null) {
+            id = actionRefOptions.action.actionId;
+            actionRef = actionRefOptions.action.actionId;
+        } else {
+            ListActionsResponseActionInfo listActionsResponseActionInfo = actionByName(wspId, actionRefOptions.action.actionName);
+            id = listActionsResponseActionInfo.getId();
+            actionRef = listActionsResponseActionInfo.getName();
         }
 
-        return new ActionsDelete(response.getAction().getName(), workspaceRef(wspId));
+        try {
+            api().deleteAction(id, wspId);
+        } catch (Exception e) {
+            throw new TowerException(String.format("Unable to delete action '%s' for workspace '%s'", actionRef, workspaceRef(wspId)));
+        }
+
+        return new ActionsDelete(actionRef, workspaceRef(wspId));
     }
 }
