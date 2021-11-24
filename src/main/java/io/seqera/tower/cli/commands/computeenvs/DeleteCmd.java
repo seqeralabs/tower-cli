@@ -16,6 +16,7 @@ import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
 import io.seqera.tower.cli.responses.ComputeEnvDeleted;
 import io.seqera.tower.cli.responses.Response;
+import io.seqera.tower.model.ComputeEnv;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
@@ -25,8 +26,8 @@ import picocli.CommandLine.Command;
 )
 public class DeleteCmd extends AbstractComputeEnvCmd {
 
-    @CommandLine.Option(names = {"-i", "--id"}, description = "Compute environment identifier.", required = true)
-    public String id;
+    @CommandLine.Mixin
+    public ComputeEnvRefOptions computeEnvRefOptions;
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
@@ -34,7 +35,15 @@ public class DeleteCmd extends AbstractComputeEnvCmd {
     @Override
     protected Response exec() throws ApiException {
         Long wspId = workspaceId(workspace.workspace);
-        
+        String id;
+
+        if (computeEnvRefOptions.computeEnv.computeEnvId != null) {
+            id = computeEnvRefOptions.computeEnv.computeEnvId;
+        } else {
+            ComputeEnv computeEnv = computeEnvByName(wspId, computeEnvRefOptions.computeEnv.computeEnvName);
+            id = computeEnv.getId();
+        }
+
         try {
             api().deleteComputeEnv(id, wspId);
             return new ComputeEnvDeleted(id, workspaceRef(wspId));

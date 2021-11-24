@@ -66,7 +66,7 @@ public class RelaunchCmd extends AbstractRunsCmd {
 
         ComputeEnv ce = null;
         if (opts.computeEnv != null) {
-            ce = computeEnvByName(wspId, opts.computeEnv);
+            ce = computeEnvByRef(wspId, opts.computeEnv);
         }
 
         WorkflowLaunchRequest workflowLaunchRequest = new WorkflowLaunchRequest()

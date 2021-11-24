@@ -54,7 +54,7 @@ public class ImportCmd extends AbstractPipelinesCmd {
         request.setName(name);
 
         if (computeEnv != null) {
-            ComputeEnv ce = findComputeEnvironmentByName(wspId, computeEnv);
+            ComputeEnv ce = computeEnvByRef(wspId, computeEnv);
             request.getLaunch().setComputeEnvId(ce.getId());
         } else {
             try {

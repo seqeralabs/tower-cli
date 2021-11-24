@@ -54,7 +54,7 @@ public class AddCmd extends AbstractPipelinesCmd {
         Long wspId = workspaceId(workspace.workspace);
 
         // Retrieve the provided computeEnv or use the primary if not provided
-        ComputeEnv ce = opts.computeEnv != null ? computeEnvByName(wspId, opts.computeEnv) : primaryComputeEnv(wspId);
+        ComputeEnv ce = opts.computeEnv != null ? computeEnvByRef(wspId, opts.computeEnv) : primaryComputeEnv(wspId);
 
         // Use compute env values by default
         String workDirValue = opts.workDir == null ? ce.getConfig().getWorkDir() : opts.workDir;

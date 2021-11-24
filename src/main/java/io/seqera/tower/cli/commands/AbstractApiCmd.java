@@ -174,6 +174,46 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         throw new TowerException(String.format("Compute environment '%s' is not available", name));
     }
 
+    protected ComputeEnv computeEnvById(Long workspaceId, String id) throws ApiException {
+        if (availableComputeEnvsNameToId == null) {
+            loadAvailableComputeEnvs(workspaceId);
+        }
+
+        if (availableComputeEnvsNameToId.containsValue(id)) {
+            String name = availableComputeEnvsNameToId.entrySet().stream()
+                    .filter(it -> Objects.equals(it.getValue(), id))
+                    .map(Map.Entry::getKey)
+                    .findFirst()
+                    .orElse(null);
+
+            return api().describeComputeEnv(availableComputeEnvsNameToId.get(name), workspaceId).getComputeEnv();
+        }
+
+        throw new TowerException(String.format("Compute environment '%s' is not available", id));
+    }
+
+    protected ComputeEnv computeEnvByRef(Long workspaceId, String ref) throws ApiException {
+        if (availableComputeEnvsNameToId == null) {
+            loadAvailableComputeEnvs(workspaceId);
+        }
+
+        if (availableComputeEnvsNameToId.containsValue(ref)) {
+            String name = availableComputeEnvsNameToId.entrySet().stream()
+                    .filter(it -> Objects.equals(it.getValue(), ref))
+                    .map(Map.Entry::getKey)
+                    .findFirst()
+                    .orElse(null);
+
+            return api().describeComputeEnv(availableComputeEnvsNameToId.get(name), workspaceId).getComputeEnv();
+        }
+
+        if (availableComputeEnvsNameToId.containsKey(ref)) {
+            return api().describeComputeEnv(availableComputeEnvsNameToId.get(ref), workspaceId).getComputeEnv();
+        }
+
+        throw new TowerException(String.format("Compute environment '%s' is not available", ref));
+    }
+
     protected ComputeEnv primaryComputeEnv(Long workspaceId) throws ApiException {
         if (primaryComputeEnvId == null) {
             loadAvailableComputeEnvs(workspaceId);

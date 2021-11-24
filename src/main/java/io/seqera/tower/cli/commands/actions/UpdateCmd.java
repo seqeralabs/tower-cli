@@ -20,7 +20,6 @@ import io.seqera.tower.cli.responses.actions.ActionUpdate;
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.Action;
 import io.seqera.tower.model.ComputeEnv;
-import io.seqera.tower.model.ListActionsResponseActionInfo;
 import io.seqera.tower.model.UpdateActionRequest;
 import io.seqera.tower.model.WorkflowLaunchRequest;
 import picocli.CommandLine;
@@ -53,7 +52,7 @@ public class UpdateCmd extends AbstractActionsCmd {
         String actionName = action.getName();
 
         // Retrieve the provided computeEnv or use the primary if not provided
-        ComputeEnv ce = opts.computeEnv != null ? computeEnvByName(wspId, opts.computeEnv) : action.getLaunch().getComputeEnv();
+        ComputeEnv ce = opts.computeEnv != null ? computeEnvByRef(wspId, opts.computeEnv) : action.getLaunch().getComputeEnv();
 
         // Use compute env values by default
         String workDirValue = opts.workDir != null ? opts.workDir : action.getLaunch().getWorkDir();

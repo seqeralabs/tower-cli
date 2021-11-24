@@ -20,6 +20,7 @@ import io.seqera.tower.JSON;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
+import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.ComputeEnvAdded;
 import io.seqera.tower.cli.responses.ComputeEnvDeleted;
 import io.seqera.tower.cli.responses.ComputeEnvList;
@@ -141,6 +142,11 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
     @ParameterizedTest
     @EnumSource(OutputType.class)
     void testViewAwsForge(OutputType format, MockServerClient mock) throws JsonProcessingException {
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"isnEDBLvHDAIteOEF44ow\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
 
         mock.when(
                 request().withMethod("GET").withPath("/compute-envs/isnEDBLvHDAIteOEF44ow"), exactly(1)
@@ -186,6 +192,11 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
     @ParameterizedTest
     @EnumSource(OutputType.class)
     void testViewAwsManual(OutputType format, MockServerClient mock) throws JsonProcessingException {
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"53aWhB2qJroy0i51FOrFAC\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
 
         mock.when(
                 request().withMethod("GET").withPath("/compute-envs/53aWhB2qJroy0i51FOrFAC"), exactly(1)
@@ -215,6 +226,12 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
     @Test
     void testViewNotFound(MockServerClient mock) {
         mock.when(
+                request().withMethod("GET").withPath("/compute-envs"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"isnEDBLvHDAIteOEF44om2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
                 request().withMethod("GET").withPath("/compute-envs/isnEDBLvHDAIteOEF44or"), exactly(1)
         ).respond(
                 response().withStatusCode(403)
@@ -222,13 +239,19 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(mock, "compute-envs", "view", "-i", "isnEDBLvHDAIteOEF44or");
 
-        assertEquals(errorMessage(out.app, new ComputeEnvNotFoundException("isnEDBLvHDAIteOEF44or", USER_WORKSPACE_NAME)), out.stdErr);
+        assertEquals(errorMessage(out.app, new TowerException(String.format("Compute environment '%s' is not available", "isnEDBLvHDAIteOEF44or"))), out.stdErr);
         assertEquals("", out.stdOut);
         assertEquals(1, out.exitCode);
     }
 
     @Test
     void testViewInvalidAuth(MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"isnEDBLvHDAIteOEF44om\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
         mock.when(
                 request().withMethod("GET").withPath("/compute-envs/isnEDBLvHDAIteOEF44om"), exactly(1)
         ).respond(
@@ -359,6 +382,12 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
     @ParameterizedTest
     @EnumSource(OutputType.class)
     void testPrimarySet(OutputType format, MockServerClient mock) throws JsonProcessingException {
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"isnEDBLvHDAIteOEF44ow\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
         mock.when(
                 request().withMethod("GET").withPath("/compute-envs/isnEDBLvHDAIteOEF44ow"), exactly(1)
         ).respond(

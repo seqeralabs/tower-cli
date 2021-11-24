@@ -85,7 +85,7 @@ public class LaunchesCmd extends AbstractRootCmd {
 
     protected Response runNextflowPipeline(Long wspId) throws ApiException, IOException {
         // Retrieve the provided computeEnv or use the primary if not provided
-        ComputeEnv ce = computeEnv != null ? computeEnvByName(wspId, computeEnv) : primaryComputeEnv(wspId);
+        ComputeEnv ce = computeEnv != null ? computeEnvByRef(wspId, computeEnv) : primaryComputeEnv(wspId);
 
         return submitWorkflow(updateLaunchRequest(new WorkflowLaunchRequest()
                 .pipeline(pipeline)
