@@ -425,7 +425,7 @@ class ActionsCmdTest extends BaseCmdTest {
                 response().withStatusCode(204)
         );
 
-        ExecOut out = exec(format, mock, "-v", "actions", "update", "-n", "hello");
+        ExecOut out = exec(format, mock, "actions", "update", "-n", "hello");
         assertOutput(format, out, new ActionUpdate("hello", USER_WORKSPACE_NAME, "57byWxhmUDLLWIF4J97XEP"));
     }
 

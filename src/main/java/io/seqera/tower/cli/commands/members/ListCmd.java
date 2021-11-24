@@ -27,8 +27,8 @@ import picocli.CommandLine;
 )
 public class ListCmd extends AbstractMembersClass {
 
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name identifier.", required = true)
-    public String organizationName;
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name or identifier.", required = true)
+    public String organizationRef;
 
     @CommandLine.Option(names = {"-f", "--filter"}, description = "Only show members with usernames that start with the given word.")
     public String startsWith;
@@ -41,10 +41,10 @@ public class ListCmd extends AbstractMembersClass {
         Integer max = PaginationOptions.getMax(paginationOptions);
         Integer offset = PaginationOptions.getOffset(paginationOptions, max);
 
-        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = findOrganizationByName(organizationName);
+        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = findOrganizationByRef(organizationRef);
 
         ListMembersResponse response = api().listOrganizationMembers(orgAndWorkspaceDbDto.getOrgId(), max, offset, startsWith);
 
-        return new MembersList(organizationName, response.getMembers());
+        return new MembersList(organizationRef, response.getMembers());
     }
 }

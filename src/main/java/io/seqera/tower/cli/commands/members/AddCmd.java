@@ -30,18 +30,18 @@ public class AddCmd extends AbstractMembersClass {
     @CommandLine.Option(names = {"-u", "--user"}, description = "User email to add as organization member.", required = true)
     public String user;
 
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name identifier.", required = true)
-    public String organizationName;
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name or identifier.", required = true)
+    public String organizationRef;
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = findOrganizationByName(organizationName);
+        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = findOrganizationByRef(organizationRef);
 
         AddMemberRequest request = new AddMemberRequest();
         request.setUser(user);
 
         AddMemberResponse response = api().createOrganizationMember(orgAndWorkspaceDbDto.getOrgId(), request);
 
-        return new MembersAdded(organizationName, response.getMember());
+        return new MembersAdded(organizationRef, response.getMember());
     }
 }

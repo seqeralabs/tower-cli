@@ -37,6 +37,18 @@ class CollaboratorsCmdTest extends BaseCmdTest {
     @EnumSource(OutputType.class)
     void testListCollaborators(OutputType format, MockServerClient mock) throws JsonProcessingException {
         mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
                 request().withMethod("GET").withPath("/orgs/27736513644467/collaborators")
                         .withQueryStringParameter("max", "100")
                         .withQueryStringParameter("offset", "0"), exactly(1)
@@ -44,7 +56,7 @@ class CollaboratorsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("collaborators/collaborators_list")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(format, mock, "collaborators", "list", "-o", "27736513644467");
+        ExecOut out = exec(format, mock, "-v", "collaborators", "list", "-o", "27736513644467");
         assertOutput(format, out, new CollaboratorsList(27736513644467L, Arrays.asList(
                 parseJson(" {\n" +
                         "      \"memberId\": 175703974560466,\n" +

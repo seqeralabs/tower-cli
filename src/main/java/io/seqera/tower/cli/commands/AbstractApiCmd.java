@@ -285,6 +285,24 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         return orgAndWorkspaceDbDtoList.stream().findFirst().orElseThrow(() -> new OrganizationNotFoundException(organizationName));
     }
 
+    protected OrgAndWorkspaceDbDto findOrganizationByRef(String organizationRef) throws ApiException {
+        ListWorkspacesAndOrgResponse workspacesAndOrgResponse = api().listWorkspacesUser(userId());
+
+        if (workspacesAndOrgResponse.getOrgsAndWorkspaces() == null) {
+            throw new OrganizationNotFoundException(organizationRef);
+        }
+
+        List<OrgAndWorkspaceDbDto> orgAndWorkspaceDbDtoList = workspacesAndOrgResponse
+                .getOrgsAndWorkspaces()
+                .stream()
+                .filter(
+                        item -> Objects.equals(item.getWorkspaceName(), null) && (Objects.equals(item.getOrgId().toString(), organizationRef) || Objects.equals(item.getOrgName(), organizationRef))
+                )
+                .collect(Collectors.toList());
+
+        return orgAndWorkspaceDbDtoList.stream().findFirst().orElseThrow(() -> new OrganizationNotFoundException(organizationRef));
+    }
+
     protected ComputeEnv findComputeEnvironmentByName(Long workspaceId, String name) throws ApiException {
         ListComputeEnvsResponse listComputeEnvsResponse = api().listComputeEnvs(null, workspaceId);
 

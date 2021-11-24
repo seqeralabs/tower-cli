@@ -31,15 +31,15 @@ public class AddCmd extends AbstractTeamsCmd {
     @CommandLine.Option(names = {"-n", "--name"}, description = "Team name.", required = true)
     public String teamName;
 
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name identifier.", required = true)
-    public String organizationName;
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name or identifier.", required = true)
+    public String organizationRef;
 
     @CommandLine.Option(names = {"-d", "--description"}, description = "Team description.")
     public String teamDescription;
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = findOrganizationByName(organizationName);
+        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = findOrganizationByRef(organizationRef);
 
         Team team = new Team();
         team.setName(teamName);
@@ -50,6 +50,6 @@ public class AddCmd extends AbstractTeamsCmd {
 
         CreateTeamResponse response = api().createOrganizationTeam(orgAndWorkspaceDbDto.getOrgId(), request);
 
-        return new TeamAdded(organizationName, teamName);
+        return new TeamAdded(organizationRef, teamName);
     }
 }

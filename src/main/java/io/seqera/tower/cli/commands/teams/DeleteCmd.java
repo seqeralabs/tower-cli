@@ -28,15 +28,15 @@ public class DeleteCmd extends AbstractTeamsCmd {
     @CommandLine.Option(names = {"-i", "--id"}, description = "Team identifier.", required = true)
     public Long teamId;
 
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name identifier.", required = true)
-    public String organizationName;
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name or identifier.", required = true)
+    public String organizationRef;
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = findOrganizationByName(organizationName);
+        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = findOrganizationByRef(organizationRef);
 
         api().deleteOrganizationTeam(orgAndWorkspaceDbDto.getOrgId(), teamId);
 
-        return new TeamDeleted(organizationName, teamId.toString());
+        return new TeamDeleted(organizationRef, teamId.toString());
     }
 }
