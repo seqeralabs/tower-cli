@@ -16,6 +16,8 @@ import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.pipelines.PipelinesView;
 import io.seqera.tower.model.DescribeLaunchResponse;
+import io.seqera.tower.model.DescribePipelineResponse;
+import io.seqera.tower.model.Launch;
 import io.seqera.tower.model.PipelineDbDto;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -27,8 +29,8 @@ import picocli.CommandLine.Option;
 )
 public class ViewCmd extends AbstractPipelinesCmd {
 
-    @Option(names = {"-n", "--name"}, description = "Pipeline name.", required = true)
-    public String name;
+    @CommandLine.Mixin
+    PipelineRefOptions pipelineRefOptions;
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
@@ -36,8 +38,10 @@ public class ViewCmd extends AbstractPipelinesCmd {
     @Override
     protected Response exec() throws ApiException {
         Long wspId = workspaceId(workspace.workspace);
-        PipelineDbDto pipe = pipelineByName(wspId, name);
-        DescribeLaunchResponse resp = api().describePipelineLaunch(pipe.getPipelineId(), wspId);
-        return new PipelinesView(workspaceRef(wspId), pipe, resp.getLaunch());
+        PipelineDbDto pipeline = fetchPipeline(pipelineRefOptions, wspId);
+
+        Launch launch = api().describePipelineLaunch(pipeline.getPipelineId(), wspId).getLaunch();
+
+        return new PipelinesView(workspaceRef(wspId), pipeline, launch);
     }
 }

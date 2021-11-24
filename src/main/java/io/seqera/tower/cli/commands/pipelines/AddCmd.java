@@ -37,7 +37,6 @@ public class AddCmd extends AbstractPipelinesCmd {
     @Option(names = {"-n", "--name"}, description = "Pipeline name.", required = true)
     public String name;
 
-
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
