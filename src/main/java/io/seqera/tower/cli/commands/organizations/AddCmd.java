@@ -27,6 +27,9 @@ import java.io.IOException;
 )
 public class AddCmd extends AbstractOrganizationsCmd {
 
+    @CommandLine.Option(names = {"-n", "--name"}, description = "Organization name.", required = true)
+    public String name;
+
     @CommandLine.Option(names = {"-f", "--full-name"}, description = "Organization full name.", required = true)
     public String fullName;
 
@@ -38,7 +41,7 @@ public class AddCmd extends AbstractOrganizationsCmd {
         CreateOrganizationResponse response;
 
         Organization organization = new Organization();
-        organization.setName(opts.name);
+        organization.setName(name);
         organization.setFullName(fullName);
         organization.setDescription(opts.description);
         organization.setLocation(opts.location);

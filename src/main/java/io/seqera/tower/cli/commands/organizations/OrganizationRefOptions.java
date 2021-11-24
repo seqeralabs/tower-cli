@@ -13,14 +13,17 @@ package io.seqera.tower.cli.commands.organizations;
 
 import picocli.CommandLine;
 
-public class OrganizationsOptions {
+public class OrganizationRefOptions {
 
-    @CommandLine.Option(names = {"-d", "--description"}, description = "Organization description.")
-    public String description;
+    @CommandLine.ArgGroup
+    public OrganizationRef organization;
 
-    @CommandLine.Option(names = {"-l", "--location"}, description = "Organization location.")
-    public String location;
+    public static class OrganizationRef {
 
-    @CommandLine.Option(names = {"-w", "--website"}, description = "Organization website URL.")
-    public String website;
+        @CommandLine.Option(names = {"-i", "--id"}, description = "Organization unique id.")
+        public Long organizationId;
+
+        @CommandLine.Option(names = {"-n", "--name"}, description = "Organization name.")
+        public String organizationName;
+    }
 }

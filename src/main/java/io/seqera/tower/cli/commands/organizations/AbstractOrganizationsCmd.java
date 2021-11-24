@@ -15,6 +15,7 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.exceptions.OrganizationNotFoundException;
 import io.seqera.tower.cli.exceptions.UserOrganizationsNotFoundException;
+import io.seqera.tower.model.DescribeOrganizationResponse;
 import io.seqera.tower.model.ListWorkspacesAndOrgResponse;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import picocli.CommandLine;
@@ -49,5 +50,18 @@ public class AbstractOrganizationsCmd extends AbstractApiCmd {
         }
 
         return orgAndWorkspaceDbDtoList.stream().findFirst().orElse(null);
+    }
+
+    protected DescribeOrganizationResponse fetchOrganization(OrganizationRefOptions organizationRefOptions) throws ApiException {
+        DescribeOrganizationResponse response;
+
+        if(organizationRefOptions.organization.organizationId != null){
+            response = api().describeOrganization(organizationRefOptions.organization.organizationId);
+        } else {
+            OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = organizationByName(organizationRefOptions.organization.organizationName);
+            response = api().describeOrganization(orgAndWorkspaceDbDto.getOrgId());
+        }
+
+        return response;
     }
 }

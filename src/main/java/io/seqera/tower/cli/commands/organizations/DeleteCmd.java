@@ -25,19 +25,30 @@ import java.io.IOException;
         description = "Delete an organization."
 )
 public class DeleteCmd extends AbstractOrganizationsCmd {
-    @CommandLine.Option(names = {"-n", "--name"}, description = "Organization name.", required = true)
-    public String name;
+
+    @CommandLine.Mixin
+    OrganizationRefOptions organizationRefOptions;
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = organizationByName(name);
+        Long id;
+        String ref;
 
-        try {
-            api().deleteOrganization(orgAndWorkspaceDbDto.getOrgId());
-        } catch (Exception e) {
-            throw new TowerException(String.format("Organization %s could not be deleted", name));
+        if(organizationRefOptions.organization.organizationId != null){
+            id = organizationRefOptions.organization.organizationId;
+            ref = id.toString();
+        } else {
+            OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = organizationByName(organizationRefOptions.organization.organizationName);
+            id = orgAndWorkspaceDbDto.getOrgId();
+            ref = orgAndWorkspaceDbDto.getOrgName();
         }
 
-        return new OrganizationsDeleted(orgAndWorkspaceDbDto.getOrgId(), name);
+        try {
+            api().deleteOrganization(id);
+        } catch (Exception e) {
+            throw new TowerException(String.format("Organization %s could not be deleted", ref));
+        }
+
+        return new OrganizationsDeleted(ref);
     }
 }

@@ -15,8 +15,6 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.organizations.OrganizationsUpdated;
 import io.seqera.tower.model.DescribeOrganizationResponse;
-import io.seqera.tower.model.OrgAndWorkspaceDbDto;
-import io.seqera.tower.model.Organization;
 import io.seqera.tower.model.OrganizationDbDto;
 import io.seqera.tower.model.UpdateOrganizationRequest;
 import picocli.CommandLine;
@@ -30,18 +28,19 @@ import java.io.IOException;
 public class UpdateCmd extends AbstractOrganizationsCmd {
 
     @CommandLine.Mixin
-    OrganizationsOptions opts;
+    OrganizationRefOptions organizationRefOptions;
 
     @CommandLine.Option(names = {"-f", "--full-name"}, description = "Organization full name.")
     public String fullName;
 
+    @CommandLine.Mixin
+    OrganizationsOptions opts;
+
     @Override
     protected Response exec() throws ApiException, IOException {
-        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = organizationByName(opts.name);
+        DescribeOrganizationResponse response = fetchOrganization(organizationRefOptions);
 
-        DescribeOrganizationResponse describeOrganization = api().describeOrganization(orgAndWorkspaceDbDto.getOrgId());
-
-        OrganizationDbDto organization = describeOrganization.getOrganization();
+        OrganizationDbDto organization = response.getOrganization();
 
         UpdateOrganizationRequest request = new UpdateOrganizationRequest();
         request.setFullName(fullName != null ? fullName : organization.getFullName());
@@ -49,8 +48,8 @@ public class UpdateCmd extends AbstractOrganizationsCmd {
         request.setLocation(opts.location != null ? opts.location : organization.getLocation());
         request.setWebsite(opts.website != null ? opts.website : organization.getWebsite());
 
-        api().updateOrganization(orgAndWorkspaceDbDto.getOrgId(), request);
+        api().updateOrganization(organization.getOrgId(), request);
 
-        return new OrganizationsUpdated(orgAndWorkspaceDbDto.getOrgId(), opts.name);
+        return new OrganizationsUpdated(organization.getOrgId(), organization.getName());
     }
 }
