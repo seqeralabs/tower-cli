@@ -29,17 +29,17 @@ public class DeleteCmd extends AbstractMembersClass{
     @CommandLine.Option(names = {"-u", "--user"}, description = "Username or email to delete from organization members.", required = true)
     public String user;
 
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name identifier.", required = true)
-    public String organizationName;
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name or identifier.", required = true)
+    public String organizationRef;
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = findOrganizationByName(organizationName);
+        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = findOrganizationByRef(organizationRef);
 
         MemberDbDto member = findMemberByUser(orgAndWorkspaceDbDto.getOrgId(), user);
 
         api().deleteOrganizationMember(orgAndWorkspaceDbDto.getOrgId(), member.getMemberId());
 
-        return new MembersDeleted(user, organizationName);
+        return new MembersDeleted(user, organizationRef);
     }
 }

@@ -174,7 +174,7 @@ class OrganizationsCmdTest extends BaseCmdTest {
         );
 
         ExecOut out = exec(format, mock, "organizations", "delete", "-n", "organization1");
-        assertOutput(format, out, new OrganizationsDeleted(27736513644467L, "organization1"));
+        assertOutput(format, out, new OrganizationsDeleted("organization1"));
     }
 
     @Test

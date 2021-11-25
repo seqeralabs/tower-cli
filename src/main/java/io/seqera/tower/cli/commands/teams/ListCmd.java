@@ -27,8 +27,8 @@ import java.io.IOException;
 )
 public class ListCmd extends AbstractTeamsCmd {
 
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name identifier.", required = true)
-    public String organizationName;
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name or identifier.", required = true)
+    public String organizationRef;
 
     @CommandLine.Mixin
     PaginationOptions paginationOptions;
@@ -38,10 +38,10 @@ public class ListCmd extends AbstractTeamsCmd {
         Integer max = PaginationOptions.getMax(paginationOptions);
         Integer offset = PaginationOptions.getOffset(paginationOptions, max);
 
-        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = findOrganizationByName(organizationName);
+        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = findOrganizationByRef(organizationRef);
 
         ListTeamResponse teamResponse = api().listOrganizationTeams(orgAndWorkspaceDbDto.getOrgId(), max, offset);
 
-        return new TeamsList(organizationName, teamResponse.getTeams());
+        return new TeamsList(organizationRef, teamResponse.getTeams());
     }
 }

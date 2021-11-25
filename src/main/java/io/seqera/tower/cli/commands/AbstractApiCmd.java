@@ -163,15 +163,37 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     }
 
     protected ComputeEnv computeEnvByName(Long workspaceId, String name) throws ApiException {
-        if (availableComputeEnvsNameToId == null) {
-            loadAvailableComputeEnvs(workspaceId);
-        }
+        loadAvailableComputeEnvs(workspaceId);
 
         if (availableComputeEnvsNameToId.containsKey(name)) {
             return api().describeComputeEnv(availableComputeEnvsNameToId.get(name), workspaceId).getComputeEnv();
         }
 
         throw new TowerException(String.format("Compute environment '%s' is not available", name));
+    }
+
+    protected ComputeEnv computeEnvById(Long workspaceId, String id) throws ApiException {
+        loadAvailableComputeEnvs(workspaceId);
+
+        if (availableComputeEnvsNameToId.containsValue(id)) {
+            String name = availableComputeEnvsNameToId.entrySet().stream()
+                    .filter(it -> Objects.equals(it.getValue(), id))
+                    .map(Map.Entry::getKey)
+                    .findFirst()
+                    .orElse(null);
+
+            return api().describeComputeEnv(availableComputeEnvsNameToId.get(name), workspaceId).getComputeEnv();
+        }
+
+        throw new TowerException(String.format("Compute environment '%s' is not available", id));
+    }
+
+    protected ComputeEnv computeEnvByRef(Long workspaceId, String ref) throws ApiException {
+        try {
+            return computeEnvById(workspaceId, ref);
+        } catch (TowerException towerException) {
+            return computeEnvByName(workspaceId, ref);
+        }
     }
 
     protected ComputeEnv primaryComputeEnv(Long workspaceId) throws ApiException {
@@ -245,6 +267,24 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         return orgAndWorkspaceDbDtoList.stream().findFirst().orElseThrow(() -> new OrganizationNotFoundException(organizationName));
     }
 
+    protected OrgAndWorkspaceDbDto findOrganizationByRef(String organizationRef) throws ApiException {
+        ListWorkspacesAndOrgResponse workspacesAndOrgResponse = api().listWorkspacesUser(userId());
+
+        if (workspacesAndOrgResponse.getOrgsAndWorkspaces() == null) {
+            throw new OrganizationNotFoundException(organizationRef);
+        }
+
+        List<OrgAndWorkspaceDbDto> orgAndWorkspaceDbDtoList = workspacesAndOrgResponse
+                .getOrgsAndWorkspaces()
+                .stream()
+                .filter(
+                        item -> Objects.equals(item.getWorkspaceName(), null) && (Objects.equals(item.getOrgId().toString(), organizationRef) || Objects.equals(item.getOrgName(), organizationRef))
+                )
+                .collect(Collectors.toList());
+
+        return orgAndWorkspaceDbDtoList.stream().findFirst().orElseThrow(() -> new OrganizationNotFoundException(organizationRef));
+    }
+
     protected ComputeEnv findComputeEnvironmentByName(Long workspaceId, String name) throws ApiException {
         ListComputeEnvsResponse listComputeEnvsResponse = api().listComputeEnvs(null, workspaceId);
 
@@ -294,13 +334,15 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     }
 
     private void loadAvailableComputeEnvs(Long workspaceId) throws ApiException {
-        availableComputeEnvsNameToId = new HashMap<>();
-        for (ListComputeEnvsResponseEntry ce : api().listComputeEnvs("AVAILABLE", workspaceId).getComputeEnvs()) {
+        if (availableComputeEnvsNameToId == null) {
+            availableComputeEnvsNameToId = new HashMap<>();
+            for (ListComputeEnvsResponseEntry ce : api().listComputeEnvs("AVAILABLE", workspaceId).getComputeEnvs()) {
 
-            if (ce.getPrimary() != null && ce.getPrimary()) {
-                primaryComputeEnvId = ce.getId();
+                if (ce.getPrimary() != null && ce.getPrimary()) {
+                    primaryComputeEnvId = ce.getId();
+                }
+                availableComputeEnvsNameToId.put(ce.getName(), ce.getId());
             }
-            availableComputeEnvsNameToId.put(ce.getName(), ce.getId());
         }
     }
 

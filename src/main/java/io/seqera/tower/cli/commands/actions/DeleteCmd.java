@@ -27,24 +27,33 @@ import java.io.IOException;
 )
 public class DeleteCmd extends AbstractActionsCmd {
 
-    @CommandLine.Option(names = {"-n", "--name"}, description = "Action name.", required = true)
-    public String actionName;
+    @CommandLine.Mixin
+    ActionRefOptions actionRefOptions;
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
     @Override
     protected Response exec() throws ApiException, IOException {
+        String id;
+        String actionRef;
         Long wspId = workspaceId(workspace.workspace);
 
-        ListActionsResponseActionInfo listActionsResponseActionInfo = actionByName(wspId, actionName);
-
-        try {
-            api().deleteAction(listActionsResponseActionInfo.getId(), wspId);
-        } catch (Exception e) {
-            throw new TowerException(String.format("Unable to delete action '%s' for workspace '%s'", actionName, workspaceRef(wspId)));
+        if (actionRefOptions.action.actionId != null) {
+            id = actionRefOptions.action.actionId;
+            actionRef = actionRefOptions.action.actionId;
+        } else {
+            ListActionsResponseActionInfo listActionsResponseActionInfo = actionByName(wspId, actionRefOptions.action.actionName);
+            id = listActionsResponseActionInfo.getId();
+            actionRef = listActionsResponseActionInfo.getName();
         }
 
-        return new ActionsDelete(actionName, workspaceRef(wspId));
+        try {
+            api().deleteAction(id, wspId);
+        } catch (Exception e) {
+            throw new TowerException(String.format("Unable to delete action '%s' for workspace '%s'", actionRef, workspaceRef(wspId)));
+        }
+
+        return new ActionsDelete(actionRef, workspaceRef(wspId));
     }
 }

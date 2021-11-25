@@ -34,12 +34,12 @@ public class UpdateCmd extends AbstractMembersClass {
     @CommandLine.Option(names = {"-r", "--role"}, description = "Member organization role (OWNER, MEMBER or COLLABORATOR).", required = true)
     public OrgRole role;
 
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name identifier.", required = true)
-    public String organizationName;
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name or identifier.", required = true)
+    public String organizationRef;
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = findOrganizationByName(organizationName);
+        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = findOrganizationByRef(organizationRef);
 
         MemberDbDto member =  findMemberByUser(orgAndWorkspaceDbDto.getOrgId(), user);
 
@@ -49,6 +49,6 @@ public class UpdateCmd extends AbstractMembersClass {
         api().updateOrganizationMemberRole(orgAndWorkspaceDbDto.getOrgId(), member.getMemberId(), request);
 
 
-        return new MembersUpdate(user, organizationName, role.toString());
+        return new MembersUpdate(user, organizationRef, role.toString());
     }
 }

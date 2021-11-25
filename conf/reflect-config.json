@@ -227,6 +227,17 @@
   "allDeclaredMethods":true}
 ,
 {
+  "name":"io.seqera.tower.cli.commands.actions.ActionRefOptions",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]}
+,
+{
+  "name":"io.seqera.tower.cli.commands.actions.ActionRefOptions$ActionRef",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true}
+,
+{
   "name":"io.seqera.tower.cli.commands.actions.AddCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -294,6 +305,17 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]}
+,
+{
+  "name":"io.seqera.tower.cli.commands.computeenvs.ComputeEnvRefOptions",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]}
+,
+{
+  "name":"io.seqera.tower.cli.commands.computeenvs.ComputeEnvRefOptions$ComputeEnvRef",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true}
 ,
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.DeleteCmd",
@@ -602,6 +624,17 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]}
 ,
 {
+  "name":"io.seqera.tower.cli.commands.credentials.CredentialsRefOptions",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]}
+,
+{
+  "name":"io.seqera.tower.cli.commands.credentials.CredentialsRefOptions$CredentialsRef",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true}
+,
+{
   "name":"io.seqera.tower.cli.commands.credentials.DeleteCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -890,6 +923,17 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]}
 ,
 {
+  "name":"io.seqera.tower.cli.commands.organizations.OrganizationRefOptions",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]}
+,
+{
+  "name":"io.seqera.tower.cli.commands.organizations.OrganizationRefOptions$OrganizationRef",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true}
+,
+{
   "name":"io.seqera.tower.cli.commands.organizations.OrganizationsOptions",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -982,6 +1026,17 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]}
+,
+{
+  "name":"io.seqera.tower.cli.commands.pipelines.PipelineRefOptions",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]}
+,
+{
+  "name":"io.seqera.tower.cli.commands.pipelines.PipelineRefOptions$PipelineRef",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true}
 ,
 {
   "name":"io.seqera.tower.cli.commands.pipelines.UpdateCmd",
@@ -1145,6 +1200,18 @@
   "name":"io.seqera.tower.cli.commands.workspaces.ViewCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]}
+,
+{
+  "name":"io.seqera.tower.cli.commands.workspaces.WorkspaceRefOptions",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]}
+,
+{
+  "name":"io.seqera.tower.cli.commands.workspaces.WorkspaceRefOptions$WorkspaceRef",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]}
 ,
 {

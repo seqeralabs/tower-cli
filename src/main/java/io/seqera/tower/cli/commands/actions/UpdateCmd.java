@@ -20,7 +20,6 @@ import io.seqera.tower.cli.responses.actions.ActionUpdate;
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.Action;
 import io.seqera.tower.model.ComputeEnv;
-import io.seqera.tower.model.ListActionsResponseActionInfo;
 import io.seqera.tower.model.UpdateActionRequest;
 import io.seqera.tower.model.WorkflowLaunchRequest;
 import picocli.CommandLine;
@@ -34,14 +33,14 @@ import java.util.Objects;
 )
 public class UpdateCmd extends AbstractActionsCmd {
 
-    @CommandLine.Option(names = {"-n", "--name"}, description = "Action name.", required = true)
-    public String actionName;
-
     @CommandLine.Mixin
-    public WorkspaceOptionalOptions workspace;
+    ActionRefOptions actionRefOptions;
 
     @CommandLine.Option(names = {"-s", "--status"}, description = "Action status (pause or active).")
     public String status;
+
+    @CommandLine.Mixin
+    public WorkspaceOptionalOptions workspace;
 
     @CommandLine.Mixin
     public LaunchOptions opts;
@@ -49,13 +48,11 @@ public class UpdateCmd extends AbstractActionsCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
-
-        ListActionsResponseActionInfo actionInfo = actionByName(wspId, actionName);
-
-        Action action = api().describeAction(actionInfo.getId(), wspId).getAction();
+        Action action = fetchDescribeActionResponse(actionRefOptions, wspId).getAction();
+        String actionName = action.getName();
 
         // Retrieve the provided computeEnv or use the primary if not provided
-        ComputeEnv ce = opts.computeEnv != null ? computeEnvByName(wspId, opts.computeEnv) : action.getLaunch().getComputeEnv();
+        ComputeEnv ce = opts.computeEnv != null ? computeEnvByRef(wspId, opts.computeEnv) : action.getLaunch().getComputeEnv();
 
         // Use compute env values by default
         String workDirValue = opts.workDir != null ? opts.workDir : action.getLaunch().getWorkDir();
@@ -66,7 +63,7 @@ public class UpdateCmd extends AbstractActionsCmd {
         WorkflowLaunchRequest workflowLaunchRequest = new WorkflowLaunchRequest();
         workflowLaunchRequest.computeEnvId(ce.getId())
                 .id(action.getLaunch().getId())
-                .pipeline(actionInfo.getPipeline())
+                .pipeline(action.getLaunch().getPipeline())
                 .revision(opts.revision)
                 .workDir(workDirValue)
                 .configProfiles(opts.profiles)

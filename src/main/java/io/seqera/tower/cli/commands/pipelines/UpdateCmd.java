@@ -17,6 +17,8 @@ import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.pipelines.PipelinesUpdated;
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.ComputeEnv;
+import io.seqera.tower.model.DescribeLaunchResponse;
+import io.seqera.tower.model.DescribePipelineResponse;
 import io.seqera.tower.model.Launch;
 import io.seqera.tower.model.PipelineDbDto;
 import io.seqera.tower.model.UpdatePipelineRequest;
@@ -37,8 +39,8 @@ import static io.seqera.tower.cli.utils.ModelHelper.coalesce;
 )
 public class UpdateCmd extends AbstractPipelinesCmd {
 
-    @Option(names = {"-n", "--name"}, description = "Pipeline name.", required = true)
-    public String name;
+    @CommandLine.Mixin
+    PipelineRefOptions pipelineRefOptions;
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
@@ -55,14 +57,21 @@ public class UpdateCmd extends AbstractPipelinesCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
+        PipelineDbDto pipe;
+        Long id;
 
-        PipelineDbDto pipe = pipelineByName(wspId, name);
+        if (pipelineRefOptions.pipeline.pipelineId != null) {
+            id = pipelineRefOptions.pipeline.pipelineId;
+            pipe = api().describePipeline(id, wspId).getPipeline();
+        } else {
+            pipe = pipelineByName(wspId, pipelineRefOptions.pipeline.pipelineName);
+            id = pipe.getPipelineId();
+        }
 
-        // Retrieve current launch
-        Launch launch = api().describePipelineLaunch(pipe.getPipelineId(), wspId).getLaunch();
+        Launch launch = api().describePipelineLaunch(id, wspId).getLaunch();
 
         // Retrieve the provided computeEnv or use the primary if not provided
-        ComputeEnv ce = opts.computeEnv != null ? computeEnvByName(wspId, opts.computeEnv) : launch.getComputeEnv();
+        ComputeEnv ce = opts.computeEnv != null ? computeEnvByRef(wspId, opts.computeEnv) : launch.getComputeEnv();
 
         UpdatePipelineResponse response = api().updatePipeline(
                 pipe.getPipelineId(),

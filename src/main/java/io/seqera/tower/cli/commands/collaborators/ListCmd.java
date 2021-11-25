@@ -18,6 +18,7 @@ import io.seqera.tower.cli.commands.global.PaginationOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.collaborators.CollaboratorsList;
 import io.seqera.tower.model.ListMembersResponse;
+import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import picocli.CommandLine;
 
 @CommandLine.Command(
@@ -26,8 +27,8 @@ import picocli.CommandLine;
 )
 public class ListCmd extends AbstractCollaboratorsCmd {
 
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization identifier.", required = true)
-    public Long organizationId;
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name or identifier.", required = true)
+    public String organizationRef;
 
     @CommandLine.Option(names = {"-f", "--filter"}, description = "Only show members with usernames that start with the given word.")
     public String startsWith;
@@ -40,8 +41,10 @@ public class ListCmd extends AbstractCollaboratorsCmd {
         Integer max = PaginationOptions.getMax(paginationOptions);
         Integer offset = PaginationOptions.getOffset(paginationOptions, max);
 
-        ListMembersResponse response = api().listOrganizationCollaborators(organizationId, max, offset, startsWith);
+        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = findOrganizationByRef(organizationRef);
 
-        return new CollaboratorsList(organizationId, response.getMembers());
+        ListMembersResponse response = api().listOrganizationCollaborators(orgAndWorkspaceDbDto.getOrgId(), max, offset, startsWith);
+
+        return new CollaboratorsList(orgAndWorkspaceDbDto.getOrgId(), response.getMembers());
     }
 }

@@ -272,6 +272,12 @@ class ActionsCmdTest extends BaseCmdTest {
         );
 
         mock.when(
+                request().withMethod("GET").withPath("/actions/57byWxhmUDLLWIF4J97XEP"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("actions/action_view")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
                 request().withMethod("DELETE").withPath("/actions/57byWxhmUDLLWIF4J97XEP"), exactly(1)
         ).respond(
                 response().withStatusCode(204)
@@ -289,6 +295,12 @@ class ActionsCmdTest extends BaseCmdTest {
                 request().withMethod("GET").withPath("/actions"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("actions/actions_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/actions/57byWxhmUDLLWIF4J97XEP"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("actions/action_view")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(

@@ -16,6 +16,7 @@ import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.commands.ActionsCmd;
 import io.seqera.tower.cli.exceptions.ActionNotFoundException;
+import io.seqera.tower.model.DescribeActionResponse;
 import io.seqera.tower.model.ListActionsResponse;
 import io.seqera.tower.model.ListActionsResponseActionInfo;
 import picocli.CommandLine;
@@ -44,5 +45,18 @@ public abstract class AbstractActionsCmd extends AbstractApiCmd {
         }
 
         return listActionsResponseActionInfos.stream().findFirst().orElse(null);
+    }
+
+    protected DescribeActionResponse fetchDescribeActionResponse(ActionRefOptions actionRefOptions, Long wspId) throws ApiException {
+        DescribeActionResponse response;
+
+        if (actionRefOptions.action.actionId != null) {
+            response = api().describeAction(actionRefOptions.action.actionId, wspId);
+        } else {
+            ListActionsResponseActionInfo listActionsResponseActionInfo = actionByName(wspId, actionRefOptions.action.actionName);
+            response = api().describeAction(listActionsResponseActionInfo.getId(), wspId);
+        }
+
+        return response;
     }
 }

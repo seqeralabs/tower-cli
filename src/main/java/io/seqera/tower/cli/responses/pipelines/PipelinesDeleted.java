@@ -15,16 +15,16 @@ import io.seqera.tower.cli.responses.Response;
 
 public class PipelinesDeleted extends Response {
 
-    public final String id;
+    public final String pipelineRef;
     public final String workspaceRef;
 
-    public PipelinesDeleted(String id, String workspaceRef) {
-        this.id = id;
+    public PipelinesDeleted(String pipelineRef, String workspaceRef) {
+        this.pipelineRef = pipelineRef;
         this.workspaceRef = workspaceRef;
     }
 
     @Override
     public String toString() {
-        return ansi(String.format("%n  @|yellow Pipeline '%s' deleted at %s workspace|@%n", id, workspaceRef));
+        return ansi(String.format("%n  @|yellow Pipeline '%s' deleted at %s workspace|@%n", pipelineRef, workspaceRef));
     }
 }
