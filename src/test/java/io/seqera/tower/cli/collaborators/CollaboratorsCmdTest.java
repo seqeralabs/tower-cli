@@ -56,7 +56,7 @@ class CollaboratorsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("collaborators/collaborators_list")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(format, mock, "-v", "collaborators", "list", "-o", "27736513644467");
+        ExecOut out = exec(format, mock, "collaborators", "list", "-o", "27736513644467");
         assertOutput(format, out, new CollaboratorsList(27736513644467L, Arrays.asList(
                 parseJson(" {\n" +
                         "      \"memberId\": 175703974560466,\n" +
