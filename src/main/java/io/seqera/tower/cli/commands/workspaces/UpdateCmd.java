@@ -31,7 +31,7 @@ import java.io.IOException;
 )
 public class UpdateCmd extends AbstractWorkspaceCmd {
 
-    @CommandLine.Option(names = {"-i", "--id"}, description = "Workspace ID to delete", required = true)
+    @CommandLine.Option(names = {"-i", "--id"}, description = "Workspace ID to delete.", required = true)
     public Long workspaceId;
 
     @Option(names = {"-f", "--fullName"}, description = "The workspace full name.")

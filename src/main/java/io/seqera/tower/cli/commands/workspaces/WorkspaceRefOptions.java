@@ -20,10 +20,10 @@ public class WorkspaceRefOptions {
 
     public static class WorkspaceRef {
 
-        @CommandLine.Option(names = {"-i", "--id"}, description = "Workspace unique ID")
+        @CommandLine.Option(names = {"-i", "--id"}, description = "Workspace unique ID.")
         public Long workspaceId;
 
-        @CommandLine.Option(names = {"-n", "--name"}, description = "Workspace namespace in the form of organizationName/workspaceName")
+        @CommandLine.Option(names = {"-n", "--name"}, description = "Workspace namespace in the form of organizationName/workspaceName.")
         public String workspaceName;
     }
 }
