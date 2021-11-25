@@ -43,6 +43,9 @@ public class MetricsCmd extends AbstractRunsCmd {
     @CommandLine.Option(names = {"-c", "--columns"}, split = ",", description = "Process metric columns to display: ${COMPLETION-CANDIDATES} (default displays all.)")
     public List<MetricColumn> columns;
 
+    @CommandLine.Option(names = {"-g", "--group-results"}, description = "Group process metric data in single cell (default id true.)")
+    public boolean groupResults = true;
+
     @CommandLine.ParentCommand
     public ViewCmd parentCommand;
 
@@ -51,7 +54,7 @@ public class MetricsCmd extends AbstractRunsCmd {
         Long wspId = workspaceId(parentCommand.workspace.workspace);
 
         type = type == null ? List.of(MetricType.cpu, MetricType.mem, MetricType.time, MetricType.io) : type;
-        columns = columns == null ? List.of(MetricColumn.mean, MetricColumn.min, MetricColumn.max, MetricColumn.q1, MetricColumn.q2, MetricColumn.q3) : columns;
+        columns = columns == null ? List.of(MetricColumn.q1, MetricColumn.q2, MetricColumn.q3, MetricColumn.min, MetricColumn.max, MetricColumn.mean) : columns;
 
         List<WorkflowMetrics> metrics = api().describeWorkflowMetrics(parentCommand.id, wspId).getMetrics();
 
@@ -117,7 +120,7 @@ public class MetricsCmd extends AbstractRunsCmd {
             });
         }
 
-        return new RunViewMetrics(columns, metricsMem, metricsCpu, metricsTime, metricsIo);
+        return new RunViewMetrics(columns, metricsMem, metricsCpu, metricsTime, metricsIo, groupResults);
     }
 
     private Map<String, Object> processColumns(ResourceData resourceData) {

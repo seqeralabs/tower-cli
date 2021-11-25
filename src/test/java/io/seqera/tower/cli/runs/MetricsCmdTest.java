@@ -41,12 +41,12 @@ public class MetricsCmdTest extends BaseCmdTest {
         );
 
         List<MetricColumn> cols = new ArrayList<>();
-        cols.add(MetricColumn.mean);
-        cols.add(MetricColumn.min);
-        cols.add(MetricColumn.max);
         cols.add(MetricColumn.q1);
         cols.add(MetricColumn.q2);
         cols.add(MetricColumn.q3);
+        cols.add(MetricColumn.min);
+        cols.add(MetricColumn.max);
+        cols.add(MetricColumn.mean);
 
         List<Map<String, Object>> metricsMem = parseJson(new String(loadResource("runs/mem")), List.class);
         List<Map<String, Object>> metricsCpu = parseJson(new String(loadResource("runs/cpu")), List.class);
@@ -55,7 +55,7 @@ public class MetricsCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(mock,"runs", "view", "-i", "5dAZoXrcmZXRO4", "metrics");
         assertEquals("", out.stdErr);
-        assertEquals(StringUtils.chop(new RunViewMetrics(cols, metricsMem, metricsCpu, metricsTime, metricsIo).toString()), out.stdOut);
+        assertEquals(StringUtils.chop(new RunViewMetrics(cols, metricsMem, metricsCpu, metricsTime, metricsIo, true).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 }
