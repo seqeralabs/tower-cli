@@ -1,0 +1,24 @@
+{
+  "versions": [
+    {
+      "datasetId": "4D9TP0w2pM0qmwqVHgrgBK",
+      "datasetName": "dataset1",
+      "hasHeader": false,
+      "version": 1,
+      "lastUpdated": "2021-11-29T09:28:09+01:00",
+      "fileName": "transaciones_2021-11-26_filter-advanced.csv",
+      "mediaType": "text/csv",
+      "url": "https://73ab-46-26-157-135.ngrok.io/api/workspaces/249664655368293/datasets/4D9TP0w2pM0qmwqVHgrgBK/v/1/n/transaciones_2021-11-26_filter-advanced.csv"
+    },
+    {
+      "datasetId": "4D9TP0w2pM0qmwqVHgrgBK",
+      "datasetName": "dataset1",
+      "hasHeader": false,
+      "version": 2,
+      "lastUpdated": "2021-11-29T09:28:09+01:00",
+      "fileName": "transaciones_2021-11-26_filter-advanced.csv",
+      "mediaType": "text/csv",
+      "url": "https://73ab-46-26-157-135.ngrok.io/api/workspaces/249664655368293/datasets/4D9TP0w2pM0qmwqVHgrgBK/v/2/n/transaciones_2021-11-26_filter-advanced.csv"
+    }
+  ]
+}

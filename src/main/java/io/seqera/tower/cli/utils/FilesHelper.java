@@ -12,6 +12,7 @@
 package io.seqera.tower.cli.utils;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -38,5 +39,20 @@ public class FilesHelper {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static String readFile(File file) {
+        String outcome = null;
+
+        try {
+            outcome = Files.readString(file.toPath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            File obj = new File(file.getPath());
+            obj.delete();
+        }
+
+        return outcome;
     }
 }
