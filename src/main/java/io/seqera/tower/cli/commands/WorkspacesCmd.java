@@ -21,6 +21,7 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "workspaces",
+        aliases = {"wsp"},
         description = "Manage workspaces.",
         subcommands = {
                 ListCmd.class,

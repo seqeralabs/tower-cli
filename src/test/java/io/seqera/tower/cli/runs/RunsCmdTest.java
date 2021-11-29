@@ -68,6 +68,19 @@ class RunsCmdTest extends BaseCmdTest {
         assertOutput(format, out, new RunDeleted("5dAZoXrcmZXRO4", USER_WORKSPACE_NAME));
     }
 
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testDeleteAlias(OutputType format, MockServerClient mock) {
+        mock.when(
+                request().withMethod("DELETE").withPath("/workflow/5dAZoXrcmZXRO4"), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(format, mock, "run", "delete", "-i", "5dAZoXrcmZXRO4");
+        assertOutput(format, out, new RunDeleted("5dAZoXrcmZXRO4", USER_WORKSPACE_NAME));
+    }
+
     @Test
     void testDeleteNotFound(MockServerClient mock) {
         mock.when(

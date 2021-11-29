@@ -74,6 +74,39 @@ class OrganizationsCmdTest extends BaseCmdTest {
         )));
     }
 
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testListAlias(OutputType format, MockServerClient mock) throws JsonProcessingException {
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "org", "list");
+        assertOutput(format, out, new OrganizationsList("jordi", Arrays.asList(parseJson(" {\n" +
+                        "      \"orgId\": 27736513644467,\n" +
+                        "      \"orgName\": \"organization1\",\n" +
+                        "      \"orgLogoUrl\": null,\n" +
+                        "      \"workspaceId\": null,\n" +
+                        "      \"workspaceName\": null\n" +
+                        "    }", OrgAndWorkspaceDbDto.class),
+                parseJson(" {\n" +
+                        "      \"orgId\": 37736513644467,\n" +
+                        "      \"orgName\": \"organization2\",\n" +
+                        "      \"orgLogoUrl\": null,\n" +
+                        "      \"workspaceId\": null,\n" +
+                        "      \"workspaceName\": null\n" +
+                        "    }", OrgAndWorkspaceDbDto.class)
+        )));
+    }
+
     @Test
     void testListEmpty(MockServerClient mock) {
         mock.when(

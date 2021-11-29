@@ -78,4 +78,50 @@ class CollaboratorsCmdTest extends BaseCmdTest {
                         "    }", MemberDbDto.class)
         )));
     }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testListCollaboratorsAlias(OutputType format, MockServerClient mock) throws JsonProcessingException {
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/orgs/27736513644467/collaborators")
+                        .withQueryStringParameter("max", "100")
+                        .withQueryStringParameter("offset", "0"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("collaborators/collaborators_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "collab", "list", "-o", "27736513644467");
+        assertOutput(format, out, new CollaboratorsList(27736513644467L, Arrays.asList(
+                parseJson(" {\n" +
+                        "      \"memberId\": 175703974560466,\n" +
+                        "      \"userName\": \"jfernandez74\",\n" +
+                        "      \"email\": \"jfernandez74@gmail.com\",\n" +
+                        "      \"firstName\": null,\n" +
+                        "      \"lastName\": null,\n" +
+                        "      \"avatar\": \"https://www.gravatar.com/avatar/7d3c1ee212a3465233e161b451fb4d05?d=404\",\n" +
+                        "      \"role\" : \"collaborator\"" +
+                        "    }", MemberDbDto.class),
+                parseJson("{\n" +
+                        "      \"memberId\": 255080245994226,\n" +
+                        "      \"userName\": \"julio\",\n" +
+                        "      \"email\": \"julio@seqera.io\",\n" +
+                        "      \"firstName\": null,\n" +
+                        "      \"lastName\": null,\n" +
+                        "      \"avatar\": \"https://www.gravatar.com/avatar/72918a9f674eaa696729917bec58760b?d=404\",\n" +
+                        "      \"role\" : \"collaborator\"" +
+                        "    }", MemberDbDto.class)
+        )));
+    }
 }

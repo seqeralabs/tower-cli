@@ -20,6 +20,7 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "participants",
+        aliases = {"part"},
         description = "Manage workspace participants.",
         subcommands = {
                 ListCmd.class,

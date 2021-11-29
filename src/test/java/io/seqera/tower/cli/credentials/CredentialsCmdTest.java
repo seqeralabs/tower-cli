@@ -56,6 +56,19 @@ class CredentialsCmdTest extends BaseCmdTest {
         assertOutput(format, out, new CredentialsDeleted("1cz5A8cuBkB5iJliCwJCFU", USER_WORKSPACE_NAME));
     }
 
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testDeleteAlias(OutputType format, MockServerClient mock) {
+        mock.when(
+                request().withMethod("DELETE").withPath("/credentials/1cz5A8cuBkB5iJliCwJCFU"), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(format, mock, "cred", "delete", "-i", "1cz5A8cuBkB5iJliCwJCFU");
+        assertOutput(format, out, new CredentialsDeleted("1cz5A8cuBkB5iJliCwJCFU", USER_WORKSPACE_NAME));
+    }
+
     @Test
     void testDeleteNotFound(MockServerClient mock) {
         mock.when(

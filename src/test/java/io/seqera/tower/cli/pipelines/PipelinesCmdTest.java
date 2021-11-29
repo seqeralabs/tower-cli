@@ -252,6 +252,27 @@ class PipelinesCmdTest extends BaseCmdTest {
     }
 
     @Test
+    void testDeleteAlias(MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "sleep"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("pipelines_sleep")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("DELETE").withPath("/pipelines/183522618315672"), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(mock, "pipe", "delete", "-n", "sleep");
+
+        assertEquals("", out.stdErr);
+        assertEquals(new PipelinesDeleted("sleep", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
     void testDeleteNotFound(MockServerClient mock) {
         mock.when(
                 request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "sleep_all"), exactly(1)

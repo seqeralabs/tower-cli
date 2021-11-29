@@ -226,6 +226,102 @@ class ActionsCmdTest extends BaseCmdTest {
                 "  }", Action.class)));
     }
 
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testViewAlias(OutputType format, MockServerClient mock) throws JsonProcessingException {
+        mock.reset();
+
+        mock.when(
+                request().withMethod("GET").withPath("/actions"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("actions/actions_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/actions/57byWxhmUDLLWIF4J97XEP"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("actions/action_view")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "action", "view", "-n", "hello");
+        assertOutput(format, out, new ActionsView(parseJson("{\n" +
+                "    \"id\": \"57byWxhmUDLLWIF4J97XEP\",\n" +
+                "    \"launch\": {\n" +
+                "      \"id\": \"3htPtgK2KufwvQcovOko\",\n" +
+                "      \"computeEnv\": {\n" +
+                "        \"id\": \"1NcvsrdHeaKsrpgQ85NYpe\",\n" +
+                "        \"name\": \"deleted-774901692352490\",\n" +
+                "        \"description\": null,\n" +
+                "        \"platform\": \"slurm-platform\",\n" +
+                "        \"config\": {\n" +
+                "          \"hostName\": \"slurm.seqera.io\",\n" +
+                "          \"workDir\": \"/home/ubuntu/nf-work\",\n" +
+                "          \"userName\": \"ubuntu\",\n" +
+                "          \"preRunScript\": null,\n" +
+                "          \"postRunScript\": null,\n" +
+                "          \"headQueue\": \"long\",\n" +
+                "          \"launchDir\": \"/home/ubuntu/nf-work\",\n" +
+                "          \"headJobOptions\": null,\n" +
+                "          \"computeQueue\": null,\n" +
+                "          \"port\": null,\n" +
+                "          \"maxQueueSize\": null,\n" +
+                "          \"discriminator\": \"slurm-platform\"\n" +
+                "        },\n" +
+                "        \"dateCreated\": \"2021-06-18T08:58:21Z\",\n" +
+                "        \"lastUpdated\": \"2021-06-18T08:58:21Z\",\n" +
+                "        \"lastUsed\": \"2021-06-18T10:22:31Z\",\n" +
+                "        \"deleted\": true,\n" +
+                "        \"status\": \"AVAILABLE\",\n" +
+                "        \"message\": null,\n" +
+                "        \"primary\": null,\n" +
+                "        \"credentialsId\": \"5KmzwVT34sT8ItofmP5S\"\n" +
+                "      },\n" +
+                "      \"pipeline\": \"https://github.com/pditommaso/hello\",\n" +
+                "      \"workDir\": \"/home/ubuntu/nf-work\",\n" +
+                "      \"revision\": null,\n" +
+                "      \"configText\": null,\n" +
+                "      \"paramsText\": null,\n" +
+                "      \"preRunScript\": null,\n" +
+                "      \"postRunScript\": null,\n" +
+                "      \"mainScript\": null,\n" +
+                "      \"entryName\": null,\n" +
+                "      \"schemaName\": null,\n" +
+                "      \"resume\": false,\n" +
+                "      \"pullLatest\": false,\n" +
+                "      \"stubRun\": false,\n" +
+                "      \"sessionId\": null,\n" +
+                "      \"configProfiles\": null,\n" +
+                "      \"dateCreated\": \"2021-06-18T10:10:05Z\",\n" +
+                "      \"lastUpdated\": \"2021-06-18T10:10:05Z\"\n" +
+                "    },\n" +
+                "    \"name\": \"hello\",\n" +
+                "    \"hookId\": \"303166158\",\n" +
+                "    \"hookUrl\": \"https://api.github.com/repos/pditommaso/hello/hooks/303166158\",\n" +
+                "    \"message\": null,\n" +
+                "    \"deleted\": null,\n" +
+                "    \"source\": \"github\",\n" +
+                "    \"status\": \"ACTIVE\",\n" +
+                "    \"config\": {\n" +
+                "      \"events\": [\n" +
+                "        \"push\"\n" +
+                "      ],\n" +
+                "      \"discriminator\": \"github\"\n" +
+                "    },\n" +
+                "    \"event\": {\n" +
+                "      \"ref\": \"refs/heads/master\",\n" +
+                "      \"commitId\": \"af8d93083a36552914929a959f7576f62996032e\",\n" +
+                "      \"commitMessage\": \"Update README.md\",\n" +
+                "      \"pusherName\": \"pditommaso\",\n" +
+                "      \"pusherEmail\": \"paolo.ditommaso@gmail.com\",\n" +
+                "      \"timestamp\": \"2021-06-18T12:10:32+02:00\",\n" +
+                "      \"discriminator\": \"github\"\n" +
+                "    },\n" +
+                "    \"lastSeen\": \"2021-06-18T10:10:33Z\",\n" +
+                "    \"dateCreated\": \"2021-06-18T10:10:05Z\",\n" +
+                "    \"lastUpdated\": \"2021-06-18T10:10:33Z\"\n" +
+                "  }", Action.class)));
+    }
+
     @Test
     void testViewNoActionFound(MockServerClient mock) {
         mock.reset();

@@ -142,6 +142,108 @@ class ParticipantsCmdTest extends BaseCmdTest {
                                 "    }", ParticipantDbDto.class))));
     }
 
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testListAlias(OutputType format, MockServerClient mock) throws JsonProcessingException {
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/orgs/27736513644467/workspaces/75887156211589/participants"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("participants/participants_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "part", "list", "-w", "75887156211589");
+
+        assertOutput(format, out, new ParticipantsList("organization1", "workspace1",
+                Arrays.asList(
+                        parseJson("{\n" +
+                                "      \"participantId\": 48516118433516,\n" +
+                                "      \"memberId\": 175703974560466,\n" +
+                                "      \"userName\": \"jfernandez74\",\n" +
+                                "      \"firstName\": null,\n" +
+                                "      \"lastName\": null,\n" +
+                                "      \"email\": \"jfernandez74@gmail.com\",\n" +
+                                "      \"orgRole\": \"owner\",\n" +
+                                "      \"teamId\": null,\n" +
+                                "      \"teamName\": null,\n" +
+                                "      \"wspRole\": \"owner\",\n" +
+                                "      \"type\": \"MEMBER\",\n" +
+                                "      \"teamAvatarUrl\": null,\n" +
+                                "      \"userAvatarUrl\": \"https://www.gravatar.com/avatar/7d3c1ee212a3465233e161b451fb4d05?d=404\"\n" +
+                                "    }", ParticipantDbDto.class),
+                        parseJson(" {\n" +
+                                "      \"participantId\": 36791779798370,\n" +
+                                "      \"memberId\": 255080245994226,\n" +
+                                "      \"userName\": \"julio\",\n" +
+                                "      \"firstName\": null,\n" +
+                                "      \"lastName\": null,\n" +
+                                "      \"email\": \"julio@seqera.io\",\n" +
+                                "      \"orgRole\": \"member\",\n" +
+                                "      \"teamId\": null,\n" +
+                                "      \"teamName\": null,\n" +
+                                "      \"wspRole\": \"admin\",\n" +
+                                "      \"type\": \"MEMBER\",\n" +
+                                "      \"teamAvatarUrl\": null,\n" +
+                                "      \"userAvatarUrl\": \"https://www.gravatar.com/avatar/72918a9f674eaa696729917bec58760b?d=404\"\n" +
+                                "    }", ParticipantDbDto.class),
+                        parseJson("{\n" +
+                                "      \"participantId\": 110330443206779,\n" +
+                                "      \"memberId\": 80726606082762,\n" +
+                                "      \"userName\": \"julio2\",\n" +
+                                "      \"firstName\": null,\n" +
+                                "      \"lastName\": null,\n" +
+                                "      \"email\": \"julio2@seqera.io\",\n" +
+                                "      \"orgRole\": \"member\",\n" +
+                                "      \"teamId\": null,\n" +
+                                "      \"teamName\": null,\n" +
+                                "      \"wspRole\": \"launch\",\n" +
+                                "      \"type\": \"MEMBER\",\n" +
+                                "      \"teamAvatarUrl\": null,\n" +
+                                "      \"userAvatarUrl\": null\n" +
+                                "    }", ParticipantDbDto.class),
+                        parseJson("{\n" +
+                                "      \"participantId\": 110330443206780,\n" +
+                                "      \"memberId\": 80726606082770,\n" +
+                                "      \"userName\": \"jordi\",\n" +
+                                "      \"firstName\": null,\n" +
+                                "      \"lastName\": null,\n" +
+                                "      \"email\": \"jordi@seqera.io\",\n" +
+                                "      \"orgRole\": \"member\",\n" +
+                                "      \"teamId\": null,\n" +
+                                "      \"teamName\": null,\n" +
+                                "      \"wspRole\": \"launch\",\n" +
+                                "      \"type\": \"MEMBER\",\n" +
+                                "      \"teamAvatarUrl\": null,\n" +
+                                "      \"userAvatarUrl\": null\n" +
+                                "    }", ParticipantDbDto.class),
+                        parseJson("{\n" +
+                                "      \"participantId\": 179548688376545,\n" +
+                                "      \"memberId\": null,\n" +
+                                "      \"userName\": null,\n" +
+                                "      \"firstName\": null,\n" +
+                                "      \"lastName\": null,\n" +
+                                "      \"email\": null,\n" +
+                                "      \"orgRole\": null,\n" +
+                                "      \"teamId\": 255717345477198,\n" +
+                                "      \"teamName\": \"team-test-2\",\n" +
+                                "      \"wspRole\": \"launch\",\n" +
+                                "      \"type\": \"TEAM\",\n" +
+                                "      \"teamAvatarUrl\": null,\n" +
+                                "      \"userAvatarUrl\": null\n" +
+                                "    }", ParticipantDbDto.class))));
+    }
+
     @Test
     void testListWithOffset(MockServerClient mock) throws JsonProcessingException {
         mock.when(

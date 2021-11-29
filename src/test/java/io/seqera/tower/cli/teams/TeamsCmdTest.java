@@ -92,6 +92,60 @@ class TeamsCmdTest extends BaseCmdTest {
         )));
     }
 
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testListAlias(OutputType format, MockServerClient mock) throws JsonProcessingException {
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/orgs/27736513644467/teams"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("teams/teams_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "team", "list", "-o", "organization1");
+        assertOutput(format, out, new TeamsList("organization1", Arrays.asList(
+                parseJson(" {\n" +
+                        "      \"teamId\": 249211453903161,\n" +
+                        "      \"name\": \"team-test-3\",\n" +
+                        "      \"description\": \"AAAAAA\",\n" +
+                        "      \"avatarUrl\": null,\n" +
+                        "      \"membersCount\": 0\n" +
+                        "    }", TeamDbDto.class),
+                parseJson(" {\n" +
+                        "      \"teamId\": 69076469523589,\n" +
+                        "      \"name\": \"team-test-1\",\n" +
+                        "      \"description\": \"a new team\",\n" +
+                        "      \"avatarUrl\": null,\n" +
+                        "      \"membersCount\": 0\n" +
+                        "    }", TeamDbDto.class),
+                parseJson(" {\n" +
+                        "      \"teamId\": 255717345477198,\n" +
+                        "      \"name\": \"team-test-2\",\n" +
+                        "      \"description\": \"a new team\",\n" +
+                        "      \"avatarUrl\": null,\n" +
+                        "      \"membersCount\": 0\n" +
+                        "    }", TeamDbDto.class),
+                parseJson("{\n" +
+                        "      \"teamId\": 267477500890054,\n" +
+                        "      \"name\": \"team1\",\n" +
+                        "      \"description\": \"Team 1\",\n" +
+                        "      \"avatarUrl\": null,\n" +
+                        "      \"membersCount\": 1\n" +
+                        "    }", TeamDbDto.class)
+        )));
+    }
+
     @Test
     void testListWithOffset(MockServerClient mock) throws JsonProcessingException {
         mock.when(

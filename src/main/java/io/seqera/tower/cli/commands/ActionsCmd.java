@@ -20,6 +20,7 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "actions",
+        aliases = {"action"},
         description = "Manage actions.",
         subcommands = {
                 ListCmd.class,

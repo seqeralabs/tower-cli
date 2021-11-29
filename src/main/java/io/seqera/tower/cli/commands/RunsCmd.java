@@ -20,6 +20,7 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "runs",
+        aliases = {"run"},
         description = "Manage workspace pipeline runs.",
         subcommands = {
                 ViewCmd.class,

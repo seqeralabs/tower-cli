@@ -72,6 +72,19 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
         assertOutput(format, out, new ComputeEnvDeleted("vYOK4vn7spw7bHHWBDXZ2", USER_WORKSPACE_NAME));
     }
 
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testDeleteAlias(OutputType format, MockServerClient mock) {
+        mock.when(
+                request().withMethod("DELETE").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(format, mock, "ce", "delete", "-i", "vYOK4vn7spw7bHHWBDXZ2");
+        assertOutput(format, out, new ComputeEnvDeleted("vYOK4vn7spw7bHHWBDXZ2", USER_WORKSPACE_NAME));
+    }
+
     @Test
     void testDeleteInvalidAuth(MockServerClient mock) {
         mock.when(

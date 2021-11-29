@@ -16,6 +16,7 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "collaborators",
+        aliases = {"collab"},
         description = "Manage organization collaborators.",
         subcommands = {
                 ListCmd.class,
