@@ -117,6 +117,7 @@ public class RunView extends Response {
         TableList table = new TableList(out, 2);
         table.setPrefix("    ");
         table.addRow("ID", general.get("id").toString());
+        table.addRow("Operation ID", general.get("operationId") != null ? general.get("operationId").toString() : "-");
         table.addRow("Run name", general.get("runName").toString());
         table.addRow("Starting date", general.get("startingDate") != null ? FormatHelper.formatTime((OffsetDateTime) general.get("startingDate")) : "No date reported");
         table.addRow("Commit ID", general.get("commitId") != null ? general.get("commitId").toString() : "No commit ID reported");

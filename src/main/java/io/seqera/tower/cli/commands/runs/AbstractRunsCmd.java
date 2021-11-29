@@ -30,14 +30,14 @@ abstract public class AbstractRunsCmd extends AbstractApiCmd {
     public AbstractRunsCmd() {
     }
 
-    protected Workflow workflowById(Long workspaceId, String id) throws ApiException {
+    protected DescribeWorkflowResponse workflowById(Long workspaceId, String id) throws ApiException {
         DescribeWorkflowResponse workflowResponse = api().describeWorkflow(id, workspaceId);
 
         if (workflowResponse == null) {
             throw new RunNotFoundException(id, workspaceRef(workspaceId));
         }
 
-        return workflowResponse.getWorkflow();
+        return workflowResponse;
     }
 
     protected Launch launchById(Long workspaceId, String id) throws ApiException {
