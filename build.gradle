@@ -17,8 +17,8 @@ dependencies {
     implementation 'ch.qos.logback:logback-core:1.2.6'
     implementation 'ch.qos.logback:logback-classic:1.2.6'
     implementation 'io.seqera:tower-java-sdk:1.1.0'
-    implementation 'info.picocli:picocli:4.6.1'
-    annotationProcessor 'info.picocli:picocli-codegen:4.6.1'
+    implementation 'info.picocli:picocli:4.6.2'
+    annotationProcessor 'info.picocli:picocli-codegen:4.6.2'
 
     testImplementation 'org.mock-server:mockserver-client-java:5.11.2'
     testImplementation 'org.mock-server:mockserver-netty:5.11.2'
