@@ -21,6 +21,7 @@ import io.seqera.tower.cli.exceptions.RunNotFoundException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.RunView;
 import io.seqera.tower.model.ComputeEnv;
+import io.seqera.tower.model.DescribeWorkflowResponse;
 import io.seqera.tower.model.Launch;
 import io.seqera.tower.model.ProgressData;
 import io.seqera.tower.model.Workflow;
@@ -59,7 +60,8 @@ public class ViewCmd extends AbstractRunsCmd {
         
         try {
             String workspaceRef = workspaceRef(wspId);
-            Workflow workflow = workflowById(wspId, id);
+            DescribeWorkflowResponse workflowResponse = workflowById(wspId, id);
+            Workflow workflow = workflowResponse.getWorkflow();
             WorkflowLoad workflowLoad = workflowLoadByWorkflowId(wspId, id);
             Launch launch = launchById(wspId, workflow.getLaunchId());
             ComputeEnv computeEnv = launch.getComputeEnv();
@@ -71,6 +73,7 @@ public class ViewCmd extends AbstractRunsCmd {
 
             Map<String, Object> general = new HashMap<String, Object>();
             general.put("id", workflow.getId());
+            general.put("operationId", workflowResponse.getJobInfo() != null ? workflowResponse.getJobInfo().getOperationId() : null);
             general.put("runName", workflow.getRunName());
             general.put("startingDate", workflow.getStart());
             general.put("commitId", workflow.getCommitId());

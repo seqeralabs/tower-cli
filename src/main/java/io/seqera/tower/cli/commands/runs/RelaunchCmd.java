@@ -61,7 +61,7 @@ public class RelaunchCmd extends AbstractRunsCmd {
             throw new TowerException("Not allowed to change '--work-dir' option when resuming. Use '--no-resume' if you want to relaunch into a different working directory without resuming.");
         }
 
-        Workflow workflow = workflowById(wspId, id);
+        Workflow workflow = workflowById(wspId, id).getWorkflow();
         Launch launch = launchById(wspId, workflow.getLaunchId());
 
         ComputeEnv ce = null;
