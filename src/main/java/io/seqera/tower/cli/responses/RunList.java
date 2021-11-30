@@ -25,12 +25,12 @@ public class RunList extends Response {
     public final List<ListWorkflowsResponseListWorkflowsElement> workflows;
 
     @JsonIgnore
-    public final String workflowWatchUrlPrefix;
+    public final String baseWorkspaceUrl;
 
-    public RunList(String workspaceRef, List<ListWorkflowsResponseListWorkflowsElement> runs, String workflowWatchUrlPrefix) {
+    public RunList(String workspaceRef, List<ListWorkflowsResponseListWorkflowsElement> runs, String baseWorkspaceUrl) {
         this.workspaceRef = workspaceRef;
         this.workflows = runs;
-        this.workflowWatchUrlPrefix = workflowWatchUrlPrefix;
+        this.baseWorkspaceUrl = baseWorkspaceUrl;
     }
 
     @Override
@@ -45,8 +45,8 @@ public class RunList extends Response {
         TableList table = new TableList(out, 6, "ID", "Status", "Project Name", "Run Name", "Username", "Submit Date");
         table.setPrefix("    ");
         workflows.forEach(wf -> table.addRow(
-                FormatHelper.formatWorkflowId(wf.getWorkflow().getId(), this.workflowWatchUrlPrefix),
-                FormatHelper.formatWorkflowStatus(wf.getWorkflow().getStatus() != null ? wf.getWorkflow().getStatus().getValue() : "Not reported"),
+                FormatHelper.formatWorkflowId(wf.getWorkflow().getId(), this.baseWorkspaceUrl),
+                FormatHelper.formatWorkflowStatus(wf.getWorkflow().getStatus()),
                 wf.getWorkflow().getProjectName(),
                 wf.getWorkflow().getRunName(),
                 wf.getWorkflow().getUserName(),

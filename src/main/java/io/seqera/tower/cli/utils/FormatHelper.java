@@ -11,6 +11,8 @@
 
 package io.seqera.tower.cli.utils;
 
+import io.seqera.tower.model.ActionStatus;
+import io.seqera.tower.model.WorkflowStatus;
 import picocli.CommandLine;
 
 import java.time.Duration;
@@ -110,29 +112,61 @@ public class FormatHelper {
 
 
     private static final boolean ANSI_ENABLED = CommandLine.Help.Ansi.AUTO.enabled();
-    public static String formatWorkflowId(String workflowId, String workflowWatchUrlPrefix) {
-        if (ANSI_ENABLED) {
-            String link = String.format("%s%s", workflowWatchUrlPrefix, workflowId);
-            return "\u001b]8;;" + link + "\u001b\\" + workflowId + "\u001b]8;;\u001b\\";
-        }
-        return workflowId;
+
+    public static String formatWorkflowId(String workflowId, String baseWorkspaceUrl) {
+        return formatLink(workflowId, String.format("%s/watch/%s", baseWorkspaceUrl, workflowId));
     }
 
-    public static String formatWorkflowStatus(String status) {
+    public static String formatLink(String title, String link) {
+        return ANSI_ENABLED ? "\u001b]8;;" + link + "\u001b\\" + title + "\u001b]8;;\u001b\\" : title;
+    }
 
-        if ("SUCCEEDED".equals(status)) {
+    public static String formatWorkflowStatus(WorkflowStatus status) {
+
+        if (status == null) {
+            return "NA";
+        }
+
+        if (WorkflowStatus.SUBMITTED.equals(status)) {
+            return ansi("@|fg(orange) SUBMITTED|@");
+        }
+
+        if (WorkflowStatus.RUNNING.equals(status)) {
+            return ansi("@|fg(blue) RUNNING|@");
+        }
+
+        if (WorkflowStatus.SUCCEEDED.equals(status)) {
             return ansi("@|fg(green) SUCCEEDED|@");
         }
 
-        if ("FAILED".equals(status)) {
+        if (WorkflowStatus.FAILED.equals(status)) {
             return ansi("@|fg(red) FAILED|@");
         }
 
-        if ("CANCELLED".equals(status)) {
+        if (WorkflowStatus.CANCELLED.equals(status)) {
             return ansi("@|fg(white) CANCELLED|@");
         }
 
-        return status;
+        return status.toString();
+    }
+
+    public static String formatActionStatus(ActionStatus status) {
+        if (status == null) {
+            return "NA";
+        }
+
+        switch (status) {
+            case ACTIVE:
+                return ansi("@|fg(green) ACTIVE|@");
+            case ERROR:
+                return ansi("@|fg(red) ERROR|@");
+            case PAUSED:
+                return ansi("@|fg(white) PAUSED|@");
+            case CREATING:
+                return ansi("@|fg(orange) CREATING");
+            default:
+                return status.toString();
+        }
     }
 
     private static String ansi(String value) {

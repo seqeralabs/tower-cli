@@ -14,18 +14,27 @@ package io.seqera.tower.cli.responses.actions;
 import java.io.PrintWriter;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.seqera.tower.cli.responses.Response;
+import io.seqera.tower.cli.utils.FormatHelper;
 import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.ListActionsResponseActionInfo;
+
+import static io.seqera.tower.cli.utils.FormatHelper.formatActionStatus;
+import static io.seqera.tower.cli.utils.FormatHelper.formatLink;
 
 public class ActionsList extends Response {
 
     public final String userName;
     public final List<ListActionsResponseActionInfo> actions;
 
-    public ActionsList(List<ListActionsResponseActionInfo> actions, String userName) {
+    @JsonIgnore
+    private String baseWorkspaceUrl;
+
+    public ActionsList(List<ListActionsResponseActionInfo> actions, String userName, String baseWorkspaceUrl) {
         this.userName = userName;
         this.actions = actions;
+        this.baseWorkspaceUrl = baseWorkspaceUrl;
     }
 
     @Override
@@ -40,7 +49,13 @@ public class ActionsList extends Response {
         TableList table = new TableList(out, 5, "ID", "Name", "Endpoint", "Status", "Source").sortBy(0);
         table.setPrefix("    ");
         actions.forEach(element -> {
-            table.addRow(element.getId(), element.getName(), element.getEndpoint(), element.getStatus().toString(), element.getSource().toString());
+            table.addRow(
+                    formatLink(element.getId(), String.format("%s/actions/%s", baseWorkspaceUrl, element.getId())),
+                    element.getName(),
+                    element.getEndpoint(),
+                    formatActionStatus(element.getStatus()),
+                    element.getSource().toString()
+            );
         });
 
         table.print();

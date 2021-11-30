@@ -19,9 +19,9 @@ public class RunSubmited extends Response {
 
     public final String workspaceRef;
 
-    public RunSubmited(String workflowId, String workflowUrl, String workspaceRef) {
+    public RunSubmited(String workflowId, String baseWorkspaceUrl, String workspaceRef) {
         this.workflowId = workflowId;
-        this.workflowUrl = workflowUrl;
+        this.workflowUrl = String.format("%s/watch/%s", baseWorkspaceUrl, workflowId);
         this.workspaceRef = workspaceRef;
     }
 
