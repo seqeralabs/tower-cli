@@ -241,7 +241,7 @@ public class DatasetsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("datasets/dataset_upload_response")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(format, mock, "-v", "datasets", "add", tempFile(new String(loadResource("datasets/dataset_data", "csv"), StandardCharsets.UTF_8), "data", ".csv"), "-w", "249664655368293", "-n", "dataset3", "-d", "Dataset 3 description.");
+        ExecOut out = exec(format, mock, "datasets", "add", tempFile(new String(loadResource("datasets/dataset_data", "csv"), StandardCharsets.UTF_8), "data", ".csv"), "-w", "249664655368293", "-n", "dataset3", "-d", "Dataset 3 description.");
 
         assertOutput(format, out, new DatasetCreate("dataset3", "249664655368293", "1W3BTHWgRH71OJmOPMdG7S"));
         assertEquals("", out.stdErr);
@@ -294,7 +294,7 @@ public class DatasetsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("datasets/dataset_upload_response")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(format, mock, "-v", "datasets", "update", "-w", "249664655368293", "-i", "4D9TP0w2pM0qmwqVHgrgBK", "--new-name", "dataset1", "-d", "Dataset 3 description.", "-f", tempFile(new String(loadResource("datasets/dataset_data", "csv"), StandardCharsets.UTF_8), "data", ".csv"));
+        ExecOut out = exec(format, mock, "datasets", "update", "-w", "249664655368293", "-i", "4D9TP0w2pM0qmwqVHgrgBK", "--new-name", "dataset1", "-d", "Dataset 3 description.", "-f", tempFile(new String(loadResource("datasets/dataset_data", "csv"), StandardCharsets.UTF_8), "data", ".csv"));
 
         assertOutput(format, out, new DatasetUpdate("dataset1", "249664655368293", "4D9TP0w2pM0qmwqVHgrgBK"));
         assertEquals("", out.stdErr);
