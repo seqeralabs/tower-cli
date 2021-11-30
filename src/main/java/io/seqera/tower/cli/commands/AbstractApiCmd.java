@@ -30,9 +30,14 @@ import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import io.seqera.tower.model.User;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.logging.LoggingFeature;
+import org.glassfish.jersey.media.multipart.BodyPart;
+import org.glassfish.jersey.media.multipart.MultiPart;
 import picocli.CommandLine;
 
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
 import java.io.IOException;
+import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -99,6 +104,40 @@ public abstract class AbstractApiCmd extends AbstractCmd {
                     clientConfig.property(LoggingFeature.LOGGING_FEATURE_VERBOSITY, LoggingFeature.Verbosity.PAYLOAD_ANY);
                 }
             }
+
+            @Override
+            public Entity<?> serialize(Object obj, Map<String, Object> formParams, String contentType) throws ApiException {
+                Entity<?> entity = super.serialize(obj, formParams, contentType);
+
+                // Current SDK sends all multipart files as 'application/octet-stream'
+                // this is a workaround to try to automatically detect the correct
+                // content-type depending on the file name.
+                if (entity.getEntity() instanceof MultiPart) {
+                    for (BodyPart bodyPart : ((MultiPart) entity.getEntity()).getBodyParts()) {
+                        String fileName = bodyPart.getContentDisposition().getFileName();
+                        bodyPart.setMediaType(guessMediaType(fileName));
+                    }
+                }
+                return entity;
+            }
+
+            private MediaType guessMediaType(String fileName) {
+                if (fileName.endsWith(".csv")) {
+                    return MediaType.valueOf("text/csv");
+                }
+
+                if (fileName.endsWith(".tsv")) {
+                    return MediaType.valueOf("text/tab-separated-values");
+                }
+
+                String mediaType = URLConnection.guessContentTypeFromName(fileName);
+                if (mediaType != null) {
+                    return MediaType.valueOf(mediaType);
+                }
+
+                return MediaType.APPLICATION_OCTET_STREAM_TYPE;
+            }
+
         };
     }
 
