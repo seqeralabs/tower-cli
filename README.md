@@ -227,7 +227,7 @@ The Tower CLI is a platform binary executable created by a native compilation fr
 3. Create the native client:
 
     ```bash
-    ./gradlew nativeImage
+    ./gradlew nativeCompile
     ```
 
 4. Run `tw`:
