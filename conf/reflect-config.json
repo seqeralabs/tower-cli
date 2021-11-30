@@ -1423,6 +1423,12 @@
   "allDeclaredConstructors":true}
 ,
 {
+  "name":"io.seqera.tower.cli.responses.datasets.DatasetCreate",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true}
+,
+{
   "name":"io.seqera.tower.cli.responses.datasets.DatasetList",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -2440,6 +2446,16 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true}
+,
+{
+  "name":"io.seqera.tower.model.UploadDatasetVersionResponse",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"<init>","parameterTypes":[] }, 
+    {"name":"setVersion","parameterTypes":["io.seqera.tower.model.DatasetVersionDbDto"] }
+  ]}
 ,
 {
   "name":"io.seqera.tower.model.User",
