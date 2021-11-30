@@ -35,7 +35,7 @@ public class ListCmd extends AbstractActionsCmd {
 
         ListActionsResponse response = api().listActions(wspId);
 
-        return new ActionsList(response.getActions(), userName());
+        return new ActionsList(response.getActions(), userName(), baseWorkspaceUrl(wspId));
     }
 }
 

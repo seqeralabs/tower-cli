@@ -127,7 +127,7 @@ class LaunchesCmdTest extends BaseCmdTest {
         ExecOut out = exec(format, mock, "launch", "sarek");
 
         // Assert results
-        assertOutput(format, out, new RunSubmited("35aLiS0bIM5efd", String.format("%s/user/jordi/watch/35aLiS0bIM5efd", url(mock)), USER_WORKSPACE_NAME));
+        assertOutput(format, out, new RunSubmited("35aLiS0bIM5efd", baseUrl(mock, "jordi"), USER_WORKSPACE_NAME));
     }
 
     @ParameterizedTest
@@ -160,7 +160,7 @@ class LaunchesCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "launch", "nextflow-io/hello");
 
-        assertOutput(format, out, new RunSubmited("57ojrWRzTyous", String.format("%s/user/jordi/watch/57ojrWRzTyous", url(mock)), USER_WORKSPACE_NAME));
+        assertOutput(format, out, new RunSubmited("57ojrWRzTyous", baseUrl(mock, "jordi"), USER_WORKSPACE_NAME));
     }
 
     @Test
@@ -199,7 +199,7 @@ class LaunchesCmdTest extends BaseCmdTest {
 
         // Assert results
         assertEquals("", out.stdErr);
-        assertEquals(new RunSubmited("35aLiS0bIM5efd", String.format("%s/user/jordi/watch/35aLiS0bIM5efd", url(mock)), USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new RunSubmited("35aLiS0bIM5efd", baseUrl(mock, "jordi"), USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -241,7 +241,7 @@ class LaunchesCmdTest extends BaseCmdTest {
 
         // Assert results
         assertEquals("", out.stdErr);
-        assertEquals(new RunSubmited("52KAMEcqXFyhZ9", String.format("%s/orgs/Seqera/workspaces/cli/watch/52KAMEcqXFyhZ9", url(mock)), buildWorkspaceRef("Seqera", "cli")).toString(), out.stdOut);
+        assertEquals(new RunSubmited("52KAMEcqXFyhZ9", String.format("%s/orgs/Seqera/workspaces/cli/", url(mock)), buildWorkspaceRef("Seqera", "cli")).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

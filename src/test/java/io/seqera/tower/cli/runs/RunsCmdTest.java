@@ -153,7 +153,7 @@ class RunsCmdTest extends BaseCmdTest {
                         "        \"runName\": \"spontaneous_easley\"\n" +
                         "      }\n" +
                         "    }", ListWorkflowsResponseListWorkflowsElement.class)
-        ), "TODO"));
+        ), baseUrl(mock, USER_WORKSPACE_NAME)));
     }
 
     @Test
@@ -201,7 +201,7 @@ class RunsCmdTest extends BaseCmdTest {
                         "        \"runName\": \"spontaneous_easley\"\n" +
                         "      }\n" +
                         "    }", ListWorkflowsResponseListWorkflowsElement.class)
-        ), "TODO").toString()), out.stdOut);
+        ), baseUrl(mock, USER_WORKSPACE_NAME)).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -250,7 +250,7 @@ class RunsCmdTest extends BaseCmdTest {
                         "        \"runName\": \"spontaneous_easley\"\n" +
                         "      }\n" +
                         "    }", ListWorkflowsResponseListWorkflowsElement.class)
-        ), "TODO").toString()), out.stdOut);
+        ), baseUrl(mock, USER_WORKSPACE_NAME)).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -292,7 +292,7 @@ class RunsCmdTest extends BaseCmdTest {
         ExecOut out = exec(mock, "runs", "list");
 
         assertEquals("", out.stdErr);
-        assertEquals(chop(new RunList(USER_WORKSPACE_NAME, List.of(), "TODO").toString()), out.stdOut);
+        assertEquals(chop(new RunList(USER_WORKSPACE_NAME, List.of(), baseUrl(mock, USER_WORKSPACE_NAME)).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

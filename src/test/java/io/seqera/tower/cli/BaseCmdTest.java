@@ -15,6 +15,7 @@
 package io.seqera.tower.cli;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.ResponseHelper;
@@ -187,6 +188,14 @@ public abstract class BaseCmdTest {
         }
     }
 
+    protected String baseUrl(MockServerClient mock, String userName) {
+        return String.format("%s/user/%s/", url(mock), userName);
+    }
+
+    protected String baseUrl(MockServerClient mock, String orgName, String workspaceName) {
+        return String.format("%s/orgs/%s/workspaces/%s/", url(mock), orgName, workspaceName);
+    }
+
     public static class ExecOut {
         public Tower app;
         public String stdOut;
@@ -228,5 +237,6 @@ public abstract class BaseCmdTest {
             new BufferedReader(new InputStreamReader(inputStream)).lines().forEach(consumer);
         }
     }
+
 
 }
