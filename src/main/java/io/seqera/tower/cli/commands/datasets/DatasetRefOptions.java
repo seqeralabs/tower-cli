@@ -15,7 +15,7 @@ import picocli.CommandLine;
 
 public class DatasetRefOptions {
 
-    @CommandLine.ArgGroup
+    @CommandLine.ArgGroup(multiplicity = "1")
     public DatasetRef dataset;
 
     public static class DatasetRef {

@@ -15,7 +15,7 @@ import picocli.CommandLine;
 
 public class ComputeEnvRefOptions {
 
-    @CommandLine.ArgGroup
+    @CommandLine.ArgGroup(multiplicity = "1")
     public ComputeEnvRef computeEnv;
 
     public static class ComputeEnvRef {

@@ -15,7 +15,7 @@ import picocli.CommandLine;
 
 public class ActionRefOptions {
 
-    @CommandLine.ArgGroup
+    @CommandLine.ArgGroup(multiplicity = "1")
     public ActionRef action;
 
     public static class ActionRef {
