@@ -52,6 +52,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
 
     private Long userId;
     private String userName;
+    private Long workspaceId;
     private Long orgId;
     private String orgName;
     private String workspaceName;
