@@ -233,7 +233,7 @@ The Tower CLI is a platform binary executable created by a native compilation fr
 4. Run `tw`:
 
     ```bash
-    ./build/graal/tw
+    ./build/native/nativeCompile/tw
     ```
 
 ## Using non-binary development versions
