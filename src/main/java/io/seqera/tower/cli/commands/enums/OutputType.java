@@ -16,5 +16,6 @@
 package io.seqera.tower.cli.commands.enums;
 
 public enum OutputType {
-    json
+    json,
+    console
 }

@@ -23,6 +23,11 @@ public class OrganizationsAdded extends Response {
     }
 
     @Override
+    public Object getJSON() {
+        return organization;
+    }
+
+    @Override
     public String toString() {
         return ansi(String.format("%n  @|yellow Organization '%s' with ID '%d' was added|@%n", organization.getName(), organization.getOrgId()));
     }

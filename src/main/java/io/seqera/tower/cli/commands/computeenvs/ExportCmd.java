@@ -31,8 +31,8 @@ import picocli.CommandLine;
 )
 public class ExportCmd extends AbstractComputeEnvCmd {
 
-    @CommandLine.Option(names = {"-n", "--name"}, description = "Compute environment name.", required = true)
-    public String name;
+    @CommandLine.Mixin
+    public ComputeEnvRefOptions computeEnvRefOptions;
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
@@ -42,7 +42,9 @@ public class ExportCmd extends AbstractComputeEnvCmd {
 
     @Override
     protected Response exec() throws ApiException {
-        ComputeEnv ce = findComputeEnvironmentByName(workspace.workspaceId, name);
+        Long wspId = workspaceId(workspace.workspace);
+        
+        ComputeEnv ce = fetchComputeEnv(computeEnvRefOptions, wspId);
 
         ComputeEnv computeEnv = new ComputeEnv();
         computeEnv.setDescription(ce.getDescription());

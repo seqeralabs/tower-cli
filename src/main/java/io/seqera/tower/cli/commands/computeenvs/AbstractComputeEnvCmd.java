@@ -11,13 +11,26 @@
 
 package io.seqera.tower.cli.commands.computeenvs;
 
+import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
+import io.seqera.tower.model.ComputeEnv;
 import picocli.CommandLine.Command;
 
 @Command
 public abstract class AbstractComputeEnvCmd extends AbstractApiCmd {
 
     public AbstractComputeEnvCmd() {
+    }
+    protected ComputeEnv fetchComputeEnv(ComputeEnvRefOptions computeEnvRefOptions, Long wspId) throws ApiException {
+        ComputeEnv computeEnv;
+
+        if (computeEnvRefOptions.computeEnv.computeEnvId != null) {
+            computeEnv = computeEnvById(wspId, computeEnvRefOptions.computeEnv.computeEnvId);
+        } else {
+            computeEnv = computeEnvByName(wspId, computeEnvRefOptions.computeEnv.computeEnvName);
+        }
+
+        return computeEnv;
     }
 }
 

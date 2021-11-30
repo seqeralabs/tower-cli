@@ -15,10 +15,12 @@ import java.io.IOException;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.computeenvs.AbstractComputeEnvCmd;
+import io.seqera.tower.cli.commands.computeenvs.ComputeEnvRefOptions;
 import io.seqera.tower.cli.exceptions.NoComputeEnvironmentException;
 import io.seqera.tower.cli.responses.ComputeEnvs.ComputeEnvsPrimaryGet;
 import io.seqera.tower.cli.responses.ComputeEnvs.ComputeEnvsPrimarySet;
 import io.seqera.tower.cli.responses.Response;
+import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.DescribeComputeEnvResponse;
 import picocli.CommandLine;
 
@@ -28,16 +30,16 @@ import picocli.CommandLine;
 )
 public class SetCmd extends AbstractComputeEnvsPrimaryCmd {
 
-    @CommandLine.Option(names = {"-i", "--id"}, description = "Compute environment identifier.", required = true)
-    public String id;
+    @CommandLine.Mixin
+    public ComputeEnvRefOptions computeEnvRefOptions;
 
     @Override
     protected Response exec() throws ApiException, IOException {
+        Long wspId = workspaceId(workspace.workspace);
+        ComputeEnv ce = fetchComputeEnv(computeEnvRefOptions, wspId);
 
-        DescribeComputeEnvResponse describeComputeEnvResponse = api().describeComputeEnv(id, workspace.workspaceId);
+        api().updateComputeEnvPrimary(ce.getId(), wspId, null);
 
-        api().updateComputeEnvPrimary(id, workspace.workspaceId, null);
-
-        return new ComputeEnvsPrimarySet(workspaceRef(workspace.workspaceId), describeComputeEnvResponse.getComputeEnv());
+        return new ComputeEnvsPrimarySet(workspaceRef(wspId), ce);
     }
 }

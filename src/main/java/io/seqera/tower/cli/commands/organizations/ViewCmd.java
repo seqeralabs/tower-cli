@@ -26,14 +26,12 @@ import java.io.IOException;
 )
 public class ViewCmd extends AbstractOrganizationsCmd {
 
-    @CommandLine.Option(names = {"-n", "--name"}, description = "Organization name.", required = true)
-    public String name;
+    @CommandLine.Mixin
+    OrganizationRefOptions organizationRefOptions;
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = organizationByName(name);
-
-        DescribeOrganizationResponse response = api().describeOrganization(orgAndWorkspaceDbDto.getOrgId());
+        DescribeOrganizationResponse response = fetchOrganization(organizationRefOptions);
 
         return new OrganizationsView(response.getOrganization());
     }

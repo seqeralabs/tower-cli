@@ -14,12 +14,14 @@ package io.seqera.tower.cli.commands.runs;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.commands.runs.metrics.MetricsCmd;
+import io.seqera.tower.cli.commands.runs.tasks.TaskCmd;
 import io.seqera.tower.cli.commands.runs.tasks.TasksCmd;
 import io.seqera.tower.cli.commands.runs.download.DownloadCmd;
 import io.seqera.tower.cli.exceptions.RunNotFoundException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.RunView;
 import io.seqera.tower.model.ComputeEnv;
+import io.seqera.tower.model.DescribeWorkflowResponse;
 import io.seqera.tower.model.Launch;
 import io.seqera.tower.model.ProgressData;
 import io.seqera.tower.model.Workflow;
@@ -39,6 +41,7 @@ import java.util.concurrent.TimeUnit;
                 DownloadCmd.class,
                 MetricsCmd.class,
                 TasksCmd.class,
+                TaskCmd.class,
         }
 )
 public class ViewCmd extends AbstractRunsCmd {
@@ -53,20 +56,24 @@ public class ViewCmd extends AbstractRunsCmd {
     public RunViewOptions opts;
 
     protected Response exec() throws ApiException {
+        Long wspId = workspaceId(workspace.workspace);
+        
         try {
-            String workspaceRef = workspaceRef(workspace.workspaceId);
-            Workflow workflow = workflowById(workspace.workspaceId, id);
-            WorkflowLoad workflowLoad = workflowLoadByWorkflowId(workspace.workspaceId, id);
-            Launch launch = launchById(workspace.workspaceId, workflow.getLaunchId());
+            String workspaceRef = workspaceRef(wspId);
+            DescribeWorkflowResponse workflowResponse = workflowById(wspId, id);
+            Workflow workflow = workflowResponse.getWorkflow();
+            WorkflowLoad workflowLoad = workflowLoadByWorkflowId(wspId, id);
+            Launch launch = launchById(wspId, workflow.getLaunchId());
             ComputeEnv computeEnv = launch.getComputeEnv();
 
             ProgressData progress = null;
             if (opts.processes || opts.stats || opts.load || opts.utilization) {
-                progress = api().describeWorkflowProgress(id, workspace.workspaceId).getProgress();
+                progress = api().describeWorkflowProgress(id, wspId).getProgress();
             }
 
             Map<String, Object> general = new HashMap<String, Object>();
             general.put("id", workflow.getId());
+            general.put("operationId", workflowResponse.getJobInfo() != null ? workflowResponse.getJobInfo().getOperationId() : null);
             general.put("runName", workflow.getRunName());
             general.put("startingDate", workflow.getStart());
             general.put("commitId", workflow.getCommitId());
@@ -158,7 +165,7 @@ public class ViewCmd extends AbstractRunsCmd {
         } catch (ApiException e) {
             if (e.getCode() == 403) {
                 // Customize the forbidden message
-                throw new RunNotFoundException(id, workspaceRef(workspace.workspaceId));
+                throw new RunNotFoundException(id, workspaceRef(wspId));
             }
 
             throw e;

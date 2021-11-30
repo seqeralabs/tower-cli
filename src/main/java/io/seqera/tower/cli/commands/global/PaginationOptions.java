@@ -35,7 +35,7 @@ public class PaginationOptions {
     }
 
     public static class Sizeable {
-        @CommandLine.Option(names = {"--max"}, description = "Maximum number of records to display [default: ." + MAX + "]")
+        @CommandLine.Option(names = {"--max"}, description = "Maximum number of records to display [default: " + MAX + "].")
         public Integer max;
 
         @CommandLine.Option(names = {"--no-max"}, description = "Show all records.")

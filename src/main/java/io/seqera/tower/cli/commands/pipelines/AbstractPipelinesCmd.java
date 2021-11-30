@@ -40,6 +40,18 @@ public abstract class AbstractPipelinesCmd extends AbstractApiCmd {
         return list.getPipelines().get(0);
     }
 
+    protected PipelineDbDto fetchPipeline(PipelineRefOptions pipelineRefOptions, Long wspId) throws ApiException {
+        PipelineDbDto pipeline;
+
+        if (pipelineRefOptions.pipeline.pipelineId != null) {
+            pipeline = api().describePipeline(pipelineRefOptions.pipeline.pipelineId, wspId).getPipeline();
+        } else {
+            pipeline = pipelineByName(wspId, pipelineRefOptions.pipeline.pipelineName);
+        }
+
+        return pipeline;
+    }
+
 }
 
 

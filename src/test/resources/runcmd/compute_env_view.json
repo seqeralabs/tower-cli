@@ -48,24 +48,6 @@
         },
         {
           "IamRole": "arn:aws:iam::195996028523:role/TowerForge-isnEDBLvHDAIteOEF44ow-FleetRole"
-        },
-        {
-          "IamInstanceProfile": "arn:aws:iam::195996028523:instance-profile/TowerForge-isnEDBLvHDAIteOEF44ow-InstanceRole"
-        },
-        {
-          "Ec2LaunchTemplate": "TowerForge-isnEDBLvHDAIteOEF44ow"
-        },
-        {
-          "BatchEnv": "arn:aws:batch:eu-west-1:195996028523:compute-environment/TowerForge-isnEDBLvHDAIteOEF44ow-head"
-        },
-        {
-          "BatchQueue": "arn:aws:batch:eu-west-1:195996028523:job-queue/TowerForge-isnEDBLvHDAIteOEF44ow-head"
-        },
-        {
-          "BatchEnv": "arn:aws:batch:eu-west-1:195996028523:compute-environment/TowerForge-isnEDBLvHDAIteOEF44ow-work"
-        },
-        {
-          "BatchQueue": "arn:aws:batch:eu-west-1:195996028523:job-queue/TowerForge-isnEDBLvHDAIteOEF44ow-work"
         }
       ],
       "discriminator": "aws-batch"

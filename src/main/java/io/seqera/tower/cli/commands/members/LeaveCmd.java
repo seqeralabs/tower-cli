@@ -25,15 +25,15 @@ import java.io.IOException;
 )
 public class LeaveCmd extends AbstractMembersClass {
 
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name identifier.", required = true)
-    public String organizationName;
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name or identifier.", required = true)
+    public String organizationRef;
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = findOrganizationByName(organizationName);
+        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = findOrganizationByRef(organizationRef);
 
         api().leaveOrganization(orgAndWorkspaceDbDto.getOrgId());
 
-        return new MembersLeave(organizationName);
+        return new MembersLeave(organizationRef);
     }
 }

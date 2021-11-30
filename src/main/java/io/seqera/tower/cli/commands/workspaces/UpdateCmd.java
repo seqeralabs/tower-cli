@@ -12,7 +12,6 @@
 package io.seqera.tower.cli.commands.workspaces;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.commands.global.WorkspaceRequiredOptions;
 import io.seqera.tower.cli.exceptions.ShowUsageException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.workspaces.WorkspaceUpdated;
@@ -20,8 +19,8 @@ import io.seqera.tower.model.DescribeWorkspaceResponse;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import io.seqera.tower.model.UpdateWorkspaceRequest;
 import io.seqera.tower.model.Visibility;
+import picocli.CommandLine;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Option;
 
 import java.io.IOException;
@@ -32,8 +31,8 @@ import java.io.IOException;
 )
 public class UpdateCmd extends AbstractWorkspaceCmd {
 
-    @Mixin
-    public WorkspaceRequiredOptions workspace;
+    @CommandLine.Option(names = {"-i", "--id"}, description = "Workspace ID to delete.", required = true)
+    public Long workspaceId;
 
     @Option(names = {"-f", "--fullName"}, description = "The workspace full name.")
     public String workspaceFullName;
@@ -43,12 +42,11 @@ public class UpdateCmd extends AbstractWorkspaceCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
-
         if (workspaceFullName == null && description == null) {
             throw new ShowUsageException(getSpec(), "Required at least one option to update");
         }
 
-        OrgAndWorkspaceDbDto ws = workspaceById(workspace.workspaceId);
+        OrgAndWorkspaceDbDto ws = workspaceById(workspaceId);
 
         DescribeWorkspaceResponse response = api().describeWorkspace(ws.getOrgId(), ws.getWorkspaceId());
         UpdateWorkspaceRequest request = new UpdateWorkspaceRequest()

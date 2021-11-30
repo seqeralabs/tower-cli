@@ -12,13 +12,12 @@
 package io.seqera.tower.cli.commands.workspaces;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.commands.global.WorkspaceRequiredOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.workspaces.WorkspaceView;
 import io.seqera.tower.model.DescribeWorkspaceResponse;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
+import picocli.CommandLine;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.Mixin;
 
 import java.io.IOException;
 
@@ -28,13 +27,15 @@ import java.io.IOException;
 )
 public class ViewCmd extends AbstractWorkspaceCmd {
 
-    @Mixin
-    public WorkspaceRequiredOptions workspace;
+    @CommandLine.Mixin
+    WorkspaceRefOptions workspaceRefOptions;
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        OrgAndWorkspaceDbDto ws = workspaceById(workspace.workspaceId);;
+        OrgAndWorkspaceDbDto ws = fetchOrgAndWorkspaceDbDto(workspaceRefOptions);
+
         DescribeWorkspaceResponse response = api().describeWorkspace(ws.getOrgId(), ws.getWorkspaceId());
+
         return new WorkspaceView(response.getWorkspace());
     }
 }

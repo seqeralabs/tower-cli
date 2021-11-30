@@ -38,10 +38,12 @@ public class ListCmd extends AbstractRunsCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
+        Long wspId = workspaceId(workspace.workspace);
+
         Integer max = PaginationOptions.getMax(paginationOptions);
         Integer offset = PaginationOptions.getOffset(paginationOptions, max);
 
-        ListWorkflowsResponse response = api().listWorkflows(workspace.workspaceId, max, offset, startsWith);
-        return new RunList(workspaceRef(workspace.workspaceId), response.getWorkflows(), workflowWatchUrlPrefix(workspace.workspaceId));
+        ListWorkflowsResponse response = api().listWorkflows(wspId, max, offset, startsWith);
+        return new RunList(workspaceRef(wspId), response.getWorkflows(), workflowWatchUrlPrefix(wspId));
     }
 }

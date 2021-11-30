@@ -21,6 +21,7 @@ import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.cli.utils.ModelHelper;
 import io.seqera.tower.model.CreatePipelineRequest;
 import io.seqera.tower.model.DescribeLaunchResponse;
+import io.seqera.tower.model.Launch;
 import io.seqera.tower.model.PipelineDbDto;
 import io.seqera.tower.model.WorkflowLaunchRequest;
 import picocli.CommandLine;
@@ -29,10 +30,10 @@ import picocli.CommandLine;
         name = "export",
         description = "Export a workspace pipeline for further creation."
 )
-public class ExportCmd extends AbstractPipelinesCmd{
+public class ExportCmd extends AbstractPipelinesCmd {
 
-    @CommandLine.Option(names = {"-n", "--name"}, description = "Pipeline name.", required = true)
-    public String name;
+    @CommandLine.Mixin
+    PipelineRefOptions pipelineRefOptions;
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
@@ -42,10 +43,12 @@ public class ExportCmd extends AbstractPipelinesCmd{
 
     @Override
     protected Response exec() throws ApiException {
-        PipelineDbDto pipeline = pipelineByName(workspace.workspaceId, name);
-        DescribeLaunchResponse resp = api().describePipelineLaunch(pipeline.getPipelineId(), workspace.workspaceId);
+        Long wspId = workspaceId(workspace.workspace);
+        PipelineDbDto pipeline = fetchPipeline(pipelineRefOptions, wspId);
 
-        WorkflowLaunchRequest workflowLaunchRequest = ModelHelper.createLaunchRequest(resp.getLaunch());
+        Launch launch = api().describePipelineLaunch(pipeline.getPipelineId(), wspId).getLaunch();
+
+        WorkflowLaunchRequest workflowLaunchRequest = ModelHelper.createLaunchRequest(launch);
 
         CreatePipelineRequest createPipelineRequest = new CreatePipelineRequest();
         createPipelineRequest.setDescription(pipeline.getDescription());

@@ -16,10 +16,9 @@ import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
 import io.seqera.tower.cli.responses.ComputeEnvView;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.model.DescribeComputeEnvResponse;
+import io.seqera.tower.model.ComputeEnv;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.Option;
 
 @Command(
         name = "view",
@@ -27,25 +26,29 @@ import picocli.CommandLine.Option;
 )
 public class ViewCmd extends AbstractComputeEnvCmd {
 
-    @Option(names = {"-i", "--id"}, description = "Compute environment identifier.", required = true)
-    public String id;
+    @CommandLine.Mixin
+    public ComputeEnvRefOptions computeEnvRefOptions;
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
     @Override
     protected Response exec() throws ApiException {
+        Long wspId = workspaceId(workspace.workspace);
+
         try {
-            DescribeComputeEnvResponse response = api().describeComputeEnv(id, workspace.workspaceId);
-            return new ComputeEnvView(id, workspaceRef(workspace.workspaceId), response.getComputeEnv());
+            ComputeEnv computeEnv = fetchComputeEnv(computeEnvRefOptions, wspId);
+
+            return new ComputeEnvView(computeEnv.getId(), workspaceRef(wspId), computeEnv);
         } catch (ApiException e) {
             if (e.getCode() == 403) {
+                String ref = computeEnvRefOptions.computeEnv.computeEnvId != null ? computeEnvRefOptions.computeEnv.computeEnvId : computeEnvRefOptions.computeEnv.computeEnvName;
+
                 // Customize the forbidden message
-                throw new ComputeEnvNotFoundException(id, workspaceRef(workspace.workspaceId));
+                throw new ComputeEnvNotFoundException(ref, workspaceRef(wspId));
             }
             throw e;
         }
     }
-
 
 }

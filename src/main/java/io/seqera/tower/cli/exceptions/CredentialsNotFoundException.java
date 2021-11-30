@@ -16,4 +16,8 @@ public class CredentialsNotFoundException extends TowerException {
     public CredentialsNotFoundException(String name, String workspaceRef) {
         super(String.format("Credentials '%s' not found at %s workspace", name, workspaceRef));
     }
+
+    public CredentialsNotFoundException(String name, Long workspaceRef) {
+        super(String.format("Credentials '%s' not found at %s workspace", name, workspaceRef));
+    }
 }

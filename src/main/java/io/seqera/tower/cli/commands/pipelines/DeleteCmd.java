@@ -18,7 +18,6 @@ import io.seqera.tower.cli.responses.pipelines.PipelinesDeleted;
 import io.seqera.tower.model.PipelineDbDto;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.Option;
 
 import java.io.IOException;
 
@@ -28,16 +27,29 @@ import java.io.IOException;
 )
 public class DeleteCmd extends AbstractPipelinesCmd {
 
-    @Option(names = {"-n", "--name"}, description = "Pipeline name.", required = true)
-    public String name;
+    @CommandLine.Mixin
+    PipelineRefOptions pipelineRefOptions;
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        PipelineDbDto pipe = pipelineByName(workspace.workspaceId, name);
-        api().deletePipeline(pipe.getPipelineId(), workspace.workspaceId);
-        return new PipelinesDeleted(pipe.getName(), workspaceRef(workspace.workspaceId));
+        Long wspId = workspaceId(workspace.workspace);
+        Long id;
+        String pipelineRef;
+
+        if (pipelineRefOptions.pipeline.pipelineId != null) {
+            id = pipelineRefOptions.pipeline.pipelineId;
+            pipelineRef = id.toString();
+        } else {
+            PipelineDbDto pipe = pipelineByName(wspId, pipelineRefOptions.pipeline.pipelineName);
+            id = pipe.getPipelineId();
+            pipelineRef = pipe.getName();
+        }
+
+        api().deletePipeline(id, wspId);
+
+        return new PipelinesDeleted(pipelineRef, workspaceRef(wspId));
     }
 }

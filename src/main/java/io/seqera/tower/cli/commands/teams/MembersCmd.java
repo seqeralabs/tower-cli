@@ -37,12 +37,12 @@ public class MembersCmd extends AbstractTeamsCmd {
     @CommandLine.Option(names = {"-t", "--team"}, description = "Team name.", required = true)
     public String teamName;
 
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name identifier.", required = true)
-    public String organizationName;
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name or identifier.", required = true)
+    public String organizationRef;
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = findOrganizationByName(organizationName);
+        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = findOrganizationByRef(organizationRef);
 
         TeamDbDto team = findTeamByName(orgAndWorkspaceDbDto.getOrgId(), teamName);
 

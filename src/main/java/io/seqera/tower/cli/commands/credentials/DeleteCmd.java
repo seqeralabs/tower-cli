@@ -16,9 +16,9 @@ import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.exceptions.CredentialsNotFoundException;
 import io.seqera.tower.cli.responses.CredentialsDeleted;
 import io.seqera.tower.cli.responses.Response;
+import io.seqera.tower.model.Credentials;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.Option;
 
 @Command(
         name = "delete",
@@ -26,21 +26,31 @@ import picocli.CommandLine.Option;
 )
 public class DeleteCmd extends AbstractCredentialsCmd {
 
-    @Option(names = {"-i", "--id"}, description = "Credentials identifier.", required = true)
-    public String id;
+    @CommandLine.Mixin
+    CredentialsRefOptions credentialsRefOptions;
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
     @Override
     protected Response exec() throws ApiException {
+        Long wspId = workspaceId(workspace.workspace);
+        String id;
+
+        if (credentialsRefOptions.credentialsRef.credentialsId != null) {
+            id = credentialsRefOptions.credentialsRef.credentialsId;
+        } else {
+            Credentials credentials = findCredentialsByName(wspId, credentialsRefOptions.credentialsRef.credentialsName);
+            id = credentials.getId();
+        }
+
         try {
-            api().deleteCredentials(id, workspace.workspaceId);
-            return new CredentialsDeleted(id, workspaceRef(workspace.workspaceId));
+            api().deleteCredentials(id, wspId);
+            return new CredentialsDeleted(id, workspaceRef(wspId));
         } catch (ApiException e) {
             if (e.getCode() == 403) {
                 // Customize the forbidden message
-                throw new CredentialsNotFoundException(id, workspaceRef(workspace.workspaceId));
+                throw new CredentialsNotFoundException(id, workspaceRef(wspId));
             }
             throw e;
         }

@@ -28,6 +28,7 @@ import picocli.CommandLine.Option;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 @Command
 public abstract class AbstractAddCmd extends AbstractApiCmd {
@@ -38,8 +39,8 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
-    @Option(names = {"-i", "--id"}, description = "Credentials identifier [default: workspace credentials].")
-    public String credentialsId;
+    @Option(names = {"-c", "--credentials"}, description = "Credentials identifier [default: workspace credentials].")
+    public String credentialsRef;
 
     @Override
     protected Response exec() throws ApiException, IOException {
@@ -47,8 +48,9 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
     }
 
     protected ComputeEnvAdded addComputeEnv(ComputeEnv.PlatformEnum platform, ComputeConfig config) throws ApiException {
+        Long wspId = workspaceId(workspace.workspace);
 
-        String credsId = credentialsId == null ? findWorkspaceCredentials(platform) : credentialsId;
+        String credsId = credentialsRef == null ? findWorkspaceCredentials(platform, wspId) : credentialsByRef(platform, wspId, credentialsRef);
 
         api().createComputeEnv(
                 new CreateComputeEnvRequest().computeEnv(
@@ -57,14 +59,35 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
                                 .platform(platform)
                                 .credentialsId(credsId)
                                 .config(config)
-                ), workspace.workspaceId
+                ), wspId
         );
 
-        return new ComputeEnvAdded(platform.getValue(), name, workspaceRef(workspace.workspaceId));
+        return new ComputeEnvAdded(platform.getValue(), name, workspaceRef(wspId));
     }
 
-    private String findWorkspaceCredentials(ComputeEnv.PlatformEnum type) throws ApiException {
-        List<Credentials> credentials = api().listCredentials(workspace.workspaceId, type.getValue()).getCredentials();
+    private String credentialsByRef(ComputeEnv.PlatformEnum type, Long wspId, String credentialsRef) throws ApiException {
+        List<Credentials> credentials = api().listCredentials(wspId, type.getValue()).getCredentials();
+
+        if (credentials.isEmpty()) {
+            throw new TowerException("No valid credentials found at the workspace");
+        }
+
+        Credentials cred;
+
+        cred = credentials.stream()
+                .filter(it -> Objects.equals(it.getId(), credentialsRef) || Objects.equals(it.getName(), credentialsRef))
+                .findFirst()
+                .orElse(null);
+
+        if (cred == null) {
+            throw new TowerException("No valid credentials found at the workspace");
+        }
+
+        return cred.getId();
+    }
+
+    private String findWorkspaceCredentials(ComputeEnv.PlatformEnum type, Long wspId) throws ApiException {
+        List<Credentials> credentials = api().listCredentials(wspId, type.getValue()).getCredentials();
         if (credentials.isEmpty()) {
             throw new TowerException("No valid credentials found at the workspace");
         }

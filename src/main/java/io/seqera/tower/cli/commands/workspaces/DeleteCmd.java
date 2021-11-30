@@ -12,12 +12,11 @@
 package io.seqera.tower.cli.commands.workspaces;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.commands.global.WorkspaceRequiredOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.workspaces.WorkspaceDeleted;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
+import picocli.CommandLine;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.Mixin;
 
 import java.io.IOException;
 
@@ -27,13 +26,15 @@ import java.io.IOException;
 )
 public class DeleteCmd extends AbstractWorkspaceCmd {
 
-    @Mixin
-    public WorkspaceRequiredOptions workspace;
+    @CommandLine.Mixin
+    WorkspaceRefOptions workspaceRefOptions;
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        OrgAndWorkspaceDbDto ws = workspaceById(workspace.workspaceId);
+        OrgAndWorkspaceDbDto ws = fetchOrgAndWorkspaceDbDto(workspaceRefOptions);
+
         api().deleteWorkspace(ws.getOrgId(), ws.getWorkspaceId());
+
         return new WorkspaceDeleted(ws.getWorkspaceName(), ws.getOrgName());
     }
 }

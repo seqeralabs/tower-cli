@@ -27,12 +27,13 @@ import picocli.CommandLine;
 public class LeaveCmd extends AbstractWorkspaceCmd {
 
     @CommandLine.Mixin
-    public WorkspaceRequiredOptions workspace;
+    WorkspaceRefOptions workspaceRefOptions;
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        OrgAndWorkspaceDbDto ws = workspaceById(workspace.workspaceId);
+        OrgAndWorkspaceDbDto ws = fetchOrgAndWorkspaceDbDto(workspaceRefOptions);
         api().leaveWorkspaceParticipant(ws.getOrgId(), ws.getWorkspaceId());
+
         return new ParticipantLeft(ws.getWorkspaceName());
     }
 }

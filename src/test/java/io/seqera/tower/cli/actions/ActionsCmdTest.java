@@ -13,6 +13,7 @@ package io.seqera.tower.cli.actions;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
+import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.ActionNotFoundException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.actions.ActionAdd;
@@ -23,6 +24,8 @@ import io.seqera.tower.cli.responses.actions.ActionsView;
 import io.seqera.tower.model.Action;
 import io.seqera.tower.model.ListActionsResponseActionInfo;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 
@@ -39,10 +42,11 @@ import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
-public class ActionsCmdTest extends BaseCmdTest {
+class ActionsCmdTest extends BaseCmdTest {
 
-    @Test
-    void testActionsList(MockServerClient mock) throws JsonProcessingException {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testList(OutputType format, MockServerClient mock) throws JsonProcessingException {
         mock.reset();
 
         mock.when(
@@ -57,9 +61,8 @@ public class ActionsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "actions", "list");
-
-        assertEquals(chop(new ActionsList(Arrays.asList(parseJson(" {\n" +
+        ExecOut out = exec(format, mock, "actions", "list");
+        assertOutput(format, out, new ActionsList(Arrays.asList(parseJson(" {\n" +
                         "      \"id\": \"57byWxhmUDLLWIF4J97XEP\",\n" +
                         "      \"name\": \"hello\",\n" +
                         "      \"pipeline\": \"https://github.com/pditommaso/hello\",\n" +
@@ -101,13 +104,11 @@ public class ActionsCmdTest extends BaseCmdTest {
                         "      \"usageCmd\": null,\n" +
                         "      \"endpoint\": \"https://api.github.com/repos/pditommaso/hello/hooks/303166158\"\n" +
                         "    }", ListActionsResponseActionInfo.class)
-        ), "jordi").toString()), out.stdOut);
-        assertEquals("", out.stdErr);
-        assertEquals(0, out.exitCode);
+        ), "jordi"));
     }
 
     @Test
-    void testActionsListEmpty(MockServerClient mock) {
+    void testListEmpty(MockServerClient mock) {
         mock.reset();
 
         mock.when(
@@ -129,8 +130,9 @@ public class ActionsCmdTest extends BaseCmdTest {
         assertEquals(0, out.exitCode);
     }
 
-    @Test
-    void testActionView(MockServerClient mock) throws JsonProcessingException {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testView(OutputType format, MockServerClient mock) throws JsonProcessingException {
         mock.reset();
 
         mock.when(
@@ -145,9 +147,8 @@ public class ActionsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("actions/action_view")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "actions", "view", "-n", "hello");
-
-        assertEquals(chop(new ActionsView(parseJson("{\n" +
+        ExecOut out = exec(format, mock, "actions", "view", "-n", "hello");
+        assertOutput(format, out, new ActionsView(parseJson("{\n" +
                 "    \"id\": \"57byWxhmUDLLWIF4J97XEP\",\n" +
                 "    \"launch\": {\n" +
                 "      \"id\": \"3htPtgK2KufwvQcovOko\",\n" +
@@ -222,13 +223,11 @@ public class ActionsCmdTest extends BaseCmdTest {
                 "    \"lastSeen\": \"2021-06-18T10:10:33Z\",\n" +
                 "    \"dateCreated\": \"2021-06-18T10:10:05Z\",\n" +
                 "    \"lastUpdated\": \"2021-06-18T10:10:33Z\"\n" +
-                "  }", Action.class)).toString()), out.stdOut);
-        assertEquals("", out.stdErr);
-        assertEquals(0, out.exitCode);
+                "  }", Action.class)));
     }
 
     @Test
-    void testActionViewNoActionFound(MockServerClient mock) {
+    void testViewNoActionFound(MockServerClient mock) {
         mock.reset();
 
         mock.when(
@@ -245,7 +244,7 @@ public class ActionsCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testActionViewNoWorkspaceActionsFound(MockServerClient mock) {
+    void testViewNoWorkspaceActionsFound(MockServerClient mock) {
         mock.reset();
 
         mock.when(
@@ -261,14 +260,21 @@ public class ActionsCmdTest extends BaseCmdTest {
         assertEquals(errorMessage(out.app, new ActionNotFoundException("test", USER_WORKSPACE_NAME)), out.stdErr);
     }
 
-    @Test
-    void testActionDelete(MockServerClient mock) {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testDelete(OutputType format, MockServerClient mock) {
         mock.reset();
 
         mock.when(
                 request().withMethod("GET").withPath("/actions"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("actions/actions_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/actions/57byWxhmUDLLWIF4J97XEP"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("actions/action_view")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
@@ -277,21 +283,24 @@ public class ActionsCmdTest extends BaseCmdTest {
                 response().withStatusCode(204)
         );
 
-        ExecOut out = exec(mock, "actions", "delete", "-n", "hello");
-
-        assertEquals("", out.stdErr);
-        assertEquals(0, out.exitCode);
-        assertEquals(new ActionsDelete("hello", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        ExecOut out = exec(format, mock, "actions", "delete", "-n", "hello");
+        assertOutput(format, out, new ActionsDelete("hello", USER_WORKSPACE_NAME));
     }
 
     @Test
-    void testActionDeleteError(MockServerClient mock) {
+    void testDeleteError(MockServerClient mock) {
         mock.reset();
 
         mock.when(
                 request().withMethod("GET").withPath("/actions"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("actions/actions_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/actions/57byWxhmUDLLWIF4J97XEP"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("actions/action_view")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
@@ -308,7 +317,7 @@ public class ActionsCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testActionDeleteNotFound(MockServerClient mock) {
+    void testDeleteNotFound(MockServerClient mock) {
         mock.reset();
 
         mock.when(
@@ -325,8 +334,9 @@ public class ActionsCmdTest extends BaseCmdTest {
         assertEquals(errorMessage(out.app, new ActionNotFoundException("test", USER_WORKSPACE_NAME)), out.stdErr);
     }
 
-    @Test
-    void testActionAdd(MockServerClient mock) {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAdd(OutputType format, MockServerClient mock) {
         mock.reset();
 
         mock.when(
@@ -347,15 +357,12 @@ public class ActionsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("/actions/action_add")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "actions", "add", "github", "-n", "new-action", "--pipeline", "https://github.com/pditommaso/nf-sleep");
-
-        assertEquals("", out.stdErr);
-        assertEquals(0, out.exitCode);
-        assertEquals(new ActionAdd("new-action", USER_WORKSPACE_NAME, "2Z1g6MCWpOLgHLA65cw1qt").toString(), out.stdOut);
+        ExecOut out = exec(format, mock, "actions", "add", "github", "-n", "new-action", "--pipeline", "https://github.com/pditommaso/nf-sleep");
+        assertOutput(format, out, new ActionAdd("new-action", USER_WORKSPACE_NAME, "2Z1g6MCWpOLgHLA65cw1qt"));
     }
 
     @Test
-    void testActionAddWithError(MockServerClient mock) {
+    void testAddWithError(MockServerClient mock) {
         mock.reset();
 
         mock.when(
@@ -383,8 +390,9 @@ public class ActionsCmdTest extends BaseCmdTest {
         assertEquals(errorMessage(out.app, new TowerException(String.format("Unable to add action for workspace '%s'", USER_WORKSPACE_NAME))), out.stdErr);
     }
 
-    @Test
-    void testActionUpdate(MockServerClient mock) {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testUpdate(OutputType format, MockServerClient mock) {
         mock.reset();
 
         mock.when(
@@ -417,15 +425,12 @@ public class ActionsCmdTest extends BaseCmdTest {
                 response().withStatusCode(204)
         );
 
-        ExecOut out = exec(mock, "actions", "update", "-n", "hello");
-
-        assertEquals("", out.stdErr);
-        assertEquals(0, out.exitCode);
-        assertEquals(new ActionUpdate("hello", USER_WORKSPACE_NAME, "57byWxhmUDLLWIF4J97XEP").toString(), out.stdOut);
+        ExecOut out = exec(format, mock, "actions", "update", "-n", "hello");
+        assertOutput(format, out, new ActionUpdate("hello", USER_WORKSPACE_NAME, "57byWxhmUDLLWIF4J97XEP"));
     }
 
     @Test
-    void testActionUpdateWithError(MockServerClient mock) {
+    void testUpdateWithError(MockServerClient mock) {
         mock.reset();
 
         mock.when(
@@ -465,8 +470,9 @@ public class ActionsCmdTest extends BaseCmdTest {
         assertEquals(errorMessage(out.app, new TowerException(String.format("Unable to update action '%s' for workspace '%s'", "hello", USER_WORKSPACE_NAME))), out.stdErr);
     }
 
-    @Test
-    void testActionPause(MockServerClient mock) throws IOException {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testPause(OutputType format, MockServerClient mock) throws IOException {
         mock.reset();
 
         mock.when(
@@ -505,15 +511,12 @@ public class ActionsCmdTest extends BaseCmdTest {
                 response().withStatusCode(204)
         );
 
-        ExecOut out = exec(mock, "actions", "update", "-n", "hello", "-s", "pause");
-
-        assertEquals("", out.stdErr);
-        assertEquals(0, out.exitCode);
-        assertEquals(new ActionUpdate("hello", USER_WORKSPACE_NAME, "57byWxhmUDLLWIF4J97XEP").toString(), out.stdOut);
+        ExecOut out = exec(format, mock, "actions", "update", "-n", "hello", "-s", "pause");
+        assertOutput(format, out, new ActionUpdate("hello", USER_WORKSPACE_NAME, "57byWxhmUDLLWIF4J97XEP"));
     }
 
     @Test
-    void testActionPauseAlreadyPausedItem(MockServerClient mock) throws IOException {
+    void testPauseAlreadyPausedItem(MockServerClient mock) throws IOException {
         mock.reset();
 
         mock.when(
@@ -554,9 +557,8 @@ public class ActionsCmdTest extends BaseCmdTest {
     }
 
 
-
     @Test
-    void testActionPauseError(MockServerClient mock) throws IOException {
+    void testPauseError(MockServerClient mock) throws IOException {
         mock.reset();
 
         mock.when(
@@ -603,7 +605,7 @@ public class ActionsCmdTest extends BaseCmdTest {
     }
 
     @Test
-    public void testAddWithoutSubCommands(MockServerClient mock) {
+    void testAddWithoutSubCommands(MockServerClient mock) {
         ExecOut out = exec(mock, "actions", "add");
         assertEquals(1, out.exitCode);
         assertTrue(out.stdErr.contains("Missing Required Subcommand"));

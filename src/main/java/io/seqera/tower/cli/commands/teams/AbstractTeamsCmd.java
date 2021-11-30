@@ -34,28 +34,6 @@ public abstract class AbstractTeamsCmd extends AbstractApiCmd {
     public AbstractTeamsCmd() {
     }
 
-    public OrgAndWorkspaceDbDto findOrganizationByName(String organizationName) throws ApiException {
-        ListWorkspacesAndOrgResponse workspacesAndOrgResponse = api().listWorkspacesUser(userId());
-
-        if (workspacesAndOrgResponse.getOrgsAndWorkspaces() == null) {
-            throw new OrganizationNotFoundException(organizationName);
-        }
-
-        List<OrgAndWorkspaceDbDto> orgAndWorkspaceDbDtoList = workspacesAndOrgResponse
-                .getOrgsAndWorkspaces()
-                .stream()
-                .filter(
-                        item -> Objects.equals(item.getWorkspaceName(), null) && Objects.equals(item.getOrgName(), organizationName)
-                )
-                .collect(Collectors.toList());
-
-        if (orgAndWorkspaceDbDtoList.isEmpty()) {
-            throw new OrganizationNotFoundException(organizationName);
-        }
-
-        return orgAndWorkspaceDbDtoList.stream().findFirst().orElse(null);
-    }
-
     public MemberDbDto findMemberByUsername(Long orgId, Long teamId, String username) throws ApiException {
         ListMembersResponse listMembersResponse = api().listOrganizationTeamMembers(orgId, teamId);
 

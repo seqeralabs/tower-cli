@@ -43,14 +43,15 @@ public class UpdateCmd extends AbstractParticipantsCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
+        Long wspId = workspaceId(workspace.workspace);
 
-        ParticipantDbDto participant = findWorkspaceParticipant(orgId(workspace.workspaceId), workspace.workspaceId, name, type);
+        ParticipantDbDto participant = findWorkspaceParticipant(orgId(wspId), wspId, name, type);
 
         UpdateParticipantRoleRequest request = new UpdateParticipantRoleRequest();
         request.setRole(role);
 
-        api().updateWorkspaceParticipantRole(orgId(workspace.workspaceId), workspace.workspaceId, participant.getParticipantId(), request);
+        api().updateWorkspaceParticipantRole(orgId(wspId), wspId, participant.getParticipantId(), request);
 
-        return new ParticipantUpdated(workspaceName(workspace.workspaceId), name, role.getValue());
+        return new ParticipantUpdated(workspaceName(wspId), name, role.getValue());
     }
 }

@@ -29,7 +29,7 @@ import java.io.IOException;
 )
 public class DownloadCmd extends AbstractRunsCmd {
 
-    @CommandLine.Option(names = {"--type"}, description = "File type to download. Options are stdout, log, stderr (for tasks only) and timeline (workflow only) (default is stdout).")
+    @CommandLine.Option(names = {"--type"}, description = "File type to download. Options are stdout, log, stderr (for tasks only) and timeline (workflow only) (default is stdout).", defaultValue = "stdout")
     public RunDownloadFileType type;
 
     @CommandLine.Option(names = {"-t"}, description = "Task identifier.")
@@ -40,6 +40,8 @@ public class DownloadCmd extends AbstractRunsCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
+        Long wspId = workspaceId(parentCommand.workspace.workspace);
+
         String fileName;
         File file;
 
@@ -54,7 +56,7 @@ public class DownloadCmd extends AbstractRunsCmd {
                 throw new TowerException("Error file is not available for pipeline's runs");
             }
 
-            file = api().downloadWorkflowLog(parentCommand.id, fileName, parentCommand.workspace.workspaceId);
+            file = api().downloadWorkflowLog(parentCommand.id, fileName, wspId);
 
         } else {
             fileName = ".command.out";
@@ -67,7 +69,7 @@ public class DownloadCmd extends AbstractRunsCmd {
                 throw new TowerException("Timeline file is not available for tasks");
             }
 
-            file = api().downloadWorkflowTaskLog(parentCommand.id, task, fileName, parentCommand.workspace.workspaceId);
+            file = api().downloadWorkflowTaskLog(parentCommand.id, task, fileName, wspId);
         }
 
         return new RunFileDownloaded(file, type);

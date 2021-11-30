@@ -46,24 +46,26 @@ public class ImportCmd extends AbstractPipelinesCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
+        Long wspId = workspaceId(workspace.workspace);
+        
         CreatePipelineRequest request;
 
         request = parseJson(FilesHelper.readString(fileName), CreatePipelineRequest.class);
         request.setName(name);
 
         if (computeEnv != null) {
-            ComputeEnv ce = findComputeEnvironmentByName(workspace.workspaceId, computeEnv);
+            ComputeEnv ce = computeEnvByRef(wspId, computeEnv);
             request.getLaunch().setComputeEnvId(ce.getId());
         } else {
             try {
-                api().describeComputeEnv(request.getLaunch().getComputeEnvId(), workspace.workspaceId);
+                api().describeComputeEnv(request.getLaunch().getComputeEnvId(), wspId);
             } catch (ApiException apiException) {
-                throw new ComputeEnvNotFoundException(request.getLaunch().getId(), workspace.workspaceId);
+                throw new ComputeEnvNotFoundException(request.getLaunch().getId(), wspId);
             }
         }
 
-        api().createPipeline(request, workspace.workspaceId);
+        api().createPipeline(request, wspId);
 
-        return new PipelinesAdded(workspaceRef(workspace.workspaceId), name);
+        return new PipelinesAdded(workspaceRef(wspId), name);
     }
 }

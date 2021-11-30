@@ -50,7 +50,7 @@ public class RunList extends Response {
                 wf.getWorkflow().getProjectName(),
                 wf.getWorkflow().getRunName(),
                 wf.getWorkflow().getUserName(),
-                formatTime(wf.getWorkflow().getSubmit())
+                FormatHelper.formatTime(wf.getWorkflow().getSubmit())
         ));
         table.print();
         out.println("");

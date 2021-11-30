@@ -16,7 +16,6 @@ import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.actions.ActionsView;
 import io.seqera.tower.model.DescribeActionResponse;
-import io.seqera.tower.model.ListActionsResponseActionInfo;
 import picocli.CommandLine;
 
 import java.io.IOException;
@@ -27,17 +26,17 @@ import java.io.IOException;
 )
 public class ViewCmd extends AbstractActionsCmd {
 
-    @CommandLine.Option(names = {"-n", "--name"}, description = "Action name.", required = true)
-    public String actionName;
+    @CommandLine.Mixin
+    ActionRefOptions actionRefOptions;
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        ListActionsResponseActionInfo listActionsResponseActionInfo = actionByName(workspace.workspaceId, actionName);
+        Long wspId = workspaceId(workspace.workspace);
 
-        DescribeActionResponse response = api().describeAction(listActionsResponseActionInfo.getId(), workspace.workspaceId);
+        DescribeActionResponse response = fetchDescribeActionResponse(actionRefOptions, wspId);
 
         return new ActionsView(response.getAction());
     }
