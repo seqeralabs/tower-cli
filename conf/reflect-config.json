@@ -846,6 +846,12 @@
   "queryAllDeclaredMethods":true}
 ,
 {
+  "name":"io.seqera.tower.cli.commands.datasets.AddCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]}
+,
+{
   "name":"io.seqera.tower.cli.commands.datasets.CreateCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
