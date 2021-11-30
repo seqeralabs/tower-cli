@@ -12,7 +12,7 @@
 package io.seqera.tower.cli.commands.datasets;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
+import io.seqera.tower.cli.commands.global.WorkspaceRequiredOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.datasets.DatasetUpdate;
 import io.seqera.tower.model.Dataset;
@@ -44,7 +44,7 @@ public class UpdateCmd extends AbstractDatasetsCmd {
     Path fileName = null;
 
     @CommandLine.Mixin
-    public WorkspaceOptionalOptions workspace;
+    public WorkspaceRequiredOptions workspace;
 
     @Override
     protected Response exec() throws ApiException, IOException {

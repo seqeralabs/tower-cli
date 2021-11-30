@@ -11,16 +11,16 @@
 
 package io.seqera.tower.cli.commands.datasets;
 
-import java.io.File;
-import java.io.IOException;
-
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
+import io.seqera.tower.cli.commands.global.WorkspaceRequiredOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.datasets.DatasetDownload;
 import io.seqera.tower.model.Dataset;
 import io.seqera.tower.model.DatasetVersionDbDto;
 import picocli.CommandLine;
+
+import java.io.File;
+import java.io.IOException;
 
 @CommandLine.Command(
         name = "download",
@@ -35,7 +35,7 @@ public class DownloadCmd extends AbstractDatasetsCmd {
     public Long version;
 
     @CommandLine.Mixin
-    public WorkspaceOptionalOptions workspace;
+    public WorkspaceRequiredOptions workspace;
 
     @Override
     protected Response exec() throws ApiException, IOException {

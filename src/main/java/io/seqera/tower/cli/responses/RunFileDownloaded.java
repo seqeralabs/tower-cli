@@ -31,13 +31,13 @@ public class RunFileDownloaded extends Response {
     @Override
     public Object getJSON() {
         Map<String, Object> data = new HashMap<>();
-        data.put(type.name(), FilesHelper.readFile(file));
+        data.put(type.name(), FilesHelper.readFileAndDelete(file));
 
         return data;
     }
 
     @Override
     public String toString() {
-        return ansi(FilesHelper.readFile(file));
+        return ansi(FilesHelper.readFileAndDelete(file));
     }
 }

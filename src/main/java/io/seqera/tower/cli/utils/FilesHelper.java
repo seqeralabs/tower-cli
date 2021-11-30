@@ -41,7 +41,7 @@ public class FilesHelper {
         }
     }
 
-    public static String readFile(File file) {
+    public static String readFileAndDelete(File file) {
         String outcome = null;
 
         try {

@@ -31,13 +31,13 @@ public class DatasetDownload extends Response {
     @Override
     public Object getJSON() {
         Map<String, Object> data = new HashMap<>();
-        data.put(fileName, FilesHelper.readFile(file));
+        data.put(fileName, FilesHelper.readFileAndDelete(file));
 
         return data;
     }
 
     @Override
     public String toString() {
-        return ansi(FilesHelper.readFile(file));
+        return ansi(FilesHelper.readFileAndDelete(file));
     }
 }

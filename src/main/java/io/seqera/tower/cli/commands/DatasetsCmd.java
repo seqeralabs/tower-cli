@@ -12,7 +12,7 @@
 package io.seqera.tower.cli.commands;
 
 
-import io.seqera.tower.cli.commands.datasets.CreateCmd;
+import io.seqera.tower.cli.commands.datasets.AddCmd;
 import io.seqera.tower.cli.commands.datasets.DeleteCmd;
 import io.seqera.tower.cli.commands.datasets.DownloadCmd;
 import io.seqera.tower.cli.commands.datasets.ListCmd;
@@ -25,7 +25,7 @@ import picocli.CommandLine;
         name = "datasets",
         description = "Manage datasets.",
         subcommands = {
-                CreateCmd.class,
+                AddCmd.class,
                 DeleteCmd.class,
                 DownloadCmd.class,
                 ListCmd.class,

@@ -12,7 +12,7 @@
 package io.seqera.tower.cli.commands.datasets;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
+import io.seqera.tower.cli.commands.global.WorkspaceRequiredOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.datasets.DatasetCreate;
 import io.seqera.tower.model.CreateDatasetRequest;
@@ -23,10 +23,10 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 @CommandLine.Command(
-        name = "create",
+        name = "add",
         description = "Create a workspace dataset."
 )
-public class CreateCmd extends AbstractDatasetsCmd{
+public class AddCmd extends AbstractDatasetsCmd{
 
     @CommandLine.Option(names = {"-n", "--name"}, description = "Dataset name.", required = true)
     public String name;
@@ -41,7 +41,7 @@ public class CreateCmd extends AbstractDatasetsCmd{
     Path fileName = null;
 
     @CommandLine.Mixin
-    public WorkspaceOptionalOptions workspace;
+    public WorkspaceRequiredOptions workspace;
 
     @Override
     protected Response exec() throws ApiException, IOException {

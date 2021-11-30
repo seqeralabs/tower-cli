@@ -12,7 +12,7 @@
 package io.seqera.tower.cli.commands.datasets;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
+import io.seqera.tower.cli.commands.global.WorkspaceRequiredOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.datasets.DatasetList;
 import io.seqera.tower.model.Dataset;
@@ -28,7 +28,7 @@ import java.util.List;
 public class ListCmd extends AbstractDatasetsCmd {
 
     @CommandLine.Mixin
-    public WorkspaceOptionalOptions workspace;
+    public WorkspaceRequiredOptions workspace;
 
     @CommandLine.Option(names = {"-f", "--filter"}, description = "Show only datasets which name contains the given word.")
     public String filter;

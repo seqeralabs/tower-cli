@@ -8,9 +8,7 @@ plugins {
 
 repositories {
     mavenCentral()
-//    maven { url = "https://s3-eu-west-1.amazonaws.com/maven.seqera.io/releases" }
-    maven { url = "https://s3-eu-west-1.amazonaws.com/maven.seqera.io/snapshots" }
-
+    maven { url = "https://s3-eu-west-1.amazonaws.com/maven.seqera.io/releases" }
 }
 
 dependencies {
@@ -18,8 +16,7 @@ dependencies {
     implementation 'org.slf4j:slf4j-api:1.7.32'
     implementation 'ch.qos.logback:logback-core:1.2.6'
     implementation 'ch.qos.logback:logback-classic:1.2.6'
-//    implementation 'io.seqera:tower-java-sdk:1.1.0'
-    implementation 'io.seqera:tower-java-sdk:1.2.0-SNAPSHOT'
+    implementation 'io.seqera:tower-java-sdk:1.2.0'
     implementation 'info.picocli:picocli:4.6.1'
     annotationProcessor 'info.picocli:picocli-codegen:4.6.1'
 
