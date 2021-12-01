@@ -147,6 +147,12 @@ class ActionsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("actions/action_view")).withContentType(MediaType.APPLICATION_JSON)
         );
 
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
         ExecOut out = exec(format, mock, "actions", "view", "-n", "hello");
         assertOutput(format, out, new ActionsView(parseJson("{\n" +
                 "    \"id\": \"57byWxhmUDLLWIF4J97XEP\",\n" +
@@ -223,7 +229,7 @@ class ActionsCmdTest extends BaseCmdTest {
                 "    \"lastSeen\": \"2021-06-18T10:10:33Z\",\n" +
                 "    \"dateCreated\": \"2021-06-18T10:10:05Z\",\n" +
                 "    \"lastUpdated\": \"2021-06-18T10:10:33Z\"\n" +
-                "  }", Action.class), baseUrl(mock, "jordi")));
+                "  }", Action.class), baseUrl(mock, USER_WORKSPACE_NAME)));
     }
 
     @Test

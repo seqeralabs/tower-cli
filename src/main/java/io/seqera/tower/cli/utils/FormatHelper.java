@@ -12,6 +12,7 @@
 package io.seqera.tower.cli.utils;
 
 import io.seqera.tower.model.ActionStatus;
+import io.seqera.tower.model.ComputeEnvStatus;
 import io.seqera.tower.model.WorkflowStatus;
 import picocli.CommandLine;
 
@@ -121,6 +122,10 @@ public class FormatHelper {
         return formatLink(actionId, String.format("%s/actions/%s", baseWorkspaceUrl, actionId));
     }
 
+    public static String formatComputeEnvId(String ceId, String baseWorkspaceUrl) {
+        return formatLink(ceId, String.format("%s/compute-envs/%s", baseWorkspaceUrl, ceId));
+    }
+
     private static String formatLink(String title, String link) {
         return ANSI_ENABLED ? "\u001b]8;;" + link + "\u001b\\" + title + "\u001b]8;;\u001b\\" : title;
     }
@@ -168,6 +173,25 @@ public class FormatHelper {
                 return ansi("@|fg(white) PAUSED|@");
             case CREATING:
                 return ansi("@|fg(orange) CREATING");
+            default:
+                return status.toString();
+        }
+    }
+
+    public static String formatComputeEnvStatus(ComputeEnvStatus status) {
+        if (status == null) {
+            return "NA";
+        }
+
+        switch (status) {
+            case CREATING:
+                return ansi("@|fg(orange) CREATING|@");
+            case ERRORED:
+                return ansi("@|fg(red) ERRORED|@");
+            case INVALID:
+                return ansi("@|fg(red) INVALID|@");
+            case AVAILABLE:
+                return ansi("@|fg(green) AVAILABLE");
             default:
                 return status.toString();
         }

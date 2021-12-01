@@ -17,7 +17,7 @@ import io.seqera.tower.JSON;
 import io.seqera.tower.cli.commands.computeenvs.platforms.AwsBatchForgePlatform;
 import io.seqera.tower.cli.commands.computeenvs.platforms.AwsBatchManualPlatform;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
-import io.seqera.tower.cli.responses.ComputeEnvs.ComputeEnvExport;
+import io.seqera.tower.cli.responses.computeenvs.ComputeEnvExport;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.AwsBatchConfig;

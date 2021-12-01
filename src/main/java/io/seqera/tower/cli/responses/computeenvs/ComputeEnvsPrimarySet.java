@@ -9,7 +9,7 @@
  * defined by the Mozilla Public License, v. 2.0.
  */
 
-package io.seqera.tower.cli.responses.ComputeEnvs;
+package io.seqera.tower.cli.responses.computeenvs;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,12 +17,12 @@ import java.util.Map;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.ComputeEnv;
 
-public class ComputeEnvsPrimaryGet extends Response {
+public class ComputeEnvsPrimarySet extends Response {
 
     public final String workspaceRef;
     public final ComputeEnv computeEnv;
 
-    public ComputeEnvsPrimaryGet(String workspaceRef, ComputeEnv computeEnv) {
+    public ComputeEnvsPrimarySet(String workspaceRef, ComputeEnv computeEnv) {
         this.workspaceRef = workspaceRef;
         this.computeEnv = computeEnv;
     }
@@ -40,6 +40,6 @@ public class ComputeEnvsPrimaryGet extends Response {
 
     @Override
     public String toString() {
-        return ansi(String.format("%n  @|yellow Primary compute environment for workspace '%s' is '%s (%s)'  |@%n", workspaceRef, computeEnv.getName(), computeEnv.getId()));
+        return ansi(String.format("%n  @|yellow Primary compute environment for workspace '%s' was set to '%s (%s)'  |@%n", workspaceRef, computeEnv.getName(), computeEnv.getId()));
     }
 }

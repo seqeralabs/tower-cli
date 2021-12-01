@@ -9,20 +9,24 @@
  * defined by the Mozilla Public License, v. 2.0.
  */
 
-package io.seqera.tower.cli.responses;
+package io.seqera.tower.cli.responses.computeenvs;
 
-public class ComputeEnvDeleted extends Response {
+import io.seqera.tower.cli.responses.Response;
 
-    public final String id;
+public class ComputeEnvAdded extends Response {
+
+    public final String platform;
+    public final String name;
     public final String workspaceRef;
 
-    public ComputeEnvDeleted(String id, String workspaceRef) {
-        this.id = id;
+    public ComputeEnvAdded(String platform, String name, String workspaceRef) {
+        this.platform = platform;
+        this.name = name;
         this.workspaceRef = workspaceRef;
     }
 
     @Override
     public String toString() {
-        return ansi(String.format("%n  @|yellow Compute environment '%s' deleted at %s workspace|@%n", id, workspaceRef));
+        return ansi(String.format("%n  @|yellow New %S compute environment '%s' added at %s workspace|@%n", platform, name, workspaceRef));
     }
 }
