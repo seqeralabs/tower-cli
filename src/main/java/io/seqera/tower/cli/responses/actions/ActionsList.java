@@ -11,17 +11,16 @@
 
 package io.seqera.tower.cli.responses.actions;
 
-import java.io.PrintWriter;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.cli.utils.FormatHelper;
 import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.ListActionsResponseActionInfo;
 
+import java.io.PrintWriter;
+import java.util.List;
+
+import static io.seqera.tower.cli.utils.FormatHelper.formatActionId;
 import static io.seqera.tower.cli.utils.FormatHelper.formatActionStatus;
-import static io.seqera.tower.cli.utils.FormatHelper.formatLink;
 
 public class ActionsList extends Response {
 
@@ -50,7 +49,7 @@ public class ActionsList extends Response {
         table.setPrefix("    ");
         actions.forEach(element -> {
             table.addRow(
-                    formatLink(element.getId(), String.format("%s/actions/%s", baseWorkspaceUrl, element.getId())),
+                    formatActionId(element.getId(), baseWorkspaceUrl),
                     element.getName(),
                     element.getEndpoint(),
                     formatActionStatus(element.getStatus()),

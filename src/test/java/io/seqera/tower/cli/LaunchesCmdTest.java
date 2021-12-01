@@ -241,7 +241,7 @@ class LaunchesCmdTest extends BaseCmdTest {
 
         // Assert results
         assertEquals("", out.stdErr);
-        assertEquals(new RunSubmited("52KAMEcqXFyhZ9", String.format("%s/orgs/Seqera/workspaces/cli/", url(mock)), buildWorkspaceRef("Seqera", "cli")).toString(), out.stdOut);
+        assertEquals(new RunSubmited("52KAMEcqXFyhZ9", baseUrl(mock, "Seqera", "cli"), buildWorkspaceRef("Seqera", "cli")).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

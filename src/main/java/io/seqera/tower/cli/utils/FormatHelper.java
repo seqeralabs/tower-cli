@@ -117,7 +117,11 @@ public class FormatHelper {
         return formatLink(workflowId, String.format("%s/watch/%s", baseWorkspaceUrl, workflowId));
     }
 
-    public static String formatLink(String title, String link) {
+    public static String formatActionId(String actionId, String baseWorkspaceUrl) {
+        return formatLink(actionId, String.format("%s/actions/%s", baseWorkspaceUrl, actionId));
+    }
+
+    private static String formatLink(String title, String link) {
         return ANSI_ENABLED ? "\u001b]8;;" + link + "\u001b\\" + title + "\u001b]8;;\u001b\\" : title;
     }
 
