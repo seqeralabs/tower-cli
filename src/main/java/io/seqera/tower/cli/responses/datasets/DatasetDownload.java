@@ -9,31 +9,29 @@
  * defined by the Mozilla Public License, v. 2.0.
  */
 
-package io.seqera.tower.cli.responses.runs;
+package io.seqera.tower.cli.responses.datasets;
 
-import io.seqera.tower.cli.commands.runs.download.enums.RunDownloadFileType;
+import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.FilesHelper;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.seqera.tower.cli.responses.Response;
-
-public class RunFileDownloaded extends Response {
+public class DatasetDownload extends Response {
 
     public final File file;
-    public final RunDownloadFileType type;
+    public final String fileName;
 
-    public RunFileDownloaded(File file, RunDownloadFileType type) {
+    public DatasetDownload(File file, String fileName) {
         this.file = file;
-        this.type = type;
+        this.fileName = fileName;
     }
 
     @Override
     public Object getJSON() {
         Map<String, Object> data = new HashMap<>();
-        data.put(type.name(), FilesHelper.readFileAndDelete(file));
+        data.put(fileName, FilesHelper.readFileAndDelete(file));
 
         return data;
     }

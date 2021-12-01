@@ -9,21 +9,21 @@
  * defined by the Mozilla Public License, v. 2.0.
  */
 
-package io.seqera.tower.cli.commands.computeenvs;
+package io.seqera.tower.cli.commands.datasets;
 
 import picocli.CommandLine;
 
-public class ComputeEnvRefOptions {
+public class DatasetRefOptions {
 
     @CommandLine.ArgGroup(multiplicity = "1")
-    public ComputeEnvRef computeEnv;
+    public DatasetRef dataset;
 
-    public static class ComputeEnvRef {
+    public static class DatasetRef {
 
-        @CommandLine.Option(names = {"-i", "--id"}, description = "Compute environment unique id.")
-        public String computeEnvId;
+        @CommandLine.Option(names = {"-i", "--id"}, description = "Dataset unique id.")
+        public String datasetId;
 
-        @CommandLine.Option(names = {"-n", "--name"}, description = "Compute environment name.")
-        public String computeEnvName;
+        @CommandLine.Option(names = {"-n", "--name"}, description = "Dataset name.")
+        public String datasetName;
     }
 }

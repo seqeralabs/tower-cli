@@ -20,6 +20,9 @@
     }, 
     {
       "name":"org.glassfish.jersey.internal.localization"
+    }, 
+    {
+      "name":"org.glassfish.jersey.media.multipart.internal.localization"
     }
   ]
 }

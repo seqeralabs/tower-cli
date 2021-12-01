@@ -1,0 +1,2 @@
+﻿"Transaction Id","Date / Time",Tipo,Cantidad,Fees,Neto,"Pedido #",Fuente,Cliente,Email,País,"Risk level","Fecha del depósito"
+txn_3K09572H1JIgQRAv01FKJBkx,"2021-11-26 18:23:33",Charge,65,2.14,62.86,763,visa,"Julio Fernandez",jfernandez74@gmail.com,ES,Normal,2021-12-03

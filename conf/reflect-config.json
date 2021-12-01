@@ -163,6 +163,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]}
 ,
 {
+  "name":"io.seqera.tower.cli.commands.DatasetsCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]}
+,
+{
   "name":"io.seqera.tower.cli.commands.InfoCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -836,6 +842,77 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]}
 ,
 {
+  "name":"io.seqera.tower.cli.commands.datasets.AbstractDatasetsCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true}
+,
+{
+  "name":"io.seqera.tower.cli.commands.datasets.AddCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]}
+,
+{
+  "name":"io.seqera.tower.cli.commands.datasets.CreateCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]}
+,
+{
+  "name":"io.seqera.tower.cli.commands.datasets.DatasetRefOptions",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]}
+,
+{
+  "name":"io.seqera.tower.cli.commands.datasets.DatasetRefOptions$DatasetRef",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]}
+,
+{
+  "name":"io.seqera.tower.cli.commands.datasets.DeleteCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]}
+,
+{
+  "name":"io.seqera.tower.cli.commands.datasets.DownloadCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]}
+,
+{
+  "name":"io.seqera.tower.cli.commands.datasets.ListCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]}
+,
+{
+  "name":"io.seqera.tower.cli.commands.datasets.UpdateCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]}
+,
+{
+  "name":"io.seqera.tower.cli.commands.datasets.UrlCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]}
+,
+{
+  "name":"io.seqera.tower.cli.commands.datasets.ViewCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]}
+,
+{
+  "name":"io.seqera.tower.cli.commands.datasets.versions.VersionsCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]}
+,
+{
   "name":"io.seqera.tower.cli.commands.global.PaginationOptions",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1377,6 +1454,48 @@
   "queryAllDeclaredConstructors":true}
 ,
 {
+  "name":"io.seqera.tower.cli.responses.datasets.DatasetCreate",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true}
+,
+{
+  "name":"io.seqera.tower.cli.responses.datasets.DatasetDelete",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true}
+,
+{
+  "name":"io.seqera.tower.cli.responses.datasets.DatasetList",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true}
+,
+{
+  "name":"io.seqera.tower.cli.responses.datasets.DatasetUpdate",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true}
+,
+{
+  "name":"io.seqera.tower.cli.responses.datasets.DatasetUrl",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true}
+,
+{
+  "name":"io.seqera.tower.cli.responses.datasets.DatasetVersionsList",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true}
+,
+{
+  "name":"io.seqera.tower.cli.responses.datasets.DatasetView",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true}
+,
+{
   "name":"io.seqera.tower.cli.responses.members.MembersAdded",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1727,6 +1846,26 @@
   "allDeclaredConstructors":true}
 ,
 {
+  "name":"io.seqera.tower.model.CreateDatasetRequest",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"getDescription","parameterTypes":[] },
+    {"name":"getName","parameterTypes":[] }
+  ]}
+,
+{
+  "name":"io.seqera.tower.model.CreateDatasetResponse",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"<init>","parameterTypes":[] },
+    {"name":"setDataset","parameterTypes":["io.seqera.tower.model.Dataset"] }
+  ]}
+,
+{
   "name":"io.seqera.tower.model.CreateOrganizationRequest",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1798,6 +1937,54 @@
   "allDeclaredConstructors":true}
 ,
 {
+  "name":"io.seqera.tower.model.Dataset",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"<init>","parameterTypes":[] },
+    {"name":"getDateCreated","parameterTypes":[] },
+    {"name":"getDeleted","parameterTypes":[] },
+    {"name":"getDescription","parameterTypes":[] },
+    {"name":"getId","parameterTypes":[] },
+    {"name":"getLastUpdated","parameterTypes":[] },
+    {"name":"getMediaType","parameterTypes":[] },
+    {"name":"getName","parameterTypes":[] },
+    {"name":"setDateCreated","parameterTypes":["java.time.OffsetDateTime"] },
+    {"name":"setDeleted","parameterTypes":["java.lang.Boolean"] },
+    {"name":"setDescription","parameterTypes":["java.lang.String"] },
+    {"name":"setId","parameterTypes":["java.lang.String"] },
+    {"name":"setLastUpdated","parameterTypes":["java.time.OffsetDateTime"] },
+    {"name":"setMediaType","parameterTypes":["java.lang.String"] },
+    {"name":"setName","parameterTypes":["java.lang.String"] }
+  ]}
+,
+{
+  "name":"io.seqera.tower.model.DatasetVersionDbDto",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"<init>","parameterTypes":[] },
+    {"name":"getDatasetId","parameterTypes":[] },
+    {"name":"getDatasetName","parameterTypes":[] },
+    {"name":"getFileName","parameterTypes":[] },
+    {"name":"getHasHeader","parameterTypes":[] },
+    {"name":"getLastUpdated","parameterTypes":[] },
+    {"name":"getMediaType","parameterTypes":[] },
+    {"name":"getUrl","parameterTypes":[] },
+    {"name":"getVersion","parameterTypes":[] },
+    {"name":"setDatasetId","parameterTypes":["java.lang.String"] },
+    {"name":"setDatasetName","parameterTypes":["java.lang.String"] },
+    {"name":"setFileName","parameterTypes":["java.lang.String"] },
+    {"name":"setHasHeader","parameterTypes":["java.lang.Boolean"] },
+    {"name":"setLastUpdated","parameterTypes":["java.time.OffsetDateTime"] },
+    {"name":"setMediaType","parameterTypes":["java.lang.String"] },
+    {"name":"setUrl","parameterTypes":["java.lang.String"] },
+    {"name":"setVersion","parameterTypes":["java.lang.Long"] }
+  ]}
+,
+{
   "name":"io.seqera.tower.model.DescribeActionResponse",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1814,6 +2001,16 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true}
+,
+{
+  "name":"io.seqera.tower.model.DescribeDatasetResponse",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"<init>","parameterTypes":[] },
+    {"name":"setDataset","parameterTypes":["io.seqera.tower.model.Dataset"] }
+  ]}
 ,
 {
   "name":"io.seqera.tower.model.DescribeLaunchResponse",
@@ -2003,6 +2200,26 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true}
+,
+{
+  "name":"io.seqera.tower.model.ListDatasetVersionsResponse",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"<init>","parameterTypes":[] },
+    {"name":"setVersions","parameterTypes":["java.util.List"] }
+  ]}
+,
+{
+  "name":"io.seqera.tower.model.ListDatasetsResponse",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"<init>","parameterTypes":[] },
+    {"name":"setDatasets","parameterTypes":["java.util.List"] }
+  ]}
 ,
 {
   "name":"io.seqera.tower.model.ListMembersResponse",
@@ -2228,6 +2445,16 @@
   "allDeclaredConstructors":true}
 ,
 {
+  "name":"io.seqera.tower.model.UpdateDatasetRequest",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"getDescription","parameterTypes":[] },
+    {"name":"getName","parameterTypes":[] }
+  ]}
+,
+{
   "name":"io.seqera.tower.model.UpdateMemberRoleRequest",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -2262,6 +2489,16 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true}
+,
+{
+  "name":"io.seqera.tower.model.UploadDatasetVersionResponse",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"<init>","parameterTypes":[] },
+    {"name":"setVersion","parameterTypes":["io.seqera.tower.model.DatasetVersionDbDto"] }
+  ]}
 ,
 {
   "name":"io.seqera.tower.model.User",

@@ -15,7 +15,7 @@ import picocli.CommandLine;
 
 public class PipelineRefOptions {
 
-    @CommandLine.ArgGroup
+    @CommandLine.ArgGroup(multiplicity = "1")
     public PipelineRef pipeline;
 
     public static class PipelineRef {
