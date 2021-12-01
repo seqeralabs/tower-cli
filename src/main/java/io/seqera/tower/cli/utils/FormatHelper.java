@@ -142,7 +142,7 @@ public class FormatHelper {
         }
 
         if (WorkflowStatus.SUBMITTED.equals(status)) {
-            return ansi("@|fg(orange) SUBMITTED|@");
+            return ansi("@|fg(214) SUBMITTED|@");
         }
 
         if (WorkflowStatus.RUNNING.equals(status)) {
@@ -177,7 +177,7 @@ public class FormatHelper {
             case PAUSED:
                 return ansi("@|fg(white) PAUSED|@");
             case CREATING:
-                return ansi("@|fg(orange) CREATING");
+                return ansi("@|fg(214) CREATING|@");
             default:
                 return status.toString();
         }
@@ -190,13 +190,13 @@ public class FormatHelper {
 
         switch (status) {
             case CREATING:
-                return ansi("@|fg(orange) CREATING|@");
+                return ansi("@|fg(214) CREATING|@");
             case ERRORED:
                 return ansi("@|fg(red) ERRORED|@");
             case INVALID:
                 return ansi("@|fg(red) INVALID|@");
             case AVAILABLE:
-                return ansi("@|fg(green) AVAILABLE");
+                return ansi("@|fg(green) AVAILABLE|@");
             default:
                 return status.toString();
         }
@@ -213,7 +213,7 @@ public class FormatHelper {
             case MEMBER:
                 return ansi("@|fg(green) MEMBER|@");
             case COLLABORATOR:
-                return ansi("@|fg(orange) COLLABORATOR|@");
+                return ansi("@|fg(214) COLLABORATOR|@");
             default:
                 return participantType.toString();
         }
