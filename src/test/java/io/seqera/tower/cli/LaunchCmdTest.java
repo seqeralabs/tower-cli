@@ -147,7 +147,7 @@ class LaunchCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/workflow/launch").withBody("{\"launch\":{\"computeEnvId\":\"1uJweHHZTo7gydE6pyDt7x\",\"pipeline\":\"nextflow-io/hello\",\"workDir\":\"s3://nextflow-ci/jordeu\"}}"), exactly(1)
+                request().withMethod("POST").withPath("/workflow/launch").withBody("{\"launch\":{\"computeEnvId\":\"1uJweHHZTo7gydE6pyDt7x\",\"pipeline\":\"https://github.com/nextflow-io/hello\",\"workDir\":\"s3://nextflow-ci/jordeu\"}}"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"workflowId\":\"57ojrWRzTyous\"}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -158,7 +158,7 @@ class LaunchCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(format, mock, "launch", "nextflow-io/hello");
+        ExecOut out = exec(format, mock, "launch", "https://github.com/nextflow-io/hello");
 
         assertOutput(format, out, new RunSubmited("57ojrWRzTyous", String.format("%s/user/jordi/watch/57ojrWRzTyous", url(mock)), USER_WORKSPACE_NAME));
     }
@@ -219,7 +219,7 @@ class LaunchCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/workflow/launch").withQueryStringParameter("workspaceId", "222756650686576").withBody("{\"launch\":{\"computeEnvId\":\"4iqCDE6C2Stq0jzBsHJvHn\",\"pipeline\":\"nextflow-io/hello\",\"workDir\":\"s3://nextflow-ci/jordeu\"}}"), exactly(1)
+                request().withMethod("POST").withPath("/workflow/launch").withQueryStringParameter("workspaceId", "222756650686576").withBody("{\"launch\":{\"computeEnvId\":\"4iqCDE6C2Stq0jzBsHJvHn\",\"pipeline\":\"https://github.com/nextflow-io/hello\",\"workDir\":\"s3://nextflow-ci/jordeu\"}}"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"workflowId\":\"52KAMEcqXFyhZ9\"}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -237,7 +237,7 @@ class LaunchCmdTest extends BaseCmdTest {
         );
 
         // Run the command
-        ExecOut out = exec(mock, "launch", "nextflow-io/hello", "-w", "222756650686576");
+        ExecOut out = exec(mock, "launch", "https://github.com/nextflow-io/hello", "-w", "222756650686576");
 
         // Assert results
         assertEquals("", out.stdErr);

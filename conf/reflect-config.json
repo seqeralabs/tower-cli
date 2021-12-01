@@ -2212,8 +2212,7 @@
   "name":"io.seqera.tower.model.ListPipelinesResponse",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]}
+  "allDeclaredConstructors":true}
 ,
 {
   "name":"io.seqera.tower.model.ListTasksResponse",
@@ -2311,8 +2310,7 @@
   "name":"io.seqera.tower.model.PipelineDbDto",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]}
+  "allDeclaredConstructors":true}
 ,
 {
   "name":"io.seqera.tower.model.PodCleanupPolicy",

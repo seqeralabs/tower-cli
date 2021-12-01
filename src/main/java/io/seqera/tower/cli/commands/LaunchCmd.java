@@ -74,7 +74,7 @@ public class LaunchCmd extends AbstractRootCmd {
         Long wspId = workspaceId(workspace.workspace);
 
         // If the pipeline has at least one backslash consider it an external pipeline.
-        if (pipeline.contains("/")) {
+        if (pipeline.startsWith("https://") || pipeline.startsWith("http://")) {
             return runNextflowPipeline(wspId);
         }
 
