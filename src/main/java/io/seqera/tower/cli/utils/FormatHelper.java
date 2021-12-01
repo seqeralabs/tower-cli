@@ -136,6 +136,14 @@ public class FormatHelper {
         return formatLink(Long.toString(teamId), String.format("%s/teams/%s/members", baseOrgUrl, teamId));
     }
 
+    public static String formatWorkspaceId(Long workspaceId, String serverUrl, String orgName, String workspaceName) {
+        return formatLink(Long.toString(workspaceId), String.format("%s/orgs/%s/workspaces/%s/launchpad", serverUrl, orgName, workspaceName));
+    }
+
+    public static String formatOrgId(Long orgId, String serverUrl, String orgName) {
+        return formatLink(Long.toString(orgId), String.format("%s/orgs/%s/workspaces", serverUrl, orgName));
+    }
+
     private static String formatLink(String title, String link) {
         return ANSI_ENABLED ? "\u001b]8;;" + link + "\u001b\\" + title + "\u001b]8;;\u001b\\" : title;
     }

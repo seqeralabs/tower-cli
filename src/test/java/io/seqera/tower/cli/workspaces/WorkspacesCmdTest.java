@@ -73,7 +73,7 @@ class WorkspacesCmdTest extends BaseCmdTest {
                         "      \"workspaceId\": 75887156211590,\n" +
                         "      \"workspaceName\": \"workspace2\"\n" +
                         "    }", OrgAndWorkspaceDbDto.class)
-        )));
+        ), url(mock)));
     }
 
     @ParameterizedTest
@@ -101,7 +101,7 @@ class WorkspacesCmdTest extends BaseCmdTest {
                 "      \"workspaceId\": 75887156211589,\n" +
                 "      \"workspaceName\": \"workspace1\"\n" +
                 "    }", OrgAndWorkspaceDbDto.class)
-        )));
+        ), url(mock)));
     }
 
     @Test
@@ -122,7 +122,7 @@ class WorkspacesCmdTest extends BaseCmdTest {
 
 
         assertEquals("", out.stdErr);
-        assertEquals(chop(new WorkspaceList("jordi", List.of()).toString()), out.stdOut);
+        assertEquals(chop(new WorkspaceList("jordi", List.of(), url(mock)).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
