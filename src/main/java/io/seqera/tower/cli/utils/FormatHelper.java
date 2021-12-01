@@ -144,6 +144,10 @@ public class FormatHelper {
         return formatLink(Long.toString(orgId), String.format("%s/orgs/%s/workspaces", serverUrl, orgName));
     }
 
+    public static String formatPipelineId(Long pipelineId, String baseWorkspaceUrl) {
+        return formatLink(Long.toString(pipelineId), String.format("%s/launchpad/%s/edit", baseWorkspaceUrl, pipelineId));
+    }
+
     private static String formatLink(String title, String link) {
         return ANSI_ENABLED ? "\u001b]8;;" + link + "\u001b\\" + title + "\u001b]8;;\u001b\\" : title;
     }
