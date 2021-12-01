@@ -38,6 +38,6 @@ public class ViewCmd extends AbstractActionsCmd {
 
         DescribeActionResponse response = fetchDescribeActionResponse(actionRefOptions, wspId);
 
-        return new ActionsView(response.getAction());
+        return new ActionsView(response.getAction(), baseWorkspaceUrl(wspId));
     }
 }

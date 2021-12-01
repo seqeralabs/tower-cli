@@ -223,7 +223,7 @@ class ActionsCmdTest extends BaseCmdTest {
                 "    \"lastSeen\": \"2021-06-18T10:10:33Z\",\n" +
                 "    \"dateCreated\": \"2021-06-18T10:10:05Z\",\n" +
                 "    \"lastUpdated\": \"2021-06-18T10:10:33Z\"\n" +
-                "  }", Action.class)));
+                "  }", Action.class), baseUrl(mock, "jordi")));
     }
 
     @Test

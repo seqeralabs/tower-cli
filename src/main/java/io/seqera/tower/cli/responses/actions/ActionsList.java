@@ -49,7 +49,7 @@ public class ActionsList extends Response {
         table.setPrefix("    ");
         actions.forEach(element -> {
             table.addRow(
-                    formatActionId(element.getId(), baseWorkspaceUrl),
+                    formatActionId(element.getId(), baseWorkspaceUrl)   ,
                     element.getName(),
                     element.getEndpoint(),
                     formatActionStatus(element.getStatus()),
