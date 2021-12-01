@@ -254,7 +254,7 @@ public class FormatHelper {
         }
     }
 
-    private static String ansi(String value) {
+    public static String ansi(String value) {
         return CommandLine.Help.Ansi.AUTO.string(value);
     }
 }

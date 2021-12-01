@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.regex.Pattern;
 
+import static io.seqera.tower.cli.utils.FormatHelper.ansi;
+
 public class TableList {
 
     private static final String BLINE = "-";
@@ -92,7 +94,7 @@ public class TableList {
                 } else {
                     line = new StringBuilder();
                 }
-                String part = descriptions[i];
+                String part = ansi(String.format("@|bold %s|@", descriptions[i]));
                 while (stringLength(part) < tableSizes[i] + spacing) {
                     part += " ";
                 }

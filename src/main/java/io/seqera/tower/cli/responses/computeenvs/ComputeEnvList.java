@@ -48,7 +48,7 @@ public class ComputeEnvList extends Response {
             return;
         }
 
-        TableList table = new TableList(out, 5, "ID", "Status", "Platform", "Name", "Last activity").sortBy(0);
+        TableList table = new TableList(out, 5, "  ID", "Status", "Platform", "Name", "Last activity").sortBy(0);
         table.setPrefix("    ");
         computeEnvs.forEach(ce -> table.addRow(
                 String.format("%s %s", ce.getPrimary() != null && ce.getPrimary() ? "*" : " ", formatComputeEnvId(ce.getId(), baseWorkspaceUrl)),
