@@ -42,6 +42,6 @@ public class ViewCmd extends AbstractPipelinesCmd {
 
         Launch launch = api().describePipelineLaunch(pipeline.getPipelineId(), wspId).getLaunch();
 
-        return new PipelinesView(workspaceRef(wspId), pipeline, launch);
+        return new PipelinesView(workspaceRef(wspId), pipeline, launch, baseWorkspaceUrl(wspId));
     }
 }

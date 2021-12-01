@@ -437,6 +437,12 @@ class PipelinesCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("pipelines_update")).withContentType(MediaType.APPLICATION_JSON)
         );
 
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
 
         ExecOut out = exec(mock, "pipelines", "view", "-n", "sleep_one_minute");
 
@@ -457,7 +463,8 @@ class PipelinesCmdTest extends BaseCmdTest {
                                 .computeEnv(
                                         parseJson("{\"id\": \"vYOK4vn7spw7bHHWBDXZ2\"}", ComputeEnv.class)
                                                 .name("demo")
-                                )
+                                ),
+                baseUserUrl(mock, USER_WORKSPACE_NAME)
                 ).toString()), out.stdOut
         );
         assertEquals(0, out.exitCode);
