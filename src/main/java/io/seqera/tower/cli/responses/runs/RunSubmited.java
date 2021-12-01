@@ -9,7 +9,9 @@
  * defined by the Mozilla Public License, v. 2.0.
  */
 
-package io.seqera.tower.cli.responses;
+package io.seqera.tower.cli.responses.runs;
+
+import io.seqera.tower.cli.responses.Response;
 
 public class RunSubmited extends Response {
 

@@ -9,15 +9,20 @@
  * defined by the Mozilla Public License, v. 2.0.
  */
 
-package io.seqera.tower.cli.responses;
+package io.seqera.tower.cli.responses.runs;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.FormatHelper;
 import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.ListWorkflowsResponseListWorkflowsElement;
 
 import java.io.PrintWriter;
 import java.util.List;
+
+import static io.seqera.tower.cli.utils.FormatHelper.formatTime;
+import static io.seqera.tower.cli.utils.FormatHelper.formatWorkflowId;
+import static io.seqera.tower.cli.utils.FormatHelper.formatWorkflowStatus;
 
 public class RunList extends Response {
 
@@ -45,12 +50,12 @@ public class RunList extends Response {
         TableList table = new TableList(out, 6, "ID", "Status", "Project Name", "Run Name", "Username", "Submit Date");
         table.setPrefix("    ");
         workflows.forEach(wf -> table.addRow(
-                FormatHelper.formatWorkflowId(wf.getWorkflow().getId(), this.baseWorkspaceUrl),
-                FormatHelper.formatWorkflowStatus(wf.getWorkflow().getStatus()),
+                formatWorkflowId(wf.getWorkflow().getId(), this.baseWorkspaceUrl),
+                formatWorkflowStatus(wf.getWorkflow().getStatus()),
                 wf.getWorkflow().getProjectName(),
                 wf.getWorkflow().getRunName(),
                 wf.getWorkflow().getUserName(),
-                FormatHelper.formatTime(wf.getWorkflow().getSubmit())
+                formatTime(wf.getWorkflow().getSubmit())
         ));
         table.print();
         out.println("");

@@ -9,20 +9,23 @@
  * defined by the Mozilla Public License, v. 2.0.
  */
 
-package io.seqera.tower.cli.responses;
+package io.seqera.tower.cli.responses.runs;
 
-public class RunDeleted extends Response {
+import io.seqera.tower.cli.responses.Response;
+
+public class RunCanceled extends Response {
 
     public final String id;
     public final String workspaceRef;
 
-    public RunDeleted(String id, String workspaceRef) {
+    public RunCanceled(String id, String workspaceRef) {
         this.id = id;
         this.workspaceRef = workspaceRef;
     }
 
     @Override
     public String toString() {
-        return ansi(String.format("%n  @|yellow Pipeline run '%s' deleted at %s workspace|@%n", id, workspaceRef));
+        return ansi(String.format("%n  @|yellow Pipeline run '%s' canceled at %s workspace|@%n", id, workspaceRef));
     }
+
 }

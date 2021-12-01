@@ -33,6 +33,6 @@ public class ViewCmd extends AbstractOrganizationsCmd {
     protected Response exec() throws ApiException, IOException {
         DescribeOrganizationResponse response = fetchOrganization(organizationRefOptions);
 
-        return new OrganizationsView(response.getOrganization());
+        return new OrganizationsView(response.getOrganization(), serverUrl());
     }
 }

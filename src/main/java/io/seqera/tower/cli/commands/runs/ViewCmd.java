@@ -19,7 +19,7 @@ import io.seqera.tower.cli.commands.runs.tasks.TasksCmd;
 import io.seqera.tower.cli.commands.runs.download.DownloadCmd;
 import io.seqera.tower.cli.exceptions.RunNotFoundException;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.cli.responses.RunView;
+import io.seqera.tower.cli.responses.runs.RunView;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.DescribeWorkflowResponse;
 import io.seqera.tower.model.Launch;
@@ -30,6 +30,7 @@ import picocli.CommandLine;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -71,7 +72,7 @@ public class ViewCmd extends AbstractRunsCmd {
                 progress = api().describeWorkflowProgress(id, wspId).getProgress();
             }
 
-            Map<String, Object> general = new HashMap<String, Object>();
+            Map<String, Object> general = new LinkedHashMap<>();
             general.put("id", workflow.getId());
             general.put("operationId", workflowResponse.getJobInfo() != null ? workflowResponse.getJobInfo().getOperationId() : null);
             general.put("runName", workflow.getRunName());
@@ -84,6 +85,7 @@ public class ViewCmd extends AbstractRunsCmd {
             general.put("executors", workflowLoad.getExecutors() != null ? String.join(", ", workflowLoad.getExecutors()) : null);
             general.put("computeEnv", computeEnv.getName());
             general.put("nextflowVersion", workflow.getNextflow() != null ? workflow.getNextflow().getVersion() : null);
+            general.put("status", workflow.getStatus());
 
             List<String> configFiles = new ArrayList<>();
             String configText = null;
@@ -159,7 +161,8 @@ public class ViewCmd extends AbstractRunsCmd {
                     processes,
                     stats,
                     load,
-                    utilization
+                    utilization,
+                    baseWorkspaceUrl(wspId)
             );
 
         } catch (ApiException e) {

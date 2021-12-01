@@ -15,7 +15,7 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.PaginationOptions;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.cli.responses.RunList;
+import io.seqera.tower.cli.responses.runs.RunList;
 import io.seqera.tower.model.ListWorkflowsResponse;
 import picocli.CommandLine;
 

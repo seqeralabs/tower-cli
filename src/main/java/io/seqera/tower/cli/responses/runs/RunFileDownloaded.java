@@ -9,7 +9,7 @@
  * defined by the Mozilla Public License, v. 2.0.
  */
 
-package io.seqera.tower.cli.responses;
+package io.seqera.tower.cli.responses.runs;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.seqera.tower.cli.commands.runs.download.enums.RunDownloadFileType;
+import io.seqera.tower.cli.responses.Response;
 
 public class RunFileDownloaded extends Response {
 

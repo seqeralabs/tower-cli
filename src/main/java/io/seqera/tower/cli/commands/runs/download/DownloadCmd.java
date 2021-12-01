@@ -17,7 +17,7 @@ import io.seqera.tower.cli.commands.runs.ViewCmd;
 import io.seqera.tower.cli.commands.runs.download.enums.RunDownloadFileType;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.cli.responses.RunFileDownloaded;
+import io.seqera.tower.cli.responses.runs.RunFileDownloaded;
 import picocli.CommandLine;
 
 import java.io.File;

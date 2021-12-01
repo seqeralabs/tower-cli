@@ -17,7 +17,7 @@ package io.seqera.tower.cli;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.InvalidResponseException;
-import io.seqera.tower.cli.responses.RunSubmited;
+import io.seqera.tower.cli.responses.runs.RunSubmited;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;

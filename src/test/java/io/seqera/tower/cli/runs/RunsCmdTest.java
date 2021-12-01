@@ -19,12 +19,12 @@ import io.seqera.tower.cli.commands.runs.download.enums.RunDownloadFileType;
 import io.seqera.tower.cli.exceptions.RunNotFoundException;
 import io.seqera.tower.cli.exceptions.ShowUsageException;
 import io.seqera.tower.cli.exceptions.TowerException;
-import io.seqera.tower.cli.responses.RunCanceled;
-import io.seqera.tower.cli.responses.RunDeleted;
-import io.seqera.tower.cli.responses.RunFileDownloaded;
-import io.seqera.tower.cli.responses.RunList;
-import io.seqera.tower.cli.responses.RunSubmited;
-import io.seqera.tower.cli.responses.RunView;
+import io.seqera.tower.cli.responses.runs.RunCanceled;
+import io.seqera.tower.cli.responses.runs.RunDeleted;
+import io.seqera.tower.cli.responses.runs.RunFileDownloaded;
+import io.seqera.tower.cli.responses.runs.RunList;
+import io.seqera.tower.cli.responses.runs.RunSubmited;
+import io.seqera.tower.cli.responses.runs.RunView;
 import io.seqera.tower.model.ListWorkflowsResponseListWorkflowsElement;
 import io.seqera.tower.model.Workflow;
 import io.seqera.tower.model.WorkflowLoad;
@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -320,6 +321,12 @@ class RunsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("compute_env_view")).withContentType(MediaType.APPLICATION_JSON)
         );
 
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
         ExecOut out = exec(format, mock, "runs", "view", "-i", "5dAZoXrcmZXRO4");
 
         Workflow workflow = parseJson("{\n" +
@@ -401,7 +408,7 @@ class RunsCmdTest extends BaseCmdTest {
                 "      \"cpuEfficiency\": 0\n" +
                 "    }", WorkflowLoad.class);
 
-        Map<String, Object> general = new HashMap<String, Object>();
+        Map<String, Object> general = new LinkedHashMap<>();
         general.put("id", workflow.getId());
         general.put("runName", workflow.getRunName());
         general.put("startingDate", workflow.getStart());
@@ -413,11 +420,12 @@ class RunsCmdTest extends BaseCmdTest {
         general.put("executors", workflowLoad.getExecutors() != null ? String.join(", ", workflowLoad.getExecutors()) : null);
         general.put("computeEnv", "ce-aws-144996268157965");
         general.put("nextflowVersion", workflow.getNextflow() != null ? workflow.getNextflow().getVersion() : null);
+        general.put("status", workflow.getStatus());
 
-        String workspaceRef = USER_WORKSPACE_NAME;
+
         List<String> configFiles = new ArrayList<>();
         String configText = null;
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         String command = null;
         Map<String, Object> status = new HashMap<>();
         List<Map<String, Object>> processes = new ArrayList<>();
@@ -426,7 +434,7 @@ class RunsCmdTest extends BaseCmdTest {
         Map<String, Object> utilization = new HashMap<>();
 
         assertOutput(format, out, new RunView(
-                workspaceRef,
+                USER_WORKSPACE_NAME,
                 general,
                 configFiles,
                 configText,
@@ -436,7 +444,8 @@ class RunsCmdTest extends BaseCmdTest {
                 processes,
                 stats,
                 load,
-                utilization
+                utilization,
+                baseUserUrl(mock, USER_WORKSPACE_NAME)
         ));
     }
 

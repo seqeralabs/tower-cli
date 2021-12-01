@@ -18,7 +18,7 @@ import io.seqera.tower.cli.commands.runs.ViewCmd;
 import io.seqera.tower.cli.commands.runs.metrics.enums.MetricColumn;
 import io.seqera.tower.cli.commands.runs.metrics.enums.MetricType;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.cli.responses.RunViewMetrics;
+import io.seqera.tower.cli.responses.runs.RunViewMetrics;
 import io.seqera.tower.model.ResourceData;
 import io.seqera.tower.model.WorkflowMetrics;
 import picocli.CommandLine;

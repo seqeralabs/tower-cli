@@ -9,12 +9,15 @@
  * defined by the Mozilla Public License, v. 2.0.
  */
 
-package io.seqera.tower.cli.responses;
+package io.seqera.tower.cli.responses.runs;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.FormatHelper;
 import io.seqera.tower.cli.utils.JsonHelper;
 import io.seqera.tower.cli.utils.TableList;
+import io.seqera.tower.model.WorkflowStatus;
 
 import java.io.PrintWriter;
 import java.time.OffsetDateTime;
@@ -22,6 +25,9 @@ import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static io.seqera.tower.cli.utils.FormatHelper.formatWorkflowId;
+import static io.seqera.tower.cli.utils.FormatHelper.formatWorkflowStatus;
 
 public class RunView extends Response {
 
@@ -37,6 +43,9 @@ public class RunView extends Response {
     public final Map<String, Object> load;
     public final Map<String, Object> utilization;
 
+    @JsonIgnore
+    private final String baseWorkspaceUrl;
+
     public RunView(
             String workspaceRef,
             Map<String, Object> general,
@@ -48,7 +57,8 @@ public class RunView extends Response {
             List<Map<String, Object>> processes,
             Map<String, Object> stats,
             Map<String, Object> load,
-            Map<String, Object> utilization
+            Map<String, Object> utilization,
+            String baseWorkspaceUrl
     ) {
         this.workspaceRef = workspaceRef;
         this.general = general;
@@ -61,6 +71,7 @@ public class RunView extends Response {
         this.stats = stats;
         this.load = load;
         this.utilization = utilization;
+        this.baseWorkspaceUrl = baseWorkspaceUrl;
     }
 
     @Override
@@ -116,9 +127,10 @@ public class RunView extends Response {
 
         TableList table = new TableList(out, 2);
         table.setPrefix("    ");
-        table.addRow("ID", general.get("id").toString());
+        table.addRow("ID", formatWorkflowId(general.get("id").toString(), baseWorkspaceUrl));
         table.addRow("Operation ID", general.get("operationId") != null ? general.get("operationId").toString() : "-");
         table.addRow("Run name", general.get("runName").toString());
+        table.addRow("Status", formatWorkflowStatus((WorkflowStatus) general.get("status")));
         table.addRow("Starting date", general.get("startingDate") != null ? FormatHelper.formatTime((OffsetDateTime) general.get("startingDate")) : "No date reported");
         table.addRow("Commit ID", general.get("commitId") != null ? general.get("commitId").toString() : "No commit ID reported");
         table.addRow("Session ID", general.get("sessionId").toString());
