@@ -9,8 +9,9 @@
  * defined by the Mozilla Public License, v. 2.0.
  */
 
-package io.seqera.tower.cli.responses;
+package io.seqera.tower.cli.responses.runs.tasks;
 
+import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.FormatHelper;
 import io.seqera.tower.cli.utils.TableList;
 

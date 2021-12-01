@@ -14,7 +14,7 @@ package io.seqera.tower.cli.runs;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.runs.tasks.enums.TaskColumn;
-import io.seqera.tower.cli.responses.TasksView;
+import io.seqera.tower.cli.responses.runs.tasks.TasksView;
 import io.seqera.tower.model.Task;
 import io.seqera.tower.model.TaskStatus;
 import org.apache.commons.lang3.StringUtils;
@@ -22,7 +22,6 @@ import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;

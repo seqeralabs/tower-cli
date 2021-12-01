@@ -14,7 +14,7 @@ package io.seqera.tower.cli.runs;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.runs.tasks.TaskCmd;
-import io.seqera.tower.cli.responses.TaskView;
+import io.seqera.tower.cli.responses.runs.tasks.TaskView;
 import io.seqera.tower.model.Task;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;

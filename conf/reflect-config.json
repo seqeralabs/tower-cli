@@ -1352,43 +1352,43 @@
   "allDeclaredMethods":true}
 ,
 {
-  "name":"io.seqera.tower.cli.responses.RunCanceled",
+  "name":"io.seqera.tower.cli.responses.runs.RunCanceled",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true}
 ,
 {
-  "name":"io.seqera.tower.cli.responses.RunDeleted",
+  "name":"io.seqera.tower.cli.responses.runs.RunDeleted",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true}
 ,
 {
-  "name":"io.seqera.tower.cli.responses.RunFileDownloaded",
+  "name":"io.seqera.tower.cli.responses.runs.RunFileDownloaded",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true}
 ,
 {
-  "name":"io.seqera.tower.cli.responses.RunList",
+  "name":"io.seqera.tower.cli.responses.runs.RunList",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true}
 ,
 {
-  "name":"io.seqera.tower.cli.responses.RunSubmited",
+  "name":"io.seqera.tower.cli.responses.runs.RunSubmited",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true}
 ,
 {
-  "name":"io.seqera.tower.cli.responses.RunTasksView",
+  "name":"io.seqera.tower.cli.responses.runs.RunTasksView",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true}
 ,
 {
-  "name":"io.seqera.tower.cli.responses.TasksView",
+  "name":"io.seqera.tower.cli.responses.runs.tasks.TasksView",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true}
