@@ -28,6 +28,7 @@ import io.seqera.tower.model.ListComputeEnvsResponseEntry;
 import io.seqera.tower.model.ListWorkspacesAndOrgResponse;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import io.seqera.tower.model.User;
+import io.swagger.annotations.Api;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.logging.LoggingFeature;
 import picocli.CommandLine;
@@ -374,6 +375,10 @@ public abstract class AbstractApiCmd extends AbstractCmd {
             return String.format("%s/user/%s", serverUrl(), userName());
         }
         return String.format("%s/orgs/%s/workspaces/%s", serverUrl(), orgName(workspaceId), workspaceName(workspaceId));
+    }
+
+    protected String baseOrgUrl(String orgName) throws ApiException {
+        return String.format("%s/orgs/%s", serverUrl(), orgName);
     }
 
 }

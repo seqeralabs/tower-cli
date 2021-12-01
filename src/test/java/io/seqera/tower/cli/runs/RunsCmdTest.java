@@ -25,11 +25,9 @@ import io.seqera.tower.cli.responses.RunFileDownloaded;
 import io.seqera.tower.cli.responses.RunList;
 import io.seqera.tower.cli.responses.RunSubmited;
 import io.seqera.tower.cli.responses.RunView;
-import io.seqera.tower.model.Launch;
 import io.seqera.tower.model.ListWorkflowsResponseListWorkflowsElement;
 import io.seqera.tower.model.Workflow;
 import io.seqera.tower.model.WorkflowLoad;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -46,7 +44,6 @@ import java.util.Map;
 
 import static io.seqera.tower.cli.commands.AbstractApiCmd.USER_WORKSPACE_NAME;
 import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
-import static io.seqera.tower.cli.utils.JsonHelper.prettyJson;
 import static org.apache.commons.lang3.StringUtils.chop;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.matchers.Times.exactly;
@@ -153,7 +150,7 @@ class RunsCmdTest extends BaseCmdTest {
                         "        \"runName\": \"spontaneous_easley\"\n" +
                         "      }\n" +
                         "    }", ListWorkflowsResponseListWorkflowsElement.class)
-        ), baseUrl(mock, USER_WORKSPACE_NAME)));
+        ), baseUserUrl(mock, USER_WORKSPACE_NAME)));
     }
 
     @Test
@@ -201,7 +198,7 @@ class RunsCmdTest extends BaseCmdTest {
                         "        \"runName\": \"spontaneous_easley\"\n" +
                         "      }\n" +
                         "    }", ListWorkflowsResponseListWorkflowsElement.class)
-        ), baseUrl(mock, USER_WORKSPACE_NAME)).toString()), out.stdOut);
+        ), baseUserUrl(mock, USER_WORKSPACE_NAME)).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -250,7 +247,7 @@ class RunsCmdTest extends BaseCmdTest {
                         "        \"runName\": \"spontaneous_easley\"\n" +
                         "      }\n" +
                         "    }", ListWorkflowsResponseListWorkflowsElement.class)
-        ), baseUrl(mock, USER_WORKSPACE_NAME)).toString()), out.stdOut);
+        ), baseUserUrl(mock, USER_WORKSPACE_NAME)).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -292,7 +289,7 @@ class RunsCmdTest extends BaseCmdTest {
         ExecOut out = exec(mock, "runs", "list");
 
         assertEquals("", out.stdErr);
-        assertEquals(chop(new RunList(USER_WORKSPACE_NAME, List.of(), baseUrl(mock, USER_WORKSPACE_NAME)).toString()), out.stdOut);
+        assertEquals(chop(new RunList(USER_WORKSPACE_NAME, List.of(), baseUserUrl(mock, USER_WORKSPACE_NAME)).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

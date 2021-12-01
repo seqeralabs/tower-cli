@@ -104,7 +104,7 @@ class ActionsCmdTest extends BaseCmdTest {
                         "      \"usageCmd\": null,\n" +
                         "      \"endpoint\": \"https://api.github.com/repos/pditommaso/hello/hooks/303166158\"\n" +
                         "    }", ListActionsResponseActionInfo.class)
-        ), "jordi", baseUrl(mock, "jordi")));
+        ), "jordi", baseUserUrl(mock, "jordi")));
     }
 
     @Test
@@ -125,7 +125,7 @@ class ActionsCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(mock, "actions", "list");
 
-        assertEquals(chop(new ActionsList(List.of(), "jordi", baseUrl(mock, "jordi")).toString()), out.stdOut);
+        assertEquals(chop(new ActionsList(List.of(), "jordi", baseUserUrl(mock, "jordi")).toString()), out.stdOut);
         assertEquals("", out.stdErr);
         assertEquals(0, out.exitCode);
     }
@@ -229,7 +229,7 @@ class ActionsCmdTest extends BaseCmdTest {
                 "    \"lastSeen\": \"2021-06-18T10:10:33Z\",\n" +
                 "    \"dateCreated\": \"2021-06-18T10:10:05Z\",\n" +
                 "    \"lastUpdated\": \"2021-06-18T10:10:33Z\"\n" +
-                "  }", Action.class), baseUrl(mock, USER_WORKSPACE_NAME)));
+                "  }", Action.class), baseUserUrl(mock, USER_WORKSPACE_NAME)));
     }
 
     @Test

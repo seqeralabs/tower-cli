@@ -95,7 +95,7 @@ class CredentialsCmdTest extends BaseCmdTest {
                 parseJson("{\"id\": \"57Ic6reczFn78H1DTaaXkp\", \"dateCreated\":\"2021-09-07T13:50:21Z\", \"lastUpdated\":\"2021-09-07T13:50:21Z\"}", Credentials.class)
                         .name("azure")
                         .provider(Credentials.ProviderEnum.AZURE)
-        ), baseUrl(mock, USER_WORKSPACE_NAME)));
+        ), baseUserUrl(mock, USER_WORKSPACE_NAME)));
     }
 
     @Test
@@ -116,7 +116,7 @@ class CredentialsCmdTest extends BaseCmdTest {
         ExecOut out = exec(mock, "credentials", "list");
 
         assertEquals("", out.stdErr);
-        assertEquals(chop(new CredentialsList(USER_WORKSPACE_NAME, List.of(), baseUrl(mock, USER_WORKSPACE_NAME)).toString()), out.stdOut);
+        assertEquals(chop(new CredentialsList(USER_WORKSPACE_NAME, List.of(), baseUserUrl(mock, USER_WORKSPACE_NAME)).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

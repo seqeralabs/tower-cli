@@ -188,11 +188,15 @@ public abstract class BaseCmdTest {
         }
     }
 
-    protected String baseUrl(MockServerClient mock, String userName) {
+    protected String baseUserUrl(MockServerClient mock, String userName) {
         return String.format("%s/user/%s", url(mock), userName);
     }
 
-    protected String baseUrl(MockServerClient mock, String orgName, String workspaceName) {
+    protected String baseOrgUrl(MockServerClient mock, String orgName) {
+        return String.format("%s/orgs/%s", url(mock), orgName);
+    }
+
+    protected String baseWorkspaceUrl(MockServerClient mock, String orgName, String workspaceName) {
         return String.format("%s/orgs/%s/workspaces/%s", url(mock), orgName, workspaceName);
     }
 

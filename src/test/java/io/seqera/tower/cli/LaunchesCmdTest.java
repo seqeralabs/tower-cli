@@ -18,11 +18,9 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.InvalidResponseException;
 import io.seqera.tower.cli.responses.RunSubmited;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 
@@ -127,7 +125,7 @@ class LaunchesCmdTest extends BaseCmdTest {
         ExecOut out = exec(format, mock, "launch", "sarek");
 
         // Assert results
-        assertOutput(format, out, new RunSubmited("35aLiS0bIM5efd", baseUrl(mock, "jordi"), USER_WORKSPACE_NAME));
+        assertOutput(format, out, new RunSubmited("35aLiS0bIM5efd", baseUserUrl(mock, "jordi"), USER_WORKSPACE_NAME));
     }
 
     @ParameterizedTest
@@ -160,7 +158,7 @@ class LaunchesCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "launch", "nextflow-io/hello");
 
-        assertOutput(format, out, new RunSubmited("57ojrWRzTyous", baseUrl(mock, "jordi"), USER_WORKSPACE_NAME));
+        assertOutput(format, out, new RunSubmited("57ojrWRzTyous", baseUserUrl(mock, "jordi"), USER_WORKSPACE_NAME));
     }
 
     @Test
@@ -199,7 +197,7 @@ class LaunchesCmdTest extends BaseCmdTest {
 
         // Assert results
         assertEquals("", out.stdErr);
-        assertEquals(new RunSubmited("35aLiS0bIM5efd", baseUrl(mock, "jordi"), USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new RunSubmited("35aLiS0bIM5efd", baseUserUrl(mock, "jordi"), USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -241,7 +239,7 @@ class LaunchesCmdTest extends BaseCmdTest {
 
         // Assert results
         assertEquals("", out.stdErr);
-        assertEquals(new RunSubmited("52KAMEcqXFyhZ9", baseUrl(mock, "Seqera", "cli"), buildWorkspaceRef("Seqera", "cli")).toString(), out.stdOut);
+        assertEquals(new RunSubmited("52KAMEcqXFyhZ9", baseWorkspaceUrl(mock, "Seqera", "cli"), buildWorkspaceRef("Seqera", "cli")).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

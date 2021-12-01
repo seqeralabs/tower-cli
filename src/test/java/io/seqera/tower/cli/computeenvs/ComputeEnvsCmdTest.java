@@ -123,7 +123,7 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
                         .name("demo")
                         .platform("aws-batch")
                         .status(ComputeEnvStatus.AVAILABLE)
-        ), baseUrl(mock, USER_WORKSPACE_NAME)));
+        ), baseUserUrl(mock, USER_WORKSPACE_NAME)));
     }
 
     @Test
@@ -144,7 +144,7 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
         ExecOut out = exec(mock, "compute-envs", "list");
 
         assertEquals("", out.stdErr);
-        assertEquals(chop(new ComputeEnvList(USER_WORKSPACE_NAME, List.of(), baseUrl(mock, USER_WORKSPACE_NAME)).toString()), out.stdOut);
+        assertEquals(chop(new ComputeEnvList(USER_WORKSPACE_NAME, List.of(), baseUserUrl(mock, USER_WORKSPACE_NAME)).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -202,7 +202,7 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
                                         )
 
                         ),
-                baseUrl(mock, USER_WORKSPACE_NAME)
+                baseUserUrl(mock, USER_WORKSPACE_NAME)
         ));
     }
 
@@ -243,7 +243,7 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
                                         .workDir("s3://nextflow-ci/jordeu")
                                         .volumes(Collections.emptyList())
                         ),
-                baseUrl(mock, USER_WORKSPACE_NAME)
+                baseUserUrl(mock, USER_WORKSPACE_NAME)
         ));
     }
 
