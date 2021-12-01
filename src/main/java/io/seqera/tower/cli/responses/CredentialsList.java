@@ -11,6 +11,7 @@
 
 package io.seqera.tower.cli.responses;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.seqera.tower.cli.utils.FormatHelper;
 import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.Credentials;
@@ -18,14 +19,21 @@ import io.seqera.tower.model.Credentials;
 import java.io.PrintWriter;
 import java.util.List;
 
+import static io.seqera.tower.cli.utils.FormatHelper.formatCredentialsId;
+import static io.seqera.tower.cli.utils.FormatHelper.formatTime;
+
 public class CredentialsList extends Response {
 
     public final String workspaceRef;
     public final List<Credentials> credentials;
 
-    public CredentialsList(String workspaceRef, List<Credentials> credentials) {
+    @JsonIgnore
+    private String baseWorkspaceUrl;
+
+    public CredentialsList(String workspaceRef, List<Credentials> credentials, String baseWorkspaceUrl) {
         this.workspaceRef = workspaceRef;
         this.credentials = credentials;
+        this.baseWorkspaceUrl = baseWorkspaceUrl;
     }
 
     @Override
@@ -40,7 +48,12 @@ public class CredentialsList extends Response {
 
         TableList table = new TableList(out, 4, "ID", "Provider", "Name", "Last activity").sortBy(0);
         table.setPrefix("    ");
-        credentials.forEach(element -> table.addRow(element.getId(), element.getProvider().getValue(), element.getName(), FormatHelper.formatTime(element.getLastUsed())));
+        credentials.forEach(element -> table.addRow(
+                formatCredentialsId(element.getId(), baseWorkspaceUrl),
+                element.getProvider().getValue(),
+                element.getName(),
+                formatTime(element.getLastUsed())
+        ));
 
         table.print();
         out.println("");

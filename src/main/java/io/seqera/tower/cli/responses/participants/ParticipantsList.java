@@ -19,6 +19,8 @@ import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.ParticipantDbDto;
 import io.seqera.tower.model.ParticipantType;
 
+import static io.seqera.tower.cli.utils.FormatHelper.formatParticipantType;
+
 public class ParticipantsList extends Response {
 
     public final String organizationName;
@@ -44,7 +46,7 @@ public class ParticipantsList extends Response {
         table.setPrefix("    ");
         participants.forEach(element -> {
             String name = element.getType() == ParticipantType.TEAM ?  element.getTeamName() : element.getUserName() + " (" + element.getEmail() + ")";
-            table.addRow(element.getParticipantId().toString(), element.getType().toString(), name, element.getWspRole().toString());
+            table.addRow(element.getParticipantId().toString(), formatParticipantType(element.getType()), name, element.getWspRole().toString());
         });
 
         table.print();

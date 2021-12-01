@@ -35,6 +35,6 @@ public class ListCmd extends AbstractCredentialsCmd {
         Long wspId = workspaceId(workspace.workspace);
         
         ListCredentialsResponse response = api().listCredentials(wspId, null);
-        return new CredentialsList(workspaceRef(wspId), response.getCredentials());
+        return new CredentialsList(workspaceRef(wspId), response.getCredentials(), baseWorkspaceUrl(wspId));
     }
 }

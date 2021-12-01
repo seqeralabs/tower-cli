@@ -13,6 +13,7 @@ package io.seqera.tower.cli.utils;
 
 import io.seqera.tower.model.ActionStatus;
 import io.seqera.tower.model.ComputeEnvStatus;
+import io.seqera.tower.model.ParticipantType;
 import io.seqera.tower.model.WorkflowStatus;
 import picocli.CommandLine;
 
@@ -126,6 +127,10 @@ public class FormatHelper {
         return formatLink(ceId, String.format("%s/compute-envs/%s", baseWorkspaceUrl, ceId));
     }
 
+    public static String formatCredentialsId(String credentialsId, String baseWorkspaceUrl) {
+        return formatLink(credentialsId, String.format("%s/credentials/%s/edit", baseWorkspaceUrl, credentialsId));
+    }
+
     private static String formatLink(String title, String link) {
         return ANSI_ENABLED ? "\u001b]8;;" + link + "\u001b\\" + title + "\u001b]8;;\u001b\\" : title;
     }
@@ -195,6 +200,24 @@ public class FormatHelper {
             default:
                 return status.toString();
         }
+    }
+
+    public static String formatParticipantType(ParticipantType participantType) {
+        if (participantType == null) {
+            return "NA";
+        }
+
+        switch (participantType) {
+            case TEAM:
+                return ansi("@|fg(blue) TEAM|@");
+            case MEMBER:
+                return ansi("@|fg(green) MEMBER|@");
+            case COLLABORATOR:
+                return ansi("@|fg(orange) COLLABORATOR|@");
+            default:
+                return participantType.toString();
+        }
+
     }
 
     private static String ansi(String value) {
