@@ -15,7 +15,7 @@ import picocli.CommandLine;
 
 public class CredentialsRefOptions {
 
-    @CommandLine.ArgGroup
+    @CommandLine.ArgGroup(multiplicity = "1")
     public CredentialsRef credentialsRef;
 
     public static class CredentialsRef {

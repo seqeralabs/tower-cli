@@ -15,7 +15,7 @@ import picocli.CommandLine;
 
 public class WorkspaceRefOptions {
 
-    @CommandLine.ArgGroup
+    @CommandLine.ArgGroup(multiplicity = "1")
     public WorkspaceRef workspace;
 
     public static class WorkspaceRef {

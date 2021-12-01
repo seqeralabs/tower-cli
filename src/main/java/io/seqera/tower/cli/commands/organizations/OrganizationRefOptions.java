@@ -15,7 +15,7 @@ import picocli.CommandLine;
 
 public class OrganizationRefOptions {
 
-    @CommandLine.ArgGroup
+    @CommandLine.ArgGroup(multiplicity = "1")
     public OrganizationRef organization;
 
     public static class OrganizationRef {
