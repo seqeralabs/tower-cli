@@ -13,6 +13,7 @@ package io.seqera.tower.cli.commands.datasets;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceRequiredOptions;
+import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.datasets.DatasetUpdate;
 import io.seqera.tower.model.Dataset;
@@ -48,11 +49,15 @@ public class UpdateCmd extends AbstractDatasetsCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
+        if (fileName == null && header) {
+            throw new TowerException("Please provide a new file version to upload or remove the --header option");
+        }
+
         Long wspId = workspaceId(workspace.workspace);
         Dataset dataset = fetchDescribeDatasetResponse(datasetRefOptions, wspId);
         UpdateDatasetRequest request = new UpdateDatasetRequest();
         request.setName(newName != null ? newName : dataset.getName());
-        request.setDescription(description);
+        request.setDescription(description != null ? description : dataset.getDescription());
 
         api().updateDataset(wspId, dataset.getId(), request);
 
