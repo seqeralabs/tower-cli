@@ -40,7 +40,7 @@ import static io.seqera.tower.cli.utils.ModelHelper.createLaunchRequest;
         name = "launch",
         description = "Launch a Nextflow pipeline execution."
 )
-public class LaunchesCmd extends AbstractRootCmd {
+public class LaunchCmd extends AbstractRootCmd {
 
     @Parameters(index = "0", paramLabel = "PIPELINE_OR_URL", description = "Workspace pipeline name or full pipeline URL.", arity = "1")
     String pipeline;
@@ -66,7 +66,7 @@ public class LaunchesCmd extends AbstractRootCmd {
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
     AdvancedOptions adv;
 
-    public LaunchesCmd() {
+    public LaunchCmd() {
     }
 
     @Override

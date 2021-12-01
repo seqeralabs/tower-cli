@@ -35,7 +35,7 @@ import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
-class LaunchesCmdTest extends BaseCmdTest {
+class LaunchCmdTest extends BaseCmdTest {
 
     @Test
     void testInvalidAuth(MockServerClient mock) {
