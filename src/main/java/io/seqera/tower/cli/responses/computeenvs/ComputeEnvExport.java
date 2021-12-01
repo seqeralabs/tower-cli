@@ -15,7 +15,7 @@ import io.seqera.tower.cli.responses.Response;
 
 public class ComputeEnvExport extends Response {
 
-    String configOutput;
+    public String configOutput;
     public final String fileName;
 
     public ComputeEnvExport(String configOutput, String fileName) {
