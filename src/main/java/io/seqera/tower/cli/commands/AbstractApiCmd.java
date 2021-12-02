@@ -64,6 +64,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     private String serverUrl;
 
     private Map<String, String> availableComputeEnvsNameToId;
+    private Map<String, String> availableComputeEnvsIdToName;
     private String primaryComputeEnvId;
 
     protected AbstractApiCmd() {
@@ -201,38 +202,15 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         return workspaceId;
     }
 
-    protected ComputeEnv computeEnvByName(Long workspaceId, String name) throws ApiException {
-        loadAvailableComputeEnvs(workspaceId);
-
-        if (availableComputeEnvsNameToId.containsKey(name)) {
-            return api().describeComputeEnv(availableComputeEnvsNameToId.get(name), workspaceId).getComputeEnv();
-        }
-
-        throw new TowerException(String.format("Compute environment '%s' is not available", name));
-    }
-
-    protected ComputeEnv computeEnvById(Long workspaceId, String id) throws ApiException {
-        loadAvailableComputeEnvs(workspaceId);
-
-        if (availableComputeEnvsNameToId.containsValue(id)) {
-            String name = availableComputeEnvsNameToId.entrySet().stream()
-                    .filter(it -> Objects.equals(it.getValue(), id))
-                    .map(Map.Entry::getKey)
-                    .findFirst()
-                    .orElse(null);
-
-            return api().describeComputeEnv(availableComputeEnvsNameToId.get(name), workspaceId).getComputeEnv();
-        }
-
-        throw new TowerException(String.format("Compute environment '%s' is not available", id));
-    }
-
     protected ComputeEnv computeEnvByRef(Long workspaceId, String ref) throws ApiException {
-        try {
-            return computeEnvById(workspaceId, ref);
-        } catch (TowerException towerException) {
-            return computeEnvByName(workspaceId, ref);
+        loadAvailableComputeEnvs(workspaceId);
+
+        String ceId = availableComputeEnvsIdToName.containsKey(ref) ? ref : availableComputeEnvsNameToId.getOrDefault(ref, null);
+        if (ceId == null) {
+            throw new ComputeEnvNotFoundException(ref, workspaceId);
         }
+
+        return api.describeComputeEnv(ceId, workspaceId).getComputeEnv();
     }
 
     protected ComputeEnv primaryComputeEnv(Long workspaceId) throws ApiException {
@@ -375,12 +353,14 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     private void loadAvailableComputeEnvs(Long workspaceId) throws ApiException {
         if (availableComputeEnvsNameToId == null) {
             availableComputeEnvsNameToId = new HashMap<>();
+            availableComputeEnvsIdToName = new HashMap<>();
             for (ListComputeEnvsResponseEntry ce : api().listComputeEnvs("AVAILABLE", workspaceId).getComputeEnvs()) {
 
                 if (ce.getPrimary() != null && ce.getPrimary()) {
                     primaryComputeEnvId = ce.getId();
                 }
                 availableComputeEnvsNameToId.put(ce.getName(), ce.getId());
+                availableComputeEnvsIdToName.put(ce.getId(), ce.getName());
             }
         }
     }
