@@ -45,6 +45,10 @@ public class FormatHelper {
         return result;
     }
 
+    public static String formatDurationMillis(Float value) {
+        return formatDurationMillis(value.longValue());
+    }
+
     public static String formatTime(OffsetDateTime value) {
         if (value == null) {
             return "never";
@@ -82,6 +86,10 @@ public class FormatHelper {
         return String.format("%.2f %s", amount, metric);
     }
 
+    public static String formatBits(Float value) {
+        return formatBits(value.longValue());
+    }
+
     public static String formatCost(Double value) {
         if (value == null) {
             return "";
@@ -96,6 +104,10 @@ public class FormatHelper {
         }
 
         return String.format("%.2f%%", value);
+    }
+
+    public static String formatPercentage(Float value) {
+        return formatPercentage(value.doubleValue());
     }
 
     public static String formatDecimal(Double value) {

@@ -16,6 +16,7 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.runs.AbstractRunsCmd;
 import io.seqera.tower.cli.commands.runs.ViewCmd;
 import io.seqera.tower.cli.commands.runs.metrics.enums.MetricColumn;
+import io.seqera.tower.cli.commands.runs.metrics.enums.MetricPreviewFormat;
 import io.seqera.tower.cli.commands.runs.metrics.enums.MetricType;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.RunViewMetrics;
@@ -43,8 +44,8 @@ public class MetricsCmd extends AbstractRunsCmd {
     @CommandLine.Option(names = {"-c", "--columns"}, split = ",", description = "Process metric columns to display: ${COMPLETION-CANDIDATES} (default displays all.)")
     public List<MetricColumn> columns;
 
-    @CommandLine.Option(names = {"-g", "--group-results"}, description = "Group process metric data in single cell (default id true.)")
-    public boolean groupResults = true;
+    @CommandLine.Option(names = {"-p", "--table-format-preview"}, description = "Preview metric table in condense or extended format (default is condense.)")
+    public MetricPreviewFormat groupType = MetricPreviewFormat.condensed;
 
     @CommandLine.ParentCommand
     public ViewCmd parentCommand;
@@ -120,7 +121,7 @@ public class MetricsCmd extends AbstractRunsCmd {
             });
         }
 
-        return new RunViewMetrics(columns, metricsMem, metricsCpu, metricsTime, metricsIo, groupResults);
+        return new RunViewMetrics(columns, metricsMem, metricsCpu, metricsTime, metricsIo, groupType);
     }
 
     private Map<String, Object> processColumns(ResourceData resourceData) {

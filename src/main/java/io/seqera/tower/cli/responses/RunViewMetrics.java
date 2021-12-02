@@ -12,6 +12,8 @@
 package io.seqera.tower.cli.responses;
 
 import io.seqera.tower.cli.commands.runs.metrics.enums.MetricColumn;
+import io.seqera.tower.cli.commands.runs.metrics.enums.MetricPreviewFormat;
+import io.seqera.tower.cli.utils.FormatHelper;
 import io.seqera.tower.cli.utils.TableList;
 
 import java.io.PrintWriter;
@@ -19,8 +21,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+// TODO: Refactor using the new Metric model instead nested maps to make it more readable.
 public class RunViewMetrics extends Response {
 
     public final List<MetricColumn> columns;
@@ -28,7 +33,7 @@ public class RunViewMetrics extends Response {
     public final List<Map<String, Object>> metricsCpu;
     public final List<Map<String, Object>> metricsTime;
     public final List<Map<String, Object>> metricsIo;
-    public final boolean groupResults;
+    public final MetricPreviewFormat groupType;
 
     public RunViewMetrics(
             List<MetricColumn> columns,
@@ -36,14 +41,14 @@ public class RunViewMetrics extends Response {
             List<Map<String, Object>> metricsCpu,
             List<Map<String, Object>> metricsTime,
             List<Map<String, Object>> metricsIo,
-            boolean groupResults
+            MetricPreviewFormat groupType
     ) {
         this.columns = columns;
         this.metricsMem = metricsMem;
         this.metricsCpu = metricsCpu;
         this.metricsTime = metricsTime;
         this.metricsIo = metricsIo;
-        this.groupResults = groupResults;
+        this.groupType = groupType;
     }
 
     @Override
@@ -74,7 +79,7 @@ public class RunViewMetrics extends Response {
         List<String> fields = columns.stream().map(Enum::name).collect(Collectors.toList());
         List<String> cols = new ArrayList<>();
         cols.add("process");
-        if (!groupResults) {
+        if (groupType == MetricPreviewFormat.expanded) {
             cols.add("metric");
         }
         cols.addAll(fields);
@@ -82,11 +87,16 @@ public class RunViewMetrics extends Response {
         if (!metricsMem.isEmpty()) {
             out.println(ansi(String.format("%n%n    @|bold  Memory Metrics|@%n    ----------------%n")));
 
-            if (groupResults) {
-                out.println(ansi(String.format("   @|italic   Legend: execution real-time / %% requested time used|@%n")));
-                processDataReducedTable(metricsMem, out, cols);
+            Map<String, Function<Float, Object>> formatter = new HashMap<>();
+            formatter.put("memVirtual", FormatHelper::formatBits);
+            formatter.put("memRaw", FormatHelper::formatBits);
+            formatter.put("memUsage", FormatHelper::formatPercentage);
+
+            if (groupType == MetricPreviewFormat.condensed) {
+                out.println(ansi(String.format("   @|italic   Legend:  physical RAM / virtual RAM+swap / %%RAM allocated |@%n")));
+                processDataReducedTable(metricsMem, out, cols, formatter);
             } else {
-                processDataTable(metricsMem, out, cols);
+                processExpandedDataTable(metricsMem, out, cols, formatter);
             }
         }
 
@@ -94,11 +104,15 @@ public class RunViewMetrics extends Response {
         if (!metricsCpu.isEmpty()) {
             out.println(ansi(String.format("%n%n    @|bold  CPU Metrics|@%n    ----------------%n")));
 
-            if (groupResults) {
+            Map<String, Function<Float, Object>> formatter = new HashMap<>();
+            formatter.put("cpuUsage", FormatHelper::formatBits);
+            formatter.put("cpuRaq", FormatHelper::formatPercentage);
+
+            if (groupType == MetricPreviewFormat.condensed) {
                 out.println(ansi(String.format("   @|italic   Legend: raw usage / %% allocated|@%n")));
-                processDataReducedTable(metricsCpu, out, cols);
+                processDataReducedTable(metricsCpu, out, cols, formatter);
             } else {
-                processDataTable(metricsCpu, out, cols);
+                processExpandedDataTable(metricsCpu, out, cols, formatter);
             }
         }
 
@@ -106,11 +120,15 @@ public class RunViewMetrics extends Response {
         if (!metricsTime.isEmpty()) {
             out.println(ansi(String.format("%n%n    @|bold  Time Metrics|@%n    ----------------%n")));
 
-            if (groupResults) {
+            Map<String, Function<Float, Object>> formatter = new HashMap<>();
+            formatter.put("timeRaw", FormatHelper::formatDurationMillis);
+            formatter.put("timeUsage", FormatHelper::formatPercentage);
+
+            if (groupType == MetricPreviewFormat.condensed) {
                 out.println(ansi(String.format("   @|italic   Legend: reads / writes|@%n")));
-                processDataReducedTable(metricsTime, out, cols);
+                processDataReducedTable(metricsTime, out, cols, formatter);
             } else {
-                processDataTable(metricsTime, out, cols);
+                processExpandedDataTable(metricsTime, out, cols, formatter);
             }
         }
 
@@ -118,16 +136,28 @@ public class RunViewMetrics extends Response {
         if (!metricsIo.isEmpty()) {
             out.println(ansi(String.format("%n%n    @|bold  I/O Metrics|@%n    ----------------%n")));
 
-            if (groupResults) {
+            Map<String, Function<Float, Object>> formatter = new HashMap<>();
+            formatter.put("reads", FormatHelper::formatBits);
+            formatter.put("writes", FormatHelper::formatBits);
+
+            if (groupType == MetricPreviewFormat.condensed) {
                 out.println(ansi(String.format("   @|italic   Legend: reads / writes|@%n")));
-                processDataReducedTable(metricsIo, out, cols);
+                processDataReducedTable(metricsIo, out, cols, formatter);
             } else {
-                processDataTable(metricsIo, out, cols);
+                processExpandedDataTable(metricsIo, out, cols, formatter);
             }
         }
     }
 
-    private void processDataTable(List<Map<String, Object>> metricData, PrintWriter out, List<String> cols) {
+    /**
+     * Process data into a regular extended data table.
+     *
+     * @param metricData
+     * @param out
+     * @param cols
+     * @param formatter
+     */
+    private void processExpandedDataTable(List<Map<String, Object>> metricData, PrintWriter out, List<String> cols, Map<String, Function<Float, Object>> formatter) {
         TableList table = new TableList(out, cols.size(), cols.toArray(new String[0]));
         table.setPrefix("    ");
 
@@ -138,10 +168,14 @@ public class RunViewMetrics extends Response {
                     cells.add(process);
                     cells.add(dataBlockDef);
 
+                    Function<Float, Object> fnc = getBlockPrettyTransformation(dataBlockDef, formatter);
+
+                    // This where data cells are created.
                     if (data != null) {
-                        ((Map<String, Object>) data).forEach((k, v) -> {
-                            cells.add(v.toString());
+                        ((Map<String, Float>) data).forEach((k, v) -> {
+                            cells.add(fnc.apply(v).toString());
                         });
+
                         table.addRow(cells.toArray(new String[0]));
                     }
                 });
@@ -152,7 +186,15 @@ public class RunViewMetrics extends Response {
         table.print();
     }
 
-    private void processDataReducedTable(List<Map<String, Object>> metricData, PrintWriter out, List<String> cols) {
+    /**
+     * Process data into a summarized or condensed table.
+     *
+     * @param metricData
+     * @param out
+     * @param cols
+     * @param formatter
+     */
+    private void processDataReducedTable(List<Map<String, Object>> metricData, PrintWriter out, List<String> cols, Map<String, Function<Float, Object>> formatter) {
         TableList table = new TableList(out, cols.size(), cols.toArray(new String[0])).sortBy(0);
         table.setPrefix("    ");
 
@@ -160,8 +202,10 @@ public class RunViewMetrics extends Response {
             processDataBlock.forEach((process, sectionDataBlock) -> {
                 List<String> cells = new ArrayList<>();
                 cells.add(process);
-                Map<String, List<String>> data = summarizeDataBlocks((Map<String, Map<String, Object>>) sectionDataBlock);
+                Map<String, List<String>> data = summarizeDataBlocks((Map<String, Map<String, Float>>) sectionDataBlock, formatter);
                 if (data.size() > 0) {
+
+                    // This where summarized data cells are created into a concatenated string.
                     data.values().stream().forEach(it -> {
                         cells.add(String.join(" / ", it));
                     });
@@ -174,21 +218,47 @@ public class RunViewMetrics extends Response {
         table.print();
     }
 
-    private Map<String, List<String>> summarizeDataBlocks(Map<String, Map<String, Object>> data) {
+    /**
+     * Transform a set of data blocks into a condensed and summarized single data block.
+     *
+     * @param data
+     * @param formatter
+     * @return
+     */
+    private Map<String, List<String>> summarizeDataBlocks(Map<String, Map<String, Float>> data, Map<String, Function<Float, Object>> formatter) {
         Map<String, List<String>> result = new HashMap<>();
 
-        data.values().stream().forEach(it -> {
-            if (it != null) {
-                for (Map.Entry<String, Object> entry : it.entrySet()) {
+        data.entrySet().stream().forEach(it -> {
+            if (it.getValue() != null) {
+                Function<Float, Object> fnc = getBlockPrettyTransformation(it.getKey(), formatter);
+
+                for (Map.Entry<String, Float> entry : it.getValue().entrySet()) {
                     if (!result.containsKey(entry.getKey())) {
                         result.put(entry.getKey(), new ArrayList<>());
                     }
 
-                    result.get(entry.getKey()).add(entry.getValue().toString());
+                    result.get(entry.getKey()).add(fnc.apply(entry.getValue()).toString());
                 }
             }
         });
 
         return result;
+    }
+
+    /**
+     * Find the right pretty transformation for the given data block and a transformation map.
+     *
+     * @param blockKey
+     * @param formatter
+     * @return
+     */
+    private Function<Float, Object> getBlockPrettyTransformation(String blockKey, Map<String, Function<Float, Object>> formatter) {
+        return formatter
+                .entrySet()
+                .stream()
+                .filter(fmt -> Objects.equals(fmt.getKey(), blockKey))
+                .findFirst()
+                .orElse(null)
+                .getValue();
     }
 }
