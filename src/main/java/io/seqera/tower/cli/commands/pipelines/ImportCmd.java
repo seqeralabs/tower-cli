@@ -20,12 +20,14 @@ import io.seqera.tower.cli.responses.pipelines.PipelinesAdded;
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.CreatePipelineRequest;
+import io.seqera.tower.model.WorkflowLaunchRequest;
 import picocli.CommandLine;
 
 import java.io.IOException;
 import java.nio.file.Path;
 
 import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
+import static io.seqera.tower.cli.utils.ModelHelper.coalesce;
 
 @CommandLine.Command(
         name = "import",
@@ -54,20 +56,23 @@ public class ImportCmd extends AbstractPipelinesCmd {
         request = parseJson(FilesHelper.readString(fileName), CreatePipelineRequest.class);
         request.setName(name);
 
-        if (computeEnv != null) {
-            ComputeEnv ce = computeEnvByRef(wspId, computeEnv);
-            request.getLaunch().setComputeEnvId(ce.getId());
-        } else {
-            String ceId = request.getLaunch().getComputeEnvId();
-            if (ceId == null) {
-                throw new TowerException("Missing compute environment ID. Provide it using '--compute-env' option or field 'launch.computeEnvId'.");
-            }
-            try {
-                api().describeComputeEnv(ceId, wspId);
-            } catch (ApiException apiException) {
-                throw new ComputeEnvNotFoundException(request.getLaunch().getId(), wspId);
-            }
+        WorkflowLaunchRequest launch = request.getLaunch();
+        String ceRef = computeEnv != null ? computeEnv : launch.getComputeEnvId();
+        if (ceRef == null) {
+            throw new TowerException("Missing compute environment ID. Provide it using '--compute-env' option or field 'launch.computeEnvId'.");
         }
+
+        ComputeEnv ce = computeEnvByRef(wspId, ceRef);
+
+        // Use compute env values by default
+        String workDirValue = coalesce(launch.getWorkDir(), ce.getConfig().getWorkDir());
+        String preRunScriptValue = coalesce(launch.getPreRunScript(), ce.getConfig().getPreRunScript());
+        String postRunScriptValue = coalesce(launch.getPostRunScript(), ce.getConfig().getPostRunScript());
+
+        launch.setComputeEnvId(ce.getId());
+        launch.setWorkDir(workDirValue);
+        launch.setPreRunScript(preRunScriptValue);
+        launch.setPostRunScript(postRunScriptValue);
 
         api().createPipeline(request, wspId);
 
