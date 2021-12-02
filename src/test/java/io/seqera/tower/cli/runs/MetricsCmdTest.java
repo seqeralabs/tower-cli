@@ -14,9 +14,10 @@ package io.seqera.tower.cli.runs;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.runs.metrics.enums.MetricColumn;
+import io.seqera.tower.cli.commands.runs.metrics.enums.MetricPreviewFormat;
 import io.seqera.tower.cli.responses.RunViewMetrics;
-import org.junit.jupiter.api.Test;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 
@@ -33,7 +34,7 @@ import static org.mockserver.model.HttpResponse.response;
 public class MetricsCmdTest extends BaseCmdTest {
 
     @Test
-    void testRunMetrics(MockServerClient mock) throws JsonProcessingException {
+    void testRunMetricsExpanded(MockServerClient mock) throws JsonProcessingException {
         mock.when(
                 request().withMethod("GET").withPath("/workflow/5dAZoXrcmZXRO4/metrics"), exactly(1)
         ).respond(
@@ -53,9 +54,36 @@ public class MetricsCmdTest extends BaseCmdTest {
         List<Map<String, Object>> metricsTime = parseJson(new String(loadResource("runs/time")), List.class);
         List<Map<String, Object>> metricsIo = parseJson(new String(loadResource("runs/io")), List.class);
 
-        ExecOut out = exec(mock,"runs", "view", "-i", "5dAZoXrcmZXRO4", "metrics");
+        ExecOut out = exec(mock,"runs", "view", "-i", "5dAZoXrcmZXRO4", "metrics", "-p", "expanded");
         assertEquals("", out.stdErr);
-        assertEquals(StringUtils.chop(new RunViewMetrics(cols, metricsMem, metricsCpu, metricsTime, metricsIo, true).toString()), out.stdOut);
+        assertEquals(StringUtils.chop(new RunViewMetrics(cols, metricsMem, metricsCpu, metricsTime, metricsIo, MetricPreviewFormat.expanded).toString()), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testRunMetricsCondensed(MockServerClient mock) throws JsonProcessingException {
+        mock.when(
+                request().withMethod("GET").withPath("/workflow/5dAZoXrcmZXRO4/metrics"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("runs/runs_metrics")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        List<MetricColumn> cols = new ArrayList<>();
+        cols.add(MetricColumn.q1);
+        cols.add(MetricColumn.q2);
+        cols.add(MetricColumn.q3);
+        cols.add(MetricColumn.min);
+        cols.add(MetricColumn.max);
+        cols.add(MetricColumn.mean);
+
+        List<Map<String, Object>> metricsMem = parseJson(new String(loadResource("runs/mem")), List.class);
+        List<Map<String, Object>> metricsCpu = parseJson(new String(loadResource("runs/cpu")), List.class);
+        List<Map<String, Object>> metricsTime = parseJson(new String(loadResource("runs/time")), List.class);
+        List<Map<String, Object>> metricsIo = parseJson(new String(loadResource("runs/io")), List.class);
+
+        ExecOut out = exec(mock,"runs", "view", "-i", "5dAZoXrcmZXRO4", "metrics", "-p", "condensed");
+        assertEquals("", out.stdErr);
+        assertEquals(StringUtils.chop(new RunViewMetrics(cols, metricsMem, metricsCpu, metricsTime, metricsIo, MetricPreviewFormat.condensed).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 }
