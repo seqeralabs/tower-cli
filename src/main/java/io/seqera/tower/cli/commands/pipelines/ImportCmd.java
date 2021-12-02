@@ -14,6 +14,7 @@ package io.seqera.tower.cli.commands.pipelines;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
+import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.pipelines.PipelinesAdded;
 import io.seqera.tower.cli.utils.FilesHelper;
@@ -57,8 +58,12 @@ public class ImportCmd extends AbstractPipelinesCmd {
             ComputeEnv ce = computeEnvByRef(wspId, computeEnv);
             request.getLaunch().setComputeEnvId(ce.getId());
         } else {
+            String ceId = request.getLaunch().getComputeEnvId();
+            if (ceId == null) {
+                throw new TowerException("Missing compute environment ID. Provide it using '--compute-env' option or field 'launch.computeEnvId'.");
+            }
             try {
-                api().describeComputeEnv(request.getLaunch().getComputeEnvId(), wspId);
+                api().describeComputeEnv(ceId, wspId);
             } catch (ApiException apiException) {
                 throw new ComputeEnvNotFoundException(request.getLaunch().getId(), wspId);
             }
