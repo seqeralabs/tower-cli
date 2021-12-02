@@ -152,11 +152,6 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
     @ParameterizedTest
     @EnumSource(OutputType.class)
     void testViewAwsForge(OutputType format, MockServerClient mock) throws JsonProcessingException {
-        mock.when(
-                request().withMethod("GET").withPath("/compute-envs"), exactly(1)
-        ).respond(
-                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"isnEDBLvHDAIteOEF44ow\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
-        );
 
         mock.when(
                 request().withMethod("GET").withPath("/compute-envs/isnEDBLvHDAIteOEF44ow"), exactly(1)
@@ -209,11 +204,6 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
     @ParameterizedTest
     @EnumSource(OutputType.class)
     void testViewAwsManual(OutputType format, MockServerClient mock) throws JsonProcessingException {
-        mock.when(
-                request().withMethod("GET").withPath("/compute-envs"), exactly(1)
-        ).respond(
-                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"53aWhB2qJroy0i51FOrFAC\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
-        );
 
         mock.when(
                 request().withMethod("GET").withPath("/compute-envs/53aWhB2qJroy0i51FOrFAC"), exactly(1)
@@ -232,7 +222,7 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
                 parseJson("{\"id\": \"53aWhB2qJroy0i51FOrFAC\", \"dateCreated\": \"2021-09-08T15:19:08Z\", \"lastUpdated\": \"2021-09-08T15:19:08Z\"}", ComputeEnv.class)
                         .name("manual")
                         .platform(ComputeEnv.PlatformEnum.AWS_BATCH)
-                        .status(ComputeEnvStatus.AVAILABLE)
+                        .status(ComputeEnvStatus.ERRORED)
                         .credentialsId("6g0ER59L4ZoE5zpOmUP48D")
                         .config(
                                 parseJson(" {\"discriminator\": \"aws-batch\"}", AwsBatchConfig.class)
@@ -249,11 +239,6 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
 
     @Test
     void testViewNotFound(MockServerClient mock) {
-        mock.when(
-                request().withMethod("GET").withPath("/compute-envs"), exactly(1)
-        ).respond(
-                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"isnEDBLvHDAIteOEF44om2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
-        );
 
         mock.when(
                 request().withMethod("GET").withPath("/compute-envs/isnEDBLvHDAIteOEF44or"), exactly(1)
@@ -263,18 +248,13 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(mock, "compute-envs", "view", "-i", "isnEDBLvHDAIteOEF44or");
 
-        assertEquals(errorMessage(out.app, new TowerException(String.format("Compute environment '%s' is not available", "isnEDBLvHDAIteOEF44or"))), out.stdErr);
+        assertEquals(errorMessage(out.app, new TowerException(String.format("Compute environment '%s' not found at user workspace", "isnEDBLvHDAIteOEF44or"))), out.stdErr);
         assertEquals("", out.stdOut);
         assertEquals(1, out.exitCode);
     }
 
     @Test
     void testViewInvalidAuth(MockServerClient mock) {
-        mock.when(
-                request().withMethod("GET").withPath("/compute-envs"), exactly(1)
-        ).respond(
-                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"isnEDBLvHDAIteOEF44om\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
-        );
 
         mock.when(
                 request().withMethod("GET").withPath("/compute-envs/isnEDBLvHDAIteOEF44om"), exactly(1)
@@ -406,11 +386,6 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
     @ParameterizedTest
     @EnumSource(OutputType.class)
     void testPrimarySet(OutputType format, MockServerClient mock) throws JsonProcessingException {
-        mock.when(
-                request().withMethod("GET").withPath("/compute-envs"), exactly(1)
-        ).respond(
-                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"isnEDBLvHDAIteOEF44ow\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
-        );
 
         mock.when(
                 request().withMethod("GET").withPath("/compute-envs/isnEDBLvHDAIteOEF44ow"), exactly(1)

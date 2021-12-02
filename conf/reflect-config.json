@@ -175,13 +175,13 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]}
 ,
 {
-  "name":"io.seqera.tower.cli.commands.LaunchesCmd",
+  "name":"io.seqera.tower.cli.commands.LaunchCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]}
 ,
 {
-  "name":"io.seqera.tower.cli.commands.LaunchesCmd$AdvancedOptions",
+  "name":"io.seqera.tower.cli.commands.LaunchCmd$AdvancedOptions",
   "allDeclaredFields":true,
   "allDeclaredMethods":true}
 ,
@@ -2237,8 +2237,7 @@
   "name":"io.seqera.tower.model.ListPipelinesResponse",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]}
+  "allDeclaredConstructors":true}
 ,
 {
   "name":"io.seqera.tower.model.ListTasksResponse",
@@ -2336,8 +2335,7 @@
   "name":"io.seqera.tower.model.PipelineDbDto",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]}
+  "allDeclaredConstructors":true}
 ,
 {
   "name":"io.seqera.tower.model.PodCleanupPolicy",
