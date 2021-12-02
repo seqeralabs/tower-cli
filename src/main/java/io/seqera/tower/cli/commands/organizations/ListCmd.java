@@ -40,9 +40,9 @@ public class ListCmd extends AbstractOrganizationsCmd {
                     .filter(item -> Objects.equals(item.getWorkspaceId(), null))
                     .collect(Collectors.toList());
 
-            return new OrganizationsList(userName(), responseOrg);
+            return new OrganizationsList(userName(), responseOrg, serverUrl());
         }
 
-        return new OrganizationsList(userName(), response.getOrgsAndWorkspaces());
+        return new OrganizationsList(userName(), response.getOrgsAndWorkspaces(), serverUrl());
     }
 }

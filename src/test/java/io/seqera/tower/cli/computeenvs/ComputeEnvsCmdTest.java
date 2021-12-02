@@ -21,20 +21,19 @@ import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
 import io.seqera.tower.cli.exceptions.TowerException;
-import io.seqera.tower.cli.responses.ComputeEnvAdded;
-import io.seqera.tower.cli.responses.ComputeEnvDeleted;
-import io.seqera.tower.cli.responses.ComputeEnvList;
-import io.seqera.tower.cli.responses.ComputeEnvView;
-import io.seqera.tower.cli.responses.ComputeEnvs.ComputeEnvExport;
-import io.seqera.tower.cli.responses.ComputeEnvs.ComputeEnvsPrimaryGet;
-import io.seqera.tower.cli.responses.ComputeEnvs.ComputeEnvsPrimarySet;
+import io.seqera.tower.cli.responses.computeenvs.ComputeEnvAdded;
+import io.seqera.tower.cli.responses.computeenvs.ComputeEnvDeleted;
+import io.seqera.tower.cli.responses.computeenvs.ComputeEnvList;
+import io.seqera.tower.cli.responses.computeenvs.ComputeEnvView;
+import io.seqera.tower.cli.responses.computeenvs.ComputeEnvExport;
+import io.seqera.tower.cli.responses.computeenvs.ComputeEnvsPrimaryGet;
+import io.seqera.tower.cli.responses.computeenvs.ComputeEnvsPrimarySet;
 import io.seqera.tower.model.AwsBatchConfig;
 import io.seqera.tower.model.ComputeConfig;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.ComputeEnvStatus;
 import io.seqera.tower.model.ForgeConfig;
 import io.seqera.tower.model.ListComputeEnvsResponseEntry;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -49,7 +48,6 @@ import java.util.Map;
 
 import static io.seqera.tower.cli.commands.AbstractApiCmd.USER_WORKSPACE_NAME;
 import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
-import static io.seqera.tower.cli.utils.JsonHelper.prettyJson;
 import static org.apache.commons.lang3.StringUtils.chop;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -112,6 +110,12 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
         );
 
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
         ExecOut out = exec(format, mock, "compute-envs", "list");
         assertOutput(format, out, new ComputeEnvList(USER_WORKSPACE_NAME, List.of(
                 new ListComputeEnvsResponseEntry()
@@ -119,7 +123,7 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
                         .name("demo")
                         .platform("aws-batch")
                         .status(ComputeEnvStatus.AVAILABLE)
-        )));
+        ), baseUserUrl(mock, USER_WORKSPACE_NAME)));
     }
 
     @Test
@@ -131,10 +135,16 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"computeEnvs\":[]}").withContentType(MediaType.APPLICATION_JSON)
         );
 
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
         ExecOut out = exec(mock, "compute-envs", "list");
 
         assertEquals("", out.stdErr);
-        assertEquals(chop(new ComputeEnvList(USER_WORKSPACE_NAME, List.of()).toString()), out.stdOut);
+        assertEquals(chop(new ComputeEnvList(USER_WORKSPACE_NAME, List.of(), baseUserUrl(mock, USER_WORKSPACE_NAME)).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -147,6 +157,12 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
                 request().withMethod("GET").withPath("/compute-envs/isnEDBLvHDAIteOEF44ow"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("compute_env_view")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         ExecOut out = exec(format, mock, "compute-envs", "view", "-i", "isnEDBLvHDAIteOEF44ow");
@@ -180,7 +196,8 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
                                                 )
                                         )
 
-                        )
+                        ),
+                baseUserUrl(mock, USER_WORKSPACE_NAME)
         ));
     }
 
@@ -192,6 +209,12 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
                 request().withMethod("GET").withPath("/compute-envs/53aWhB2qJroy0i51FOrFAC"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("compute_env_view_aws_manual")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         ExecOut out = exec(format, mock, "compute-envs", "view", "-i", "53aWhB2qJroy0i51FOrFAC");
@@ -209,7 +232,8 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
                                         .cliPath("/home/ec2-user/miniconda/bin/aws")
                                         .workDir("s3://nextflow-ci/jordeu")
                                         .volumes(Collections.emptyList())
-                        )
+                        ),
+                baseUserUrl(mock, USER_WORKSPACE_NAME)
         ));
     }
 

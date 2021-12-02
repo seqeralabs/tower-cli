@@ -71,7 +71,7 @@ class OrganizationsCmdTest extends BaseCmdTest {
                         "      \"workspaceId\": null,\n" +
                         "      \"workspaceName\": null\n" +
                         "    }", OrgAndWorkspaceDbDto.class)
-        )));
+        ), url(mock)));
     }
 
     @Test
@@ -91,7 +91,7 @@ class OrganizationsCmdTest extends BaseCmdTest {
         ExecOut out = exec(mock, "organizations", "list");
 
         assertEquals("", out.stdErr);
-        assertEquals(chop(new OrganizationsList("jordi", List.of()).toString()), out.stdOut);
+        assertEquals(chop(new OrganizationsList("jordi", List.of(), url(mock)).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -128,7 +128,7 @@ class OrganizationsCmdTest extends BaseCmdTest {
                 "    \"logoUrl\": null,\n" +
                 "    \"memberId\": null,\n" +
                 "    \"memberRole\": null\n" +
-                "  }", OrganizationDbDto.class)));
+                "  }", OrganizationDbDto.class), url(mock)));
     }
 
     @Test

@@ -55,6 +55,6 @@ public class ListCmd extends AbstractPipelinesCmd {
             }
         }
 
-        return new PipelinesList(workspaceRef(wspId), response.getPipelines());
+        return new PipelinesList(workspaceRef(wspId), response.getPipelines(), baseWorkspaceUrl(wspId));
     }
 }

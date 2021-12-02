@@ -28,6 +28,7 @@ import io.seqera.tower.model.ListComputeEnvsResponseEntry;
 import io.seqera.tower.model.ListWorkspacesAndOrgResponse;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import io.seqera.tower.model.User;
+import io.swagger.annotations.Api;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.media.multipart.BodyPart;
@@ -386,6 +387,17 @@ public abstract class AbstractApiCmd extends AbstractCmd {
 
     protected Response exec() throws ApiException, IOException {
         throw new ShowUsageException(getSpec());
+    }
+
+    protected String baseWorkspaceUrl(Long workspaceId) throws ApiException {
+        if (workspaceId == null) {
+            return String.format("%s/user/%s", serverUrl(), userName());
+        }
+        return String.format("%s/orgs/%s/workspaces/%s", serverUrl(), orgName(workspaceId), workspaceName(workspaceId));
+    }
+
+    protected String baseOrgUrl(String orgName) throws ApiException {
+        return String.format("%s/orgs/%s", serverUrl(), orgName);
     }
 
 }

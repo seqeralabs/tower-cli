@@ -14,8 +14,7 @@ package io.seqera.tower.cli.commands.computeenvs.primary;
 import java.io.IOException;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.commands.computeenvs.AbstractComputeEnvCmd;
-import io.seqera.tower.cli.responses.ComputeEnvs.ComputeEnvsPrimaryGet;
+import io.seqera.tower.cli.responses.computeenvs.ComputeEnvsPrimaryGet;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.ComputeEnv;
 import picocli.CommandLine;

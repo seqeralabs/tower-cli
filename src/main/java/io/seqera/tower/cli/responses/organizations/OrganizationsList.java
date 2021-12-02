@@ -14,23 +14,30 @@ package io.seqera.tower.cli.responses.organizations;
 import java.io.PrintWriter;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
+
+import static io.seqera.tower.cli.utils.FormatHelper.formatOrgId;
 
 public class OrganizationsList extends Response {
 
     public final String userName;
     public final List<OrgAndWorkspaceDbDto> organizations;
 
-    public OrganizationsList(String userName, List<OrgAndWorkspaceDbDto> organizations) {
+    @JsonIgnore
+    private final String serverUrl;
+
+    public OrganizationsList(String userName, List<OrgAndWorkspaceDbDto> organizations, String serverUrl) {
         this.userName = userName;
         this.organizations = organizations;
+        this.serverUrl = serverUrl;
     }
 
     @Override
     public void toString(PrintWriter out) {
-        out.println(ansi(String.format("%n  @|bold organizations for %s user:|@%n", userName)));
+        out.println(ansi(String.format("%n  @|bold Organizations for %s user:|@%n", userName)));
 
         if (organizations.isEmpty()) {
             out.println(ansi("    @|yellow No organizations found|@"));
@@ -41,7 +48,7 @@ public class OrganizationsList extends Response {
         table.setPrefix("    ");
         organizations.forEach(element -> {
             if (element.getOrgId() != null) {
-                table.addRow(element.getOrgId().toString(), element.getOrgName());
+                table.addRow(formatOrgId(element.getOrgId(), serverUrl, element.getOrgName()), element.getOrgName());
             }
         });
 

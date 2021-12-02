@@ -291,6 +291,12 @@ class PipelinesCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("pipelines_list")).withContentType(MediaType.APPLICATION_JSON)
         );
 
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
         ExecOut out = exec(format, mock, "pipelines", "list");
         assertOutput(format, out, new PipelinesList(USER_WORKSPACE_NAME, List.of(
                 new PipelineDbDto()
@@ -299,7 +305,7 @@ class PipelinesCmdTest extends BaseCmdTest {
                         .repository("https://github.com/pditommaso/nf-sleep")
                         .userId(4L)
                         .userName("jordi")
-        )));
+        ), baseUserUrl(mock, USER_WORKSPACE_NAME)));
     }
 
     @Test
@@ -323,7 +329,7 @@ class PipelinesCmdTest extends BaseCmdTest {
                         .repository("https://github.com/pditommaso/nf-sleep")
                         .userId(4L)
                         .userName("jordi")
-        )).toString()), out.stdOut);
+        ), baseUserUrl(mock, USER_WORKSPACE_NAME)).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -338,6 +344,12 @@ class PipelinesCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("pipelines_list")).withContentType(MediaType.APPLICATION_JSON)
         );
 
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
         ExecOut out = exec(mock, "pipelines", "list", "--page", "1", "--max", "2");
 
         assertEquals("", out.stdErr);
@@ -348,7 +360,7 @@ class PipelinesCmdTest extends BaseCmdTest {
                         .repository("https://github.com/pditommaso/nf-sleep")
                         .userId(4L)
                         .userName("jordi")
-        )).toString()), out.stdOut);
+        ), baseUserUrl(mock, USER_WORKSPACE_NAME)).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -397,10 +409,16 @@ class PipelinesCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{ \"pipelines\": [], \"totalSize\": 0 }").withContentType(MediaType.APPLICATION_JSON)
         );
 
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
         ExecOut out = exec(mock, "pipelines", "list");
 
         assertEquals("", out.stdErr);
-        assertEquals(chop(new PipelinesList(USER_WORKSPACE_NAME, List.of()).toString()), out.stdOut);
+        assertEquals(chop(new PipelinesList(USER_WORKSPACE_NAME, List.of(), baseUserUrl(mock, USER_WORKSPACE_NAME)).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -417,6 +435,12 @@ class PipelinesCmdTest extends BaseCmdTest {
                 request().withMethod("GET").withPath("/pipelines/217997727159863/launch"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("pipelines_update")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
 
 
@@ -439,7 +463,8 @@ class PipelinesCmdTest extends BaseCmdTest {
                                 .computeEnv(
                                         parseJson("{\"id\": \"vYOK4vn7spw7bHHWBDXZ2\"}", ComputeEnv.class)
                                                 .name("demo")
-                                )
+                                ),
+                baseUserUrl(mock, USER_WORKSPACE_NAME)
                 ).toString()), out.stdOut
         );
         assertEquals(0, out.exitCode);
@@ -470,7 +495,7 @@ class PipelinesCmdTest extends BaseCmdTest {
         ExecOut out = exec(mock, "pipelines", "list", "-w", "222756650686576");
 
         assertEquals("", out.stdErr);
-        assertEquals(chop(new PipelinesList(buildWorkspaceRef("Seqera", "cli"), List.of()).toString()), out.stdOut);
+        assertEquals(chop(new PipelinesList(buildWorkspaceRef("Seqera", "cli"), List.of(), baseWorkspaceUrl(mock, "Seqera", "cli")).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

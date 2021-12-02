@@ -9,12 +9,14 @@
  * defined by the Mozilla Public License, v. 2.0.
  */
 
-package io.seqera.tower.cli.responses;
+package io.seqera.tower.cli.responses.computeenvs;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.JSON;
 import io.seqera.tower.cli.commands.computeenvs.platforms.AwsBatchForgePlatform;
 import io.seqera.tower.cli.commands.computeenvs.platforms.AwsBatchManualPlatform;
+import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.FormatHelper;
 import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.AwsBatchConfig;
@@ -23,16 +25,24 @@ import io.seqera.tower.model.ComputeEnv;
 
 import java.io.PrintWriter;
 
+import static io.seqera.tower.cli.utils.FormatHelper.formatComputeEnvId;
+import static io.seqera.tower.cli.utils.FormatHelper.formatComputeEnvStatus;
+import static io.seqera.tower.cli.utils.FormatHelper.formatTime;
+
 public class ComputeEnvView extends Response {
 
     public final String id;
     public final ComputeEnv computeEnv;
     public final String workspaceRef;
 
-    public ComputeEnvView(String id, String workspaceRef, ComputeEnv computeEnv) {
+    @JsonIgnore
+    private String baseWorkspaceUrl;
+
+    public ComputeEnvView(String id, String workspaceRef, ComputeEnv computeEnv, String baseWorkspaceUrl) {
         this.id = id;
         this.computeEnv = computeEnv;
         this.workspaceRef = workspaceRef;
+        this.baseWorkspaceUrl = baseWorkspaceUrl;
     }
 
     @Override
@@ -64,12 +74,13 @@ public class ComputeEnvView extends Response {
         out.println(ansi(String.format("%n  @|bold Compute environment at %s workspace:|@%n", workspaceRef)));
         TableList table = new TableList(out, 2);
         table.setPrefix("    ");
-        table.addRow("ID", id);
+        table.addRow("ID", formatComputeEnvId(id, baseWorkspaceUrl));
         table.addRow("Name", computeEnv.getName());
         table.addRow("Platform", computeEnv.getPlatform().getValue());
-        table.addRow("Last updated", FormatHelper.formatTime(computeEnv.getLastUpdated()));
-        table.addRow("Last activity", FormatHelper.formatTime(computeEnv.getLastUsed()));
-        table.addRow("Created", FormatHelper.formatTime(computeEnv.getDateCreated()));
+        table.addRow("Last updated", formatTime(computeEnv.getLastUpdated()));
+        table.addRow("Last activity", formatTime(computeEnv.getLastUsed()));
+        table.addRow("Created", formatTime(computeEnv.getDateCreated()));
+        table.addRow("Status", formatComputeEnvStatus(computeEnv.getStatus()));
         table.print();
 
         out.println(String.format("%n  Configuration:%n%n%s%n", configJson.replaceAll("(?m)^", "     ")));

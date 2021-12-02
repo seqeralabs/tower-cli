@@ -9,22 +9,23 @@
  * defined by the Mozilla Public License, v. 2.0.
  */
 
-package io.seqera.tower.cli.responses;
+package io.seqera.tower.cli.responses.runs;
 
-public class ComputeEnvAdded extends Response {
+import io.seqera.tower.cli.responses.Response;
 
-    public final String platform;
-    public final String name;
+public class RunCanceled extends Response {
+
+    public final String id;
     public final String workspaceRef;
 
-    public ComputeEnvAdded(String platform, String name, String workspaceRef) {
-        this.platform = platform;
-        this.name = name;
+    public RunCanceled(String id, String workspaceRef) {
+        this.id = id;
         this.workspaceRef = workspaceRef;
     }
 
     @Override
     public String toString() {
-        return ansi(String.format("%n  @|yellow New %S compute environment '%s' added at %s workspace|@%n", platform, name, workspaceRef));
+        return ansi(String.format("%n  @|yellow Pipeline run '%s' canceled at %s workspace|@%n", id, workspaceRef));
     }
+
 }

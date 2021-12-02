@@ -17,12 +17,10 @@ package io.seqera.tower.cli;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.InvalidResponseException;
-import io.seqera.tower.cli.responses.RunSubmited;
-import org.junit.jupiter.api.DisplayName;
+import io.seqera.tower.cli.responses.runs.RunSubmited;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 
@@ -127,7 +125,7 @@ class LaunchCmdTest extends BaseCmdTest {
         ExecOut out = exec(format, mock, "launch", "sarek");
 
         // Assert results
-        assertOutput(format, out, new RunSubmited("35aLiS0bIM5efd", String.format("%s/user/jordi/watch/35aLiS0bIM5efd", url(mock)), USER_WORKSPACE_NAME));
+        assertOutput(format, out, new RunSubmited("35aLiS0bIM5efd", baseUserUrl(mock, "jordi"), USER_WORKSPACE_NAME));
     }
 
     @ParameterizedTest
@@ -160,7 +158,7 @@ class LaunchCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "launch", "https://github.com/nextflow-io/hello");
 
-        assertOutput(format, out, new RunSubmited("57ojrWRzTyous", String.format("%s/user/jordi/watch/57ojrWRzTyous", url(mock)), USER_WORKSPACE_NAME));
+        assertOutput(format, out, new RunSubmited("57ojrWRzTyous", baseUserUrl(mock, "jordi"), USER_WORKSPACE_NAME));
     }
 
     @Test
@@ -199,7 +197,7 @@ class LaunchCmdTest extends BaseCmdTest {
 
         // Assert results
         assertEquals("", out.stdErr);
-        assertEquals(new RunSubmited("35aLiS0bIM5efd", String.format("%s/user/jordi/watch/35aLiS0bIM5efd", url(mock)), USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new RunSubmited("35aLiS0bIM5efd", baseUserUrl(mock, "jordi"), USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -241,7 +239,7 @@ class LaunchCmdTest extends BaseCmdTest {
 
         // Assert results
         assertEquals("", out.stdErr);
-        assertEquals(new RunSubmited("52KAMEcqXFyhZ9", String.format("%s/orgs/Seqera/workspaces/cli/watch/52KAMEcqXFyhZ9", url(mock)), buildWorkspaceRef("Seqera", "cli")).toString(), out.stdOut);
+        assertEquals(new RunSubmited("52KAMEcqXFyhZ9", baseWorkspaceUrl(mock, "Seqera", "cli"), buildWorkspaceRef("Seqera", "cli")).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

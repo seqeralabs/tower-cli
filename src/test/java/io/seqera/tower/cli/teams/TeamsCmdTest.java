@@ -89,7 +89,7 @@ class TeamsCmdTest extends BaseCmdTest {
                         "      \"avatarUrl\": null,\n" +
                         "      \"membersCount\": 1\n" +
                         "    }", TeamDbDto.class)
-        )));
+        ), baseOrgUrl(mock, "organization1")));
     }
 
     @Test
@@ -146,7 +146,7 @@ class TeamsCmdTest extends BaseCmdTest {
                         "      \"avatarUrl\": null,\n" +
                         "      \"membersCount\": 1\n" +
                         "    }", TeamDbDto.class)
-        )).toString()), out.stdOut);
+        ), baseOrgUrl(mock, "organization1")).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -204,7 +204,7 @@ class TeamsCmdTest extends BaseCmdTest {
                         "      \"avatarUrl\": null,\n" +
                         "      \"membersCount\": 1\n" +
                         "    }", TeamDbDto.class)
-        )).toString()), out.stdOut);
+        ), baseOrgUrl(mock, "organization1")).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -289,7 +289,7 @@ class TeamsCmdTest extends BaseCmdTest {
         ExecOut out = exec(mock, "teams", "list", "-o", "organization1");
 
         assertEquals("", out.stdErr);
-        assertEquals(chop(new TeamsList("organization1", List.of()).toString()), out.stdOut);
+        assertEquals(chop(new TeamsList("organization1", List.of(), baseOrgUrl(mock, "organization1")).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

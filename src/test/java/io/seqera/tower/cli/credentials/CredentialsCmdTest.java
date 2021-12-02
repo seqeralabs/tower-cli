@@ -81,6 +81,12 @@ class CredentialsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("credentials_list")).withContentType(MediaType.APPLICATION_JSON)
         );
 
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
         ExecOut out = exec(format, mock, "credentials", "list");
         assertOutput(format, out, new CredentialsList(USER_WORKSPACE_NAME, Arrays.asList(
                 parseJson("{\"id\": \"2ba2oekqeTEBzwSDgXg7xf\", \"lastUsed\": \"2021-09-06T08:53:51Z\", \"dateCreated\":\"2021-09-06T06:54:53Z\", \"lastUpdated\":\"2021-09-06T06:54:53Z\"}", Credentials.class)
@@ -89,7 +95,7 @@ class CredentialsCmdTest extends BaseCmdTest {
                 parseJson("{\"id\": \"57Ic6reczFn78H1DTaaXkp\", \"dateCreated\":\"2021-09-07T13:50:21Z\", \"lastUpdated\":\"2021-09-07T13:50:21Z\"}", Credentials.class)
                         .name("azure")
                         .provider(Credentials.ProviderEnum.AZURE)
-        )));
+        ), baseUserUrl(mock, USER_WORKSPACE_NAME)));
     }
 
     @Test
@@ -101,10 +107,16 @@ class CredentialsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"credentials\": []}").withContentType(MediaType.APPLICATION_JSON)
         );
 
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
         ExecOut out = exec(mock, "credentials", "list");
 
         assertEquals("", out.stdErr);
-        assertEquals(chop(new CredentialsList(USER_WORKSPACE_NAME, List.of()).toString()), out.stdOut);
+        assertEquals(chop(new CredentialsList(USER_WORKSPACE_NAME, List.of(), baseUserUrl(mock, USER_WORKSPACE_NAME)).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
