@@ -553,7 +553,7 @@ class PipelinesCmdTest extends BaseCmdTest {
                         .withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "-v", "pipelines", "import", tempFile(new String(loadResource("pipelines_add"), StandardCharsets.UTF_8), "data", ".json"), "-n", "pipelineNew");
+        ExecOut out = exec(mock, "pipelines", "import", tempFile(new String(loadResource("pipelines_add"), StandardCharsets.UTF_8), "data", ".json"), "-n", "pipelineNew");
 
         assertEquals("", out.stdErr);
         assertEquals(new PipelinesAdded(USER_WORKSPACE_NAME, "pipelineNew").toString(), out.stdOut);
