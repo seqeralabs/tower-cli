@@ -40,17 +40,11 @@ license {
     exclude 'conf/**'
 }
 
-String gitVersion() {
-    def p = new ProcessBuilder().command('sh', '-c', 'git rev-parse --short HEAD').start()
-    def r = p.waitFor()
-    return r == 0 ? p.text.trim() : '(unknown)'
-}
-
 task buildInfo {
     doLast {
         def version = rootProject.file('VERSION').text.trim()
         def versionApi = rootProject.file('VERSION-API').text.trim()
-        def commitId = gitVersion().trim()
+        def commitId = System.env.getOrDefault("GITHUB_SHA", "unknown").substring(0,7)
         def info = """\
                     version=${version}
                     versionApi=${versionApi}
