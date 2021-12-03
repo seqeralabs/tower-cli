@@ -131,12 +131,12 @@ Comprehensive details about Tower Forge are availible in the [user documentation
 Add a pre-configured pipeline that can be re-used later:
 
 ```bash
-tw pipelines add --name=my_sleepy_pipeline --params=<(echo 'timeout: 60') https://github.com/pditommaso/nf-sleep
+tw pipelines add --name=my_sleepy_pipeline --params-file=<(echo 'timeout: 60') https://github.com/pditommaso/nf-sleep
 ```
 
 Pipelines consist of a pipeline repository, launch parameters, and a Compute Environment. When a Compute Environment is not specified the primary one is used.
 
-> The `params` option should be a YAML or JSON file. Here we use a Bash pipe to convert a command into a YAML file automatically.
+> The `params-file` option should be a YAML or JSON file. Here we use a Bash pipe to convert a command into a YAML file automatically.
 
 ### 9. Launch it!
 
@@ -149,7 +149,7 @@ tw launch my_sleepy_pipeline
 Launch the pipeline with different parameters:
 
 ```bash
-tw launch my_sleepy_pipeline --params=<(echo 'timeout: 30')
+tw launch my_sleepy_pipeline --params-file=<(echo 'timeout: 30')
 ```
 
 ### 11. Update a pipeline
@@ -157,7 +157,7 @@ tw launch my_sleepy_pipeline --params=<(echo 'timeout: 30')
 The default launch parameters can be changed using the `update` command:
 
 ```bash
-tw pipelines update --name=my_sleepy_pipeline --params=<(echo 'timeout: 30')
+tw pipelines update --name=my_sleepy_pipeline --params-file=<(echo 'timeout: 30')
 ```
 
 ### 12. Launch a pipeline directly
@@ -183,7 +183,7 @@ The `tw launch` command provides a similar user experience to `nextflow run` wit
 1. Run a Pipeline pre-defined in a Tower Workspace with a custom parameters file:
 
     ```bash
-    tw launch my_sleepy_pipeline --params=./my_params.yaml
+    tw launch my_sleepy_pipeline --params-file=./my_params.yaml
     ```
 
 2. Run any Nextflow pipeline using the primary Compute Environment:
@@ -201,7 +201,7 @@ The `tw launch` command provides a similar user experience to `nextflow run` wit
 4. Run any Nextflow pipeline and adjust the default profile and parameters:
 
     ```bash
-    tw launch nf-core/rnaseq --profile=test,docker --params=./my_params.yaml --compute-env=my_aws_ce
+    tw launch nf-core/rnaseq --profile=test,docker --params-file=./my_params.yaml --compute-env=my_aws_ce
     ```
 
 ## Activate autocompletion

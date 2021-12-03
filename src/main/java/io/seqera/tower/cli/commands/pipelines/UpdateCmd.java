@@ -17,8 +17,6 @@ import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.pipelines.PipelinesUpdated;
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.ComputeEnv;
-import io.seqera.tower.model.DescribeLaunchResponse;
-import io.seqera.tower.model.DescribePipelineResponse;
 import io.seqera.tower.model.Launch;
 import io.seqera.tower.model.PipelineDbDto;
 import io.seqera.tower.model.UpdatePipelineRequest;
@@ -82,8 +80,8 @@ public class UpdateCmd extends AbstractPipelinesCmd {
                                 .pipeline(coalesce(pipeline, launch.getPipeline()))
                                 .revision(coalesce(opts.revision, launch.getRevision()))
                                 .workDir(coalesce(opts.workDir, launch.getWorkDir()))
-                                .configProfiles(coalesce(opts.profiles, launch.getConfigProfiles()))
-                                .paramsText(coalesce(FilesHelper.readString(opts.params), launch.getParamsText()))
+                                .configProfiles(coalesce(opts.profile, launch.getConfigProfiles()))
+                                .paramsText(coalesce(FilesHelper.readString(opts.paramsFile), launch.getParamsText()))
 
                                 // Advanced options
                                 .configText(coalesce(FilesHelper.readString(opts.config), launch.getConfigText()))

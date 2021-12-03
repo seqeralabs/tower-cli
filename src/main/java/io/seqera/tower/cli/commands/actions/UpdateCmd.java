@@ -66,8 +66,8 @@ public class UpdateCmd extends AbstractActionsCmd {
                 .pipeline(action.getLaunch().getPipeline())
                 .revision(opts.revision)
                 .workDir(workDirValue)
-                .configProfiles(opts.profiles)
-                .paramsText(FilesHelper.readString(opts.params))
+                .configProfiles(opts.profile)
+                .paramsText(FilesHelper.readString(opts.paramsFile))
 
                 // Advanced options
                 .configText(FilesHelper.readString(opts.config))
