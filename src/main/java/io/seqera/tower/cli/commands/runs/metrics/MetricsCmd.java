@@ -26,6 +26,7 @@ import picocli.CommandLine;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -62,11 +63,11 @@ public class MetricsCmd extends AbstractRunsCmd {
         List<Map<String, Object>> metricsMem = new ArrayList<>();
         if (type.contains(MetricType.mem)) {
             metrics.forEach(it -> {
-                Map<String, Object> data = new HashMap<>();
+                Map<String, Object> data = new LinkedHashMap<>();
                 if (it.getProcess().contains(filter)) {
                     data.put("memRaw", it.getMem() != null ? processColumns(it.getMem()) : null);
-                    data.put("memUsage", it.getMemUsage() != null ? processColumns(it.getMemUsage()) : null);
                     data.put("memVirtual", it.getVmem() != null ? processColumns(it.getVmem()) : null);
+                    data.put("memUsage", it.getMemUsage() != null ? processColumns(it.getMemUsage()) : null);
 
                     Map<String, Object> process = new HashMap<>();
                     process.put(it.getProcess(), data);
@@ -79,7 +80,7 @@ public class MetricsCmd extends AbstractRunsCmd {
         List<Map<String, Object>> metricsCpu = new ArrayList<>();
         if (type.contains(MetricType.cpu)) {
             metrics.forEach(it -> {
-                Map<String, Object> data = new HashMap<>();
+                Map<String, Object> data = new LinkedHashMap<>();
                 if (it.getProcess().contains(filter)) {
                     data.put("cpuRaw", it.getCpu() != null ? processColumns(it.getCpu()) : null);
                     data.put("cpuUsage", it.getCpuUsage() != null ? processColumns(it.getCpuUsage()) : null);
@@ -94,7 +95,7 @@ public class MetricsCmd extends AbstractRunsCmd {
         List<Map<String, Object>> metricsTime = new ArrayList<>();
         if (type.contains(MetricType.time)) {
             metrics.forEach(it -> {
-                Map<String, Object> data = new HashMap<>();
+                Map<String, Object> data = new LinkedHashMap<>();
                 if (it.getProcess().contains(filter)) {
                     data.put("timeRaw", it.getTime() != null ? processColumns(it.getTime()) : null);
                     data.put("timeUsage", it.getTimeUsage() != null ? processColumns(it.getTimeUsage()) : null);
@@ -109,10 +110,10 @@ public class MetricsCmd extends AbstractRunsCmd {
         List<Map<String, Object>> metricsIo = new ArrayList<>();
         if (type.contains(MetricType.io)) {
             metrics.forEach(it -> {
-                Map<String, Object> data = new HashMap<>();
+                Map<String, Object> data = new LinkedHashMap<>();
                 if (it.getProcess().contains(filter)) {
-                    data.put("writes", it.getWrites() != null ? processColumns(it.getWrites()) : null);
                     data.put("reads", it.getReads() != null ? processColumns(it.getReads()) : null);
+                    data.put("writes", it.getWrites() != null ? processColumns(it.getWrites()) : null);
 
                     Map<String, Object> process = new HashMap<>();
                     process.put(it.getProcess(), data);
