@@ -65,7 +65,7 @@ class GkePlatformTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "-v", "compute-envs", "add", "gke", "-n", "gke", "--work-dir", "/workdir", "-r", "europe", "--cluster-name", "tower", "--namespace", "nf", "--head-account", "head", "--storage-claim", "nf", "--storage-mount=/workdir");
+        ExecOut out = exec(mock, "compute-envs", "add", "gke", "-n", "gke", "--work-dir", "/workdir", "-r", "europe", "--cluster-name", "tower", "--namespace", "nf", "--head-account", "head", "--storage-claim", "nf", "--storage-mount=/workdir");
 
         assertEquals("", out.stdErr);
         assertEquals(new ComputeEnvAdded("gke-platform", "gke", USER_WORKSPACE_NAME).toString(), out.stdOut);
