@@ -36,17 +36,17 @@ public class FormatHelper {
         long seconds = d.toSecondsPart();
 
         String result = "";
-        if (seconds != 0) {
-            result = String.format("%s%ds ", result, seconds);
-        }
-        if (minutes != 0) {
-            result = String.format("%s%dm ", result, minutes);
+        if (days != 0) {
+            result = String.format("%s%dd", result, days);
         }
         if (hours != 0) {
-            result = String.format("%s%dh ", result, hours);
+            result = String.format("%s%dh", result, hours);
         }
-        if (days != 0) {
-            result = String.format("%s%dd ", result, days);
+        if (minutes != 0) {
+            result = String.format("%s%dm", result, minutes);
+        }
+        if (seconds != 0) {
+            result = String.format("%s%ds", result, seconds);
         }
 
         return result;
@@ -90,7 +90,7 @@ public class FormatHelper {
             metric = "B";
         }
 
-        return String.format("%.2f %s", amount, metric);
+        return String.format("%.0f%s", amount, metric);
     }
 
     public static String formatBits(Number value) {
@@ -110,7 +110,7 @@ public class FormatHelper {
             return "";
         }
 
-        return String.format("%.2f%%", value);
+        return String.format("%.0f%%", value);
     }
 
     public static String formatPercentage(Number value) {

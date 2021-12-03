@@ -59,10 +59,10 @@ public class MetricFormatMapper {
     private Map<String, Number> padding() {
         Map<String, Number> padding = new HashMap<>();
 
-        padding.put("mem", 10);
-        padding.put("cpu", 10);
+        padding.put("mem", 9);
+        padding.put("cpu", 9);
         padding.put("time", 7);
-        padding.put("io", 11);
+        padding.put("io", 9);
 
         return padding;
     }
