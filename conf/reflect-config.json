@@ -1352,48 +1352,6 @@
   "allDeclaredMethods":true}
 ,
 {
-  "name":"io.seqera.tower.cli.responses.runs.RunCanceled",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "allDeclaredConstructors":true}
-,
-{
-  "name":"io.seqera.tower.cli.responses.runs.RunDeleted",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "allDeclaredConstructors":true}
-,
-{
-  "name":"io.seqera.tower.cli.responses.runs.RunFileDownloaded",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "allDeclaredConstructors":true}
-,
-{
-  "name":"io.seqera.tower.cli.responses.runs.RunList",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "allDeclaredConstructors":true}
-,
-{
-  "name":"io.seqera.tower.cli.responses.runs.RunSubmited",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true}
-,
-{
-  "name":"io.seqera.tower.cli.responses.runs.RunTasksView",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "allDeclaredConstructors":true}
-,
-{
-  "name":"io.seqera.tower.cli.responses.runs.tasks.TasksView",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true}
-,
-{
   "name":"io.seqera.tower.cli.responses.actions.ActionAdd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -1590,6 +1548,48 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true}
+,
+{
+  "name":"io.seqera.tower.cli.responses.runs.RunCanceled",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true}
+,
+{
+  "name":"io.seqera.tower.cli.responses.runs.RunDeleted",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true}
+,
+{
+  "name":"io.seqera.tower.cli.responses.runs.RunFileDownloaded",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true}
+,
+{
+  "name":"io.seqera.tower.cli.responses.runs.RunList",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true}
+,
+{
+  "name":"io.seqera.tower.cli.responses.runs.RunSubmited",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true}
+,
+{
+  "name":"io.seqera.tower.cli.responses.runs.RunTasksView",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true}
+,
+{
+  "name":"io.seqera.tower.cli.responses.runs.tasks.TasksView",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true}
 ,
 {
   "name":"io.seqera.tower.cli.responses.teams.TeamAdded",
@@ -1851,7 +1851,7 @@
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
   "methods":[
-    {"name":"getDescription","parameterTypes":[] },
+    {"name":"getDescription","parameterTypes":[] }, 
     {"name":"getName","parameterTypes":[] }
   ]}
 ,
@@ -1861,7 +1861,7 @@
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
   "methods":[
-    {"name":"<init>","parameterTypes":[] },
+    {"name":"<init>","parameterTypes":[] }, 
     {"name":"setDataset","parameterTypes":["io.seqera.tower.model.Dataset"] }
   ]}
 ,
@@ -1942,20 +1942,20 @@
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
   "methods":[
-    {"name":"<init>","parameterTypes":[] },
-    {"name":"getDateCreated","parameterTypes":[] },
-    {"name":"getDeleted","parameterTypes":[] },
-    {"name":"getDescription","parameterTypes":[] },
-    {"name":"getId","parameterTypes":[] },
-    {"name":"getLastUpdated","parameterTypes":[] },
-    {"name":"getMediaType","parameterTypes":[] },
-    {"name":"getName","parameterTypes":[] },
-    {"name":"setDateCreated","parameterTypes":["java.time.OffsetDateTime"] },
-    {"name":"setDeleted","parameterTypes":["java.lang.Boolean"] },
-    {"name":"setDescription","parameterTypes":["java.lang.String"] },
-    {"name":"setId","parameterTypes":["java.lang.String"] },
-    {"name":"setLastUpdated","parameterTypes":["java.time.OffsetDateTime"] },
-    {"name":"setMediaType","parameterTypes":["java.lang.String"] },
+    {"name":"<init>","parameterTypes":[] }, 
+    {"name":"getDateCreated","parameterTypes":[] }, 
+    {"name":"getDeleted","parameterTypes":[] }, 
+    {"name":"getDescription","parameterTypes":[] }, 
+    {"name":"getId","parameterTypes":[] }, 
+    {"name":"getLastUpdated","parameterTypes":[] }, 
+    {"name":"getMediaType","parameterTypes":[] }, 
+    {"name":"getName","parameterTypes":[] }, 
+    {"name":"setDateCreated","parameterTypes":["java.time.OffsetDateTime"] }, 
+    {"name":"setDeleted","parameterTypes":["java.lang.Boolean"] }, 
+    {"name":"setDescription","parameterTypes":["java.lang.String"] }, 
+    {"name":"setId","parameterTypes":["java.lang.String"] }, 
+    {"name":"setLastUpdated","parameterTypes":["java.time.OffsetDateTime"] }, 
+    {"name":"setMediaType","parameterTypes":["java.lang.String"] }, 
     {"name":"setName","parameterTypes":["java.lang.String"] }
   ]}
 ,
@@ -1965,22 +1965,22 @@
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
   "methods":[
-    {"name":"<init>","parameterTypes":[] },
-    {"name":"getDatasetId","parameterTypes":[] },
-    {"name":"getDatasetName","parameterTypes":[] },
-    {"name":"getFileName","parameterTypes":[] },
-    {"name":"getHasHeader","parameterTypes":[] },
-    {"name":"getLastUpdated","parameterTypes":[] },
-    {"name":"getMediaType","parameterTypes":[] },
-    {"name":"getUrl","parameterTypes":[] },
-    {"name":"getVersion","parameterTypes":[] },
-    {"name":"setDatasetId","parameterTypes":["java.lang.String"] },
-    {"name":"setDatasetName","parameterTypes":["java.lang.String"] },
-    {"name":"setFileName","parameterTypes":["java.lang.String"] },
-    {"name":"setHasHeader","parameterTypes":["java.lang.Boolean"] },
-    {"name":"setLastUpdated","parameterTypes":["java.time.OffsetDateTime"] },
-    {"name":"setMediaType","parameterTypes":["java.lang.String"] },
-    {"name":"setUrl","parameterTypes":["java.lang.String"] },
+    {"name":"<init>","parameterTypes":[] }, 
+    {"name":"getDatasetId","parameterTypes":[] }, 
+    {"name":"getDatasetName","parameterTypes":[] }, 
+    {"name":"getFileName","parameterTypes":[] }, 
+    {"name":"getHasHeader","parameterTypes":[] }, 
+    {"name":"getLastUpdated","parameterTypes":[] }, 
+    {"name":"getMediaType","parameterTypes":[] }, 
+    {"name":"getUrl","parameterTypes":[] }, 
+    {"name":"getVersion","parameterTypes":[] }, 
+    {"name":"setDatasetId","parameterTypes":["java.lang.String"] }, 
+    {"name":"setDatasetName","parameterTypes":["java.lang.String"] }, 
+    {"name":"setFileName","parameterTypes":["java.lang.String"] }, 
+    {"name":"setHasHeader","parameterTypes":["java.lang.Boolean"] }, 
+    {"name":"setLastUpdated","parameterTypes":["java.time.OffsetDateTime"] }, 
+    {"name":"setMediaType","parameterTypes":["java.lang.String"] }, 
+    {"name":"setUrl","parameterTypes":["java.lang.String"] }, 
     {"name":"setVersion","parameterTypes":["java.lang.Long"] }
   ]}
 ,
@@ -2008,7 +2008,7 @@
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
   "methods":[
-    {"name":"<init>","parameterTypes":[] },
+    {"name":"<init>","parameterTypes":[] }, 
     {"name":"setDataset","parameterTypes":["io.seqera.tower.model.Dataset"] }
   ]}
 ,
@@ -2207,7 +2207,7 @@
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
   "methods":[
-    {"name":"<init>","parameterTypes":[] },
+    {"name":"<init>","parameterTypes":[] }, 
     {"name":"setVersions","parameterTypes":["java.util.List"] }
   ]}
 ,
@@ -2217,7 +2217,7 @@
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
   "methods":[
-    {"name":"<init>","parameterTypes":[] },
+    {"name":"<init>","parameterTypes":[] }, 
     {"name":"setDatasets","parameterTypes":["java.util.List"] }
   ]}
 ,
@@ -2448,7 +2448,7 @@
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
   "methods":[
-    {"name":"getDescription","parameterTypes":[] },
+    {"name":"getDescription","parameterTypes":[] }, 
     {"name":"getName","parameterTypes":[] }
   ]}
 ,
@@ -2494,7 +2494,7 @@
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
   "methods":[
-    {"name":"<init>","parameterTypes":[] },
+    {"name":"<init>","parameterTypes":[] }, 
     {"name":"setVersion","parameterTypes":["io.seqera.tower.model.DatasetVersionDbDto"] }
   ]}
 ,

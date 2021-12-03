@@ -262,7 +262,7 @@ class WorkspacesCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_add_response")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(format, mock, "workspaces", "add", "-n", "wspNew", "-o", "organization1", "-f", "wsp-new", "-d", "workspace description");
+        ExecOut out = exec(format, mock, "workspaces", "add", "-n", "wspNew", "-o", "organization1", "-f", "wsp-new", "-d", "workspace description", "-v", "PRIVATE");
         assertOutput(format, out, new WorkspaceAdded("wspNew", "organization1", Visibility.PRIVATE));
     }
 

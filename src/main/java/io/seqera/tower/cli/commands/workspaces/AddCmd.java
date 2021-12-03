@@ -42,16 +42,21 @@ public class AddCmd extends AbstractWorkspaceCmd {
     @CommandLine.Option(names = {"-d", "--description"}, description = "The workspace description.")
     public String description;
 
+    @CommandLine.Option(names = {"-v", "--visibility"}, description = "The workspace visibility. It can be PRIVATE, SHARED (default is PRIVATE.)")
+    public Visibility visibility = Visibility.PRIVATE;
+
     @Override
     protected Response exec() throws ApiException, IOException {
+        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = organizationByName(organizationName);
+
         Workspace workspace = new Workspace();
         workspace.setName(workspaceName);
         workspace.setFullName(workspaceFullName);
         workspace.setDescription(description);
-        workspace.setVisibility(Visibility.PRIVATE);
+        workspace.setVisibility(visibility);
 
         CreateWorkspaceRequest request = new CreateWorkspaceRequest().workspace(workspace);
-        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = organizationByName(organizationName);
+
         api().workspaceValidate(orgAndWorkspaceDbDto.getOrgId(), workspaceName);
         CreateWorkspaceResponse response = api().createWorkspace(orgAndWorkspaceDbDto.getOrgId(), request);
 
