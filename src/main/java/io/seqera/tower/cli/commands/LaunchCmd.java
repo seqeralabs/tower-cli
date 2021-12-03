@@ -144,7 +144,7 @@ public class LaunchCmd extends AbstractRootCmd {
 
     public static class AdvancedOptions {
 
-        @Option(names = {"--config"}, description = "Additional Nextflow config settings file.")
+        @Option(names = {"--config"}, description = "Additional Nextflow config file.")
         public Path config;
 
         @Option(names = {"--pre-run"}, description = "Bash script that is executed in the same environment where Nextflow runs just before the pipeline is launched.")
