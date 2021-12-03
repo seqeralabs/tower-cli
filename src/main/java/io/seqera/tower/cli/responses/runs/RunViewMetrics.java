@@ -114,7 +114,7 @@ public class RunViewMetrics extends Response {
             out.println(ansi(String.format("%n%n    @|bold  Time Metrics|@%n    ----------------%n")));
 
             if (groupType == MetricPreviewFormat.condensed) {
-                out.println(ansi(String.format("   @|italic   Legend: reads / writes|@%n")));
+                out.println(ansi(String.format("   @|italic   Legend: execution real-time / %% requested time used|@%n")));
                 processDataReducedTable(metricsTime, out, cols, MetricFormatMapper.getInstance().getPadding("time"));
             } else {
                 processExpandedDataTable(metricsTime, out, cols);
