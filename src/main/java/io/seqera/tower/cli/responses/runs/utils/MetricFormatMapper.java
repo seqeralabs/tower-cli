@@ -19,58 +19,40 @@ import java.util.function.Function;
 
 public class MetricFormatMapper {
 
-    private static MetricFormatMapper instance;
-    private final Map<String, Function<Number, Object>> formatter = new HashMap<>();
-    private final Map<String, Number> padding = new HashMap<>();
+    private static final Map<String, Function<Number, Object>> FORMATTER = new HashMap<>();
+    static {
+        FORMATTER.put("memVirtual", FormatHelper::formatBits);
+        FORMATTER.put("memRaw", FormatHelper::formatBits);
+        FORMATTER.put("memUsage", FormatHelper::formatPercentage);
+        FORMATTER.put("cpuUsage", FormatHelper::formatPercentage);
+        FORMATTER.put("cpuRaw", FormatHelper::formatPercentage);
+        FORMATTER.put("timeRaw", FormatHelper::formatDurationMillis);
+        FORMATTER.put("timeUsage", FormatHelper::formatPercentage);
+        FORMATTER.put("reads", FormatHelper::formatBits);
+        FORMATTER.put("writes", FormatHelper::formatBits);
+    }
+
+    private static final Map<String, Number> PADDING = new HashMap<>();
+    static {
+        PADDING.put("memVirtual", 6);
+        PADDING.put("memRaw", 6);
+        PADDING.put("memUsage", 4);
+        PADDING.put("cpuUsage", 5);
+        PADDING.put("cpuRaw", 5);
+        PADDING.put("timeRaw", 8);
+        PADDING.put("timeUsage", 4);
+        PADDING.put("reads", 6);
+        PADDING.put("writes", 6);
+    }
 
     private MetricFormatMapper() {
     }
 
-    public static MetricFormatMapper getInstance() {
-        if (instance == null) {
-            instance = new MetricFormatMapper();
-        }
-
-        return instance;
+    public static Function<Number, Object> getFormatTransformer(String key) {
+        return FORMATTER.getOrDefault(key, null);
     }
 
-    public Function<Number, Object> getFormatTransformer(String key) {
-        return formatter().getOrDefault(key, null);
-    }
-
-    public Number getPadding(String key) {
-        return padding().getOrDefault(key, null);
-    }
-
-    private Map<String, Function<Number, Object>> formatter() {
-        if (formatter.isEmpty()) {
-            formatter.put("memVirtual", FormatHelper::formatBits);
-            formatter.put("memRaw", FormatHelper::formatBits);
-            formatter.put("memUsage", FormatHelper::formatPercentage);
-            formatter.put("cpuUsage", FormatHelper::formatBits);
-            formatter.put("cpuRaq", FormatHelper::formatPercentage);
-            formatter.put("timeRaw", FormatHelper::formatDurationMillis);
-            formatter.put("timeUsage", FormatHelper::formatPercentage);
-            formatter.put("reads", FormatHelper::formatBits);
-            formatter.put("writes", FormatHelper::formatBits);
-        }
-
-        return formatter;
-    }
-
-    private Map<String, Number> padding() {
-        if (padding.isEmpty()) {
-            padding.put("memVirtual", 7);
-            padding.put("memRaw", 7);
-            padding.put("memUsage", 6);
-            padding.put("cpuUsage", 7);
-            padding.put("cpuRaq", 6);
-            padding.put("timeRaw", 8);
-            padding.put("timeUsage", 6);
-            padding.put("reads", 7);
-            padding.put("writes", 7);
-        }
-
-        return padding;
+    public static Number getPadding(String key) {
+        return PADDING.getOrDefault(key, null);
     }
 }

@@ -44,8 +44,8 @@ public class MetricsCmd extends AbstractRunsCmd {
     @CommandLine.Option(names = {"-c", "--columns"}, split = ",", description = "Process metric columns to display: ${COMPLETION-CANDIDATES} [default: displays all].")
     public List<MetricColumn> columns;
 
-    @CommandLine.Option(names = {"-v", "--view"}, description = "Preview metric table in condense or extended format [default: condense].")
-    public MetricPreviewFormat groupType = MetricPreviewFormat.condensed;
+    @CommandLine.Option(names = {"-v", "--view"}, description = "Metric table view mode: ${COMPLETION-CANDIDATES} [default: condensed].")
+    public MetricPreviewFormat view = MetricPreviewFormat.condensed;
 
     @CommandLine.ParentCommand
     public ViewCmd parentCommand;
@@ -81,7 +81,7 @@ public class MetricsCmd extends AbstractRunsCmd {
             metrics.forEach(it -> {
                 Map<String, Object> data = new HashMap<>();
                 if (it.getProcess().contains(filter)) {
-                    data.put("cpuRaq", it.getCpu() != null ? processColumns(it.getCpu()) : null);
+                    data.put("cpuRaw", it.getCpu() != null ? processColumns(it.getCpu()) : null);
                     data.put("cpuUsage", it.getCpuUsage() != null ? processColumns(it.getCpuUsage()) : null);
 
                     Map<String, Object> process = new HashMap<>();
@@ -121,7 +121,7 @@ public class MetricsCmd extends AbstractRunsCmd {
             });
         }
 
-        return new RunViewMetrics(columns, metricsMem, metricsCpu, metricsTime, metricsIo, groupType);
+        return new RunViewMetrics(columns, metricsMem, metricsCpu, metricsTime, metricsIo, view);
     }
 
     private Map<String, Object> processColumns(ResourceData resourceData) {

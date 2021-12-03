@@ -152,7 +152,7 @@ public class RunViewMetrics extends Response {
                     cells.add(process);
                     cells.add(dataBlockDef);
 
-                    Function<Number, Object> fnc = MetricFormatMapper.getInstance().getFormatTransformer(dataBlockDef);
+                    Function<Number, Object> fnc = MetricFormatMapper.getFormatTransformer(dataBlockDef);
 
                     // This where data cells are created.
                     if (data != null) {
@@ -212,14 +212,14 @@ public class RunViewMetrics extends Response {
 
         data.entrySet().stream().forEach(it -> {
             if (it.getValue() != null) {
-                Function<Number, Object> fnc = MetricFormatMapper.getInstance().getFormatTransformer(it.getKey());
+                Number padding =  MetricFormatMapper.getPadding(it.getKey());
+                Function<Number, Object> fnc = MetricFormatMapper.getFormatTransformer(it.getKey());
 
                 for (Map.Entry<String, Number> entry : it.getValue().entrySet()) {
                     if (!result.containsKey(entry.getKey())) {
                         result.put(entry.getKey(), new ArrayList<>());
                     }
 
-                    Number padding =  MetricFormatMapper.getInstance().getPadding(it.getKey());
                     result.get(entry.getKey()).add(String.format("%1$"+padding+"s", fnc.apply(entry.getValue())));
                 }
             }
