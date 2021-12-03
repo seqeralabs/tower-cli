@@ -46,7 +46,7 @@ jobs:
           path: build/reports/tests/test/
 
       - name: Build Native Image
-        run: ./gradlew nativeCompile
+        run: ./gradlew buildInfo nativeCompile
 
       - name: Upload linux native image artifact
         uses: actions/upload-artifact@v2
@@ -102,7 +102,7 @@ jobs:
           path: build/reports/tests/test/
 
       - name: Build Native Image
-        run: ./gradlew nativeCompile
+        run: ./gradlew buildInfo nativeCompile
 
       - name: Upload Mac native image artifact
         uses: actions/upload-artifact@v2
@@ -164,7 +164,7 @@ jobs:
           path: build/reports/tests/test/
 
       - name: Build Native Image
-        run: ./gradlew nativeCompile
+        run: ./gradlew buildInfo nativeCompile
 
       - name: Upload Windows native image artifact
         uses: actions/upload-artifact@v2
