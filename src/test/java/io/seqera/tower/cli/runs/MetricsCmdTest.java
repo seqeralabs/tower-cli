@@ -15,9 +15,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.runs.metrics.enums.MetricColumn;
 import io.seqera.tower.cli.commands.runs.metrics.enums.MetricPreviewFormat;
-import io.seqera.tower.cli.responses.RunViewMetrics;
-import org.apache.commons.lang3.StringUtils;
+import io.seqera.tower.cli.responses.runs.RunViewMetrics;
 import org.junit.jupiter.api.Test;
+import org.apache.commons.lang3.StringUtils;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 

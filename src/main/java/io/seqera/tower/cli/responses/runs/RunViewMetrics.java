@@ -9,11 +9,12 @@
  * defined by the Mozilla Public License, v. 2.0.
  */
 
-package io.seqera.tower.cli.responses;
+package io.seqera.tower.cli.responses.runs;
 
 import io.seqera.tower.cli.commands.runs.metrics.enums.MetricColumn;
 import io.seqera.tower.cli.commands.runs.metrics.enums.MetricPreviewFormat;
 import io.seqera.tower.cli.utils.FormatHelper;
+import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.TableList;
 
 import java.io.PrintWriter;

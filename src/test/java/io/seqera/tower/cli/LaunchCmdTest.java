@@ -17,12 +17,10 @@ package io.seqera.tower.cli;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.InvalidResponseException;
-import io.seqera.tower.cli.responses.RunSubmited;
-import org.junit.jupiter.api.DisplayName;
+import io.seqera.tower.cli.responses.runs.RunSubmited;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 
@@ -35,7 +33,7 @@ import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
-class LaunchesCmdTest extends BaseCmdTest {
+class LaunchCmdTest extends BaseCmdTest {
 
     @Test
     void testInvalidAuth(MockServerClient mock) {
@@ -127,7 +125,7 @@ class LaunchesCmdTest extends BaseCmdTest {
         ExecOut out = exec(format, mock, "launch", "sarek");
 
         // Assert results
-        assertOutput(format, out, new RunSubmited("35aLiS0bIM5efd", String.format("%s/user/jordi/watch/35aLiS0bIM5efd", url(mock)), USER_WORKSPACE_NAME));
+        assertOutput(format, out, new RunSubmited("35aLiS0bIM5efd", baseUserUrl(mock, "jordi"), USER_WORKSPACE_NAME));
     }
 
     @ParameterizedTest
@@ -147,7 +145,7 @@ class LaunchesCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/workflow/launch").withBody("{\"launch\":{\"computeEnvId\":\"1uJweHHZTo7gydE6pyDt7x\",\"pipeline\":\"nextflow-io/hello\",\"workDir\":\"s3://nextflow-ci/jordeu\"}}"), exactly(1)
+                request().withMethod("POST").withPath("/workflow/launch").withBody("{\"launch\":{\"computeEnvId\":\"1uJweHHZTo7gydE6pyDt7x\",\"pipeline\":\"https://github.com/nextflow-io/hello\",\"workDir\":\"s3://nextflow-ci/jordeu\"}}"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"workflowId\":\"57ojrWRzTyous\"}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -158,9 +156,9 @@ class LaunchesCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(format, mock, "launch", "nextflow-io/hello");
+        ExecOut out = exec(format, mock, "launch", "https://github.com/nextflow-io/hello");
 
-        assertOutput(format, out, new RunSubmited("57ojrWRzTyous", String.format("%s/user/jordi/watch/57ojrWRzTyous", url(mock)), USER_WORKSPACE_NAME));
+        assertOutput(format, out, new RunSubmited("57ojrWRzTyous", baseUserUrl(mock, "jordi"), USER_WORKSPACE_NAME));
     }
 
     @Test
@@ -199,7 +197,7 @@ class LaunchesCmdTest extends BaseCmdTest {
 
         // Assert results
         assertEquals("", out.stdErr);
-        assertEquals(new RunSubmited("35aLiS0bIM5efd", String.format("%s/user/jordi/watch/35aLiS0bIM5efd", url(mock)), USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new RunSubmited("35aLiS0bIM5efd", baseUserUrl(mock, "jordi"), USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -219,7 +217,7 @@ class LaunchesCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/workflow/launch").withQueryStringParameter("workspaceId", "222756650686576").withBody("{\"launch\":{\"computeEnvId\":\"4iqCDE6C2Stq0jzBsHJvHn\",\"pipeline\":\"nextflow-io/hello\",\"workDir\":\"s3://nextflow-ci/jordeu\"}}"), exactly(1)
+                request().withMethod("POST").withPath("/workflow/launch").withQueryStringParameter("workspaceId", "222756650686576").withBody("{\"launch\":{\"computeEnvId\":\"4iqCDE6C2Stq0jzBsHJvHn\",\"pipeline\":\"https://github.com/nextflow-io/hello\",\"workDir\":\"s3://nextflow-ci/jordeu\"}}"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"workflowId\":\"52KAMEcqXFyhZ9\"}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -237,11 +235,11 @@ class LaunchesCmdTest extends BaseCmdTest {
         );
 
         // Run the command
-        ExecOut out = exec(mock, "launch", "nextflow-io/hello", "-w", "222756650686576");
+        ExecOut out = exec(mock, "launch", "https://github.com/nextflow-io/hello", "-w", "222756650686576");
 
         // Assert results
         assertEquals("", out.stdErr);
-        assertEquals(new RunSubmited("52KAMEcqXFyhZ9", String.format("%s/orgs/Seqera/workspaces/cli/watch/52KAMEcqXFyhZ9", url(mock)), buildWorkspaceRef("Seqera", "cli")).toString(), out.stdOut);
+        assertEquals(new RunSubmited("52KAMEcqXFyhZ9", baseWorkspaceUrl(mock, "Seqera", "cli"), buildWorkspaceRef("Seqera", "cli")).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

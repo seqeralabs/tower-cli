@@ -14,6 +14,9 @@ package io.seqera.tower.cli.utils;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.regex.Pattern;
+
+import static io.seqera.tower.cli.utils.FormatHelper.ansi;
 
 public class TableList {
 
@@ -55,7 +58,7 @@ public class TableList {
         for (int i = 0; i < tableSizes.length; i++) {
             if (elements[i] != null) {
                 int j = tableSizes[i];
-                j = Math.max(j, elements[i].length());
+                j = Math.max(j, stringLength(elements[i]));
                 tableSizes[i] = j;
             }
         }
@@ -91,8 +94,8 @@ public class TableList {
                 } else {
                     line = new StringBuilder();
                 }
-                String part = descriptions[i];
-                while (part.length() < tableSizes[i] + spacing) {
+                String part = ansi(String.format("@|bold %s|@", descriptions[i]));
+                while (stringLength(part) < tableSizes[i] + spacing) {
                     part += " ";
                 }
                 for (int j = 0; j < spacing; j++) {
@@ -154,20 +157,20 @@ public class TableList {
                             part += strings[i];
                             break;
                         case RIGHT:
-                            for (int j = 0; j < tableSizes[i] - strings[i].length(); j++) {
+                            for (int j = 0; j < tableSizes[i] - stringLength(strings[i]); j++) {
                                 part += " ";
                             }
                             part += strings[i];
                             break;
                         case CENTER:
-                            for (int j = 0; j < (tableSizes[i] - strings[i].length()) / 2; j++) {
+                            for (int j = 0; j < (tableSizes[i] - stringLength(strings[i])) / 2; j++) {
                                 part += " ";
                             }
                             part += strings[i];
                             break;
                     }
                 }
-                while (part.length() < tableSizes[i] + spacing) {
+                while (stringLength(part) < tableSizes[i] + spacing) {
                     part += " ";
                 }
                 for (int j = 0; j < spacing; j++) {
@@ -187,6 +190,12 @@ public class TableList {
 
     public enum EnumAlignment {
         LEFT, CENTER, RIGHT
+    }
+
+    private static final Pattern ANSI_ESCAPE_LINK = Pattern.compile("\u001b\\]8;;[^\u001b]*\u001b\\\\"); // Remove links
+    private static final Pattern ANSI_ESCAPE_COLS = Pattern.compile("\u001B\\[[;\\d]*m"); // Remove colors
+    private int stringLength(String value) {
+        return ANSI_ESCAPE_COLS.matcher(ANSI_ESCAPE_LINK.matcher(value).replaceAll("")).replaceAll("").length();
     }
 
 }

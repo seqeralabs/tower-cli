@@ -14,14 +14,10 @@ package io.seqera.tower.cli.commands.computeenvs.primary;
 import java.io.IOException;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.commands.computeenvs.AbstractComputeEnvCmd;
 import io.seqera.tower.cli.commands.computeenvs.ComputeEnvRefOptions;
-import io.seqera.tower.cli.exceptions.NoComputeEnvironmentException;
-import io.seqera.tower.cli.responses.ComputeEnvs.ComputeEnvsPrimaryGet;
-import io.seqera.tower.cli.responses.ComputeEnvs.ComputeEnvsPrimarySet;
+import io.seqera.tower.cli.responses.computeenvs.ComputeEnvsPrimarySet;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.ComputeEnv;
-import io.seqera.tower.model.DescribeComputeEnvResponse;
 import picocli.CommandLine;
 
 @CommandLine.Command(

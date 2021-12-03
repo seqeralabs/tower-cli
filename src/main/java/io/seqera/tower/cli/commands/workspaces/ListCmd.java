@@ -39,7 +39,7 @@ public class ListCmd extends AbstractWorkspaceCmd {
         ListWorkspacesAndOrgResponse response = api().listWorkspacesUser(userId());
 
         if (response.getOrgsAndWorkspaces() == null) {
-            return new WorkspaceList(userName(), Collections.emptyList());
+            return new WorkspaceList(userName(), Collections.emptyList(), serverUrl());
         }
 
         List<OrgAndWorkspaceDbDto> responseOrg = response.getOrgsAndWorkspaces()
@@ -47,6 +47,6 @@ public class ListCmd extends AbstractWorkspaceCmd {
                 .filter(v -> v.getWorkspaceId() != null && (organizationName == null || organizationName.equals(v.getOrgName()))
                 ).collect(Collectors.toList());
 
-        return new WorkspaceList(userName(), responseOrg);
+        return new WorkspaceList(userName(), responseOrg, serverUrl());
     }
 }

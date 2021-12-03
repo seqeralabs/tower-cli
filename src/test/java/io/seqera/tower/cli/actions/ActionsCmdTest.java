@@ -104,7 +104,7 @@ class ActionsCmdTest extends BaseCmdTest {
                         "      \"usageCmd\": null,\n" +
                         "      \"endpoint\": \"https://api.github.com/repos/pditommaso/hello/hooks/303166158\"\n" +
                         "    }", ListActionsResponseActionInfo.class)
-        ), "jordi"));
+        ), "jordi", baseUserUrl(mock, "jordi")));
     }
 
     @Test
@@ -125,7 +125,7 @@ class ActionsCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(mock, "actions", "list");
 
-        assertEquals(chop(new ActionsList(List.of(), "jordi").toString()), out.stdOut);
+        assertEquals(chop(new ActionsList(List.of(), "jordi", baseUserUrl(mock, "jordi")).toString()), out.stdOut);
         assertEquals("", out.stdErr);
         assertEquals(0, out.exitCode);
     }
@@ -145,6 +145,12 @@ class ActionsCmdTest extends BaseCmdTest {
                 request().withMethod("GET").withPath("/actions/57byWxhmUDLLWIF4J97XEP"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("actions/action_view")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         ExecOut out = exec(format, mock, "actions", "view", "-n", "hello");
@@ -223,7 +229,7 @@ class ActionsCmdTest extends BaseCmdTest {
                 "    \"lastSeen\": \"2021-06-18T10:10:33Z\",\n" +
                 "    \"dateCreated\": \"2021-06-18T10:10:05Z\",\n" +
                 "    \"lastUpdated\": \"2021-06-18T10:10:33Z\"\n" +
-                "  }", Action.class)));
+                "  }", Action.class), baseUserUrl(mock, USER_WORKSPACE_NAME)));
     }
 
     @Test

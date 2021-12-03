@@ -17,7 +17,7 @@ import io.seqera.tower.cli.commands.runs.AbstractRunsCmd;
 import io.seqera.tower.cli.commands.runs.ViewCmd;
 import io.seqera.tower.cli.commands.runs.tasks.enums.TaskColumn;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.cli.responses.TasksView;
+import io.seqera.tower.cli.responses.runs.tasks.TasksView;
 import io.seqera.tower.model.DescribeTaskResponse;
 import io.seqera.tower.model.ListTasksResponse;
 import io.seqera.tower.model.Task;

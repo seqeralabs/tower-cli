@@ -13,6 +13,7 @@ package io.seqera.tower.cli.responses.actions;
 
 import java.io.PrintWriter;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.JSON;
 import io.seqera.tower.cli.responses.Response;
@@ -22,12 +23,19 @@ import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.Action;
 import io.seqera.tower.model.WorkflowLaunchRequest;
 
+import static io.seqera.tower.cli.utils.FormatHelper.formatActionId;
+import static io.seqera.tower.cli.utils.FormatHelper.formatActionStatus;
+
 public class ActionsView extends Response {
 
     final public Action action;
 
-    public ActionsView(Action action) {
+    @JsonIgnore
+    private String baseWorkspaceUrl;
+
+    public ActionsView(Action action, String baseWorkspaceUrl) {
         this.action = action;
+        this.baseWorkspaceUrl = baseWorkspaceUrl;
     }
 
     @Override
@@ -44,8 +52,9 @@ public class ActionsView extends Response {
 
         TableList table = new TableList(out, 2);
         table.setPrefix("    ");
-        table.addRow("ID", action.getId());
+        table.addRow("ID", formatActionId(action.getId(), baseWorkspaceUrl));
         table.addRow("Name", action.getName());
+        table.addRow("Status", formatActionStatus(action.getStatus()));
         table.addRow("Pipeline URL", action.getLaunch().getPipeline());
         table.addRow("Source", action.getSource().toString());
         table.addRow("Hook URL", action.getHookUrl());

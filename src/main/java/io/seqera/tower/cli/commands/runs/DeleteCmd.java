@@ -15,7 +15,7 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.exceptions.RunNotFoundException;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.cli.responses.RunDeleted;
+import io.seqera.tower.cli.responses.runs.RunDeleted;
 import picocli.CommandLine;
 
 import java.io.IOException;

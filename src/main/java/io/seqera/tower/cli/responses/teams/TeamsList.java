@@ -11,6 +11,7 @@
 
 package io.seqera.tower.cli.responses.teams;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.TeamDbDto;
@@ -18,14 +19,20 @@ import io.seqera.tower.model.TeamDbDto;
 import java.io.PrintWriter;
 import java.util.List;
 
+import static io.seqera.tower.cli.utils.FormatHelper.formatTeamId;
+
 public class TeamsList extends Response {
 
     public final String organizationName;
     public final List<TeamDbDto> teams;
 
-    public TeamsList(String organizationName, List<TeamDbDto> teams) {
+    @JsonIgnore
+    private String baseOrgUrl;
+
+    public TeamsList(String organizationName, List<TeamDbDto> teams, String baseOrgUrl) {
         this.organizationName = organizationName;
         this.teams = teams;
+        this.baseOrgUrl = baseOrgUrl;
     }
 
     @Override
@@ -40,7 +47,7 @@ public class TeamsList extends Response {
         TableList table = new TableList(out, 3, "Team ID", "Team Name", "Members Count Name").sortBy(0);
         table.setPrefix("    ");
         teams.forEach(element -> {
-            table.addRow(element.getTeamId().toString(), element.getName(), element.getMembersCount().toString());
+            table.addRow(formatTeamId(element.getTeamId(), baseOrgUrl), element.getName(), element.getMembersCount().toString());
         });
 
         table.print();

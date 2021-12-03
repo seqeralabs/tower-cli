@@ -15,7 +15,7 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.PaginationOptions;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.cli.responses.RunList;
+import io.seqera.tower.cli.responses.runs.RunList;
 import io.seqera.tower.model.ListWorkflowsResponse;
 import picocli.CommandLine;
 
@@ -39,11 +39,11 @@ public class ListCmd extends AbstractRunsCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
-        
+
         Integer max = PaginationOptions.getMax(paginationOptions);
         Integer offset = PaginationOptions.getOffset(paginationOptions, max);
 
         ListWorkflowsResponse response = api().listWorkflows(wspId, max, offset, startsWith);
-        return new RunList(workspaceRef(wspId), response.getWorkflows());
+        return new RunList(workspaceRef(wspId), response.getWorkflows(), baseWorkspaceUrl(wspId));
     }
 }

@@ -11,6 +11,7 @@
 
 package io.seqera.tower.cli.responses.pipelines;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.JSON;
 import io.seqera.tower.cli.responses.Response;
@@ -22,16 +23,22 @@ import io.seqera.tower.model.WorkflowLaunchRequest;
 
 import java.io.PrintWriter;
 
+import static io.seqera.tower.cli.utils.FormatHelper.formatPipelineId;
+
 public class PipelinesView extends Response {
 
     public final String workspaceRef;
     public final PipelineDbDto info;
     public final Launch launch;
 
-    public PipelinesView(String workspaceRef, PipelineDbDto info, Launch launch) {
+    @JsonIgnore
+    private final String baseWorkspaceUrl;
+
+    public PipelinesView(String workspaceRef, PipelineDbDto info, Launch launch, String baseWorkspaceUrl) {
         this.workspaceRef = workspaceRef;
         this.info = info;
         this.launch = launch;
+        this.baseWorkspaceUrl = baseWorkspaceUrl;
     }
 
     @Override
@@ -47,7 +54,7 @@ public class PipelinesView extends Response {
         out.println(ansi(String.format("%n  @|bold Pipeline at %s workspace:|@%n", workspaceRef)));
         TableList table = new TableList(out, 2);
         table.setPrefix("    ");
-        table.addRow("ID", info.getPipelineId().toString());
+        table.addRow("ID", formatPipelineId(info.getPipelineId(), baseWorkspaceUrl));
         table.addRow("Name", info.getName());
         table.addRow("Description", info.getDescription());
         table.addRow("Repository", info.getRepository());

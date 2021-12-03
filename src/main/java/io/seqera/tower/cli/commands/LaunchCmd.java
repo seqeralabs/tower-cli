@@ -15,7 +15,7 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.exceptions.InvalidResponseException;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.cli.responses.RunSubmited;
+import io.seqera.tower.cli.responses.runs.RunSubmited;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.Launch;
 import io.seqera.tower.model.ListPipelinesResponse;
@@ -40,7 +40,7 @@ import static io.seqera.tower.cli.utils.ModelHelper.createLaunchRequest;
         name = "launch",
         description = "Launch a Nextflow pipeline execution."
 )
-public class LaunchesCmd extends AbstractRootCmd {
+public class LaunchCmd extends AbstractRootCmd {
 
     @Parameters(index = "0", paramLabel = "PIPELINE_OR_URL", description = "Workspace pipeline name or full pipeline URL.", arity = "1")
     String pipeline;
@@ -66,7 +66,7 @@ public class LaunchesCmd extends AbstractRootCmd {
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
     AdvancedOptions adv;
 
-    public LaunchesCmd() {
+    public LaunchCmd() {
     }
 
     @Override
@@ -74,7 +74,7 @@ public class LaunchesCmd extends AbstractRootCmd {
         Long wspId = workspaceId(workspace.workspace);
 
         // If the pipeline has at least one backslash consider it an external pipeline.
-        if (pipeline.contains("/")) {
+        if (pipeline.startsWith("https://") || pipeline.startsWith("http://")) {
             return runNextflowPipeline(wspId);
         }
 
@@ -132,16 +132,7 @@ public class LaunchesCmd extends AbstractRootCmd {
     protected Response submitWorkflow(WorkflowLaunchRequest launch, Long wspId) throws ApiException {
         SubmitWorkflowLaunchResponse response = api().createWorkflowLaunch(new SubmitWorkflowLaunchRequest().launch(launch), wspId);
         String workflowId = response.getWorkflowId();
-        return new RunSubmited(workflowId, workflowWatchUrl(workflowId, wspId), workspaceRef(wspId));
-    }
-
-    private String workflowWatchUrl(String workflowId, Long wspId) throws ApiException {
-
-        if (wspId == null) {
-            return String.format("%s/user/%s/watch/%s", serverUrl(), userName(), workflowId);
-        }
-
-        return String.format("%s/orgs/%s/workspaces/%s/watch/%s", serverUrl(), orgName(wspId), workspaceName(wspId), workflowId);
+        return new RunSubmited(workflowId, baseWorkspaceUrl(wspId), workspaceRef(wspId));
     }
 
     private AdvancedOptions adv() {

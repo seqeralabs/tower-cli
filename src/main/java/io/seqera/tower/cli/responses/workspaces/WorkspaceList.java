@@ -14,18 +14,26 @@ package io.seqera.tower.cli.responses.workspaces;
 import java.io.PrintWriter;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
+
+import static io.seqera.tower.cli.utils.FormatHelper.formatOrgId;
+import static io.seqera.tower.cli.utils.FormatHelper.formatWorkspaceId;
 
 public class WorkspaceList extends Response {
 
     public final String userName;
     public final List<OrgAndWorkspaceDbDto> workspaces;
 
-    public WorkspaceList(String userName, List<OrgAndWorkspaceDbDto> workspaces) {
+    @JsonIgnore
+    private String serverUrl;
+
+    public WorkspaceList(String userName, List<OrgAndWorkspaceDbDto> workspaces, String serverUrl) {
         this.userName = userName;
         this.workspaces = workspaces;
+        this.serverUrl = serverUrl;
     }
 
     @Override
@@ -41,7 +49,12 @@ public class WorkspaceList extends Response {
         table.setPrefix("    ");
         workspaces.forEach(element -> {
             if(element.getWorkspaceId() != null) {
-                table.addRow(element.getWorkspaceId().toString(), element.getWorkspaceName(), element.getOrgName(), element.getOrgId().toString());
+                table.addRow(
+                        formatWorkspaceId(element.getWorkspaceId(), serverUrl, element.getOrgName(), element.getWorkspaceName()),
+                        element.getWorkspaceName(),
+                        element.getOrgName(),
+                        formatOrgId(element.getOrgId(), serverUrl, element.getOrgName())
+                );
             }
         });
 

@@ -18,6 +18,8 @@ import io.seqera.tower.model.MemberDbDto;
 import java.io.PrintWriter;
 import java.util.List;
 
+import static io.seqera.tower.cli.utils.FormatHelper.formatOrgRole;
+
 public class MembersList extends Response {
 
     public final String orgName;
@@ -40,7 +42,7 @@ public class MembersList extends Response {
         TableList table = new TableList(out, 4, "ID", "Username", "Email", "Role");
         table.setPrefix("    ");
         members.forEach(element -> {
-            table.addRow(element.getMemberId().toString(), element.getUserName(), element.getEmail(), element.getRole().toString());
+            table.addRow(element.getMemberId().toString(), element.getUserName(), element.getEmail(), formatOrgRole(element.getRole()));
         });
 
         table.print();

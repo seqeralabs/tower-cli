@@ -13,13 +13,19 @@ package io.seqera.tower.cli.commands.computeenvs;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
+import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
+import io.seqera.tower.cli.exceptions.NoComputeEnvironmentException;
+import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.model.ComputeEnv;
+import io.seqera.tower.model.ListComputeEnvsResponseEntry;
 import picocli.CommandLine.Command;
+
+import java.util.List;
 
 @Command
 public abstract class AbstractComputeEnvCmd extends AbstractApiCmd {
 
-    public AbstractComputeEnvCmd() {
+    protected AbstractComputeEnvCmd() {
     }
     protected ComputeEnv fetchComputeEnv(ComputeEnvRefOptions computeEnvRefOptions, Long wspId) throws ApiException {
         ComputeEnv computeEnv;
@@ -31,6 +37,22 @@ public abstract class AbstractComputeEnvCmd extends AbstractApiCmd {
         }
 
         return computeEnv;
+    }
+
+    protected ComputeEnv computeEnvByName(Long workspaceId, String name) throws ApiException {
+
+        List<ListComputeEnvsResponseEntry> computeEnvs = api().listComputeEnvs(null, workspaceId).getComputeEnvs();
+        ListComputeEnvsResponseEntry entry = computeEnvs
+                .stream()
+                .filter(ce -> name.equals(ce.getName()))
+                .findFirst()
+                .orElseThrow(() -> new ComputeEnvNotFoundException(name, workspaceId));
+
+        return api().describeComputeEnv(entry.getId(), workspaceId).getComputeEnv();
+    }
+
+    private ComputeEnv computeEnvById(Long workspaceId, String id) throws ApiException {
+        return api().describeComputeEnv(id, workspaceId).getComputeEnv();
     }
 }
 
