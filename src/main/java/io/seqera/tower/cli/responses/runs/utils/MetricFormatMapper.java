@@ -60,10 +60,15 @@ public class MetricFormatMapper {
 
     private Map<String, Number> padding() {
         if (padding.isEmpty()) {
-            padding.put("mem", 9);
-            padding.put("cpu", 9);
-            padding.put("time", 7);
-            padding.put("io", 9);
+            padding.put("memVirtual", 7);
+            padding.put("memRaw", 7);
+            padding.put("memUsage", 6);
+            padding.put("cpuUsage", 7);
+            padding.put("cpuRaq", 6);
+            padding.put("timeRaw", 8);
+            padding.put("timeUsage", 6);
+            padding.put("reads", 7);
+            padding.put("writes", 7);
         }
 
         return padding;

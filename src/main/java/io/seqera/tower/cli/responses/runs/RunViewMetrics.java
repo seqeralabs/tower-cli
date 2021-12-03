@@ -91,7 +91,7 @@ public class RunViewMetrics extends Response {
 
             if (groupType == MetricPreviewFormat.condensed) {
                 out.println(ansi(String.format("   @|italic   Legend:  physical RAM / virtual RAM+swap / %%RAM allocated |@%n")));
-                processDataReducedTable(metricsMem, out, cols, MetricFormatMapper.getInstance().getPadding("mem"));
+                processDataReducedTable(metricsMem, out, cols);
             } else {
                 processExpandedDataTable(metricsMem, out, cols);
             }
@@ -103,7 +103,7 @@ public class RunViewMetrics extends Response {
 
             if (groupType == MetricPreviewFormat.condensed) {
                 out.println(ansi(String.format("   @|italic   Legend: raw usage / %% allocated|@%n")));
-                processDataReducedTable(metricsCpu, out, cols, MetricFormatMapper.getInstance().getPadding("cpu"));
+                processDataReducedTable(metricsCpu, out, cols);
             } else {
                 processExpandedDataTable(metricsCpu, out, cols);
             }
@@ -115,7 +115,7 @@ public class RunViewMetrics extends Response {
 
             if (groupType == MetricPreviewFormat.condensed) {
                 out.println(ansi(String.format("   @|italic   Legend: execution real-time / %% requested time used|@%n")));
-                processDataReducedTable(metricsTime, out, cols, MetricFormatMapper.getInstance().getPadding("time"));
+                processDataReducedTable(metricsTime, out, cols);
             } else {
                 processExpandedDataTable(metricsTime, out, cols);
             }
@@ -127,7 +127,7 @@ public class RunViewMetrics extends Response {
 
             if (groupType == MetricPreviewFormat.condensed) {
                 out.println(ansi(String.format("   @|italic   Legend: reads / writes|@%n")));
-                processDataReducedTable(metricsIo, out, cols, MetricFormatMapper.getInstance().getPadding("io"));
+                processDataReducedTable(metricsIo, out, cols);
             } else {
                 processExpandedDataTable(metricsIo, out, cols);
             }
@@ -177,7 +177,7 @@ public class RunViewMetrics extends Response {
      * @param out
      * @param cols
      */
-    private void processDataReducedTable(List<Map<String, Object>> metricData, PrintWriter out, List<String> cols, Number padding) {
+    private void processDataReducedTable(List<Map<String, Object>> metricData, PrintWriter out, List<String> cols) {
         TableList table = new TableList(out, cols.size(), cols.toArray(new String[0])).sortBy(0);
         table.setPrefix("    ");
 
@@ -185,7 +185,7 @@ public class RunViewMetrics extends Response {
             processDataBlock.forEach((process, sectionDataBlock) -> {
                 List<String> cells = new ArrayList<>();
                 cells.add(process);
-                Map<String, List<String>> data = summarizeDataBlocks((Map<String, Map<String, Number>>) sectionDataBlock, padding);
+                Map<String, List<String>> data = summarizeDataBlocks((Map<String, Map<String, Number>>) sectionDataBlock);
                 if (data.size() > 0) {
 
                     // This where summarized data cells are created into a concatenated string.
@@ -207,7 +207,7 @@ public class RunViewMetrics extends Response {
      * @param data
      * @return
      */
-    private Map<String, List<String>> summarizeDataBlocks(Map<String, Map<String, Number>> data, Number padding) {
+    private Map<String, List<String>> summarizeDataBlocks(Map<String, Map<String, Number>> data) {
         Map<String, List<String>> result = new HashMap<>();
 
         data.entrySet().stream().forEach(it -> {
@@ -219,6 +219,7 @@ public class RunViewMetrics extends Response {
                         result.put(entry.getKey(), new ArrayList<>());
                     }
 
+                    Number padding =  MetricFormatMapper.getInstance().getPadding(it.getKey());
                     result.get(entry.getKey()).add(String.format("%1$"+padding+"s", fnc.apply(entry.getValue())));
                 }
             }
