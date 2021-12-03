@@ -147,7 +147,7 @@ class PipelinesCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"pipeline\":{\"pipelineId\":18388134856008,\"name\":\"sleep_one_minute\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/pditommaso/nf-sleep\",\"userId\":4,\"userName\":\"jordi\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null}}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "pipelines", "add", "-n", "sleep_one_minute", "--params", tempFile("timeout: 60\n", "params", ".yml"), "https://github.com/pditommaso/nf-sleep");
+        ExecOut out = exec(mock, "pipelines", "add", "-n", "sleep_one_minute", "--params-file", tempFile("timeout: 60\n", "params", ".yml"), "https://github.com/pditommaso/nf-sleep");
 
         assertEquals("", out.stdErr);
         assertEquals(new PipelinesAdded(USER_WORKSPACE_NAME, "sleep_one_minute").toString(), out.stdOut);
