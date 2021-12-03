@@ -48,8 +48,8 @@ public class LaunchCmd extends AbstractRootCmd {
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
-    @Option(names = {"--params"}, description = "Pipeline parameters in either JSON or YML format.")
-    Path params;
+    @Option(names = {"--params-file"}, description = "Pipeline parameters in either JSON or YML format.")
+    Path paramsFile;
 
     @Option(names = {"-c", "--compute-env"}, description = "Compute environment name [default: primary compute environment].")
     String computeEnv;
@@ -100,7 +100,7 @@ public class LaunchCmd extends AbstractRootCmd {
                 .pipeline(base.getPipeline())
                 .computeEnvId(base.getComputeEnvId())
                 .workDir(coalesce(workDir, base.getWorkDir()))
-                .paramsText(coalesce(readString(params), base.getParamsText()))
+                .paramsText(coalesce(readString(paramsFile), base.getParamsText()))
                 .configProfiles(coalesce(profile, base.getConfigProfiles()))
                 .revision(coalesce(revision, base.getRevision()))
                 .configText(coalesce(readString(adv().config), base.getConfigText()))

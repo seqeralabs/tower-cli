@@ -27,8 +27,8 @@ public class LaunchOptions {
     @Option(names = {"-p", "--profile"}, split = ",", description = "Comma-separated list of one or more configuration profile names you want to use for this pipeline execution.")
     public List<String> profile;
 
-    @Option(names = {"--params"}, description = "Pipeline parameters in either JSON or YML format.")
-    public Path params;
+    @Option(names = {"--params-file"}, description = "Pipeline parameters in either JSON or YML format.")
+    public Path paramsFile;
 
     @Option(names = {"--revision"}, description = "A valid repository commit Id, tag or branch name.")
     public String revision;

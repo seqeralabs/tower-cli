@@ -81,7 +81,7 @@ public class UpdateCmd extends AbstractPipelinesCmd {
                                 .revision(coalesce(opts.revision, launch.getRevision()))
                                 .workDir(coalesce(opts.workDir, launch.getWorkDir()))
                                 .configProfiles(coalesce(opts.profile, launch.getConfigProfiles()))
-                                .paramsText(coalesce(FilesHelper.readString(opts.params), launch.getParamsText()))
+                                .paramsText(coalesce(FilesHelper.readString(opts.paramsFile), launch.getParamsText()))
 
                                 // Advanced options
                                 .configText(coalesce(FilesHelper.readString(opts.config), launch.getConfigText()))
