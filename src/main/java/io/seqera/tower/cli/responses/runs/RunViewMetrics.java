@@ -13,6 +13,7 @@ package io.seqera.tower.cli.responses.runs;
 
 import io.seqera.tower.cli.commands.runs.metrics.enums.MetricColumn;
 import io.seqera.tower.cli.commands.runs.metrics.enums.MetricPreviewFormat;
+import io.seqera.tower.cli.responses.runs.utils.MetricFormatMapper;
 import io.seqera.tower.cli.utils.FormatHelper;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.TableList;
@@ -88,16 +89,11 @@ public class RunViewMetrics extends Response {
         if (!metricsMem.isEmpty()) {
             out.println(ansi(String.format("%n%n    @|bold  Memory Metrics|@%n    ----------------%n")));
 
-            Map<String, Function<Number, Object>> formatter = new HashMap<>();
-            formatter.put("memVirtual", FormatHelper::formatBits);
-            formatter.put("memRaw", FormatHelper::formatBits);
-            formatter.put("memUsage", FormatHelper::formatPercentage);
-
             if (groupType == MetricPreviewFormat.condensed) {
                 out.println(ansi(String.format("   @|italic   Legend:  physical RAM / virtual RAM+swap / %%RAM allocated |@%n")));
-                processDataReducedTable(metricsMem, out, cols, formatter);
+                processDataReducedTable(metricsMem, out, cols);
             } else {
-                processExpandedDataTable(metricsMem, out, cols, formatter);
+                processExpandedDataTable(metricsMem, out, cols);
             }
         }
 
@@ -105,15 +101,11 @@ public class RunViewMetrics extends Response {
         if (!metricsCpu.isEmpty()) {
             out.println(ansi(String.format("%n%n    @|bold  CPU Metrics|@%n    ----------------%n")));
 
-            Map<String, Function<Number, Object>> formatter = new HashMap<>();
-            formatter.put("cpuUsage", FormatHelper::formatBits);
-            formatter.put("cpuRaq", FormatHelper::formatPercentage);
-
             if (groupType == MetricPreviewFormat.condensed) {
                 out.println(ansi(String.format("   @|italic   Legend: raw usage / %% allocated|@%n")));
-                processDataReducedTable(metricsCpu, out, cols, formatter);
+                processDataReducedTable(metricsCpu, out, cols);
             } else {
-                processExpandedDataTable(metricsCpu, out, cols, formatter);
+                processExpandedDataTable(metricsCpu, out, cols);
             }
         }
 
@@ -121,15 +113,11 @@ public class RunViewMetrics extends Response {
         if (!metricsTime.isEmpty()) {
             out.println(ansi(String.format("%n%n    @|bold  Time Metrics|@%n    ----------------%n")));
 
-            Map<String, Function<Number, Object>> formatter = new HashMap<>();
-            formatter.put("timeRaw", FormatHelper::formatDurationMillis);
-            formatter.put("timeUsage", FormatHelper::formatPercentage);
-
             if (groupType == MetricPreviewFormat.condensed) {
                 out.println(ansi(String.format("   @|italic   Legend: reads / writes|@%n")));
-                processDataReducedTable(metricsTime, out, cols, formatter);
+                processDataReducedTable(metricsTime, out, cols);
             } else {
-                processExpandedDataTable(metricsTime, out, cols, formatter);
+                processExpandedDataTable(metricsTime, out, cols);
             }
         }
 
@@ -137,15 +125,11 @@ public class RunViewMetrics extends Response {
         if (!metricsIo.isEmpty()) {
             out.println(ansi(String.format("%n%n    @|bold  I/O Metrics|@%n    ----------------%n")));
 
-            Map<String, Function<Number, Object>> formatter = new HashMap<>();
-            formatter.put("reads", FormatHelper::formatBits);
-            formatter.put("writes", FormatHelper::formatBits);
-
             if (groupType == MetricPreviewFormat.condensed) {
                 out.println(ansi(String.format("   @|italic   Legend: reads / writes|@%n")));
-                processDataReducedTable(metricsIo, out, cols, formatter);
+                processDataReducedTable(metricsIo, out, cols);
             } else {
-                processExpandedDataTable(metricsIo, out, cols, formatter);
+                processExpandedDataTable(metricsIo, out, cols);
             }
         }
     }
@@ -156,9 +140,8 @@ public class RunViewMetrics extends Response {
      * @param metricData
      * @param out
      * @param cols
-     * @param formatter
      */
-    private void processExpandedDataTable(List<Map<String, Object>> metricData, PrintWriter out, List<String> cols, Map<String, Function<Number, Object>> formatter) {
+    private void processExpandedDataTable(List<Map<String, Object>> metricData, PrintWriter out, List<String> cols) {
         TableList table = new TableList(out, cols.size(), cols.toArray(new String[0]));
         table.setPrefix("    ");
 
@@ -169,7 +152,7 @@ public class RunViewMetrics extends Response {
                     cells.add(process);
                     cells.add(dataBlockDef);
 
-                    Function<Number, Object> fnc = formatter.getOrDefault(dataBlockDef, null);
+                    Function<Number, Object> fnc = MetricFormatMapper.getMap().getOrDefault(dataBlockDef, null);
 
                     // This where data cells are created.
                     if (data != null) {
@@ -193,9 +176,8 @@ public class RunViewMetrics extends Response {
      * @param metricData
      * @param out
      * @param cols
-     * @param formatter
      */
-    private void processDataReducedTable(List<Map<String, Object>> metricData, PrintWriter out, List<String> cols, Map<String, Function<Number, Object>> formatter) {
+    private void processDataReducedTable(List<Map<String, Object>> metricData, PrintWriter out, List<String> cols) {
         TableList table = new TableList(out, cols.size(), cols.toArray(new String[0])).sortBy(0);
         table.setPrefix("    ");
 
@@ -203,7 +185,7 @@ public class RunViewMetrics extends Response {
             processDataBlock.forEach((process, sectionDataBlock) -> {
                 List<String> cells = new ArrayList<>();
                 cells.add(process);
-                Map<String, List<String>> data = summarizeDataBlocks((Map<String, Map<String, Number>>) sectionDataBlock, formatter);
+                Map<String, List<String>> data = summarizeDataBlocks((Map<String, Map<String, Number>>) sectionDataBlock);
                 if (data.size() > 0) {
 
                     // This where summarized data cells are created into a concatenated string.
@@ -223,15 +205,14 @@ public class RunViewMetrics extends Response {
      * Transform a set of data blocks into a condensed and summarized single data block.
      *
      * @param data
-     * @param formatter
      * @return
      */
-    private Map<String, List<String>> summarizeDataBlocks(Map<String, Map<String, Number>> data, Map<String, Function<Number, Object>> formatter) {
+    private Map<String, List<String>> summarizeDataBlocks(Map<String, Map<String, Number>> data) {
         Map<String, List<String>> result = new HashMap<>();
 
         data.entrySet().stream().forEach(it -> {
             if (it.getValue() != null) {
-                Function<Number, Object> fnc = formatter.getOrDefault(it.getKey(), null);
+                Function<Number, Object> fnc = MetricFormatMapper.getMap().getOrDefault(it.getKey(), null);
 
                 for (Map.Entry<String, Number> entry : it.getValue().entrySet()) {
                     if (!result.containsKey(entry.getKey())) {
