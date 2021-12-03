@@ -31,7 +31,7 @@ import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
-public class MetricsCmdTest extends BaseCmdTest {
+class MetricsCmdTest extends BaseCmdTest {
 
     @Test
     void testRunMetricsExpanded(MockServerClient mock) throws JsonProcessingException {

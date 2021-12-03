@@ -1,7 +1,7 @@
 [
   {
     "SAMPLESHEET_CHECK": {
-      "cpuUsage": {
+      "cpuRaw": {
         "q1": 66.7,
         "q2": 66.7,
         "q3": 66.7,
@@ -9,7 +9,7 @@
         "max": 66.7,
         "mean": 66.7
       },
-      "cpuRaq": {
+      "cpuUsage": {
         "q1": 66.7,
         "q2": 66.7,
         "q3": 66.7,
