@@ -404,4 +404,26 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
         ComputeEnv ce = parseJson("{\"id\":\"isnEDBLvHDAIteOEF44ow\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}", ComputeEnv.class);
         assertOutput(format, out, new ComputeEnvsPrimarySet(USER_WORKSPACE_NAME, ce));
     }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testPrimarySetWorkspace(OutputType format, MockServerClient mock) throws JsonProcessingException {
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/lkasjdlkfwerjbEcrycwrSSe").withQueryStringParameter("workspaceId", "4189880970932453240"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnv\":{\"id\":\"lkasjdlkfwerjbEcrycwrSSe\",\"name\":\"az-abhinav\",\"description\":null,\"platform\":\"azure-batch\",\"config\":{\"workDir\":\"az://scratch/work\",\"preRunScript\":null,\"postRunScript\":null,\"region\":\"eastus\",\"headPool\":null,\"autoPoolMode\":null,\"forge\":{\"vmType\":\"Standard_D4_v3\",\"vmCount\":1,\"autoScale\":true,\"disposeOnDeletion\":true},\"tokenDuration\":null,\"deleteJobsOnCompletion\":\"ON_SUCCESS\",\"deletePoolsOnCompletion\":null,\"environment\":null,\"discriminator\":\"azure-batch\"},\"dateCreated\":\"2021-12-03T07:20:26Z\",\"lastUpdated\":\"2021-12-03T07:20:27Z\",\"lastUsed\":null,\"deleted\":null,\"status\":\"AVAILABLE\",\"message\":null,\"primary\":null,\"credentialsId\":\"QboiuwqopeiruiopqDplGsgEJxad\"}}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/compute-envs/lkasjdlkfwerjbEcrycwrSSe/primary"), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(format, mock, "-v", "compute-envs", "primary", "set", "-i", "lkasjdlkfwerjbEcrycwrSSe", "-w", "4189880970932453240");
+
+        ComputeEnv ce = parseJson("{\"id\":\"isnEDBLvHDAIteOEF44ow\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}", ComputeEnv.class);
+        assertOutput(format, out, new ComputeEnvsPrimarySet(USER_WORKSPACE_NAME, ce));
+    }
 }
