@@ -88,7 +88,7 @@ public class RunViewMetrics extends Response {
         if (!metricsMem.isEmpty()) {
             out.println(ansi(String.format("%n%n    @|bold  Memory Metrics|@%n    ----------------%n")));
 
-            Map<String, Function<Float, Object>> formatter = new HashMap<>();
+            Map<String, Function<Number, Object>> formatter = new HashMap<>();
             formatter.put("memVirtual", FormatHelper::formatBits);
             formatter.put("memRaw", FormatHelper::formatBits);
             formatter.put("memUsage", FormatHelper::formatPercentage);
@@ -105,7 +105,7 @@ public class RunViewMetrics extends Response {
         if (!metricsCpu.isEmpty()) {
             out.println(ansi(String.format("%n%n    @|bold  CPU Metrics|@%n    ----------------%n")));
 
-            Map<String, Function<Float, Object>> formatter = new HashMap<>();
+            Map<String, Function<Number, Object>> formatter = new HashMap<>();
             formatter.put("cpuUsage", FormatHelper::formatBits);
             formatter.put("cpuRaq", FormatHelper::formatPercentage);
 
@@ -121,7 +121,7 @@ public class RunViewMetrics extends Response {
         if (!metricsTime.isEmpty()) {
             out.println(ansi(String.format("%n%n    @|bold  Time Metrics|@%n    ----------------%n")));
 
-            Map<String, Function<Float, Object>> formatter = new HashMap<>();
+            Map<String, Function<Number, Object>> formatter = new HashMap<>();
             formatter.put("timeRaw", FormatHelper::formatDurationMillis);
             formatter.put("timeUsage", FormatHelper::formatPercentage);
 
@@ -137,7 +137,7 @@ public class RunViewMetrics extends Response {
         if (!metricsIo.isEmpty()) {
             out.println(ansi(String.format("%n%n    @|bold  I/O Metrics|@%n    ----------------%n")));
 
-            Map<String, Function<Float, Object>> formatter = new HashMap<>();
+            Map<String, Function<Number, Object>> formatter = new HashMap<>();
             formatter.put("reads", FormatHelper::formatBits);
             formatter.put("writes", FormatHelper::formatBits);
 
@@ -158,7 +158,7 @@ public class RunViewMetrics extends Response {
      * @param cols
      * @param formatter
      */
-    private void processExpandedDataTable(List<Map<String, Object>> metricData, PrintWriter out, List<String> cols, Map<String, Function<Float, Object>> formatter) {
+    private void processExpandedDataTable(List<Map<String, Object>> metricData, PrintWriter out, List<String> cols, Map<String, Function<Number, Object>> formatter) {
         TableList table = new TableList(out, cols.size(), cols.toArray(new String[0]));
         table.setPrefix("    ");
 
@@ -169,11 +169,11 @@ public class RunViewMetrics extends Response {
                     cells.add(process);
                     cells.add(dataBlockDef);
 
-                    Function<Float, Object> fnc = getBlockPrettyTransformation(dataBlockDef, formatter);
+                    Function<Number, Object> fnc = formatter.getOrDefault(dataBlockDef, null);
 
                     // This where data cells are created.
                     if (data != null) {
-                        ((Map<String, Float>) data).forEach((k, v) -> {
+                        ((Map<String, Number>) data).forEach((k, v) -> {
                             cells.add(fnc.apply(v).toString());
                         });
 
@@ -195,7 +195,7 @@ public class RunViewMetrics extends Response {
      * @param cols
      * @param formatter
      */
-    private void processDataReducedTable(List<Map<String, Object>> metricData, PrintWriter out, List<String> cols, Map<String, Function<Float, Object>> formatter) {
+    private void processDataReducedTable(List<Map<String, Object>> metricData, PrintWriter out, List<String> cols, Map<String, Function<Number, Object>> formatter) {
         TableList table = new TableList(out, cols.size(), cols.toArray(new String[0])).sortBy(0);
         table.setPrefix("    ");
 
@@ -203,12 +203,12 @@ public class RunViewMetrics extends Response {
             processDataBlock.forEach((process, sectionDataBlock) -> {
                 List<String> cells = new ArrayList<>();
                 cells.add(process);
-                Map<String, List<String>> data = summarizeDataBlocks((Map<String, Map<String, Float>>) sectionDataBlock, formatter);
+                Map<String, List<String>> data = summarizeDataBlocks((Map<String, Map<String, Number>>) sectionDataBlock, formatter);
                 if (data.size() > 0) {
 
                     // This where summarized data cells are created into a concatenated string.
                     data.values().stream().forEach(it -> {
-                        cells.add(String.join(" / ", it));
+                        cells.add(String.join(" ", it));
                     });
 
                     table.addRow(cells.toArray(new String[0]));
@@ -226,14 +226,14 @@ public class RunViewMetrics extends Response {
      * @param formatter
      * @return
      */
-    private Map<String, List<String>> summarizeDataBlocks(Map<String, Map<String, Float>> data, Map<String, Function<Float, Object>> formatter) {
+    private Map<String, List<String>> summarizeDataBlocks(Map<String, Map<String, Number>> data, Map<String, Function<Number, Object>> formatter) {
         Map<String, List<String>> result = new HashMap<>();
 
         data.entrySet().stream().forEach(it -> {
             if (it.getValue() != null) {
-                Function<Float, Object> fnc = getBlockPrettyTransformation(it.getKey(), formatter);
+                Function<Number, Object> fnc = formatter.getOrDefault(it.getKey(), null);
 
-                for (Map.Entry<String, Float> entry : it.getValue().entrySet()) {
+                for (Map.Entry<String, Number> entry : it.getValue().entrySet()) {
                     if (!result.containsKey(entry.getKey())) {
                         result.put(entry.getKey(), new ArrayList<>());
                     }
@@ -244,22 +244,5 @@ public class RunViewMetrics extends Response {
         });
 
         return result;
-    }
-
-    /**
-     * Find the right pretty transformation for the given data block and a transformation map.
-     *
-     * @param blockKey
-     * @param formatter
-     * @return
-     */
-    private Function<Float, Object> getBlockPrettyTransformation(String blockKey, Map<String, Function<Float, Object>> formatter) {
-        return formatter
-                .entrySet()
-                .stream()
-                .filter(fmt -> Objects.equals(fmt.getKey(), blockKey))
-                .findFirst()
-                .orElse(null)
-                .getValue();
     }
 }

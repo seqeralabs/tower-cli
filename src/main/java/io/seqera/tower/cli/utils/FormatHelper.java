@@ -52,7 +52,7 @@ public class FormatHelper {
         return result;
     }
 
-    public static String formatDurationMillis(Float value) {
+    public static String formatDurationMillis(Number value) {
         return formatDurationMillis(value.longValue());
     }
 
@@ -93,7 +93,7 @@ public class FormatHelper {
         return String.format("%.2f %s", amount, metric);
     }
 
-    public static String formatBits(Float value) {
+    public static String formatBits(Number value) {
         return formatBits(value.longValue());
     }
 
@@ -113,7 +113,7 @@ public class FormatHelper {
         return String.format("%.2f%%", value);
     }
 
-    public static String formatPercentage(Float value) {
+    public static String formatPercentage(Number value) {
         return formatPercentage(value.doubleValue());
     }
 

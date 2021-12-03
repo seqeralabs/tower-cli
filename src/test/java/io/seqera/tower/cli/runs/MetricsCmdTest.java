@@ -42,10 +42,10 @@ public class MetricsCmdTest extends BaseCmdTest {
         );
 
         List<MetricColumn> cols = new ArrayList<>();
+        cols.add(MetricColumn.min);
         cols.add(MetricColumn.q1);
         cols.add(MetricColumn.q2);
         cols.add(MetricColumn.q3);
-        cols.add(MetricColumn.min);
         cols.add(MetricColumn.max);
         cols.add(MetricColumn.mean);
 
@@ -54,7 +54,7 @@ public class MetricsCmdTest extends BaseCmdTest {
         List<Map<String, Object>> metricsTime = parseJson(new String(loadResource("runs/time")), List.class);
         List<Map<String, Object>> metricsIo = parseJson(new String(loadResource("runs/io")), List.class);
 
-        ExecOut out = exec(mock,"runs", "view", "-i", "5dAZoXrcmZXRO4", "metrics", "-p", "expanded");
+        ExecOut out = exec(mock,"runs", "view", "-i", "5dAZoXrcmZXRO4", "metrics", "-v", "expanded");
         assertEquals("", out.stdErr);
         assertEquals(StringUtils.chop(new RunViewMetrics(cols, metricsMem, metricsCpu, metricsTime, metricsIo, MetricPreviewFormat.expanded).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
@@ -69,10 +69,10 @@ public class MetricsCmdTest extends BaseCmdTest {
         );
 
         List<MetricColumn> cols = new ArrayList<>();
+        cols.add(MetricColumn.min);
         cols.add(MetricColumn.q1);
         cols.add(MetricColumn.q2);
         cols.add(MetricColumn.q3);
-        cols.add(MetricColumn.min);
         cols.add(MetricColumn.max);
         cols.add(MetricColumn.mean);
 
@@ -81,7 +81,7 @@ public class MetricsCmdTest extends BaseCmdTest {
         List<Map<String, Object>> metricsTime = parseJson(new String(loadResource("runs/time")), List.class);
         List<Map<String, Object>> metricsIo = parseJson(new String(loadResource("runs/io")), List.class);
 
-        ExecOut out = exec(mock,"runs", "view", "-i", "5dAZoXrcmZXRO4", "metrics", "-p", "condensed");
+        ExecOut out = exec(mock,"runs", "view", "-i", "5dAZoXrcmZXRO4", "metrics", "-v", "condensed");
         assertEquals("", out.stdErr);
         assertEquals(StringUtils.chop(new RunViewMetrics(cols, metricsMem, metricsCpu, metricsTime, metricsIo, MetricPreviewFormat.condensed).toString()), out.stdOut);
         assertEquals(0, out.exitCode);

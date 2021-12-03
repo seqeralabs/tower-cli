@@ -44,7 +44,7 @@ public class MetricsCmd extends AbstractRunsCmd {
     @CommandLine.Option(names = {"-c", "--columns"}, split = ",", description = "Process metric columns to display: ${COMPLETION-CANDIDATES} (default displays all.)")
     public List<MetricColumn> columns;
 
-    @CommandLine.Option(names = {"-p", "--table-format-preview"}, description = "Preview metric table in condense or extended format (default is condense.)")
+    @CommandLine.Option(names = {"-v", "--table-format-preview"}, description = "Preview metric table in condense or extended format (default is condense.)")
     public MetricPreviewFormat groupType = MetricPreviewFormat.condensed;
 
     @CommandLine.ParentCommand
@@ -55,7 +55,7 @@ public class MetricsCmd extends AbstractRunsCmd {
         Long wspId = workspaceId(parentCommand.workspace.workspace);
 
         type = type == null ? List.of(MetricType.cpu, MetricType.mem, MetricType.time, MetricType.io) : type;
-        columns = columns == null ? List.of(MetricColumn.q1, MetricColumn.q2, MetricColumn.q3, MetricColumn.min, MetricColumn.max, MetricColumn.mean) : columns;
+        columns = columns == null ? List.of(MetricColumn.min, MetricColumn.q1, MetricColumn.q2, MetricColumn.q3, MetricColumn.max, MetricColumn.mean) : columns;
 
         List<WorkflowMetrics> metrics = api().describeWorkflowMetrics(parentCommand.id, wspId).getMetrics();
 
