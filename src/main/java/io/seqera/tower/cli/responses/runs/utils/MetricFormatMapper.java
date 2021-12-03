@@ -20,6 +20,8 @@ import java.util.function.Function;
 public class MetricFormatMapper {
 
     private static MetricFormatMapper instance;
+    private final Map<String, Function<Number, Object>> formatter = new HashMap<>();
+    private final Map<String, Number> padding = new HashMap<>();
 
     private MetricFormatMapper() {
     }
@@ -41,28 +43,28 @@ public class MetricFormatMapper {
     }
 
     private Map<String, Function<Number, Object>> formatter() {
-        Map<String, Function<Number, Object>> formatter = new HashMap<>();
-
-        formatter.put("memVirtual", FormatHelper::formatBits);
-        formatter.put("memRaw", FormatHelper::formatBits);
-        formatter.put("memUsage", FormatHelper::formatPercentage);
-        formatter.put("cpuUsage", FormatHelper::formatBits);
-        formatter.put("cpuRaq", FormatHelper::formatPercentage);
-        formatter.put("timeRaw", FormatHelper::formatDurationMillis);
-        formatter.put("timeUsage", FormatHelper::formatPercentage);
-        formatter.put("reads", FormatHelper::formatBits);
-        formatter.put("writes", FormatHelper::formatBits);
+        if (formatter.isEmpty()) {
+            formatter.put("memVirtual", FormatHelper::formatBits);
+            formatter.put("memRaw", FormatHelper::formatBits);
+            formatter.put("memUsage", FormatHelper::formatPercentage);
+            formatter.put("cpuUsage", FormatHelper::formatBits);
+            formatter.put("cpuRaq", FormatHelper::formatPercentage);
+            formatter.put("timeRaw", FormatHelper::formatDurationMillis);
+            formatter.put("timeUsage", FormatHelper::formatPercentage);
+            formatter.put("reads", FormatHelper::formatBits);
+            formatter.put("writes", FormatHelper::formatBits);
+        }
 
         return formatter;
     }
 
     private Map<String, Number> padding() {
-        Map<String, Number> padding = new HashMap<>();
-
-        padding.put("mem", 9);
-        padding.put("cpu", 9);
-        padding.put("time", 7);
-        padding.put("io", 9);
+        if (padding.isEmpty()) {
+            padding.put("mem", 9);
+            padding.put("cpu", 9);
+            padding.put("time", 7);
+            padding.put("io", 9);
+        }
 
         return padding;
     }
