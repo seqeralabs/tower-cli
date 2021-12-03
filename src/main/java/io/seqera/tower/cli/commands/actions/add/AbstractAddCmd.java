@@ -60,7 +60,7 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
                 .pipeline(pipeline)
                 .revision(opts.revision)
                 .workDir(workDirValue)
-                .configProfiles(opts.profiles)
+                .configProfiles(opts.profile)
                 .paramsText(FilesHelper.readString(opts.params))
 
                 // Advanced options

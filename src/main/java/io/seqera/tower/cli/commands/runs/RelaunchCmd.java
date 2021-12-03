@@ -76,7 +76,7 @@ public class RelaunchCmd extends AbstractRunsCmd {
                 .pipeline(pipeline != null ? pipeline : launch.getPipeline())
                 .workDir(opts.workDir != null ? opts.workDir : workflow.getWorkDir())
                 .revision(opts.revision != null ? opts.revision : workflow.getRevision())
-                .configProfiles(opts.profiles != null ? opts.profiles : launch.getConfigProfiles())
+                .configProfiles(opts.profile != null ? opts.profile : launch.getConfigProfiles())
                 .configText(opts.config != null ? FilesHelper.readString(opts.config) : workflow.getConfigText())
                 .paramsText(opts.params != null ? FilesHelper.readString(opts.params) : launch.getParamsText())
                 .preRunScript(opts.preRunScript != null ? FilesHelper.readString(opts.preRunScript) : launch.getPreRunScript())

@@ -48,16 +48,16 @@ public class LaunchCmd extends AbstractRootCmd {
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
-    @Option(names = {"--params"}, description = "Parameters file.")
+    @Option(names = {"--params"}, description = "Pipeline parameters in either JSON or YML format.")
     Path params;
 
-    @Option(names = {"-c", "--compute-env"}, description = "Compute environment name [default: primary workspace].")
+    @Option(names = {"-c", "--compute-env"}, description = "Compute environment name [default: primary compute environment].")
     String computeEnv;
 
-    @Option(names = {"--work-dir"}, description = "Working directory.")
+    @Option(names = {"--work-dir"}, description = "Path where the pipeline scratch data is stored.")
     String workDir;
 
-    @Option(names = {"-p", "--profile"}, split = ",", description = "Configuration profiles.")
+    @Option(names = {"-p", "--profile"}, split = ",", description = "Comma-separated list of one or more configuration profile names you want to use for this pipeline execution.")
     List<String> profile;
 
     @Option(names = {"-r", "--revision"}, description = "A valid repository commit Id, tag or branch name.")
@@ -144,13 +144,13 @@ public class LaunchCmd extends AbstractRootCmd {
 
     public static class AdvancedOptions {
 
-        @Option(names = {"--config"}, description = "Additional Nextflow config settings can be provided in the above field. These settings will be included in the `nextflow.config` file for this execution.")
+        @Option(names = {"--config"}, description = "Additional Nextflow config settings file.")
         public Path config;
 
-        @Option(names = {"--pre-run"}, description = "Pre-run script.")
+        @Option(names = {"--pre-run"}, description = "Bash script that is executed in the same environment where Nextflow runs just before the pipeline is launched.")
         public Path preRunScript;
 
-        @Option(names = {"--post-run"}, description = "Post-run script.")
+        @Option(names = {"--post-run"}, description = "Bash script that is executed in the same environment where Nextflow runs immediately after the pipeline completion.")
         public Path postRunScript;
 
         @Option(names = {"--pull-latest"}, description = "Enable Nextflow to pull the latest repository version before running the pipeline.")
@@ -159,13 +159,13 @@ public class LaunchCmd extends AbstractRootCmd {
         @Option(names = {"--stub-run"}, description = "Execute the workflow replacing process scripts with command stubs.")
         public Boolean stubRun;
 
-        @Option(names = {"--main-script"}, description = "Specify the pipeline main script file if different from `main.nf`.")
+        @Option(names = {"--main-script"}, description = "Pipeline main script file if different from `main.nf`.")
         public String mainScript;
 
-        @Option(names = {"--entry-name"}, description = "Specify the main workflow name to be executed when using DLS2 syntax.")
+        @Option(names = {"--entry-name"}, description = "Main workflow name to be executed when using DLS2 syntax.")
         public String entryName;
 
-        @Option(names = {"--schema-name"}, description = "Enter schema name.")
+        @Option(names = {"--schema-name"}, description = "Schema name.")
         public String schemaName;
 
     }
