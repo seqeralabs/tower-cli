@@ -20,12 +20,14 @@ import io.seqera.tower.cli.utils.TableList;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 // TODO: Refactor using the new Metric model instead nested maps to make it more readable.
 public class RunViewMetrics extends Response {
@@ -187,14 +189,15 @@ public class RunViewMetrics extends Response {
                 cells.add(process);
                 Map<String, List<String>> data = summarizeDataBlocks((Map<String, Map<String, Number>>) sectionDataBlock);
                 if (data.size() > 0) {
-
                     // This where summarized data cells are created into a concatenated string.
                     data.values().stream().forEach(it -> {
                         cells.add(String.join(" ", it));
                     });
-
-                    table.addRow(cells.toArray(new String[0]));
+                } else {
+                    // Empty row
+                    cells.addAll(Collections.nCopies(cols.size() - 1, null));
                 }
+                table.addRow(cells.toArray(new String[0]));
             });
         });
 
