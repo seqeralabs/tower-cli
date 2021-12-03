@@ -404,4 +404,38 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
         ComputeEnv ce = parseJson("{\"id\":\"isnEDBLvHDAIteOEF44ow\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}", ComputeEnv.class);
         assertOutput(format, out, new ComputeEnvsPrimarySet(USER_WORKSPACE_NAME, ce));
     }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testPrimarySetAzure(OutputType format, MockServerClient mock) throws JsonProcessingException {
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/lkasjdlkfwerjbEcrycwrSSe").withQueryStringParameter("workspaceId", "75887156211590"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnv\":{\"id\":\"lkasjdlkfwerjbEcrycwrSSe\",\"name\":\"demo\",\"description\":null,\"platform\":\"azure-batch\",\"config\":{\"workDir\":\"az://scratch/work\",\"preRunScript\":null,\"postRunScript\":null,\"region\":\"eastus\",\"headPool\":null,\"autoPoolMode\":null,\"forge\":{\"vmType\":\"Standard_D4_v3\",\"vmCount\":1,\"autoScale\":true,\"disposeOnDeletion\":true},\"tokenDuration\":null,\"deleteJobsOnCompletion\":\"on_success\",\"deletePoolsOnCompletion\":null,\"environment\":null,\"discriminator\":\"azure-batch\"},\"dateCreated\":\"2021-12-03T07:20:26Z\",\"lastUpdated\":\"2021-12-03T07:20:27Z\",\"lastUsed\":null,\"deleted\":null,\"status\":\"AVAILABLE\",\"message\":null,\"primary\":null,\"credentialsId\":\"XXbouwqopeiruiopqDplGsgEJxad\"}}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/compute-envs/lkasjdlkfwerjbEcrycwrSSe/primary"), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "compute-envs", "primary", "set", "-i", "lkasjdlkfwerjbEcrycwrSSe", "-w", "75887156211590");
+
+        ComputeEnv ce = parseJson("{\"id\":\"lkasjdlkfwerjbEcrycwrSSe\",\"name\":\"demo\",\"platform\":\"azure-batch\"}", ComputeEnv.class);
+        assertOutput(format, out, new ComputeEnvsPrimarySet("[organization2 / workspace2]", ce));
+    }
 }
