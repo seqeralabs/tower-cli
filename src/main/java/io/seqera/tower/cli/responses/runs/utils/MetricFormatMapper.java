@@ -11,15 +11,36 @@
 
 package io.seqera.tower.cli.responses.runs.utils;
 
+import io.seqera.tower.cli.utils.FormatHelper;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import io.seqera.tower.cli.utils.FormatHelper;
-
 public class MetricFormatMapper {
 
-    public static Map<String, Function<Number, Object>> getMap() {
+    private static MetricFormatMapper instance;
+
+    private MetricFormatMapper() {
+    }
+
+    public static MetricFormatMapper getInstance() {
+        if (instance == null) {
+            instance = new MetricFormatMapper();
+        }
+
+        return instance;
+    }
+
+    public Function<Number, Object> getFormatTransformer(String key) {
+        return formatter().getOrDefault(key, null);
+    }
+
+    public Number getPadding(String key) {
+        return padding().getOrDefault(key, null);
+    }
+
+    private Map<String, Function<Number, Object>> formatter() {
         Map<String, Function<Number, Object>> formatter = new HashMap<>();
 
         formatter.put("memVirtual", FormatHelper::formatBits);
@@ -33,5 +54,16 @@ public class MetricFormatMapper {
         formatter.put("writes", FormatHelper::formatBits);
 
         return formatter;
+    }
+
+    private Map<String, Number> padding() {
+        Map<String, Number> padding = new HashMap<>();
+
+        padding.put("mem", 10);
+        padding.put("cpu", 10);
+        padding.put("time", 7);
+        padding.put("io", 11);
+
+        return padding;
     }
 }

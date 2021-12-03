@@ -91,7 +91,7 @@ public class RunViewMetrics extends Response {
 
             if (groupType == MetricPreviewFormat.condensed) {
                 out.println(ansi(String.format("   @|italic   Legend:  physical RAM / virtual RAM+swap / %%RAM allocated |@%n")));
-                processDataReducedTable(metricsMem, out, cols);
+                processDataReducedTable(metricsMem, out, cols, MetricFormatMapper.getInstance().getPadding("mem"));
             } else {
                 processExpandedDataTable(metricsMem, out, cols);
             }
@@ -103,7 +103,7 @@ public class RunViewMetrics extends Response {
 
             if (groupType == MetricPreviewFormat.condensed) {
                 out.println(ansi(String.format("   @|italic   Legend: raw usage / %% allocated|@%n")));
-                processDataReducedTable(metricsCpu, out, cols);
+                processDataReducedTable(metricsCpu, out, cols, MetricFormatMapper.getInstance().getPadding("cpu"));
             } else {
                 processExpandedDataTable(metricsCpu, out, cols);
             }
@@ -115,7 +115,7 @@ public class RunViewMetrics extends Response {
 
             if (groupType == MetricPreviewFormat.condensed) {
                 out.println(ansi(String.format("   @|italic   Legend: reads / writes|@%n")));
-                processDataReducedTable(metricsTime, out, cols);
+                processDataReducedTable(metricsTime, out, cols, MetricFormatMapper.getInstance().getPadding("time"));
             } else {
                 processExpandedDataTable(metricsTime, out, cols);
             }
@@ -127,7 +127,7 @@ public class RunViewMetrics extends Response {
 
             if (groupType == MetricPreviewFormat.condensed) {
                 out.println(ansi(String.format("   @|italic   Legend: reads / writes|@%n")));
-                processDataReducedTable(metricsIo, out, cols);
+                processDataReducedTable(metricsIo, out, cols, MetricFormatMapper.getInstance().getPadding("io"));
             } else {
                 processExpandedDataTable(metricsIo, out, cols);
             }
@@ -152,7 +152,7 @@ public class RunViewMetrics extends Response {
                     cells.add(process);
                     cells.add(dataBlockDef);
 
-                    Function<Number, Object> fnc = MetricFormatMapper.getMap().getOrDefault(dataBlockDef, null);
+                    Function<Number, Object> fnc = MetricFormatMapper.getInstance().getFormatTransformer(dataBlockDef);
 
                     // This where data cells are created.
                     if (data != null) {
@@ -177,7 +177,7 @@ public class RunViewMetrics extends Response {
      * @param out
      * @param cols
      */
-    private void processDataReducedTable(List<Map<String, Object>> metricData, PrintWriter out, List<String> cols) {
+    private void processDataReducedTable(List<Map<String, Object>> metricData, PrintWriter out, List<String> cols, Number padding) {
         TableList table = new TableList(out, cols.size(), cols.toArray(new String[0])).sortBy(0);
         table.setPrefix("    ");
 
@@ -185,7 +185,7 @@ public class RunViewMetrics extends Response {
             processDataBlock.forEach((process, sectionDataBlock) -> {
                 List<String> cells = new ArrayList<>();
                 cells.add(process);
-                Map<String, List<String>> data = summarizeDataBlocks((Map<String, Map<String, Number>>) sectionDataBlock);
+                Map<String, List<String>> data = summarizeDataBlocks((Map<String, Map<String, Number>>) sectionDataBlock, padding);
                 if (data.size() > 0) {
 
                     // This where summarized data cells are created into a concatenated string.
@@ -207,19 +207,19 @@ public class RunViewMetrics extends Response {
      * @param data
      * @return
      */
-    private Map<String, List<String>> summarizeDataBlocks(Map<String, Map<String, Number>> data) {
+    private Map<String, List<String>> summarizeDataBlocks(Map<String, Map<String, Number>> data, Number padding) {
         Map<String, List<String>> result = new HashMap<>();
 
         data.entrySet().stream().forEach(it -> {
             if (it.getValue() != null) {
-                Function<Number, Object> fnc = MetricFormatMapper.getMap().getOrDefault(it.getKey(), null);
+                Function<Number, Object> fnc = MetricFormatMapper.getInstance().getFormatTransformer(it.getKey());
 
                 for (Map.Entry<String, Number> entry : it.getValue().entrySet()) {
                     if (!result.containsKey(entry.getKey())) {
                         result.put(entry.getKey(), new ArrayList<>());
                     }
 
-                    result.get(entry.getKey()).add(fnc.apply(entry.getValue()).toString());
+                    result.get(entry.getKey()).add(String.format("%1$"+padding+"s", fnc.apply(entry.getValue())));
                 }
             }
         });

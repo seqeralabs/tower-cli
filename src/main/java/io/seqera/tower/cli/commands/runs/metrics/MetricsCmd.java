@@ -38,13 +38,13 @@ public class MetricsCmd extends AbstractRunsCmd {
     @CommandLine.Option(names = {"-f", "--filter"}, description = "Filters by process name.")
     public String filter = "";
 
-    @CommandLine.Option(names = {"-t", "--type"}, split = ",", description = "Process metric types separated by comma: ${COMPLETION-CANDIDATES} (default displays all.)")
+    @CommandLine.Option(names = {"-t", "--type"}, split = ",", description = "Process metric types separated by comma: ${COMPLETION-CANDIDATES} [default: displays all].")
     public List<MetricType> type;
 
-    @CommandLine.Option(names = {"-c", "--columns"}, split = ",", description = "Process metric columns to display: ${COMPLETION-CANDIDATES} (default displays all.)")
+    @CommandLine.Option(names = {"-c", "--columns"}, split = ",", description = "Process metric columns to display: ${COMPLETION-CANDIDATES} [default: displays all].")
     public List<MetricColumn> columns;
 
-    @CommandLine.Option(names = {"-v", "--table-format-preview"}, description = "Preview metric table in condense or extended format (default is condense.)")
+    @CommandLine.Option(names = {"-v", "--view"}, description = "Preview metric table in condense or extended format [default: condense].")
     public MetricPreviewFormat groupType = MetricPreviewFormat.condensed;
 
     @CommandLine.ParentCommand
