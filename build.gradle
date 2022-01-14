@@ -130,7 +130,7 @@ task generateManpageAsciiDoc(type: JavaExec) {
     description = "Generate AsciiDoc manpage"
     classpath(configurations.compileClasspath, configurations.annotationProcessor, sourceSets.main.runtimeClasspath)
     main 'picocli.codegen.docgen.manpage.ManPageGenerator'
-    args project.ext.mainClassName, "--outdir=${project.buildDir}/generated-picocli-docs", "-v", "--template-dir=src/docs/mantemplates"
+    args project.ext.mainClassName, "--outdir=${project.buildDir}/generated-picocli-docs", "-v" //, "--template-dir=src/docs/mantemplates"
 }
 
 apply plugin: 'org.asciidoctor.jvm.convert'
@@ -141,5 +141,42 @@ asciidoctor {
     logDocuments = true
     outputOptions {
         backends = ['html5']
+    }
+
+    doLast {
+        def htmlDir = file("${project.buildDir}/docs")
+
+        def index = file("${project.buildDir}/docs/index.html")
+        def indexHtml = """\
+                <!DOCTYPE html>
+                <html lang="en">
+                <frameset cols="20,80">
+                    <frame src="toc.html" name="toc"></frame>
+                    <frame src="tw.html" name="content"></frame>
+                </frameset>
+                </html>
+                """.stripIndent().toString()
+        index.text = indexHtml
+
+        def toc = file("${project.buildDir}/docs/toc.html")
+        def tocItems = htmlDir.listFiles()
+                .collect { it.name.replace(".html", "") }
+                .findAll { it.startsWith("tw") }
+                .sort()
+                .collect { "<li><a href=\"${it}.html\" target=\"content\">${it}</a></li>" }.join("\n")
+        def tocHtml = """\
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Tower CLI Command Index</title>
+                </head>
+                <body>
+                <ul>
+                ${tocItems}
+                </ul>
+                """.stripIndent().toString()
+        toc.text = tocHtml
+
     }
 }
