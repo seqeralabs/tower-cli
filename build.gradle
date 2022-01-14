@@ -1,3 +1,17 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.asciidoctor:asciidoctor-gradle-jvm:3.3.2"
+    }
+}
+
 plugins {
     id 'java'
     id 'application'
@@ -104,4 +118,28 @@ configurations.all {
 
 jacocoTestReport {
     dependsOn test // tests are required to run before generating the report
+}
+
+project.ext {
+    mainClassName = "io.seqera.tower.cli.Tower"
+}
+
+task generateManpageAsciiDoc(type: JavaExec) {
+    dependsOn(classes)
+    group = "Documentation"
+    description = "Generate AsciiDoc manpage"
+    classpath(configurations.compileClasspath, configurations.annotationProcessor, sourceSets.main.runtimeClasspath)
+    main 'picocli.codegen.docgen.manpage.ManPageGenerator'
+    args project.ext.mainClassName, "--outdir=${project.buildDir}/generated-picocli-docs", "-v", "--template-dir=src/docs/mantemplates"
+}
+
+apply plugin: 'org.asciidoctor.jvm.convert'
+asciidoctor {
+    dependsOn(generateManpageAsciiDoc)
+    sourceDir = file("${project.buildDir}/generated-picocli-docs")
+    outputDir = file("${project.buildDir}/docs")
+    logDocuments = true
+    outputOptions {
+        backends = ['html5']
+    }
 }
