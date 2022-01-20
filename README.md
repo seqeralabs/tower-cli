@@ -122,7 +122,7 @@ tw compute-envs add aws-batch forge --name=my_aws_ce --region=eu-west-1 --max-cp
 
 The above command will create all of the required AWS Batch resources in the AWS Ireland (`eu-west-1`) region with a total of 256 CPUs provisioned in the compute environment. An existing S3 bucket will be used as the work directory when running Nextflow.
 
-Comprehensive details about Tower Forge are availible in the [user documentation](https://help.tower.nf/compute-envs/aws-batch/#forge).
+Comprehensive details about Tower Forge are available in the [user documentation](https://help.tower.nf/compute-envs/aws-batch/#forge).
 
 > If you have multiple credentials matching the same compute environment, you will need to provide the `--credentials-id` obtained by running `tw credentials list`.
 
