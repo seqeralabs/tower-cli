@@ -130,7 +130,7 @@ task generateManpageAsciiDoc(type: JavaExec) {
     description = "Generate AsciiDoc manpage"
     classpath(configurations.compileClasspath, configurations.annotationProcessor, sourceSets.main.runtimeClasspath)
     main 'picocli.codegen.docgen.manpage.ManPageGenerator'
-    args project.ext.mainClassName, "--outdir=${project.buildDir}/generated-picocli-docs", "-v" //, "--template-dir=src/docs/mantemplates"
+    args project.ext.mainClassName, "--outdir=${project.buildDir}/generated-picocli-docs", "-v"
 }
 
 apply plugin: 'org.asciidoctor.jvm.convert'
@@ -141,6 +141,13 @@ asciidoctor {
     logDocuments = true
     outputOptions {
         backends = ['html5']
+    }
+
+    doFirst {
+        def adocsDir = file("${project.buildDir}/generated-picocli-docs")
+        adocsDir.listFiles().each {
+            it.text = ":stylesheet: docs/fedora.css\n" + it.text
+        }
     }
 
     doLast {
