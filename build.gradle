@@ -131,59 +131,39 @@ task generateManpageAsciiDoc(type: JavaExec) {
     classpath(configurations.compileClasspath, configurations.annotationProcessor, sourceSets.main.runtimeClasspath)
     main 'picocli.codegen.docgen.manpage.ManPageGenerator'
     args project.ext.mainClassName, "--outdir=${project.buildDir}/generated-picocli-docs", "-v"
+
+    doLast{
+        def index = file("${project.buildDir}/generated-picocli-docs/index.adoc")
+        def header = [
+                "= Tower Cli",
+                "Seqera Team <support.seqera.io>",
+                ":toc: left",
+                ":toclevels: 2",
+                "",
+                "",
+        ]
+        index.text = header.join('\n')
+        def adocsDir = file("${project.buildDir}/generated-picocli-docs")
+        adocsDir.listFiles({d, f-> f ==~ /.*.adoc/ } as FilenameFilter).sort{it.name}.each {
+            if( it.name == 'index.adoc')
+                return
+            index << "include::${project.buildDir}/generated-picocli-docs/${it.name}[]\n"
+            it.text = it.text.substring(it.text.indexOf('='))
+            it.text = it.text.replaceAll('= ','== ')
+        }
+    }
 }
 
 apply plugin: 'org.asciidoctor.jvm.convert'
 asciidoctor {
     dependsOn(generateManpageAsciiDoc)
     sourceDir = file("${project.buildDir}/generated-picocli-docs")
+    sources {
+        include 'index.adoc'
+    }
     outputDir = file("${project.buildDir}/docs")
     logDocuments = true
     outputOptions {
         backends = ['html5']
-    }
-
-    doFirst {
-        def adocsDir = file("${project.buildDir}/generated-picocli-docs")
-        adocsDir.listFiles().each {
-            it.text = ":stylesheet: docs/fedora.css\n" + it.text
-        }
-    }
-
-    doLast {
-        def htmlDir = file("${project.buildDir}/docs")
-
-        def index = file("${project.buildDir}/docs/index.html")
-        def indexHtml = """\
-                <!DOCTYPE html>
-                <html lang="en">
-                <frameset cols="20,80">
-                    <frame src="toc.html" name="toc"></frame>
-                    <frame src="tw.html" name="content"></frame>
-                </frameset>
-                </html>
-                """.stripIndent().toString()
-        index.text = indexHtml
-
-        def toc = file("${project.buildDir}/docs/toc.html")
-        def tocItems = htmlDir.listFiles()
-                .collect { it.name.replace(".html", "") }
-                .findAll { it.startsWith("tw") }
-                .sort()
-                .collect { "<li><a href=\"${it}.html\" target=\"content\">${it}</a></li>" }.join("\n")
-        def tocHtml = """\
-                <!DOCTYPE html>
-                <html lang="en">
-                <head>
-                    <meta charset="UTF-8">
-                    <title>Tower CLI Command Index</title>
-                </head>
-                <body>
-                <ul>
-                ${tocItems}
-                </ul>
-                """.stripIndent().toString()
-        toc.text = tocHtml
-
     }
 }
