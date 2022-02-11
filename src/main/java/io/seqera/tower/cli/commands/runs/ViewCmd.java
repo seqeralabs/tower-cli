@@ -64,8 +64,8 @@ public class ViewCmd extends AbstractRunsCmd {
             DescribeWorkflowResponse workflowResponse = workflowById(wspId, id);
             Workflow workflow = workflowResponse.getWorkflow();
             WorkflowLoad workflowLoad = workflowLoadByWorkflowId(wspId, id);
-            Launch launch = launchById(wspId, workflow.getLaunchId());
-            ComputeEnv computeEnv = launch.getComputeEnv();
+
+            ComputeEnv computeEnv = workflow.getLaunchId() != null ? launchById(wspId, workflow.getLaunchId()).getComputeEnv() : null;
 
             ProgressData progress = null;
             if (opts.processes || opts.stats || opts.load || opts.utilization) {
@@ -83,7 +83,7 @@ public class ViewCmd extends AbstractRunsCmd {
             general.put("workdir", workflow.getWorkDir());
             general.put("container", workflow.getContainer());
             general.put("executors", workflowLoad.getExecutors() != null ? String.join(", ", workflowLoad.getExecutors()) : null);
-            general.put("computeEnv", computeEnv.getName());
+            general.put("computeEnv", computeEnv == null ? '-' : computeEnv.getName());
             general.put("nextflowVersion", workflow.getNextflow() != null ? workflow.getNextflow().getVersion() : null);
             general.put("status", workflow.getStatus());
 
