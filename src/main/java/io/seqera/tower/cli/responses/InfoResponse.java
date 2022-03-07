@@ -59,7 +59,7 @@ public class InfoResponse extends Response {
 
         if (connectionCheck == 0) {
             if (opts.get("towerApiEndpoint").contains("/api")) {
-                out.println(ansi(String.format("%n    @|bold,fg(red) Tower API URL %s is not available|@%n", opts.get("towerApiEndpoint"))));
+                out.println(ansi(String.format("%n    @|bold,fg(red) Tower API URL '%s' is not available|@%n", opts.get("towerApiEndpoint"))));
             } else {
                 out.println(ansi(String.format("%n    @|bold,fg(red) Tower API URL %s is not available (did you mean '%s/api' ?)|@%n", opts.get("towerApiEndpoint"), opts.get("towerApiEndpoint"))));
             }
