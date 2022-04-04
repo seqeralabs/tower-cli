@@ -210,12 +210,12 @@ The Tower CLI is a platform binary executable created by a native compilation fr
 
 1. Install [SDKMan!](https://sdkman.io/)
 
-2. Install required GraalVM 
+2. Install required GraalVM:
 
     ```bash
     sdk env install
     ```
-   
+
 3. Install `native-image`:
 
     ```bash
