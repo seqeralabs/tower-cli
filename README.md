@@ -162,7 +162,7 @@ tw pipelines update --name=my_sleepy_pipeline --params-file=<(echo 'timeout: 30'
 
 ### 12. Launch a pipeline directly
 
-It is also possible to directly launch pipelines that have not been explicitly added to a Tower Workspace by using the full URL:
+It is also possible to directly launch pipelines that have not been explicitly added to a Tower Workspace by using the pipeline repository URL:
 
 ```bash
 tw launch https://github.com/nextflow-io/hello
