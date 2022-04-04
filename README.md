@@ -208,21 +208,27 @@ source <(tw generate-completion)
 
 The Tower CLI is a platform binary executable created by a native compilation from Java GraalVM.
 
-1. Download GraalVM (Java 11 version) from [here](https://github.com/graalvm/graalvm-ce-builds/releases/tag/vm-20.2.0).
+1. Install [SDKMan!](https://sdkman.io/)
 
-2. Install `native-image`:
+2. Install required GraalVM 
+
+    ```bash
+    sdk env install
+    ```
+   
+3. Install `native-image`:
 
     ```bash
     gu install native-image
     ```
 
-3. Create the native client:
+4. Create the native client:
 
     ```bash
-    ./gradlew nativeImage
+    ./gradlew nativeCompile
     ```
 
-4. Run `tw`:
+5. Run `tw`:
 
     ```bash
     ./build/graal/tw
