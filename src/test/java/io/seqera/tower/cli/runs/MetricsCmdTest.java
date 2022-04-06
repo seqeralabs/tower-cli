@@ -43,9 +43,9 @@ class MetricsCmdTest extends BaseCmdTest {
 
         List<MetricColumn> cols = new ArrayList<>();
         cols.add(MetricColumn.min);
-        cols.add(MetricColumn.q1);
-        cols.add(MetricColumn.q2);
-        cols.add(MetricColumn.q3);
+        cols.add(MetricColumn.Q1);
+        cols.add(MetricColumn.Q2);
+        cols.add(MetricColumn.Q3);
         cols.add(MetricColumn.max);
         cols.add(MetricColumn.mean);
 
@@ -70,9 +70,9 @@ class MetricsCmdTest extends BaseCmdTest {
 
         List<MetricColumn> cols = new ArrayList<>();
         cols.add(MetricColumn.min);
-        cols.add(MetricColumn.q1);
-        cols.add(MetricColumn.q2);
-        cols.add(MetricColumn.q3);
+        cols.add(MetricColumn.Q1);
+        cols.add(MetricColumn.Q2);
+        cols.add(MetricColumn.Q3);
         cols.add(MetricColumn.max);
         cols.add(MetricColumn.mean);
 

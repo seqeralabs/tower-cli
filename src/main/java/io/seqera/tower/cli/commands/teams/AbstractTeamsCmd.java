@@ -35,7 +35,7 @@ public abstract class AbstractTeamsCmd extends AbstractApiCmd {
     }
 
     public MemberDbDto findMemberByUsername(Long orgId, Long teamId, String username) throws ApiException {
-        ListMembersResponse listMembersResponse = api().listOrganizationTeamMembers(orgId, teamId);
+        ListMembersResponse listMembersResponse = api().listOrganizationTeamMembers(orgId, teamId, 25, 0, username);
 
         if (listMembersResponse.getMembers() == null) {
             throw new MemberNotFoundException(orgId, username);

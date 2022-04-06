@@ -29,6 +29,9 @@ public class DeleteCmd extends AbstractRunsCmd {
     @CommandLine.Option(names = {"-i", "-id"}, description = "Pipeline run identifier.", required = true)
     public String id;
 
+    @CommandLine.Option(names = {"--force"}, description = "Force the deletion even if any workflows are active")
+    public boolean force = false;
+
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
@@ -37,7 +40,7 @@ public class DeleteCmd extends AbstractRunsCmd {
         Long wspId = workspaceId(workspace.workspace);
         
         try {
-            api().deleteWorkflow(id, wspId);
+            api().deleteWorkflow(id, wspId, force);
 
             return new RunDeleted(id, workspaceRef(wspId));
         } catch (ApiException e) {

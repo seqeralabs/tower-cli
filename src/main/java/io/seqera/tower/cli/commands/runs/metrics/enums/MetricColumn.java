@@ -12,5 +12,5 @@
 package io.seqera.tower.cli.commands.runs.metrics.enums;
 
 public enum MetricColumn {
-    mean, min, q1, q2, q3, max
+    mean, min, Q1, Q2, Q3, max
 }

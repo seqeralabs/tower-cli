@@ -12,7 +12,7 @@
 package io.seqera.tower.cli.commands.credentials.providers;
 
 import io.seqera.tower.model.AwsSecurityKeys;
-import io.seqera.tower.model.Credentials.ProviderEnum;
+import io.seqera.tower.model.CredentialsSpec.ProviderEnum;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Option;
 

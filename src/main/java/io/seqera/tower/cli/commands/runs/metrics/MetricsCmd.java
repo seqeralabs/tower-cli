@@ -56,7 +56,7 @@ public class MetricsCmd extends AbstractRunsCmd {
         Long wspId = workspaceId(parentCommand.workspace.workspace);
 
         type = type == null ? List.of(MetricType.cpu, MetricType.mem, MetricType.time, MetricType.io) : type;
-        columns = columns == null ? List.of(MetricColumn.min, MetricColumn.q1, MetricColumn.q2, MetricColumn.q3, MetricColumn.max, MetricColumn.mean) : columns;
+        columns = columns == null ? List.of(MetricColumn.min, MetricColumn.Q1, MetricColumn.Q2, MetricColumn.Q3, MetricColumn.max, MetricColumn.mean) : columns;
 
         List<WorkflowMetrics> metrics = api().describeWorkflowMetrics(parentCommand.id, wspId).getMetrics();
 
