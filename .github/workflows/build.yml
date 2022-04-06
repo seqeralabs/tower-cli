@@ -39,7 +39,7 @@ jobs:
         run: ./gradlew cleanTest test
         env:
           GITHUB_USERNAME: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
 
       - name: Tests reports
         uses: actions/upload-artifact@v2
@@ -52,7 +52,7 @@ jobs:
         run: ./gradlew nativeCompile
         env:
           GITHUB_USERNAME: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
 
       - name: Upload linux native image artifact
         uses: actions/upload-artifact@v2
@@ -65,7 +65,7 @@ jobs:
         env:
           TOWER_CLI: build/native/nativeCompile/tw
           GITHUB_USERNAME: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
 
       - name: Binary tests reports
         uses: actions/upload-artifact@v2
@@ -103,7 +103,7 @@ jobs:
         run: ./gradlew cleanTest test
         env:
           GITHUB_USERNAME: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
 
       - name: Tests reports
         uses: actions/upload-artifact@v2
@@ -116,7 +116,7 @@ jobs:
         run: ./gradlew nativeCompile
         env:
           GITHUB_USERNAME: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
 
       - name: Upload Mac native image artifact
         uses: actions/upload-artifact@v2
@@ -129,7 +129,7 @@ jobs:
         env:
           TOWER_CLI: build/native/nativeCompile/tw
           GITHUB_USERNAME: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
 
       - name: Binary tests reports
         uses: actions/upload-artifact@v2
@@ -173,7 +173,7 @@ jobs:
         run: ./gradlew cleanTest test
         env:
           GITHUB_USERNAME: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
 
       - name: Tests reports
         uses: actions/upload-artifact@v2
@@ -186,7 +186,7 @@ jobs:
         run: ./gradlew nativeCompile
         env:
           GITHUB_USERNAME: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
 
       - name: Upload Windows native image artifact
         uses: actions/upload-artifact@v2
@@ -199,7 +199,7 @@ jobs:
         env:
           TOWER_CLI: build/native/nativeCompile/tw.exe
           GITHUB_USERNAME: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
 
       - name: Binary tests reports
         uses: actions/upload-artifact@v2
@@ -237,5 +237,5 @@ jobs:
       - name: Run JReleaser
         uses: jreleaser/release-action@v1
         env:
-          JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JRELEASER_GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
           JRELEASER_PROJECT_VERSION: ${{ steps.version.outputs.VERSION }}
