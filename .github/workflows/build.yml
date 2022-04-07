@@ -32,10 +32,10 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Tests
-        run: export && ./gradlew cleanTest test
+        run: ./gradlew cleanTest test
         env:
           GITHUB_USERNAME: ${{ github.actor }}
-          GITHUB_SEQERA_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
 
       - name: Tests reports
         uses: actions/upload-artifact@v2
