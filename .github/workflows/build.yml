@@ -13,7 +13,6 @@ jobs:
     name: Linux
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-latest
-    container: public.ecr.aws/seqera-labs/graalvm-static:21.3.0
     timeout-minutes: 90
 
     steps:
@@ -21,19 +20,16 @@ jobs:
         run: env | sort
 
       - name: Checkout
-        uses: actions/checkout@v1
-        with:
-          fetch-depth: 1
+        uses: actions/checkout@v2
 
       - name: Setup Graalvm
-        uses: DeLaGuardo/setup-graalvm@master
+        uses: graalvm/setup-graalvm@v1
         with:
-          graalvm: '21.3.0'
-          java: 'java11'
-          arch: 'amd64'
-
-      - name: Install native-image component
-        run: gu install native-image
+          version: '22.0.0.2'
+          java-version: '11'
+          components: 'native-image'
+          native-image-musl: 'true'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Tests
         run: ./gradlew cleanTest test
@@ -85,19 +81,15 @@ jobs:
         run: env | sort
 
       - name: Checkout
-        uses: actions/checkout@v1
-        with:
-          fetch-depth: 1
+        uses: actions/checkout@v2
 
       - name: Setup Graalvm
-        uses: DeLaGuardo/setup-graalvm@master
+        uses: graalvm/setup-graalvm@v1
         with:
-          graalvm: '21.3.0'
-          java: 'java11'
-          arch: 'amd64'
-
-      - name: Install native-image component
-        run: gu install native-image
+          version: '22.0.0.2'
+          java-version: '11'
+          components: 'native-image'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Tests
         run: ./gradlew cleanTest test
@@ -149,25 +141,15 @@ jobs:
         run: env | sort
 
       - name: Checkout
-        uses: actions/checkout@v1
-        with:
-          fetch-depth: 1
-
-      - name: Add MSVC dev setup
-        uses: ilammy/msvc-dev-cmd@v1.10.0
-
-      - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v1.0.3
+        uses: actions/checkout@v2
 
       - name: Setup Graalvm
-        uses: DeLaGuardo/setup-graalvm@master
+        uses: graalvm/setup-graalvm@v1
         with:
-          graalvm: '21.3.0'
-          java: 'java11'
-          arch: 'amd64'
-
-      - name: Install native-image component
-        run: gu.cmd install native-image
+          version: '22.0.0.2'
+          java-version: '11'
+          components: 'native-image'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Tests
         run: ./gradlew cleanTest test
