@@ -32,7 +32,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Tests
-        run: ./gradlew cleanTest test
+        run: export && ./gradlew cleanTest test
         env:
           GITHUB_USERNAME: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
