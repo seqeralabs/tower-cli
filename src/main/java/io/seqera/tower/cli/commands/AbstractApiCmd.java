@@ -16,6 +16,7 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.api.DefaultApi;
 import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
+import io.seqera.tower.cli.exceptions.InvalidWorkspaceParameterException;
 import io.seqera.tower.cli.exceptions.NoComputeEnvironmentException;
 import io.seqera.tower.cli.exceptions.OrganizationNotFoundException;
 import io.seqera.tower.cli.exceptions.ShowUsageException;
@@ -28,7 +29,6 @@ import io.seqera.tower.model.ListComputeEnvsResponseEntry;
 import io.seqera.tower.model.ListWorkspacesAndOrgResponse;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import io.seqera.tower.model.User;
-import io.swagger.annotations.Api;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.media.multipart.BodyPart;
@@ -187,7 +187,10 @@ public abstract class AbstractApiCmd extends AbstractCmd {
             if (workspaceId == null) {
                 if (workspaceRef.contains("/")) {
                     String[] wspRefs = workspaceRef.split(WORKSPACE_REF_SEPARATOR);
-                    OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = this.findOrgAndWorkspaceByName(wspRefs[0], wspRefs[1]);
+                    if (wspRefs.length != 2) {
+                        throw new InvalidWorkspaceParameterException(workspaceRef);
+                    }
+                    OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = this.findOrgAndWorkspaceByName(wspRefs[0].strip(), wspRefs[1].strip());
                     if (orgAndWorkspaceDbDto != null) {
                         workspaceName = orgAndWorkspaceDbDto.getWorkspaceName();
                         workspaceId = orgAndWorkspaceDbDto.getWorkspaceId();
@@ -195,7 +198,11 @@ public abstract class AbstractApiCmd extends AbstractCmd {
                         orgId = orgAndWorkspaceDbDto.getOrgId();
                     }
                 } else {
-                    workspaceId = Long.valueOf(workspaceRef);
+                    try {
+                        workspaceId = Long.valueOf(workspaceRef);
+                    } catch (NumberFormatException e) {
+                        throw new InvalidWorkspaceParameterException(workspaceRef);
+                    }
                 }
             }
         }
