@@ -14,6 +14,7 @@ package io.seqera.tower.cli.datasets;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
+import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.datasets.DatasetCreate;
 import io.seqera.tower.cli.responses.datasets.DatasetDelete;
 import io.seqera.tower.cli.responses.datasets.DatasetDownload;
@@ -299,5 +300,16 @@ public class DatasetsCmdTest extends BaseCmdTest {
         assertOutput(format, out, new DatasetUpdate("dataset1", "249664655368293", "4D9TP0w2pM0qmwqVHgrgBK"));
         assertEquals("", out.stdErr);
         assertEquals(0, out.exitCode);
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testFileNotExistsError(OutputType format, MockServerClient mock) throws IOException {
+
+        ExecOut out = exec(format, mock, "datasets", "add", "-w", "249664655368293", "-n", "name", "path/that/do/not/exist/file.tsv");
+
+        assertEquals(errorMessage(out.app, new TowerException(String.format("File path '%s' do not exists.", "path/that/do/not/exist/file.tsv"))), out.stdErr);
+        assertEquals("", out.stdOut);
+        assertEquals(1, out.exitCode);
     }
 }
