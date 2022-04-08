@@ -16,10 +16,18 @@
   ]},
   "bundles":[
     {
-      "name":"org.glassfish.jersey.client.internal.localization"
+      "name":"org.glassfish.jersey.client.internal.localization",
+      "locales":[
+        "", 
+        "und"
+      ]
     }, 
     {
-      "name":"org.glassfish.jersey.internal.localization"
+      "name":"org.glassfish.jersey.internal.localization",
+      "locales":[
+        "", 
+        "und"
+      ]
     }, 
     {
       "name":"org.glassfish.jersey.media.multipart.internal.localization"
