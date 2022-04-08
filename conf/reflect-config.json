@@ -1669,6 +1669,12 @@
   "allDeclaredMethods":true}
 ,
 {
+  "name":"io.seqera.tower.model.AccessToken",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true}
+,
+{
   "name":"io.seqera.tower.model.Action",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1729,10 +1735,38 @@
   "allDeclaredConstructors":true}
 ,
 {
+  "name":"io.seqera.tower.model.AgentSecurityKeys",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"<init>","parameterTypes":[] }, 
+    {"name":"setConnectionId","parameterTypes":["java.lang.String"] }, 
+    {"name":"setWorkDir","parameterTypes":["java.lang.String"] }
+  ]}
+,
+{
   "name":"io.seqera.tower.model.AltairPbsComputeConfig",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true}
+,
+{
+  "name":"io.seqera.tower.model.Analytics",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"<init>","parameterTypes":[] }, 
+    {"name":"setSiteId","parameterTypes":["java.lang.Integer"] }, 
+    {"name":"setUrl","parameterTypes":["java.lang.String"] }
+  ]}
+,
+{
+  "name":"io.seqera.tower.model.Avatar",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true}
 ,
 {
   "name":"io.seqera.tower.model.AwsBatchConfig",
@@ -1770,6 +1804,12 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true}
+,
+{
+  "name":"io.seqera.tower.model.BlobContent",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true}
 ,
 {
   "name":"io.seqera.tower.model.CloudPriceModel",
@@ -1935,6 +1975,12 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true}
+,
+{
+  "name":"io.seqera.tower.model.CredentialsSpec$ProviderEnum",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"getValue","parameterTypes":[] }]}
 ,
 {
   "name":"io.seqera.tower.model.Dataset",
@@ -2317,6 +2363,12 @@
   "allDeclaredConstructors":true}
 ,
 {
+  "name":"io.seqera.tower.model.OrganizationQuotas",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true}
+,
+{
   "name":"io.seqera.tower.model.ParticipantDbDto",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -2503,6 +2555,18 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true}
+,
+{
+  "name":"io.seqera.tower.model.UserOptions",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"<init>","parameterTypes":[] }, 
+    {"name":"setGithubToken","parameterTypes":["java.lang.String"] }, 
+    {"name":"setHubspotId","parameterTypes":["java.lang.Long"] }, 
+    {"name":"setMaxRuns","parameterTypes":["java.lang.Integer"] }
+  ]}
 ,
 {
   "name":"io.seqera.tower.model.Visibility",

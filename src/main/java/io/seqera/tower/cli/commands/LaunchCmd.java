@@ -114,7 +114,7 @@ public class LaunchCmd extends AbstractRootCmd {
     }
 
     protected Response runTowerPipeline(Long wspId) throws ApiException, IOException {
-        ListPipelinesResponse pipelines = api().listPipelines(wspId, 2, 0, pipeline);
+        ListPipelinesResponse pipelines = api().listPipelines(wspId, 2, 0, pipeline, null);
         if (pipelines.getTotalSize() == 0) {
             throw new InvalidResponseException(String.format("Pipeline '%s' not found on this workspace.", pipeline));
         }
@@ -130,7 +130,7 @@ public class LaunchCmd extends AbstractRootCmd {
     }
 
     protected Response submitWorkflow(WorkflowLaunchRequest launch, Long wspId) throws ApiException {
-        SubmitWorkflowLaunchResponse response = api().createWorkflowLaunch(new SubmitWorkflowLaunchRequest().launch(launch), wspId);
+        SubmitWorkflowLaunchResponse response = api().createWorkflowLaunch(new SubmitWorkflowLaunchRequest().launch(launch), wspId, null);
         String workflowId = response.getWorkflowId();
         return new RunSubmited(workflowId, baseWorkspaceUrl(wspId), workspaceRef(wspId));
     }

@@ -26,7 +26,7 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "members",
-        description = "Add or delete team members.",
+        description = "List all team members.",
         subcommands = {
                 AddCmd.class,
                 DeleteCmd.class,
@@ -46,7 +46,8 @@ public class MembersCmd extends AbstractTeamsCmd {
 
         TeamDbDto team = findTeamByName(orgAndWorkspaceDbDto.getOrgId(), teamName);
 
-        ListMembersResponse response = api().listOrganizationTeamMembers(orgAndWorkspaceDbDto.getOrgId(), team.getTeamId());
+        //TODO use pagination to get all the members
+        ListMembersResponse response = api().listOrganizationTeamMembers(orgAndWorkspaceDbDto.getOrgId(), team.getTeamId(), 100, 0, null);
 
         if (response == null) {
             throw new TowerException(String.format("Team '%s' has no members", teamName));
