@@ -33,6 +33,7 @@ import org.mockserver.model.MediaType;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.Arrays;
 
 import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
@@ -308,7 +309,7 @@ public class DatasetsCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "datasets", "add", "-w", "249664655368293", "-n", "name", "path/that/do/not/exist/file.tsv");
 
-        assertEquals(errorMessage(out.app, new TowerException(String.format("File path '%s' do not exists.", "path/that/do/not/exist/file.tsv"))), out.stdErr);
+        assertEquals(errorMessage(out.app, new TowerException(String.format("File path '%s' do not exists.", Path.of("path/that/do/not/exist/file.tsv")))), out.stdErr);
         assertEquals("", out.stdOut);
         assertEquals(1, out.exitCode);
     }
