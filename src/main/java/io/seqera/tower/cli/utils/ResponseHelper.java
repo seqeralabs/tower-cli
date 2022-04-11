@@ -132,17 +132,23 @@ public class ResponseHelper {
         int maxSecondsToSleep = 120;
         int targetPos = positions.get(targetStatus);
         int currentPos;
+        S lastReported = null;
 
         if (showProgress) {
-            out.print(String.format("  Waiting '%s' status .", targetStatus));
+            out.print(String.format("  Waiting %s status...", targetStatus));
             out.flush();
         }
 
         do {
             TimeUnit.SECONDS.sleep(secondsToSleep);
-            currentPos = positions.get(checkStatus.get());
+            S status = checkStatus.get();
+            currentPos = status == null ? positions.size() : positions.get(status);
             if (showProgress) {
                 out.print('.');
+                if (lastReported != status) {
+                    out.print(String.format("%s", status));
+                    lastReported = status;
+                }
                 out.flush();
             }
             if (secondsToSleep < maxSecondsToSleep) {
@@ -151,7 +157,7 @@ public class ResponseHelper {
         } while (currentPos < targetPos);
 
         if (showProgress) {
-            out.print(currentPos == targetPos ? " OK!\n\n" : " ERROR!\n\n");
+            out.print(currentPos == targetPos ? "  [DONE]\n\n" : "  [ERROR]\n\n");
             out.flush();
         }
 

@@ -16,7 +16,7 @@ public class ComputeEnvNotFoundException extends TowerException {
         super(String.format("Compute environment '%s' not found at %s workspace", name, workspaceRef));
     }
 
-    public ComputeEnvNotFoundException(String name, long workspaceId) {
-        super(String.format("Compute environment '%s' not found at %d workspace", name, workspaceId));
+    public ComputeEnvNotFoundException(String name, Long workspaceId) {
+        super(String.format("Compute environment '%s' not found at %s workspace", name, workspaceId != null ? workspaceId.toString() : "user"));
     }
 }
