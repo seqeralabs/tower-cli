@@ -16,12 +16,16 @@ import io.seqera.tower.cli.responses.Response;
 public class ComputeEnvAdded extends Response {
 
     public final String platform;
+    public final String id;
     public final String name;
+    public final Long workspaceId;
     public final String workspaceRef;
 
-    public ComputeEnvAdded(String platform, String name, String workspaceRef) {
+    public ComputeEnvAdded(String platform, String id, String name, Long workspaceId, String workspaceRef) {
         this.platform = platform;
+        this.id = id;
         this.name = name;
+        this.workspaceId = workspaceId;
         this.workspaceRef = workspaceRef;
     }
 

@@ -26,6 +26,11 @@ import picocli.CommandLine;
 import javax.ws.rs.ProcessingException;
 import java.io.PrintWriter;
 import java.nio.file.NoSuchFileException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
 import static io.seqera.tower.cli.utils.JsonHelper.prettyJson;
@@ -114,6 +119,43 @@ public class ResponseHelper {
 
         return ex.getResponseBody();
 
+    }
+
+    public static <S extends Enum<?>> Integer waitStatus(PrintWriter out, boolean showProgress, S targetStatus, S[] allStatus, Supplier<S> checkStatus ) throws InterruptedException {
+
+        Map<S, Integer> positions = new HashMap<>();
+        for (int i=0; i < allStatus.length; i++) {
+            positions.put(allStatus[i], i);
+        }
+
+        int secondsToSleep = 2;
+        int maxSecondsToSleep = 120;
+        int targetPos = positions.get(targetStatus);
+        int currentPos;
+
+        if (showProgress) {
+            out.print(String.format("  Waiting '%s' status .", targetStatus));
+            out.flush();
+        }
+
+        do {
+            TimeUnit.SECONDS.sleep(secondsToSleep);
+            currentPos = positions.get(checkStatus.get());
+            if (showProgress) {
+                out.print('.');
+                out.flush();
+            }
+            if (secondsToSleep < maxSecondsToSleep) {
+                secondsToSleep += 1;
+            }
+        } while (currentPos < targetPos);
+
+        if (showProgress) {
+            out.print(currentPos == targetPos ? " OK!\n\n" : " ERROR!\n\n");
+            out.flush();
+        }
+
+        return currentPos == targetPos ? CommandLine.ExitCode.OK : CommandLine.ExitCode.SOFTWARE;
     }
 
 }
