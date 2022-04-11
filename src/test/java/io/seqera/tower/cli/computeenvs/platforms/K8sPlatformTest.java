@@ -46,7 +46,7 @@ class K8sPlatformTest extends BaseCmdTest {
         ExecOut out = exec(mock, "compute-envs", "add", "k8s", "-n", "k8s", "--work-dir", "/workdir", "-s", "k8s.mydomain.net", "--namespace", "nf", "--ssl-cert", tempFile("ssl_cert", "", ".crt"), "--head-account", "head", "--storage-claim", "nf");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvAdded("k8s-platform", "k8s", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("k8s-platform", "isnEDBLvHDAIteOEF44ow", "k8s", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -68,7 +68,7 @@ class K8sPlatformTest extends BaseCmdTest {
         ExecOut out = exec(mock, "compute-envs", "add", "k8s", "-n", "k8s", "--work-dir", "/workdir", "-s", "k8s.mydomain.net", "--namespace", "nf", "--ssl-cert", tempFile("ssl_cert", "", ".crt"), "--head-account", "head", "--storage-claim", "nf", "--storage-mount", "/workdir");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvAdded("k8s-platform", "k8s", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("k8s-platform", "isnEDBLvHDAIteOEF44ow", "k8s", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -90,7 +90,7 @@ class K8sPlatformTest extends BaseCmdTest {
         ExecOut out = exec(mock, "compute-envs", "add", "k8s", "-n", "k8s", "--work-dir", "/workdir", "-s", "k8s.mydomain.net", "--namespace", "nf", "--ssl-cert", tempFile("ssl_cert", "", ".crt"), "--head-account", "head", "--storage-claim", "nf", "--pre-run", tempFile("pre_run_me", "pre", "sh"), "--post-run", tempFile("post_run_me", "post", "sh"));
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvAdded("k8s-platform", "k8s", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("k8s-platform", "isnEDBLvHDAIteOEF44ow", "k8s", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

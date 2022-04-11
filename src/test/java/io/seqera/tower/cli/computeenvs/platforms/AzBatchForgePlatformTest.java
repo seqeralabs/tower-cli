@@ -44,7 +44,7 @@ class AzBatchForgePlatformTest extends BaseCmdTest {
         ExecOut out = exec(mock, "compute-envs", "add", "azure-batch", "forge", "-n", "azure", "-l", "europe", "--work-dir", "az://nextflow-ci/jordeu");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvAdded("azure-batch", "azure", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("azure-batch", "isnEDBLvHDAIteOEF44ow", "azure", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -66,7 +66,7 @@ class AzBatchForgePlatformTest extends BaseCmdTest {
         ExecOut out = exec(mock, "compute-envs", "add", "azure-batch", "forge",  "-n", "azure", "-l", "europe", "--work-dir", "az://nextflow-ci/jordeu", "--token-duration=24");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvAdded("azure-batch", "azure", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("azure-batch", "isnEDBLvHDAIteOEF44ow", "azure", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

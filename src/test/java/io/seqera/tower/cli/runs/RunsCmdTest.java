@@ -493,7 +493,7 @@ class RunsCmdTest extends BaseCmdTest {
 
 
         ExecOut out = exec(format, mock, "runs", "relaunch", "-i", "5UVJlhfUAHTuAP");
-        assertOutput(format, out, new RunSubmited("35aLiS0bIM5efd", String.format("%s/user/jordi/watch/35aLiS0bIM5efd", url(mock)), "user"));
+        assertOutput(format, out, new RunSubmited("35aLiS0bIM5efd", null, String.format("%s/user/jordi/watch/35aLiS0bIM5efd", url(mock)), "user"));
     }
 
     @Test

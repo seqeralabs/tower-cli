@@ -46,7 +46,7 @@ class EksPlatformTest extends BaseCmdTest {
         ExecOut out = exec(mock, "compute-envs", "add", "eks", "-n", "eks", "--work-dir", "/workdir", "-r", "europe", "--cluster-name", "tower", "--namespace", "nf", "--head-account", "head", "--storage-claim", "nf");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvAdded("eks-platform", "eks", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("eks-platform", "isnEDBLvHDAIteOEF44ow", "eks", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -68,7 +68,7 @@ class EksPlatformTest extends BaseCmdTest {
         ExecOut out = exec(mock, "compute-envs", "add", "eks", "-n", "eks", "--work-dir", "/workdir", "-r", "europe", "--cluster-name", "tower", "--namespace", "nf", "--head-account", "head", "--storage-claim", "nf", "--storage-mount=/workdir");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvAdded("eks-platform", "eks", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("eks-platform", "isnEDBLvHDAIteOEF44ow", "eks", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

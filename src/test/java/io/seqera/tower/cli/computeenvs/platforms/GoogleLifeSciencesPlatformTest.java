@@ -46,7 +46,7 @@ class GoogleLifeSciencesPlatformTest extends BaseCmdTest {
         ExecOut out = exec(mock, "compute-envs", "add", "google-ls", "-n", "google", "--work-dir", "gs://workdir", "-r", "europe");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvAdded("google-lifesciences", "google", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("google-lifesciences", "isnEDBLvHDAIteOEF44ow", "google", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -68,7 +68,7 @@ class GoogleLifeSciencesPlatformTest extends BaseCmdTest {
         ExecOut out = exec(mock, "compute-envs", "add", "google-ls", "-n", "google", "--work-dir", "gs://workdir", "-r", "europe", "--use-private-address");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvAdded("google-lifesciences", "google", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("google-lifesciences", "isnEDBLvHDAIteOEF44ow", "google", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -90,7 +90,7 @@ class GoogleLifeSciencesPlatformTest extends BaseCmdTest {
         ExecOut out = exec(mock, "compute-envs", "add", "google-ls", "-n", "google", "--work-dir", "gs://workdir", "-r", "europe", "--nfs-target=1.2.3.4:/my_share_name");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvAdded("google-lifesciences", "google", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("google-lifesciences", "isnEDBLvHDAIteOEF44ow", "google", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

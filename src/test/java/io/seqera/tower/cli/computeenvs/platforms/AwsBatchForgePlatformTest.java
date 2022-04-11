@@ -44,7 +44,7 @@ class AwsBatchForgePlatformTest extends BaseCmdTest {
         ExecOut out = exec(mock, "compute-envs", "add", "aws-batch", "forge", "-n", "demo", "-r", "eu-west-1", "--work-dir", "s3://nextflow-ci/jordeu", "--max-cpus=123", "--fusion");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvAdded("aws-batch", "demo", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("aws-batch", "isnEDBLvHDAIteOEF44ow", "demo", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -66,7 +66,7 @@ class AwsBatchForgePlatformTest extends BaseCmdTest {
         ExecOut out = exec(mock, "compute-envs", "add", "aws-batch", "forge", "-n", "demo", "-r", "eu-west-1", "--work-dir", "s3://nextflow-ci/jordeu", "--max-cpus=123", "--create-efs");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvAdded("aws-batch", "demo", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("aws-batch", "isnEDBLvHDAIteOEF44ow", "demo", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -88,7 +88,7 @@ class AwsBatchForgePlatformTest extends BaseCmdTest {
         ExecOut out = exec(mock, "compute-envs", "add", "aws-batch", "forge", "-n", "demo", "-r", "eu-west-1", "--work-dir", "/workdir", "--max-cpus=123", "--fsx-size=1200");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvAdded("aws-batch", "demo", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("aws-batch", "isnEDBLvHDAIteOEF44ow", "demo", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -110,7 +110,7 @@ class AwsBatchForgePlatformTest extends BaseCmdTest {
         ExecOut out = exec(mock, "compute-envs", "add", "aws-batch", "forge", "-n", "demo", "-r", "eu-west-1", "--work-dir", "s3://nextflow-ci/jordeu", "--max-cpus=123", "--fusion", "--cli-path=/bin/aws", "--min-cpus=8", "--allow-buckets=bkt1,bkt2");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvAdded("aws-batch", "demo", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("aws-batch", "isnEDBLvHDAIteOEF44ow", "demo", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

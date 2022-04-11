@@ -44,7 +44,7 @@ class LsfPlatformTest extends BaseCmdTest {
         ExecOut out = exec(mock, "compute-envs", "add", "lsf", "-n", "lsf", "--work-dir", "/home/jordeu/nf", "-u", "jordi", "-H", "ssh.mydomain.net", "-q", "normal");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvAdded("lsf-platform", "lsf", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("lsf-platform", "isnEDBLvHDAIteOEF44ow", "lsf", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -66,7 +66,7 @@ class LsfPlatformTest extends BaseCmdTest {
         ExecOut out = exec(mock, "compute-envs", "add", "lsf", "-n", "lsf", "--work-dir", "/home/jordeu/nf", "-u", "jordi", "-H", "ssh.mydomain.net", "-q", "normal", "--max-queue-size=200");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvAdded("lsf-platform", "lsf", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("lsf-platform", "isnEDBLvHDAIteOEF44ow", "lsf", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

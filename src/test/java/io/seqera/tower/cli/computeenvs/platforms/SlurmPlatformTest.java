@@ -44,7 +44,7 @@ class SlurmPlatformTest extends BaseCmdTest {
         ExecOut out = exec(mock, "compute-envs", "add", "slurm", "-n", "slurm", "--work-dir", "/home/jordeu/nf", "-u", "jordi", "-H", "ssh.mydomain.net", "-q", "normal");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvAdded("slurm-platform", "slurm", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("slurm-platform", "isnEDBLvHDAIteOEF44ow", "slurm", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -66,7 +66,7 @@ class SlurmPlatformTest extends BaseCmdTest {
         ExecOut out = exec(mock, "compute-envs", "add", "slurm", "-n", "slurm", "--work-dir", "/home/jordeu/nf", "-u", "jordi", "-H", "ssh.mydomain.net", "-q", "normal", "--max-queue-size=200");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvAdded("slurm-platform", "slurm", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("slurm-platform", "isnEDBLvHDAIteOEF44ow", "slurm", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

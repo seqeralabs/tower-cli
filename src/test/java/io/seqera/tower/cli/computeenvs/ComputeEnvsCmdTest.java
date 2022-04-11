@@ -358,7 +358,7 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
         );
 
         ExecOut out = exec(format, mock, "compute-envs", "import", tempFile(new String(loadResource("cejson"), StandardCharsets.UTF_8), "ce", "json"), "-n", "json", "-c", "6g0ER59L4ZoE5zpOmUP48D");
-        assertOutput(format, out, new ComputeEnvAdded(ComputeEnv.PlatformEnum.AWS_BATCH.getValue(), "json", USER_WORKSPACE_NAME));
+        assertOutput(format, out, new ComputeEnvAdded(ComputeEnv.PlatformEnum.AWS_BATCH.getValue(),  "3T6xWeFD63QIuzdAowvSTC", "json", null, USER_WORKSPACE_NAME));
     }
 
     @ParameterizedTest

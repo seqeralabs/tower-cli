@@ -46,7 +46,7 @@ class GkePlatformTest extends BaseCmdTest {
         ExecOut out = exec(mock, "compute-envs", "add", "gke", "-n", "gke", "--work-dir", "/workdir", "-r", "europe", "--cluster-name", "tower", "--namespace", "nf", "--head-account", "head", "--storage-claim", "nf");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvAdded("gke-platform", "gke", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("gke-platform", "isnEDBLvHDAIteOEF44ow", "gke", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -68,7 +68,7 @@ class GkePlatformTest extends BaseCmdTest {
         ExecOut out = exec(mock, "compute-envs", "add", "gke", "-n", "gke", "--work-dir", "/workdir", "-r", "europe", "--cluster-name", "tower", "--namespace", "nf", "--head-account", "head", "--storage-claim", "nf", "--storage-mount=/workdir");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvAdded("gke-platform", "gke", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("gke-platform", "isnEDBLvHDAIteOEF44ow", "gke", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
