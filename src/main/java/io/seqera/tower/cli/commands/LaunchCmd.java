@@ -54,6 +54,9 @@ public class LaunchCmd extends AbstractRootCmd {
     @Option(names = {"-c", "--compute-env"}, description = "Compute environment name [default: primary compute environment].")
     String computeEnv;
 
+    @Option(names = {"-n", "--name"}, description = "Custom workflow run name")
+    String name;
+
     @Option(names = {"--work-dir"}, description = "Path where the pipeline scratch data is stored.")
     String workDir;
 
@@ -99,6 +102,7 @@ public class LaunchCmd extends AbstractRootCmd {
                 .id(base.getId())
                 .pipeline(base.getPipeline())
                 .computeEnvId(base.getComputeEnvId())
+                .runName(coalesce(name, base.getRunName()))
                 .workDir(coalesce(workDir, base.getWorkDir()))
                 .paramsText(coalesce(readString(paramsFile), base.getParamsText()))
                 .configProfiles(coalesce(profile, base.getConfigProfiles()))
