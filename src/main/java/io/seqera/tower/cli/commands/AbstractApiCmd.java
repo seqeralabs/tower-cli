@@ -16,6 +16,7 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.api.DefaultApi;
 import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
+import io.seqera.tower.cli.exceptions.InvalidWorkspaceParameterException;
 import io.seqera.tower.cli.exceptions.NoComputeEnvironmentException;
 import io.seqera.tower.cli.exceptions.OrganizationNotFoundException;
 import io.seqera.tower.cli.exceptions.ShowUsageException;
@@ -28,7 +29,6 @@ import io.seqera.tower.model.ListComputeEnvsResponseEntry;
 import io.seqera.tower.model.ListWorkspacesAndOrgResponse;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import io.seqera.tower.model.User;
-import io.swagger.annotations.Api;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.media.multipart.BodyPart;
@@ -43,6 +43,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Properties;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -91,10 +92,25 @@ public abstract class AbstractApiCmd extends AbstractCmd {
             client.setServerIndex(null);
             client.setBasePath(app().url);
             client.setBearerToken(app().token);
+
+            // Set HTTP Agent header
+            Properties props = getCliProperties();
+            client.setUserAgent(String.format("tw/%s (%s)", props.get("version"), props.get("platform")));
+
             api = new DefaultApi(client);
         }
 
         return api;
+    }
+
+    protected Properties getCliProperties() throws ApiException {
+        Properties properties = new Properties();
+        try {
+            properties.load(this.getClass().getResourceAsStream("/META-INF/build-info.properties"));
+        } catch (IOException e) {
+            throw new ApiException("loading build-info.properties");
+        }
+        return properties;
     }
 
     private ApiClient buildApiClient() {
@@ -187,7 +203,10 @@ public abstract class AbstractApiCmd extends AbstractCmd {
             if (workspaceId == null) {
                 if (workspaceRef.contains("/")) {
                     String[] wspRefs = workspaceRef.split(WORKSPACE_REF_SEPARATOR);
-                    OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = this.findOrgAndWorkspaceByName(wspRefs[0], wspRefs[1]);
+                    if (wspRefs.length != 2) {
+                        throw new InvalidWorkspaceParameterException(workspaceRef);
+                    }
+                    OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = this.findOrgAndWorkspaceByName(wspRefs[0].strip(), wspRefs[1].strip());
                     if (orgAndWorkspaceDbDto != null) {
                         workspaceName = orgAndWorkspaceDbDto.getWorkspaceName();
                         workspaceId = orgAndWorkspaceDbDto.getWorkspaceId();
@@ -195,7 +214,11 @@ public abstract class AbstractApiCmd extends AbstractCmd {
                         orgId = orgAndWorkspaceDbDto.getOrgId();
                     }
                 } else {
-                    workspaceId = Long.valueOf(workspaceRef);
+                    try {
+                        workspaceId = Long.valueOf(workspaceRef);
+                    } catch (NumberFormatException e) {
+                        throw new InvalidWorkspaceParameterException(workspaceRef);
+                    }
                 }
             }
         }

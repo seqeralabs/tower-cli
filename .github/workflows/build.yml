@@ -49,6 +49,7 @@ jobs:
         env:
           GITHUB_USERNAME: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
+          PLATFORM: linux-x86_64
 
       - name: Upload linux native image artifact
         uses: actions/upload-artifact@v2
@@ -109,6 +110,7 @@ jobs:
         env:
           GITHUB_USERNAME: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
+          PLATFORM: osx-x86_64
 
       - name: Upload Mac native image artifact
         uses: actions/upload-artifact@v2
@@ -169,6 +171,7 @@ jobs:
         env:
           GITHUB_USERNAME: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
+          PLATFORM: windows-x86_64
 
       - name: Upload Windows native image artifact
         uses: actions/upload-artifact@v2
