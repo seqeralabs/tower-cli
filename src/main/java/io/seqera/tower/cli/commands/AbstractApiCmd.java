@@ -43,6 +43,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Properties;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -91,10 +92,25 @@ public abstract class AbstractApiCmd extends AbstractCmd {
             client.setServerIndex(null);
             client.setBasePath(app().url);
             client.setBearerToken(app().token);
+
+            // Set HTTP Agent header
+            Properties props = getCliProperties();
+            client.setUserAgent(String.format("tw/%s (%s)", props.get("version"), props.get("platform")));
+
             api = new DefaultApi(client);
         }
 
         return api;
+    }
+
+    protected Properties getCliProperties() throws ApiException {
+        Properties properties = new Properties();
+        try {
+            properties.load(this.getClass().getResourceAsStream("/META-INF/build-info.properties"));
+        } catch (IOException e) {
+            throw new ApiException("loading build-info.properties");
+        }
+        return properties;
     }
 
     private ApiClient buildApiClient() {
