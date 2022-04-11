@@ -36,13 +36,13 @@ class AgentProviderTest extends BaseCmdTest {
         mock.when(
                 request().withMethod("POST").withPath("/credentials").withBody("{\"credentials\":{\"keys\":{\"connectionId\":\"connection_id\",\"workDir\":\"/work\"},\"name\":\"agent_test\",\"provider\":\"tw-agent\"}}"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"credentialsId\":\"1cz5A8cuBkB5iJliCwJCFU\"}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody("{\"credentialsId\":\"1cz5A8cuBkB5iJliCwJCFJ\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "credentials", "add", "agent", "-n", "agent_test", "--connection-id=connection_id", "--work-dir=/work");
+        ExecOut out = exec(mock, "credentials", "add", "agent", "-n", "agent_test", "--connection-id", "connection_id", "--work-dir", "/work");
 
         assertEquals("", out.stdErr);
-        assertEquals(new CredentialsAdded("tw_agent", "1cz5A8cuBkB5iJliCwJCFU", "agent_test", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new CredentialsAdded("tw_agent", "1cz5A8cuBkB5iJliCwJCFJ", "agent_test", USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
 
     }
