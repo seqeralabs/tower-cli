@@ -13,12 +13,14 @@ package io.seqera.tower.cli.commands.datasets;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceRequiredOptions;
+import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.datasets.DatasetCreate;
 import io.seqera.tower.model.CreateDatasetRequest;
 import io.seqera.tower.model.CreateDatasetResponse;
 import picocli.CommandLine;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
@@ -26,7 +28,7 @@ import java.nio.file.Path;
         name = "add",
         description = "Create a workspace dataset."
 )
-public class AddCmd extends AbstractDatasetsCmd{
+public class AddCmd extends AbstractDatasetsCmd {
 
     @CommandLine.Option(names = {"-n", "--name"}, description = "Dataset name.", required = true)
     public String name;
@@ -45,6 +47,15 @@ public class AddCmd extends AbstractDatasetsCmd{
 
     @Override
     protected Response exec() throws ApiException, IOException {
+        File dataset = fileName.toFile();
+        if (!dataset.exists()) {
+            throw new TowerException(String.format("File path '%s' do not exists.", fileName));
+        }
+
+        if (dataset.isDirectory()) {
+            throw new TowerException(String.format("File path '%s' must be a file, not a directory.", fileName));
+        }
+
         Long wspId = workspaceId(workspace.workspace);
         CreateDatasetRequest request = new CreateDatasetRequest();
         request.setName(name);
