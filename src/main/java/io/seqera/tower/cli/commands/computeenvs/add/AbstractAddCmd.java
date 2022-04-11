@@ -73,7 +73,8 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
                     showProgress,
                     wait,
                     ComputeEnvStatus.values(),
-                    () -> checkComputeEnvStatus(added.id, added.workspaceId)
+                    () -> checkComputeEnvStatus(added.id, added.workspaceId),
+                    ComputeEnvStatus.AVAILABLE, ComputeEnvStatus.ERRORED, ComputeEnvStatus.INVALID
             );
         } catch (InterruptedException e) {
             return exitCode;

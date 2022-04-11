@@ -20,6 +20,7 @@ import io.seqera.tower.cli.exceptions.ApiExceptionMessage;
 import io.seqera.tower.cli.exceptions.ShowUsageException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
+import org.glassfish.jersey.internal.guava.Sets;
 import org.glassfish.jersey.message.internal.MessageBodyProviderNotFoundException;
 import picocli.CommandLine;
 
@@ -28,7 +29,9 @@ import java.io.PrintWriter;
 import java.nio.file.NoSuchFileException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
@@ -121,12 +124,14 @@ public class ResponseHelper {
 
     }
 
-    public static <S extends Enum<?>> Integer waitStatus(PrintWriter out, boolean showProgress, S targetStatus, S[] allStatus, Supplier<S> checkStatus ) throws InterruptedException {
+    public static <S extends Enum<?>> Integer waitStatus(PrintWriter out, boolean showProgress, S targetStatus, S[] allStates, Supplier<S> checkStatus, S... endStates ) throws InterruptedException {
 
         Map<S, Integer> positions = new HashMap<>();
-        for (int i=0; i < allStatus.length; i++) {
-            positions.put(allStatus[i], i);
+        for (int i=0; i < allStates.length; i++) {
+            positions.put(allStates[i], i);
         }
+
+        Set<S> immutableStates = new HashSet<S>(Arrays.asList(endStates));
 
         int secondsToSleep = 2;
         int maxSecondsToSleep = 120;
@@ -139,9 +144,10 @@ public class ResponseHelper {
             out.flush();
         }
 
+        S status;
         do {
             TimeUnit.SECONDS.sleep(secondsToSleep);
-            S status = checkStatus.get();
+            status = checkStatus.get();
             currentPos = status == null ? positions.size() : positions.get(status);
             if (showProgress) {
                 out.print('.');
@@ -154,7 +160,7 @@ public class ResponseHelper {
             if (secondsToSleep < maxSecondsToSleep) {
                 secondsToSleep += 1;
             }
-        } while (currentPos < targetPos);
+        } while (currentPos < targetPos && !immutableStates.contains(status));
 
         if (showProgress) {
             out.print(currentPos == targetPos ? "  [DONE]\n\n" : "  [ERROR]\n\n");

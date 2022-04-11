@@ -157,7 +157,8 @@ public class LaunchCmd extends AbstractRootCmd {
                     showProgress,
                     wait,
                     WorkflowStatus.values(),
-                    () -> checkWorkflowStatus(submitted.workflowId, submitted.workspaceId)
+                    () -> checkWorkflowStatus(submitted.workflowId, submitted.workspaceId),
+                    WorkflowStatus.CANCELLED, WorkflowStatus.FAILED, WorkflowStatus.SUCCEEDED
             );
         } catch (InterruptedException e) {
             return exitCode;
