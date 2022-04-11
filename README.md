@@ -144,7 +144,12 @@ Pipelines consist of a pipeline repository, launch parameters, and a Compute Env
 tw launch my_sleepy_pipeline
 ```
 
-> Add a `--wait=SUCCEEDED` if you want the command to wait until the pipeline execution is complete.
+Add a `--wait=SUCCEEDED` if you want the command to wait until the pipeline execution is complete.
+
+When using `--wait`, `tw` can exit with one of two exit codes:
+
+- `0`: When the run reaches the desired state.
+- `1`:  When the run reaches a state that makes it impossible to reach the desired state.
 
 ### 10. Change launch parameters
 
