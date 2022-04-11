@@ -34,12 +34,12 @@ class AgentProviderTest extends BaseCmdTest {
     void testAdd(MockServerClient mock) throws IOException {
 
         mock.when(
-                request().withMethod("POST").withPath("/credentials").withBody("{\"credentials\":{\"keys\":{\"connectionId\":\"connection_id\",\"workDir\":\"$TW_AGENT_WORK\"},\"name\":\"agent_test\",\"provider\":\"tw-agent\"}}"), exactly(1)
+                request().withMethod("POST").withPath("/credentials").withBody("{\"credentials\":{\"keys\":{\"connectionId\":\"connection_id\",\"workDir\":\"/work\"},\"name\":\"agent_test\",\"provider\":\"tw-agent\"}}"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"credentialsId\":\"1cz5A8cuBkB5iJliCwJCFU\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "credentials", "add", "agent", "-n", "agent_test", "--connection-id=connection_id");
+        ExecOut out = exec(mock, "credentials", "add", "agent", "-n", "agent_test", "--connection-id=connection_id", "--work-dir=/work");
 
         assertEquals("", out.stdErr);
         assertEquals(new CredentialsAdded("tw_agent", "1cz5A8cuBkB5iJliCwJCFU", "agent_test", USER_WORKSPACE_NAME).toString(), out.stdOut);
