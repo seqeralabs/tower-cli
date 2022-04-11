@@ -51,10 +51,12 @@ task buildInfo {
         def version = rootProject.file('VERSION').text.trim()
         def versionApi = rootProject.file('VERSION-API').text.trim()
         def commitId = System.env.getOrDefault("GITHUB_SHA", "unknown").substring(0,7)
+        def platform = System.env.getOrDefault("PLATFORM", "java")
         def info = """\
                     version=${version}
                     versionApi=${versionApi}
                     commitId=${commitId}
+                    platform=${platform}
                 """.stripIndent().toString()
         def f = file("src/main/resources/META-INF/build-info.properties")
         f.parentFile.mkdirs()
