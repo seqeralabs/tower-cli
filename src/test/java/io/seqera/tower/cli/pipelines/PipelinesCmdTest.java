@@ -383,24 +383,6 @@ class PipelinesCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testListWithConflictingSizeable(MockServerClient mock) {
-
-        mock.when(
-                request().withMethod("GET").withPath("/pipelines")
-                        .withQueryStringParameter("offset", "0")
-                        .withQueryStringParameter("max", "2"), exactly(1)
-        ).respond(
-                response().withStatusCode(200).withBody(loadResource("pipelines_list")).withContentType(MediaType.APPLICATION_JSON)
-        );
-
-        ExecOut out = exec(mock, "pipelines", "list", "--page", "1", "--no-max", "--max", "2");
-
-        assertEquals(errorMessage(out.app, new TowerException("Please use either --no-max or --max as pagination size parameter")), out.stdErr);
-        assertEquals("", out.stdOut);
-        assertEquals(1, out.exitCode);
-    }
-
-    @Test
     void testListEmpty(MockServerClient mock) {
 
         mock.when(
