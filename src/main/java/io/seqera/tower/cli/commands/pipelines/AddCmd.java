@@ -53,10 +53,12 @@ public class AddCmd extends AbstractPipelinesCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
-        Long orgId = orgId(wspId);
 
         // Check workspace visibility
-        Visibility visibility = api().describeWorkspace(orgId, wspId).getWorkspace().getVisibility();
+        Visibility visibility = Visibility.PRIVATE;
+        if (wspId != null) {
+            visibility = api().describeWorkspace(orgId(wspId), wspId).getWorkspace().getVisibility();
+        }
 
         // Retrieve the provided computeEnv or use the primary if not provided
         ComputeEnv ce = opts.computeEnv != null ? computeEnvByRef(wspId, opts.computeEnv) : null;
