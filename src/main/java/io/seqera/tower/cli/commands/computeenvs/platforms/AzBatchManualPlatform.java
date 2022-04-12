@@ -58,7 +58,7 @@ public class AzBatchManualPlatform extends AbstractPlatform<AzBatchConfig> {
 
     public static class AdvancedOptions {
 
-        @Option(names = {"--jobs-cleanup"}, description = "Enable the automatic deletion of Batch jobs created by the pipeline execution (ON_SUCESS, ALWAYS, NEVER).")
+        @Option(names = {"--jobs-cleanup"}, description = "Enable the automatic deletion of Batch jobs created by the pipeline execution (ON_SUCCESS, ALWAYS, NEVER).")
         public JobCleanupPolicy jobsCleanup;
 
         @Option(names = {"--token-duration"}, description = "The duration of the shared access signature token created by Nextflow when the 'sasToken' option is not specified [default: 12h].")
