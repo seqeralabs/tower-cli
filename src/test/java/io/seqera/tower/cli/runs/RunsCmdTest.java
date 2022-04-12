@@ -263,16 +263,6 @@ class RunsCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testListWithConflictingSizeable(MockServerClient mock) {
-
-        ExecOut out = exec(mock, "runs", "list", "--page", "1", "--no-max", "--max", "2");
-
-        assertEquals(errorMessage(out.app, new TowerException("Please use either --no-max or --max as pagination size parameter")), out.stdErr);
-        assertEquals("", out.stdOut);
-        assertEquals(1, out.exitCode);
-    }
-
-    @Test
     void testListEmpty(MockServerClient mock) {
 
         mock.when(
