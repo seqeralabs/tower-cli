@@ -81,10 +81,4 @@ public class InfoCmd extends AbstractRootCmd {
 
         return new InfoResponse(connectionCheck, versionCheck, credentialsCheck, opts);
     }
-
-    private Properties getCliProperties() throws IOException {
-        Properties properties = new Properties();
-        properties.load(this.getClass().getResourceAsStream("/META-INF/build-info.properties"));
-        return properties;
-    }
 }

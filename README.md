@@ -1,6 +1,6 @@
 # Nextflow Tower CLI
 
-`tw` is [Tower](https://landing.tower.nf/) on the command line. It brings Tower concepts including Pipelines, Actions and Compute Environments to the terminal.
+`tw` is [Tower](https://tower.nf/) on the command line. It brings Tower concepts including Pipelines, Actions and Compute Environments to the terminal.
 
 Tower is a full-stack application for the management of data pipelines and compute resources. It enables collaborative data analysis at scale, on-premises or in any cloud.
 
@@ -122,7 +122,7 @@ tw compute-envs add aws-batch forge --name=my_aws_ce --region=eu-west-1 --max-cp
 
 The above command will create all of the required AWS Batch resources in the AWS Ireland (`eu-west-1`) region with a total of 256 CPUs provisioned in the compute environment. An existing S3 bucket will be used as the work directory when running Nextflow.
 
-Comprehensive details about Tower Forge are availible in the [user documentation](https://help.tower.nf/compute-envs/aws-batch/#forge).
+Comprehensive details about Tower Forge are available in the [user documentation](https://help.tower.nf/compute-envs/aws-batch/#forge).
 
 > If you have multiple credentials matching the same compute environment, you will need to provide the `--credentials-id` obtained by running `tw credentials list`.
 
@@ -162,19 +162,11 @@ tw pipelines update --name=my_sleepy_pipeline --params-file=<(echo 'timeout: 30'
 
 ### 12. Launch a pipeline directly
 
-It is also possible to directly launch pipelines that have not been explicitly added to a Tower Workspace by:
+It is also possible to directly launch pipelines that have not been explicitly added to a Tower Workspace by using the pipeline repository URL:
 
-1. Using the short name for the pipeline on GitHub:
-
-    ```bash
-    tw launch nextflow-io/hello
-    ```
-
-2. Using the full URL to the pipeline:
-
-    ```bash
-    tw launch https://github.com/nextflow-io/hello
-    ```
+```bash
+tw launch https://github.com/nextflow-io/hello
+```
 
 ## Launch Examples
 
@@ -216,21 +208,27 @@ source <(tw generate-completion)
 
 The Tower CLI is a platform binary executable created by a native compilation from Java GraalVM.
 
-1. Download GraalVM (Java 11 version) from [here](https://github.com/graalvm/graalvm-ce-builds/releases/tag/vm-20.2.0).
+1. Install [SDKMan!](https://sdkman.io/)
 
-2. Install `native-image`:
+2. Install required GraalVM:
+
+    ```bash
+    sdk env install
+    ```
+
+3. Install `native-image`:
 
     ```bash
     gu install native-image
     ```
 
-3. Create the native client:
+4. Create the native client:
 
     ```bash
-    ./gradlew nativeImage
+    ./gradlew nativeCompile
     ```
 
-4. Run `tw`:
+5. Run `tw`:
 
     ```bash
     ./build/graal/tw

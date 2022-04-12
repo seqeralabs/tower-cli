@@ -54,6 +54,9 @@ public class LaunchCmd extends AbstractRootCmd {
     @Option(names = {"-c", "--compute-env"}, description = "Compute environment name [default: primary compute environment].")
     String computeEnv;
 
+    @Option(names = {"-n", "--name"}, description = "Custom workflow run name")
+    String name;
+
     @Option(names = {"--work-dir"}, description = "Path where the pipeline scratch data is stored.")
     String workDir;
 
@@ -99,6 +102,7 @@ public class LaunchCmd extends AbstractRootCmd {
                 .id(base.getId())
                 .pipeline(base.getPipeline())
                 .computeEnvId(base.getComputeEnvId())
+                .runName(coalesce(name, base.getRunName()))
                 .workDir(coalesce(workDir, base.getWorkDir()))
                 .paramsText(coalesce(readString(paramsFile), base.getParamsText()))
                 .configProfiles(coalesce(profile, base.getConfigProfiles()))
@@ -114,7 +118,7 @@ public class LaunchCmd extends AbstractRootCmd {
     }
 
     protected Response runTowerPipeline(Long wspId) throws ApiException, IOException {
-        ListPipelinesResponse pipelines = api().listPipelines(wspId, 2, 0, pipeline);
+        ListPipelinesResponse pipelines = api().listPipelines(wspId, 2, 0, pipeline, null);
         if (pipelines.getTotalSize() == 0) {
             throw new InvalidResponseException(String.format("Pipeline '%s' not found on this workspace.", pipeline));
         }
@@ -130,7 +134,7 @@ public class LaunchCmd extends AbstractRootCmd {
     }
 
     protected Response submitWorkflow(WorkflowLaunchRequest launch, Long wspId) throws ApiException {
-        SubmitWorkflowLaunchResponse response = api().createWorkflowLaunch(new SubmitWorkflowLaunchRequest().launch(launch), wspId);
+        SubmitWorkflowLaunchResponse response = api().createWorkflowLaunch(new SubmitWorkflowLaunchRequest().launch(launch), wspId, null);
         String workflowId = response.getWorkflowId();
         return new RunSubmited(workflowId, baseWorkspaceUrl(wspId), workspaceRef(wspId));
     }

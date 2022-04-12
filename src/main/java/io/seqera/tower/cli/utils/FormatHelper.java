@@ -25,6 +25,10 @@ import java.time.format.DateTimeFormatter;
 public class FormatHelper {
 
     public static String formatDate(OffsetDateTime date) {
+        if (date == null) {
+            return "";
+        }
+
         return date.format(DateTimeFormatter.RFC_1123_DATE_TIME);
     }
 
@@ -36,20 +40,28 @@ public class FormatHelper {
         long seconds = d.toSecondsPart();
 
         String result = "";
-        if (seconds != 0) {
-            result = String.format("%s%ds ", result, seconds);
-        }
-        if (minutes != 0) {
-            result = String.format("%s%dm ", result, minutes);
+        if (days != 0) {
+            result = String.format("%s%dd", result, days);
         }
         if (hours != 0) {
-            result = String.format("%s%dh ", result, hours);
+            result = String.format("%s%dh", result, hours);
         }
-        if (days != 0) {
-            result = String.format("%s%dd ", result, days);
+        if (minutes != 0) {
+            result = String.format("%s%dm", result, minutes);
+        }
+        if (seconds != 0) {
+            result = String.format("%s%ds", result, seconds);
         }
 
         return result;
+    }
+
+    public static String formatDurationMillis(Number value) {
+        if (value == null) {
+            return "";
+        }
+
+        return formatDurationMillis(value.longValue());
     }
 
     public static String formatTime(OffsetDateTime value) {
@@ -86,7 +98,15 @@ public class FormatHelper {
             metric = "B";
         }
 
-        return String.format("%.2f %s", amount, metric);
+        return String.format("%.0f%s", amount, metric);
+    }
+
+    public static String formatBits(Number value) {
+        if (value == null) {
+            return "";
+        }
+
+        return formatBits(value.longValue());
     }
 
     public static String formatCost(Double value) {
@@ -102,7 +122,15 @@ public class FormatHelper {
             return "";
         }
 
-        return String.format("%.2f%%", value);
+        return String.format("%.0f%%", value);
+    }
+
+    public static String formatPercentage(Number value) {
+        if (value == null) {
+            return "";
+        }
+
+        return formatPercentage(value.doubleValue());
     }
 
     public static String formatDecimal(Double value) {
