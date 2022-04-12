@@ -37,20 +37,13 @@ public class PaginationOptions {
     public static class Sizeable {
         @CommandLine.Option(names = {"--max"}, description = "Maximum number of records to display [default: " + MAX + "].")
         public Integer max;
-
-        @CommandLine.Option(names = {"--no-max"}, description = "Show all records.")
-        public Boolean noMax;
     }
 
     public static Integer getMax(PaginationOptions paginationOptions) throws TowerException {
         Integer max = PaginationOptions.MAX;
 
         if (paginationOptions.sizeable != null) {
-            if (paginationOptions.sizeable.noMax != null && paginationOptions.sizeable.max != null) {
-                throw new TowerException("Please use either --no-max or --max as pagination size parameter");
-            }
-
-            max = paginationOptions.sizeable.noMax != null ? null : paginationOptions.sizeable.max != null ? paginationOptions.sizeable.max : max;
+            max = paginationOptions.sizeable.max != null ? paginationOptions.sizeable.max : max;
         }
 
         return max;
