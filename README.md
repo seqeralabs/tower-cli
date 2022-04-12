@@ -117,10 +117,10 @@ tw credentials list
 Create a Compute Environment for AWS Batch with automatic provisioning of cloud computing resources:
 
 ```bash
-tw compute-envs add aws-batch forge --name=my_aws_ce --region=eu-west-1 --max-cpus=256 --work-dir=s3://<bucket name>
+tw compute-envs add aws-batch forge --name=my_aws_ce --region=eu-west-1 --max-cpus=256 --work-dir=s3://<bucket name> --wait=AVAILABLE
 ```
 
-The above command will create all of the required AWS Batch resources in the AWS Ireland (`eu-west-1`) region with a total of 256 CPUs provisioned in the compute environment. An existing S3 bucket will be used as the work directory when running Nextflow.
+The above command will create all of the required AWS Batch resources in the AWS Ireland (`eu-west-1`) region with a total of 256 CPUs provisioned in the compute environment. An existing S3 bucket will be used as the work directory when running Nextflow. Also, it will wait until all the resources are AVAILABLE and ready to use.
 
 Comprehensive details about Tower Forge are available in the [user documentation](https://help.tower.nf/compute-envs/aws-batch/#forge).
 
@@ -143,6 +143,13 @@ Pipelines consist of a pipeline repository, launch parameters, and a Compute Env
 ```bash
 tw launch my_sleepy_pipeline
 ```
+
+Add a `--wait=SUCCEEDED` if you want the command to wait until the pipeline execution is complete.
+
+When using `--wait`, `tw` can exit with one of two exit codes:
+
+- `0`: When the run reaches the desired state.
+- `1`: When the run reaches a state that makes it impossible to reach the desired state.
 
 ### 10. Change launch parameters
 
