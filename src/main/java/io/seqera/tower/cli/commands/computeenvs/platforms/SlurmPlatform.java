@@ -21,10 +21,10 @@ import java.io.IOException;
 
 public class SlurmPlatform extends AbstractPlatform<SlurmComputeConfig> {
 
-    @Option(names = {"-u", "--user-name"}, description = "The username on the cluster used to launch the pipeline execution.", required = true)
+    @Option(names = {"-u", "--user-name"}, description = "The username on the cluster used to launch the pipeline execution.")
     public String userName;
 
-    @Option(names = {"-H", "--host-name"}, description = "The pipeline execution is launched by connecting via SSH to the hostname specified. This usually is the cluster login node. Local IP addresses e.g. 127.*, 172.*, 192.*, etc. are not allowed, use a fully qualified hostname instead.", required = true)
+    @Option(names = {"-H", "--host-name"}, description = "The pipeline execution is launched by connecting via SSH to the hostname specified. This usually is the cluster login node. Local IP addresses e.g. 127.*, 172.*, 192.*, etc. are not allowed, use a fully qualified hostname instead.")
     public String hostName;
 
     @Option(names = {"-p", "--port"}, description = "Port number for the login connection.")

@@ -234,7 +234,7 @@ class LaunchCmdTest extends BaseCmdTest {
         ExecOut out = exec(format, mock, "launch", "sarek", "-n", "custom_run_name");
 
         // Assert results
-        assertOutput(format, out, new RunSubmited("35aLiS0bIM5efd", baseUserUrl(mock, "jordi"), USER_WORKSPACE_NAME));
+        assertOutput(format, out, new RunSubmited("35aLiS0bIM5efd", null, baseUserUrl(mock, "jordi"), USER_WORKSPACE_NAME));
     }
 
     @Test

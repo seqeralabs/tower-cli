@@ -665,6 +665,12 @@
   "allDeclaredMethods":true
 },
 {
+  "name":"io.seqera.tower.cli.commands.credentials.add.AddAgentCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.credentials.add.AddAwsCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -801,9 +807,21 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.credentials.providers.TwAgentProvider",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.credentials.update.AbstractUpdateCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
+},
+{
+  "name":"io.seqera.tower.cli.commands.credentials.update.UpdateAgentCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.update.UpdateAwsCmd",
@@ -1759,6 +1777,9 @@
   "queryAllDeclaredConstructors":true,
   "methods":[
     {"name":"<init>","parameterTypes":[] }, 
+    {"name":"getConnectionId","parameterTypes":[] }, 
+    {"name":"getDiscriminator","parameterTypes":[] }, 
+    {"name":"getWorkDir","parameterTypes":[] }, 
     {"name":"setConnectionId","parameterTypes":["java.lang.String"] }, 
     {"name":"setWorkDir","parameterTypes":["java.lang.String"] }
   ]
