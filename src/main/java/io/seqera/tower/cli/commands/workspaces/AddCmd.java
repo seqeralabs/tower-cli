@@ -42,19 +42,37 @@ public class AddCmd extends AbstractWorkspaceCmd {
     @CommandLine.Option(names = {"-d", "--description"}, description = "The workspace description.")
     public String description;
 
+    @CommandLine.Option(names = {"-v", "--visibility"}, description = "The workspace visibility. Valid options PRIVATE, SHARED [default: PRIVATE].")
+    public String visibility = "PRIVATE";
+
     @Override
     protected Response exec() throws ApiException, IOException {
+
+        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = organizationByName(organizationName);
+
         Workspace workspace = new Workspace();
         workspace.setName(workspaceName);
         workspace.setFullName(workspaceFullName);
         workspace.setDescription(description);
-        workspace.setVisibility(Visibility.PRIVATE);
+        workspace.setVisibility(parseVisibility());
 
         CreateWorkspaceRequest request = new CreateWorkspaceRequest().workspace(workspace);
-        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = organizationByName(organizationName);
+
         api().workspaceValidate(orgAndWorkspaceDbDto.getOrgId(), workspaceName);
         CreateWorkspaceResponse response = api().createWorkspace(orgAndWorkspaceDbDto.getOrgId(), request);
 
         return new WorkspaceAdded(response.getWorkspace().getName(), organizationName, response.getWorkspace().getVisibility());
+    }
+
+    private Visibility parseVisibility() throws ApiException {
+        if ("PRIVATE".equals(visibility)) {
+            return Visibility.PRIVATE;
+        } else if ("SHARED".equals(visibility)) {
+            return Visibility.SHARED;
+        } else {
+            throw new ApiException(
+                    String.format("Invalid value for option '--visibility': expected one of [PRIVATE, SHARED] (case-sensitive) but was '%s'", visibility)
+            );
+        }
     }
 }
