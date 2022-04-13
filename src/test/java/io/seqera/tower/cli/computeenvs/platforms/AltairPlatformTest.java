@@ -44,7 +44,7 @@ class AltairPlatformTest extends BaseCmdTest {
         ExecOut out = exec(mock, "compute-envs", "add", "altair", "-n", "altair", "--work-dir", "/home/jordeu/nf", "-u", "jordi", "-H", "ssh.mydomain.net", "-q", "normal");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvAdded("altair-platform", "altair", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("altair-platform", "isnEDBLvHDAIteOEF44ow", "altair", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -66,7 +66,7 @@ class AltairPlatformTest extends BaseCmdTest {
         ExecOut out = exec(mock, "compute-envs", "add", "altair", "-n", "altair", "--work-dir", "/home/jordeu/nf", "-u", "jordi", "-H", "ssh.mydomain.net", "-q", "normal", "--max-queue-size=200");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvAdded("altair-platform", "altair", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("altair-platform", "isnEDBLvHDAIteOEF44ow", "altair", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

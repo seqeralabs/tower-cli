@@ -44,7 +44,7 @@ class AwsBatchManualPlatformTest extends BaseCmdTest {
         ExecOut out = exec(mock, "compute-envs", "add", "aws-batch", "manual", "-n", "manual", "-r", "eu-west-1", "--work-dir", "s3://nextflow-ci/jordeu", "--head-queue", "TowerForge-isnEDBLvHDAIteOEF44ow-head", "--compute-queue", "TowerForge-isnEDBLvHDAIteOEF44ow-work");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvAdded("aws-batch", "manual", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("aws-batch", "isnEDBLvHDAIteOEF44ow", "manual", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -66,7 +66,7 @@ class AwsBatchManualPlatformTest extends BaseCmdTest {
         ExecOut out = exec(mock, "compute-envs", "add", "aws-batch", "manual", "-n", "manual", "-r", "eu-west-1", "--work-dir", "s3://nextflow-ci/jordeu", "--head-queue", "TowerForge-isnEDBLvHDAIteOEF44ow-head", "--compute-queue", "TowerForge-isnEDBLvHDAIteOEF44ow-work", "--cli-path=/bin/aws");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvAdded("aws-batch", "manual", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("aws-batch", "isnEDBLvHDAIteOEF44ow", "manual", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

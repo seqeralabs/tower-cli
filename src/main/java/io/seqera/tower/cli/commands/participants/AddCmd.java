@@ -13,6 +13,7 @@ package io.seqera.tower.cli.commands.participants;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceRequiredOptions;
+import io.seqera.tower.cli.exceptions.MemberNotFoundException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.participants.ParticipantAdded;
@@ -46,11 +47,19 @@ public class AddCmd extends AbstractParticipantsCmd {
         Long wspId = workspaceId(workspace.workspace);
 
         if (Objects.equals(type, ParticipantType.MEMBER)) {
-            request.setMemberId(findOrganizationMemberByName(orgId(wspId), name).getMemberId());
+            try {
+                request.setMemberId(findOrganizationMemberByName(orgId(wspId), name).getMemberId());
+            } catch (MemberNotFoundException e) {
+                request.setUserNameOrEmail(name);
+            }
         } else if (Objects.equals(type, ParticipantType.TEAM)) {
             request.setTeamId(findOrganizationTeamByName(orgId(wspId), name).getTeamId());
         } else if (Objects.equals(type, ParticipantType.COLLABORATOR)) {
-            request.setMemberId(findOrganizationCollaboratorByName(orgId(wspId), name).getMemberId());
+            try {
+                request.setMemberId(findOrganizationCollaboratorByName(orgId(wspId), name).getMemberId());
+            } catch (MemberNotFoundException e) {
+                request.setUserNameOrEmail(name);
+            }
         } else {
             throw new TowerException("Unknown participant candidate type provided.");
         }

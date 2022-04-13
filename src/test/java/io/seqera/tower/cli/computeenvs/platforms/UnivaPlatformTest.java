@@ -44,7 +44,7 @@ class UnivaPlatformTest extends BaseCmdTest {
         ExecOut out = exec(mock, "compute-envs", "add", "uge", "-n", "uge", "--work-dir", "/home/jordeu/nf", "-u", "jordi", "-H", "ssh.mydomain.net", "-q", "normal");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvAdded("uge-platform", "uge", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("uge-platform", "isnEDBLvHDAIteOEF44ow", "uge", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -66,7 +66,7 @@ class UnivaPlatformTest extends BaseCmdTest {
         ExecOut out = exec(mock, "compute-envs", "add", "uge", "-n", "uge", "--work-dir", "/home/jordeu/nf", "-u", "jordi", "-H", "ssh.mydomain.net", "-q", "normal", "--max-queue-size=200");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvAdded("uge-platform", "uge", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("uge-platform", "isnEDBLvHDAIteOEF44ow", "uge", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
