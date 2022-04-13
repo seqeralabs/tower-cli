@@ -683,6 +683,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.credentials.add.AddContainerRegistryCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.credentials.add.AddGithubCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -744,6 +750,12 @@
   "name":"io.seqera.tower.cli.commands.credentials.providers.BitbucketProvider",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.credentials.providers.ContainerRegistryProvider",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -809,6 +821,12 @@
   "name":"io.seqera.tower.cli.commands.credentials.update.UpdateBitbucketCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.credentials.update.UpdateContainerRegistryCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1848,6 +1866,18 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.model.ContainerRegistryKeys",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"getDiscriminator","parameterTypes":[] }, 
+    {"name":"getPassword","parameterTypes":[] }, 
+    {"name":"getRegistry","parameterTypes":[] }, 
+    {"name":"getUserName","parameterTypes":[] }
+  ]
 },
 {
   "name":"io.seqera.tower.model.CreateActionRequest",

@@ -15,6 +15,7 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.credentials.update.UpdateAwsCmd;
 import io.seqera.tower.cli.commands.credentials.update.UpdateAzureCmd;
 import io.seqera.tower.cli.commands.credentials.update.UpdateBitbucketCmd;
+import io.seqera.tower.cli.commands.credentials.update.UpdateContainerRegistryCmd;
 import io.seqera.tower.cli.commands.credentials.update.UpdateGithubCmd;
 import io.seqera.tower.cli.commands.credentials.update.UpdateGitlabCmd;
 import io.seqera.tower.cli.commands.credentials.update.UpdateGoogleCmd;
@@ -37,7 +38,8 @@ import java.io.IOException;
                 UpdateBitbucketCmd.class,
                 UpdateSshCmd.class,
                 UpdateK8sCmd.class,
-                UpdateAzureCmd.class
+                UpdateAzureCmd.class,
+                UpdateContainerRegistryCmd.class
         }
 )
 public class UpdateCmd extends AbstractCredentialsCmd {
