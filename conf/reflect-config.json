@@ -643,7 +643,8 @@
 {
   "name":"io.seqera.tower.cli.commands.credentials.CredentialsRefOptions$CredentialsRef",
   "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.DeleteCmd",
@@ -1898,10 +1899,14 @@
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
   "methods":[
+    {"name":"<init>","parameterTypes":[] }, 
     {"name":"getDiscriminator","parameterTypes":[] }, 
     {"name":"getPassword","parameterTypes":[] }, 
     {"name":"getRegistry","parameterTypes":[] }, 
-    {"name":"getUserName","parameterTypes":[] }
+    {"name":"getUserName","parameterTypes":[] }, 
+    {"name":"setPassword","parameterTypes":["java.lang.String"] }, 
+    {"name":"setRegistry","parameterTypes":["java.lang.String"] }, 
+    {"name":"setUserName","parameterTypes":["java.lang.String"] }
   ]
 },
 {
