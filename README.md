@@ -211,6 +211,23 @@ You can activate option autocompletion in your current session with the command 
 source <(tw generate-completion)
 ```
 
+## Custom SSL certificate authority store
+
+If you are using an SSL certificate that it is not accepted by the default Java certificate authorities you
+can [customize](https://www.baeldung.com/jvm-certificate-store-errors) a `cacerts` store and use it like:
+
+```bash
+tw -Djavax.net.ssl.trustStore=/absolute/path/to/cacerts info
+```
+
+To avoid typing it everytime we recommend to rename the binary to `tw-binary` and create a `tw` script similar
+to this:
+
+```bash
+#!/usr/bin/env bash
+tw-binary -Djavax.net.ssl.trustStore=/absolute/path/to/cacerts $@
+```
+
 ## Build binary development versions
 
 The Tower CLI is a platform binary executable created by a native compilation from Java GraalVM.
