@@ -146,7 +146,8 @@ task generateManpageAsciiDoc(type: JavaExec) {
                 "= Tower Cli",
                 "Seqera Team <support.seqera.io>",
                 ":toc: left",
-                ":toclevels: 2",
+                ":toclevels: 1",
+                ":stylesheet: docs/fedora.css",
                 "",
                 "",
         ]
