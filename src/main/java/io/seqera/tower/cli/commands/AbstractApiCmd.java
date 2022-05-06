@@ -15,7 +15,9 @@ import io.seqera.tower.ApiClient;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.api.DefaultApi;
 import io.seqera.tower.cli.Tower;
+import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
+import io.seqera.tower.cli.exceptions.InvalidWorkspaceParameterException;
 import io.seqera.tower.cli.exceptions.NoComputeEnvironmentException;
 import io.seqera.tower.cli.exceptions.OrganizationNotFoundException;
 import io.seqera.tower.cli.exceptions.ShowUsageException;
@@ -23,12 +25,10 @@ import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.exceptions.WorkspaceNotFoundException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.ComputeEnv;
-import io.seqera.tower.model.ListComputeEnvsResponse;
 import io.seqera.tower.model.ListComputeEnvsResponseEntry;
 import io.seqera.tower.model.ListWorkspacesAndOrgResponse;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import io.seqera.tower.model.User;
-import io.swagger.annotations.Api;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.media.multipart.BodyPart;
@@ -38,11 +38,13 @@ import picocli.CommandLine;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Properties;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -75,7 +77,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         return String.format("[%s / %s]", orgName, workspaceName);
     }
 
-    private Tower app() {
+    protected Tower app() {
         return (Tower) getSpec().root().userObject();
     }
 
@@ -91,10 +93,25 @@ public abstract class AbstractApiCmd extends AbstractCmd {
             client.setServerIndex(null);
             client.setBasePath(app().url);
             client.setBearerToken(app().token);
+
+            // Set HTTP Agent header
+            Properties props = getCliProperties();
+            client.setUserAgent(String.format("tw/%s (%s)", props.get("version"), props.get("platform")));
+
             api = new DefaultApi(client);
         }
 
         return api;
+    }
+
+    protected Properties getCliProperties() throws ApiException {
+        Properties properties = new Properties();
+        try {
+            properties.load(this.getClass().getResourceAsStream("/META-INF/build-info.properties"));
+        } catch (IOException e) {
+            throw new ApiException("loading build-info.properties");
+        }
+        return properties;
     }
 
     private ApiClient buildApiClient() {
@@ -187,7 +204,10 @@ public abstract class AbstractApiCmd extends AbstractCmd {
             if (workspaceId == null) {
                 if (workspaceRef.contains("/")) {
                     String[] wspRefs = workspaceRef.split(WORKSPACE_REF_SEPARATOR);
-                    OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = this.findOrgAndWorkspaceByName(wspRefs[0], wspRefs[1]);
+                    if (wspRefs.length != 2) {
+                        throw new InvalidWorkspaceParameterException(workspaceRef);
+                    }
+                    OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = this.findOrgAndWorkspaceByName(wspRefs[0].strip(), wspRefs[1].strip());
                     if (orgAndWorkspaceDbDto != null) {
                         workspaceName = orgAndWorkspaceDbDto.getWorkspaceName();
                         workspaceId = orgAndWorkspaceDbDto.getWorkspaceId();
@@ -195,7 +215,11 @@ public abstract class AbstractApiCmd extends AbstractCmd {
                         orgId = orgAndWorkspaceDbDto.getOrgId();
                     }
                 } else {
-                    workspaceId = Long.valueOf(workspaceRef);
+                    try {
+                        workspaceId = Long.valueOf(workspaceRef);
+                    } catch (NumberFormatException e) {
+                        throw new InvalidWorkspaceParameterException(workspaceRef);
+                    }
                 }
             }
         }
@@ -267,24 +291,6 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         return orgAndWorkspaceDbDtoList.stream().findFirst().orElse(null);
     }
 
-    protected OrgAndWorkspaceDbDto findOrganizationByName(String organizationName) throws ApiException {
-        ListWorkspacesAndOrgResponse workspacesAndOrgResponse = api().listWorkspacesUser(userId());
-
-        if (workspacesAndOrgResponse.getOrgsAndWorkspaces() == null) {
-            throw new OrganizationNotFoundException(organizationName);
-        }
-
-        List<OrgAndWorkspaceDbDto> orgAndWorkspaceDbDtoList = workspacesAndOrgResponse
-                .getOrgsAndWorkspaces()
-                .stream()
-                .filter(
-                        item -> Objects.equals(item.getWorkspaceName(), null) && Objects.equals(item.getOrgName(), organizationName)
-                )
-                .collect(Collectors.toList());
-
-        return orgAndWorkspaceDbDtoList.stream().findFirst().orElseThrow(() -> new OrganizationNotFoundException(organizationName));
-    }
-
     protected OrgAndWorkspaceDbDto findOrganizationByRef(String organizationRef) throws ApiException {
         ListWorkspacesAndOrgResponse workspacesAndOrgResponse = api().listWorkspacesUser(userId());
 
@@ -301,19 +307,6 @@ public abstract class AbstractApiCmd extends AbstractCmd {
                 .collect(Collectors.toList());
 
         return orgAndWorkspaceDbDtoList.stream().findFirst().orElseThrow(() -> new OrganizationNotFoundException(organizationRef));
-    }
-
-    protected ComputeEnv findComputeEnvironmentByName(Long workspaceId, String name) throws ApiException {
-        ListComputeEnvsResponse listComputeEnvsResponse = api().listComputeEnvs(null, workspaceId);
-
-        ListComputeEnvsResponseEntry listComputeEnvsResponseEntry = listComputeEnvsResponse
-                .getComputeEnvs()
-                .stream()
-                .filter(it -> Objects.equals(it.getName(), name))
-                .findFirst()
-                .orElseThrow(() -> new ComputeEnvNotFoundException(name, workspaceId));
-
-        return api().describeComputeEnv(listComputeEnvsResponseEntry.getId(), workspaceId).getComputeEnv();
     }
 
     private void loadUser() throws ApiException {
@@ -377,12 +370,17 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     @Override
     public Integer call() {
         try {
-            return outputFormat(app().getOut(), exec(), app().output);
+            Response response = exec();
+            int exitCode = outputFormat(app().getOut(), response, app().output);
+            return onBeforeExit(exitCode, response);
         } catch (Exception e) {
             errorMessage(app(), e);
         }
-
         return CommandLine.ExitCode.SOFTWARE;
+    }
+
+    protected Integer onBeforeExit(int exitCode, Response response) throws ApiException {
+        return exitCode;
     }
 
     protected Response exec() throws ApiException, IOException {

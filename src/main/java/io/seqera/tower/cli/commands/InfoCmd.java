@@ -12,6 +12,7 @@
 package io.seqera.tower.cli.commands;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.InfoResponse;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.DescribeUserResponse;
@@ -55,6 +56,8 @@ public class InfoCmd extends AbstractRootCmd {
 
                 versionCheck = towerApiVersion.compareTo(cliApiVersion) >= 0 ? 1 : 0;
             }
+        } catch (TowerException e) {
+            throw e;
         } catch (Exception e) {
             connectionCheck = 0;
         }
@@ -80,11 +83,5 @@ public class InfoCmd extends AbstractRootCmd {
         opts.put("userName", userName);
 
         return new InfoResponse(connectionCheck, versionCheck, credentialsCheck, opts);
-    }
-
-    private Properties getCliProperties() throws IOException {
-        Properties properties = new Properties();
-        properties.load(this.getClass().getResourceAsStream("/META-INF/build-info.properties"));
-        return properties;
     }
 }

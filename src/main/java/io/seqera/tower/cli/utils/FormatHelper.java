@@ -25,6 +25,10 @@ import java.time.format.DateTimeFormatter;
 public class FormatHelper {
 
     public static String formatDate(OffsetDateTime date) {
+        if (date == null) {
+            return "";
+        }
+
         return date.format(DateTimeFormatter.RFC_1123_DATE_TIME);
     }
 
@@ -53,6 +57,10 @@ public class FormatHelper {
     }
 
     public static String formatDurationMillis(Number value) {
+        if (value == null) {
+            return "";
+        }
+
         return formatDurationMillis(value.longValue());
     }
 
@@ -94,6 +102,10 @@ public class FormatHelper {
     }
 
     public static String formatBits(Number value) {
+        if (value == null) {
+            return "";
+        }
+
         return formatBits(value.longValue());
     }
 
@@ -114,6 +126,10 @@ public class FormatHelper {
     }
 
     public static String formatPercentage(Number value) {
+        if (value == null) {
+            return "";
+        }
+
         return formatPercentage(value.doubleValue());
     }
 

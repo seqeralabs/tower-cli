@@ -11,7 +11,7 @@
 
 package io.seqera.tower.cli.commands.credentials.providers;
 
-import io.seqera.tower.model.Credentials.ProviderEnum;
+import io.seqera.tower.model.CredentialsSpec.ProviderEnum;
 import io.seqera.tower.model.GitLabSecurityKeys;
 import picocli.CommandLine.Option;
 

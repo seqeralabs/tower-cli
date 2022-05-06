@@ -117,12 +117,12 @@ tw credentials list
 Create a Compute Environment for AWS Batch with automatic provisioning of cloud computing resources:
 
 ```bash
-tw compute-envs add aws-batch forge --name=my_aws_ce --region=eu-west-1 --max-cpus=256 --work-dir=s3://<bucket name>
+tw compute-envs add aws-batch forge --name=my_aws_ce --region=eu-west-1 --max-cpus=256 --work-dir=s3://<bucket name> --wait=AVAILABLE
 ```
 
-The above command will create all of the required AWS Batch resources in the AWS Ireland (`eu-west-1`) region with a total of 256 CPUs provisioned in the compute environment. An existing S3 bucket will be used as the work directory when running Nextflow.
+The above command will create all of the required AWS Batch resources in the AWS Ireland (`eu-west-1`) region with a total of 256 CPUs provisioned in the compute environment. An existing S3 bucket will be used as the work directory when running Nextflow. Also, it will wait until all the resources are AVAILABLE and ready to use.
 
-Comprehensive details about Tower Forge are availible in the [user documentation](https://help.tower.nf/compute-envs/aws-batch/#forge).
+Comprehensive details about Tower Forge are available in the [user documentation](https://help.tower.nf/compute-envs/aws-batch/#forge).
 
 > If you have multiple credentials matching the same compute environment, you will need to provide the `--credentials-id` obtained by running `tw credentials list`.
 
@@ -144,6 +144,13 @@ Pipelines consist of a pipeline repository, launch parameters, and a Compute Env
 tw launch my_sleepy_pipeline
 ```
 
+Add a `--wait=SUCCEEDED` if you want the command to wait until the pipeline execution is complete.
+
+When using `--wait`, `tw` can exit with one of two exit codes:
+
+- `0`: When the run reaches the desired state.
+- `1`: When the run reaches a state that makes it impossible to reach the desired state.
+
 ### 10. Change launch parameters
 
 Launch the pipeline with different parameters:
@@ -162,19 +169,11 @@ tw pipelines update --name=my_sleepy_pipeline --params-file=<(echo 'timeout: 30'
 
 ### 12. Launch a pipeline directly
 
-It is also possible to directly launch pipelines that have not been explicitly added to a Tower Workspace by:
+It is also possible to directly launch pipelines that have not been explicitly added to a Tower Workspace by using the pipeline repository URL:
 
-1. Using the short name for the pipeline on GitHub:
-
-    ```bash
-    tw launch nextflow-io/hello
-    ```
-
-2. Using the full URL to the pipeline:
-
-    ```bash
-    tw launch https://github.com/nextflow-io/hello
-    ```
+```bash
+tw launch https://github.com/nextflow-io/hello
+```
 
 ## Launch Examples
 
@@ -212,25 +211,48 @@ You can activate option autocompletion in your current session with the command 
 source <(tw generate-completion)
 ```
 
+## Custom SSL certificate authority store
+
+If you are using an SSL certificate that it is not accepted by the default Java certificate authorities you
+can [customize](https://www.baeldung.com/jvm-certificate-store-errors) a `cacerts` store and use it like:
+
+```bash
+tw -Djavax.net.ssl.trustStore=/absolute/path/to/cacerts info
+```
+
+To avoid typing it everytime we recommend to rename the binary to `tw-binary` and create a `tw` script similar
+to this:
+
+```bash
+#!/usr/bin/env bash
+tw-binary -Djavax.net.ssl.trustStore=/absolute/path/to/cacerts $@
+```
+
 ## Build binary development versions
 
 The Tower CLI is a platform binary executable created by a native compilation from Java GraalVM.
 
-1. Download GraalVM (Java 11 version) from [here](https://github.com/graalvm/graalvm-ce-builds/releases/tag/vm-20.2.0).
+1. Install [SDKMan!](https://sdkman.io/)
 
-2. Install `native-image`:
+2. Install required GraalVM:
+
+    ```bash
+    sdk env install
+    ```
+
+3. Install `native-image`:
 
     ```bash
     gu install native-image
     ```
 
-3. Create the native client:
+4. Create the native client:
 
     ```bash
-    ./gradlew nativeImage
+    ./gradlew nativeCompile
     ```
 
-4. Run `tw`:
+5. Run `tw`:
 
     ```bash
     ./build/graal/tw

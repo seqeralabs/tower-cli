@@ -125,7 +125,7 @@ class LaunchCmdTest extends BaseCmdTest {
         ExecOut out = exec(format, mock, "launch", "sarek");
 
         // Assert results
-        assertOutput(format, out, new RunSubmited("35aLiS0bIM5efd", baseUserUrl(mock, "jordi"), USER_WORKSPACE_NAME));
+        assertOutput(format, out, new RunSubmited("35aLiS0bIM5efd", null, baseUserUrl(mock, "jordi"), USER_WORKSPACE_NAME));
     }
 
     @ParameterizedTest
@@ -158,7 +158,7 @@ class LaunchCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "launch", "https://github.com/nextflow-io/hello");
 
-        assertOutput(format, out, new RunSubmited("57ojrWRzTyous", baseUserUrl(mock, "jordi"), USER_WORKSPACE_NAME));
+        assertOutput(format, out, new RunSubmited("57ojrWRzTyous", null, baseUserUrl(mock, "jordi"), USER_WORKSPACE_NAME));
     }
 
     @Test
@@ -197,8 +197,44 @@ class LaunchCmdTest extends BaseCmdTest {
 
         // Assert results
         assertEquals("", out.stdErr);
-        assertEquals(new RunSubmited("35aLiS0bIM5efd", baseUserUrl(mock, "jordi"), USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new RunSubmited("35aLiS0bIM5efd", 1L, baseUserUrl(mock, "jordi"), USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testSubmitLaunchpadPipelineWithCustomName(OutputType format, MockServerClient mock) {
+
+        // Create server expectation
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("pipelines_sarek")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines/250911634275687/launch"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("pipeline_launch_describe")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/workflow/launch").withBody("{\"launch\":{\"id\":\"5nmCvXcarkvv8tELMF4KyY\",\"computeEnvId\":\"4X7YrYJp9B1d1DUpfur7DS\",\"runName\":\"custom_run_name\",\"pipeline\":\"https://github.com/nf-core/sarek\",\"workDir\":\"/efs\",\"pullLatest\":false,\"stubRun\":false}}"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workflow_launch")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // Run the command
+        ExecOut out = exec(format, mock, "launch", "sarek", "-n", "custom_run_name");
+
+        // Assert results
+        assertOutput(format, out, new RunSubmited("35aLiS0bIM5efd", null, baseUserUrl(mock, "jordi"), USER_WORKSPACE_NAME));
     }
 
     @Test
@@ -239,7 +275,7 @@ class LaunchCmdTest extends BaseCmdTest {
 
         // Assert results
         assertEquals("", out.stdErr);
-        assertEquals(new RunSubmited("52KAMEcqXFyhZ9", baseWorkspaceUrl(mock, "Seqera", "cli"), buildWorkspaceRef("Seqera", "cli")).toString(), out.stdOut);
+        assertEquals(new RunSubmited("52KAMEcqXFyhZ9", 1L, baseWorkspaceUrl(mock, "Seqera", "cli"), buildWorkspaceRef("Seqera", "cli")).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

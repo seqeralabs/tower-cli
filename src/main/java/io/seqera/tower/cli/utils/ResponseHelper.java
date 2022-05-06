@@ -20,12 +20,20 @@ import io.seqera.tower.cli.exceptions.ApiExceptionMessage;
 import io.seqera.tower.cli.exceptions.ShowUsageException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
+import org.glassfish.jersey.internal.guava.Sets;
 import org.glassfish.jersey.message.internal.MessageBodyProviderNotFoundException;
 import picocli.CommandLine;
 
 import javax.ws.rs.ProcessingException;
 import java.io.PrintWriter;
 import java.nio.file.NoSuchFileException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
 import static io.seqera.tower.cli.utils.JsonHelper.prettyJson;
@@ -114,6 +122,52 @@ public class ResponseHelper {
 
         return ex.getResponseBody();
 
+    }
+
+    public static <S extends Enum<?>> Integer waitStatus(PrintWriter out, boolean showProgress, S targetStatus, S[] allStates, Supplier<S> checkStatus, S... endStates ) throws InterruptedException {
+
+        Map<S, Integer> positions = new HashMap<>();
+        for (int i=0; i < allStates.length; i++) {
+            positions.put(allStates[i], i);
+        }
+
+        Set<S> immutableStates = new HashSet<S>(Arrays.asList(endStates));
+
+        int secondsToSleep = 2;
+        int maxSecondsToSleep = 120;
+        int targetPos = positions.get(targetStatus);
+        int currentPos;
+        S lastReported = null;
+
+        if (showProgress) {
+            out.print(String.format("  Waiting %s status...", targetStatus));
+            out.flush();
+        }
+
+        S status;
+        do {
+            TimeUnit.SECONDS.sleep(secondsToSleep);
+            status = checkStatus.get();
+            currentPos = status == null ? positions.size() : positions.get(status);
+            if (showProgress) {
+                out.print('.');
+                if (lastReported != status) {
+                    out.print(String.format("%s", status));
+                    lastReported = status;
+                }
+                out.flush();
+            }
+            if (secondsToSleep < maxSecondsToSleep) {
+                secondsToSleep += 1;
+            }
+        } while (currentPos < targetPos && !immutableStates.contains(status));
+
+        if (showProgress) {
+            out.print(currentPos == targetPos ? "  [DONE]\n\n" : "  [ERROR]\n\n");
+            out.flush();
+        }
+
+        return currentPos == targetPos ? CommandLine.ExitCode.OK : CommandLine.ExitCode.SOFTWARE;
     }
 
 }

@@ -12,6 +12,7 @@
 package io.seqera.tower.cli.commands;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.exceptions.InvalidResponseException;
 import io.seqera.tower.cli.responses.Response;
@@ -22,6 +23,7 @@ import io.seqera.tower.model.ListPipelinesResponse;
 import io.seqera.tower.model.SubmitWorkflowLaunchRequest;
 import io.seqera.tower.model.SubmitWorkflowLaunchResponse;
 import io.seqera.tower.model.WorkflowLaunchRequest;
+import io.seqera.tower.model.WorkflowStatus;
 import picocli.CommandLine;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
@@ -35,6 +37,7 @@ import java.util.List;
 import static io.seqera.tower.cli.utils.FilesHelper.readString;
 import static io.seqera.tower.cli.utils.ModelHelper.coalesce;
 import static io.seqera.tower.cli.utils.ModelHelper.createLaunchRequest;
+import static io.seqera.tower.cli.utils.ResponseHelper.waitStatus;
 
 @Command(
         name = "launch",
@@ -54,6 +57,9 @@ public class LaunchCmd extends AbstractRootCmd {
     @Option(names = {"-c", "--compute-env"}, description = "Compute environment name [default: primary compute environment].")
     String computeEnv;
 
+    @Option(names = {"-n", "--name"}, description = "Custom workflow run name")
+    String name;
+
     @Option(names = {"--work-dir"}, description = "Path where the pipeline scratch data is stored.")
     String workDir;
 
@@ -62,6 +68,9 @@ public class LaunchCmd extends AbstractRootCmd {
 
     @Option(names = {"-r", "--revision"}, description = "A valid repository commit Id, tag or branch name.")
     String revision;
+
+    @Option(names = {"--wait"}, description = "Wait until given status or fail. Valid options: ${COMPLETION-CANDIDATES}.")
+    public WorkflowStatus wait;
 
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
     AdvancedOptions adv;
@@ -99,6 +108,7 @@ public class LaunchCmd extends AbstractRootCmd {
                 .id(base.getId())
                 .pipeline(base.getPipeline())
                 .computeEnvId(base.getComputeEnvId())
+                .runName(coalesce(name, base.getRunName()))
                 .workDir(coalesce(workDir, base.getWorkDir()))
                 .paramsText(coalesce(readString(paramsFile), base.getParamsText()))
                 .configProfiles(coalesce(profile, base.getConfigProfiles()))
@@ -114,7 +124,7 @@ public class LaunchCmd extends AbstractRootCmd {
     }
 
     protected Response runTowerPipeline(Long wspId) throws ApiException, IOException {
-        ListPipelinesResponse pipelines = api().listPipelines(wspId, 2, 0, pipeline);
+        ListPipelinesResponse pipelines = api().listPipelines(wspId, 2, 0, pipeline, null);
         if (pipelines.getTotalSize() == 0) {
             throw new InvalidResponseException(String.format("Pipeline '%s' not found on this workspace.", pipeline));
         }
@@ -130,10 +140,43 @@ public class LaunchCmd extends AbstractRootCmd {
     }
 
     protected Response submitWorkflow(WorkflowLaunchRequest launch, Long wspId) throws ApiException {
-        SubmitWorkflowLaunchResponse response = api().createWorkflowLaunch(new SubmitWorkflowLaunchRequest().launch(launch), wspId);
+        SubmitWorkflowLaunchResponse response = api().createWorkflowLaunch(new SubmitWorkflowLaunchRequest().launch(launch), wspId, null);
         String workflowId = response.getWorkflowId();
-        return new RunSubmited(workflowId, baseWorkspaceUrl(wspId), workspaceRef(wspId));
+        return new RunSubmited(workflowId, wspId, baseWorkspaceUrl(wspId), workspaceRef(wspId));
     }
+
+    @Override
+    protected Integer onBeforeExit(int exitCode, Response response) {
+
+        if (exitCode != 0 || wait == null || response == null) {
+            return exitCode;
+        }
+
+        RunSubmited submitted = (RunSubmited) response;
+        boolean showProgress = app().output != OutputType.json;
+
+        try {
+            return waitStatus(
+                    app().getOut(),
+                    showProgress,
+                    wait,
+                    WorkflowStatus.values(),
+                    () -> checkWorkflowStatus(submitted.workflowId, submitted.workspaceId),
+                    WorkflowStatus.CANCELLED, WorkflowStatus.FAILED, WorkflowStatus.SUCCEEDED
+            );
+        } catch (InterruptedException e) {
+            return exitCode;
+        }
+    }
+
+    private WorkflowStatus checkWorkflowStatus(String workflowId, Long workspaceId) {
+        try {
+            return api().describeWorkflow(workflowId, workspaceId).getWorkflow().getStatus();
+        } catch (ApiException | NullPointerException e) {
+            return null;
+        }
+    }
+
 
     private AdvancedOptions adv() {
         if (adv == null) {

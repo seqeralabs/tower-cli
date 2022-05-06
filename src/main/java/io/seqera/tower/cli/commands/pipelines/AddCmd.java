@@ -19,6 +19,7 @@ import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.CreatePipelineRequest;
 import io.seqera.tower.model.CreatePipelineResponse;
+import io.seqera.tower.model.Visibility;
 import io.seqera.tower.model.WorkflowLaunchRequest;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -53,20 +54,34 @@ public class AddCmd extends AbstractPipelinesCmd {
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
 
+        // Check workspace visibility
+        Visibility visibility = Visibility.PRIVATE;
+        if (wspId != null) {
+            visibility = api().describeWorkspace(orgId(wspId), wspId).getWorkspace().getVisibility();
+        }
+
         // Retrieve the provided computeEnv or use the primary if not provided
-        ComputeEnv ce = opts.computeEnv != null ? computeEnvByRef(wspId, opts.computeEnv) : primaryComputeEnv(wspId);
+        ComputeEnv ce = opts.computeEnv != null ? computeEnvByRef(wspId, opts.computeEnv) : null;
+
+        // By default use primary compute environment at private workspaces
+        if (ce == null && visibility == Visibility.PRIVATE) {
+            ce = primaryComputeEnv(wspId);
+            if (ce == null) {
+                throw new ApiException("No compute environment. You need to provide one using '--compute-env' or define a workspace primary one.");
+            }
+        }
 
         // Use compute env values by default
-        String workDirValue = opts.workDir == null ? ce.getConfig().getWorkDir() : opts.workDir;
-        String preRunScriptValue = opts.preRunScript == null ? ce.getConfig().getPreRunScript() : FilesHelper.readString(opts.preRunScript);
-        String postRunScriptValue = opts.postRunScript == null ? ce.getConfig().getPostRunScript() : FilesHelper.readString(opts.postRunScript);
+        String workDirValue = opts.workDir == null && ce != null? ce.getConfig().getWorkDir() : opts.workDir;
+        String preRunScriptValue = opts.preRunScript == null && ce != null ? ce.getConfig().getPreRunScript() : FilesHelper.readString(opts.preRunScript);
+        String postRunScriptValue = opts.postRunScript == null && ce != null ? ce.getConfig().getPostRunScript() : FilesHelper.readString(opts.postRunScript);
 
         CreatePipelineResponse response = api().createPipeline(
                 new CreatePipelineRequest()
                         .name(name)
                         .description(description)
                         .launch(new WorkflowLaunchRequest()
-                                .computeEnvId(ce.getId())
+                                .computeEnvId(ce != null ? ce.getId() : null)
                                 .pipeline(pipeline)
                                 .revision(opts.revision)
                                 .workDir(workDirValue)

@@ -73,7 +73,7 @@ public class Tower extends AbstractCmd {
     @Option(names = {"-u", "--url"}, description = "Tower server API endpoint URL (TOWER_API_ENDPOINT) [default: 'tower.nf'].", defaultValue = "${TOWER_API_ENDPOINT:-https://api.tower.nf}", required = true)
     public String url;
 
-    @Option(names = {"-o", "--output"}, description = "Show output in defined format (only the 'json' option is available at the moment).")
+    @Option(names = {"-o", "--output"}, description = "Show output in defined format (only the 'json' option is available at the moment).", defaultValue = "${TOWER_CLI_OUTPUT_FORMAT:-console}")
     public OutputType output;
 
     @Option(names = {"-v", "--verbose"}, description = "Show HTTP request/response logs at stderr.")

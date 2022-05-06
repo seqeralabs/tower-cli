@@ -14,21 +14,28 @@ package io.seqera.tower.cli.commands.computeenvs.add;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.commands.computeenvs.platforms.Platform;
+import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.computeenvs.ComputeEnvAdded;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.ComputeConfig;
 import io.seqera.tower.model.ComputeEnv;
+import io.seqera.tower.model.ComputeEnvStatus;
 import io.seqera.tower.model.CreateComputeEnvRequest;
+import io.seqera.tower.model.CreateComputeEnvResponse;
 import io.seqera.tower.model.Credentials;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Supplier;
+
+import static io.seqera.tower.cli.utils.ResponseHelper.waitStatus;
 
 @Command
 public abstract class AbstractAddCmd extends AbstractApiCmd {
@@ -42,9 +49,44 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
     @Option(names = {"-c", "--credentials"}, description = "Credentials identifier [default: workspace credentials].")
     public String credentialsRef;
 
+    @Option(names = {"--wait"}, description = "Wait until given status or fail. Valid options: ${COMPLETION-CANDIDATES}.")
+    public ComputeEnvStatus wait;
+
     @Override
     protected Response exec() throws ApiException, IOException {
         return addComputeEnv(getPlatform().type(), getPlatform().computeConfig());
+    }
+
+    @Override
+    protected Integer onBeforeExit(int exitCode, Response response) {
+
+        if (exitCode != 0 || wait == null || response == null) {
+            return exitCode;
+        }
+
+        ComputeEnvAdded added = (ComputeEnvAdded) response;
+        boolean showProgress = app().output != OutputType.json;
+
+        try {
+            return waitStatus(
+                    app().getOut(),
+                    showProgress,
+                    wait,
+                    ComputeEnvStatus.values(),
+                    () -> checkComputeEnvStatus(added.id, added.workspaceId),
+                    ComputeEnvStatus.AVAILABLE, ComputeEnvStatus.ERRORED, ComputeEnvStatus.INVALID
+            );
+        } catch (InterruptedException e) {
+            return exitCode;
+        }
+    }
+
+    private ComputeEnvStatus checkComputeEnvStatus(String computeEnvId, Long workspaceId) {
+        try {
+            return api().describeComputeEnv(computeEnvId, workspaceId).getComputeEnv().getStatus();
+        } catch (ApiException | NullPointerException e) {
+            return null;
+        }
     }
 
     protected ComputeEnvAdded addComputeEnv(ComputeEnv.PlatformEnum platform, ComputeConfig config) throws ApiException {
@@ -52,7 +94,7 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
 
         String credsId = credentialsRef == null ? findWorkspaceCredentials(platform, wspId) : credentialsByRef(platform, wspId, credentialsRef);
 
-        api().createComputeEnv(
+        CreateComputeEnvResponse resp = api().createComputeEnv(
                 new CreateComputeEnvRequest().computeEnv(
                         new ComputeEnv()
                                 .name(name)
@@ -62,7 +104,7 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
                 ), wspId
         );
 
-        return new ComputeEnvAdded(platform.getValue(), name, workspaceRef(wspId));
+        return new ComputeEnvAdded(platform.getValue(), resp.getComputeEnvId(), name, wspId, workspaceRef(wspId));
     }
 
     private String credentialsByRef(ComputeEnv.PlatformEnum type, Long wspId, String credentialsRef) throws ApiException {
