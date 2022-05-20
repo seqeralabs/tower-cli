@@ -139,40 +139,31 @@ task generateManpageAsciiDoc(type: JavaExec) {
     classpath(configurations.compileClasspath, configurations.annotationProcessor, sourceSets.main.runtimeClasspath)
     main 'picocli.codegen.docgen.manpage.ManPageGenerator'
     args project.ext.mainClassName, "--outdir=${project.buildDir}/generated-picocli-docs", "-v"
-
-    doLast{
-        def index = file("${project.buildDir}/generated-picocli-docs/index.adoc")
-        def header = [
-                "= Tower Cli",
-                "Seqera Team <support.seqera.io>",
-                ":toc: left",
-                ":toclevels: 1",
-                ":stylesheet: docs/fedora.css",
-                "",
-                "",
-        ]
-        index.text = header.join('\n')
-        def adocsDir = file("${project.buildDir}/generated-picocli-docs")
-        adocsDir.listFiles({d, f-> f ==~ /.*.adoc/ } as FilenameFilter).sort{it.name}.each {
-            if( it.name == 'index.adoc')
-                return
-            index << "include::${project.buildDir}/generated-picocli-docs/${it.name}[]\n"
-            it.text = it.text.substring(it.text.indexOf('='))
-            it.text = it.text.replaceAll('= ','== ')
-        }
-    }
 }
 
 apply plugin: 'org.asciidoctor.jvm.convert'
 asciidoctor {
     dependsOn(generateManpageAsciiDoc)
     sourceDir = file("${project.buildDir}/generated-picocli-docs")
-    sources {
-        include 'index.adoc'
-    }
-    outputDir = file("${project.buildDir}/docs")
+    outputDir = file("${project.buildDir}/generated-picocli-docs-xml")
     logDocuments = true
     outputOptions {
-        backends = ['html5']
+        backends = ['docbook']
     }
 }
+
+/*TODO
+
+# Generate Markdown
+mkdir -p build/docs
+cd build/generated-picocli-docs-xml/
+ls *.xml | awk '{system("pandoc -f docbook -t markdown_strict "$1" -o ../docs/"$1".md")}'
+ls *.md | awk '{system("sed -i 's/\.xml/\.xml\.md/g' "$1)}'
+
+# Build MkDocs
+cd ..
+cp ../docs/* .
+docker run --rm -p 8000:8000 -v ${PWD}:/docs squidfunk/mkdocs-material build
+
+ */
+
