@@ -89,6 +89,10 @@ $ tw credentials delete --name=my_aws_creds
 ### Compute Environments
 
 
+Tower uses the concept of Compute Environments to define the execution platform where a pipeline will run, a Compute Environment is composed of credentials, configuration settings, and storage options related to a computing platform. They are used to configure and manage computing platforms where workflows are executed.
+
+Comprehensive details on supported compute environments can be obtained from [Tower Usage docs](https://help.tower.nf/22.1/compute-envs/overview/#introduction).
+
 #### Adding compute-env to a workspace
 
 Once the credentials have been added to a workspace, a Compute Environment (e.g AWS Batch) can be created using those credentials with automatic provisioning of cloud computing resources via **Tower Forge**:
@@ -114,7 +118,30 @@ Comprehensive details about Tower Forge are available in the [user documentation
 
 #### Deleting compute-env to a workspace
 
-#### Pipelines
+```bash
+$ tw compute-envs delete --name my_aws_ce
+
+  Compute environment '1sxCxvxfx8xnxdxGxQxqxH' deleted at user workspace
+```
+
+#### Importing/Exporting a compute-env
+
+Using the `tw` CLI, it is possible to export and import a compute-env for reproducibility and versioning purposes.
+
+```bash
+$ tw compute-envs export --name=my_aws_ce my_aws_ce_v1.json
+
+  Compute environment exported into 'my_aws_ce_v1.json' 
+```
+Similarly, a compute-env can be imported into a workspace from a previously exported `JSON` file
+
+```bash
+$ tw compute-envs import --name=my_aws_ce_v1 ./my_aws_ce_v1.json
+
+  New AWS-BATCH compute environment 'my_aws_ce_v1' added at user workspace
+```
+
+### Pipelines
 
 Add a pre-configured pipeline that can be re-used later:
 
