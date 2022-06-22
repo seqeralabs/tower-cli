@@ -109,7 +109,7 @@ The above command will
 - Use the **Tower Forge** mechanism to automatically manage the AWS Batch resource lifesycle (`forge`)
 - Use the credentials previously added to the workspace (`--credentials`)
 - Create all of the required AWS Batch resources in the AWS Ireland (`eu-west-1`) region 
-- A total of 256 CPUs will be provisined in the compute environment (`--max-cpus`)
+- A maximum of 256 CPUs will be provisioned in the compute environment as per the needs of the pipeline (`--max-cpus`)
 - An existing S3 bucket will be used as the work directory when running Nextflow (`--work-dir`)
 - Will wait until all the resources are AVAILABLE and ready to use (`--wait`)
 
@@ -171,6 +171,36 @@ The `--params-file` option was used to pass the pipeline parameters and set thos
 
 **NOTE**: The `params-file` option should be a YAML or JSON file.
 
+#### Importing/Exporting a pipeline within a workspace
+
+Using the `tw` CLI, it is possible to export and import a pipeline for reproducibility and versioning purposes.
+
+```bash
+$ tw pipelines export --name=my_sleepy_pipeline my_sleepy_pipeline_v1.json
+
+  Pipeline exported into 'my_sleepy_pipeline_v1.json' 
+
+```
+
+Similarly, a pipeline can be imported into a workspace from a previously exported `JSON` file
+
+```bash
+$ tw pipelines import --name=my_sleepy_pipeline_v1 ./my_sleepy_pipeline_v1.json
+
+  New pipeline 'my_sleepy_pipeline_v1' added at user workspace
+```
+
+
+#### Update the pipeline defaults
+
+The default launch parameters can be changed using the `update` command:
+
+```bash
+$ tw pipelines update --name=my_sleepy_pipeline --params-file=my_sleepy_pipeline_params_2.yaml
+```
+
+### Launch
+
 
 #### Launching a preset pipeline
 
@@ -205,20 +235,12 @@ $ tw launch my_sleepy_pipeline --params-file=my_sleepy_pipeline_params_2.yaml
 
 ```
 
-#### Update the pipeline defaults
-
-The default launch parameters can be changed using the `update` command:
-
-```bash
-$ tw pipelines update --name=my_sleepy_pipeline --params-file=my_sleepy_pipeline_params_2.yaml
-```
-
 #### Quicklaunch any pipeline 
 
 It is also possible to directly launch pipelines that have not been explicitly added to the Launchapd in a Tower Workspace by using the full pipeline repository URL:
 
 ```bash
-$ tw launch https://github.com/nf-core/rnaseq -revision 3.8.1 -profile=test,docker  --params-file=./custom_rnaseq_params.yaml --compute-env=my_aws_ce
+$ tw launch https://github.com/nf-core/rnaseq --params-file=./custom_rnaseq_params.yaml --compute-env=my_aws_ce --revision 3.8.1 --profile=test,docker  
 
   Workflow 2XDXxX0vCX8xhx submitted at user workspace.
 
@@ -228,5 +250,90 @@ $ tw launch https://github.com/nf-core/rnaseq -revision 3.8.1 -profile=test,dock
 
 In the above command:
 - Pipeline level parameters are within the `custom_rnaseq_params.yaml` file
-- The nextflow level parameters such as `-profile` and `-revision` has been specified
+- Other parameters such as `--profile` and `--revision` can also be specified
 - A non-primary compute-env has been used to launch the pipeline
+
+
+### Workspaces
+
+Workspaces provide the context in which a user operates, i.e. launch workflow executions, and defines what resources are available/accessible and who can access/operate on those resources. They are are composed of Pipelines, Runs, Actions, Datasets, Compute Environments and Credentials. Access permissions are controlled through Participants, Collaborators, and Teams.
+
+Comprehensive details about [Users and Workspaces](https://help.tower.nf/22.1/orgs-and-teams/overview/) are available in the Tower Usage docs.
+
+**NOTE**: This section assumes that you already have access to an organization within Tower.
+
+#### Creating a new workspace
+
+In the example below, we create a shared workspace which can be used for sharing pipelines across other private workspaces. For detailed information about [shared workspaces](https://help.tower.nf/22.1/orgs-and-teams/shared-workspaces/) please refer the Tower Usage docs.
+
+**NOTE**: By default, a private workspace is created.
+
+
+```bash
+$ tw workspaces add --name=shared-workspace --full-name=shared-workspace-for-all  --org=my-tower-org --visibility=SHARED
+
+  A 'SHARED' workspace 'shared-workspace' added for 'my-tower-org' organization
+
+```
+
+
+
+#### List all workspaces
+
+It is possible to list all the workspaces in which you are participating
+
+```bash
+
+$ tw workspaces list                      
+
+
+  Workspaces for abhinav user:
+
+     Workspace ID    | Workspace Name   | Organization Name | Organization ID 
+    -----------------+------------------+-------------------+-----------------
+     26002603030407  | shared-workspace | my-tower-org      | 04303000612070  
+
+
+```
+
+
+### Participants
+
+#### List the participants of a workspace
+
+```bash
+$ tw participants list
+
+  Participants for 'my-tower-org/shared-workspace' workspace:
+
+     ID             | Participant Type | Name                        | Workspace Role 
+    ----------------+------------------+-----------------------------+----------------
+     45678460861822 | MEMBER           | abhinav (abhinav@mydomain.com) | owner          
+
+```
+
+
+#### Add new participant to a workspace
+
+FIXME: Collaborator and Members
+
+```bash
+$ tw participants add --name=collaborator@mydomain.com --type=MEMBER                           
+
+
+  User 'collaborator' was added as participant to 'shared-workspace' workspace with role 'launch'
+
+
+```
+
+#### Update a participant role within the workspace
+
+FIXME: If you'd like to update the role of a collaborator
+
+```bash
+$ tw  participants update --name=collaborator@mydomain.com --type=COLLABORATOR --role=MAINTAIN
+
+  Participant 'collaborator@mydomain.com' has now role 'maintain' for workspace 'shared-workspace'
+
+```
+
