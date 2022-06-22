@@ -41,13 +41,24 @@ Commands:
 
 To launch pipelines on AWS Batch, you will need to add credentials to the appropriate Tower Workspace.
 
-- Adding credentials to a workspace
+**NOTE**: The default workspace is the user workspace, which could be overridden by the `TOWER_WORKSPACE_ID` env variable or the `--workspace` argument for various commands.
+
+#### Adding credentials to a workspace
+
 ```bash
-tw credentials add aws --name=my_aws_creds --access-key=<aws access key> --secret-key=<aws secret key>
+$ tw credentials add aws --name=my_aws_creds --access-key=<aws access key> --secret-key=<aws secret key>
+
+  New AWS credentials 'my_aws_creds (1sxCxvxfx8xnxdxGxQxqxH)' added at user workspace
 ```
 > See the [IAM policy](https://github.com/seqeralabs/nf-tower-aws/tree/master/forge) for Tower Forge for recommendations on AWS Batch permissions.
 
-- 
+#### Deleting credentials from a workspace
+
+```bash
+$ tw credentials delete --name=my_aws_creds
+
+  Credentials '1sxCxvxfx8xnxdxGxQxqxH' deleted at user workspace
+
 
 ### 6. List credentials
 
