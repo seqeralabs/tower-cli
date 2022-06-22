@@ -1,23 +1,53 @@
-# Usage
+# Usage examples for `tw` CLI
 
 
-### 4. View available commands
+## View available commands
 
 Use the `-h` or `--help` parameter to list the available commands and their associated options.
 
 ```bash
-tw --help
+$ tw --help
+
+Nextflow Tower CLI.
+
+Options:
+  -t, --access-token=<token>   Tower personal access token (TOWER_ACCESS_TOKEN).
+  -u, --url=<url>              Tower server API endpoint URL (TOWER_API_ENDPOINT) [default: 'tower.nf'].
+  -o, --output=<output>        Show output in defined format (only the 'json' option is available at the moment).
+  -v, --verbose                Show HTTP request/response logs at stderr.
+      --insecure               Explicitly allow to connect to a non-SSL secured Tower server (this is not recommended).
+  -h, --help                   Show this help message and exit.
+  -V, --version                Print version information and exit.
+
+Commands:
+  actions              Manage actions.
+  collaborators        Manage organization collaborators.
+  compute-envs         Manage workspace compute environments.
+  credentials          Manage workspace credentials.
+  datasets             Manage datasets.
+  generate-completion  Generate bash/zsh completion script for tw.
+  info                 System info and health status.
+  launch               Launch a Nextflow pipeline execution.
+  members              Manage organization members.
+  organizations        Manage organizations.
+  participants         Manage workspace participants.
+  pipelines            Manage workspace pipeline launchpad.
+  runs                 Manage workspace pipeline runs.
+  teams                Manage organization teams.
+  workspaces           Manage workspaces.
 ```
 
-### 5. Add credentials
+### Credentials
 
 To launch pipelines on AWS Batch, you will need to add credentials to the appropriate Tower Workspace.
 
+- Adding credentials to a workspace
 ```bash
 tw credentials add aws --name=my_aws_creds --access-key=<aws access key> --secret-key=<aws secret key>
 ```
-
 > See the [IAM policy](https://github.com/seqeralabs/nf-tower-aws/tree/master/forge) for Tower Forge for recommendations on AWS Batch permissions.
+
+- 
 
 ### 6. List credentials
 
