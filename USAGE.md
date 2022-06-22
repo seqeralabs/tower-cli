@@ -172,7 +172,7 @@ The `--params-file` option was used to pass the pipeline parameters and set thos
 **NOTE**: The `params-file` option should be a YAML or JSON file.
 
 
-#### Launching a launchpad pipeline
+#### Launching a preset pipeline
 
 While launching a launchpad pipeline, if no custom pipeline-parameters are passed then the preset defaults are used.
 
@@ -215,8 +215,18 @@ $ tw pipelines update --name=my_sleepy_pipeline --params-file=my_sleepy_pipeline
 
 #### Quicklaunch any pipeline 
 
-It is also possible to directly launch pipelines that have not been explicitly added to a Tower Workspace by using the pipeline repository URL:
+It is also possible to directly launch pipelines that have not been explicitly added to the Launchapd in a Tower Workspace by using the full pipeline repository URL:
 
 ```bash
-$ tw launch nf-core/rnaseq --profile=test,docker --params-file=./custom_rnaseq_params.yaml --compute-env=my_aws_ce
+$ tw launch https://github.com/nf-core/rnaseq -revision 3.8.1 -profile=test,docker  --params-file=./custom_rnaseq_params.yaml --compute-env=my_aws_ce
+
+  Workflow 2XDXxX0vCX8xhx submitted at user workspace.
+
+    https://tower.nf/user/abhinav/watch/2XDXxX0vCX8xhx
+
 ```
+
+In the above command:
+- Pipeline level parameters are within the `custom_rnaseq_params.yaml` file
+- The nextflow level parameters such as `-profile` and `-revision` has been specified
+- A non-primary compute-env has been used to launch the pipeline
