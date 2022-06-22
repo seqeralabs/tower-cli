@@ -119,10 +119,22 @@ Comprehensive details about Tower Forge are available in the [user documentation
 #### Deleting compute-env to a workspace
 
 ```bash
-$ tw compute-envs delete --name my_aws_ce
+$ tw compute-envs delete --name=my_aws_ce
 
   Compute environment '1sxCxvxfx8xnxdxGxQxqxH' deleted at user workspace
 ```
+
+#### Default compute-env in a workspace
+
+It is possible to select a **primary** compute-env within a workspace, which would be used by default if a different compute-env hasn't been specified.
+
+```bash
+$ tw compute-envs primary set --name=my_aws_ce
+
+  Primary compute environment for workspace 'user' was set to 'my_aws_ce (1sxCxvxfx8xnxdxGxQxqxH)'  
+
+```
+
 
 #### Importing/Exporting a compute-env
 
@@ -143,78 +155,68 @@ $ tw compute-envs import --name=my_aws_ce_v1 ./my_aws_ce_v1.json
 
 ### Pipelines
 
-Add a pre-configured pipeline that can be re-used later:
+A Pipeline is composed of a workflow repository, launch parameters, and a Compute Environment. Pipelines are used to define frequently used pre-configured workflows in a Workspace.
+
+#### Adding a pipeline (with preset defaults) to launchpad 
+
+Add a pre-configured pipeline to the launchpad that can be re-used later:
 
 ```bash
-tw pipelines add --name=my_sleepy_pipeline --params-file=<(echo 'timeout: 60') https://github.com/pditommaso/nf-sleep
+$ tw pipelines add --name=my_sleepy_pipeline --params-file=my_sleepy_pipeline_params.yaml https://github.com/pditommaso/nf-sleep
+
+ New pipeline 'my_sleepy_pipeline' added at user workspace
 ```
 
-Pipelines consist of a pipeline repository, launch parameters, and a Compute Environment. When a Compute Environment is not specified the primary one is used.
+The `--params-file` option was used to pass the pipeline parameters and set those as default.
 
-> The `params-file` option should be a YAML or JSON file. Here we use a Bash pipe to convert a command into a YAML file automatically.
+**NOTE**: The `params-file` option should be a YAML or JSON file.
 
-### 9. Launch it!
+
+#### Launching a launchpad pipeline
+
+While launching a launchpad pipeline, if no custom pipeline-parameters are passed then the preset defaults are used.
 
 ```bash
-tw launch my_sleepy_pipeline
+$ tw launch my_sleepy_pipeline 
+
+  Workflow 1XCXxX0vCX8xhx submitted at user workspace.
+
+    https://tower.nf/user/abhinav/watch/1XCXxX0vCX8xhx
+
 ```
 
-Add a `--wait=SUCCEEDED` if you want the command to wait until the pipeline execution is complete.
+**TIP**: Add a `--wait=SUCCEEDED` if you want the command to wait until the pipeline execution is complete.
 
 When using `--wait`, `tw` can exit with one of two exit codes:
 
 - `0`: When the run reaches the desired state.
 - `1`: When the run reaches a state that makes it impossible to reach the desired state.
 
-### 10. Change launch parameters
+#### Launch a pipeline with custom parameters
 
-Launch the pipeline with different parameters:
+Launch the pipeline with different parameters
 
 ```bash
-tw launch my_sleepy_pipeline --params-file=<(echo 'timeout: 30')
+$ tw launch my_sleepy_pipeline --params-file=my_sleepy_pipeline_params_2.yaml
+
+  Workflow 2XDXxX0vCX8xhx submitted at user workspace.
+
+    https://tower.nf/user/abhinav/watch/2XDXxX0vCX8xhx
+
 ```
 
-### 11. Update a pipeline
+#### Update the pipeline defaults
 
 The default launch parameters can be changed using the `update` command:
 
 ```bash
-tw pipelines update --name=my_sleepy_pipeline --params-file=<(echo 'timeout: 30')
+$ tw pipelines update --name=my_sleepy_pipeline --params-file=my_sleepy_pipeline_params_2.yaml
 ```
 
-### 12. Launch a pipeline directly
+#### Quicklaunch any pipeline 
 
 It is also possible to directly launch pipelines that have not been explicitly added to a Tower Workspace by using the pipeline repository URL:
 
 ```bash
-tw launch https://github.com/nextflow-io/hello
+$ tw launch nf-core/rnaseq --profile=test,docker --params-file=./custom_rnaseq_params.yaml --compute-env=my_aws_ce
 ```
-
-## Launch Examples
-
-The `tw launch` command provides a similar user experience to `nextflow run` with the benefits of using Tower.
-
-1. Run a Pipeline pre-defined in a Tower Workspace with a custom parameters file:
-
-    ```bash
-    tw launch my_sleepy_pipeline --params-file=./my_params.yaml
-    ```
-
-2. Run any Nextflow pipeline using the primary Compute Environment:
-
-    ```bash
-    tw launch nf-core/rnaseq
-    ```
-
-3. Run any Nextflow pipeline on a specific Compute Environment:
-
-    ```bash
-    tw launch nf-core/rnaseq --compute-env=my_aws_ce
-    ```
-
-4. Run any Nextflow pipeline and adjust the default profile and parameters:
-
-    ```bash
-    tw launch nf-core/rnaseq --profile=test,docker --params-file=./my_params.yaml --compute-env=my_aws_ce
-    ```
-
