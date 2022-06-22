@@ -37,9 +37,11 @@ Commands:
   workspaces           Manage workspaces.
 ```
 
+**TIP**: `tw` CLI can be directed to use JSON format for the output using `tw --output=json <command>` option.
+
 ### Credentials
 
-To launch pipelines on AWS Batch, you will need to add credentials to the appropriate Tower Workspace.
+To launch pipelines on any compute environment (for example AWS Batch), you will need to add credentials to the appropriate Tower Workspace. Credentials for git provider (e.g. Github), [tower-agent](https://github.com/seqeralabs/tower-agent) or container registeries (e.g. docker.io) could also be added using the `tw credentials add <provider>` command.
 
 **NOTE**: The default workspace is the user workspace, which could be overridden by the `TOWER_WORKSPACE_ID` env variable or the `--workspace` argument for various commands.
 
@@ -50,7 +52,30 @@ $ tw credentials add aws --name=my_aws_creds --access-key=<aws access key> --sec
 
   New AWS credentials 'my_aws_creds (1sxCxvxfx8xnxdxGxQxqxH)' added at user workspace
 ```
-> See the [IAM policy](https://github.com/seqeralabs/nf-tower-aws/tree/master/forge) for Tower Forge for recommendations on AWS Batch permissions.
+
+#### List credentials
+
+List the credentials available in the workspace.
+
+**NOTE**: You can add multiple credentials of the same "provider", for example you can add `my_aws_creds_1` as well as `my_aws_creds_2` in the workspace.
+
+```bash
+$ tw credentials list
+
+
+  Credentials at user workspace:
+
+     ID                     | Provider  | Name                               | Last activity                 
+    ------------------------+-----------+------------------------------------+-------------------------------
+     1x1HxFxzxNxptxlx4xO7Gx | aws       | my_aws_creds_1                     | Wed, 6 Apr 2022 08:40:49 GMT  
+     1sxCxvxfx8xnxdxGxQxqxH | aws       | my_aws_creds_2                     | Wed, 9 Apr 2022 08:40:49 GMT  
+     2x7xNsf2xkxxUIxXKxsTCx | ssh       | my_ssh_key                         | Thu, 8 Jul 2021 07:09:46 GMT  
+     4xxxIeUx7xex1xqx1xxesk | github    | my_github_cred                     | Wed, 22 Jun 2022 09:18:05 GMT 
+
+
+
+```
+
 
 #### Deleting credentials from a workspace
 
@@ -58,31 +83,38 @@ $ tw credentials add aws --name=my_aws_creds --access-key=<aws access key> --sec
 $ tw credentials delete --name=my_aws_creds
 
   Credentials '1sxCxvxfx8xnxdxGxQxqxH' deleted at user workspace
-
-
-### 6. List credentials
-
-List the credentials available in the workspace.
-
-```bash
-tw credentials list
 ```
 
-### 7. Provision a Compute Environment
 
-Create a Compute Environment for AWS Batch with automatic provisioning of cloud computing resources:
+### Compute Environments
+
+
+#### Adding compute-env to a workspace
+
+Once the credentials have been added to a workspace, a Compute Environment (e.g AWS Batch) can be created using those credentials with automatic provisioning of cloud computing resources via **Tower Forge**:
 
 ```bash
-tw compute-envs add aws-batch forge --name=my_aws_ce --region=eu-west-1 --max-cpus=256 --work-dir=s3://<bucket name> --wait=AVAILABLE
+$ tw compute-envs add aws-batch forge --name=my_aws_ce --credentials=<my_aws_creds_1> --region=eu-west-1 --max-cpus=256 --work-dir=s3://<bucket name> --wait=AVAILABLE
+
+  New AWS-BATCH compute environment 'my_aws_ce' added at user workspace
 ```
 
-The above command will create all of the required AWS Batch resources in the AWS Ireland (`eu-west-1`) region with a total of 256 CPUs provisioned in the compute environment. An existing S3 bucket will be used as the work directory when running Nextflow. Also, it will wait until all the resources are AVAILABLE and ready to use.
+**NOTE**: See the [IAM policy](https://github.com/seqeralabs/nf-tower-aws/tree/master/forge) for Tower Forge for recommendations on AWS Batch permissions, without which the env creation would fail.
+
+The above command will 
+- Use the **Tower Forge** mechanism to automatically manage the AWS Batch resource lifesycle (`forge`)
+- Use the credentials previously added to the workspace (`--credentials`)
+- Create all of the required AWS Batch resources in the AWS Ireland (`eu-west-1`) region 
+- A total of 256 CPUs will be provisined in the compute environment (`--max-cpus`)
+- An existing S3 bucket will be used as the work directory when running Nextflow (`--work-dir`)
+- Will wait until all the resources are AVAILABLE and ready to use (`--wait`)
 
 Comprehensive details about Tower Forge are available in the [user documentation](https://help.tower.nf/compute-envs/aws-batch/#forge).
 
-> If you have multiple credentials matching the same compute environment, you will need to provide the `--credentials-id` obtained by running `tw credentials list`.
 
-### 8. Add a pipeline
+#### Deleting compute-env to a workspace
+
+#### Pipelines
 
 Add a pre-configured pipeline that can be re-used later:
 
