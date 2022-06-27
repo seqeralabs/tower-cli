@@ -162,9 +162,9 @@ A Pipeline is composed of a workflow repository, launch parameters, and a Comput
 Add a pre-configured pipeline to the launchpad that can be re-used later:
 
 ```bash
-$ tw pipelines add --name=my_sleepy_pipeline --params-file=my_sleepy_pipeline_params.yaml https://github.com/pditommaso/nf-sleep
+$ tw pipelines add --name=my_rnaseq_nf_pipeline --params-file=my_rnaseq_nf_pipeline_params.yaml https://github.com/nextflow-io/rnaseq-nf
 
- New pipeline 'my_sleepy_pipeline' added at user workspace
+ New pipeline 'my_rnaseq_nf_pipeline' added at user workspace
 ```
 
 The `--params-file` option was used to pass the pipeline parameters and set those as default.
@@ -176,18 +176,18 @@ The `--params-file` option was used to pass the pipeline parameters and set thos
 Using the `tw` CLI, it is possible to export and import a pipeline for reproducibility and versioning purposes.
 
 ```bash
-$ tw pipelines export --name=my_sleepy_pipeline my_sleepy_pipeline_v1.json
+$ tw pipelines export --name=my_rnaseq_nf_pipeline my_rnaseq_nf_pipeline_v1.json
 
-  Pipeline exported into 'my_sleepy_pipeline_v1.json' 
+  Pipeline exported into 'my_rnaseq_nf_pipeline_v1.json' 
 
 ```
 
 Similarly, a pipeline can be imported into a workspace from a previously exported `JSON` file
 
 ```bash
-$ tw pipelines import --name=my_sleepy_pipeline_v1 ./my_sleepy_pipeline_v1.json
+$ tw pipelines import --name=my_rnaseq_nf_pipeline_v1 ./my_rnaseq_nf_pipeline_v1.json
 
-  New pipeline 'my_sleepy_pipeline_v1' added at user workspace
+  New pipeline 'my_rnaseq_nf_pipeline_v1' added at user workspace
 ```
 
 
@@ -196,7 +196,7 @@ $ tw pipelines import --name=my_sleepy_pipeline_v1 ./my_sleepy_pipeline_v1.json
 The default launch parameters can be changed using the `update` command:
 
 ```bash
-$ tw pipelines update --name=my_sleepy_pipeline --params-file=my_sleepy_pipeline_params_2.yaml
+$ tw pipelines update --name=my_rnaseq_nf_pipeline --params-file=my_rnaseq_nf_pipeline_params_2.yaml
 ```
 
 ### Launch
@@ -207,7 +207,7 @@ $ tw pipelines update --name=my_sleepy_pipeline --params-file=my_sleepy_pipeline
 While launching a launchpad pipeline, if no custom pipeline-parameters are passed then the preset defaults are used.
 
 ```bash
-$ tw launch my_sleepy_pipeline 
+$ tw launch my_rnaseq_nf_pipeline 
 
   Workflow 1XCXxX0vCX8xhx submitted at user workspace.
 
@@ -227,7 +227,7 @@ When using `--wait`, `tw` can exit with one of two exit codes:
 Launch the pipeline with different parameters
 
 ```bash
-$ tw launch my_sleepy_pipeline --params-file=my_sleepy_pipeline_params_2.yaml
+$ tw launch my_rnaseq_nf_pipeline --params-file=my_rnaseq_nf_pipeline_params_2.yaml
 
   Workflow 2XDXxX0vCX8xhx submitted at user workspace.
 
@@ -315,7 +315,10 @@ $ tw participants list
 
 #### Add new participant to a workspace
 
-FIXME: Collaborator and Members
+To add a new _Collaborator_ to the workspace, you can use the `add` subcommand, the default role assigned to a _Collaborator_ is `Launch`.
+
+For detailed information about [collaborators and members](https://help.tower.nf/22.1/orgs-and-teams/workspace-management/) please refer the Tower Usage docs.
+
 
 ```bash
 $ tw participants add --name=collaborator@mydomain.com --type=MEMBER                           
@@ -328,7 +331,7 @@ $ tw participants add --name=collaborator@mydomain.com --type=MEMBER
 
 #### Update a participant role within the workspace
 
-FIXME: If you'd like to update the role of a collaborator
+If you'd like to update the role of a _Collaborator_, to `ADMIN` or `MAINTAIN`, you can use the `update` subcommand.
 
 ```bash
 $ tw  participants update --name=collaborator@mydomain.com --type=COLLABORATOR --role=MAINTAIN
