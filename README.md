@@ -88,7 +88,7 @@ $ tw info
 
 ## Using the `tw` CLI
 
-For detailed instructions on how to use the `tw` CLI to interact with Tower (e.g. launch pipelines), please refer the [USAGE.md](./USAGE.md) file. 
+For detailed instructions on how to use the `tw` CLI to interact with Tower please refer to the [usage docs](./USAGE.md). 
 
 ## Activate autocompletion
 
