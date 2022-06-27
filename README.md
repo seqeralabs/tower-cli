@@ -86,6 +86,10 @@ $ tw info
      Authentication API credential's token | OK
 ```
 
+## Using the `tw` CLI
+
+For detailed instructions on how to use the `tw` CLI to interact with Tower (e.g. launch pipelines), please refer the [USAGE.md](./USAGE.md) file. 
+
 ## Activate autocompletion
 
 You can activate option autocompletion in your current session with the command below:
