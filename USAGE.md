@@ -1,6 +1,5 @@
 # Usage examples for `tw` CLI
 
-
 ## View available commands
 
 Use the `-h` or `--help` parameter to list the available commands and their associated options.
