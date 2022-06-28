@@ -36,7 +36,7 @@ Commands:
   workspaces           Manage workspaces.
 ```
 
-**TIP**: `tw` CLI can be directed to use JSON format for the output using `tw --output=json <command>` option.
+**TIP**: Use `tw --output=json <command>` to dump and store Tower entities in JSON format.
 
 ### Credentials
 
