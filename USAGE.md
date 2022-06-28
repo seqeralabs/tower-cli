@@ -116,7 +116,7 @@ The above command will
 Comprehensive details about Tower Forge are available in the [user documentation](https://help.tower.nf/compute-envs/aws-batch/#forge).
 
 
-#### Deleting compute-env to a workspace
+#### Deleting a Compute Environment from a Workspace
 
 ```bash
 $ tw compute-envs delete --name=my_aws_ce
