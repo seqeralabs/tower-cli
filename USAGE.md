@@ -49,7 +49,7 @@ To launch pipelines in a Workspace you will need to add Credentials for:
 
 All of these can be added with the `tw credentials add <provider>` command as highlighted in the next section.
 
-**NOTE**: The default workspace is the user workspace, which could be overridden by the `TOWER_WORKSPACE_ID` env variable or the `--workspace` argument for various commands.
+**NOTE**: The default Workspace used by the CLI is the user Workspace. Use the `TOWER_WORKSPACE_ID` environment variable or the `--workspace` parameter to override this behaviour.
 
 #### Adding credentials to a workspace
 
