@@ -51,21 +51,19 @@ All of these can be added with the `tw credentials add <provider>` command as hi
 
 **NOTE**: The default Workspace used by the CLI is the user Workspace. Use the `TOWER_WORKSPACE_ID` environment variable or the `--workspace` parameter to override this behaviour.
 
-#### Adding credentials to a workspace
+#### Adding Credentials to a Workspace
 
-```bash
+```console
 $ tw credentials add aws --name=my_aws_creds --access-key=<aws access key> --secret-key=<aws secret key>
 
   New AWS credentials 'my_aws_creds (1sxCxvxfx8xnxdxGxQxqxH)' added at user workspace
 ```
 
-#### List credentials
+#### List Credentials
 
-List the credentials available in the workspace.
 
-**NOTE**: You can add multiple credentials of the same "provider", for example you can add `my_aws_creds_1` as well as `my_aws_creds_2` in the workspace.
 
-```bash
+```console
 $ tw credentials list
 
 
@@ -77,42 +75,36 @@ $ tw credentials list
      1sxCxvxfx8xnxdxGxQxqxH | aws       | my_aws_creds_2                     | Wed, 9 Apr 2022 08:40:49 GMT  
      2x7xNsf2xkxxUIxXKxsTCx | ssh       | my_ssh_key                         | Thu, 8 Jul 2021 07:09:46 GMT  
      4xxxIeUx7xex1xqx1xxesk | github    | my_github_cred                     | Wed, 22 Jun 2022 09:18:05 GMT 
-
-
-
 ```
 
+**NOTE**: You can add multiple Credentials from the same "provider". For example, you can add `my_aws_creds_1` as well as `my_aws_creds_2` in the same Workspace.
 
-#### Deleting credentials from a workspace
+#### Deleting Credentials from a Workspace
 
-```bash
+```console
 $ tw credentials delete --name=my_aws_creds
 
   Credentials '1sxCxvxfx8xnxdxGxQxqxH' deleted at user workspace
 ```
 
-
 ### Compute Environments
 
+Tower uses the concept of Compute Environments to define the execution platform where a pipeline will run, a Compute Environment is composed of Credentials, configuration settings, and storage options related to a computing platform. They are used to configure and manage computing platforms where workflows are executed.
 
-Tower uses the concept of Compute Environments to define the execution platform where a pipeline will run, a Compute Environment is composed of credentials, configuration settings, and storage options related to a computing platform. They are used to configure and manage computing platforms where workflows are executed.
+Comprehensive details for supported Compute Environments can be obtained from the [Tower Usage docs](https://help.tower.nf/22.1/compute-envs/overview/#introduction).
 
-Comprehensive details on supported compute environments can be obtained from [Tower Usage docs](https://help.tower.nf/22.1/compute-envs/overview/#introduction).
+#### Adding a Compute Environment to a Workspace
 
-#### Adding compute-env to a workspace
+Once Credentials have been added to a Workspace, a Compute Environment (e.g AWS Batch) can be created using those Credentials with automatic provisioning of cloud computing resources via **Tower Forge**:
 
-Once the credentials have been added to a workspace, a Compute Environment (e.g AWS Batch) can be created using those credentials with automatic provisioning of cloud computing resources via **Tower Forge**:
-
-```bash
+```console
 $ tw compute-envs add aws-batch forge --name=my_aws_ce --credentials=<my_aws_creds_1> --region=eu-west-1 --max-cpus=256 --work-dir=s3://<bucket name> --wait=AVAILABLE
 
   New AWS-BATCH compute environment 'my_aws_ce' added at user workspace
 ```
 
-**NOTE**: See the [IAM policy](https://github.com/seqeralabs/nf-tower-aws/tree/master/forge) for Tower Forge for recommendations on AWS Batch permissions, without which the env creation would fail.
-
-The above command will 
-- Use the **Tower Forge** mechanism to automatically manage the AWS Batch resource lifesycle (`forge`)
+The command above will:
+- Use the **Tower Forge** mechanism to automatically manage the AWS Batch resource lifecycle (`forge`)
 - Use the Credentials added to the Workspace in the previous section (`--credentials`)
 - Create all of the required AWS Batch resources in the AWS Ireland (`eu-west-1`) region 
 - Provision a maximum of 256 CPUs in the Compute Environment (`--max-cpus`)
@@ -121,6 +113,7 @@ The above command will
 
 Comprehensive details about Tower Forge are available in the [user documentation](https://help.tower.nf/compute-envs/aws-batch/#forge).
 
+**NOTE**: Compute Environment creation will fail if you haven't set the appropriate [IAM policies](https://github.com/seqeralabs/nf-tower-aws/tree/master/forge) for Tower Forge when using AWS Batch.
 
 #### Deleting a Compute Environment from a Workspace
 
