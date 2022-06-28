@@ -40,7 +40,14 @@ Commands:
 
 ### Credentials
 
-To launch pipelines on any compute environment (for example AWS Batch), you will need to add credentials to the appropriate Tower Workspace. Credentials for git provider (e.g. Github), [tower-agent](https://github.com/seqeralabs/tower-agent) or container registeries (e.g. docker.io) could also be added using the `tw credentials add <provider>` command.
+To launch pipelines in a Workspace you will need to add Credentials for:
+
+1. Any Compute Environment(s) you would like to use
+2. Git provider (e.g. Github)
+3. (Optional) [Tower agent](https://github.com/seqeralabs/tower-agent) if using a HPC cluster
+4. (Optional) Container registries (e.g. docker.io)
+
+All of these can be added with the `tw credentials add <provider>` command as highlighted in the next section.
 
 **NOTE**: The default workspace is the user workspace, which could be overridden by the `TOWER_WORKSPACE_ID` env variable or the `--workspace` argument for various commands.
 
