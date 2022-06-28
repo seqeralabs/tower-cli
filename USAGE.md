@@ -4,7 +4,7 @@
 
 Use the `-h` or `--help` parameter to list the available commands and their associated options.
 
-```bash
+```console
 $ tw --help
 
 Nextflow Tower CLI.
