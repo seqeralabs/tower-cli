@@ -116,7 +116,7 @@ The above command will
 - Use the Credentials added to the Workspace in the previous section (`--credentials`)
 - Create all of the required AWS Batch resources in the AWS Ireland (`eu-west-1`) region 
 - Provision a maximum of 256 CPUs in the Compute Environment (`--max-cpus`)
-- An existing S3 bucket will be used as the work directory when running Nextflow (`--work-dir`)
+- Use an existing S3 bucket to store the work directory when running Nextflow (`--work-dir`)
 - Will wait until all the resources are AVAILABLE and ready to use (`--wait`)
 
 Comprehensive details about Tower Forge are available in the [user documentation](https://help.tower.nf/compute-envs/aws-batch/#forge).
