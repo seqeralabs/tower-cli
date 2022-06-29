@@ -61,11 +61,8 @@ $ tw credentials add aws --name=my_aws_creds --access-key=<aws access key> --sec
 
 #### List Credentials
 
-
-
 ```console
 $ tw credentials list
-
 
   Credentials at user workspace:
 
@@ -104,9 +101,10 @@ $ tw compute-envs add aws-batch forge --name=my_aws_ce --credentials=<my_aws_cre
 ```
 
 The command above will:
+
 - Use the **Tower Forge** mechanism to automatically manage the AWS Batch resource lifecycle (`forge`)
 - Use the Credentials added to the Workspace in the previous section (`--credentials`)
-- Create all of the required AWS Batch resources in the AWS Ireland (`eu-west-1`) region 
+- Create all of the required AWS Batch resources in the AWS Ireland (`eu-west-1`) region
 - Provision a maximum of 256 CPUs in the Compute Environment (`--max-cpus`)
 - Use an existing S3 bucket to store the work directory when running Nextflow (`--work-dir`)
 - Wait until the Compute Environment has been successfully created and is ready to use (`--wait`)
@@ -117,7 +115,7 @@ Comprehensive details about Tower Forge are available in the [user documentation
 
 #### Deleting a Compute Environment from a Workspace
 
-```bash
+```console
 $ tw compute-envs delete --name=my_aws_ce
 
   Compute environment '1sxCxvxfx8xnxdxGxQxqxH' deleted at user workspace
@@ -127,26 +125,25 @@ $ tw compute-envs delete --name=my_aws_ce
 
 It is possible to select a **primary** compute-env within a workspace, which would be used by default if a different compute-env hasn't been specified.
 
-```bash
+```console
 $ tw compute-envs primary set --name=my_aws_ce
 
   Primary compute environment for workspace 'user' was set to 'my_aws_ce (1sxCxvxfx8xnxdxGxQxqxH)'  
-
 ```
-
 
 #### Importing/Exporting a compute-env
 
 Using the `tw` CLI, it is possible to export and import a compute-env for reproducibility and versioning purposes.
 
-```bash
+```console
 $ tw compute-envs export --name=my_aws_ce my_aws_ce_v1.json
 
   Compute environment exported into 'my_aws_ce_v1.json' 
 ```
+
 Similarly, a compute-env can be imported into a workspace from a previously exported `JSON` file
 
-```bash
+```console
 $ tw compute-envs import --name=my_aws_ce_v1 ./my_aws_ce_v1.json
 
   New AWS-BATCH compute environment 'my_aws_ce_v1' added at user workspace
@@ -156,11 +153,11 @@ $ tw compute-envs import --name=my_aws_ce_v1 ./my_aws_ce_v1.json
 
 A Pipeline is composed of a workflow repository, launch parameters, and a Compute Environment. Pipelines are used to define frequently used pre-configured workflows in a Workspace.
 
-#### Adding a pipeline (with preset defaults) to launchpad 
+#### Adding a pipeline (with preset defaults) to launchpad
 
 Add a pre-configured pipeline to the launchpad that can be re-used later:
 
-```bash
+```console
 $ tw pipelines add --name=my_rnaseq_nf_pipeline --params-file=my_rnaseq_nf_pipeline_params.yaml https://github.com/nextflow-io/rnaseq-nf
 
  New pipeline 'my_rnaseq_nf_pipeline' added at user workspace
@@ -174,44 +171,40 @@ The `--params-file` option was used to pass the pipeline parameters and set thos
 
 Using the `tw` CLI, it is possible to export and import a pipeline for reproducibility and versioning purposes.
 
-```bash
+```console
 $ tw pipelines export --name=my_rnaseq_nf_pipeline my_rnaseq_nf_pipeline_v1.json
 
   Pipeline exported into 'my_rnaseq_nf_pipeline_v1.json' 
-
 ```
 
 Similarly, a pipeline can be imported into a workspace from a previously exported `JSON` file
 
-```bash
+```console
 $ tw pipelines import --name=my_rnaseq_nf_pipeline_v1 ./my_rnaseq_nf_pipeline_v1.json
 
   New pipeline 'my_rnaseq_nf_pipeline_v1' added at user workspace
 ```
 
-
 #### Update the pipeline defaults
 
 The default launch parameters can be changed using the `update` command:
 
-```bash
-$ tw pipelines update --name=my_rnaseq_nf_pipeline --params-file=my_rnaseq_nf_pipeline_params_2.yaml
+```console
+tw pipelines update --name=my_rnaseq_nf_pipeline --params-file=my_rnaseq_nf_pipeline_params_2.yaml
 ```
 
 ### Launch
-
 
 #### Launching a preset pipeline
 
 While launching a launchpad pipeline, if no custom pipeline-parameters are passed then the preset defaults are used.
 
-```bash
+```console
 $ tw launch my_rnaseq_nf_pipeline 
 
   Workflow 1XCXxX0vCX8xhx submitted at user workspace.
 
     https://tower.nf/user/abhinav/watch/1XCXxX0vCX8xhx
-
 ```
 
 **TIP**: Add a `--wait=SUCCEEDED` if you want the command to wait until the pipeline execution is complete.
@@ -225,33 +218,31 @@ When using `--wait`, `tw` can exit with one of two exit codes:
 
 Launch the pipeline with different parameters
 
-```bash
+```console
 $ tw launch my_rnaseq_nf_pipeline --params-file=my_rnaseq_nf_pipeline_params_2.yaml
 
   Workflow 2XDXxX0vCX8xhx submitted at user workspace.
 
     https://tower.nf/user/abhinav/watch/2XDXxX0vCX8xhx
-
 ```
 
-#### Quicklaunch any pipeline 
+#### Quicklaunch any pipeline
 
 It is also possible to directly launch pipelines that have not been explicitly added to the Launchapd in a Tower Workspace by using the full pipeline repository URL:
 
-```bash
+```console
 $ tw launch https://github.com/nf-core/rnaseq --params-file=./custom_rnaseq_params.yaml --compute-env=my_aws_ce --revision 3.8.1 --profile=test,docker  
 
   Workflow 2XDXxX0vCX8xhx submitted at user workspace.
 
     https://tower.nf/user/abhinav/watch/2XDXxX0vCX8xhx
-
 ```
 
 In the above command:
+
 - Pipeline level parameters are within the `custom_rnaseq_params.yaml` file
 - Other parameters such as `--profile` and `--revision` can also be specified
 - A non-primary compute-env has been used to launch the pipeline
-
 
 ### Workspaces
 
@@ -267,40 +258,32 @@ In the example below, we create a shared workspace which can be used for sharing
 
 **NOTE**: By default, a private workspace is created.
 
-
-```bash
+```console
 $ tw workspaces add --name=shared-workspace --full-name=shared-workspace-for-all  --org=my-tower-org --visibility=SHARED
 
   A 'SHARED' workspace 'shared-workspace' added for 'my-tower-org' organization
-
 ```
-
-
 
 #### List all workspaces
 
 It is possible to list all the workspaces in which you are participating
 
-```bash
+```console
 
 $ tw workspaces list                      
-
 
   Workspaces for abhinav user:
 
      Workspace ID    | Workspace Name   | Organization Name | Organization ID 
     -----------------+------------------+-------------------+-----------------
      26002603030407  | shared-workspace | my-tower-org      | 04303000612070  
-
-
 ```
-
 
 ### Participants
 
 #### List the participants of a workspace
 
-```bash
+```console
 $ tw participants list
 
   Participants for 'my-tower-org/shared-workspace' workspace:
@@ -308,9 +291,7 @@ $ tw participants list
      ID             | Participant Type | Name                        | Workspace Role 
     ----------------+------------------+-----------------------------+----------------
      45678460861822 | MEMBER           | abhinav (abhinav@mydomain.com) | owner          
-
 ```
-
 
 #### Add new participant to a workspace
 
@@ -318,24 +299,18 @@ To add a new _Collaborator_ to the workspace, you can use the `add` subcommand, 
 
 For detailed information about [collaborators and members](https://help.tower.nf/22.1/orgs-and-teams/workspace-management/) please refer the Tower Usage docs.
 
-
-```bash
+```console
 $ tw participants add --name=collaborator@mydomain.com --type=MEMBER                           
 
-
   User 'collaborator' was added as participant to 'shared-workspace' workspace with role 'launch'
-
-
 ```
 
 #### Update a participant role within the workspace
 
 If you'd like to update the role of a _Collaborator_, to `ADMIN` or `MAINTAIN`, you can use the `update` subcommand.
 
-```bash
+```console
 $ tw  participants update --name=collaborator@mydomain.com --type=COLLABORATOR --role=MAINTAIN
 
   Participant 'collaborator@mydomain.com' has now role 'maintain' for workspace 'shared-workspace'
-
 ```
-
