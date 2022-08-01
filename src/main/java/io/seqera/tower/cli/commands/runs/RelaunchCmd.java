@@ -96,8 +96,7 @@ public class RelaunchCmd extends AbstractRunsCmd {
         SubmitWorkflowLaunchRequest submitWorkflowLaunchRequest = new SubmitWorkflowLaunchRequest()
                 .launch(workflowLaunchRequest);
 
-        Long sourceWorkspaceId = launch.getComputeEnv() != null ? launch.getComputeEnv().getWorkspaceId() : null;
-        SubmitWorkflowLaunchResponse response = api().createWorkflowLaunch(submitWorkflowLaunchRequest, wspId, sourceWorkspaceId);
+        SubmitWorkflowLaunchResponse response = api().createWorkflowLaunch(submitWorkflowLaunchRequest, wspId, null);
 
         return new RunSubmited(response.getWorkflowId(), wspId, workflowWatchUrl(response.getWorkflowId(), wspId), workspaceRef(wspId));
     }
