@@ -4,37 +4,7 @@
 
 Use the `-h` or `--help` parameter to list the available commands and their associated options.
 
-```console
-$ tw --help
-
-Nextflow Tower CLI.
-
-Options:
-  -t, --access-token=<token>   Tower personal access token (TOWER_ACCESS_TOKEN).
-  -u, --url=<url>              Tower server API endpoint URL (TOWER_API_ENDPOINT) [default: 'tower.nf'].
-  -o, --output=<output>        Show output in defined format (only the 'json' option is available at the moment).
-  -v, --verbose                Show HTTP request/response logs at stderr.
-      --insecure               Explicitly allow to connect to a non-SSL secured Tower server (this is not recommended).
-  -h, --help                   Show this help message and exit.
-  -V, --version                Print version information and exit.
-
-Commands:
-  actions              Manage actions.
-  collaborators        Manage organization collaborators.
-  compute-envs         Manage workspace compute environments.
-  credentials          Manage workspace credentials.
-  datasets             Manage datasets.
-  generate-completion  Generate bash/zsh completion script for tw.
-  info                 System info and health status.
-  launch               Launch a Nextflow pipeline execution.
-  members              Manage organization members.
-  organizations        Manage organizations.
-  participants         Manage workspace participants.
-  pipelines            Manage workspace pipeline launchpad.
-  runs                 Manage workspace pipeline runs.
-  teams                Manage organization teams.
-  workspaces           Manage workspaces.
-```
+![`tw info`](./assets/img/rich_codex/tw-info.svg)
 
 > **TIP**: Use `tw --output=json <command>` to dump and store Tower entities in JSON format.
 
