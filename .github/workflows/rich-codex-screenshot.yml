@@ -1,0 +1,25 @@
+name: rich-codex-screenshot
+on: [push]
+jobs:
+  rich_codex:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Check out the repo
+        uses: actions/checkout@v3
+        
+      - name: Install Tower-CLI 
+        run: |
+          TOWER_CLI_VERSION="0.6.3"
+          curl -L https://github.com/seqeralabs/tower-cli/releases/download/v${TOWER_CLI_VERSION}/tw-${TOWER_CLI_VERSION}-linux-x86_64 > tw
+          chmod +x ./tw
+          mv tw /usr/local/bin/
+        
+
+      - name: Generate terminal images with rich-codex
+        uses: ewels/rich-codex@v1
+        env:
+          TOWER_ACCESS_TOKEN: ${{ secrets.TOWER_ACCESS_TOKEN }}
+        with:
+          commit_changes: "true"
+          clean_img_paths: assets/img/rich_codex/*.svg
