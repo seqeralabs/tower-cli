@@ -4,7 +4,7 @@
 
 Use the `-h` or `--help` parameter to list the available commands and their associated options.
 
-![`tw info`](./assets/img/rich_codex/tw-info.svg)
+![`tw --help`](./assets/img/rich_codex/tw-info.svg)
 
 > **TIP**: Use `tw --output=json <command>` to dump and store Tower entities in JSON format.
 
