@@ -23,3 +23,4 @@ jobs:
         with:
           commit_changes: "true"
           clean_img_paths: assets/img/rich_codex/*.svg
+          skip_git_checks: "true"
