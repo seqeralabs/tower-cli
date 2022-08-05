@@ -132,14 +132,20 @@ The Tower CLI is a platform binary executable created by a native compilation fr
     ```bash
     gu install native-image
     ```
+4. Export Github credentials. Even for public packages Github requires authentication (the token only requires `read:packages` scope):
 
-4. Create the native client:
+    ```
+    export GITHUB_USERNAME=...
+    export GITHUB_TOKEN=...
+    ```
+   
+5. Create the native client:
 
     ```bash
     ./gradlew nativeCompile
     ```
 
-5. Run `tw`:
+6. Run `tw`:
 
     ```bash
     ./build/graal/tw
