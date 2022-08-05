@@ -135,7 +135,7 @@ The Tower CLI is a platform binary executable created by a native compilation fr
 
 4. Export Github credentials. Even for public packages Github requires authentication (the token only requires `read:packages` scope):
 
-    ```
+    ```bash
     export GITHUB_USERNAME=...
     export GITHUB_TOKEN=...
     ```
