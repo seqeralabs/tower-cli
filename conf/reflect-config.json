@@ -2149,6 +2149,16 @@
   "allDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.model.DescribeWorkflowLaunchResponse",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"<init>","parameterTypes":[] }, 
+    {"name":"setLaunch","parameterTypes":["io.seqera.tower.model.WorkflowLaunchResponse"] }
+  ]
+},
+{
   "name":"io.seqera.tower.model.DescribeWorkflowResponse",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -2669,6 +2679,38 @@
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.model.WorkflowLaunchResponse",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"<init>","parameterTypes":[] }, 
+    {"name":"setComputeEnv","parameterTypes":["io.seqera.tower.model.ComputeEnv"] }, 
+    {"name":"setConfigProfiles","parameterTypes":["java.util.List"] }, 
+    {"name":"setConfigText","parameterTypes":["java.lang.String"] }, 
+    {"name":"setDateCreated","parameterTypes":["java.time.OffsetDateTime"] }, 
+    {"name":"setEntryName","parameterTypes":["java.lang.String"] }, 
+    {"name":"setId","parameterTypes":["java.lang.String"] }, 
+    {"name":"setMainScript","parameterTypes":["java.lang.String"] }, 
+    {"name":"setParamsText","parameterTypes":["java.lang.String"] }, 
+    {"name":"setPipeline","parameterTypes":["java.lang.String"] }, 
+    {"name":"setPostRunScript","parameterTypes":["java.lang.String"] }, 
+    {"name":"setPreRunScript","parameterTypes":["java.lang.String"] }, 
+    {"name":"setPullLatest","parameterTypes":["java.lang.Boolean"] }, 
+    {"name":"setResume","parameterTypes":["java.lang.Boolean"] }, 
+    {"name":"setResumeCommitId","parameterTypes":["java.lang.String"] }, 
+    {"name":"setResumeDir","parameterTypes":["java.lang.String"] }, 
+    {"name":"setRevision","parameterTypes":["java.lang.String"] }, 
+    {"name":"setSchemaName","parameterTypes":["java.lang.String"] }, 
+    {"name":"setSessionId","parameterTypes":["java.lang.String"] }, 
+    {"name":"setStubRun","parameterTypes":["java.lang.Boolean"] }, 
+    {"name":"setTowerConfig","parameterTypes":["java.lang.String"] }, 
+    {"name":"setUserSecrets","parameterTypes":["java.util.List"] }, 
+    {"name":"setWorkDir","parameterTypes":["java.lang.String"] }, 
+    {"name":"setWorkspaceSecrets","parameterTypes":["java.util.List"] }
+  ]
 },
 {
   "name":"io.seqera.tower.model.WorkflowLoad",
