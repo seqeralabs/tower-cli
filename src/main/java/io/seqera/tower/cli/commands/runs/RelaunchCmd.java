@@ -76,6 +76,11 @@ public class RelaunchCmd extends AbstractRunsCmd {
             ce = computeEnvByRef(wspId, opts.computeEnv);
         }
 
+        // Check if it's not possible to resume the workflow
+        if (launch.getResumeCommitId() == null) {
+            noResume = true;
+        }
+
         WorkflowLaunchRequest workflowLaunchRequest = new WorkflowLaunchRequest()
                 .id(workflow.getLaunchId())
                 .sessionId(launch.getSessionId())
