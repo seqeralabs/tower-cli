@@ -8,7 +8,7 @@ Use the `-h` or `--help` parameter to list the available commands and their asso
 
 > **TIP**: Use `tw --output=json <command>` to dump and store Tower entities in JSON format.
 
-> **TIP**: Use `tw --output=json <command> | jq -r '.[].<key>`  pipe the command to jq to get specific entries within the JSON output.
+> **TIP**: Use `tw --output=json <command> | jq -r '.[].<key>'`  pipe the command to jq to get specific entries within the JSON output.
 
 ## Credentials
 
