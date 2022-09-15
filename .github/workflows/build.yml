@@ -27,6 +27,7 @@ jobs:
           version: '22.0.0.2'
           java-version: '11'
           components: 'native-image'
+          native-image-musl: 'true'
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Tests
@@ -68,6 +69,40 @@ jobs:
         with:
           name: linux-binary-test-reports
           path: build/reports/tests/test/
+
+  linux-image-dynamic:
+    name: Linux (dynamic linked)
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Environment
+        run: env | sort
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Graalvm
+        uses: graalvm/setup-graalvm@v1
+        with:
+          version: '22.0.0.2'
+          java-version: '11'
+          components: 'native-image'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Native Image
+        run: ./gradlew nativeCompile
+        env:
+          GITHUB_USERNAME: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
+          PLATFORM: linux-dynamic-x86_64
+
+      - name: Upload linux native image artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: tw_linux_dynamic
+          path: build/native/nativeCompile/tw
+
 
   mac-image:
     name: MAC
