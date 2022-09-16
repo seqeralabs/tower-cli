@@ -43,6 +43,15 @@ jobs:
           name: linux-test-reports
           path: build/reports/tests/test/
 
+      - name: Build fat JAR
+        run: ./gradlew shadowJar
+
+      - name: Upload fat JAR artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: tw_jar
+          path: build/libs/tw.jar
+
       - name: Build Native Image
         run: ./gradlew nativeCompile
         env:
@@ -69,40 +78,6 @@ jobs:
         with:
           name: linux-binary-test-reports
           path: build/reports/tests/test/
-
-  linux-image-dynamic:
-    name: Linux (dynamic linked)
-    runs-on: ubuntu-latest
-    timeout-minutes: 90
-
-    steps:
-      - name: Environment
-        run: env | sort
-
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Setup Graalvm
-        uses: graalvm/setup-graalvm@v1
-        with:
-          version: '22.0.0.2'
-          java-version: '11'
-          components: 'native-image'
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build Native Image
-        run: ./gradlew nativeCompile
-        env:
-          GITHUB_USERNAME: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
-          PLATFORM: linux-dynamic-x86_64
-
-      - name: Upload linux native image artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: tw_linux_dynamic
-          path: build/native/nativeCompile/tw
-
 
   mac-image:
     name: MAC
@@ -227,7 +202,7 @@ jobs:
   release:
     name: Release
     if: "contains(github.event.head_commit.message, '[release]') && github.event.ref=='refs/heads/master'"
-    needs: [ linux-image, linux-image-dynamic, mac-image, windows-image ]
+    needs: [ linux-image, mac-image, windows-image ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository

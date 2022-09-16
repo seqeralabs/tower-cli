@@ -4,6 +4,7 @@ plugins {
     id 'jacoco'
     id 'org.cadixdev.licenser' version '0.6.1'
     id 'org.graalvm.buildtools.native'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
 repositories {
@@ -76,6 +77,11 @@ application {
     applicationDefaultJvmArgs = ["-agentlib:native-image-agent=config-merge-dir=conf/"]
 }
 
+shadowJar {
+    archiveBaseName.set('tw')
+    archiveClassifier.set('')
+    archiveVersion.set('')
+}
 
 test {
     // Use junit platform for unit tests

@@ -79,12 +79,13 @@ distributions:
       - path: "tw_linux/tw"
         transform: "{{distributionName}}-{{projectEffectiveVersion}}-linux-x86_64"
         platform: linux-x86_64
-      - path: "tw_linux_dynamic/tw"
-        transform: "{{distributionName}}-{{projectEffectiveVersion}}-linux-dynamic-x86_64"
-        platform: linux-x86_64
       - path: "tw_mac/tw"
         transform: "{{distributionName}}-{{projectEffectiveVersion}}-osx-x86_64"
         platform: osx-x86_64
       - path: "tw_windows/tw.exe"
         transform: "{{distributionName}}-{{projectEffectiveVersion}}-windows-x86_64.exe"
         platform: windows-x86_64
+  tw-jar:
+    type: SINGLE_JAR
+    artifacts:
+      - path: "tw_jar/tw.jar"
