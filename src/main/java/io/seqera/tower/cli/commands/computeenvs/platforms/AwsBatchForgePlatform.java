@@ -86,6 +86,7 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
 
                 // Advanced
                 .cliPath(adv().cliPath)
+                .executionRole(adv().batchExecutionRole)
                 .computeJobRole(adv().computeJobRole)
                 .headJobCpus(adv().headJobCpus)
                 .headJobMemoryMb(adv().headJobMemoryMb)
@@ -111,6 +112,7 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
                 .minCpus(adv().minCpus == null ? 0 : adv().minCpus)
                 .ebsBlockSize(adv().ebsBlockSize)
                 .bidPercentage(adv().bidPercentage);
+
 
         if (efs != null) {
             forge
@@ -198,6 +200,8 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
 
         @Option(names = {"--compute-job-role"}, description = "IAM role to fine-grained control permissions for jobs submitted by Nextflow.")
         public String computeJobRole;
+        @Option(names = {"--batch-execution-role"}, description = "The execution role grants the Amazon ECS container used by Batch the permission to make API calls on your behalf.")
+        public String batchExecutionRole;
 
         @Option(names = {"--ebs-blocksize"}, description = "This field controls the initial size of the EBS auto-expandable volume. New blocks of the same size are added as necessary when the volume is running out of free space [default: 50 GB].")
         public Integer ebsBlockSize;
