@@ -19,10 +19,8 @@ import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.runs.RunSubmited;
 import io.seqera.tower.cli.utils.FilesHelper;
-import io.seqera.tower.model.ComputeEnv;
-import io.seqera.tower.model.DescribeLaunchResponse;
+import io.seqera.tower.model.ComputeEnvResponseDto;
 import io.seqera.tower.model.DescribeWorkflowLaunchResponse;
-import io.seqera.tower.model.Launch;
 import io.seqera.tower.model.SubmitWorkflowLaunchRequest;
 import io.seqera.tower.model.SubmitWorkflowLaunchResponse;
 import io.seqera.tower.model.Workflow;
@@ -71,7 +69,7 @@ public class RelaunchCmd extends AbstractRunsCmd {
         Workflow workflow = workflowById(wspId, id).getWorkflow();
         WorkflowLaunchResponse launch = workflowLaunchResponse(workflow.getId(), wspId);
 
-        ComputeEnv ce = null;
+        ComputeEnvResponseDto ce = null;
         if (opts.computeEnv != null) {
             ce = computeEnvByRef(wspId, opts.computeEnv);
         }
@@ -109,7 +107,7 @@ public class RelaunchCmd extends AbstractRunsCmd {
         SubmitWorkflowLaunchRequest submitWorkflowLaunchRequest = new SubmitWorkflowLaunchRequest()
                 .launch(workflowLaunchRequest);
 
-        SubmitWorkflowLaunchResponse response = api().createWorkflowLaunch(submitWorkflowLaunchRequest, wspId, null);
+        SubmitWorkflowLaunchResponse response = api().createWorkflowLaunch(submitWorkflowLaunchRequest, wspId, null,null);
 
         return new RunSubmited(response.getWorkflowId(), wspId, workflowWatchUrl(response.getWorkflowId(), wspId), workspaceRef(wspId));
     }

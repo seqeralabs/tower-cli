@@ -12,10 +12,10 @@
 package io.seqera.tower.cli.commands;
 
 import io.seqera.tower.cli.commands.participants.AddCmd;
-import io.seqera.tower.cli.commands.participants.UpdateCmd;
 import io.seqera.tower.cli.commands.participants.DeleteCmd;
 import io.seqera.tower.cli.commands.participants.LeaveCmd;
 import io.seqera.tower.cli.commands.participants.ListCmd;
+import io.seqera.tower.cli.commands.participants.UpdateCmd;
 import picocli.CommandLine;
 
 @CommandLine.Command(

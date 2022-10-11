@@ -19,6 +19,7 @@ import io.seqera.tower.model.ListActionsResponse;
 import picocli.CommandLine;
 
 import java.io.IOException;
+import java.util.Collections;
 
 @CommandLine.Command(
         name = "list",
@@ -33,7 +34,7 @@ public class ListCmd extends AbstractActionsCmd {
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
 
-        ListActionsResponse response = api().listActions(wspId);
+        ListActionsResponse response = api().listActions(wspId, Collections.emptyList());
 
         return new ActionsList(response.getActions(), userName(), baseWorkspaceUrl(wspId));
     }

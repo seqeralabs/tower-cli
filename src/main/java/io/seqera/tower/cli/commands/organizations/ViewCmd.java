@@ -15,7 +15,6 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.organizations.OrganizationsView;
 import io.seqera.tower.model.DescribeOrganizationResponse;
-import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import picocli.CommandLine;
 
 import java.io.IOException;

@@ -245,7 +245,8 @@
 {
   "name":"io.seqera.tower.cli.commands.actions.ActionRefOptions$ActionRef",
   "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.actions.AddCmd",
@@ -1730,6 +1731,43 @@
   "allDeclaredMethods":true
 },
 {
+  "name":"io.seqera.tower.model.ActionResponseDto",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"<init>","parameterTypes":[] }, 
+    {"name":"getConfig","parameterTypes":[] }, 
+    {"name":"getDateCreated","parameterTypes":[] }, 
+    {"name":"getEvent","parameterTypes":[] }, 
+    {"name":"getHookId","parameterTypes":[] }, 
+    {"name":"getHookUrl","parameterTypes":[] }, 
+    {"name":"getId","parameterTypes":[] }, 
+    {"name":"getLabels","parameterTypes":[] }, 
+    {"name":"getLastSeen","parameterTypes":[] }, 
+    {"name":"getLastUpdated","parameterTypes":[] }, 
+    {"name":"getLaunch","parameterTypes":[] }, 
+    {"name":"getMessage","parameterTypes":[] }, 
+    {"name":"getName","parameterTypes":[] }, 
+    {"name":"getSource","parameterTypes":[] }, 
+    {"name":"getStatus","parameterTypes":[] }, 
+    {"name":"setConfig","parameterTypes":["io.seqera.tower.model.ActionConfigType"] }, 
+    {"name":"setDateCreated","parameterTypes":["java.time.OffsetDateTime"] }, 
+    {"name":"setEvent","parameterTypes":["io.seqera.tower.model.ActionEventType"] }, 
+    {"name":"setHookId","parameterTypes":["java.lang.String"] }, 
+    {"name":"setHookUrl","parameterTypes":["java.lang.String"] }, 
+    {"name":"setId","parameterTypes":["java.lang.String"] }, 
+    {"name":"setLabels","parameterTypes":["java.util.List"] }, 
+    {"name":"setLastSeen","parameterTypes":["java.time.OffsetDateTime"] }, 
+    {"name":"setLastUpdated","parameterTypes":["java.time.OffsetDateTime"] }, 
+    {"name":"setLaunch","parameterTypes":["io.seqera.tower.model.Launch"] }, 
+    {"name":"setMessage","parameterTypes":["java.lang.String"] }, 
+    {"name":"setName","parameterTypes":["java.lang.String"] }, 
+    {"name":"setSource","parameterTypes":["io.seqera.tower.model.ActionSource"] }, 
+    {"name":"setStatus","parameterTypes":["io.seqera.tower.model.ActionStatus"] }
+  ]
+},
+{
   "name":"io.seqera.tower.model.ActionSource",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
@@ -1875,6 +1913,56 @@
   "name":"io.seqera.tower.model.ComputeEnv$PlatformEnum",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
+},
+{
+  "name":"io.seqera.tower.model.ComputeEnvResponseDto",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"<init>","parameterTypes":[] }, 
+    {"name":"getConfig","parameterTypes":[] }, 
+    {"name":"getCredentialsId","parameterTypes":[] }, 
+    {"name":"getDateCreated","parameterTypes":[] }, 
+    {"name":"getDeleted","parameterTypes":[] }, 
+    {"name":"getDescription","parameterTypes":[] }, 
+    {"name":"getId","parameterTypes":[] }, 
+    {"name":"getLabels","parameterTypes":[] }, 
+    {"name":"getLastUpdated","parameterTypes":[] }, 
+    {"name":"getLastUsed","parameterTypes":[] }, 
+    {"name":"getMessage","parameterTypes":[] }, 
+    {"name":"getName","parameterTypes":[] }, 
+    {"name":"getOrgId","parameterTypes":[] }, 
+    {"name":"getPlatform","parameterTypes":[] }, 
+    {"name":"getPrimary","parameterTypes":[] }, 
+    {"name":"getStatus","parameterTypes":[] }, 
+    {"name":"getWorkspaceId","parameterTypes":[] }, 
+    {"name":"setConfig","parameterTypes":["io.seqera.tower.model.ComputeConfig"] }, 
+    {"name":"setCredentialsId","parameterTypes":["java.lang.String"] }, 
+    {"name":"setDateCreated","parameterTypes":["java.time.OffsetDateTime"] }, 
+    {"name":"setDeleted","parameterTypes":["java.lang.Boolean"] }, 
+    {"name":"setDescription","parameterTypes":["java.lang.String"] }, 
+    {"name":"setId","parameterTypes":["java.lang.String"] }, 
+    {"name":"setLabels","parameterTypes":["java.util.List"] }, 
+    {"name":"setLastUpdated","parameterTypes":["java.time.OffsetDateTime"] }, 
+    {"name":"setLastUsed","parameterTypes":["java.time.OffsetDateTime"] }, 
+    {"name":"setMessage","parameterTypes":["java.lang.String"] }, 
+    {"name":"setName","parameterTypes":["java.lang.String"] }, 
+    {"name":"setOrgId","parameterTypes":["java.lang.Long"] }, 
+    {"name":"setPlatform","parameterTypes":["io.seqera.tower.model.ComputeEnvResponseDto$PlatformEnum"] }, 
+    {"name":"setPrimary","parameterTypes":["java.lang.Boolean"] }, 
+    {"name":"setStatus","parameterTypes":["io.seqera.tower.model.ComputeEnvStatus"] }, 
+    {"name":"setWorkspaceId","parameterTypes":["java.lang.Long"] }
+  ]
+},
+{
+  "name":"io.seqera.tower.model.ComputeEnvResponseDto$PlatformEnum",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[
+    {"name":"fromValue","parameterTypes":["java.lang.String"] }, 
+    {"name":"getValue","parameterTypes":[] }
+  ]
 },
 {
   "name":"io.seqera.tower.model.ComputeEnvStatus",
@@ -2072,6 +2160,7 @@
   "queryAllDeclaredConstructors":true,
   "methods":[
     {"name":"<init>","parameterTypes":[] }, 
+    {"name":"getDatasetDescription","parameterTypes":[] }, 
     {"name":"getDatasetId","parameterTypes":[] }, 
     {"name":"getDatasetName","parameterTypes":[] }, 
     {"name":"getFileName","parameterTypes":[] }, 
@@ -2080,6 +2169,7 @@
     {"name":"getMediaType","parameterTypes":[] }, 
     {"name":"getUrl","parameterTypes":[] }, 
     {"name":"getVersion","parameterTypes":[] }, 
+    {"name":"setDatasetDescription","parameterTypes":["java.lang.String"] }, 
     {"name":"setDatasetId","parameterTypes":["java.lang.String"] }, 
     {"name":"setDatasetName","parameterTypes":["java.lang.String"] }, 
     {"name":"setFileName","parameterTypes":["java.lang.String"] }, 
@@ -2268,6 +2358,12 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.model.LabelDbDto",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
 },
 {
   "name":"io.seqera.tower.model.Launch",

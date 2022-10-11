@@ -15,13 +15,10 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.pipelines.PipelinesView;
-import io.seqera.tower.model.DescribeLaunchResponse;
-import io.seqera.tower.model.DescribePipelineResponse;
 import io.seqera.tower.model.Launch;
 import io.seqera.tower.model.PipelineDbDto;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.Option;
 
 @Command(
         name = "view",

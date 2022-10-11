@@ -17,11 +17,10 @@ import io.seqera.tower.JSON;
 import io.seqera.tower.cli.commands.computeenvs.platforms.AwsBatchForgePlatform;
 import io.seqera.tower.cli.commands.computeenvs.platforms.AwsBatchManualPlatform;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.cli.utils.FormatHelper;
 import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.AwsBatchConfig;
 import io.seqera.tower.model.ComputeConfig;
-import io.seqera.tower.model.ComputeEnv;
+import io.seqera.tower.model.ComputeEnvResponseDto;
 
 import java.io.PrintWriter;
 
@@ -32,13 +31,13 @@ import static io.seqera.tower.cli.utils.FormatHelper.formatTime;
 public class ComputeEnvView extends Response {
 
     public final String id;
-    public final ComputeEnv computeEnv;
+    public final ComputeEnvResponseDto computeEnv;
     public final String workspaceRef;
 
     @JsonIgnore
     private String baseWorkspaceUrl;
 
-    public ComputeEnvView(String id, String workspaceRef, ComputeEnv computeEnv, String baseWorkspaceUrl) {
+    public ComputeEnvView(String id, String workspaceRef, ComputeEnvResponseDto computeEnv, String baseWorkspaceUrl) {
         this.id = id;
         this.computeEnv = computeEnv;
         this.workspaceRef = workspaceRef;

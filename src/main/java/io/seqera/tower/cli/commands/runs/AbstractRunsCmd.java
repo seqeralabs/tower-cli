@@ -20,7 +20,6 @@ import io.seqera.tower.model.DescribeLaunchResponse;
 import io.seqera.tower.model.DescribeWorkflowResponse;
 import io.seqera.tower.model.GetProgressResponse;
 import io.seqera.tower.model.Launch;
-import io.seqera.tower.model.Workflow;
 import io.seqera.tower.model.WorkflowLoad;
 import picocli.CommandLine.Command;
 
@@ -31,7 +30,7 @@ abstract public class AbstractRunsCmd extends AbstractApiCmd {
     }
 
     protected DescribeWorkflowResponse workflowById(Long workspaceId, String id) throws ApiException {
-        DescribeWorkflowResponse workflowResponse = api().describeWorkflow(id, workspaceId);
+        DescribeWorkflowResponse workflowResponse = api().describeWorkflow(id, workspaceId, NO_WORKFLOW_ATTRIBUTES);
 
         if (workflowResponse == null) {
             throw new RunNotFoundException(id, workspaceRef(workspaceId));

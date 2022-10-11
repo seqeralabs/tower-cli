@@ -22,6 +22,7 @@ import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
 import java.io.IOException;
+import java.util.Collections;
 
 @Command(
         name = "list",
@@ -47,7 +48,7 @@ public class ListCmd extends AbstractPipelinesCmd {
         ListPipelinesResponse response = new ListPipelinesResponse();
 
         try {
-           response = api().listPipelines(wspId, max, offset, filter, null);
+           response = api().listPipelines(Collections.emptyList(), wspId, max, offset, filter, null);
 
         } catch (ApiException apiException) {
             if (apiException.getCode() == 404){

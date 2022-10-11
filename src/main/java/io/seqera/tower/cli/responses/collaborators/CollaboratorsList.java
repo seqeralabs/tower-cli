@@ -11,12 +11,12 @@
 
 package io.seqera.tower.cli.responses.collaborators;
 
-import java.io.PrintWriter;
-import java.util.List;
-
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.MemberDbDto;
+
+import java.io.PrintWriter;
+import java.util.List;
 
 public class CollaboratorsList extends Response {
 

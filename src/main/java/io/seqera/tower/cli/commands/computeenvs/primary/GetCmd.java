@@ -11,13 +11,13 @@
 
 package io.seqera.tower.cli.commands.computeenvs.primary;
 
-import java.io.IOException;
-
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.responses.computeenvs.ComputeEnvsPrimaryGet;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.model.ComputeEnv;
+import io.seqera.tower.cli.responses.computeenvs.ComputeEnvsPrimaryGet;
+import io.seqera.tower.model.ComputeEnvResponseDto;
 import picocli.CommandLine;
+
+import java.io.IOException;
 
 @CommandLine.Command(
         name = "get",
@@ -29,7 +29,7 @@ public class GetCmd extends AbstractComputeEnvsPrimaryCmd {
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
         
-        ComputeEnv primary = primaryComputeEnv(wspId);
+        ComputeEnvResponseDto primary = primaryComputeEnv(wspId);
 
         return new ComputeEnvsPrimaryGet(workspaceRef(wspId), primary);
     }

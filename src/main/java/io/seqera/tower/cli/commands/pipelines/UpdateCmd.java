@@ -16,7 +16,6 @@ import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.pipelines.PipelinesUpdated;
 import io.seqera.tower.cli.utils.FilesHelper;
-import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.Launch;
 import io.seqera.tower.model.PipelineDbDto;
 import io.seqera.tower.model.UpdatePipelineRequest;
@@ -28,6 +27,7 @@ import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Option;
 
 import java.io.IOException;
+import java.util.Collections;
 
 import static io.seqera.tower.cli.utils.ModelHelper.coalesce;
 
@@ -60,7 +60,7 @@ public class UpdateCmd extends AbstractPipelinesCmd {
 
         if (pipelineRefOptions.pipeline.pipelineId != null) {
             id = pipelineRefOptions.pipeline.pipelineId;
-            pipe = api().describePipeline(id, wspId).getPipeline();
+            pipe = api().describePipeline(id, Collections.emptyList(), wspId, null).getPipeline();
         } else {
             pipe = pipelineByName(wspId, pipelineRefOptions.pipeline.pipelineName);
             id = pipe.getPipelineId();
@@ -69,14 +69,14 @@ public class UpdateCmd extends AbstractPipelinesCmd {
         Launch launch = api().describePipelineLaunch(id, wspId).getLaunch();
 
         // Retrieve the provided computeEnv or use the primary if not provided
-        ComputeEnv ce = opts.computeEnv != null ? computeEnvByRef(wspId, opts.computeEnv) : launch.getComputeEnv();
+        String ceId = opts.computeEnv != null ? computeEnvByRef(wspId, opts.computeEnv).getId() : launch.getComputeEnv().getId();
 
         UpdatePipelineResponse response = api().updatePipeline(
                 pipe.getPipelineId(),
                 new UpdatePipelineRequest()
                         .description(coalesce(description, pipe.getDescription()))
                         .launch(new WorkflowLaunchRequest()
-                                .computeEnvId(ce.getId())
+                                .computeEnvId(ceId)
                                 .pipeline(coalesce(pipeline, launch.getPipeline()))
                                 .revision(coalesce(opts.revision, launch.getRevision()))
                                 .workDir(coalesce(opts.workDir, launch.getWorkDir()))

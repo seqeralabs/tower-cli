@@ -14,19 +14,14 @@ package io.seqera.tower.cli.commands.teams;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.exceptions.MemberNotFoundException;
-import io.seqera.tower.cli.exceptions.OrganizationNotFoundException;
 import io.seqera.tower.cli.exceptions.TeamNotFoundException;
 import io.seqera.tower.model.ListMembersResponse;
 import io.seqera.tower.model.ListTeamResponse;
-import io.seqera.tower.model.ListWorkspacesAndOrgResponse;
 import io.seqera.tower.model.MemberDbDto;
-import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import io.seqera.tower.model.TeamDbDto;
 import picocli.CommandLine.Command;
 
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Command
 public abstract class AbstractTeamsCmd extends AbstractApiCmd {

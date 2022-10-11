@@ -13,16 +13,15 @@ package io.seqera.tower.cli.commands.runs;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
+import io.seqera.tower.cli.commands.runs.download.DownloadCmd;
 import io.seqera.tower.cli.commands.runs.metrics.MetricsCmd;
 import io.seqera.tower.cli.commands.runs.tasks.TaskCmd;
 import io.seqera.tower.cli.commands.runs.tasks.TasksCmd;
-import io.seqera.tower.cli.commands.runs.download.DownloadCmd;
 import io.seqera.tower.cli.exceptions.RunNotFoundException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.runs.RunView;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.DescribeWorkflowResponse;
-import io.seqera.tower.model.Launch;
 import io.seqera.tower.model.ProgressData;
 import io.seqera.tower.model.Workflow;
 import io.seqera.tower.model.WorkflowLoad;

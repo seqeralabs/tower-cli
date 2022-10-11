@@ -21,7 +21,7 @@ import io.seqera.tower.cli.responses.actions.ActionUpdate;
 import io.seqera.tower.cli.responses.actions.ActionsDelete;
 import io.seqera.tower.cli.responses.actions.ActionsList;
 import io.seqera.tower.cli.responses.actions.ActionsView;
-import io.seqera.tower.model.Action;
+import io.seqera.tower.model.ActionResponseDto;
 import io.seqera.tower.model.ListActionsResponseActionInfo;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -229,7 +229,7 @@ class ActionsCmdTest extends BaseCmdTest {
                 "    \"lastSeen\": \"2021-06-18T10:10:33Z\",\n" +
                 "    \"dateCreated\": \"2021-06-18T10:10:05Z\",\n" +
                 "    \"lastUpdated\": \"2021-06-18T10:10:33Z\"\n" +
-                "  }", Action.class), baseUserUrl(mock, USER_WORKSPACE_NAME)));
+                "  }", ActionResponseDto.class), baseUserUrl(mock, USER_WORKSPACE_NAME)));
     }
 
     @Test

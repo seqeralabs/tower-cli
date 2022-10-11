@@ -17,12 +17,13 @@ import io.seqera.tower.JSON;
 import io.seqera.tower.cli.commands.computeenvs.platforms.AwsBatchForgePlatform;
 import io.seqera.tower.cli.commands.computeenvs.platforms.AwsBatchManualPlatform;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
-import io.seqera.tower.cli.responses.computeenvs.ComputeEnvExport;
 import io.seqera.tower.cli.responses.Response;
+import io.seqera.tower.cli.responses.computeenvs.ComputeEnvExport;
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.AwsBatchConfig;
 import io.seqera.tower.model.ComputeConfig;
 import io.seqera.tower.model.ComputeEnv;
+import io.seqera.tower.model.ComputeEnvResponseDto;
 import picocli.CommandLine;
 
 @CommandLine.Command(
@@ -44,13 +45,13 @@ public class ExportCmd extends AbstractComputeEnvCmd {
     protected Response exec() throws ApiException {
         Long wspId = workspaceId(workspace.workspace);
         
-        ComputeEnv ce = fetchComputeEnv(computeEnvRefOptions, wspId);
+        ComputeEnvResponseDto ce = fetchComputeEnv(computeEnvRefOptions, wspId);
 
         ComputeEnv computeEnv = new ComputeEnv();
         computeEnv.setDescription(ce.getDescription());
         computeEnv.setCredentialsId(ce.getCredentialsId());
         computeEnv.setMessage(ce.getMessage());
-        computeEnv.setPlatform(ce.getPlatform());
+        computeEnv.setPlatform(ce.getPlatform() != null ? ComputeEnv.PlatformEnum.fromValue(ce.getPlatform().getValue()) : null);
         computeEnv.setConfig(ce.getConfig());
 
         // Remove forged resources
