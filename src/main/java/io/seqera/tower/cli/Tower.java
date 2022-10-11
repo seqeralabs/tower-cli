@@ -67,10 +67,10 @@ public class Tower extends AbstractCmd {
     @Spec
     public CommandSpec spec;
 
-    @Option(names = {"-t", "--access-token"}, description = "Tower personal access token (TOWER_ACCESS_TOKEN).", defaultValue = "${TOWER_ACCESS_TOKEN}", required = true)
+    @Option(names = {"-t", "--access-token"}, description = "Tower personal access token (TOWER_ACCESS_TOKEN).", defaultValue = "${TOWER_ACCESS_TOKEN}")
     public String token;
 
-    @Option(names = {"-u", "--url"}, description = "Tower server API endpoint URL (TOWER_API_ENDPOINT) [default: 'tower.nf'].", defaultValue = "${TOWER_API_ENDPOINT:-https://api.tower.nf}", required = true)
+    @Option(names = {"-u", "--url"}, description = "Tower server API endpoint URL (TOWER_API_ENDPOINT) [default: 'tower.nf'].", defaultValue = "${TOWER_API_ENDPOINT:-https://api.tower.nf}")
     public String url;
 
     @Option(names = {"-o", "--output"}, description = "Show output in defined format (only the 'json' option is available at the moment).", defaultValue = "${TOWER_CLI_OUTPUT_FORMAT:-console}")
