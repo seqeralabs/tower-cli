@@ -137,7 +137,12 @@ public class LaunchCmd extends AbstractRootCmd {
         Long pipelineId = pipelines.getPipelines().get(0).getPipelineId();
         Launch launch = api().describePipelineLaunch(pipelineId, wspId).getLaunch();
 
-        return submitWorkflow(updateLaunchRequest(createLaunchRequest(launch)), wspId);
+        WorkflowLaunchRequest launchRequest = createLaunchRequest(launch);
+        if (computeEnv != null) {
+            launchRequest.computeEnvId(computeEnvByRef(wspId, computeEnv).getId());
+        }
+
+        return submitWorkflow(updateLaunchRequest(launchRequest), wspId);
     }
 
     protected Response submitWorkflow(WorkflowLaunchRequest launch, Long wspId) throws ApiException {
