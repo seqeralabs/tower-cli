@@ -11,13 +11,13 @@
 
 package io.seqera.tower.cli.responses.organizations;
 
-import java.io.PrintWriter;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
+
+import java.io.PrintWriter;
+import java.util.List;
 
 import static io.seqera.tower.cli.utils.FormatHelper.formatOrgId;
 

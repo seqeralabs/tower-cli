@@ -14,12 +14,11 @@ package io.seqera.tower.cli.commands.computeenvs;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
-import io.seqera.tower.cli.exceptions.NoComputeEnvironmentException;
-import io.seqera.tower.cli.exceptions.TowerException;
-import io.seqera.tower.model.ComputeEnv;
+import io.seqera.tower.model.ComputeEnvResponseDto;
 import io.seqera.tower.model.ListComputeEnvsResponseEntry;
 import picocli.CommandLine.Command;
 
+import java.util.Collections;
 import java.util.List;
 
 @Command
@@ -27,8 +26,8 @@ public abstract class AbstractComputeEnvCmd extends AbstractApiCmd {
 
     protected AbstractComputeEnvCmd() {
     }
-    protected ComputeEnv fetchComputeEnv(ComputeEnvRefOptions computeEnvRefOptions, Long wspId) throws ApiException {
-        ComputeEnv computeEnv;
+    protected ComputeEnvResponseDto fetchComputeEnv(ComputeEnvRefOptions computeEnvRefOptions, Long wspId) throws ApiException {
+        ComputeEnvResponseDto computeEnv;
 
         if (computeEnvRefOptions.computeEnv.computeEnvId != null) {
             computeEnv = computeEnvById(wspId, computeEnvRefOptions.computeEnv.computeEnvId);
@@ -39,7 +38,7 @@ public abstract class AbstractComputeEnvCmd extends AbstractApiCmd {
         return computeEnv;
     }
 
-    protected ComputeEnv computeEnvByName(Long workspaceId, String name) throws ApiException {
+    protected ComputeEnvResponseDto computeEnvByName(Long workspaceId, String name) throws ApiException {
 
         List<ListComputeEnvsResponseEntry> computeEnvs = api().listComputeEnvs(null, workspaceId).getComputeEnvs();
         ListComputeEnvsResponseEntry entry = computeEnvs
@@ -48,11 +47,11 @@ public abstract class AbstractComputeEnvCmd extends AbstractApiCmd {
                 .findFirst()
                 .orElseThrow(() -> new ComputeEnvNotFoundException(name, workspaceId));
 
-        return api().describeComputeEnv(entry.getId(), workspaceId).getComputeEnv();
+        return api().describeComputeEnv(entry.getId(), workspaceId, Collections.emptyList()).getComputeEnv();
     }
 
-    private ComputeEnv computeEnvById(Long workspaceId, String id) throws ApiException {
-        return api().describeComputeEnv(id, workspaceId).getComputeEnv();
+    private ComputeEnvResponseDto computeEnvById(Long workspaceId, String id) throws ApiException {
+        return api().describeComputeEnv(id, workspaceId, Collections.emptyList()).getComputeEnv();
     }
 }
 

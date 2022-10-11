@@ -11,8 +11,6 @@
 
 package io.seqera.tower.cli.commands.collaborators;
 
-import java.io.IOException;
-
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.PaginationOptions;
 import io.seqera.tower.cli.responses.Response;
@@ -20,6 +18,8 @@ import io.seqera.tower.cli.responses.collaborators.CollaboratorsList;
 import io.seqera.tower.model.ListMembersResponse;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import picocli.CommandLine;
+
+import java.io.IOException;
 
 @CommandLine.Command(
         name = "list",

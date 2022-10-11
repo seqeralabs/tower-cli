@@ -11,14 +11,14 @@
 
 package io.seqera.tower.cli.commands.computeenvs;
 
-import java.io.IOException;
-
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.computeenvs.primary.GetCmd;
 import io.seqera.tower.cli.commands.computeenvs.primary.SetCmd;
 import io.seqera.tower.cli.exceptions.ShowUsageException;
 import io.seqera.tower.cli.responses.Response;
 import picocli.CommandLine;
+
+import java.io.IOException;
 
 @CommandLine.Command(
         name = "primary",

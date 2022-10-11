@@ -11,14 +11,14 @@
 
 package io.seqera.tower.cli.commands.computeenvs.primary;
 
-import java.io.IOException;
-
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.computeenvs.ComputeEnvRefOptions;
-import io.seqera.tower.cli.responses.computeenvs.ComputeEnvsPrimarySet;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.model.ComputeEnv;
+import io.seqera.tower.cli.responses.computeenvs.ComputeEnvsPrimarySet;
+import io.seqera.tower.model.ComputeEnvResponseDto;
 import picocli.CommandLine;
+
+import java.io.IOException;
 
 @CommandLine.Command(
         name = "set",
@@ -32,7 +32,7 @@ public class SetCmd extends AbstractComputeEnvsPrimaryCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
-        ComputeEnv ce = fetchComputeEnv(computeEnvRefOptions, wspId);
+        ComputeEnvResponseDto ce = fetchComputeEnv(computeEnvRefOptions, wspId);
 
         api().updateComputeEnvPrimary(ce.getId(), wspId, null);
 

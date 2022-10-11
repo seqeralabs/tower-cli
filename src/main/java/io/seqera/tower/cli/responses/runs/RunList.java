@@ -13,7 +13,6 @@ package io.seqera.tower.cli.responses.runs;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.cli.utils.FormatHelper;
 import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.ListWorkflowsResponseListWorkflowsElement;
 

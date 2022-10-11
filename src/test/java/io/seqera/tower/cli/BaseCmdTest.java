@@ -15,7 +15,6 @@
 package io.seqera.tower.cli;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.ResponseHelper;

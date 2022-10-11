@@ -11,8 +11,6 @@
 
 package io.seqera.tower.cli.commands.datasets.versions;
 
-import java.io.IOException;
-
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.datasets.AbstractDatasetsCmd;
 import io.seqera.tower.cli.commands.datasets.ViewCmd;
@@ -21,6 +19,8 @@ import io.seqera.tower.cli.responses.datasets.DatasetVersionsList;
 import io.seqera.tower.model.Dataset;
 import io.seqera.tower.model.ListDatasetVersionsResponse;
 import picocli.CommandLine;
+
+import java.io.IOException;
 
 @CommandLine.Command(
         name = "versions",

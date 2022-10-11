@@ -11,13 +11,13 @@
 
 package io.seqera.tower.cli.responses.participants;
 
-import java.io.PrintWriter;
-import java.util.List;
-
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.ParticipantDbDto;
 import io.seqera.tower.model.ParticipantType;
+
+import java.io.PrintWriter;
+import java.util.List;
 
 import static io.seqera.tower.cli.utils.FormatHelper.formatParticipantType;
 

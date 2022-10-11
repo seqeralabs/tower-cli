@@ -16,7 +16,6 @@ import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.responses.collaborators.CollaboratorsList;
 import io.seqera.tower.model.MemberDbDto;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
@@ -25,8 +24,6 @@ import org.mockserver.model.MediaType;
 import java.util.Arrays;
 
 import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
-import static org.apache.commons.lang3.StringUtils.chop;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;

@@ -13,9 +13,8 @@ package io.seqera.tower.cli.responses.runs;
 
 import io.seqera.tower.cli.commands.runs.metrics.enums.MetricColumn;
 import io.seqera.tower.cli.commands.runs.metrics.enums.MetricPreviewFormat;
-import io.seqera.tower.cli.responses.runs.utils.MetricFormatMapper;
-import io.seqera.tower.cli.utils.FormatHelper;
 import io.seqera.tower.cli.responses.Response;
+import io.seqera.tower.cli.responses.runs.utils.MetricFormatMapper;
 import io.seqera.tower.cli.utils.TableList;
 
 import java.io.PrintWriter;
@@ -24,10 +23,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 // TODO: Refactor using the new Metric model instead nested maps to make it more readable.
 public class RunViewMetrics extends Response {

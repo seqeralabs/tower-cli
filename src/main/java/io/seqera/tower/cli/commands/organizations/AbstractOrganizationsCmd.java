@@ -14,7 +14,6 @@ package io.seqera.tower.cli.commands.organizations;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.exceptions.OrganizationNotFoundException;
-import io.seqera.tower.cli.exceptions.UserOrganizationsNotFoundException;
 import io.seqera.tower.model.DescribeOrganizationResponse;
 import io.seqera.tower.model.ListWorkspacesAndOrgResponse;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;

@@ -20,6 +20,7 @@ import io.seqera.tower.model.ListWorkflowsResponse;
 import picocli.CommandLine;
 
 import java.io.IOException;
+import java.util.Collections;
 
 @CommandLine.Command(
         name = "list",
@@ -43,7 +44,7 @@ public class ListCmd extends AbstractRunsCmd {
         Integer max = PaginationOptions.getMax(paginationOptions);
         Integer offset = PaginationOptions.getOffset(paginationOptions, max);
 
-        ListWorkflowsResponse response = api().listWorkflows(wspId, max, offset, startsWith);
+        ListWorkflowsResponse response = api().listWorkflows(Collections.emptyList(), wspId, max, offset, startsWith);
         return new RunList(workspaceRef(wspId), response.getWorkflows(), baseWorkspaceUrl(wspId));
     }
 }

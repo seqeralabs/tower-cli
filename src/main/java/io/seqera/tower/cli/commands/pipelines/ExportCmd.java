@@ -20,7 +20,6 @@ import io.seqera.tower.cli.responses.pipelines.PipelinesExport;
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.cli.utils.ModelHelper;
 import io.seqera.tower.model.CreatePipelineRequest;
-import io.seqera.tower.model.DescribeLaunchResponse;
 import io.seqera.tower.model.Launch;
 import io.seqera.tower.model.PipelineDbDto;
 import io.seqera.tower.model.WorkflowLaunchRequest;

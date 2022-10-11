@@ -14,9 +14,9 @@ package io.seqera.tower.cli.commands.computeenvs;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
-import io.seqera.tower.cli.responses.computeenvs.ComputeEnvDeleted;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.model.ComputeEnv;
+import io.seqera.tower.cli.responses.computeenvs.ComputeEnvDeleted;
+import io.seqera.tower.model.ComputeEnvResponseDto;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
@@ -40,7 +40,7 @@ public class DeleteCmd extends AbstractComputeEnvCmd {
         if (computeEnvRefOptions.computeEnv.computeEnvId != null) {
             id = computeEnvRefOptions.computeEnv.computeEnvId;
         } else {
-            ComputeEnv computeEnv = computeEnvByName(wspId, computeEnvRefOptions.computeEnv.computeEnvName);
+            ComputeEnvResponseDto computeEnv = computeEnvByName(wspId, computeEnvRefOptions.computeEnv.computeEnvName);
             id = computeEnv.getId();
         }
 

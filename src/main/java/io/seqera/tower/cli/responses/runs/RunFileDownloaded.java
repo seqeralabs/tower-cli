@@ -12,13 +12,12 @@
 package io.seqera.tower.cli.responses.runs;
 
 import io.seqera.tower.cli.commands.runs.download.enums.RunDownloadFileType;
+import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.FilesHelper;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-
-import io.seqera.tower.cli.responses.Response;
 
 public class RunFileDownloaded extends Response {
 

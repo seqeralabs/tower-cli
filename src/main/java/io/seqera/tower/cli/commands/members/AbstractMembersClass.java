@@ -12,9 +12,7 @@
 package io.seqera.tower.cli.commands.members;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
-import io.seqera.tower.cli.commands.MembersCmd;
 import io.seqera.tower.cli.exceptions.MembersMultiplicityException;
 import io.seqera.tower.cli.exceptions.MembersNotFoundException;
 import io.seqera.tower.model.ListMembersResponse;
