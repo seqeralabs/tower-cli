@@ -15,8 +15,11 @@
 package io.seqera.tower.cli.credentials.providers;
 
 import io.seqera.tower.cli.BaseCmdTest;
+import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.responses.CredentialsAdded;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 
@@ -30,8 +33,9 @@ import static org.mockserver.model.HttpResponse.response;
 
 class K8sProviderTest extends BaseCmdTest {
 
-    @Test
-    void testAddWithCertificate(MockServerClient mock) throws IOException {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAddWithCertificate(OutputType format, MockServerClient mock) throws IOException {
 
         mock.when(
                 request().withMethod("POST").withPath("/credentials").withBody("{\"credentials\":{\"keys\":{\"certificate\":\"my_certificate\",\"privateKey\":\"my_private_key\"},\"name\":\"k8s\",\"provider\":\"k8s\"}}"), exactly(1)
@@ -39,27 +43,21 @@ class K8sProviderTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"credentialsId\":\"1cz5A8cuBkB5iJliCwJCFU\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "credentials", "add", "k8s", "-n", "k8s", "-k", tempFile("my_private_key", "", ".key"), "-c", tempFile("my_certificate", "", ".crt"));
-
-        assertEquals("", out.stdErr);
-        assertEquals(new CredentialsAdded("k8s", "1cz5A8cuBkB5iJliCwJCFU", "k8s", USER_WORKSPACE_NAME).toString(), out.stdOut);
-        assertEquals(0, out.exitCode);
-
+        ExecOut out = exec(format, mock, "credentials", "add", "k8s", "-n", "k8s", "-k", tempFile("my_private_key", "", ".key"), "-c", tempFile("my_certificate", "", ".crt"));
+        assertOutput(format, out, new CredentialsAdded("K8S", "1cz5A8cuBkB5iJliCwJCFU", "k8s", USER_WORKSPACE_NAME));
     }
 
-    @Test
-    void testAddWithToken(MockServerClient mock) {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAddWithToken(OutputType format, MockServerClient mock) {
         mock.when(
                 request().withMethod("POST").withPath("/credentials").withBody("{\"credentials\":{\"keys\":{\"token\":\"my_token\"},\"name\":\"k8s\",\"provider\":\"k8s\"}}"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"credentialsId\":\"1cz5A8cuBkB5iJliCwJCFU\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "credentials", "add", "k8s", "-n", "k8s", "-t", "my_token");
-
-        assertEquals("", out.stdErr);
-        assertEquals(new CredentialsAdded("k8s", "1cz5A8cuBkB5iJliCwJCFU", "k8s", USER_WORKSPACE_NAME).toString(), out.stdOut);
-        assertEquals(0, out.exitCode);
+        ExecOut out = exec(format, mock, "credentials", "add", "k8s", "-n", "k8s", "-t", "my_token");
+        assertOutput(format, out, new CredentialsAdded("K8S", "1cz5A8cuBkB5iJliCwJCFU", "k8s", USER_WORKSPACE_NAME));
     }
 
 }
