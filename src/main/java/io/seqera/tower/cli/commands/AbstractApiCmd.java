@@ -17,6 +17,7 @@ import io.seqera.tower.api.DefaultApi;
 import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
 import io.seqera.tower.cli.exceptions.InvalidWorkspaceParameterException;
+import io.seqera.tower.cli.exceptions.MissingTowerAccessTokenException;
 import io.seqera.tower.cli.exceptions.NoComputeEnvironmentException;
 import io.seqera.tower.cli.exceptions.OrganizationNotFoundException;
 import io.seqera.tower.cli.exceptions.ShowUsageException;
@@ -97,6 +98,11 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         }
 
         if (api == null) {
+
+            if (app().token == null) {
+                throw new MissingTowerAccessTokenException();
+            }
+
             ApiClient client = buildApiClient();
             client.setServerIndex(null);
             client.setBasePath(app().url);
