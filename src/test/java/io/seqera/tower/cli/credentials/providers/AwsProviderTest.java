@@ -16,10 +16,13 @@ package io.seqera.tower.cli.credentials.providers;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.BaseCmdTest;
+import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.CredentialsNotFoundException;
 import io.seqera.tower.cli.responses.CredentialsAdded;
 import io.seqera.tower.cli.responses.CredentialsUpdated;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 
@@ -31,8 +34,9 @@ import static org.mockserver.model.HttpResponse.response;
 
 class AwsProviderTest extends BaseCmdTest {
 
-    @Test
-    void testAddWithOnlyAssumeRole(MockServerClient mock) {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAddWithOnlyAssumeRole(OutputType format, MockServerClient mock) {
 
         // Create server expectation
         mock.when(
@@ -42,17 +46,14 @@ class AwsProviderTest extends BaseCmdTest {
         );
 
         // Run the command
-        ExecOut out = exec(mock, "credentials", "add", "aws", "--name=test_credentials", "--assume-role-arn=arn_role");
-
-        // Assert results
-        assertEquals("", out.stdErr);
-        assertEquals(new CredentialsAdded("aws", "6Kyn17toiABGu47qpBXsVX", "test_credentials", USER_WORKSPACE_NAME).toString(), out.stdOut);
-        assertEquals(0, out.exitCode);
+        ExecOut out = exec(format, mock, "credentials", "add", "aws", "--name=test_credentials", "--assume-role-arn=arn_role");
+        assertOutput(format, out, new CredentialsAdded("AWS", "6Kyn17toiABGu47qpBXsVX", "test_credentials", USER_WORKSPACE_NAME));
 
     }
 
-    @Test
-    void testAdd(MockServerClient mock) {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAdd(OutputType format, MockServerClient mock) {
 
         mock.when(
                 request().withMethod("POST").withPath("/credentials").withBody("{\"credentials\":{\"keys\":{\"accessKey\":\"access_key\",\"secretKey\":\"secret_key\"},\"name\":\"aws\",\"provider\":\"aws\"}}"), exactly(1)
@@ -60,16 +61,14 @@ class AwsProviderTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"credentialsId\":\"1cz5A8cuBkB5iJliCwJCFU\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "credentials", "add", "aws", "-n", "aws", "-a", "access_key", "-s", "secret_key");
-
-        assertEquals("", out.stdErr);
-        assertEquals(new CredentialsAdded("aws", "1cz5A8cuBkB5iJliCwJCFU", "aws", USER_WORKSPACE_NAME).toString(), out.stdOut);
-        assertEquals(0, out.exitCode);
+        ExecOut out = exec(format, mock, "credentials", "add", "aws", "-n", "aws", "-a", "access_key", "-s", "secret_key");
+        assertOutput(format, out, new CredentialsAdded("AWS", "1cz5A8cuBkB5iJliCwJCFU", "aws", USER_WORKSPACE_NAME));
 
     }
 
-    @Test
-    void testUpdate(MockServerClient mock) {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testUpdate(OutputType format, MockServerClient mock) {
 
         mock.when(
                 request().withMethod("GET").withPath("/credentials/kfKx9xRgzpIIZrbCMOcU4"), exactly(1)
@@ -83,10 +82,8 @@ class AwsProviderTest extends BaseCmdTest {
                 response().withStatusCode(204)
         );
 
-        ExecOut out = exec(mock, "credentials", "update", "aws", "-i", "kfKx9xRgzpIIZrbCMOcU4", "-r", "changeAssumeRole");
-
-        assertEquals("", out.stdErr);
-        assertEquals(new CredentialsUpdated("aws", "aws", USER_WORKSPACE_NAME).toString(), out.stdOut);
+        ExecOut out = exec(format, mock, "credentials", "update", "aws", "-i", "kfKx9xRgzpIIZrbCMOcU4", "-r", "changeAssumeRole");
+        assertOutput(format, out, new CredentialsUpdated("AWS", "aws", USER_WORKSPACE_NAME));
     }
 
     @Test

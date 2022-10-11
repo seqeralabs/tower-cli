@@ -15,8 +15,11 @@
 package io.seqera.tower.cli.credentials.providers;
 
 import io.seqera.tower.cli.BaseCmdTest;
+import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.responses.CredentialsAdded;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 
@@ -30,8 +33,9 @@ import static org.mockserver.model.HttpResponse.response;
 
 class ContainerRegistryProviderTest extends BaseCmdTest {
 
-    @Test
-    void testAdd(MockServerClient mock) throws IOException {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAdd(OutputType format, MockServerClient mock) throws IOException {
 
         mock.when(
                 request().withMethod("POST").withPath("/credentials").withBody("{\"credentials\":{\"keys\":{\"userName\":\"jordeu\",\"password\":\"kkdevaka\",\"registry\":\"docker.io\"},\"name\":\"docker-reg\",\"provider\":\"container-reg\"}}"), exactly(1)
@@ -39,12 +43,8 @@ class ContainerRegistryProviderTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"credentialsId\":\"5JFPt8U5J4zYcnjD7qQaiF\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "credentials", "add", "container-reg", "-u", "jordeu", "-p", "kkdevaka", "-n", "docker-reg");
-
-        assertEquals("", out.stdErr);
-        assertEquals(new CredentialsAdded("container_reg", "5JFPt8U5J4zYcnjD7qQaiF", "docker-reg", USER_WORKSPACE_NAME).toString(), out.stdOut);
-        assertEquals(0, out.exitCode);
-
+        ExecOut out = exec(format, mock, "credentials", "add", "container-reg", "-u", "jordeu", "-p", "kkdevaka", "-n", "docker-reg");
+        assertOutput(format, out, new CredentialsAdded("CONTAINER_REG", "5JFPt8U5J4zYcnjD7qQaiF", "docker-reg", USER_WORKSPACE_NAME));
     }
 
 }
