@@ -401,9 +401,21 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.computeenvs.add.AddGoogleBatchCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.computeenvs.add.AddGoogleCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.computeenvs.add.AddGoogleLifeSciencesCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -550,6 +562,17 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.computeenvs.platforms.GoogleBatchPlatform",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.computeenvs.platforms.GoogleBatchPlatform$AdvancedOptions",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.GoogleLifeSciencesPlatform",
@@ -2352,6 +2375,35 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.model.GoogleBatchConfig",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"getBootDiskSizeGb","parameterTypes":[] }, 
+    {"name":"getCopyImage","parameterTypes":[] }, 
+    {"name":"getCpuPlatform","parameterTypes":[] }, 
+    {"name":"getDebugMode","parameterTypes":[] }, 
+    {"name":"getDiscriminator","parameterTypes":[] }, 
+    {"name":"getEnvironment","parameterTypes":[] }, 
+    {"name":"getHeadJobCpus","parameterTypes":[] }, 
+    {"name":"getHeadJobMemoryMb","parameterTypes":[] }, 
+    {"name":"getLabels","parameterTypes":[] }, 
+    {"name":"getLocation","parameterTypes":[] }, 
+    {"name":"getMachineType","parameterTypes":[] }, 
+    {"name":"getNfsMount","parameterTypes":[] }, 
+    {"name":"getNfsTarget","parameterTypes":[] }, 
+    {"name":"getPostRunScript","parameterTypes":[] }, 
+    {"name":"getPreRunScript","parameterTypes":[] }, 
+    {"name":"getProjectId","parameterTypes":[] }, 
+    {"name":"getSpot","parameterTypes":[] }, 
+    {"name":"getSshDaemon","parameterTypes":[] }, 
+    {"name":"getSshImage","parameterTypes":[] }, 
+    {"name":"getUsePrivateAddress","parameterTypes":[] }, 
+    {"name":"getWorkDir","parameterTypes":[] }
+  ]
 },
 {
   "name":"io.seqera.tower.model.GoogleLifeSciencesConfig",
