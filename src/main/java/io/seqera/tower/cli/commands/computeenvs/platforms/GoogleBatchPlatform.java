@@ -21,7 +21,7 @@ import java.io.IOException;
 
 public class GoogleBatchPlatform extends AbstractPlatform<GoogleBatchConfig> {
 
-    @Option(names = {"--location"}, description = "The location where the job executions are deployed to Google Batch API.", required = true)
+    @Option(names = {"-l", "--location"}, description = "The location where the job executions are deployed to Google Batch API.", required = true)
     public String location;
 
     @Option(names = {"--spot"}, description = "Use Spot virtual machines.")
@@ -31,7 +31,7 @@ public class GoogleBatchPlatform extends AbstractPlatform<GoogleBatchConfig> {
     public AdvancedOptions adv;
 
     public GoogleBatchPlatform() {
-        super(PlatformEnum.GOOGLE_LIFESCIENCES);
+        super(PlatformEnum.GOOGLE_BATCH);
     }
 
     @Override
