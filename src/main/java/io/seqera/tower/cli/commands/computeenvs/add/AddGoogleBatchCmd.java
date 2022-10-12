@@ -11,19 +11,19 @@
 
 package io.seqera.tower.cli.commands.computeenvs.add;
 
-import io.seqera.tower.cli.commands.computeenvs.platforms.GoogleLifeSciencesPlatform;
+import io.seqera.tower.cli.commands.computeenvs.platforms.GoogleBatchPlatform;
 import io.seqera.tower.cli.commands.computeenvs.platforms.Platform;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 
 @Command(
-        name = "google-ls",
-        description = "Add new Google life sciences compute environment."
+        name = "google-batch",
+        description = "Add new Google Batch compute environment."
 )
-public class AddGoogleCmd extends AbstractAddCmd {
+public class AddGoogleBatchCmd extends AbstractAddCmd {
 
     @Mixin
-    public GoogleLifeSciencesPlatform platform;
+    public GoogleBatchPlatform platform;
 
     @Override
     protected Platform getPlatform() {
