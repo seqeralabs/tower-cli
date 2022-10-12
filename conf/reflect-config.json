@@ -419,6 +419,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.computeenvs.add.AddMoabCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.computeenvs.add.AddSlurmCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -584,6 +590,17 @@
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.LsfPlatform$AdvancedOptions",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
+},
+{
+  "name":"io.seqera.tower.cli.commands.computeenvs.platforms.MoabPlatform",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.computeenvs.platforms.MoabPlatform$AdvancedOptions",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.SlurmPlatform",
@@ -2504,6 +2521,28 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.model.MoabComputeConfig",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"getComputeQueue","parameterTypes":[] }, 
+    {"name":"getDiscriminator","parameterTypes":[] }, 
+    {"name":"getEnvironment","parameterTypes":[] }, 
+    {"name":"getHeadJobOptions","parameterTypes":[] }, 
+    {"name":"getHeadQueue","parameterTypes":[] }, 
+    {"name":"getHostName","parameterTypes":[] }, 
+    {"name":"getLaunchDir","parameterTypes":[] }, 
+    {"name":"getMaxQueueSize","parameterTypes":[] }, 
+    {"name":"getPort","parameterTypes":[] }, 
+    {"name":"getPostRunScript","parameterTypes":[] }, 
+    {"name":"getPreRunScript","parameterTypes":[] }, 
+    {"name":"getPropagateHeadJobOptions","parameterTypes":[] }, 
+    {"name":"getUserName","parameterTypes":[] }, 
+    {"name":"getWorkDir","parameterTypes":[] }
+  ]
 },
 {
   "name":"io.seqera.tower.model.NavbarConfig",

@@ -22,6 +22,7 @@ import io.seqera.tower.cli.commands.computeenvs.add.AddGoogleBatchCmd;
 import io.seqera.tower.cli.commands.computeenvs.add.AddGoogleLifeSciencesCmd;
 import io.seqera.tower.cli.commands.computeenvs.add.AddK8sCmd;
 import io.seqera.tower.cli.commands.computeenvs.add.AddLsfCmd;
+import io.seqera.tower.cli.commands.computeenvs.add.AddMoabCmd;
 import io.seqera.tower.cli.commands.computeenvs.add.AddSlurmCmd;
 import io.seqera.tower.cli.commands.computeenvs.add.AddUgeCmd;
 import io.seqera.tower.cli.exceptions.ShowUsageException;
@@ -41,6 +42,7 @@ import java.io.IOException;
                 AddLsfCmd.class,
                 AddUgeCmd.class,
                 AddAltairCmd.class,
+                AddMoabCmd.class,
                 AddGkeCmd.class,
                 AddGoogleLifeSciencesCmd.class,
                 AddGoogleBatchCmd.class,
