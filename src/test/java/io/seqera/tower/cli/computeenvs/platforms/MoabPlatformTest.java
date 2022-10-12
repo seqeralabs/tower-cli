@@ -27,48 +27,47 @@ import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
 
-class LsfPlatformTest extends BaseCmdTest {
+class MoabPlatformTest extends BaseCmdTest {
 
     @ParameterizedTest
     @EnumSource(OutputType.class)
     void testAdd(OutputType format, MockServerClient mock) {
 
         mock.when(
-                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "lsf-platform"), exactly(1)
+                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "moab-platform"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"2ba2oekqeTEBzwSDgXg7xf\",\"name\":\"jdeu\",\"description\":null,\"discriminator\":\"ssh\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-06T08:53:51Z\",\"dateCreated\":\"2021-09-06T06:54:53Z\",\"lastUpdated\":\"2021-09-06T06:54:53Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"name\":\"lsf\",\"platform\":\"lsf-platform\",\"config\":{\"workDir\":\"/home/jordeu/nf\",\"userName\":\"jordi\",\"hostName\":\"ssh.mydomain.net\",\"headQueue\":\"normal\"},\"credentialsId\":\"2ba2oekqeTEBzwSDgXg7xf\"}}"), exactly(1)
+                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"name\":\"moab\",\"platform\":\"moab-platform\",\"config\":{\"workDir\":\"/home/jordeu/nf\",\"userName\":\"jordi\",\"hostName\":\"ssh.mydomain.net\",\"headQueue\":\"normal\"},\"credentialsId\":\"2ba2oekqeTEBzwSDgXg7xf\"}}"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(format, mock, "compute-envs", "add", "lsf", "-n", "lsf", "--work-dir", "/home/jordeu/nf", "-u", "jordi", "-H", "ssh.mydomain.net", "-q", "normal");
-
-        assertOutput(format, out, new ComputeEnvAdded("lsf-platform", "isnEDBLvHDAIteOEF44ow", "lsf", null, USER_WORKSPACE_NAME));
+        ExecOut out = exec(format, mock, "compute-envs", "add", "moab", "-n", "moab", "--work-dir", "/home/jordeu/nf", "-u", "jordi", "-H", "ssh.mydomain.net", "-q", "normal");
+        assertOutput(format, out, new ComputeEnvAdded("moab-platform", "isnEDBLvHDAIteOEF44ow", "moab", null, USER_WORKSPACE_NAME));
     }
 
     @Test
     void testAddWithAdvancedOptions(MockServerClient mock) {
 
         mock.when(
-                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "lsf-platform"), exactly(1)
+                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "moab-platform"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"2ba2oekqeTEBzwSDgXg7xf\",\"name\":\"jdeu\",\"description\":null,\"discriminator\":\"ssh\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-06T08:53:51Z\",\"dateCreated\":\"2021-09-06T06:54:53Z\",\"lastUpdated\":\"2021-09-06T06:54:53Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"name\":\"lsf\",\"platform\":\"lsf-platform\",\"config\":{\"workDir\":\"/home/jordeu/nf\",\"userName\":\"jordi\",\"hostName\":\"ssh.mydomain.net\",\"headQueue\":\"normal\",\"maxQueueSize\":200},\"credentialsId\":\"2ba2oekqeTEBzwSDgXg7xf\"}}"), exactly(1)
+                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"name\":\"moab\",\"platform\":\"moab-platform\",\"config\":{\"workDir\":\"/home/jordeu/nf\",\"userName\":\"jordi\",\"hostName\":\"ssh.mydomain.net\",\"headQueue\":\"normal\",\"maxQueueSize\":200},\"credentialsId\":\"2ba2oekqeTEBzwSDgXg7xf\"}}"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "compute-envs", "add", "lsf", "-n", "lsf", "--work-dir", "/home/jordeu/nf", "-u", "jordi", "-H", "ssh.mydomain.net", "-q", "normal", "--max-queue-size=200");
+        ExecOut out = exec(mock, "compute-envs", "add", "moab", "-n", "moab", "--work-dir", "/home/jordeu/nf", "-u", "jordi", "-H", "ssh.mydomain.net", "-q", "normal", "--max-queue-size=200");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvAdded("lsf-platform", "isnEDBLvHDAIteOEF44ow", "lsf", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(new ComputeEnvAdded("moab-platform", "isnEDBLvHDAIteOEF44ow", "moab", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
