@@ -12,8 +12,11 @@
 package io.seqera.tower.cli.computeenvs.platforms;
 
 import io.seqera.tower.cli.BaseCmdTest;
+import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.responses.computeenvs.ComputeEnvAdded;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 
@@ -26,8 +29,9 @@ import static org.mockserver.model.HttpResponse.response;
 
 class SlurmPlatformTest extends BaseCmdTest {
 
-    @Test
-    void testAdd(MockServerClient mock) {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAdd(OutputType format, MockServerClient mock) {
 
         mock.when(
                 request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "slurm-platform"), exactly(1)
@@ -41,11 +45,8 @@ class SlurmPlatformTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "compute-envs", "add", "slurm", "-n", "slurm", "--work-dir", "/home/jordeu/nf", "-u", "jordi", "-H", "ssh.mydomain.net", "-q", "normal");
-
-        assertEquals("", out.stdErr);
-        assertEquals(new ComputeEnvAdded("slurm-platform", "isnEDBLvHDAIteOEF44ow", "slurm", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
-        assertEquals(0, out.exitCode);
+        ExecOut out = exec(format, mock, "compute-envs", "add", "slurm", "-n", "slurm", "--work-dir", "/home/jordeu/nf", "-u", "jordi", "-H", "ssh.mydomain.net", "-q", "normal");
+        assertOutput(format, out, new ComputeEnvAdded("slurm-platform", "isnEDBLvHDAIteOEF44ow", "slurm", null, USER_WORKSPACE_NAME));
     }
 
     @Test
