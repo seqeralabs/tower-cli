@@ -40,12 +40,12 @@ class AzBatchForgePlatformTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"name\":\"azure\",\"platform\":\"azure-batch\",\"config\":{\"workDir\":\"az://nextflow-ci/jordeu\",\"region\":\"europe\",\"forge\":{\"autoScale\":true,\"disposeOnDeletion\":true}},\"credentialsId\":\"57Ic6reczFn78H1DTaaXkp\"}}"), exactly(1)
+                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"name\":\"azure\",\"platform\":\"azure-batch\",\"config\":{\"workDir\":\"az://nextflow-ci/jordeu\",\"region\":\"europe\",\"forge\":{\"vmCount\":10,\"autoScale\":true,\"disposeOnDeletion\":true}},\"credentialsId\":\"57Ic6reczFn78H1DTaaXkp\"}}"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(format, mock, "compute-envs", "add", "azure-batch", "forge", "-n", "azure", "-l", "europe", "--work-dir", "az://nextflow-ci/jordeu");
+        ExecOut out = exec(format, mock, "-v", "compute-envs", "add", "azure-batch", "forge", "-n", "azure", "-l", "europe", "--work-dir", "az://nextflow-ci/jordeu", "--vm-count", "10");
         assertOutput(format, out, new ComputeEnvAdded("azure-batch", "isnEDBLvHDAIteOEF44ow", "azure", null, USER_WORKSPACE_NAME));
     }
 
@@ -59,12 +59,12 @@ class AzBatchForgePlatformTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"name\":\"azure\",\"platform\":\"azure-batch\",\"config\":{\"workDir\":\"az://nextflow-ci/jordeu\",\"region\":\"europe\",\"forge\":{\"autoScale\":true,\"disposeOnDeletion\":true},\"tokenDuration\":\"24\"},\"credentialsId\":\"57Ic6reczFn78H1DTaaXkp\"}}"), exactly(1)
+                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"name\":\"azure\",\"platform\":\"azure-batch\",\"config\":{\"workDir\":\"az://nextflow-ci/jordeu\",\"region\":\"europe\",\"forge\":{\"vmCount\":10,\"autoScale\":true,\"disposeOnDeletion\":true},\"tokenDuration\":\"24\"},\"credentialsId\":\"57Ic6reczFn78H1DTaaXkp\"}}"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "compute-envs", "add", "azure-batch", "forge",  "-n", "azure", "-l", "europe", "--work-dir", "az://nextflow-ci/jordeu", "--token-duration=24");
+        ExecOut out = exec(mock, "-v", "compute-envs", "add", "azure-batch", "forge",  "-n", "azure", "-l", "europe", "--work-dir", "az://nextflow-ci/jordeu", "--token-duration=24", "--vm-count", "10");
 
         assertEquals("", out.stdErr);
         assertEquals(new ComputeEnvAdded("azure-batch", "isnEDBLvHDAIteOEF44ow", "azure", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
