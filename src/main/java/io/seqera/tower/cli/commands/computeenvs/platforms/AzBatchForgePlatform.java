@@ -36,7 +36,7 @@ public class AzBatchForgePlatform extends AbstractPlatform<AzBatchConfig> {
     @Option(names = {"--vm-type"}, description = "Specify the virtual machine type used by this pool. It must be a valid Azure Batch VM type [default: Standard_D4_v3].")
     public String vmType;
 
-    @Option(names = {"--vm-count"}, description = "The number of virtual machines in this pool. When autoscaling feature is enabled, this option represents the maximum number of virtual machines to which the pool can grow and automatically scales to zero when unused.")
+    @Option(names = {"--vm-count"}, description = "The number of virtual machines in this pool. When autoscaling feature is enabled, this option represents the maximum number of virtual machines to which the pool can grow and automatically scales to zero when unused.", required = true)
     public Integer vmCount;
 
     @Option(names = {"--no-auto-scale"}, description = "Disable pool autoscaling which automatically adjust the pool size depending the number submitted jobs and scale to zero when the pool is unused.")
