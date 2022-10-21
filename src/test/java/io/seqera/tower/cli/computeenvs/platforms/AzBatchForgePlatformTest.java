@@ -45,7 +45,7 @@ class AzBatchForgePlatformTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(format, mock, "-v", "compute-envs", "add", "azure-batch", "forge", "-n", "azure", "-l", "europe", "--work-dir", "az://nextflow-ci/jordeu", "--vm-count", "10");
+        ExecOut out = exec(format, mock, "compute-envs", "add", "azure-batch", "forge", "-n", "azure", "-l", "europe", "--work-dir", "az://nextflow-ci/jordeu", "--vm-count", "10");
         assertOutput(format, out, new ComputeEnvAdded("azure-batch", "isnEDBLvHDAIteOEF44ow", "azure", null, USER_WORKSPACE_NAME));
     }
 
@@ -64,7 +64,7 @@ class AzBatchForgePlatformTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "-v", "compute-envs", "add", "azure-batch", "forge",  "-n", "azure", "-l", "europe", "--work-dir", "az://nextflow-ci/jordeu", "--token-duration=24", "--vm-count", "10");
+        ExecOut out = exec(mock, "compute-envs", "add", "azure-batch", "forge",  "-n", "azure", "-l", "europe", "--work-dir", "az://nextflow-ci/jordeu", "--token-duration=24", "--vm-count", "10");
 
         assertEquals("", out.stdErr);
         assertEquals(new ComputeEnvAdded("azure-batch", "isnEDBLvHDAIteOEF44ow", "azure", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
