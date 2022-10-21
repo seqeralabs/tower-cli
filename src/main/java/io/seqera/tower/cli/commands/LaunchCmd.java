@@ -101,6 +101,8 @@ public class LaunchCmd extends AbstractRootCmd {
                 .pipeline(pipeline)
                 .computeEnvId(ce.getId())
                 .workDir(ce.getConfig().getWorkDir())
+                .preRunScript(ce.getConfig().getPreRunScript())
+                .postRunScript(ce.getConfig().getPostRunScript())
         ), wspId);
     }
 
