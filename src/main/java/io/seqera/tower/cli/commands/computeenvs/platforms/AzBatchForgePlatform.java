@@ -12,14 +12,21 @@
 package io.seqera.tower.cli.commands.computeenvs.platforms;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.api.DefaultApi;
+import io.seqera.tower.cli.exceptions.CredentialsNotFoundException;
 import io.seqera.tower.model.AzBatchConfig;
 import io.seqera.tower.model.AzBatchForgeConfig;
+import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.ComputeEnv.PlatformEnum;
+import io.seqera.tower.model.Credentials;
 import io.seqera.tower.model.JobCleanupPolicy;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Option;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class AzBatchForgePlatform extends AbstractPlatform<AzBatchConfig> {
 
@@ -38,6 +45,9 @@ public class AzBatchForgePlatform extends AbstractPlatform<AzBatchConfig> {
     @Option(names = {"--preserve-resources"}, description = "Enable this if you want to preserve the Batch compute pool created by Tower independently from the lifecycle of this compute environment.")
     public boolean preserveResources;
 
+    @Option(names = {"--registry-credentials"}, split = ",", paramLabel = "<credential_name>", description = "Comma-separated list of container registry credentials name.")
+    public List<String> registryCredentials;
+
 
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
     public AdvancedOptions adv;
@@ -47,7 +57,7 @@ public class AzBatchForgePlatform extends AbstractPlatform<AzBatchConfig> {
     }
 
     @Override
-    public AzBatchConfig computeConfig() throws ApiException, IOException {
+    public AzBatchConfig computeConfig(Long workspaceId, DefaultApi api) throws ApiException, IOException {
         AzBatchConfig config = new AzBatchConfig();
 
         config
@@ -64,12 +74,34 @@ public class AzBatchForgePlatform extends AbstractPlatform<AzBatchConfig> {
         }
 
 
-        config.forge(new AzBatchForgeConfig()
+        AzBatchForgeConfig forge = new AzBatchForgeConfig()
                 .vmType(vmType)
                 .vmCount(vmCount)
                 .autoScale(!noAutoScale)
-                .disposeOnDeletion(!preserveResources)
-        );
+                .disposeOnDeletion(!preserveResources);
+
+        if (registryCredentials != null && registryCredentials.size() > 0) {
+
+            Map<String, String> credentialsNameToId = new HashMap<>();
+            List<Credentials> credentials = api.listCredentials(workspaceId, null).getCredentials();
+            if (credentials != null) {
+                for (Credentials c : credentials) {
+                    if (c.getProvider() == Credentials.ProviderEnum.CONTAINER_REG) {
+                        credentialsNameToId.put(c.getName(), c.getId());
+                    }
+                }
+            }
+
+            for (String name : registryCredentials) {
+                if (credentialsNameToId.containsKey(name)) {
+                    forge.addContainerRegIdsItem(credentialsNameToId.get(name));
+                } else {
+                    throw new CredentialsNotFoundException(name, workspaceId);
+                }
+            }
+        }
+
+        config.forge(forge);
 
         return config;
     }

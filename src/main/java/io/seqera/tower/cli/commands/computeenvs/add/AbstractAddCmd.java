@@ -53,7 +53,8 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        return addComputeEnv(getPlatform().type(), getPlatform().computeConfig());
+        Long wspId = workspaceId(workspace.workspace);
+        return addComputeEnv(getPlatform().type(), getPlatform().computeConfig(wspId, api()));
     }
 
     @Override
