@@ -66,7 +66,8 @@ public class EksPlatform extends AbstractPlatform<EksComputeConfig> {
 
                 // Stagging
                 .preRunScript(preRunScriptString())
-                .postRunScript(postRunScriptString());
+                .postRunScript(postRunScriptString())
+                .environment(environmentVariables());
 
         return config;
     }

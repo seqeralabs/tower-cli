@@ -16,11 +16,16 @@ import io.seqera.tower.api.DefaultApi;
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.ComputeConfig;
 import io.seqera.tower.model.ComputeEnv.PlatformEnum;
+import io.seqera.tower.model.ConfigEnvVariable;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Option;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 public abstract class AbstractPlatform<T extends ComputeConfig> implements Platform {
 
@@ -29,6 +34,9 @@ public abstract class AbstractPlatform<T extends ComputeConfig> implements Platf
 
     @ArgGroup(heading = "%nStaging options:%n", validate = false)
     public StagingOptions staging;
+
+    @ArgGroup(heading = "%nEnvironment variables:%n", validate = false)
+    public Environment environment;
 
     private PlatformEnum type;
 
@@ -50,6 +58,33 @@ public abstract class AbstractPlatform<T extends ComputeConfig> implements Platf
         return FilesHelper.readString(staging.postRunScript);
     }
 
+    protected List<ConfigEnvVariable> environmentVariables() {
+        if (environment == null || environment.variables == null || environment.variables.size() == 0) {
+            return null;
+        }
+
+        List<ConfigEnvVariable> vars = new ArrayList<>(environment.variables.size());
+        environment.variables.forEach((name, value) -> {
+            boolean head = true;
+            boolean compute = false;
+            String varName = name;
+            if (name.startsWith("compute:")) {
+                varName = name.substring(8);
+                head = false;
+                compute = true;
+            } else if (name.startsWith("head:")) {
+                varName = name.substring(5);
+                compute = false;
+            } else if (name.startsWith("both:")) {
+                varName = name.substring(5);
+                compute = true;
+            }
+            vars.add(new ConfigEnvVariable().name(varName).value(value).head(head).compute(compute));
+        });
+
+        return vars;
+    }
+
     public PlatformEnum type() {
         return type;
     }
@@ -68,6 +103,13 @@ public abstract class AbstractPlatform<T extends ComputeConfig> implements Platf
 
         @Option(names = {"--post-run"}, description = "Post-run script.")
         public Path postRunScript;
+    }
+
+    public static class Environment {
+        @Option(names = {"-e", "--env"}, description = "Add environment variables. By default are only added to the Nextflow " +
+                "head job process, if you want to add them to the process task prefix the name with 'compute:' or 'both:' if you want to " +
+                "make it available to both locations.")
+        Map<String, String> variables;
     }
 
 

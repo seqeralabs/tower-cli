@@ -65,6 +65,7 @@ public class AzBatchForgePlatform extends AbstractPlatform<AzBatchConfig> {
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
+                .environment(environmentVariables())
                 .region(location);
 
         if (adv != null) {

@@ -52,6 +52,7 @@ public class GoogleLifeSciencesPlatform extends AbstractPlatform<GoogleLifeScien
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
+                .environment(environmentVariables())
 
                 // Main
                 .region(region)

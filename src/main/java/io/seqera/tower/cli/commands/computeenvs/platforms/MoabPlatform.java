@@ -55,6 +55,7 @@ public class MoabPlatform extends AbstractPlatform<MoabComputeConfig> {
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
+                .environment(environmentVariables())
 
                 // Main
                 .launchDir(launchDir)

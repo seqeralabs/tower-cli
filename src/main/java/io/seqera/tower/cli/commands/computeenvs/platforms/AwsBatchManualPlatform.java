@@ -51,6 +51,7 @@ public class AwsBatchManualPlatform extends AbstractPlatform<AwsBatchConfig> {
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
+                .environment(environmentVariables())
                 .region(region)
 
                 // Queues

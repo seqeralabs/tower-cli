@@ -66,7 +66,8 @@ public class GkePlatform extends AbstractPlatform<GkeComputeConfig> {
 
                 // Stagging
                 .preRunScript(preRunScriptString())
-                .postRunScript(postRunScriptString());
+                .postRunScript(postRunScriptString())
+                .environment(environmentVariables());
 
         return config;
     }
