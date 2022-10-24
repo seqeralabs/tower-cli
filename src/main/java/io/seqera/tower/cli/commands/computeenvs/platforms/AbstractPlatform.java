@@ -60,7 +60,7 @@ public abstract class AbstractPlatform<T extends ComputeConfig> implements Platf
 
     protected List<ConfigEnvVariable> environmentVariables() {
         if (environment == null || environment.variables == null || environment.variables.size() == 0) {
-            return Collections.emptyList();
+            return null;
         }
 
         List<ConfigEnvVariable> vars = new ArrayList<>(environment.variables.size());
