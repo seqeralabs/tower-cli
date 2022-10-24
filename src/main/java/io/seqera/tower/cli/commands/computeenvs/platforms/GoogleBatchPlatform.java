@@ -43,6 +43,7 @@ public class GoogleBatchPlatform extends AbstractPlatform<GoogleBatchConfig> {
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
+                .environment(environmentVariables())
 
                 // Main
                 .location(location)
