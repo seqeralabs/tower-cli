@@ -28,6 +28,7 @@ import io.seqera.tower.cli.commands.OrganizationsCmd;
 import io.seqera.tower.cli.commands.ParticipantsCmd;
 import io.seqera.tower.cli.commands.PipelinesCmd;
 import io.seqera.tower.cli.commands.RunsCmd;
+import io.seqera.tower.cli.commands.SecretsCmd;
 import io.seqera.tower.cli.commands.TeamsCmd;
 import io.seqera.tower.cli.commands.WorkspacesCmd;
 import io.seqera.tower.cli.commands.enums.OutputType;
@@ -61,6 +62,7 @@ import static picocli.AutoComplete.GenerateCompletion;
                 RunsCmd.class,
                 TeamsCmd.class,
                 WorkspacesCmd.class,
+                SecretsCmd.class,
         }
 )
 public class Tower extends AbstractCmd {

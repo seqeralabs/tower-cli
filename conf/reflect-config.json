@@ -220,6 +220,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.SecretsCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.TeamsCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1287,6 +1293,53 @@
   "queryAllDeclaredMethods":true
 },
 {
+  "name":"io.seqera.tower.cli.commands.secrets.AbstractSecretsCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"io.seqera.tower.cli.commands.secrets.AddCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.secrets.DeleteCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.secrets.ListCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.secrets.SecretRefOptions",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.secrets.SecretRefOptions$SecretRef",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.secrets.UpdateCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.secrets.ViewCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.teams.AbstractTeamsCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
@@ -1687,6 +1740,36 @@
 },
 {
   "name":"io.seqera.tower.cli.responses.runs.tasks.TasksView",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.secrets.SecretAdded",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.secrets.SecretDeleted",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.secrets.SecretUpdated",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.secrets.SecretView",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.secrets.SecretsList",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true
@@ -2136,6 +2219,26 @@
   "allDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.model.CreatePipelineSecretRequest",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"getName","parameterTypes":[] }, 
+    {"name":"getValue","parameterTypes":[] }
+  ]
+},
+{
+  "name":"io.seqera.tower.model.CreatePipelineSecretResponse",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"<init>","parameterTypes":[] }, 
+    {"name":"setSecretId","parameterTypes":["java.lang.Long"] }
+  ]
+},
+{
   "name":"io.seqera.tower.model.CreateTeamMemberRequest",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -2533,6 +2636,17 @@
   "allDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.model.ListPipelineSecretsResponse",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"<init>","parameterTypes":[] }, 
+    {"name":"setPipelineSecrets","parameterTypes":["java.util.List"] }, 
+    {"name":"setTotalSize","parameterTypes":["java.lang.Long"] }
+  ]
+},
+{
   "name":"io.seqera.tower.model.ListPipelinesResponse",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -2663,6 +2777,22 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.model.PipelineSecret",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"<init>","parameterTypes":[] }, 
+    {"name":"getDateCreated","parameterTypes":[] }, 
+    {"name":"getId_JsonNullable","parameterTypes":[] }, 
+    {"name":"getLastUpdated","parameterTypes":[] }, 
+    {"name":"getLastUsed","parameterTypes":[] }, 
+    {"name":"getName","parameterTypes":[] }, 
+    {"name":"setId_JsonNullable","parameterTypes":["org.openapitools.jackson.nullable.JsonNullable"] }, 
+    {"name":"setName","parameterTypes":["java.lang.String"] }
+  ]
 },
 {
   "name":"io.seqera.tower.model.PodCleanupPolicy",
@@ -2808,6 +2938,13 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.model.UpdatePipelineSecretRequest",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"getValue","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.UpdateWorkspaceRequest",
