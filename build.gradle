@@ -8,7 +8,6 @@ plugins {
 }
 
 repositories {
-    mavenLocal()
     mavenCentral()
     maven {
         url = uri("https://maven.pkg.github.com/seqeralabs/tower-java-sdk")
@@ -24,7 +23,7 @@ dependencies {
     implementation 'org.slf4j:slf4j-api:1.7.36'
     implementation 'ch.qos.logback:logback-core:1.2.11'
     implementation 'ch.qos.logback:logback-classic:1.2.11'
-    implementation 'io.seqera.tower:tower-java-sdk:1.4-SNAPSHOT'
+    implementation 'io.seqera.tower:tower-java-sdk:1.4.2'
     implementation 'info.picocli:picocli:4.6.3'
     annotationProcessor 'info.picocli:picocli-codegen:4.6.3'
 
