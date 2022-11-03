@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.util.Collections;
 
 import static io.seqera.tower.cli.utils.ModelHelper.coalesce;
+import static io.seqera.tower.cli.utils.ModelHelper.removeEmptyValues;
 
 @Command(
         name = "update",
@@ -92,6 +93,8 @@ public class UpdateCmd extends AbstractPipelinesCmd {
                                 .mainScript(coalesce(opts.mainScript, launch.getMainScript()))
                                 .entryName(coalesce(opts.entryName, launch.getEntryName()))
                                 .schemaName(coalesce(opts.schemaName, launch.getSchemaName()))
+                                .userSecrets(coalesce(removeEmptyValues(opts.userSecrets), launch.getUserSecrets()))
+                                .workspaceSecrets(coalesce(removeEmptyValues(opts.workspaceSecrets), launch.getWorkspaceSecrets()))
                         )
                 , wspId
         );
