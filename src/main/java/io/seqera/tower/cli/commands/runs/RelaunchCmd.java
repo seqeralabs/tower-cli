@@ -34,6 +34,9 @@ import picocli.CommandLine.Option;
 import java.io.IOException;
 import java.time.OffsetDateTime;
 
+import static io.seqera.tower.cli.utils.ModelHelper.coalesce;
+import static io.seqera.tower.cli.utils.ModelHelper.removeEmptyValues;
+
 @Command(
         name = "relaunch",
         description = "Add a pipeline run."
@@ -83,20 +86,22 @@ public class RelaunchCmd extends AbstractRunsCmd {
                 .id(workflow.getLaunchId())
                 .sessionId(launch.getSessionId())
                 .computeEnvId(ce != null ? ce.getId() : launch.getComputeEnv().getId())
-                .pipeline(pipeline != null ? pipeline : launch.getPipeline())
+                .pipeline(coalesce(pipeline, launch.getPipeline()))
                 .workDir(opts.workDir != null ? opts.workDir : selectWorkDir(!noResume, launch.getResumeDir(), launch.getWorkDir(), workflow.getWorkDir()))
-                .revision(opts.revision != null ? opts.revision : (noResume ? launch.getRevision() : launch.getResumeCommitId()))
-                .configProfiles(opts.profile != null ? opts.profile : launch.getConfigProfiles())
+                .revision(coalesce(opts.revision, (noResume ? launch.getRevision() : launch.getResumeCommitId())))
+                .configProfiles(coalesce(opts.profile, launch.getConfigProfiles()))
                 .configText(opts.config != null ? FilesHelper.readString(opts.config) : launch.getConfigText())
                 .paramsText(opts.paramsFile != null ? FilesHelper.readString(opts.paramsFile) : launch.getParamsText())
                 .preRunScript(opts.preRunScript != null ? FilesHelper.readString(opts.preRunScript) : launch.getPreRunScript())
                 .postRunScript(opts.postRunScript != null ? FilesHelper.readString(opts.postRunScript) : launch.getPostRunScript())
-                .mainScript(opts.mainScript != null ? opts.mainScript : launch.getMainScript())
-                .entryName(opts.entryName != null ? opts.entryName : launch.getEntryName())
-                .schemaName(opts.schemaName != null ? opts.schemaName : launch.getSchemaName())
+                .mainScript(coalesce(opts.mainScript, launch.getMainScript()))
+                .entryName(coalesce(opts.entryName,  launch.getEntryName()))
+                .schemaName(coalesce(opts.schemaName, launch.getSchemaName()))
+                .userSecrets(coalesce(removeEmptyValues(opts.userSecrets), launch.getUserSecrets()))
+                .workspaceSecrets(coalesce(removeEmptyValues(opts.workspaceSecrets), launch.getWorkspaceSecrets()))
                 .resume(!noResume)
-                .pullLatest(opts.pullLatest != null ? opts.pullLatest : launch.getPullLatest())
-                .stubRun(opts.stubRun != null ? opts.stubRun : launch.getStubRun())
+                .pullLatest(coalesce(opts.pullLatest, launch.getPullLatest()))
+                .stubRun(coalesce(opts.stubRun, launch.getStubRun()))
                 .dateCreated(OffsetDateTime.now())
                 .runName(name);
 

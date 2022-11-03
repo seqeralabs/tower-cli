@@ -29,6 +29,8 @@ import picocli.CommandLine.Parameters;
 
 import java.io.IOException;
 
+import static io.seqera.tower.cli.utils.ModelHelper.removeEmptyValues;
+
 @Command(
         name = "add",
         description = "Add a workspace pipeline."
@@ -97,6 +99,8 @@ public class AddCmd extends AbstractPipelinesCmd {
                                 .mainScript(opts.mainScript)
                                 .entryName(opts.entryName)
                                 .schemaName(opts.schemaName)
+                                .userSecrets(removeEmptyValues(opts.userSecrets))
+                                .workspaceSecrets(removeEmptyValues(opts.workspaceSecrets))
                         )
                 , wspId
         );

@@ -38,6 +38,7 @@ import java.util.List;
 import static io.seqera.tower.cli.utils.FilesHelper.readString;
 import static io.seqera.tower.cli.utils.ModelHelper.coalesce;
 import static io.seqera.tower.cli.utils.ModelHelper.createLaunchRequest;
+import static io.seqera.tower.cli.utils.ModelHelper.removeEmptyValues;
 import static io.seqera.tower.cli.utils.ResponseHelper.waitStatus;
 
 @Command(
@@ -123,7 +124,9 @@ public class LaunchCmd extends AbstractRootCmd {
                 .stubRun(coalesce(adv().stubRun, base.getStubRun()))
                 .mainScript(coalesce(adv().mainScript, base.getMainScript()))
                 .entryName(coalesce(adv().entryName, base.getEntryName()))
-                .schemaName(coalesce(adv().schemaName, base.getSchemaName()));
+                .schemaName(coalesce(adv().schemaName, base.getSchemaName()))
+                .userSecrets(coalesce(removeEmptyValues(adv().userSecrets), base.getUserSecrets()))
+                .workspaceSecrets(coalesce(removeEmptyValues(adv().workspaceSecrets), base.getWorkspaceSecrets()));
     }
 
     protected Response runTowerPipeline(Long wspId) throws ApiException, IOException {
@@ -218,6 +221,12 @@ public class LaunchCmd extends AbstractRootCmd {
 
         @Option(names = {"--schema-name"}, description = "Schema name.")
         public String schemaName;
+
+        @Option(names = {"--user-secrets"}, split = ",", description = "Pipeline Secrets required by the pipeline execution that belong to the launching user personal context. User's secrets will take precedence over workspace secrets with the same name.")
+        public List<String> userSecrets;
+
+        @Option(names = {"--workspace-secrets"}, split = ",", description = "Pipeline Secrets required by the pipeline execution. Those secrets must be defined in the launching workspace.")
+        public List<String> workspaceSecrets;
 
     }
 
