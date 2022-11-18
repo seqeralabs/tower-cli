@@ -1,17 +1,12 @@
-site_name: 'Tower User Documentation'
+site_name: 'Tower CLI command line reference'
 site_author: Seqera Labs
-repo_name: nf-tower-docs
-repo_url: https://github.com/seqeralabs/nf-tower-docs
-edit_uri: https://github.com/seqeralabs/nf-tower-docs/tree/master/docs
+repo_name: tower-cli
+repo_url: https://github.com/seqeralabs/tower-cli
 
 site_dir: public
 
 plugins:
   - search
-#   - git-revision-date
-#   - git-revision-date-localized:
-#       fallback_to_build_date: true
-
 
 theme:
   language: en
@@ -52,18 +47,7 @@ extra_css:
 
 
 extra:
-  analytics:
-    provider: google
-    property: UA-364526-12
-  # generator: false
   homepage: /
-  social:
-    - icon: fontawesome/solid/paper-plane
-      link: mailto:support@seqera.io
-    - icon: fontawesome/brands/twitter
-      link: https://twitter.com/seqeralabs
-    - icon: fontawesome/brands/github
-      link: https://github.com/seqeralabs
   version:
     provider: mike
 

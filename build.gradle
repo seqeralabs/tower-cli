@@ -160,18 +160,3 @@ asciidoctor {
     }
 }
 
-/*TODO
-
-# Generate Markdown
-mkdir -p build/docs
-cd build/generated-picocli-docs-xml/
-ls *.xml | awk '{system("pandoc -f docbook -t markdown_strict "$1" -o ../docs/"$1".md")}'
-ls *.md | awk '{system("sed -i 's/\.xml/\.xml\.md/g' "$1)}'
-
-# Build MkDocs
-cd ..
-cp ../docs/* .
-docker run --rm -p 8000:8000 -v ${PWD}:/docs squidfunk/mkdocs-material build
-
- */
-
