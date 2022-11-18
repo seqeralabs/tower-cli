@@ -14,6 +14,9 @@ package io.seqera.tower.cli.utils;
 import io.seqera.tower.model.Launch;
 import io.seqera.tower.model.WorkflowLaunchRequest;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class ModelHelper {
 
     private ModelHelper() {
@@ -35,6 +38,8 @@ public class ModelHelper {
                 .mainScript(launch.getMainScript())
                 .entryName(launch.getEntryName())
                 .schemaName(launch.getSchemaName())
+                .workspaceSecrets(launch.getWorkspaceSecrets())
+                .userSecrets(launch.getUserSecrets())
                 .resume(launch.getResume())
                 .pullLatest(launch.getPullLatest())
                 .stubRun(launch.getStubRun())
@@ -46,5 +51,13 @@ public class ModelHelper {
             return defaultValue;
         }
         return value;
+    }
+
+    public static List<String> removeEmptyValues(List<String> values) {
+        if (values == null) {
+            return null;
+        }
+
+        return values.stream().filter(s -> !s.isEmpty()).collect(Collectors.toList());
     }
 }

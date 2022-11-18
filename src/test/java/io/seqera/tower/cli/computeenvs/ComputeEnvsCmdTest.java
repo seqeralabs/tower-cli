@@ -23,14 +23,15 @@ import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.computeenvs.ComputeEnvAdded;
 import io.seqera.tower.cli.responses.computeenvs.ComputeEnvDeleted;
+import io.seqera.tower.cli.responses.computeenvs.ComputeEnvExport;
 import io.seqera.tower.cli.responses.computeenvs.ComputeEnvList;
 import io.seqera.tower.cli.responses.computeenvs.ComputeEnvView;
-import io.seqera.tower.cli.responses.computeenvs.ComputeEnvExport;
 import io.seqera.tower.cli.responses.computeenvs.ComputeEnvsPrimaryGet;
 import io.seqera.tower.cli.responses.computeenvs.ComputeEnvsPrimarySet;
 import io.seqera.tower.model.AwsBatchConfig;
 import io.seqera.tower.model.ComputeConfig;
 import io.seqera.tower.model.ComputeEnv;
+import io.seqera.tower.model.ComputeEnvResponseDto;
 import io.seqera.tower.model.ComputeEnvStatus;
 import io.seqera.tower.model.ForgeConfig;
 import io.seqera.tower.model.ListComputeEnvsResponseEntry;
@@ -167,9 +168,9 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "compute-envs", "view", "-i", "isnEDBLvHDAIteOEF44ow");
         assertOutput(format, out, new ComputeEnvView("isnEDBLvHDAIteOEF44ow", USER_WORKSPACE_NAME,
-                parseJson("{\"id\": \"isnEDBLvHDAIteOEF44ow\", \"dateCreated\": \"2021-09-08T11:19:24Z\", \"lastUpdated\": \"2021-09-08T11:20:08Z\"}", ComputeEnv.class)
+                parseJson("{\"id\": \"isnEDBLvHDAIteOEF44ow\", \"dateCreated\": \"2021-09-08T11:19:24Z\", \"lastUpdated\": \"2021-09-08T11:20:08Z\"}", ComputeEnvResponseDto.class)
                         .name("demo")
-                        .platform(ComputeEnv.PlatformEnum.AWS_BATCH)
+                        .platform(ComputeEnvResponseDto.PlatformEnum.AWS_BATCH)
                         .status(ComputeEnvStatus.AVAILABLE)
                         .credentialsId("6g0ER59L4ZoE5zpOmUP48D")
                         .config(
@@ -219,9 +220,9 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "compute-envs", "view", "-i", "53aWhB2qJroy0i51FOrFAC");
         assertOutput(format, out, new ComputeEnvView("53aWhB2qJroy0i51FOrFAC", USER_WORKSPACE_NAME,
-                parseJson("{\"id\": \"53aWhB2qJroy0i51FOrFAC\", \"dateCreated\": \"2021-09-08T15:19:08Z\", \"lastUpdated\": \"2021-09-08T15:19:08Z\"}", ComputeEnv.class)
+                parseJson("{\"id\": \"53aWhB2qJroy0i51FOrFAC\", \"dateCreated\": \"2021-09-08T15:19:08Z\", \"lastUpdated\": \"2021-09-08T15:19:08Z\"}", ComputeEnvResponseDto.class)
                         .name("manual")
-                        .platform(ComputeEnv.PlatformEnum.AWS_BATCH)
+                        .platform(ComputeEnvResponseDto.PlatformEnum.AWS_BATCH)
                         .status(ComputeEnvStatus.ERRORED)
                         .credentialsId("6g0ER59L4ZoE5zpOmUP48D")
                         .config(
@@ -358,7 +359,7 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
         );
 
         ExecOut out = exec(format, mock, "compute-envs", "import", tempFile(new String(loadResource("cejson"), StandardCharsets.UTF_8), "ce", "json"), "-n", "json", "-c", "6g0ER59L4ZoE5zpOmUP48D");
-        assertOutput(format, out, new ComputeEnvAdded(ComputeEnv.PlatformEnum.AWS_BATCH.getValue(),  "3T6xWeFD63QIuzdAowvSTC", "json", null, USER_WORKSPACE_NAME));
+        assertOutput(format, out, new ComputeEnvAdded(ComputeEnv.PlatformEnum.AWS_BATCH.getValue(), "3T6xWeFD63QIuzdAowvSTC", "json", null, USER_WORKSPACE_NAME));
     }
 
     @ParameterizedTest
@@ -378,7 +379,7 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "compute-envs", "primary", "get");
 
-        ComputeEnv ce = parseJson("{\"id\":\"isnEDBLvHDAIteOEF44ow\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}", ComputeEnv.class);
+        ComputeEnvResponseDto ce = parseJson("{\"id\":\"isnEDBLvHDAIteOEF44ow\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}", ComputeEnvResponseDto.class);
 
         assertOutput(format, out, new ComputeEnvsPrimaryGet(USER_WORKSPACE_NAME, ce));
     }
@@ -401,7 +402,7 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "compute-envs", "primary", "set", "-i", "isnEDBLvHDAIteOEF44ow");
 
-        ComputeEnv ce = parseJson("{\"id\":\"isnEDBLvHDAIteOEF44ow\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}", ComputeEnv.class);
+        ComputeEnvResponseDto ce = parseJson("{\"id\":\"isnEDBLvHDAIteOEF44ow\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}", ComputeEnvResponseDto.class);
         assertOutput(format, out, new ComputeEnvsPrimarySet(USER_WORKSPACE_NAME, ce));
     }
 
@@ -435,7 +436,7 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "compute-envs", "primary", "set", "-i", "lkasjdlkfwerjbEcrycwrSSe", "-w", "75887156211590");
 
-        ComputeEnv ce = parseJson("{\"id\":\"lkasjdlkfwerjbEcrycwrSSe\",\"name\":\"demo\",\"platform\":\"azure-batch\"}", ComputeEnv.class);
+        ComputeEnvResponseDto ce = parseJson("{\"id\":\"lkasjdlkfwerjbEcrycwrSSe\",\"name\":\"demo\",\"platform\":\"azure-batch\"}", ComputeEnvResponseDto.class);
         assertOutput(format, out, new ComputeEnvsPrimarySet("[organization2 / workspace2]", ce));
     }
 }

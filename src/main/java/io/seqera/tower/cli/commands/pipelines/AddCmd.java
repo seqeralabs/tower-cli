@@ -16,7 +16,7 @@ import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.pipelines.PipelinesAdded;
 import io.seqera.tower.cli.utils.FilesHelper;
-import io.seqera.tower.model.ComputeEnv;
+import io.seqera.tower.model.ComputeEnvResponseDto;
 import io.seqera.tower.model.CreatePipelineRequest;
 import io.seqera.tower.model.CreatePipelineResponse;
 import io.seqera.tower.model.Visibility;
@@ -28,6 +28,8 @@ import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
 import java.io.IOException;
+
+import static io.seqera.tower.cli.utils.ModelHelper.removeEmptyValues;
 
 @Command(
         name = "add",
@@ -61,7 +63,7 @@ public class AddCmd extends AbstractPipelinesCmd {
         }
 
         // Retrieve the provided computeEnv or use the primary if not provided
-        ComputeEnv ce = opts.computeEnv != null ? computeEnvByRef(wspId, opts.computeEnv) : null;
+        ComputeEnvResponseDto ce = opts.computeEnv != null ? computeEnvByRef(wspId, opts.computeEnv) : null;
 
         // By default use primary compute environment at private workspaces
         if (ce == null && visibility == Visibility.PRIVATE) {
@@ -97,6 +99,8 @@ public class AddCmd extends AbstractPipelinesCmd {
                                 .mainScript(opts.mainScript)
                                 .entryName(opts.entryName)
                                 .schemaName(opts.schemaName)
+                                .userSecrets(removeEmptyValues(opts.userSecrets))
+                                .workspaceSecrets(removeEmptyValues(opts.workspaceSecrets))
                         )
                 , wspId
         );

@@ -15,8 +15,11 @@
 package io.seqera.tower.cli.credentials.providers;
 
 import io.seqera.tower.cli.BaseCmdTest;
+import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.responses.CredentialsAdded;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 
@@ -28,8 +31,9 @@ import static org.mockserver.model.HttpResponse.response;
 
 class AzureProviderTest extends BaseCmdTest {
 
-    @Test
-    void testAdd(MockServerClient mock) {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAdd(OutputType format, MockServerClient mock) {
 
         mock.when(
                 request().withMethod("POST").withPath("/credentials").withBody("{\"credentials\":{\"keys\":{\"batchName\":\"batchName\",\"batchKey\":\"batchKey\",\"storageName\":\"storageName\",\"storageKey\":\"storageKey\"},\"name\":\"azure\",\"provider\":\"azure\"}}"), exactly(1)
@@ -37,12 +41,8 @@ class AzureProviderTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"credentialsId\":\"1cz5A8cuBkB5iJliCwJCFU\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "credentials", "add", "azure", "--name=azure", "--batch-key=batchKey", "--batch-name=batchName", "--storage-key=storageKey", "--storage-name=storageName");
-
-        assertEquals("", out.stdErr);
-        assertEquals(new CredentialsAdded("azure", "1cz5A8cuBkB5iJliCwJCFU", "azure", USER_WORKSPACE_NAME).toString(), out.stdOut);
-        assertEquals(0, out.exitCode);
-
+        ExecOut out = exec(format, mock, "credentials", "add", "azure", "--name=azure", "--batch-key=batchKey", "--batch-name=batchName", "--storage-key=storageKey", "--storage-name=storageName");
+        assertOutput(format, out, new CredentialsAdded("AZURE", "1cz5A8cuBkB5iJliCwJCFU", "azure", USER_WORKSPACE_NAME));
     }
 
 }

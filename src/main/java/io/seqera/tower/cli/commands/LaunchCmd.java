@@ -17,7 +17,7 @@ import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.exceptions.InvalidResponseException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.runs.RunSubmited;
-import io.seqera.tower.model.ComputeEnv;
+import io.seqera.tower.model.ComputeEnvResponseDto;
 import io.seqera.tower.model.Launch;
 import io.seqera.tower.model.ListPipelinesResponse;
 import io.seqera.tower.model.SubmitWorkflowLaunchRequest;
@@ -32,11 +32,13 @@ import picocli.CommandLine.Parameters;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 
 import static io.seqera.tower.cli.utils.FilesHelper.readString;
 import static io.seqera.tower.cli.utils.ModelHelper.coalesce;
 import static io.seqera.tower.cli.utils.ModelHelper.createLaunchRequest;
+import static io.seqera.tower.cli.utils.ModelHelper.removeEmptyValues;
 import static io.seqera.tower.cli.utils.ResponseHelper.waitStatus;
 
 @Command(
@@ -83,7 +85,7 @@ public class LaunchCmd extends AbstractRootCmd {
         Long wspId = workspaceId(workspace.workspace);
 
         // If the pipeline has at least one backslash consider it an external pipeline.
-        if (pipeline.startsWith("https://") || pipeline.startsWith("http://")) {
+        if (pipeline.startsWith("https://") || pipeline.startsWith("http://") || pipeline.startsWith("file:/")) {
             return runNextflowPipeline(wspId);
         }
 
@@ -94,12 +96,14 @@ public class LaunchCmd extends AbstractRootCmd {
 
     protected Response runNextflowPipeline(Long wspId) throws ApiException, IOException {
         // Retrieve the provided computeEnv or use the primary if not provided
-        ComputeEnv ce = computeEnv != null ? computeEnvByRef(wspId, computeEnv) : primaryComputeEnv(wspId);
+        ComputeEnvResponseDto ce = computeEnv != null ? computeEnvByRef(wspId, computeEnv) : primaryComputeEnv(wspId);
 
         return submitWorkflow(updateLaunchRequest(new WorkflowLaunchRequest()
                 .pipeline(pipeline)
                 .computeEnvId(ce.getId())
                 .workDir(ce.getConfig().getWorkDir())
+                .preRunScript(ce.getConfig().getPreRunScript())
+                .postRunScript(ce.getConfig().getPostRunScript())
         ), wspId);
     }
 
@@ -120,11 +124,13 @@ public class LaunchCmd extends AbstractRootCmd {
                 .stubRun(coalesce(adv().stubRun, base.getStubRun()))
                 .mainScript(coalesce(adv().mainScript, base.getMainScript()))
                 .entryName(coalesce(adv().entryName, base.getEntryName()))
-                .schemaName(coalesce(adv().schemaName, base.getSchemaName()));
+                .schemaName(coalesce(adv().schemaName, base.getSchemaName()))
+                .userSecrets(coalesce(removeEmptyValues(adv().userSecrets), base.getUserSecrets()))
+                .workspaceSecrets(coalesce(removeEmptyValues(adv().workspaceSecrets), base.getWorkspaceSecrets()));
     }
 
     protected Response runTowerPipeline(Long wspId) throws ApiException, IOException {
-        ListPipelinesResponse pipelines = api().listPipelines(wspId, 2, 0, pipeline, null);
+        ListPipelinesResponse pipelines = api().listPipelines(Collections.emptyList(), wspId, 2, 0, pipeline, null);
         if (pipelines.getTotalSize() == 0) {
             throw new InvalidResponseException(String.format("Pipeline '%s' not found on this workspace.", pipeline));
         }
@@ -136,11 +142,16 @@ public class LaunchCmd extends AbstractRootCmd {
         Long pipelineId = pipelines.getPipelines().get(0).getPipelineId();
         Launch launch = api().describePipelineLaunch(pipelineId, wspId).getLaunch();
 
-        return submitWorkflow(updateLaunchRequest(createLaunchRequest(launch)), wspId);
+        WorkflowLaunchRequest launchRequest = createLaunchRequest(launch);
+        if (computeEnv != null) {
+            launchRequest.computeEnvId(computeEnvByRef(wspId, computeEnv).getId());
+        }
+
+        return submitWorkflow(updateLaunchRequest(launchRequest), wspId);
     }
 
     protected Response submitWorkflow(WorkflowLaunchRequest launch, Long wspId) throws ApiException {
-        SubmitWorkflowLaunchResponse response = api().createWorkflowLaunch(new SubmitWorkflowLaunchRequest().launch(launch), wspId, null);
+        SubmitWorkflowLaunchResponse response = api().createWorkflowLaunch(new SubmitWorkflowLaunchRequest().launch(launch), wspId, null, null);
         String workflowId = response.getWorkflowId();
         return new RunSubmited(workflowId, wspId, baseWorkspaceUrl(wspId), workspaceRef(wspId));
     }
@@ -171,7 +182,7 @@ public class LaunchCmd extends AbstractRootCmd {
 
     private WorkflowStatus checkWorkflowStatus(String workflowId, Long workspaceId) {
         try {
-            return api().describeWorkflow(workflowId, workspaceId).getWorkflow().getStatus();
+            return api().describeWorkflow(workflowId, workspaceId, Collections.emptyList()).getWorkflow().getStatus();
         } catch (ApiException | NullPointerException e) {
             return null;
         }
@@ -210,6 +221,12 @@ public class LaunchCmd extends AbstractRootCmd {
 
         @Option(names = {"--schema-name"}, description = "Schema name.")
         public String schemaName;
+
+        @Option(names = {"--user-secrets"}, split = ",", description = "Pipeline Secrets required by the pipeline execution that belong to the launching user personal context. User's secrets will take precedence over workspace secrets with the same name.")
+        public List<String> userSecrets;
+
+        @Option(names = {"--workspace-secrets"}, split = ",", description = "Pipeline Secrets required by the pipeline execution. Those secrets must be defined in the launching workspace.")
+        public List<String> workspaceSecrets;
 
     }
 

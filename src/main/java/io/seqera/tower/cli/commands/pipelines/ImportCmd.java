@@ -13,12 +13,11 @@ package io.seqera.tower.cli.commands.pipelines;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
-import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.pipelines.PipelinesAdded;
 import io.seqera.tower.cli.utils.FilesHelper;
-import io.seqera.tower.model.ComputeEnv;
+import io.seqera.tower.model.ComputeEnvResponseDto;
 import io.seqera.tower.model.CreatePipelineRequest;
 import io.seqera.tower.model.WorkflowLaunchRequest;
 import picocli.CommandLine;
@@ -62,7 +61,7 @@ public class ImportCmd extends AbstractPipelinesCmd {
             throw new TowerException("Missing compute environment ID. Provide it using '--compute-env' option or field 'launch.computeEnvId'.");
         }
 
-        ComputeEnv ce = computeEnvByRef(wspId, ceRef);
+        ComputeEnvResponseDto ce = computeEnvByRef(wspId, ceRef);
 
         // Use compute env values by default
         String workDirValue = coalesce(launch.getWorkDir(), ce.getConfig().getWorkDir());

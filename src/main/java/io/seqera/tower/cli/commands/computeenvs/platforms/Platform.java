@@ -12,6 +12,7 @@
 package io.seqera.tower.cli.commands.computeenvs.platforms;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.api.DefaultApi;
 import io.seqera.tower.model.ComputeConfig;
 import io.seqera.tower.model.ComputeEnv.PlatformEnum;
 
@@ -21,5 +22,5 @@ public interface Platform {
 
     PlatformEnum type();
 
-    ComputeConfig computeConfig() throws ApiException, IOException;
+    ComputeConfig computeConfig(Long workspaceId, DefaultApi api) throws ApiException, IOException;
 }

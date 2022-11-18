@@ -13,8 +13,8 @@ package io.seqera.tower.cli.commands;
 
 import io.seqera.tower.cli.commands.runs.CancelCmd;
 import io.seqera.tower.cli.commands.runs.DeleteCmd;
-import io.seqera.tower.cli.commands.runs.RelaunchCmd;
 import io.seqera.tower.cli.commands.runs.ListCmd;
+import io.seqera.tower.cli.commands.runs.RelaunchCmd;
 import io.seqera.tower.cli.commands.runs.ViewCmd;
 import picocli.CommandLine;
 

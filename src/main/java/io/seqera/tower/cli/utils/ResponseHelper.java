@@ -13,15 +13,12 @@ package io.seqera.tower.cli.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.ApiException;
-import io.seqera.tower.StringUtil;
 import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.ApiExceptionMessage;
 import io.seqera.tower.cli.exceptions.ShowUsageException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
-import org.glassfish.jersey.internal.guava.Sets;
-import org.glassfish.jersey.message.internal.MessageBodyProviderNotFoundException;
 import picocli.CommandLine;
 
 import javax.ws.rs.ProcessingException;

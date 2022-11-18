@@ -18,8 +18,7 @@ import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.actions.ActionUpdate;
 import io.seqera.tower.cli.utils.FilesHelper;
-import io.seqera.tower.model.Action;
-import io.seqera.tower.model.ComputeEnv;
+import io.seqera.tower.model.ActionResponseDto;
 import io.seqera.tower.model.UpdateActionRequest;
 import io.seqera.tower.model.WorkflowLaunchRequest;
 import picocli.CommandLine;
@@ -48,11 +47,11 @@ public class UpdateCmd extends AbstractActionsCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
-        Action action = fetchDescribeActionResponse(actionRefOptions, wspId).getAction();
+        ActionResponseDto action = fetchDescribeActionResponse(actionRefOptions, wspId).getAction();
         String actionName = action.getName();
 
         // Retrieve the provided computeEnv or use the primary if not provided
-        ComputeEnv ce = opts.computeEnv != null ? computeEnvByRef(wspId, opts.computeEnv) : action.getLaunch().getComputeEnv();
+        String ceId = opts.computeEnv != null ? computeEnvByRef(wspId, opts.computeEnv).getId() : action.getLaunch().getComputeEnv().getId();
 
         // Use compute env values by default
         String workDirValue = opts.workDir != null ? opts.workDir : action.getLaunch().getWorkDir();
@@ -61,7 +60,7 @@ public class UpdateCmd extends AbstractActionsCmd {
 
 
         WorkflowLaunchRequest workflowLaunchRequest = new WorkflowLaunchRequest();
-        workflowLaunchRequest.computeEnvId(ce.getId())
+        workflowLaunchRequest.computeEnvId(ceId)
                 .id(action.getLaunch().getId())
                 .pipeline(action.getLaunch().getPipeline())
                 .revision(opts.revision)

@@ -27,6 +27,7 @@ jobs:
           version: '22.0.0.2'
           java-version: '11'
           components: 'native-image'
+          native-image-musl: 'true'
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Tests
@@ -41,6 +42,15 @@ jobs:
         with:
           name: linux-test-reports
           path: build/reports/tests/test/
+
+      - name: Build fat JAR
+        run: ./gradlew shadowJar
+
+      - name: Upload fat JAR artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: tw_jar
+          path: build/libs/tw.jar
 
       - name: Build Native Image
         run: ./gradlew nativeCompile

@@ -15,8 +15,11 @@
 package io.seqera.tower.cli.credentials.providers;
 
 import io.seqera.tower.cli.BaseCmdTest;
+import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.responses.CredentialsAdded;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 
@@ -30,8 +33,9 @@ import static org.mockserver.model.HttpResponse.response;
 
 class AgentProviderTest extends BaseCmdTest {
 
-    @Test
-    void testAdd(MockServerClient mock) throws IOException {
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAdd(OutputType format, MockServerClient mock) throws IOException {
 
         mock.when(
                 request().withMethod("POST").withPath("/credentials").withBody("{\"credentials\":{\"keys\":{\"connectionId\":\"connection_id\",\"workDir\":\"/work\"},\"name\":\"agent_test\",\"provider\":\"tw-agent\"}}"), exactly(1)
@@ -39,12 +43,8 @@ class AgentProviderTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"credentialsId\":\"1cz5A8cuBkB5iJliCwJCFJ\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "credentials", "add", "agent", "-n", "agent_test", "--connection-id", "connection_id", "--work-dir", "/work");
-
-        assertEquals("", out.stdErr);
-        assertEquals(new CredentialsAdded("tw_agent", "1cz5A8cuBkB5iJliCwJCFJ", "agent_test", USER_WORKSPACE_NAME).toString(), out.stdOut);
-        assertEquals(0, out.exitCode);
-
+        ExecOut out = exec(format, mock, "credentials", "add", "agent", "-n", "agent_test", "--connection-id", "connection_id", "--work-dir", "/work");
+        assertOutput(format, out, new CredentialsAdded("TW_AGENT", "1cz5A8cuBkB5iJliCwJCFJ", "agent_test", USER_WORKSPACE_NAME));
     }
 
 }

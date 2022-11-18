@@ -17,8 +17,8 @@ import io.seqera.tower.cli.commands.computeenvs.platforms.Platform;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.exceptions.TowerException;
-import io.seqera.tower.cli.responses.computeenvs.ComputeEnvAdded;
 import io.seqera.tower.cli.responses.Response;
+import io.seqera.tower.cli.responses.computeenvs.ComputeEnvAdded;
 import io.seqera.tower.model.ComputeConfig;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.ComputeEnvStatus;
@@ -30,10 +30,9 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Supplier;
 
 import static io.seqera.tower.cli.utils.ResponseHelper.waitStatus;
 
@@ -54,7 +53,8 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        return addComputeEnv(getPlatform().type(), getPlatform().computeConfig());
+        Long wspId = workspaceId(workspace.workspace);
+        return addComputeEnv(getPlatform().type(), getPlatform().computeConfig(wspId, api()));
     }
 
     @Override
@@ -83,7 +83,7 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
 
     private ComputeEnvStatus checkComputeEnvStatus(String computeEnvId, Long workspaceId) {
         try {
-            return api().describeComputeEnv(computeEnvId, workspaceId).getComputeEnv().getStatus();
+            return api().describeComputeEnv(computeEnvId, workspaceId, Collections.emptyList()).getComputeEnv().getStatus();
         } catch (ApiException | NullPointerException e) {
             return null;
         }

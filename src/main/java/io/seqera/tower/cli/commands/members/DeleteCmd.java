@@ -11,14 +11,14 @@
 
 package io.seqera.tower.cli.commands.members;
 
-import java.io.IOException;
-
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.members.MembersDeleted;
 import io.seqera.tower.model.MemberDbDto;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import picocli.CommandLine;
+
+import java.io.IOException;
 
 @CommandLine.Command(
         name = "delete",

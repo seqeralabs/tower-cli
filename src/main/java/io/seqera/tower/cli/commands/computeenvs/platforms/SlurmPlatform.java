@@ -55,6 +55,7 @@ public class SlurmPlatform extends AbstractPlatform<SlurmComputeConfig> {
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
+                .environment(environmentVariables())
 
                 // Main
                 .launchDir(launchDir)

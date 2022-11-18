@@ -55,6 +55,7 @@ public class UnivaPlatform extends AbstractPlatform<UnivaComputeConfig> {
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
+                .environment(environmentVariables())
 
                 // Main
                 .launchDir(launchDir)

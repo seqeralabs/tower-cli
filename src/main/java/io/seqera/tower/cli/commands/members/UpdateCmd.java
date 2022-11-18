@@ -11,8 +11,6 @@
 
 package io.seqera.tower.cli.commands.members;
 
-import java.io.IOException;
-
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.members.MembersUpdate;
@@ -21,6 +19,8 @@ import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import io.seqera.tower.model.OrgRole;
 import io.seqera.tower.model.UpdateMemberRoleRequest;
 import picocli.CommandLine;
+
+import java.io.IOException;
 
 @CommandLine.Command(
         name = "update",

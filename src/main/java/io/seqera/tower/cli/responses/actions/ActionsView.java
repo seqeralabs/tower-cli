@@ -11,8 +11,6 @@
 
 package io.seqera.tower.cli.responses.actions;
 
-import java.io.PrintWriter;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.JSON;
@@ -20,20 +18,22 @@ import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.FormatHelper;
 import io.seqera.tower.cli.utils.ModelHelper;
 import io.seqera.tower.cli.utils.TableList;
-import io.seqera.tower.model.Action;
+import io.seqera.tower.model.ActionResponseDto;
 import io.seqera.tower.model.WorkflowLaunchRequest;
+
+import java.io.PrintWriter;
 
 import static io.seqera.tower.cli.utils.FormatHelper.formatActionId;
 import static io.seqera.tower.cli.utils.FormatHelper.formatActionStatus;
 
 public class ActionsView extends Response {
 
-    final public Action action;
+    final public ActionResponseDto action;
 
     @JsonIgnore
     private String baseWorkspaceUrl;
 
-    public ActionsView(Action action, String baseWorkspaceUrl) {
+    public ActionsView(ActionResponseDto action, String baseWorkspaceUrl) {
         this.action = action;
         this.baseWorkspaceUrl = baseWorkspaceUrl;
     }

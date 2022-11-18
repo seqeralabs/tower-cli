@@ -464,15 +464,15 @@ class RunsCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("GET").withPath("/workflow/5UVJlhfUAHTuAP"), exactly(1)
+                request().withMethod("GET").withPath("/workflow/5mDfiUtqyptDib"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("workflow_view")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
-                request().withMethod("GET").withPath("/launch/5SCyEXKrCqFoGzOXGpesr5"), exactly(1)
+                request().withMethod("GET").withPath("/workflow/5mDfiUtqyptDib/launch"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResource("launch_view")).withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(loadResource("runs/workflow_launch")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
@@ -482,7 +482,7 @@ class RunsCmdTest extends BaseCmdTest {
         );
 
 
-        ExecOut out = exec(format, mock, "runs", "relaunch", "-i", "5UVJlhfUAHTuAP");
+        ExecOut out = exec(format, mock, "runs", "relaunch", "-i", "5mDfiUtqyptDib");
         assertOutput(format, out, new RunSubmited("35aLiS0bIM5efd", null, String.format("%s/user/jordi/watch/35aLiS0bIM5efd", url(mock)), "user"));
     }
 

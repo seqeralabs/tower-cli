@@ -12,9 +12,7 @@
 package io.seqera.tower.cli.commands.actions;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
-import io.seqera.tower.cli.commands.ActionsCmd;
 import io.seqera.tower.cli.exceptions.ActionNotFoundException;
 import io.seqera.tower.model.DescribeActionResponse;
 import io.seqera.tower.model.ListActionsResponse;
@@ -29,7 +27,7 @@ import java.util.stream.Collectors;
 public abstract class AbstractActionsCmd extends AbstractApiCmd {
 
     protected ListActionsResponseActionInfo actionByName(Long workspaceId, String actionName) throws ApiException {
-        ListActionsResponse listActionResponse = api().listActions(workspaceId);
+        ListActionsResponse listActionResponse = api().listActions(workspaceId, NO_ACTION_ATTRIBUTES);
 
         if (listActionResponse == null || listActionResponse.getActions() == null) {
             throw new ActionNotFoundException(workspaceRef(workspaceId));
@@ -51,10 +49,10 @@ public abstract class AbstractActionsCmd extends AbstractApiCmd {
         DescribeActionResponse response;
 
         if (actionRefOptions.action.actionId != null) {
-            response = api().describeAction(actionRefOptions.action.actionId, wspId);
+            response = api().describeAction(actionRefOptions.action.actionId, wspId, NO_ACTION_ATTRIBUTES);
         } else {
             ListActionsResponseActionInfo listActionsResponseActionInfo = actionByName(wspId, actionRefOptions.action.actionName);
-            response = api().describeAction(listActionsResponseActionInfo.getId(), wspId);
+            response = api().describeAction(listActionsResponseActionInfo.getId(), wspId, NO_ACTION_ATTRIBUTES);
         }
 
         return response;

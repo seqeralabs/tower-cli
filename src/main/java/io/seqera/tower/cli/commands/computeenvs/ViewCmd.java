@@ -14,9 +14,9 @@ package io.seqera.tower.cli.commands.computeenvs;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
-import io.seqera.tower.cli.responses.computeenvs.ComputeEnvView;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.model.ComputeEnv;
+import io.seqera.tower.cli.responses.computeenvs.ComputeEnvView;
+import io.seqera.tower.model.ComputeEnvResponseDto;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
@@ -37,7 +37,7 @@ public class ViewCmd extends AbstractComputeEnvCmd {
         Long wspId = workspaceId(workspace.workspace);
 
         try {
-            ComputeEnv computeEnv = fetchComputeEnv(computeEnvRefOptions, wspId);
+            ComputeEnvResponseDto computeEnv = fetchComputeEnv(computeEnvRefOptions, wspId);
 
             return new ComputeEnvView(computeEnv.getId(), workspaceRef(wspId), computeEnv, baseWorkspaceUrl(wspId));
         } catch (ApiException e) {

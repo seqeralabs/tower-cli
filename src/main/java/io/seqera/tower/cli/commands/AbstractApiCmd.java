@@ -15,20 +15,23 @@ import io.seqera.tower.ApiClient;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.api.DefaultApi;
 import io.seqera.tower.cli.Tower;
-import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
 import io.seqera.tower.cli.exceptions.InvalidWorkspaceParameterException;
+import io.seqera.tower.cli.exceptions.MissingTowerAccessTokenException;
 import io.seqera.tower.cli.exceptions.NoComputeEnvironmentException;
 import io.seqera.tower.cli.exceptions.OrganizationNotFoundException;
 import io.seqera.tower.cli.exceptions.ShowUsageException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.exceptions.WorkspaceNotFoundException;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.model.ComputeEnv;
+import io.seqera.tower.model.ActionQueryAttribute;
+import io.seqera.tower.model.ComputeEnvQueryAttribute;
+import io.seqera.tower.model.ComputeEnvResponseDto;
 import io.seqera.tower.model.ListComputeEnvsResponseEntry;
 import io.seqera.tower.model.ListWorkspacesAndOrgResponse;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import io.seqera.tower.model.User;
+import io.seqera.tower.model.WorkflowQueryAttribute;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.media.multipart.BodyPart;
@@ -38,8 +41,8 @@ import picocli.CommandLine;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.URLConnection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +58,12 @@ public abstract class AbstractApiCmd extends AbstractCmd {
 
     public static final String USER_WORKSPACE_NAME = "user";
     public static final String WORKSPACE_REF_SEPARATOR = "/";
+
+    // No attributes constants
+    public static final List<ComputeEnvQueryAttribute> NO_CE_ATTRIBUTES = Collections.EMPTY_LIST;
+    public static final List<WorkflowQueryAttribute> NO_WORKFLOW_ATTRIBUTES = Collections.EMPTY_LIST;
+    public static final List<ActionQueryAttribute> NO_ACTION_ATTRIBUTES = Collections.EMPTY_LIST;
+
 
     private DefaultApi api;
 
@@ -89,6 +98,11 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         }
 
         if (api == null) {
+
+            if (app().token == null) {
+                throw new MissingTowerAccessTokenException();
+            }
+
             ApiClient client = buildApiClient();
             client.setServerIndex(null);
             client.setBasePath(app().url);
@@ -227,7 +241,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         return workspaceId;
     }
 
-    protected ComputeEnv computeEnvByRef(Long workspaceId, String ref) throws ApiException {
+    protected ComputeEnvResponseDto computeEnvByRef(Long workspaceId, String ref) throws ApiException {
         loadAvailableComputeEnvs(workspaceId);
 
         String ceId = availableComputeEnvsIdToName.containsKey(ref) ? ref : availableComputeEnvsNameToId.getOrDefault(ref, null);
@@ -235,10 +249,10 @@ public abstract class AbstractApiCmd extends AbstractCmd {
             throw new ComputeEnvNotFoundException(ref, workspaceId);
         }
 
-        return api.describeComputeEnv(ceId, workspaceId).getComputeEnv();
+        return api.describeComputeEnv(ceId, workspaceId, NO_CE_ATTRIBUTES).getComputeEnv();
     }
 
-    protected ComputeEnv primaryComputeEnv(Long workspaceId) throws ApiException {
+    protected ComputeEnvResponseDto primaryComputeEnv(Long workspaceId) throws ApiException {
         if (primaryComputeEnvId == null) {
             loadAvailableComputeEnvs(workspaceId);
         }
@@ -247,7 +261,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
             throw new NoComputeEnvironmentException(workspaceRef(workspaceId));
         }
 
-        return api().describeComputeEnv(primaryComputeEnvId, workspaceId).getComputeEnv();
+        return api().describeComputeEnv(primaryComputeEnvId, workspaceId, NO_CE_ATTRIBUTES).getComputeEnv();
     }
 
     protected String serverUrl() {
@@ -310,7 +324,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     }
 
     private void loadUser() throws ApiException {
-        User user = api().user().getUser();
+        User user = api().profile().getUser();
         userName = user.getUserName();
         userId = user.getId();
     }

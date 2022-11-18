@@ -44,6 +44,7 @@ public class AzBatchManualPlatform extends AbstractPlatform<AzBatchConfig> {
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
+                .environment(environmentVariables())
                 .region(location)
                 .headPool(computePoolName);
 

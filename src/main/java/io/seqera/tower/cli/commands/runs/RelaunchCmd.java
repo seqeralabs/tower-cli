@@ -14,16 +14,18 @@ package io.seqera.tower.cli.commands.runs;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.commands.pipelines.LaunchOptions;
+import io.seqera.tower.cli.exceptions.LaunchNotFoundException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.runs.RunSubmited;
 import io.seqera.tower.cli.utils.FilesHelper;
-import io.seqera.tower.model.ComputeEnv;
-import io.seqera.tower.model.Launch;
+import io.seqera.tower.model.ComputeEnvResponseDto;
+import io.seqera.tower.model.DescribeWorkflowLaunchResponse;
 import io.seqera.tower.model.SubmitWorkflowLaunchRequest;
 import io.seqera.tower.model.SubmitWorkflowLaunchResponse;
 import io.seqera.tower.model.Workflow;
 import io.seqera.tower.model.WorkflowLaunchRequest;
+import io.seqera.tower.model.WorkflowLaunchResponse;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
@@ -31,6 +33,9 @@ import picocli.CommandLine.Option;
 
 import java.io.IOException;
 import java.time.OffsetDateTime;
+
+import static io.seqera.tower.cli.utils.ModelHelper.coalesce;
+import static io.seqera.tower.cli.utils.ModelHelper.removeEmptyValues;
 
 @Command(
         name = "relaunch",
@@ -50,6 +55,9 @@ public class RelaunchCmd extends AbstractRunsCmd {
     @Option(names = {"--no-resume"}, description = "Do not resume the pipeline run.")
     public boolean noResume;
 
+    @Option(names = {"-n", "--name"}, description = "Custom workflow run name")
+    public String name;
+
     @Mixin
     public LaunchOptions opts;
 
@@ -62,32 +70,40 @@ public class RelaunchCmd extends AbstractRunsCmd {
         }
 
         Workflow workflow = workflowById(wspId, id).getWorkflow();
-        Launch launch = launchById(wspId, workflow.getLaunchId());
+        WorkflowLaunchResponse launch = workflowLaunchResponse(workflow.getId(), wspId);
 
-        ComputeEnv ce = null;
+        ComputeEnvResponseDto ce = null;
         if (opts.computeEnv != null) {
             ce = computeEnvByRef(wspId, opts.computeEnv);
+        }
+
+        // Check if it's not possible to resume the workflow
+        if (launch.getResumeCommitId() == null) {
+            noResume = true;
         }
 
         WorkflowLaunchRequest workflowLaunchRequest = new WorkflowLaunchRequest()
                 .id(workflow.getLaunchId())
                 .sessionId(launch.getSessionId())
                 .computeEnvId(ce != null ? ce.getId() : launch.getComputeEnv().getId())
-                .pipeline(pipeline != null ? pipeline : launch.getPipeline())
-                .workDir(opts.workDir != null ? opts.workDir : workflow.getWorkDir())
-                .revision(opts.revision != null ? opts.revision : workflow.getRevision())
-                .configProfiles(opts.profile != null ? opts.profile : launch.getConfigProfiles())
-                .configText(opts.config != null ? FilesHelper.readString(opts.config) : workflow.getConfigText())
+                .pipeline(coalesce(pipeline, launch.getPipeline()))
+                .workDir(opts.workDir != null ? opts.workDir : selectWorkDir(!noResume, launch.getResumeDir(), launch.getWorkDir(), workflow.getWorkDir()))
+                .revision(coalesce(opts.revision, (noResume ? launch.getRevision() : launch.getResumeCommitId())))
+                .configProfiles(coalesce(opts.profile, launch.getConfigProfiles()))
+                .configText(opts.config != null ? FilesHelper.readString(opts.config) : launch.getConfigText())
                 .paramsText(opts.paramsFile != null ? FilesHelper.readString(opts.paramsFile) : launch.getParamsText())
                 .preRunScript(opts.preRunScript != null ? FilesHelper.readString(opts.preRunScript) : launch.getPreRunScript())
                 .postRunScript(opts.postRunScript != null ? FilesHelper.readString(opts.postRunScript) : launch.getPostRunScript())
-                .mainScript(opts.mainScript != null ? opts.mainScript : launch.getPostRunScript())
-                .entryName(opts.entryName != null ? opts.entryName : launch.getEntryName())
-                .schemaName(opts.schemaName != null ? opts.schemaName : launch.getSchemaName())
+                .mainScript(coalesce(opts.mainScript, launch.getMainScript()))
+                .entryName(coalesce(opts.entryName,  launch.getEntryName()))
+                .schemaName(coalesce(opts.schemaName, launch.getSchemaName()))
+                .userSecrets(coalesce(removeEmptyValues(opts.userSecrets), launch.getUserSecrets()))
+                .workspaceSecrets(coalesce(removeEmptyValues(opts.workspaceSecrets), launch.getWorkspaceSecrets()))
                 .resume(!noResume)
-                .pullLatest(opts.pullLatest != null ? opts.pullLatest : launch.getPullLatest())
-                .stubRun(opts.stubRun != null ? opts.stubRun : launch.getStubRun())
-                .dateCreated(OffsetDateTime.now());
+                .pullLatest(coalesce(opts.pullLatest, launch.getPullLatest()))
+                .stubRun(coalesce(opts.stubRun, launch.getStubRun()))
+                .dateCreated(OffsetDateTime.now())
+                .runName(name);
 
         if (!noResume) {
             workflowLaunchRequest.sessionId(workflow.getSessionId());
@@ -96,10 +112,27 @@ public class RelaunchCmd extends AbstractRunsCmd {
         SubmitWorkflowLaunchRequest submitWorkflowLaunchRequest = new SubmitWorkflowLaunchRequest()
                 .launch(workflowLaunchRequest);
 
-        Long sourceWorkspaceId = launch.getComputeEnv() != null ? launch.getComputeEnv().getWorkspaceId() : null;
-        SubmitWorkflowLaunchResponse response = api().createWorkflowLaunch(submitWorkflowLaunchRequest, wspId, sourceWorkspaceId);
+        SubmitWorkflowLaunchResponse response = api().createWorkflowLaunch(submitWorkflowLaunchRequest, wspId, null,null);
 
         return new RunSubmited(response.getWorkflowId(), wspId, workflowWatchUrl(response.getWorkflowId(), wspId), workspaceRef(wspId));
+    }
+
+    private String selectWorkDir(boolean isResume, String launchResumeDir, String launchWorkDir, String workflowWorkDir) {
+        if (isResume) {
+            return launchResumeDir;
+        }
+        if (launchWorkDir != null) {
+            return launchWorkDir;
+        }
+        return workflowWorkDir;
+    }
+
+    private WorkflowLaunchResponse workflowLaunchResponse(String workflowId, Long workspaceId) throws ApiException {
+        DescribeWorkflowLaunchResponse launchResponse = api().describeWorkflowLaunch(workflowId, workspaceId);
+        if (launchResponse == null) {
+            throw new LaunchNotFoundException(id, workspaceRef(workspaceId));
+        }
+        return launchResponse.getLaunch();
     }
 
     private String workflowWatchUrl(String workflowId, Long wspId) throws ApiException {

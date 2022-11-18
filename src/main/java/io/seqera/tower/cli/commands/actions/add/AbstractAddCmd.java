@@ -20,7 +20,7 @@ import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.actions.ActionAdd;
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.ActionSource;
-import io.seqera.tower.model.ComputeEnv;
+import io.seqera.tower.model.ComputeEnvResponseDto;
 import io.seqera.tower.model.CreateActionRequest;
 import io.seqera.tower.model.CreateActionResponse;
 import io.seqera.tower.model.WorkflowLaunchRequest;
@@ -47,7 +47,7 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
         Long wspId = workspaceId(workspace.workspace);
 
         // Retrieve the provided computeEnv or use the primary if not provided
-        ComputeEnv ce = opts.computeEnv != null ? computeEnvByRef(wspId, opts.computeEnv) : primaryComputeEnv(wspId);
+        ComputeEnvResponseDto ce = opts.computeEnv != null ? computeEnvByRef(wspId, opts.computeEnv) : primaryComputeEnv(wspId);
 
         // Use compute env values by default
         String workDirValue = opts.workDir != null ? opts.workDir : ce.getConfig() != null ? ce.getConfig().getWorkDir() : null;

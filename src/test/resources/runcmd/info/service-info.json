@@ -1,12 +1,11 @@
 {
   "serviceInfo": {
-    "version": "21.10.0",
-    "apiVersion": "1.9.0",
-    "commitId": "b101b372",
+    "version": "22.3.0-torricelli",
+    "apiVersion": "1.15.0",
+    "commitId": "3f04bfd4",
     "authTypes": [
       "github",
-      "google",
-      "oidc"
+      "google"
     ],
     "loginPath": "/login",
     "navbar": {
@@ -17,7 +16,7 @@
         },
         {
           "label": "Community",
-          "url": "https://gitter.im/nf-tower/community"
+          "url": "https://cloud.tower.nf/community/"
         },
         {
           "label": "Feedback",
@@ -26,7 +25,25 @@
       ]
     },
     "heartbeatInterval": 3240,
+    "userWorkspaceEnabled": true,
     "allowInstanceCredentials": false,
-    "landingUrl": null
+    "landingUrl": "https://cloud.tower.nf",
+    "termsOfUseUrl": "https://cloud.tower.nf/legal",
+    "contentUrl": "https://user-data.tower.nf",
+    "analytics": {
+      "url": "https://analytics.tower.nf",
+      "siteId": 2
+    },
+    "allowLocalRepos": true,
+    "contentMaxFileSize": 26214400,
+    "waveEnabled": true,
+    "waveAllowedWorkspaces": [
+      40230138858677,
+      200813881126734,
+      70508760960023,
+      161997551968002,
+      34830707738561,
+      215559034546785
+    ]
   }
 }

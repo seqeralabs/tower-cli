@@ -19,6 +19,8 @@ import io.seqera.tower.model.ListPipelinesResponse;
 import io.seqera.tower.model.PipelineDbDto;
 import picocli.CommandLine.Command;
 
+import java.util.Collections;
+
 @Command
 public abstract class AbstractPipelinesCmd extends AbstractApiCmd {
 
@@ -27,7 +29,7 @@ public abstract class AbstractPipelinesCmd extends AbstractApiCmd {
 
     protected PipelineDbDto pipelineByName(Long workspaceId, String name) throws ApiException {
 
-        ListPipelinesResponse list = api().listPipelines(workspaceId, null, null, name, null);
+        ListPipelinesResponse list = api().listPipelines(Collections.emptyList(), workspaceId, null, null, name, null);
 
         if (list.getPipelines().isEmpty()) {
             throw new PipelineNotFoundException(name, workspaceRef(workspaceId));
@@ -44,7 +46,7 @@ public abstract class AbstractPipelinesCmd extends AbstractApiCmd {
         PipelineDbDto pipeline;
 
         if (pipelineRefOptions.pipeline.pipelineId != null) {
-            pipeline = api().describePipeline(pipelineRefOptions.pipeline.pipelineId, wspId).getPipeline();
+            pipeline = api().describePipeline(pipelineRefOptions.pipeline.pipelineId, Collections.emptyList(), wspId, null).getPipeline();
         } else {
             pipeline = pipelineByName(wspId, pipelineRefOptions.pipeline.pipelineName);
         }

@@ -8,6 +8,9 @@ project:
   license: MPL-2.0
   extraProperties:
     inceptionYear: 2021
+  java:
+    groupId: io.seqera.tower.cli
+    version: 11
 
 release:
   github:
@@ -85,3 +88,7 @@ distributions:
       - path: "tw_windows/tw.exe"
         transform: "{{distributionName}}-{{projectEffectiveVersion}}-windows-x86_64.exe"
         platform: windows-x86_64
+  tw-jar:
+    type: SINGLE_JAR
+    artifacts:
+      - path: "tw_jar/tw.jar"

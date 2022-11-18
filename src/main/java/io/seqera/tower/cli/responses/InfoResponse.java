@@ -66,7 +66,7 @@ public class InfoResponse extends Response {
         }
 
         if (versionCheck == 0) {
-            out.println(ansi(String.format("%n    @|bold,fg(red) Tower API version is %s while the minimum required version to be fully compatible is %s|@%n", opts.get("cliApiVersion"), opts.get("cliApiVersion"))));
+            out.println(ansi(String.format("%n    @|bold,fg(red) Tower API version is %s while the minimum required version to be fully compatible is %s|@%n", opts.get("towerApiVersion"), opts.get("cliApiVersion"))));
         }
 
         if (credentialsCheck == 0) {
