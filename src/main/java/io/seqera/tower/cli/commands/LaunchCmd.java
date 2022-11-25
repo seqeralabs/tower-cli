@@ -20,6 +20,7 @@ import io.seqera.tower.cli.responses.runs.RunSubmited;
 import io.seqera.tower.model.ComputeEnvResponseDto;
 import io.seqera.tower.model.Launch;
 import io.seqera.tower.model.ListPipelinesResponse;
+import io.seqera.tower.model.PipelineDbDto;
 import io.seqera.tower.model.SubmitWorkflowLaunchRequest;
 import io.seqera.tower.model.SubmitWorkflowLaunchResponse;
 import io.seqera.tower.model.WorkflowLaunchRequest;
@@ -104,7 +105,7 @@ public class LaunchCmd extends AbstractRootCmd {
                 .workDir(ce.getConfig().getWorkDir())
                 .preRunScript(ce.getConfig().getPreRunScript())
                 .postRunScript(ce.getConfig().getPostRunScript())
-        ), wspId);
+        ), wspId, null);
     }
 
     private WorkflowLaunchRequest updateLaunchRequest(WorkflowLaunchRequest base) throws IOException {
@@ -130,7 +131,7 @@ public class LaunchCmd extends AbstractRootCmd {
     }
 
     protected Response runTowerPipeline(Long wspId) throws ApiException, IOException {
-        ListPipelinesResponse pipelines = api().listPipelines(Collections.emptyList(), wspId, 2, 0, pipeline, null);
+        ListPipelinesResponse pipelines = api().listPipelines(Collections.emptyList(), wspId, 2, 0, pipeline, "all");
         if (pipelines.getTotalSize() == 0) {
             throw new InvalidResponseException(String.format("Pipeline '%s' not found on this workspace.", pipeline));
         }
@@ -139,19 +140,30 @@ public class LaunchCmd extends AbstractRootCmd {
             throw new InvalidResponseException(String.format("Multiple pipelines match '%s'", pipeline));
         }
 
-        Long pipelineId = pipelines.getPipelines().get(0).getPipelineId();
-        Launch launch = api().describePipelineLaunch(pipelineId, wspId).getLaunch();
+        PipelineDbDto pipeline = pipelines.getPipelines().get(0);
+        Long sourceWorkspaceId = wspId.equals(pipeline.getWorkspaceId()) ? null : pipeline.getWorkspaceId();
+
+        Launch launch = api().describePipelineLaunch(pipeline.getPipelineId(), wspId, sourceWorkspaceId).getLaunch();
 
         WorkflowLaunchRequest launchRequest = createLaunchRequest(launch);
         if (computeEnv != null) {
             launchRequest.computeEnvId(computeEnvByRef(wspId, computeEnv).getId());
         }
 
-        return submitWorkflow(updateLaunchRequest(launchRequest), wspId);
+        if (launchRequest.getComputeEnvId() == null) {
+            launchRequest.computeEnvId(primaryComputeEnv(wspId).getId());
+        }
+
+        if (launchRequest.getWorkDir() == null) {
+            ComputeEnvResponseDto ce = api().describeComputeEnv(launchRequest.getComputeEnvId(), wspId, NO_CE_ATTRIBUTES).getComputeEnv();
+            launchRequest.workDir(ce.getConfig().getWorkDir());
+        }
+
+        return submitWorkflow(updateLaunchRequest(launchRequest), wspId, sourceWorkspaceId);
     }
 
-    protected Response submitWorkflow(WorkflowLaunchRequest launch, Long wspId) throws ApiException {
-        SubmitWorkflowLaunchResponse response = api().createWorkflowLaunch(new SubmitWorkflowLaunchRequest().launch(launch), wspId, null, null);
+    protected Response submitWorkflow(WorkflowLaunchRequest launch, Long wspId, Long sourceWorkspaceId) throws ApiException {
+        SubmitWorkflowLaunchResponse response = api().createWorkflowLaunch(new SubmitWorkflowLaunchRequest().launch(launch), wspId, null, sourceWorkspaceId);
         String workflowId = response.getWorkflowId();
         return new RunSubmited(workflowId, wspId, baseWorkspaceUrl(wspId), workspaceRef(wspId));
     }

@@ -25,7 +25,7 @@ public class ModelHelper {
     public static WorkflowLaunchRequest createLaunchRequest(Launch launch) {
         return new WorkflowLaunchRequest()
                 .id(launch.getId())
-                .computeEnvId(launch.getComputeEnv().getId())
+                .computeEnvId(launch.getComputeEnv() != null ? launch.getComputeEnv().getId() : null)
                 .pipeline(launch.getPipeline())
                 .workDir(launch.getWorkDir())
                 .revision(launch.getRevision())
