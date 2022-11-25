@@ -131,19 +131,26 @@ public class LaunchCmd extends AbstractRootCmd {
     }
 
     protected Response runTowerPipeline(Long wspId) throws ApiException, IOException {
-        ListPipelinesResponse pipelines = api().listPipelines(Collections.emptyList(), wspId, 2, 0, pipeline, "all");
+        ListPipelinesResponse pipelines = api().listPipelines(Collections.emptyList(), wspId, 50, 0, pipeline, "all");
         if (pipelines.getTotalSize() == 0) {
             throw new InvalidResponseException(String.format("Pipeline '%s' not found on this workspace.", pipeline));
         }
 
-        if (pipelines.getTotalSize() > 1) {
-            throw new InvalidResponseException(String.format("Multiple pipelines match '%s'", pipeline));
+        PipelineDbDto pipe = null;
+        for (PipelineDbDto p : pipelines.getPipelines()) {
+            if (pipeline.equals(p.getName())) {
+                pipe = p;
+                break;
+            }
         }
 
-        PipelineDbDto pipeline = pipelines.getPipelines().get(0);
-        Long sourceWorkspaceId = sourceWorkspaceId(wspId, pipeline);
+        if (pipe == null) {
+            throw new InvalidResponseException(String.format("Pipeline '%s' not found", pipe));
+        }
 
-        Launch launch = api().describePipelineLaunch(pipeline.getPipelineId(), wspId, sourceWorkspaceId).getLaunch();
+        Long sourceWorkspaceId = sourceWorkspaceId(wspId, pipe);
+
+        Launch launch = api().describePipelineLaunch(pipe.getPipelineId(), wspId, sourceWorkspaceId).getLaunch();
 
         WorkflowLaunchRequest launchRequest = createLaunchRequest(launch);
         if (computeEnv != null) {
