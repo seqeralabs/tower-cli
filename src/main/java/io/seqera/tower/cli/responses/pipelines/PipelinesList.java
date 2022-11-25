@@ -45,13 +45,13 @@ public class PipelinesList extends Response {
             return;
         }
 
-        TableList table = new TableList(out, 3, "ID", "Name", "Repository", "Description").sortBy(0);
+        TableList table = new TableList(out, 4, "ID", "Name", "Repository", "Visibility").sortBy(0);
         table.setPrefix("    ");
         pipelines.forEach(pipe -> table.addRow(
                 formatPipelineId(pipe.getPipelineId(), baseWorkspaceUrl),
                 pipe.getName(),
                 pipe.getRepository(),
-                pipe.getDescription()
+                pipe.getVisibility()
         ));
         table.print();
         out.println("");
