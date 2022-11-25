@@ -141,7 +141,7 @@ public class LaunchCmd extends AbstractRootCmd {
         }
 
         PipelineDbDto pipeline = pipelines.getPipelines().get(0);
-        Long sourceWorkspaceId = wspId.equals(pipeline.getWorkspaceId()) ? null : pipeline.getWorkspaceId();
+        Long sourceWorkspaceId = sourceWorkspaceId(wspId, pipeline);
 
         Launch launch = api().describePipelineLaunch(pipeline.getPipelineId(), wspId, sourceWorkspaceId).getLaunch();
 

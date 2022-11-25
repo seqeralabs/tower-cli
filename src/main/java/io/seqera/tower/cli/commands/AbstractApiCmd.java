@@ -30,6 +30,7 @@ import io.seqera.tower.model.ComputeEnvResponseDto;
 import io.seqera.tower.model.ListComputeEnvsResponseEntry;
 import io.seqera.tower.model.ListWorkspacesAndOrgResponse;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
+import io.seqera.tower.model.PipelineDbDto;
 import io.seqera.tower.model.User;
 import io.seqera.tower.model.WorkflowQueryAttribute;
 import org.glassfish.jersey.client.ClientConfig;
@@ -379,6 +380,19 @@ public abstract class AbstractApiCmd extends AbstractCmd {
             return USER_WORKSPACE_NAME;
         }
         return buildWorkspaceRef(orgName(workspaceId), workspaceName(workspaceId));
+    }
+
+    protected Long sourceWorkspaceId(Long currentWorkspace, PipelineDbDto pipeline) {
+        if (pipeline == null)
+            return null;
+
+        if (pipeline.getWorkspaceId() == null)
+            return null;
+
+        if (pipeline.getWorkspaceId().equals(currentWorkspace))
+            return null;
+
+        return pipeline.getWorkspaceId();
     }
 
     @Override

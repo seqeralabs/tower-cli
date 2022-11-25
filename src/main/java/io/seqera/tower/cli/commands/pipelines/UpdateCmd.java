@@ -67,7 +67,7 @@ public class UpdateCmd extends AbstractPipelinesCmd {
             id = pipe.getPipelineId();
         }
 
-        Long sourceWorkspaceId = wspId.equals(pipe.getWorkspaceId()) ? null : pipe.getWorkspaceId();
+        Long sourceWorkspaceId = sourceWorkspaceId(wspId, pipe);
         Launch launch = api().describePipelineLaunch(id, wspId, sourceWorkspaceId).getLaunch();
 
         // Retrieve the provided computeEnv or use the primary if not provided
