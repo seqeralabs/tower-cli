@@ -36,6 +36,9 @@ public class ListCmd extends AbstractPipelinesCmd {
     @CommandLine.Option(names = {"-f", "--filter"}, description = "Show only pipelines that contain the given word.")
     public String filter;
 
+    @CommandLine.Option(names = {"--visibility"}, description = "Show pipelines: ${COMPLETION-CANDIDATES} [default: private].", defaultValue = "private")
+    public PipelineVisibility visibility;
+
     @CommandLine.Mixin
     PaginationOptions paginationOptions;
 
@@ -48,7 +51,7 @@ public class ListCmd extends AbstractPipelinesCmd {
         ListPipelinesResponse response = new ListPipelinesResponse();
 
         try {
-           response = api().listPipelines(Collections.emptyList(), wspId, max, offset, filter, null);
+           response = api().listPipelines(Collections.emptyList(), wspId, max, offset, filter, visibility.toString());
 
         } catch (ApiException apiException) {
             if (apiException.getCode() == 404){
