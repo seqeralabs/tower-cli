@@ -72,26 +72,6 @@ class LaunchCmdTest extends BaseCmdTest {
         assertEquals(1, out.exitCode);
     }
 
-    @Test
-    void testMultiplePipelinesFound(MockServerClient mock) {
-
-        mock.reset();
-
-        // Create server expectation
-        mock.when(
-                request().withMethod("GET").withPath("/pipelines"), exactly(1)
-        ).respond(
-                response().withStatusCode(200).withBody(loadResource("pipelines_multiple")).withContentType(MediaType.APPLICATION_JSON)
-        );
-
-        // Run the command
-        ExecOut out = exec(mock, "launch", "hello");
-
-        // Assert results
-        assertEquals(errorMessage(out.app, new InvalidResponseException("Multiple pipelines match 'hello'")), out.stdErr);
-        assertEquals(1, out.exitCode);
-    }
-
     @ParameterizedTest
     @EnumSource(OutputType.class)
     void testSubmitLaunchpadPipeline(OutputType format, MockServerClient mock) {
