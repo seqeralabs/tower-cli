@@ -2499,6 +2499,7 @@
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
   "methods":[
+    {"name":"<init>","parameterTypes":[] }, 
     {"name":"getBootDiskSizeGb","parameterTypes":[] }, 
     {"name":"getCopyImage","parameterTypes":[] }, 
     {"name":"getCpuPlatform","parameterTypes":[] }, 
@@ -2519,7 +2520,27 @@
     {"name":"getSshDaemon","parameterTypes":[] }, 
     {"name":"getSshImage","parameterTypes":[] }, 
     {"name":"getUsePrivateAddress","parameterTypes":[] }, 
-    {"name":"getWorkDir","parameterTypes":[] }
+    {"name":"getWorkDir","parameterTypes":[] }, 
+    {"name":"setBootDiskSizeGb","parameterTypes":["java.lang.Integer"] }, 
+    {"name":"setCopyImage","parameterTypes":["java.lang.String"] }, 
+    {"name":"setCpuPlatform","parameterTypes":["java.lang.String"] }, 
+    {"name":"setDebugMode","parameterTypes":["java.lang.Integer"] }, 
+    {"name":"setEnvironment","parameterTypes":["java.util.List"] }, 
+    {"name":"setHeadJobCpus","parameterTypes":["java.lang.Integer"] }, 
+    {"name":"setHeadJobMemoryMb","parameterTypes":["java.lang.Integer"] }, 
+    {"name":"setLabels","parameterTypes":["java.util.Map"] }, 
+    {"name":"setLocation","parameterTypes":["java.lang.String"] }, 
+    {"name":"setMachineType","parameterTypes":["java.lang.String"] }, 
+    {"name":"setNfsMount","parameterTypes":["java.lang.String"] }, 
+    {"name":"setNfsTarget","parameterTypes":["java.lang.String"] }, 
+    {"name":"setPostRunScript","parameterTypes":["java.lang.String"] }, 
+    {"name":"setPreRunScript","parameterTypes":["java.lang.String"] }, 
+    {"name":"setProjectId","parameterTypes":["java.lang.String"] }, 
+    {"name":"setSpot","parameterTypes":["java.lang.Boolean"] }, 
+    {"name":"setSshDaemon","parameterTypes":["java.lang.Boolean"] }, 
+    {"name":"setSshImage","parameterTypes":["java.lang.String"] }, 
+    {"name":"setUsePrivateAddress","parameterTypes":["java.lang.Boolean"] }, 
+    {"name":"setWorkDir","parameterTypes":["java.lang.String"] }
   ]
 },
 {
