@@ -13,6 +13,8 @@ package io.seqera.tower.cli.commands.pipelines;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
+import io.seqera.tower.cli.commands.labels.LabelsCreator;
+import io.seqera.tower.cli.commands.labels.LabelsOptionalOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.pipelines.PipelinesAdded;
 import io.seqera.tower.cli.utils.FilesHelper;
@@ -48,6 +50,9 @@ public class AddCmd extends AbstractPipelinesCmd {
 
     @Parameters(index = "0", paramLabel = "PIPELINE_URL", description = "Nextflow pipeline URL.", arity = "1")
     public String pipeline;
+
+    @Mixin
+    public LabelsOptionalOptions labels;
 
     @Mixin
     public LaunchOptions opts;
@@ -105,6 +110,13 @@ public class AddCmd extends AbstractPipelinesCmd {
                 , wspId
         );
 
+        attachLabels(wspId,response.getPipeline().getPipelineId());
+
         return new PipelinesAdded(workspaceRef(wspId), response.getPipeline().getName());
+    }
+
+    private void attachLabels(Long wspId,Long pipelineId) throws ApiException{
+        PipelinesLabelsCreator creator = new PipelinesLabelsCreator(api());
+        creator.execute(wspId, pipelineId, labels.labels);
     }
 }

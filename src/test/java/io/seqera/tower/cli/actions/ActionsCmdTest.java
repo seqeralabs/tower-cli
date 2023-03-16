@@ -14,6 +14,7 @@ package io.seqera.tower.cli.actions;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
+import io.seqera.tower.cli.commands.labels.LabelsSubcmdOptions;
 import io.seqera.tower.cli.exceptions.ActionNotFoundException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.actions.ActionAdd;
@@ -21,6 +22,7 @@ import io.seqera.tower.cli.responses.actions.ActionUpdate;
 import io.seqera.tower.cli.responses.actions.ActionsDelete;
 import io.seqera.tower.cli.responses.actions.ActionsList;
 import io.seqera.tower.cli.responses.actions.ActionsView;
+import io.seqera.tower.cli.responses.labels.ManageLabels;
 import io.seqera.tower.model.ActionResponseDto;
 import io.seqera.tower.model.ListActionsResponseActionInfo;
 import org.junit.jupiter.api.Test;
@@ -616,4 +618,15 @@ class ActionsCmdTest extends BaseCmdTest {
         assertEquals(1, out.exitCode);
         assertTrue(out.stdErr.contains("Missing Required Subcommand"));
     }
+
+/*    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testLabels(OutputType format, MockServerClient mock) throws IOException {
+        mock.reset();
+        mock.when(
+                request().withMethod("GET").withPath("/labels")
+        )
+        ExecOut out = exec(mock,"actions", "labels","label1,label2,label3","-n","action");
+        assertOutput(format,out,new ManageLabels(LabelsSubcmdOptions.Operation.set.prettyName,"action","1",0l));
+    }*/
 }

@@ -12,8 +12,8 @@ repositories {
     maven {
         url = uri("https://maven.pkg.github.com/seqeralabs/tower-java-sdk")
         credentials {
-            username = System.getenv("GITHUB_USERNAME")
-            password = System.getenv("GITHUB_TOKEN")
+            username = "${GITHUB_USERNAME}"
+            password = "${GITHUB_TOKEN}"
         }
     }
 }
@@ -23,7 +23,7 @@ dependencies {
     implementation 'org.slf4j:slf4j-api:1.7.36'
     implementation 'ch.qos.logback:logback-core:1.2.11'
     implementation 'ch.qos.logback:logback-classic:1.2.11'
-    implementation 'io.seqera.tower:tower-java-sdk:1.4.4'
+    implementation 'io.seqera.tower:tower-java-sdk:1.5.0'
     implementation 'info.picocli:picocli:4.6.3'
     annotationProcessor 'info.picocli:picocli-codegen:4.6.3'
 
@@ -74,7 +74,7 @@ compileJava {
 
 application {
     mainClass.set('io.seqera.tower.cli.Tower')
-    applicationDefaultJvmArgs = ["-agentlib:native-image-agent=config-merge-dir=conf/"]
+    //applicationDefaultJvmArgs = ["-agentlib:native-image-agent=config-merge-dir=conf/"]
 }
 
 shadowJar {

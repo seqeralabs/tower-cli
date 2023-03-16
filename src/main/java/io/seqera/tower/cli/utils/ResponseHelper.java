@@ -18,6 +18,7 @@ import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.ApiExceptionMessage;
 import io.seqera.tower.cli.exceptions.ShowUsageException;
 import io.seqera.tower.cli.exceptions.TowerException;
+import io.seqera.tower.cli.exceptions.TowerRuntimeException;
 import io.seqera.tower.cli.responses.Response;
 import picocli.CommandLine;
 
@@ -63,6 +64,11 @@ public class ResponseHelper {
             }
             ((ShowUsageException)e).getSpecs().commandLine().usage(err);
 
+            return;
+        }
+
+        if (e instanceof TowerRuntimeException) {
+            print(err, e.getMessage());
             return;
         }
 

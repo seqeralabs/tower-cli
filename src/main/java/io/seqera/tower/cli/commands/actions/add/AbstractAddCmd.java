@@ -13,7 +13,12 @@ package io.seqera.tower.cli.commands.actions.add;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
+import io.seqera.tower.cli.commands.actions.ActionsLabelsCreator;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
+import io.seqera.tower.cli.commands.labels.Label;
+import io.seqera.tower.cli.commands.labels.LabelsCreator;
+import io.seqera.tower.cli.commands.labels.LabelsOptionalOptions;
+import io.seqera.tower.cli.commands.labels.LabelsSubcmdOptions;
 import io.seqera.tower.cli.commands.pipelines.LaunchOptions;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
@@ -27,6 +32,7 @@ import io.seqera.tower.model.WorkflowLaunchRequest;
 import picocli.CommandLine;
 
 import java.io.IOException;
+import java.util.List;
 
 public abstract class AbstractAddCmd extends AbstractApiCmd {
 
@@ -35,6 +41,9 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
 
     @CommandLine.Option(names = {"--pipeline"}, description = "Pipeline to launch.", required = true)
     public String pipeline;
+
+    @CommandLine.Mixin
+    public LabelsOptionalOptions labels;
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
@@ -77,14 +86,21 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
         request.setSource(getSource());
         request.setLaunch(workflowLaunchRequest);
 
+
         CreateActionResponse response;
         try {
             response = api().createAction(request, wspId);
+            attachLabels(labels.labels,wspId,response.getActionId());
         } catch (Exception e) {
             throw new TowerException(String.format("Unable to add action for workspace '%s'", workspaceRef(wspId)));
         }
 
         return new ActionAdd(actionName, workspaceRef(wspId), response.getActionId());
+    }
+
+    private void attachLabels(List<Label> labels,Long wspId, String actionId) throws ApiException {
+        ActionsLabelsCreator creator = new ActionsLabelsCreator(api());
+        creator.execute(wspId,actionId, labels);
     }
 
     protected abstract ActionSource getSource();
