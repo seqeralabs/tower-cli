@@ -21,8 +21,8 @@ import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.ActionResponseDto;
 import io.seqera.tower.model.WorkflowLaunchRequest;
 
-import javax.annotation.Nullable;
 import java.io.PrintWriter;
+import java.util.stream.Collectors;
 
 import static io.seqera.tower.cli.utils.FormatHelper.formatActionId;
 import static io.seqera.tower.cli.utils.FormatHelper.formatActionStatus;
@@ -32,16 +32,15 @@ public class ActionsView extends Response {
     final public ActionResponseDto action;
 
     @JsonIgnore
-    @Nullable
-    final public String labels;
-
-    @JsonIgnore
     private String baseWorkspaceUrl;
 
-    public ActionsView(ActionResponseDto action, String baseWorkspaceUrl, @Nullable String csvLabels) {
+    @JsonIgnore
+    private boolean includeBoolean;
+
+    public ActionsView(ActionResponseDto action, String baseWorkspaceUrl, boolean includeLabels) {
         this.action = action;
         this.baseWorkspaceUrl = baseWorkspaceUrl;
-        this.labels = csvLabels;
+        this.includeBoolean = includeLabels;
     }
 
     @Override
@@ -67,11 +66,24 @@ public class ActionsView extends Response {
         table.addRow("Last event", FormatHelper.formatTime(action.getLastSeen()));
         table.addRow("Date created", FormatHelper.formatTime(action.getDateCreated()));
         table.addRow("Last event", FormatHelper.formatTime(action.getLastSeen()));
-        if (labels != null)
-            table.addRow("Workspace labels", labels.isEmpty() ? "No labels found for workspace" : labels);
+        if (includeBoolean) table.addRow("Labels", action.getLabels().isEmpty() ? "No labels found" : commaSeparatedLabels(action));
+
         table.print();
 
         out.println(String.format("%n  Configuration:%n%n%s%n", configJson.replaceAll("(?m)^", "     ")));
 
     }
+
+    private String commaSeparatedLabels(final ActionResponseDto res) {
+        return res.getLabels().stream().map(label -> {
+            String str = label.getName();
+            if (label.getValue() != null && !label.getValue().isEmpty()) {
+                str += "=" + label.getValue();
+            }
+            return str;
+        })
+        .collect(Collectors.joining(","));
+    }
+
+
 }

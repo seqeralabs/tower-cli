@@ -17,7 +17,9 @@ import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.ListActionsResponseActionInfo;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static io.seqera.tower.cli.utils.FormatHelper.formatActionId;
 import static io.seqera.tower.cli.utils.FormatHelper.formatActionStatus;
@@ -30,10 +32,14 @@ public class ActionsList extends Response {
     @JsonIgnore
     private String baseWorkspaceUrl;
 
-    public ActionsList(List<ListActionsResponseActionInfo> actions, String userName, String baseWorkspaceUrl) {
+    @JsonIgnore
+    private boolean includeLabels;
+
+    public ActionsList(List<ListActionsResponseActionInfo> actions, String userName, String baseWorkspaceUrl, boolean includeLabels) {
         this.userName = userName;
         this.actions = actions;
         this.baseWorkspaceUrl = baseWorkspaceUrl;
+        this.includeLabels = includeLabels;
     }
 
     @Override
@@ -45,19 +51,46 @@ public class ActionsList extends Response {
             return;
         }
 
-        TableList table = new TableList(out, 5, "ID", "Name", "Endpoint", "Status", "Source").sortBy(0);
+        List<String> descriptions = new ArrayList<>(List.of("ID", "Name", "Endpoint", "Status", "Source"));
+        if (includeLabels) descriptions.add("Labels");
+
+        String[] desc = new String[descriptions.size()];
+        descriptions.toArray(desc);
+
+        TableList table = new TableList(out, desc.length, desc).sortBy(0);
         table.setPrefix("    ");
+
         actions.forEach(element -> {
-            table.addRow(
-                    formatActionId(element.getId(), baseWorkspaceUrl)   ,
+
+            List<String> rows = new ArrayList<>(List.of(
+                    formatActionId(element.getId(), baseWorkspaceUrl),
                     element.getName(),
                     element.getEndpoint(),
                     formatActionStatus(element.getStatus()),
                     element.getSource().toString()
-            );
+            ));
+            if (includeLabels) rows.add(commaSeparated(element));
+
+            String[] rowsArray = new String[rows.size()];
+            rows.toArray(rowsArray);
+            table.addRow(rowsArray);
         });
 
         table.print();
         out.println("");
+    }
+
+    private String commaSeparated(final ListActionsResponseActionInfo res) {
+        if (res.getLabels() == null || res.getLabels().isEmpty()) {
+            return "";
+        }
+        return res.getLabels().stream().map(label -> {
+                    String str = label.getName();
+                    if (label.getValue() != null && !label.getValue().isEmpty()) {
+                        str += "=" + label.getValue();
+                    }
+                    return str;
+                })
+                .collect(Collectors.joining(","));
     }
 }

@@ -14,6 +14,7 @@ package io.seqera.tower.cli.commands.actions;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.exceptions.ActionNotFoundException;
+import io.seqera.tower.model.ActionQueryAttribute;
 import io.seqera.tower.model.DescribeActionResponse;
 import io.seqera.tower.model.ListActionsResponse;
 import io.seqera.tower.model.ListActionsResponseActionInfo;
@@ -46,20 +47,17 @@ public abstract class AbstractActionsCmd extends AbstractApiCmd {
         return listActionsResponseActionInfos.stream().findFirst().orElse(null);
     }
 
-    protected DescribeActionResponse fetchDescribeActionResponse(ActionRefOptions actionRefOptions, Long wspId) throws ApiException {
+    protected DescribeActionResponse fetchDescribeActionResponse(ActionRefOptions actionRefOptions, Long wspId, List<ActionQueryAttribute> actionQueryAttributes) throws ApiException {
         DescribeActionResponse response;
 
         if (actionRefOptions.action.actionId != null) {
-            response = api().describeAction(actionRefOptions.action.actionId, wspId, NO_ACTION_ATTRIBUTES);
+            response = api().describeAction(actionRefOptions.action.actionId, wspId, actionQueryAttributes);
         } else {
             ListActionsResponseActionInfo listActionsResponseActionInfo = actionByName(wspId, actionRefOptions.action.actionName);
-            response = api().describeAction(listActionsResponseActionInfo.getId(), wspId, NO_ACTION_ATTRIBUTES);
+            response = api().describeAction(listActionsResponseActionInfo.getId(), wspId, actionQueryAttributes);
         }
 
         return response;
     }
 
-    protected ListLabelsResponse fetchLabelsFor(Long wspId) throws ApiException {
-        return api().listLabels(wspId, null, null, null, null);
-    }
 }
