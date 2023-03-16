@@ -36,7 +36,7 @@ class TeamMembersCmdTest extends BaseCmdTest {
     @EnumSource(OutputType.class)
     void testList(OutputType format, MockServerClient mock) throws JsonProcessingException {
         mock.when(
-                request().withMethod("GET").withPath("/user"), exactly(1)
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -95,7 +95,7 @@ class TeamMembersCmdTest extends BaseCmdTest {
     @EnumSource(OutputType.class)
     void testAdd(OutputType format, MockServerClient mock) throws JsonProcessingException {
         mock.when(
-                request().withMethod("GET").withPath("/user"), exactly(1)
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -135,7 +135,7 @@ class TeamMembersCmdTest extends BaseCmdTest {
     @EnumSource(OutputType.class)
     void testDelete(OutputType format, MockServerClient mock) {
         mock.when(
-                request().withMethod("GET").withPath("/user"), exactly(1)
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
