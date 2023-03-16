@@ -32,6 +32,7 @@ import io.seqera.tower.cli.commands.SecretsCmd;
 import io.seqera.tower.cli.commands.TeamsCmd;
 import io.seqera.tower.cli.commands.WorkspacesCmd;
 import io.seqera.tower.cli.commands.enums.OutputType;
+import io.seqera.tower.cli.commands.labels.LabelsCmd;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;
@@ -54,6 +55,7 @@ import static picocli.AutoComplete.GenerateCompletion;
                 DatasetsCmd.class,
                 GenerateCompletion.class,
                 InfoCmd.class,
+                LabelsCmd.class,
                 LaunchCmd.class,
                 MembersCmd.class,
                 OrganizationsCmd.class,
