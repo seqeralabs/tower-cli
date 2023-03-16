@@ -12,6 +12,7 @@
 package io.seqera.tower.cli.commands.runs;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.commands.global.ShowLabelsOption;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.commands.runs.download.DownloadCmd;
 import io.seqera.tower.cli.commands.runs.metrics.MetricsCmd;
@@ -22,6 +23,7 @@ import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.runs.RunView;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.DescribeWorkflowResponse;
+import io.seqera.tower.model.ListLabelsResponse;
 import io.seqera.tower.model.ProgressData;
 import io.seqera.tower.model.Workflow;
 import io.seqera.tower.model.WorkflowLoad;
@@ -33,6 +35,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @CommandLine.Command(
         name = "view",
@@ -55,6 +58,10 @@ public class ViewCmd extends AbstractRunsCmd {
     @CommandLine.Mixin
     public RunViewOptions opts;
 
+    @CommandLine.Mixin
+    public ShowLabelsOption showLabelsOption;
+
+
     protected Response exec() throws ApiException {
         Long wspId = workspaceId(workspace.workspace);
         
@@ -69,6 +76,11 @@ public class ViewCmd extends AbstractRunsCmd {
             ProgressData progress = null;
             if (opts.processes || opts.stats || opts.load || opts.utilization) {
                 progress = api().describeWorkflowProgress(id, wspId).getProgress();
+            }
+
+            ListLabelsResponse labels = null;
+            if (showLabelsOption.showLabels) {
+                labels = api().listLabels(wspId, null, null, null, null);
             }
 
             Map<String, Object> general = new LinkedHashMap<>();
@@ -147,6 +159,21 @@ public class ViewCmd extends AbstractRunsCmd {
             if (opts.utilization) {
                 utilization.put("memoryEfficiency", progress.getWorkflowProgress().getMemoryEfficiency());
                 utilization.put("cpuEfficiency", progress.getWorkflowProgress().getCpuEfficiency());
+            }
+
+            if (labels != null && !labels.getLabels().isEmpty()) {
+                general.put(
+                    "labels",
+                    labels.getLabels().stream()
+                        .map(label -> {
+                            String str = label.getName();
+                            if (label.getValue() != null && !label.getValue().isEmpty()) {
+                                str += "=" + label.getValue();
+                            }
+                            return str;
+                        })
+                        .collect(Collectors.joining(","))
+                );
             }
 
             return new RunView(
