@@ -64,7 +64,7 @@ public class InfoCmd extends AbstractRootCmd {
 
         if (connectionCheck == 1) {
             try {
-                DescribeUserResponse resp = api().profile();
+                DescribeUserResponse resp = api().userInfo();
                 userName = resp.getUser().getUserName();
                 credentialsCheck = 1;
             } catch (ApiException apiException) {
