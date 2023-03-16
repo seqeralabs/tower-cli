@@ -1026,6 +1026,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.global.ShowLabelsOption",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -2582,7 +2588,14 @@
   "name":"io.seqera.tower.model.LabelDbDto",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"<init>","parameterTypes":[] }, 
+    {"name":"setId","parameterTypes":["java.lang.Long"] }, 
+    {"name":"setName","parameterTypes":["java.lang.String"] }, 
+    {"name":"setResource","parameterTypes":["java.lang.Boolean"] }, 
+    {"name":"setValue","parameterTypes":["java.lang.String"] }
+  ]
 },
 {
   "name":"io.seqera.tower.model.Launch",
@@ -2650,6 +2663,17 @@
   "methods":[
     {"name":"<init>","parameterTypes":[] }, 
     {"name":"setDatasets","parameterTypes":["java.util.List"] }
+  ]
+},
+{
+  "name":"io.seqera.tower.model.ListLabelsResponse",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"<init>","parameterTypes":[] }, 
+    {"name":"setLabels","parameterTypes":["java.util.List"] }, 
+    {"name":"setTotalSize","parameterTypes":["java.lang.Long"] }
   ]
 },
 {
