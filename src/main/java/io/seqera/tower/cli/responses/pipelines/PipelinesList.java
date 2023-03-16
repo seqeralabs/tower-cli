@@ -14,10 +14,13 @@ package io.seqera.tower.cli.responses.pipelines;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.TableList;
+import io.seqera.tower.model.ListActionsResponseActionInfo;
 import io.seqera.tower.model.PipelineDbDto;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static io.seqera.tower.cli.utils.FormatHelper.formatPipelineId;
 
@@ -29,10 +32,14 @@ public class PipelinesList extends Response {
     @JsonIgnore
     private final String baseWorkspaceUrl;
 
-    public PipelinesList(String workspaceRef, List<PipelineDbDto> pipelines, String baseWorkspaceUrl) {
+    @JsonIgnore
+    private boolean includeLabels;
+
+    public PipelinesList(String workspaceRef, List<PipelineDbDto> pipelines, String baseWorkspaceUrl, boolean includeLabels) {
         this.workspaceRef = workspaceRef;
         this.pipelines = pipelines;
         this.baseWorkspaceUrl = baseWorkspaceUrl;
+        this.includeLabels = includeLabels;
     }
 
     @Override
@@ -45,16 +52,39 @@ public class PipelinesList extends Response {
             return;
         }
 
-        TableList table = new TableList(out, 4, "ID", "Name", "Repository", "Visibility").sortBy(0);
+        List<String> descriptions = new ArrayList<>(List.of("ID", "Name", "Repository", "Visibility"));
+        if (includeLabels) descriptions.add("Labels");
+
+        TableList table = new TableList(out, descriptions.size(), descriptions.toArray(new String[descriptions.size()])).sortBy(0);
         table.setPrefix("    ");
-        pipelines.forEach(pipe -> table.addRow(
-                formatPipelineId(pipe.getPipelineId(), baseWorkspaceUrl),
-                pipe.getName(),
-                pipe.getRepository(),
-                pipe.getVisibility()
-        ));
+        pipelines.forEach(pipe -> {
+
+            List<String> rows = new ArrayList<>(List.of(
+                    formatPipelineId(pipe.getPipelineId(), baseWorkspaceUrl),
+                    pipe.getName(),
+                    pipe.getRepository(),
+                    pipe.getVisibility()
+            ));
+            if (includeLabels) rows.add(commaSeparated(pipe));
+
+            table.addRow(rows.toArray(new String[rows.size()]));
+        });
         table.print();
         out.println("");
+    }
+
+    private String commaSeparated(final PipelineDbDto res) {
+        if (res.getLabels() == null || res.getLabels().isEmpty()) {
+            return "";
+        }
+        return res.getLabels().stream().map(label -> {
+                    String str = label.getName();
+                    if (label.getValue() != null && !label.getValue().isEmpty()) {
+                        str += "=" + label.getValue();
+                    }
+                    return str;
+                })
+                .collect(Collectors.joining(","));
     }
 
 
