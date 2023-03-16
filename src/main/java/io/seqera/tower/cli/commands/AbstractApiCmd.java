@@ -325,7 +325,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     }
 
     private void loadUser() throws ApiException {
-        User user = api().profile().getUser();
+        User user = api().userInfo().getUser();
         userName = user.getUserName();
         userId = user.getId();
     }
