@@ -49,14 +49,6 @@ public class AddLabelsCmd extends AbstractLabelsCmd {
             throw new IllegalArgumentException("Missing label name");
         }
 
-        /*
-        System.out.println("############################");
-
-        System.out.println(labelName);
-        System.out.println(labelValue);
-        System.out.println(workspace.workspace);
-        */
-
         CreateLabelRequest req = new CreateLabelRequest();
 
         req.setName(labelName);
@@ -68,29 +60,14 @@ public class AddLabelsCmd extends AbstractLabelsCmd {
             req.setResource(false);
         }
 
-
         CreateLabelResponse res = null;
         try {
             res = api().createLabel(req, workspaceId);
         } catch (Exception e) {
-            System.out.println(labelName);
-            System.out.println(e);
-            System.out.println(req);
             throw new TowerException(String.format("Unable to create label for workspace '%d'", workspaceId));
         }
 
-
-        return new AddResponse(res.getId());
+        return new GenericStrResponse(String.format("successfully created label '%d' for workspace '%d'\n", res.getId(), workspaceId));
     }
 
-    public static class AddResponse extends Response {
-
-        public Long id;
-
-        AddResponse(Long id) { this.id = id; }
-         @Override
-         public void toString(PrintWriter out) {
-             out.printf("Add label %d succesfully", this.id);
-         }
-    }
 }
