@@ -14,9 +14,11 @@ package io.seqera.tower.cli.commands.labels;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.computeenvs.AbstractComputeEnvCmd;
 import io.seqera.tower.cli.exceptions.ShowUsageException;
+import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import picocli.CommandLine;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 
 @CommandLine.Command(
@@ -25,8 +27,23 @@ import java.io.IOException;
 )
 public class DeleteLabelsCmd extends AbstractLabelsCmd {
 
+    @CommandLine.Option(names = {"-i", "--id"}, description = "Label ID", required = true)
+    public Long labelId;
+
+    @CommandLine.Option(names = {"-w", "--workspace"}, description = "Workspace numeric identifier", required = false)
+    @Nullable
+    public Long workspaceId;
+
     @Override
     protected Response exec() throws ApiException, IOException {
-        throw new ShowUsageException(getSpec(), "Missing Required Subcommand");
+        try {
+
+            api().deleteLabel(labelId, workspaceId);
+
+        } catch (Exception e) {
+            throw new TowerException(String.format("Unable to delete label '%d', reason: %s", labelId, e.toString()));
+        }
+
+        return new GenericStrResponse(String.format("Label '%d' deleted successfully\n", labelId));
     }
 }

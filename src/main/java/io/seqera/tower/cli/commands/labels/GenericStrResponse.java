@@ -9,7 +9,11 @@ public class GenericStrResponse extends Response {
     public String msg;
 
     GenericStrResponse(final String msg) {
-        this.msg = msg;
+        if (!msg.endsWith(System.lineSeparator())) {
+            this.msg = msg + System.lineSeparator();
+        } else {
+            this.msg = msg;
+        }
     }
 
     @Override
