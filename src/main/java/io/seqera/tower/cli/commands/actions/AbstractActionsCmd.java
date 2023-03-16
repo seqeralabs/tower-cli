@@ -17,6 +17,7 @@ import io.seqera.tower.cli.exceptions.ActionNotFoundException;
 import io.seqera.tower.model.DescribeActionResponse;
 import io.seqera.tower.model.ListActionsResponse;
 import io.seqera.tower.model.ListActionsResponseActionInfo;
+import io.seqera.tower.model.ListLabelsResponse;
 import picocli.CommandLine;
 
 import java.util.List;
@@ -56,5 +57,9 @@ public abstract class AbstractActionsCmd extends AbstractApiCmd {
         }
 
         return response;
+    }
+
+    protected ListLabelsResponse fetchLabelsFor(Long wspId) throws ApiException {
+        return api().listLabels(wspId, null, null, null, null);
     }
 }

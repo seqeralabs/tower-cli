@@ -21,6 +21,7 @@ import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.ActionResponseDto;
 import io.seqera.tower.model.WorkflowLaunchRequest;
 
+import javax.annotation.Nullable;
 import java.io.PrintWriter;
 
 import static io.seqera.tower.cli.utils.FormatHelper.formatActionId;
@@ -31,11 +32,16 @@ public class ActionsView extends Response {
     final public ActionResponseDto action;
 
     @JsonIgnore
+    @Nullable
+    final public String labels;
+
+    @JsonIgnore
     private String baseWorkspaceUrl;
 
-    public ActionsView(ActionResponseDto action, String baseWorkspaceUrl) {
+    public ActionsView(ActionResponseDto action, String baseWorkspaceUrl, @Nullable String csvLabels) {
         this.action = action;
         this.baseWorkspaceUrl = baseWorkspaceUrl;
+        this.labels = csvLabels;
     }
 
     @Override
@@ -61,6 +67,8 @@ public class ActionsView extends Response {
         table.addRow("Last event", FormatHelper.formatTime(action.getLastSeen()));
         table.addRow("Date created", FormatHelper.formatTime(action.getDateCreated()));
         table.addRow("Last event", FormatHelper.formatTime(action.getLastSeen()));
+        if (labels != null)
+            table.addRow("Workspace labels", labels.isEmpty() ? "No labels found for workspace" : labels);
         table.print();
 
         out.println(String.format("%n  Configuration:%n%n%s%n", configJson.replaceAll("(?m)^", "     ")));
