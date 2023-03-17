@@ -34,7 +34,7 @@ class CollaboratorsCmdTest extends BaseCmdTest {
     @EnumSource(OutputType.class)
     void testListCollaborators(OutputType format, MockServerClient mock) throws JsonProcessingException {
         mock.when(
-                request().withMethod("GET").withPath("/user"), exactly(1)
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
