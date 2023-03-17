@@ -20,6 +20,7 @@ import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.exceptions.ShowUsageException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.LabelType;
+import io.seqera.tower.model.ListLabelsResponse;
 import picocli.CommandLine;
 
 import javax.annotation.Nullable;
@@ -63,9 +64,8 @@ public class ListLabelsCmd extends AbstractLabelsCmd {
             throw new IllegalArgumentException("Label type " + labelType + " is not supported");
         }
 
-        api().listLabels(wspId, max, offset, filter == null ? "" : filter, typeEnum);
+        ListLabelsResponse res = api().listLabels(wspId, max, offset, filter == null ? "" : filter, typeEnum);
 
-
-        return new GenericStrResponse("lima lmao");
+        return new ListLabelsCmdResponse(wspId, res.getLabels());
     }
 }
