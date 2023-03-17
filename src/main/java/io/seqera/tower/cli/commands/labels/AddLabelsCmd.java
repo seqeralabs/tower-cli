@@ -34,11 +34,10 @@ public class AddLabelsCmd extends AbstractLabelsCmd {
     @CommandLine.Option(names = {"-n", "--name"}, description = "Label name.", required = true)
     public String labelName;
 
-    @CommandLine.Option(names = {"-w", "--workspace"}, description = "Workspace numeric identifier", required = false)
-    @Nullable
-    public Long workspaceId;
+    @CommandLine.Mixin
+    public WorkspaceOptionalOptions workspaceOptionalOptions;
 
-    @CommandLine.Option(names = {"-v", "--value"}, description = "label value", required = false)
+    @CommandLine.Option(names = {"-v", "--value"}, description = "Label value", required = false)
     @Nullable
     public String labelValue;
 
@@ -60,9 +59,11 @@ public class AddLabelsCmd extends AbstractLabelsCmd {
             req.setResource(false);
         }
 
+        Long wspId = workspaceId(workspaceOptionalOptions.workspace);
+
         CreateLabelResponse res = null;
         try {
-            res = api().createLabel(req, workspaceId);
+            res = api().createLabel(req, wspId);
         } catch (Exception e) {
             throw new TowerException(String.format("Unable to create label for workspace '%d'", workspaceId));
         }
