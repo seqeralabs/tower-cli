@@ -17,7 +17,7 @@ import picocli.CommandLine;
 
 public class LabelsOptionalOptions {
 
-    @CommandLine.Option(names = {"--labels","-l"}, split = ",", description = "Labels to add", converter = Label.LabelConverter.class)
+    @CommandLine.Option(names = {"--labels"}, split = ",", description = "Labels to add", converter = Label.LabelConverter.class)
     public List<Label> labels = null;
 
 }
