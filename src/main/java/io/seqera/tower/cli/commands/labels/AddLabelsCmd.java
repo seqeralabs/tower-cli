@@ -65,10 +65,10 @@ public class AddLabelsCmd extends AbstractLabelsCmd {
         try {
             res = api().createLabel(req, wspId);
         } catch (Exception e) {
-            throw new TowerException(String.format("Unable to create label for workspace '%d'", workspaceId));
+            throw new TowerException(String.format("Unable to create label for workspace '%d'", wspId));
         }
 
-        return new GenericStrResponse(String.format("successfully created label '%d' for workspace '%d'\n", res.getId(), workspaceId));
+        return new GenericStrResponse(String.format("successfully created label '%d' for workspace '%d'\n", res.getId(), wspId));
     }
 
 }
