@@ -13,17 +13,11 @@ package io.seqera.tower.cli.commands.actions;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.api.DefaultApi;
-import io.seqera.tower.cli.commands.labels.LabelsFinder;
 import io.seqera.tower.cli.commands.labels.LabelsSubcmdOptions;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.cli.responses.labels.ManageLabels;
-import io.seqera.tower.model.AssociateActionLabelsRequest;
 import picocli.CommandLine;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Stack;
 
 @CommandLine.Command(name = "labels", description = "Manages labels for actions.")
 public class LabelsCmd extends AbstractActionsCmd {
@@ -39,8 +33,9 @@ public class LabelsCmd extends AbstractActionsCmd {
         Long wspId = workspaceId(labelsSubcmdOptions.workspace.workspace);
         DefaultApi api = api();
         String actionId = fetchDescribeActionResponse(actionRefOptions, wspId).getAction().getId();
-        ActionsLabelsCreator creator = new ActionsLabelsCreator(api);
+        ActionsLabelsManager creator = new ActionsLabelsManager(api);
         return creator.execute(wspId,actionId, labelsSubcmdOptions);
     }
+
 
 }

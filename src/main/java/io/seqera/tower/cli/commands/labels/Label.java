@@ -60,4 +60,15 @@ public class Label {
             return new Label(key, value);
         }
     }
+
+    public static class ResourceLabelsConverter extends LabelConverter {
+        @Override
+        public Label convert(String rawValue) throws Exception {
+            Label label = super.convert(rawValue);
+            if (label.value == null) {
+                throw new TowerException("Label value is required");
+            }
+            return label;
+        }
+    }
 }

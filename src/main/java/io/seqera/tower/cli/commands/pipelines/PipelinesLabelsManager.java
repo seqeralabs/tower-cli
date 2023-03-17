@@ -15,11 +15,11 @@ import java.util.List;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.api.DefaultApi;
-import io.seqera.tower.cli.commands.labels.LabelsCreator;
+import io.seqera.tower.cli.commands.labels.BaseLabelsManager;
 import io.seqera.tower.model.AssociatePipelineLabelsRequest;
 
-public class PipelinesLabelsCreator extends LabelsCreator<AssociatePipelineLabelsRequest,Long> {
-    public PipelinesLabelsCreator(DefaultApi api) {
+public class PipelinesLabelsManager extends BaseLabelsManager<AssociatePipelineLabelsRequest,Long> {
+    public PipelinesLabelsManager(DefaultApi api) {
         super(api, "pipeline");
     }
 

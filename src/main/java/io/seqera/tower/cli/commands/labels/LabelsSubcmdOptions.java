@@ -11,18 +11,10 @@
 
 package io.seqera.tower.cli.commands.labels;
 
-import io.seqera.tower.ApiException;
-import io.seqera.tower.api.DefaultApi;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
-import io.seqera.tower.cli.exceptions.TowerRuntimeException;
-import io.seqera.tower.model.CreateLabelRequest;
-import io.seqera.tower.model.LabelDbDto;
-import io.seqera.tower.model.ListLabelsResponse;
 import picocli.CommandLine;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class LabelsSubcmdOptions {
 
@@ -35,10 +27,6 @@ public class LabelsSubcmdOptions {
     private boolean noCreate;
     @CommandLine.Option(names = {"--operations", "-o"}, description = "selects the operation to do on labels, defaults to set", defaultValue = "set")
     private Operation operation;
-
-    public String getOperationName() {
-        return operation.prettyName;
-    }
 
     public Operation getOperation() {
         return operation;

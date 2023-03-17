@@ -13,12 +13,10 @@ package io.seqera.tower.cli.commands.actions.add;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
-import io.seqera.tower.cli.commands.actions.ActionsLabelsCreator;
+import io.seqera.tower.cli.commands.actions.ActionsLabelsManager;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.commands.labels.Label;
-import io.seqera.tower.cli.commands.labels.LabelsCreator;
 import io.seqera.tower.cli.commands.labels.LabelsOptionalOptions;
-import io.seqera.tower.cli.commands.labels.LabelsSubcmdOptions;
 import io.seqera.tower.cli.commands.pipelines.LaunchOptions;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
@@ -99,7 +97,7 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
     }
 
     private void attachLabels(List<Label> labels,Long wspId, String actionId) throws ApiException {
-        ActionsLabelsCreator creator = new ActionsLabelsCreator(api());
+        ActionsLabelsManager creator = new ActionsLabelsManager(api());
         creator.execute(wspId,actionId, labels);
     }
 

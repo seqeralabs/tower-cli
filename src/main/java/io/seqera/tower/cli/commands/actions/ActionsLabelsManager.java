@@ -8,21 +8,22 @@
  * This Source Code Form is "Incompatible With Secondary Licenses", as
  * defined by the Mozilla Public License, v. 2.0.
  */
+
+
 package io.seqera.tower.cli.commands.actions;
-
-
-import java.util.List;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.api.DefaultApi;
-import io.seqera.tower.cli.commands.labels.LabelsCreator;
+import io.seqera.tower.cli.commands.labels.BaseLabelsManager;
 import io.seqera.tower.model.AssociateActionLabelsRequest;
 
-public class ActionsLabelsCreator extends LabelsCreator<AssociateActionLabelsRequest, String> {
+import java.util.List;
+
+public class ActionsLabelsManager extends BaseLabelsManager<AssociateActionLabelsRequest, String> {
 
 
-    public ActionsLabelsCreator(DefaultApi api) {
-        super(api,"action");
+    public ActionsLabelsManager(DefaultApi api) {
+        super(api, "action");
     }
 
     @Override

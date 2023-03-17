@@ -4,12 +4,12 @@ import java.util.List;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.api.DefaultApi;
-import io.seqera.tower.cli.commands.labels.LabelsCreator;
+import io.seqera.tower.cli.commands.labels.BaseLabelsManager;
 import io.seqera.tower.model.AssociateWorkflowLabelsRequest;
 
-public class RunsLabelsCreator extends LabelsCreator<AssociateWorkflowLabelsRequest,String> {
+public class RunsLabelsManager extends BaseLabelsManager<AssociateWorkflowLabelsRequest,String> {
 
-    public RunsLabelsCreator(DefaultApi api) {
+    public RunsLabelsManager(DefaultApi api) {
         super(api, "run");
     }
 
