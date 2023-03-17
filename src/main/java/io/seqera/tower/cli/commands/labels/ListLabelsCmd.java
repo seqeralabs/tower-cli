@@ -53,19 +53,10 @@ public class ListLabelsCmd extends AbstractLabelsCmd {
         Integer max = PaginationOptions.getMax(paginationOptions);
         Integer offset = PaginationOptions.getOffset(paginationOptions, max);
 
-        LabelType typeEnum = LabelType.ALL;
-        if (labelType == "simple") {
-            typeEnum = LabelType.SIMPLE;
-        } else if (labelType == "resource") {
-            typeEnum = LabelType.RESOURCE;
-        } else if (labelType == "all") {
-            typeEnum = LabelType.ALL;
-        } else {
-            throw new IllegalArgumentException("Label type " + labelType + " is not supported");
-        }
+        LabelType typeEnum = LabelType.fromValue(labelType);
 
         ListLabelsResponse res = api().listLabels(wspId, max, offset, filter == null ? "" : filter, typeEnum);
 
-        return new ListLabelsCmdResponse(wspId, res.getLabels());
+        return new ListLabelsCmdResponse(wspId, typeEnum, res.getLabels());
     }
 }
