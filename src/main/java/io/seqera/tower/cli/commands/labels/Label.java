@@ -12,6 +12,7 @@
 package io.seqera.tower.cli.commands.labels;
 
 import io.seqera.tower.cli.exceptions.TowerException;
+import io.seqera.tower.model.LabelType;
 import picocli.CommandLine;
 
 public class Label {
@@ -38,6 +39,10 @@ public class Label {
                 (this.value == null || this.value.equals(value));
     }
 
+    public LabelType getType() {
+        return value == null ? LabelType.SIMPLE : LabelType.RESOURCE;
+    }
+
     public static class LabelConverter implements CommandLine.ITypeConverter<Label> {
 
         @Override
@@ -51,7 +56,7 @@ public class Label {
                 throw new TowerException("Label key cannot be empty");
             }
             if (parts.length == 1) {
-                return new Label(key,null);
+                return new Label(key, null);
             }
             final String value = parts[1];
             if (value.isBlank()) {

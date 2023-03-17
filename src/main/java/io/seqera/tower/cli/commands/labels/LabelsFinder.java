@@ -11,10 +11,6 @@
 
 package io.seqera.tower.cli.commands.labels;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import io.seqera.tower.ApiException;
 import io.seqera.tower.api.DefaultApi;
 import io.seqera.tower.cli.exceptions.TowerException;
@@ -22,6 +18,10 @@ import io.seqera.tower.cli.exceptions.TowerRuntimeException;
 import io.seqera.tower.model.CreateLabelRequest;
 import io.seqera.tower.model.LabelDbDto;
 import io.seqera.tower.model.ListLabelsResponse;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class LabelsFinder {
 
@@ -43,21 +43,21 @@ public class LabelsFinder {
         long maxElements = Long.MAX_VALUE;
         try {
             while (offset + pageSize < maxElements) {
-                ListLabelsResponse resp = api.listLabels(wspId, pageSize, offset, label.name, null);
+                ListLabelsResponse resp = api.listLabels(wspId, pageSize, offset, label.name, label.getType());
                 maxElements = resp.getTotalSize();
-                Optional<LabelDbDto> labelResponse = resp.getLabels().stream().filter(l -> label.matches(l.getName(),l.getValue())).findFirst();
+                Optional<LabelDbDto> labelResponse = resp.getLabels().stream().filter(l -> label.matches(l.getName(), l.getValue())).findFirst();
                 if (labelResponse.isPresent()) {
                     return labelResponse.get().getId();
                 }
                 offset += pageSize;
             }
         } catch (ApiException e) {
-            throw new TowerRuntimeException(String.format("Failed to list labels [%s]",e.getMessage()));
+            throw new TowerRuntimeException(String.format("Failed to list labels [%s]", e.getMessage()));
         }
         if (!noCreate) {
             return createLabel(wspId, label);
         }
-        throw new TowerRuntimeException(String.format("Label '%s' does not exists in workspace '%s'",label,wspId));
+        throw new TowerRuntimeException(String.format("Label '%s' does not exists in workspace '%s'", label, wspId));
     }
 
 
@@ -69,7 +69,7 @@ public class LabelsFinder {
             }
             return api.createLabel(request, wspId).getId();
         } catch (ApiException e) {
-            throw new TowerRuntimeException(String.format("Failed to create label '%s' in workspace %s",label,wspId));
+            throw new TowerRuntimeException(String.format("Failed to create label '%s' in workspace %s", label, wspId));
         }
     }
 }
