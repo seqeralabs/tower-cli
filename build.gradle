@@ -74,7 +74,8 @@ compileJava {
 
 application {
     mainClass.set('io.seqera.tower.cli.Tower')
-    //applicationDefaultJvmArgs = ["-agentlib:native-image-agent=config-merge-dir=conf/"]
+    // This doesn't work on M1
+    applicationDefaultJvmArgs = ["-agentlib:native-image-agent=config-merge-dir=conf/"]
 }
 
 shadowJar {

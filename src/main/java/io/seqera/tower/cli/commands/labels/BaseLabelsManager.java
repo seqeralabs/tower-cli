@@ -17,7 +17,7 @@ import io.seqera.tower.cli.responses.labels.ManageLabels;
 
 import java.util.List;
 
-public abstract class BaseLabelsManager<Request,EntityId> {
+public abstract class BaseLabelsManager<Request, EntityId> {
 
     protected final DefaultApi api;
     private final LabelsFinder finder;
@@ -39,32 +39,32 @@ public abstract class BaseLabelsManager<Request,EntityId> {
     protected abstract void append(Request request, Long wspId) throws ApiException;
 
 
-    public void execute(Long wspId, EntityId entityId, List<Label> labels) throws ApiException{
+    public void execute(Long wspId, EntityId entityId, List<Label> labels) throws ApiException {
         if (labels == null || labels.isEmpty()) {
             return;
         }
-        execute(wspId, entityId,labels, LabelsSubcmdOptions.Operation.set,false);
+        execute(wspId, entityId, labels, LabelsSubcmdOptions.Operation.set, false);
     }
 
     public ManageLabels execute(Long wspId, EntityId entityId, LabelsSubcmdOptions options) throws ApiException {
-        return execute(wspId,entityId,options.getLabels(), options.getOperation(), options.getNoCreate());
+        return execute(wspId, entityId, options.getLabels(), options.getOperation(), options.getNoCreate());
     }
-    public ManageLabels execute(Long wspId, EntityId entityId, List<Label> labels, LabelsSubcmdOptions.Operation operation, boolean noCreate)  throws ApiException {
-        final List<Long> labelsIds = finder.findLabelsIds(wspId, labels,noCreate);
-        final Request request = getRequest(labelsIds,entityId);
+
+    public ManageLabels execute(Long wspId, EntityId entityId, List<Label> labels, LabelsSubcmdOptions.Operation operation, boolean noCreate) throws ApiException {
+        final List<Long> labelsIds = finder.findLabelsIds(wspId, labels, noCreate);
+        final Request request = getRequest(labelsIds, entityId);
         switch (operation) {
             case set:
                 apply(request, wspId);
                 break;
             case append:
-                append(request,wspId);
+                append(request, wspId);
                 break;
             case delete:
                 remove(request, wspId);
                 break;
         }
 
-        return new ManageLabels(operation.prettyName,this.type,entityId.toString(),wspId);
+        return new ManageLabels(operation.prettyName, this.type, entityId.toString(), wspId);
     }
-
 }

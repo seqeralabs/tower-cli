@@ -16,9 +16,9 @@ import io.seqera.tower.model.LabelType;
 import picocli.CommandLine;
 
 public class Label {
-    final String name;
+    public final String name;
 
-    final String value;
+    public final String value;
 
     public Label(String name, String value) {
         this.name = name;

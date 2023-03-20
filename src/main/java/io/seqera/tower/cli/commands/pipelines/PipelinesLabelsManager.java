@@ -18,7 +18,7 @@ import io.seqera.tower.api.DefaultApi;
 import io.seqera.tower.cli.commands.labels.BaseLabelsManager;
 import io.seqera.tower.model.AssociatePipelineLabelsRequest;
 
-public class PipelinesLabelsManager extends BaseLabelsManager<AssociatePipelineLabelsRequest,Long> {
+public class PipelinesLabelsManager extends BaseLabelsManager<AssociatePipelineLabelsRequest, Long> {
     public PipelinesLabelsManager(DefaultApi api) {
         super(api, "pipeline");
     }
@@ -35,11 +35,11 @@ public class PipelinesLabelsManager extends BaseLabelsManager<AssociatePipelineL
 
     @Override
     protected void remove(AssociatePipelineLabelsRequest associatePipelineLabelsRequest, Long wspId) throws ApiException {
-        api.removeLabelsFromPipelines(associatePipelineLabelsRequest,wspId);
+        api.removeLabelsFromPipelines(associatePipelineLabelsRequest, wspId);
     }
 
     @Override
     protected void append(AssociatePipelineLabelsRequest associatePipelineLabelsRequest, Long wspId) throws ApiException {
-        api.removeLabelsFromPipelines(associatePipelineLabelsRequest,wspId);
+        api.removeLabelsFromPipelines(associatePipelineLabelsRequest, wspId);
     }
 }

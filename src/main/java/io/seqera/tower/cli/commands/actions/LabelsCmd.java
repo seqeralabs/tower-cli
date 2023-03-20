@@ -34,8 +34,6 @@ public class LabelsCmd extends AbstractActionsCmd {
         DefaultApi api = api();
         String actionId = fetchDescribeActionResponse(actionRefOptions, wspId).getAction().getId();
         ActionsLabelsManager creator = new ActionsLabelsManager(api);
-        return creator.execute(wspId,actionId, labelsSubcmdOptions);
+        return creator.execute(wspId, actionId, labelsSubcmdOptions);
     }
-
-
 }

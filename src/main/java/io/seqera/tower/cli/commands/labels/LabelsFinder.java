@@ -20,6 +20,7 @@ import io.seqera.tower.model.LabelDbDto;
 import io.seqera.tower.model.ListLabelsResponse;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -44,8 +45,11 @@ public class LabelsFinder {
         try {
             while (offset + pageSize < maxElements) {
                 ListLabelsResponse resp = api.listLabels(wspId, pageSize, offset, label.name, label.getType());
-                maxElements = resp.getTotalSize();
-                Optional<LabelDbDto> labelResponse = resp.getLabels().stream().filter(l -> label.matches(l.getName(), l.getValue())).findFirst();
+                maxElements = Objects.requireNonNull(resp.getTotalSize(), "List labels API didn't return any result.");
+                Optional<LabelDbDto> labelResponse = Objects.requireNonNull(resp.getLabels(), "List labels API didn't return labels.")
+                        .stream()
+                        .filter(l -> label.matches(l.getName(), l.getValue()))
+                        .findFirst();
                 if (labelResponse.isPresent()) {
                     return labelResponse.get().getId();
                 }
@@ -59,7 +63,6 @@ public class LabelsFinder {
         }
         throw new TowerRuntimeException(String.format("Label '%s' does not exists in workspace '%s'", label, wspId));
     }
-
 
     private Long createLabel(Long wspId, Label label) throws TowerRuntimeException {
         try {

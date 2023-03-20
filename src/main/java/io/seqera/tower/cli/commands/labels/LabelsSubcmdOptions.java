@@ -21,11 +21,11 @@ public class LabelsSubcmdOptions {
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
-    @CommandLine.Parameters(split = ",", description = "a comma separated list of labels",converter = Label.LabelConverter.class)
+    @CommandLine.Parameters(split = ",", description = "List of labels seperated by coma.", converter = Label.LabelConverter.class)
     private List<Label> labels;
-    @CommandLine.Option(names = "--no-create", description = "do not create labels if they not exist")
+    @CommandLine.Option(names = "--no-create", description = "Assign labels without creating the ones which were not found.")
     private boolean noCreate;
-    @CommandLine.Option(names = {"--operations", "-o"}, description = "selects the operation to do on labels, defaults to set", defaultValue = "set")
+    @CommandLine.Option(names = {"--operations", "-o"}, description = "Type of operation (set, append, remove) [default: set].", defaultValue = "set")
     private Operation operation;
 
     public Operation getOperation() {
@@ -35,6 +35,7 @@ public class LabelsSubcmdOptions {
     public List<Label> getLabels() {
         return labels;
     }
+
     public boolean getNoCreate() {
         return noCreate;
     }

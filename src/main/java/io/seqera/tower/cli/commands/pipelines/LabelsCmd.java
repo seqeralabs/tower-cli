@@ -11,13 +11,13 @@
 
 package io.seqera.tower.cli.commands.pipelines;
 
-import java.io.IOException;
-
 import io.seqera.tower.ApiException;
 import io.seqera.tower.api.DefaultApi;
 import io.seqera.tower.cli.commands.labels.LabelsSubcmdOptions;
 import io.seqera.tower.cli.responses.Response;
 import picocli.CommandLine;
+
+import java.io.IOException;
 
 @CommandLine.Command(name = "labels", description = "Manages labels for pipelines.")
 public class LabelsCmd extends AbstractPipelinesCmd {
@@ -36,6 +36,6 @@ public class LabelsCmd extends AbstractPipelinesCmd {
 
         PipelinesLabelsManager creator = new PipelinesLabelsManager(api);
 
-        return creator.execute(wspId,pipelineId,labelsSubcmdOptions);
+        return creator.execute(wspId, pipelineId, labelsSubcmdOptions);
     }
 }

@@ -11,13 +11,13 @@
 
 package io.seqera.tower.cli.commands.labels;
 
-import java.util.List;
-
 import picocli.CommandLine;
+
+import java.util.List;
 
 public class LabelsOptionalOptions {
 
-    @CommandLine.Option(names = {"--labels"}, split = ",", description = "Labels to add", converter = Label.LabelConverter.class)
+    @CommandLine.Option(names = {"--labels"}, split = ",", description = "List of labels seperated by coma.", converter = Label.LabelConverter.class)
     public List<Label> labels = null;
 
 }

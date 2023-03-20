@@ -15,8 +15,8 @@ import io.seqera.tower.cli.responses.Response;
 
 public class ManageLabels extends Response {
 
-    String operation;
-    String type;
+    public String operation;
+    public String type;
 
     public final String id;
 
