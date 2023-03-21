@@ -13,6 +13,7 @@ package io.seqera.tower.cli.commands;
 
 import io.seqera.tower.cli.commands.runs.CancelCmd;
 import io.seqera.tower.cli.commands.runs.DeleteCmd;
+import io.seqera.tower.cli.commands.runs.LabelsCmd;
 import io.seqera.tower.cli.commands.runs.ListCmd;
 import io.seqera.tower.cli.commands.runs.RelaunchCmd;
 import io.seqera.tower.cli.commands.runs.ViewCmd;
@@ -26,7 +27,8 @@ import picocli.CommandLine;
                 ListCmd.class,
                 RelaunchCmd.class,
                 CancelCmd.class,
-                DeleteCmd.class
+                DeleteCmd.class,
+                LabelsCmd.class,
         }
 )
 public class RunsCmd extends AbstractRootCmd {
