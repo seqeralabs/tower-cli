@@ -63,7 +63,7 @@ public class PipelinesList extends Response {
                     formatPipelineId(pipe.getPipelineId(), baseWorkspaceUrl),
                     pipe.getName(),
                     pipe.getRepository(),
-                    pipe.getVisibility()
+                    pipe.getVisibility() == null ? "" : pipe.getVisibility()
             ));
             if (includeLabels) rows.add(commaSeparated(pipe));
 
