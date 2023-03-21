@@ -44,9 +44,10 @@ public class AddLabelsCmd extends AbstractLabelsCmd {
     @Override
     protected Response exec() throws ApiException, IOException, IllegalArgumentException, TowerException {
 
-        CreateLabelRequest req = new CreateLabelRequest();
-
-        req.setName(labelName);
+        CreateLabelRequest req = new CreateLabelRequest()
+                .name(labelName)
+                .value(labelValue)
+                .resource(labelValue != null);
 
         if (labelValue != null) {
             req.setValue(labelValue);
