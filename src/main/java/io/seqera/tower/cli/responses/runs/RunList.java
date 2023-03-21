@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 import static io.seqera.tower.cli.utils.FormatHelper.formatTime;
 import static io.seqera.tower.cli.utils.FormatHelper.formatWorkflowId;
 import static io.seqera.tower.cli.utils.FormatHelper.formatWorkflowStatus;
+import static io.seqera.tower.cli.utils.FormatHelper.formatLabels;
 
 public class RunList extends Response {
 
@@ -75,7 +76,7 @@ public class RunList extends Response {
                 wf.getWorkflow().getUserName() == null ? "" : wf.getWorkflow().getUserName(),
                 formatTime(wf.getWorkflow().getSubmit())
             ));
-            if (showLabels) rows.add(getLabelRow(wf));
+            if (showLabels) rows.add(formatLabels(wf.getLabels()));
 
             String[] rowsArray = new String[rows.size()];
             rows.toArray(rowsArray);
@@ -87,16 +88,4 @@ public class RunList extends Response {
         out.println("");
     }
 
-    private String getLabelRow(ListWorkflowsResponseListWorkflowsElement e) {
-        return e.getLabels()
-                .stream()
-                .map(label -> {
-                    String str = label.getName();
-                    if (label.getValue() != null && !label.getValue().isEmpty()) {
-                        str += "=" + label.getValue();
-                    }
-                    return str;
-                })
-                .collect(Collectors.joining(","));
-    }
 }

@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 import static io.seqera.tower.cli.utils.FormatHelper.formatActionId;
 import static io.seqera.tower.cli.utils.FormatHelper.formatActionStatus;
+import static io.seqera.tower.cli.utils.FormatHelper.formatLabels;
 
 public class ActionsList extends Response {
 
@@ -69,7 +70,7 @@ public class ActionsList extends Response {
                     formatActionStatus(element.getStatus()),
                     element.getSource().toString()
             ));
-            if (includeLabels) rows.add(commaSeparated(element));
+            if (includeLabels) rows.add(formatLabels(element.getLabels()));
 
             String[] rowsArray = new String[rows.size()];
             rows.toArray(rowsArray);
@@ -80,17 +81,4 @@ public class ActionsList extends Response {
         out.println("");
     }
 
-    private String commaSeparated(final ListActionsResponseActionInfo res) {
-        if (res.getLabels() == null || res.getLabels().isEmpty()) {
-            return "";
-        }
-        return res.getLabels().stream().map(label -> {
-                    String str = label.getName();
-                    if (label.getValue() != null && !label.getValue().isEmpty()) {
-                        str += "=" + label.getValue();
-                    }
-                    return str;
-                })
-                .collect(Collectors.joining(","));
-    }
 }

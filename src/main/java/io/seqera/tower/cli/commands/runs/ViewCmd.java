@@ -37,6 +37,8 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import static io.seqera.tower.cli.utils.FormatHelper.formatLabels;
+
 @CommandLine.Command(
         name = "view",
         description = "View pipeline's runs.",
@@ -164,15 +166,7 @@ public class ViewCmd extends AbstractRunsCmd {
             if (labels != null && !labels.getLabels().isEmpty()) {
                 general.put(
                     "labels",
-                    labels.getLabels().stream()
-                        .map(label -> {
-                            String str = label.getName();
-                            if (label.getValue() != null && !label.getValue().isEmpty()) {
-                                str += "=" + label.getValue();
-                            }
-                            return str;
-                        })
-                        .collect(Collectors.joining(","))
+                    formatLabels(labels.getLabels())
                 );
             }
 

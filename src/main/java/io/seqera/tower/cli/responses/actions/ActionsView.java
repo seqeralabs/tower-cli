@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 
 import static io.seqera.tower.cli.utils.FormatHelper.formatActionId;
 import static io.seqera.tower.cli.utils.FormatHelper.formatActionStatus;
+import static io.seqera.tower.cli.utils.FormatHelper.formatLabels;
 
 public class ActionsView extends Response {
 
@@ -66,24 +67,12 @@ public class ActionsView extends Response {
         table.addRow("Last event", FormatHelper.formatTime(action.getLastSeen()));
         table.addRow("Date created", FormatHelper.formatTime(action.getDateCreated()));
         table.addRow("Last event", FormatHelper.formatTime(action.getLastSeen()));
-        if (includeBoolean) table.addRow("Labels", action.getLabels().isEmpty() ? "No labels found" : commaSeparatedLabels(action));
+        if (includeBoolean) table.addRow("Labels", action.getLabels().isEmpty() ? "No labels found" : formatLabels(action.getLabels()));
 
         table.print();
 
         out.println(String.format("%n  Configuration:%n%n%s%n", configJson.replaceAll("(?m)^", "     ")));
 
     }
-
-    private String commaSeparatedLabels(final ActionResponseDto res) {
-        return res.getLabels().stream().map(label -> {
-            String str = label.getName();
-            if (label.getValue() != null && !label.getValue().isEmpty()) {
-                str += "=" + label.getValue();
-            }
-            return str;
-        })
-        .collect(Collectors.joining(","));
-    }
-
 
 }

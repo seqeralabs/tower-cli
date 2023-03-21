@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static io.seqera.tower.cli.utils.FormatHelper.formatPipelineId;
+import static io.seqera.tower.cli.utils.FormatHelper.formatLabels;
 
 public class PipelinesList extends Response {
 
@@ -65,27 +66,12 @@ public class PipelinesList extends Response {
                     pipe.getRepository(),
                     pipe.getVisibility() == null ? "" : pipe.getVisibility()
             ));
-            if (includeLabels) rows.add(commaSeparated(pipe));
+            if (includeLabels) rows.add(formatLabels(pipe.getLabels()));
 
             table.addRow(rows.toArray(new String[rows.size()]));
         });
         table.print();
         out.println("");
     }
-
-    private String commaSeparated(final PipelineDbDto res) {
-        if (res.getLabels() == null || res.getLabels().isEmpty()) {
-            return "";
-        }
-        return res.getLabels().stream().map(label -> {
-                    String str = label.getName();
-                    if (label.getValue() != null && !label.getValue().isEmpty()) {
-                        str += "=" + label.getValue();
-                    }
-                    return str;
-                })
-                .collect(Collectors.joining(","));
-    }
-
 
 }
