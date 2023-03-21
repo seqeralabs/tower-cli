@@ -44,10 +44,6 @@ public class AddLabelsCmd extends AbstractLabelsCmd {
     @Override
     protected Response exec() throws ApiException, IOException, IllegalArgumentException, TowerException {
 
-        if (labelName == null || labelName.isEmpty()) {
-            throw new IllegalArgumentException("Missing label name");
-        }
-
         CreateLabelRequest req = new CreateLabelRequest();
 
         req.setName(labelName);
