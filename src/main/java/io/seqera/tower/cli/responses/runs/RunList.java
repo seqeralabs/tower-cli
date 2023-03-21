@@ -66,15 +66,13 @@ public class RunList extends Response {
 
         TableList table = new TableList(out, descriptions.length, descriptions);
         table.setPrefix("    ");
-
         workflows.forEach(wf -> {
-
             List<String> rows = new ArrayList<>(List.of(
                 formatWorkflowId(wf.getWorkflow().getId(), this.baseWorkspaceUrl),
                 formatWorkflowStatus(wf.getWorkflow().getStatus()),
-                wf.getWorkflow().getProjectName(),
+                wf.getWorkflow().getProjectName() == null ? "" : wf.getWorkflow().getProjectName(),
                 wf.getWorkflow().getRunName(),
-                wf.getWorkflow().getUserName(),
+                wf.getWorkflow().getUserName() == null ? "" : wf.getWorkflow().getUserName(),
                 formatTime(wf.getWorkflow().getSubmit())
             ));
             if (showLabels) rows.add(getLabelRow(wf));
@@ -83,6 +81,7 @@ public class RunList extends Response {
             rows.toArray(rowsArray);
             table.addRow(rowsArray);
         });
+
 
         table.print();
         out.println("");
