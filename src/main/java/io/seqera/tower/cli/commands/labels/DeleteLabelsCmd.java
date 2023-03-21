@@ -46,6 +46,6 @@ public class DeleteLabelsCmd extends AbstractLabelsCmd {
             throw new TowerException(String.format("Unable to delete label '%d', reason: %s", labelId, e.toString()));
         }
 
-        return new GenericStrResponse(String.format("Label '%d' deleted successfully\n", labelId));
+        return new DeleteLabelsResponse(labelId, workspaceId(workspaceOptionalOptions.workspace));
     }
 }
