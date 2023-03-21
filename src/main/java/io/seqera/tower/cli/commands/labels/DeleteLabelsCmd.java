@@ -36,16 +36,8 @@ public class DeleteLabelsCmd extends AbstractLabelsCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        try {
-
-            Long wspId = workspaceId(workspaceOptionalOptions.workspace);
-
-            api().deleteLabel(labelId, wspId);
-
-        } catch (Exception e) {
-            throw new TowerException(String.format("Unable to delete label '%d', reason: %s", labelId, e.toString()));
-        }
-
+        Long wspId = workspaceId(workspaceOptionalOptions.workspace);
+        api().deleteLabel(labelId, wspId);
         return new DeleteLabelsResponse(labelId, workspaceId(workspaceOptionalOptions.workspace));
     }
 }
