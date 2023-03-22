@@ -1026,6 +1026,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.global.ShowLabelsOption",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,

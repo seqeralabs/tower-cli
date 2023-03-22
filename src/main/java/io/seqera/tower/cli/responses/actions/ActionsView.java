@@ -22,9 +22,11 @@ import io.seqera.tower.model.ActionResponseDto;
 import io.seqera.tower.model.WorkflowLaunchRequest;
 
 import java.io.PrintWriter;
+import java.util.stream.Collectors;
 
 import static io.seqera.tower.cli.utils.FormatHelper.formatActionId;
 import static io.seqera.tower.cli.utils.FormatHelper.formatActionStatus;
+import static io.seqera.tower.cli.utils.FormatHelper.formatLabels;
 
 public class ActionsView extends Response {
 
@@ -33,9 +35,13 @@ public class ActionsView extends Response {
     @JsonIgnore
     private String baseWorkspaceUrl;
 
-    public ActionsView(ActionResponseDto action, String baseWorkspaceUrl) {
+    @JsonIgnore
+    private boolean includeBoolean;
+
+    public ActionsView(ActionResponseDto action, String baseWorkspaceUrl, boolean includeLabels) {
         this.action = action;
         this.baseWorkspaceUrl = baseWorkspaceUrl;
+        this.includeBoolean = includeLabels;
     }
 
     @Override
@@ -61,9 +67,12 @@ public class ActionsView extends Response {
         table.addRow("Last event", FormatHelper.formatTime(action.getLastSeen()));
         table.addRow("Date created", FormatHelper.formatTime(action.getDateCreated()));
         table.addRow("Last event", FormatHelper.formatTime(action.getLastSeen()));
+        if (includeBoolean) table.addRow("Labels", action.getLabels().isEmpty() ? "No labels found" : formatLabels(action.getLabels()));
+
         table.print();
 
         out.println(String.format("%n  Configuration:%n%n%s%n", configJson.replaceAll("(?m)^", "     ")));
 
     }
+
 }
