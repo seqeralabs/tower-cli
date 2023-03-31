@@ -12,14 +12,11 @@
 package io.seqera.tower.cli.commands.labels;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.commands.computeenvs.AbstractComputeEnvCmd;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
-import io.seqera.tower.cli.exceptions.ShowUsageException;
-import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
+import io.seqera.tower.cli.responses.labels.DeleteLabelsResponse;
 import picocli.CommandLine;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
 
 @CommandLine.Command(

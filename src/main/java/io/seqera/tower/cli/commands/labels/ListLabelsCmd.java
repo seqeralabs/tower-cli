@@ -12,13 +12,10 @@
 package io.seqera.tower.cli.commands.labels;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.commands.computeenvs.AbstractComputeEnvCmd;
-import io.seqera.tower.cli.commands.computeenvs.primary.GetCmd;
-import io.seqera.tower.cli.commands.computeenvs.primary.SetCmd;
 import io.seqera.tower.cli.commands.global.PaginationOptions;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
-import io.seqera.tower.cli.exceptions.ShowUsageException;
 import io.seqera.tower.cli.responses.Response;
+import io.seqera.tower.cli.responses.labels.ListLabelsCmdResponse;
 import io.seqera.tower.model.LabelType;
 import io.seqera.tower.model.ListLabelsResponse;
 import picocli.CommandLine;
@@ -36,7 +33,7 @@ public class ListLabelsCmd extends AbstractLabelsCmd {
     public WorkspaceOptionalOptions workspaceOptionalOptions;
 
     @CommandLine.Option(names = {"-t", "--type"}, description = "Label type (normal|resource|all).", defaultValue = "all")
-    public String labelType;
+    public LabelType labelType;
 
     @CommandLine.Option(names = {"-f", "--filter"}, description = "Show only labels that contain the given word.")
     @Nullable
@@ -53,10 +50,9 @@ public class ListLabelsCmd extends AbstractLabelsCmd {
         Integer max = PaginationOptions.getMax(paginationOptions);
         Integer offset = PaginationOptions.getOffset(paginationOptions, max);
 
-        LabelType typeEnum = LabelType.fromValue(labelType);
 
-        ListLabelsResponse res = api().listLabels(wspId, max, offset, filter == null ? "" : filter, typeEnum);
+        ListLabelsResponse res = api().listLabels(wspId, max, offset, filter == null ? "" : filter, labelType);
 
-        return new ListLabelsCmdResponse(wspId, typeEnum, res.getLabels());
+        return new ListLabelsCmdResponse(wspId, labelType, res.getLabels());
     }
 }

@@ -17,6 +17,7 @@ import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.exceptions.ShowUsageException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
+import io.seqera.tower.cli.responses.labels.LabelAdded;
 import io.seqera.tower.model.CreateLabelRequest;
 import io.seqera.tower.model.CreateLabelResponse;
 import picocli.CommandLine;
@@ -37,7 +38,7 @@ public class AddLabelsCmd extends AbstractLabelsCmd {
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspaceOptionalOptions;
 
-    @CommandLine.Option(names = {"-v", "--value"}, description = "Label value", required = false)
+    @CommandLine.Option(names = {"-v", "--value"}, description = "Label value")
     @Nullable
     public String labelValue;
 
@@ -58,14 +59,12 @@ public class AddLabelsCmd extends AbstractLabelsCmd {
 
         Long wspId = workspaceId(workspaceOptionalOptions.workspace);
 
-        CreateLabelResponse res = null;
         try {
-            res = api().createLabel(req, wspId);
+            CreateLabelResponse res = api().createLabel(req, wspId);
+            return new LabelAdded(res.getId(), res.getName(), res.getResource(),res.getValue(),workspaceOptionalOptions.workspace);
         } catch (Exception e) {
             throw new TowerException(String.format("Unable to create label for workspace '%d'", wspId));
         }
-
-        return new GenericStrResponse(String.format("successfully created label '%d' for workspace '%d'\n", res.getId(), wspId));
     }
 
 }

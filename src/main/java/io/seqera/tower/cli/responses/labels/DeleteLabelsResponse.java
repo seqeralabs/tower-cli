@@ -9,7 +9,7 @@
  * defined by the Mozilla Public License, v. 2.0.
  */
 
-package io.seqera.tower.cli.commands.labels;
+package io.seqera.tower.cli.responses.labels;
 
 import io.seqera.tower.cli.responses.Response;
 
@@ -17,9 +17,9 @@ import javax.annotation.Nullable;
 
 public class DeleteLabelsResponse extends Response {
 
-    Long labelId;
+    public final Long labelId;
     @Nullable
-    Long workspaceId;
+    public final Long workspaceId;
 
     public DeleteLabelsResponse(final Long labelId, final Long workspaceId) {
         this.labelId = labelId;

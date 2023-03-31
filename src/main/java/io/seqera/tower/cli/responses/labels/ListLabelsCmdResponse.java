@@ -10,7 +10,7 @@
  */
 
 
-package io.seqera.tower.cli.commands.labels;
+package io.seqera.tower.cli.responses.labels;
 
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.TableList;

@@ -18,6 +18,7 @@ import io.seqera.tower.cli.responses.Response;
 import picocli.CommandLine;
 
 import java.io.IOException;
+import java.util.Collections;
 
 @CommandLine.Command(name = "labels", description = "Manages labels for actions.")
 public class LabelsCmd extends AbstractActionsCmd {
@@ -32,7 +33,7 @@ public class LabelsCmd extends AbstractActionsCmd {
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(labelsSubcmdOptions.workspace.workspace);
         DefaultApi api = api();
-        String actionId = fetchDescribeActionResponse(actionRefOptions, wspId).getAction().getId();
+        String actionId = fetchDescribeActionResponse(actionRefOptions, wspId,Collections.emptyList()).getAction().getId();
         ActionsLabelsManager creator = new ActionsLabelsManager(api);
         return creator.execute(wspId, actionId, labelsSubcmdOptions);
     }

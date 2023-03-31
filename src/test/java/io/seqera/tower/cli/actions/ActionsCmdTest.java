@@ -619,14 +619,17 @@ class ActionsCmdTest extends BaseCmdTest {
         assertTrue(out.stdErr.contains("Missing Required Subcommand"));
     }
 
-/*    @ParameterizedTest
-    @EnumSource(OutputType.class)
-    void testLabels(OutputType format, MockServerClient mock) throws IOException {
-        mock.reset();
-        mock.when(
-                request().withMethod("GET").withPath("/labels")
-        )
-        ExecOut out = exec(mock,"actions", "labels","label1,label2,label3","-n","action");
-        assertOutput(format,out,new ManageLabels(LabelsSubcmdOptions.Operation.set.prettyName,"action","1",0l));
-    }*/
+//    @ParameterizedTest
+//    @EnumSource(OutputType.class)
+//    void testLabels(OutputType format, MockServerClient mock) throws IOException {
+//        mock.reset();
+//        mock.when(
+//                request().withMethod("GET").withPath("/labels"),exactly(1)
+//        ).respond(
+//                response().withStatusCode(200)
+//        );
+//
+//        ExecOut out = exec(mock,"actions", "labels","label1,label2,label3","-n","action");
+//        assertOutput(format,out,new ManageLabels(LabelsSubcmdOptions.Operation.set.prettyName,"action","1",0l));
+//    }
 }
