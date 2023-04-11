@@ -64,11 +64,11 @@ public class DumpCmd extends AbstractRunsCmd {
     @CommandLine.Option(names = {"-o", "--output"}, description = "Output file to store the dump. (supported formats: .tar.xz and .tar.gz)", required = true)
     Path outputFile;
 
-    @CommandLine.Option(names = {"--skip-tasks"}, description = "Skip all tasks logs.")
-    public boolean skipTasks;
+    @CommandLine.Option(names = {"--add-task-logs"}, description = "Add all task stdout, stderr and log files.")
+    public boolean addTaskLogs;
 
-    @CommandLine.Option(names = {"--add-fusion"}, description = "Add Fusion task logs.")
-    public boolean addFusion;
+    @CommandLine.Option(names = {"--add-fusion-logs"}, description = "Add all Fusion task logs.")
+    public boolean addFusionLogs;
 
     @CommandLine.Option(names = {"--only-failed"}, description = "Dump only failed tasks.")
     public boolean onlyFailed;
@@ -192,7 +192,7 @@ public class DumpCmd extends AbstractRunsCmd {
     }
 
     private void addTaskLogs(PrintWriter progress, TarArchiveOutputStream out, Long wspId, String workflowId, List<Task> tasks) throws IOException, ApiException {
-        if (skipTasks) {
+        if (!addTaskLogs && !addFusionLogs) {
             return;
         }
 
@@ -204,37 +204,40 @@ public class DumpCmd extends AbstractRunsCmd {
         int total = tasks.size();
         for (Task task : tasks) {
             progress.println(ansi(String.format("     [%d/%d] adding task logs '%s'", current++, total, task.getName())));
-            try {
-                File taskOut = api().downloadWorkflowTaskLog(workflowId, task.getTaskId(), ".command.out", wspId);
-                addFile(out, String.format("tasks/%d/.command.out", task.getTaskId()), taskOut);
-            } catch (ApiException e) {
-                // Ignore error 404 that means that the file it is no longer available
-                if (e.getCode() != 404) {
-                    throw e;
+
+            if (addTaskLogs) {
+                try {
+                    File taskOut = api().downloadWorkflowTaskLog(workflowId, task.getTaskId(), ".command.out", wspId);
+                    addFile(out, String.format("tasks/%d/.command.out", task.getTaskId()), taskOut);
+                } catch (ApiException e) {
+                    // Ignore error 404 that means that the file it is no longer available
+                    if (e.getCode() != 404) {
+                        throw e;
+                    }
+                }
+
+                try {
+                    File taskOut = api().downloadWorkflowTaskLog(workflowId, task.getTaskId(), ".command.err", wspId);
+                    addFile(out, String.format("tasks/%d/.command.err", task.getTaskId()), taskOut);
+                } catch (ApiException e) {
+                    // Ignore error 404 that means that the file it is no longer available
+                    if (e.getCode() != 404) {
+                        throw e;
+                    }
+                }
+
+                try {
+                    File taskOut = api().downloadWorkflowTaskLog(workflowId, task.getTaskId(), ".command.log", wspId);
+                    addFile(out, String.format("tasks/%d/.command.log", task.getTaskId()), taskOut);
+                } catch (ApiException e) {
+                    // Ignore error 404 that means that the file it is no longer available
+                    if (e.getCode() != 404) {
+                        throw e;
+                    }
                 }
             }
 
-            try {
-                File taskOut = api().downloadWorkflowTaskLog(workflowId, task.getTaskId(), ".command.err", wspId);
-                addFile(out, String.format("tasks/%d/.command.err", task.getTaskId()), taskOut);
-            } catch (ApiException e) {
-                // Ignore error 404 that means that the file it is no longer available
-                if (e.getCode() != 404) {
-                    throw e;
-                }
-            }
-
-            try {
-                File taskOut = api().downloadWorkflowTaskLog(workflowId, task.getTaskId(), ".command.log", wspId);
-                addFile(out, String.format("tasks/%d/.command.log", task.getTaskId()), taskOut);
-            } catch (ApiException e) {
-                // Ignore error 404 that means that the file it is no longer available
-                if (e.getCode() != 404) {
-                    throw e;
-                }
-            }
-
-            if (addFusion) {
+            if (addFusionLogs) {
                 try {
                     File taskOut = api().downloadWorkflowTaskLog(workflowId, task.getTaskId(), ".fusion.log", wspId);
                     addFile(out, String.format("tasks/%d/.fusion.log", task.getTaskId()), taskOut);
