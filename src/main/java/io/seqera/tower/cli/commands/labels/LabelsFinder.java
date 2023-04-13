@@ -26,6 +26,12 @@ import java.util.stream.Collectors;
 
 public class LabelsFinder {
 
+    public enum NotFoundLabelBehavior {
+        CREATE,
+        FAIL,
+        FILTER
+    }
+
     private final DefaultApi api;
 
 
@@ -34,11 +40,13 @@ public class LabelsFinder {
     }
 
 
-    public List<Long> findLabelsIds(Long wspId, List<Label> labels, boolean noCreate) throws TowerException {
-        return labels.stream().map(e -> fetchOrCreateLabelId(wspId, e, noCreate)).collect(Collectors.toList());
+    public List<Long> findLabelsIds(Long wspId, List<Label> labels, NotFoundLabelBehavior behavior) throws TowerException {
+        return labels.stream().map(e -> fetchOrCreateLabelId(wspId, e, behavior))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
-    private Long fetchOrCreateLabelId(Long wspId, Label label, boolean noCreate) throws TowerRuntimeException {
+    private Long fetchOrCreateLabelId(Long wspId, Label label, NotFoundLabelBehavior notFound) throws TowerRuntimeException {
         int offset = 0;
         int pageSize = 100;
         long maxElements = Long.MAX_VALUE;
@@ -58,10 +66,15 @@ public class LabelsFinder {
         } catch (ApiException e) {
             throw new TowerRuntimeException(String.format("Failed to list labels [%s]", e.getMessage()));
         }
-        if (!noCreate) {
-            return createLabel(wspId, label);
+        switch (notFound) {
+            case CREATE:
+                return createLabel(wspId,label);
+            case FILTER:
+                return null;
+            default:
+                throw new TowerRuntimeException(String.format("Label '%s' does not exists in workspace '%s'", label, wspId));
+
         }
-        throw new TowerRuntimeException(String.format("Label '%s' does not exists in workspace '%s'", label, wspId));
     }
 
     private Long createLabel(Long wspId, Label label) throws TowerRuntimeException {
@@ -69,6 +82,7 @@ public class LabelsFinder {
             CreateLabelRequest request = new CreateLabelRequest().name(label.name);
             if (label.value != null) {
                 request.value(label.value);
+                request.resource(true);
             }
             return api.createLabel(request, wspId).getId();
         } catch (ApiException e) {

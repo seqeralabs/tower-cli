@@ -18,11 +18,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.JSON;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
+import io.seqera.tower.cli.commands.labels.LabelsSubcmdOptions;
 import io.seqera.tower.cli.exceptions.MultiplePipelinesFoundException;
 import io.seqera.tower.cli.exceptions.NoComputeEnvironmentException;
 import io.seqera.tower.cli.exceptions.PipelineNotFoundException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.exceptions.WorkspaceNotFoundException;
+import io.seqera.tower.cli.responses.labels.ManageLabels;
 import io.seqera.tower.cli.responses.pipelines.PipelinesAdded;
 import io.seqera.tower.cli.responses.pipelines.PipelinesDeleted;
 import io.seqera.tower.cli.responses.pipelines.PipelinesExport;
@@ -631,5 +633,264 @@ class PipelinesCmdTest extends BaseCmdTest {
         assertEquals("", out.stdErr);
         assertEquals(new PipelinesAdded(USER_WORKSPACE_NAME, "pipelineNew").toString(), out.stdOut);
         assertEquals(0, out.exitCode);
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testApplyLabels(OutputType format, MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET")
+                        .withPath("/pipelines")
+                        .withQueryStringParameter("workspaceId", "69509535922157")
+                        .withQueryStringParameter("search", "cli_pipeline")
+                        .withQueryStringParameter("visibility", "all"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(
+                                """
+                            {
+                             "pipelines":[{"pipelineId":227906339448730,"name":"cli_pipeline","description":null,"icon":null,"repository":"https://github.com/nextflow-io/hello","userId":1,"userName":"eliantor",
+                             "userFirstName":null,"userLastName":null,"orgId":109383401867759,"orgName":"CliOrg",
+                             "workspaceId":69509535922157,"workspaceName":"cli-wsp","visibility":"PRIVATE",
+                             "deleted":false,"lastUpdated":"2023-04-12T14:30:44.541301+02:00","optimized":null,"labels":null,"computeEnv":null}],
+                             "totalSize":1}
+                             """)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/labels")
+                        .withQueryStringParameter("workspaceId","69509535922157")
+                        .withQueryStringParameter("max","100")
+                        .withQueryStringParameter("offset","0")
+                        .withQueryStringParameter("type","simple")
+                        .withQueryStringParameter("search", "test_label0"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("""
+                                  {"labels":[{"id":20504124310835,"name":"test_label0","value":null,"resource":false,"isDefault":false}],"totalSize":1}
+                                  """)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/labels")
+                        .withQueryStringParameter("workspaceId","69509535922157")
+                        .withQueryStringParameter("max","100")
+                        .withQueryStringParameter("offset","0")
+                        .withQueryStringParameter("type","simple")
+                        .withQueryStringParameter("search", "test_label1"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("""
+                                  {"labels":[],"totalSize":0}
+                                  """)
+        );
+        mock.when(
+                request().withMethod("POST")
+                        .withPath("/labels")
+                        .withQueryStringParameter("workspaceId","69509535922157")
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("{\"name\":\"test_label1\"}"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("""
+                                  {"id":216786345960497,"name":"test_label1","value":null,"resource":false,"isDefault":false}
+                                  """)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/labels")
+                        .withQueryStringParameter("workspaceId","69509535922157")
+                        .withQueryStringParameter("max","100")
+                        .withQueryStringParameter("offset","0")
+                        .withQueryStringParameter("type","resource")
+                        .withQueryStringParameter("search", "test_label2"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("""
+                                  {"labels":[],"totalSize":0}
+                                  """)
+        );
+        mock.when(
+                request().withMethod("POST")
+                        .withPath("/labels")
+                        .withQueryStringParameter("workspaceId","69509535922157")
+                        .withBody("{\"name\":\"test_label2\",\"value\":\"value\",\"resource\":true}")
+                        .withContentType(MediaType.APPLICATION_JSON),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+                        .withBody("{\"id\":280969213757193,\"name\":\"test_label2\",\"value\":\"value\",\"resource\":true}")
+                        .withContentType(MediaType.APPLICATION_JSON)
+
+        );
+        mock.when(
+                request().withMethod("POST")
+                        .withPath("/pipelines/labels/apply")
+                        .withQueryStringParameter("workspaceId","69509535922157")
+                        .withBody("{\"pipelineIds\":[227906339448730],\"labelIds\":[20504124310835,216786345960497,280969213757193]}")
+                        .withContentType(MediaType.APPLICATION_JSON),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(format, mock,"pipelines","labels","-w","69509535922157","-n","cli_pipeline", "test_label0,test_label1,test_label2=value");
+        assertOutput(format,out, new ManageLabels("Applied","pipeline","227906339448730",69509535922157L));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAppendLabels(OutputType format, MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET")
+                        .withPath("/pipelines")
+                        .withQueryStringParameter("workspaceId", "69509535922157")
+                        .withQueryStringParameter("search", "cli_pipeline")
+                        .withQueryStringParameter("visibility", "all"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(
+                                """
+                            {
+                             "pipelines":[{"pipelineId":227906339448730,"name":"cli_pipeline","description":null,"icon":null,"repository":"https://github.com/nextflow-io/hello","userId":1,"userName":"eliantor",
+                             "userFirstName":null,"userLastName":null,"orgId":109383401867759,"orgName":"CliOrg",
+                             "workspaceId":69509535922157,"workspaceName":"cli-wsp","visibility":"PRIVATE",
+                             "deleted":false,"lastUpdated":"2023-04-12T14:30:44.541301+02:00","optimized":null,"labels":null,"computeEnv":null}],
+                             "totalSize":1}
+                             """)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/labels")
+                        .withQueryStringParameter("workspaceId","69509535922157")
+                        .withQueryStringParameter("max","100")
+                        .withQueryStringParameter("offset","0")
+                        .withQueryStringParameter("type","simple")
+                        .withQueryStringParameter("search", "test_label0"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("""
+                                  {"labels":[{"id":20504124310835,"name":"test_label0","value":null,"resource":false,"isDefault":false}],"totalSize":1}
+                                  """)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/labels")
+                        .withQueryStringParameter("workspaceId","69509535922157")
+                        .withQueryStringParameter("max","100")
+                        .withQueryStringParameter("offset","0")
+                        .withQueryStringParameter("type","resource")
+                        .withQueryStringParameter("search", "test_label2"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("""
+                                  {"labels":[],"totalSize":0}
+                                  """)
+        );
+        mock.when(
+                request().withMethod("POST")
+                        .withPath("/labels")
+                        .withQueryStringParameter("workspaceId","69509535922157")
+                        .withBody("{\"name\":\"test_label2\",\"value\":\"value\",\"resource\":true}")
+                        .withContentType(MediaType.APPLICATION_JSON),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+                        .withBody("{\"id\":280969213757193,\"name\":\"test_label2\",\"value\":\"value\",\"resource\":true}")
+                        .withContentType(MediaType.APPLICATION_JSON)
+
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/pipelines/labels/add")
+                        .withQueryStringParameter("workspaceId","69509535922157")
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("{\"pipelineIds\":[227906339448730],\"labelIds\":[20504124310835,280969213757193]}")
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+
+        ExecOut out = exec(format,mock, "pipelines", "labels", "-w", "69509535922157", "-n", "cli_pipeline", "-o", "append","test_label0,test_label2=value");
+        assertOutput(format,out, new ManageLabels("Added","pipeline","227906339448730",69509535922157L));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testRemoveLabels(OutputType format, MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET")
+                        .withPath("/pipelines")
+                        .withQueryStringParameter("workspaceId", "69509535922157")
+                        .withQueryStringParameter("search", "cli_pipeline")
+                        .withQueryStringParameter("visibility", "all"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(
+                                """
+                            {
+                             "pipelines":[{"pipelineId":227906339448730,"name":"cli_pipeline","description":null,"icon":null,"repository":"https://github.com/nextflow-io/hello","userId":1,"userName":"eliantor",
+                             "userFirstName":null,"userLastName":null,"orgId":109383401867759,"orgName":"CliOrg",
+                             "workspaceId":69509535922157,"workspaceName":"cli-wsp","visibility":"PRIVATE",
+                             "deleted":false,"lastUpdated":"2023-04-12T14:30:44.541301+02:00","optimized":null,"labels":null,"computeEnv":null}],
+                             "totalSize":1}
+                             """)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/labels")
+                        .withQueryStringParameter("workspaceId","69509535922157")
+                        .withQueryStringParameter("max","100")
+                        .withQueryStringParameter("offset","0")
+                        .withQueryStringParameter("type","simple")
+                        .withQueryStringParameter("search", "test_label0"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("""
+                                  {"labels":[],"totalSize":0}
+                                  """)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/labels")
+                        .withQueryStringParameter("workspaceId","69509535922157")
+                        .withQueryStringParameter("max","100")
+                        .withQueryStringParameter("offset","0")
+                        .withQueryStringParameter("type","resource")
+                        .withQueryStringParameter("search", "test_label1"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("""
+                                  {"labels":[{"id":20504123310835,"name":"test_label1","value":"value","resource":true,"isDefault":false}],"totalSize":0}
+                                  """)
+        );
+        mock.when(
+                request().withMethod("POST")
+                        .withPath("/pipelines/labels/remove")
+                        .withQueryStringParameter("workspaceId","69509535922157")
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("{\"pipelineIds\":[227906339448730],\"labelIds\":[20504123310835]}")
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(format,mock,"-v", "pipelines", "labels","-w","69509535922157","-n","cli_pipeline","-o","delete", "test_label0,test_label1=value");
+        assertOutput(format,out, new ManageLabels("Removed","pipeline","227906339448730",69509535922157L));
     }
 }

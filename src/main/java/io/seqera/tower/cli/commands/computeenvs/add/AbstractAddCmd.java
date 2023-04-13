@@ -116,7 +116,7 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
     private List<Long> findLabels(Long wspId, List<Label> labels) throws ApiException {
         if (labels != null && !labels.isEmpty()) {
             LabelsFinder finder = new LabelsFinder(api());
-            return finder.findLabelsIds(wspId,labels,false);
+            return finder.findLabelsIds(wspId,labels, LabelsFinder.NotFoundLabelBehavior.CREATE);
         } else {
             return null;
         }

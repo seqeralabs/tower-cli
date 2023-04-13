@@ -27,7 +27,7 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "update",
-        description = "Update labels"
+        description = "Update labels."
 )
 public class UpdateLabelsCmd extends AbstractLabelsCmd {
 

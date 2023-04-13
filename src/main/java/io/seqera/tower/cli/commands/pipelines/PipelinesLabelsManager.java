@@ -40,6 +40,6 @@ public class PipelinesLabelsManager extends BaseLabelsManager<AssociatePipelineL
 
     @Override
     protected void append(AssociatePipelineLabelsRequest associatePipelineLabelsRequest, Long wspId) throws ApiException {
-        api.removeLabelsFromPipelines(associatePipelineLabelsRequest, wspId);
+        api.addLabelsToPipelines(associatePipelineLabelsRequest, wspId);
     }
 }

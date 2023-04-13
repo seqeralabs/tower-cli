@@ -51,7 +51,7 @@ public abstract class BaseLabelsManager<Request, EntityId> {
     }
 
     public ManageLabels execute(Long wspId, EntityId entityId, List<Label> labels, LabelsSubcmdOptions.Operation operation, boolean noCreate) throws ApiException {
-        final List<Long> labelsIds = finder.findLabelsIds(wspId, labels, noCreate);
+        final List<Long> labelsIds = finder.findLabelsIds(wspId, labels, selectBehavior(noCreate,operation));
         final Request request = getRequest(labelsIds, entityId);
         switch (operation) {
             case set:
@@ -66,5 +66,14 @@ public abstract class BaseLabelsManager<Request, EntityId> {
         }
 
         return new ManageLabels(operation.prettyName, this.type, entityId.toString(), wspId);
+    }
+
+    private LabelsFinder.NotFoundLabelBehavior selectBehavior(boolean noCreate, LabelsSubcmdOptions.Operation operation) {
+        if (operation == LabelsSubcmdOptions.Operation.delete) {
+            // for delete operations we never want to create non-existing labels
+            // we can simply skip the label
+            return LabelsFinder.NotFoundLabelBehavior.FILTER;
+        }
+        return noCreate? LabelsFinder.NotFoundLabelBehavior.FAIL: LabelsFinder.NotFoundLabelBehavior.CREATE;
     }
 }
