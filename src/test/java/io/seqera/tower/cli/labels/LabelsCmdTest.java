@@ -39,15 +39,13 @@ public class LabelsCmdTest extends BaseCmdTest {
         ).respond(
                 response().withStatusCode(200).withBody(
                         // language=json
-                        """
-                        {
-                            "id": 10,
-                            "name": "some-label",
-                            "resource": false,
-                            "value": null
-                            
-                        }
-                        """).withContentType(MediaType.APPLICATION_JSON)
+                        "{\n" +
+                            "\"id\": 10,\n" +
+                            "\"name\": \"some-label\",\n" +
+                            "\"resource\": false,\n" +
+                            "\"value\": null\n" +
+                        "}")
+                        .withContentType(MediaType.APPLICATION_JSON)
         );
 
         ExecOut out = exec(format, mock, "labels", "add", "-n", "some-label","-w", "123");
@@ -65,15 +63,13 @@ public class LabelsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody(
-                // language=json
-                """
-                {
-                    "id": 10,
-                    "name": "res",
-                    "resource": true,
-                    "value": "val"
-                }
-                """)
+                        //language=json
+                        "{\n" +
+                            "\"id\": 10,\n" +
+                            "\"name\": \"res\",\n" +
+                            "\"resource\": true,\n" +
+                            "\"value\": \"val\"\n" +
+                        "}")
         );
 
         ExecOut out = exec(format, mock,"labels", "add", "-n", "res","-v","val","-w","4343");
@@ -106,14 +102,13 @@ public class LabelsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody( // language=json
-                        """
-                            {"labels":[
-                                {"id":97027588903667,"name":"awesome-label","value":null,"resource":false},
-                                {"id":250670995082875,"name":"new-label","value":null,"resource":false},
-                                {"id":55286297817389,"name":"newx-label","value":null,"resource":false},
-                                {"id":232243090533688,"name":"res-label","value":"aaaa","resource":true}],
-                                "totalSize":4}
-                        """)
+                        "{\"labels\":[\n" +
+                                "{\"id\":97027588903667,\"name\":\"awesome-label\",\"value\":null,\"resource\":false},\n" +
+                                "{\"id\":250670995082875,\"name\":\"new-label\",\"value\":null,\"resource\":false},\n" +
+                                "{\"id\":55286297817389,\"name\":\"newx-label\",\"value\":null,\"resource\":false},\n" +
+                                "{\"id\":232243090533688,\"name\":\"res-label\",\"value\":\"aaaa\",\"resource\":true}],\n" +
+                                "\"totalSize\":4" +
+                        "}")
         );
         ExecOut out = exec(format, mock, "labels", "list", "-w","5662512677752");
         assertOutput(format, out, new ListLabelsCmdResponse(
@@ -139,13 +134,12 @@ public class LabelsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody( // language=json
-                                """
-                                    {"labels":[
-                                        {"id":97027588903667,"name":"awesome-label","value": null, "resource":false},
-                                        {"id":250670995082875,"name":"new-label","value": null, "resource":false},
-                                        {"id":55286297817389,"name":"newx-label","value": null, "resource":false}],
-                                        "totalSize":3}
-                                """)
+                        "{\"labels\":[\n" +
+                                "{\"id\":97027588903667,\"name\":\"awesome-label\",\"value\": null, \"resource\":false},\n" +
+                                "{\"id\":250670995082875,\"name\":\"new-label\",\"value\": null, \"resource\":false},\n" +
+                                "{\"id\":55286297817389,\"name\":\"newx-label\",\"value\": null, \"resource\":false}],\n" +
+                                "\"totalSize\":3" +
+                        "}")
         );
         ExecOut out = exec(format, mock, "labels", "list", "-w","5662512677752","-t", "simple");
         assertOutput(format, out, new ListLabelsCmdResponse(
@@ -170,13 +164,12 @@ public class LabelsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody( // language=json
-                                """
-                                    {"labels":[
-                                        {"id":97027588903667,"name":"awesome-label","value": "aaa", "resource":true},
-                                        {"id":250670995082875,"name":"new-label","value": "bbb", "resource":true},
-                                        {"id":55286297817389,"name":"newx-label","value": "ccc", "resource":true}],
-                                        "totalSize":3}
-                                """)
+                        "{\"labels\":[\n" +
+                                "{\"id\":97027588903667,\"name\":\"awesome-label\",\"value\": \"aaa\", \"resource\":true},\n" +
+                                "{\"id\":250670995082875,\"name\":\"new-label\",\"value\": \"bbb\", \"resource\":true},\n" +
+                                "{\"id\":55286297817389,\"name\":\"newx-label\",\"value\": \"ccc\", \"resource\":true}],\n" +
+                                "\"totalSize\":3" +
+                        "}")
         );
         ExecOut out = exec(format, mock, "labels", "list", "-w","5662512677752","-t", "resource");
         assertOutput(format, out, new ListLabelsCmdResponse(
@@ -201,13 +194,12 @@ public class LabelsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody( // language=json
-                                """
-                                    {"labels":[
-                                        {"id":97027588903667,"name":"res-find-label","value": "aaa", "resource":true},
-                                        {"id":250670995082875,"name":"label-to-find","value": null, "resource":false},
-                                        {"id":55286297817389,"name":"find-label","value": "ccc", "resource":true}],
-                                        "totalSize":3}
-                                """)
+                        "{\"labels\":[\n" +
+                            "{\"id\":97027588903667,\"name\":\"res-find-label\",\"value\": \"aaa\", \"resource\":true},\n" +
+                            "{\"id\":250670995082875,\"name\":\"label-to-find\",\"value\": null, \"resource\":false},\n" +
+                            "{\"id\":55286297817389,\"name\":\"find-label\",\"value\": \"ccc\", \"resource\":true}],\n" +
+                            "\"totalSize\":3" +
+                        "}")
         );
         ExecOut out = exec(format, mock, "labels", "list", "-w","5662512677752","-f", "find");
         assertOutput(format, out, new ListLabelsCmdResponse(
