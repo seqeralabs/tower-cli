@@ -66,7 +66,7 @@ task buildInfo {
 }
 
 compileJava {
-    sourceCompatibility = JavaVersion.toVersion("11")
+    sourceCompatibility = JavaVersion.toVersion("17")
     targetCompatibility = JavaVersion.toVersion("11")
     options.compilerArgs += ["-Aproject=${project.name}"]
     dependsOn buildInfo
