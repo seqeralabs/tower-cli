@@ -649,15 +649,15 @@ class PipelinesCmdTest extends BaseCmdTest {
                 response().withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody(
-                                """
-                            {
-                             "pipelines":[{"pipelineId":227906339448730,"name":"cli_pipeline","description":null,"icon":null,"repository":"https://github.com/nextflow-io/hello","userId":1,"userName":"eliantor",
-                             "userFirstName":null,"userLastName":null,"orgId":109383401867759,"orgName":"CliOrg",
-                             "workspaceId":69509535922157,"workspaceName":"cli-wsp","visibility":"PRIVATE",
-                             "deleted":false,"lastUpdated":"2023-04-12T14:30:44.541301+02:00","optimized":null,"labels":null,"computeEnv":null}],
-                             "totalSize":1}
-                             """)
-        );
+                                "{\n" +
+                                "\"pipelines\":[{\"pipelineId\":227906339448730,\"name\":\"cli_pipeline\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/nextflow-io/hello\",\"userId\":1,\"userName\":\"eliantor\",\n" +
+                                "\"userFirstName\":null,\"userLastName\":null,\"orgId\":109383401867759,\"orgName\":\"CliOrg\",\n" +
+                                "\"workspaceId\":69509535922157,\"workspaceName\":\"cli-wsp\",\"visibility\":\"PRIVATE\",\n" +
+                                "\"deleted\":false,\"lastUpdated\":\"2023-04-12T14:30:44.541301+02:00\",\"optimized\":null,\"labels\":null,\"computeEnv\":null}],\n" +
+                                "\"totalSize\":1" +
+                                "}"
+                        )
+                );
         mock.when(
                 request().withMethod("GET").withPath("/labels")
                         .withQueryStringParameter("workspaceId","69509535922157")
@@ -669,9 +669,9 @@ class PipelinesCmdTest extends BaseCmdTest {
         ).respond(
                 response().withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody("""
-                                  {"labels":[{"id":20504124310835,"name":"test_label0","value":null,"resource":false,"isDefault":false}],"totalSize":1}
-                                  """)
+                        .withBody("" +
+                            "{\"labels\":[{\"id\":20504124310835,\"name\":\"test_label0\",\"value\":null,\"resource\":false,\"isDefault\":false}],\"totalSize\":1}" +
+                        "")
         );
         mock.when(
                 request().withMethod("GET").withPath("/labels")
@@ -684,9 +684,9 @@ class PipelinesCmdTest extends BaseCmdTest {
         ).respond(
                 response().withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody("""
-                                  {"labels":[],"totalSize":0}
-                                  """)
+                        .withBody("" +
+                            "{\"labels\":[],\"totalSize\":0}" +
+                        "")
         );
         mock.when(
                 request().withMethod("POST")
@@ -698,9 +698,7 @@ class PipelinesCmdTest extends BaseCmdTest {
         ).respond(
                 response().withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody("""
-                                  {"id":216786345960497,"name":"test_label1","value":null,"resource":false,"isDefault":false}
-                                  """)
+                        .withBody("{\"id\":216786345960497,\"name\":\"test_label1\",\"value\":null,\"resource\":false,\"isDefault\":false}")
         );
         mock.when(
                 request().withMethod("GET").withPath("/labels")
@@ -713,9 +711,7 @@ class PipelinesCmdTest extends BaseCmdTest {
         ).respond(
                 response().withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody("""
-                                  {"labels":[],"totalSize":0}
-                                  """)
+                        .withBody("{\"labels\":[],\"totalSize\":0}")
         );
         mock.when(
                 request().withMethod("POST")
@@ -759,14 +755,13 @@ class PipelinesCmdTest extends BaseCmdTest {
                 response().withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody(
-                                """
-                            {
-                             "pipelines":[{"pipelineId":227906339448730,"name":"cli_pipeline","description":null,"icon":null,"repository":"https://github.com/nextflow-io/hello","userId":1,"userName":"eliantor",
-                             "userFirstName":null,"userLastName":null,"orgId":109383401867759,"orgName":"CliOrg",
-                             "workspaceId":69509535922157,"workspaceName":"cli-wsp","visibility":"PRIVATE",
-                             "deleted":false,"lastUpdated":"2023-04-12T14:30:44.541301+02:00","optimized":null,"labels":null,"computeEnv":null}],
-                             "totalSize":1}
-                             """)
+                                "{\n" +
+                                "\"pipelines\":[{\"pipelineId\":227906339448730,\"name\":\"cli_pipeline\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/nextflow-io/hello\",\"userId\":1,\"userName\":\"eliantor\",\n" +
+                                "\"userFirstName\":null,\"userLastName\":null,\"orgId\":109383401867759,\"orgName\":\"CliOrg\",\n" +
+                                "\"workspaceId\":69509535922157,\"workspaceName\":\"cli-wsp\",\"visibility\":\"PRIVATE\",\n" +
+                                "\"deleted\":false,\"lastUpdated\":\"2023-04-12T14:30:44.541301+02:00\",\"optimized\":null,\"labels\":null,\"computeEnv\":null}],\n" +
+                                "\"totalSize\":1}"
+                        )
         );
 
         mock.when(
@@ -780,9 +775,9 @@ class PipelinesCmdTest extends BaseCmdTest {
         ).respond(
                 response().withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody("""
-                                  {"labels":[{"id":20504124310835,"name":"test_label0","value":null,"resource":false,"isDefault":false}],"totalSize":1}
-                                  """)
+                        .withBody("" +
+                            "{\"labels\":[{\"id\":20504124310835,\"name\":\"test_label0\",\"value\":null,\"resource\":false,\"isDefault\":false}],\"totalSize\":1}" +
+                        "")
         );
         mock.when(
                 request().withMethod("GET").withPath("/labels")
@@ -795,9 +790,7 @@ class PipelinesCmdTest extends BaseCmdTest {
         ).respond(
                 response().withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody("""
-                                  {"labels":[],"totalSize":0}
-                                  """)
+                        .withBody("{\"labels\":[],\"totalSize\":0}")
         );
         mock.when(
                 request().withMethod("POST")
@@ -840,15 +833,13 @@ class PipelinesCmdTest extends BaseCmdTest {
         ).respond(
                 response().withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody(
-                                """
-                            {
-                             "pipelines":[{"pipelineId":227906339448730,"name":"cli_pipeline","description":null,"icon":null,"repository":"https://github.com/nextflow-io/hello","userId":1,"userName":"eliantor",
-                             "userFirstName":null,"userLastName":null,"orgId":109383401867759,"orgName":"CliOrg",
-                             "workspaceId":69509535922157,"workspaceName":"cli-wsp","visibility":"PRIVATE",
-                             "deleted":false,"lastUpdated":"2023-04-12T14:30:44.541301+02:00","optimized":null,"labels":null,"computeEnv":null}],
-                             "totalSize":1}
-                             """)
+                        .withBody("{\n" +
+                            "\"pipelines\":[{\"pipelineId\":227906339448730,\"name\":\"cli_pipeline\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/nextflow-io/hello\",\"userId\":1,\"userName\":\"eliantor\",\n" +
+                            "\"userFirstName\":null,\"userLastName\":null,\"orgId\":109383401867759,\"orgName\":\"CliOrg\",\n" +
+                            "\"workspaceId\":69509535922157,\"workspaceName\":\"cli-wsp\",\"visibility\":\"PRIVATE\",\n" +
+                            "\"deleted\":false,\"lastUpdated\":\"2023-04-12T14:30:44.541301+02:00\",\"optimized\":null,\"labels\":null,\"computeEnv\":null}],\n" +
+                            "\"totalSize\":1" +
+                        "}")
         );
         mock.when(
                 request().withMethod("GET").withPath("/labels")
@@ -861,9 +852,7 @@ class PipelinesCmdTest extends BaseCmdTest {
         ).respond(
                 response().withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody("""
-                                  {"labels":[],"totalSize":0}
-                                  """)
+                        .withBody("{\"labels\":[],\"totalSize\":0}")
         );
         mock.when(
                 request().withMethod("GET").withPath("/labels")
@@ -876,9 +865,7 @@ class PipelinesCmdTest extends BaseCmdTest {
         ).respond(
                 response().withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody("""
-                                  {"labels":[{"id":20504123310835,"name":"test_label1","value":"value","resource":true,"isDefault":false}],"totalSize":0}
-                                  """)
+                        .withBody("{\"labels\":[{\"id\":20504123310835,\"name\":\"test_label1\",\"value\":\"value\",\"resource\":true,\"isDefault\":false}],\"totalSize\":0}")
         );
         mock.when(
                 request().withMethod("POST")
