@@ -27,6 +27,7 @@ import io.seqera.tower.model.ListLabelsResponse;
 import io.seqera.tower.model.ProgressData;
 import io.seqera.tower.model.Workflow;
 import io.seqera.tower.model.WorkflowLoad;
+import io.seqera.tower.model.WorkflowQueryAttribute;
 import picocli.CommandLine;
 
 import java.util.ArrayList;
@@ -60,16 +61,17 @@ public class ViewCmd extends AbstractRunsCmd {
     @CommandLine.Mixin
     public RunViewOptions opts;
 
-    @CommandLine.Mixin
-    public ShowLabelsOption showLabelsOption;
-
-
     protected Response exec() throws ApiException {
         Long wspId = workspaceId(workspace.workspace);
-        
+
         try {
             String workspaceRef = workspaceRef(wspId);
-            DescribeWorkflowResponse workflowResponse = workflowById(wspId, id);
+            DescribeWorkflowResponse workflowResponse = api().describeWorkflow(id, wspId, List.of(WorkflowQueryAttribute.LABELS));
+            
+            if (workflowResponse == null) {
+                throw new RunNotFoundException(id, workspaceRef(wspId));
+            }
+
             Workflow workflow = workflowResponse.getWorkflow();
             WorkflowLoad workflowLoad = workflowLoadByWorkflowId(wspId, id);
 
@@ -78,11 +80,6 @@ public class ViewCmd extends AbstractRunsCmd {
             ProgressData progress = null;
             if (opts.processes || opts.stats || opts.load || opts.utilization) {
                 progress = api().describeWorkflowProgress(id, wspId).getProgress();
-            }
-
-            ListLabelsResponse labels = null;
-            if (showLabelsOption.showLabels) {
-                labels = api().listLabels(wspId, null, null, null, null);
             }
 
             Map<String, Object> general = new LinkedHashMap<>();
@@ -99,6 +96,7 @@ public class ViewCmd extends AbstractRunsCmd {
             general.put("computeEnv", computeEnv == null ? '-' : computeEnv.getName());
             general.put("nextflowVersion", workflow.getNextflow() != null ? workflow.getNextflow().getVersion() : null);
             general.put("status", workflow.getStatus());
+            general.put("labels", formatLabels(workflowResponse.getLabels()));
 
             List<String> configFiles = new ArrayList<>();
             String configText = null;
@@ -161,13 +159,6 @@ public class ViewCmd extends AbstractRunsCmd {
             if (opts.utilization) {
                 utilization.put("memoryEfficiency", progress.getWorkflowProgress().getMemoryEfficiency());
                 utilization.put("cpuEfficiency", progress.getWorkflowProgress().getCpuEfficiency());
-            }
-
-            if (labels != null && !labels.getLabels().isEmpty()) {
-                general.put(
-                    "labels",
-                    formatLabels(labels.getLabels())
-                );
             }
 
             return new RunView(

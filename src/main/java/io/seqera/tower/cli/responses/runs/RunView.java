@@ -139,8 +139,7 @@ public class RunView extends Response {
         table.addRow("Executors", general.get("executors") != null ? general.get("executors").toString() : "No executors were reported");
         table.addRow("Compute Environment", general.get("computeEnv").toString());
         table.addRow("Nextflow Version", general.get("nextflowVersion") != null ? general.get("nextflowVersion").toString() : "No Nextflow version reported");
-        if(general.get("labels") != null)
-            table.addRow("Workspace labels", general.get("labels") == "" ? general.get("labels").toString() : "No labels reported in workspace");
+        table.addRow("Labels", general.get("labels") != "" ? general.get("labels").toString() : "No labels reported in workspace");
         table.print();
 
         if (!configFiles.isEmpty()) {
@@ -222,5 +221,7 @@ public class RunView extends Response {
             tableUtilization.addRow("CPU Efficiency", String.format("%.2f", utilization.get("cpuEfficiency")) + "%");
             tableUtilization.print();
         }
+
+        out.println();
     }
 }

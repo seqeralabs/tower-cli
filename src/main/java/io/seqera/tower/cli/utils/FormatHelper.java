@@ -293,6 +293,10 @@ public class FormatHelper {
     }
 
     public static String formatLabels(java.util.List<io.seqera.tower.model.LabelDbDto> res) {
+        if (res == null || res.isEmpty()) {
+            return "";
+        }
+
         return res.stream().map(label -> {
             String str = label.getName();
             if (label.getValue() != null && !label.getValue().isEmpty()) {
