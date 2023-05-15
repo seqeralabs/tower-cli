@@ -17,24 +17,37 @@ import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.ListWorkflowsResponseListWorkflowsElement;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static io.seqera.tower.cli.utils.FormatHelper.formatTime;
 import static io.seqera.tower.cli.utils.FormatHelper.formatWorkflowId;
 import static io.seqera.tower.cli.utils.FormatHelper.formatWorkflowStatus;
+import static io.seqera.tower.cli.utils.FormatHelper.formatLabels;
 
 public class RunList extends Response {
 
     public final String workspaceRef;
     public final List<ListWorkflowsResponseListWorkflowsElement> workflows;
 
+    public boolean showLabels;
+
     @JsonIgnore
     public final String baseWorkspaceUrl;
+
+    public RunList(String workspaceRef, List<ListWorkflowsResponseListWorkflowsElement> runs, String baseWorkspaceUrl, boolean showLabels) {
+        this.workspaceRef = workspaceRef;
+        this.workflows = runs;
+        this.baseWorkspaceUrl = baseWorkspaceUrl;
+        this.showLabels = showLabels;
+    }
 
     public RunList(String workspaceRef, List<ListWorkflowsResponseListWorkflowsElement> runs, String baseWorkspaceUrl) {
         this.workspaceRef = workspaceRef;
         this.workflows = runs;
         this.baseWorkspaceUrl = baseWorkspaceUrl;
+        this.showLabels = false;
     }
 
     @Override
@@ -46,17 +59,33 @@ public class RunList extends Response {
             return;
         }
 
-        TableList table = new TableList(out, 6, "ID", "Status", "Project Name", "Run Name", "Username", "Submit Date");
+        List<String> desc = new ArrayList<>(List.of("ID", "Status", "Project Name", "Run Name", "Username", "Submit Date"));
+        if (showLabels) desc.add("Labels");
+
+        String[] descriptions = new String[desc.size()];
+        desc.toArray(descriptions);
+
+        TableList table = new TableList(out, descriptions.length, descriptions);
         table.setPrefix("    ");
-        workflows.forEach(wf -> table.addRow(
+        workflows.forEach(wf -> {
+            List<String> rows = new ArrayList<>(List.of(
                 formatWorkflowId(wf.getWorkflow().getId(), this.baseWorkspaceUrl),
                 formatWorkflowStatus(wf.getWorkflow().getStatus()),
-                wf.getWorkflow().getProjectName(),
+                wf.getWorkflow().getProjectName() == null ? "" : wf.getWorkflow().getProjectName(),
                 wf.getWorkflow().getRunName(),
-                wf.getWorkflow().getUserName(),
+                wf.getWorkflow().getUserName() == null ? "" : wf.getWorkflow().getUserName(),
                 formatTime(wf.getWorkflow().getSubmit())
-        ));
+            ));
+            if (showLabels) rows.add(formatLabels(wf.getLabels()));
+
+            String[] rowsArray = new String[rows.size()];
+            rows.toArray(rowsArray);
+            table.addRow(rowsArray);
+        });
+
+
         table.print();
         out.println("");
     }
+
 }

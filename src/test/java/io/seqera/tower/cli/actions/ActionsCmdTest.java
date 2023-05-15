@@ -14,6 +14,7 @@ package io.seqera.tower.cli.actions;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
+import io.seqera.tower.cli.commands.labels.LabelsSubcmdOptions;
 import io.seqera.tower.cli.exceptions.ActionNotFoundException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.actions.ActionAdd;
@@ -21,6 +22,7 @@ import io.seqera.tower.cli.responses.actions.ActionUpdate;
 import io.seqera.tower.cli.responses.actions.ActionsDelete;
 import io.seqera.tower.cli.responses.actions.ActionsList;
 import io.seqera.tower.cli.responses.actions.ActionsView;
+import io.seqera.tower.cli.responses.labels.ManageLabels;
 import io.seqera.tower.model.ActionResponseDto;
 import io.seqera.tower.model.ListActionsResponseActionInfo;
 import org.junit.jupiter.api.Test;
@@ -56,7 +58,7 @@ class ActionsCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("GET").withPath("/user"), exactly(1)
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -104,7 +106,7 @@ class ActionsCmdTest extends BaseCmdTest {
                         "      \"usageCmd\": null,\n" +
                         "      \"endpoint\": \"https://api.github.com/repos/pditommaso/hello/hooks/303166158\"\n" +
                         "    }", ListActionsResponseActionInfo.class)
-        ), "jordi", baseUserUrl(mock, "jordi")));
+        ), "jordi", baseUserUrl(mock, "jordi"), false));
     }
 
     @Test
@@ -118,14 +120,14 @@ class ActionsCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("GET").withPath("/user"), exactly(1)
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         ExecOut out = exec(mock, "actions", "list");
 
-        assertEquals(chop(new ActionsList(List.of(), "jordi", baseUserUrl(mock, "jordi")).toString()), out.stdOut);
+        assertEquals(chop(new ActionsList(List.of(), "jordi", baseUserUrl(mock, "jordi"), false).toString()), out.stdOut);
         assertEquals("", out.stdErr);
         assertEquals(0, out.exitCode);
     }
@@ -148,7 +150,7 @@ class ActionsCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("GET").withPath("/user"), exactly(1)
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -616,4 +618,18 @@ class ActionsCmdTest extends BaseCmdTest {
         assertEquals(1, out.exitCode);
         assertTrue(out.stdErr.contains("Missing Required Subcommand"));
     }
+
+//    @ParameterizedTest
+//    @EnumSource(OutputType.class)
+//    void testLabels(OutputType format, MockServerClient mock) throws IOException {
+//        mock.reset();
+//        mock.when(
+//                request().withMethod("GET").withPath("/labels"),exactly(1)
+//        ).respond(
+//                response().withStatusCode(200)
+//        );
+//
+//        ExecOut out = exec(mock,"actions", "labels","label1,label2,label3","-n","action");
+//        assertOutput(format,out,new ManageLabels(LabelsSubcmdOptions.Operation.set.prettyName,"action","1",0l));
+//    }
 }

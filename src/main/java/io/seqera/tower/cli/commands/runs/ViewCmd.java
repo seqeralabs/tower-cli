@@ -12,6 +12,7 @@
 package io.seqera.tower.cli.commands.runs;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.commands.global.ShowLabelsOption;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.commands.runs.download.DownloadCmd;
 import io.seqera.tower.cli.commands.runs.metrics.MetricsCmd;
@@ -22,9 +23,11 @@ import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.runs.RunView;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.DescribeWorkflowResponse;
+import io.seqera.tower.model.ListLabelsResponse;
 import io.seqera.tower.model.ProgressData;
 import io.seqera.tower.model.Workflow;
 import io.seqera.tower.model.WorkflowLoad;
+import io.seqera.tower.model.WorkflowQueryAttribute;
 import picocli.CommandLine;
 
 import java.util.ArrayList;
@@ -33,6 +36,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
+import static io.seqera.tower.cli.utils.FormatHelper.formatLabels;
 
 @CommandLine.Command(
         name = "view",
@@ -57,10 +63,15 @@ public class ViewCmd extends AbstractRunsCmd {
 
     protected Response exec() throws ApiException {
         Long wspId = workspaceId(workspace.workspace);
-        
+
         try {
             String workspaceRef = workspaceRef(wspId);
-            DescribeWorkflowResponse workflowResponse = workflowById(wspId, id);
+            DescribeWorkflowResponse workflowResponse = api().describeWorkflow(id, wspId, List.of(WorkflowQueryAttribute.LABELS));
+            
+            if (workflowResponse == null) {
+                throw new RunNotFoundException(id, workspaceRef(wspId));
+            }
+
             Workflow workflow = workflowResponse.getWorkflow();
             WorkflowLoad workflowLoad = workflowLoadByWorkflowId(wspId, id);
 
@@ -85,6 +96,7 @@ public class ViewCmd extends AbstractRunsCmd {
             general.put("computeEnv", computeEnv == null ? '-' : computeEnv.getName());
             general.put("nextflowVersion", workflow.getNextflow() != null ? workflow.getNextflow().getVersion() : null);
             general.put("status", workflow.getStatus());
+            general.put("labels", formatLabels(workflowResponse.getLabels()));
 
             List<String> configFiles = new ArrayList<>();
             String configText = null;

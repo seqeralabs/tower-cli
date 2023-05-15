@@ -45,7 +45,7 @@ class OrganizationsCmdTest extends BaseCmdTest {
     @EnumSource(OutputType.class)
     void testList(OutputType format, MockServerClient mock) throws JsonProcessingException {
         mock.when(
-                request().withMethod("GET").withPath("/user"), exactly(1)
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -77,7 +77,7 @@ class OrganizationsCmdTest extends BaseCmdTest {
     @Test
     void testListEmpty(MockServerClient mock) {
         mock.when(
-                request().withMethod("GET").withPath("/user"), exactly(1)
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -99,7 +99,7 @@ class OrganizationsCmdTest extends BaseCmdTest {
     @EnumSource(OutputType.class)
     void testView(OutputType format, MockServerClient mock) throws JsonProcessingException {
         mock.when(
-                request().withMethod("GET").withPath("/user"), exactly(1)
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -134,7 +134,7 @@ class OrganizationsCmdTest extends BaseCmdTest {
     @Test
     void testViewNotFound(MockServerClient mock) {
         mock.when(
-                request().withMethod("GET").withPath("/user"), exactly(1)
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -156,7 +156,7 @@ class OrganizationsCmdTest extends BaseCmdTest {
     @EnumSource(OutputType.class)
     void testDelete(OutputType format, MockServerClient mock) {
         mock.when(
-                request().withMethod("GET").withPath("/user"), exactly(1)
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -180,7 +180,7 @@ class OrganizationsCmdTest extends BaseCmdTest {
     @Test
     void testDeleteNotFound(MockServerClient mock) {
         mock.when(
-                request().withMethod("GET").withPath("/user"), exactly(1)
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -201,7 +201,7 @@ class OrganizationsCmdTest extends BaseCmdTest {
     @Test
     void testDeleteError(MockServerClient mock) {
         mock.when(
-                request().withMethod("GET").withPath("/user"), exactly(1)
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -268,7 +268,7 @@ class OrganizationsCmdTest extends BaseCmdTest {
     void testUpdate(OutputType format, MockServerClient mock) {
         mock.reset();
         mock.when(
-                request().withMethod("GET").withPath("/user"), exactly(1)
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -299,7 +299,7 @@ class OrganizationsCmdTest extends BaseCmdTest {
     void testUpdateError(MockServerClient mock) {
         mock.reset();
         mock.when(
-                request().withMethod("GET").withPath("/user"), exactly(1)
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );

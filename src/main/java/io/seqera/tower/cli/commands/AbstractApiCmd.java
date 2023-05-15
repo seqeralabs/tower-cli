@@ -31,6 +31,7 @@ import io.seqera.tower.model.ListComputeEnvsResponseEntry;
 import io.seqera.tower.model.ListWorkspacesAndOrgResponse;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import io.seqera.tower.model.PipelineDbDto;
+import io.seqera.tower.model.PipelineQueryAttribute;
 import io.seqera.tower.model.User;
 import io.seqera.tower.model.WorkflowQueryAttribute;
 import org.glassfish.jersey.client.ClientConfig;
@@ -64,6 +65,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     public static final List<ComputeEnvQueryAttribute> NO_CE_ATTRIBUTES = Collections.EMPTY_LIST;
     public static final List<WorkflowQueryAttribute> NO_WORKFLOW_ATTRIBUTES = Collections.EMPTY_LIST;
     public static final List<ActionQueryAttribute> NO_ACTION_ATTRIBUTES = Collections.EMPTY_LIST;
+    public static final List<PipelineQueryAttribute> NO_PIPELINE_ATTRIBUTES = Collections.EMPTY_LIST;
 
 
     private DefaultApi api;
@@ -325,7 +327,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     }
 
     private void loadUser() throws ApiException {
-        User user = api().profile().getUser();
+        User user = api().userInfo().getUser();
         userName = user.getUserName();
         userId = user.getId();
     }

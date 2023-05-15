@@ -47,7 +47,7 @@ class WorkspacesCmdTest extends BaseCmdTest {
     @EnumSource(OutputType.class)
     void testList(OutputType format, MockServerClient mock) throws JsonProcessingException {
         mock.when(
-                request().withMethod("GET").withPath("/user"), exactly(1)
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -80,7 +80,7 @@ class WorkspacesCmdTest extends BaseCmdTest {
     @EnumSource(OutputType.class)
     void testListByOrganization(OutputType format, MockServerClient mock) throws JsonProcessingException {
         mock.when(
-                request().withMethod("GET").withPath("/user"), exactly(1)
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -107,7 +107,7 @@ class WorkspacesCmdTest extends BaseCmdTest {
     @Test
     void testListEmpty(MockServerClient mock) {
         mock.when(
-                request().withMethod("GET").withPath("/user"), exactly(1)
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -132,7 +132,7 @@ class WorkspacesCmdTest extends BaseCmdTest {
         mock.reset();
 
         mock.when(
-                request().withMethod("GET").withPath("/user"), exactly(1)
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -156,7 +156,7 @@ class WorkspacesCmdTest extends BaseCmdTest {
     @Test
     void testDeleteNotFound(MockServerClient mock) {
         mock.when(
-                request().withMethod("GET").withPath("/user"), exactly(1)
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -184,7 +184,7 @@ class WorkspacesCmdTest extends BaseCmdTest {
     @EnumSource(OutputType.class)
     void testViewById(OutputType format, MockServerClient mock) throws JsonProcessingException {
         mock.when(
-                request().withMethod("GET").withPath("/user"), exactly(1)
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -217,7 +217,7 @@ class WorkspacesCmdTest extends BaseCmdTest {
     @Test
     void testViewNotFound(MockServerClient mock) throws JsonProcessingException {
         mock.when(
-                request().withMethod("GET").withPath("/user"), exactly(1)
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -239,7 +239,7 @@ class WorkspacesCmdTest extends BaseCmdTest {
     @EnumSource(OutputType.class)
     void testAdd(OutputType format, MockServerClient mock) {
         mock.when(
-                request().withMethod("GET").withPath("/user"), exactly(1)
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -269,7 +269,7 @@ class WorkspacesCmdTest extends BaseCmdTest {
     @Test
     void testAddOrganizationNotFound(MockServerClient mock) {
         mock.when(
-                request().withMethod("GET").withPath("/user"), exactly(1)
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -291,7 +291,7 @@ class WorkspacesCmdTest extends BaseCmdTest {
     @EnumSource(OutputType.class)
     void testUpdateById(OutputType format, MockServerClient mock) {
         mock.when(
-                request().withMethod("GET").withPath("/user"), exactly(1)
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -321,7 +321,7 @@ class WorkspacesCmdTest extends BaseCmdTest {
     @Test
     void testUpdateWorkspaceNotFound(MockServerClient mock) {
         mock.when(
-                request().withMethod("GET").withPath("/user"), exactly(1)
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -343,7 +343,7 @@ class WorkspacesCmdTest extends BaseCmdTest {
     @EnumSource(OutputType.class)
     void testLeaveWorkspaceAsParticipantById(OutputType format, MockServerClient mock) {
         mock.when(
-                request().withMethod("GET").withPath("/user"), exactly(1)
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -367,7 +367,7 @@ class WorkspacesCmdTest extends BaseCmdTest {
     @Test
     void leaveWorkspaceAsParticipantByIdAndWorkspaceReference(MockServerClient mock) {
         mock.when(
-                request().withMethod("GET").withPath("/user"), exactly(1)
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );

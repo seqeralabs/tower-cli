@@ -16,6 +16,8 @@ import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.commands.computeenvs.platforms.Platform;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
+import io.seqera.tower.cli.commands.labels.Label;
+import io.seqera.tower.cli.commands.labels.LabelsFinder;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.computeenvs.ComputeEnvAdded;
@@ -50,6 +52,9 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
 
     @Option(names = {"--wait"}, description = "Wait until given status or fail. Valid options: ${COMPLETION-CANDIDATES}.")
     public ComputeEnvStatus wait;
+
+    @Option(names = {"--labels"}, description = "List of labels seperated by coma.", split = ",", converter = Label.ResourceLabelsConverter.class)
+    public  List<Label> labels;
 
     @Override
     protected Response exec() throws ApiException, IOException {
@@ -94,17 +99,27 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
 
         String credsId = credentialsRef == null ? findWorkspaceCredentials(platform, wspId) : credentialsByRef(platform, wspId, credentialsRef);
 
-        CreateComputeEnvResponse resp = api().createComputeEnv(
-                new CreateComputeEnvRequest().computeEnv(
-                        new ComputeEnv()
-                                .name(name)
-                                .platform(platform)
-                                .credentialsId(credsId)
-                                .config(config)
-                ), wspId
-        );
+        List<Long> labelIds = findLabels(wspId, labels);
+        CreateComputeEnvRequest request =  new CreateComputeEnvRequest().computeEnv(
+                new ComputeEnv()
+                        .name(name)
+                        .platform(platform)
+                        .credentialsId(credsId)
+                        .config(config)
+        ).labelIds(labelIds);
+
+        CreateComputeEnvResponse resp = api().createComputeEnv(request, wspId);
 
         return new ComputeEnvAdded(platform.getValue(), resp.getComputeEnvId(), name, wspId, workspaceRef(wspId));
+    }
+
+    private List<Long> findLabels(Long wspId, List<Label> labels) throws ApiException {
+        if (labels != null && !labels.isEmpty()) {
+            LabelsFinder finder = new LabelsFinder(api());
+            return finder.findLabelsIds(wspId,labels, LabelsFinder.NotFoundLabelBehavior.CREATE);
+        } else {
+            return null;
+        }
     }
 
     private String credentialsByRef(ComputeEnv.PlatformEnum type, Long wspId, String credentialsRef) throws ApiException {

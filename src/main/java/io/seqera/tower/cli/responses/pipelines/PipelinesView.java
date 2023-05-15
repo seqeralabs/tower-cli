@@ -23,6 +23,7 @@ import io.seqera.tower.model.WorkflowLaunchRequest;
 
 import java.io.PrintWriter;
 
+import static io.seqera.tower.cli.utils.FormatHelper.formatLabels;
 import static io.seqera.tower.cli.utils.FormatHelper.formatPipelineId;
 
 public class PipelinesView extends Response {
@@ -59,6 +60,7 @@ public class PipelinesView extends Response {
         table.addRow("Description", info.getDescription());
         table.addRow("Repository", info.getRepository());
         table.addRow("Compute env.", launch.getComputeEnv() == null ? "(not defined)" : launch.getComputeEnv().getName());
+        table.addRow("Labels", info.getLabels() == null || info.getLabels().isEmpty() ? "No labels found" : formatLabels(info.getLabels()));
         table.print();
 
         out.println(String.format("%n  Configuration:%n%n%s%n", configJson.replaceAll("(?m)^", "     ")));

@@ -13,6 +13,7 @@ package io.seqera.tower.cli.commands;
 
 import io.seqera.tower.cli.commands.actions.AddCmd;
 import io.seqera.tower.cli.commands.actions.DeleteCmd;
+import io.seqera.tower.cli.commands.actions.LabelsCmd;
 import io.seqera.tower.cli.commands.actions.ListCmd;
 import io.seqera.tower.cli.commands.actions.UpdateCmd;
 import io.seqera.tower.cli.commands.actions.ViewCmd;
@@ -27,6 +28,7 @@ import picocli.CommandLine;
                 DeleteCmd.class,
                 AddCmd.class,
                 UpdateCmd.class,
+                LabelsCmd.class,
         }
 )
 public class ActionsCmd extends AbstractRootCmd {

@@ -13,14 +13,18 @@ package io.seqera.tower.cli.commands.runs;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.PaginationOptions;
+import io.seqera.tower.cli.commands.global.ShowLabelsOption;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.runs.RunList;
 import io.seqera.tower.model.ListWorkflowsResponse;
+import io.seqera.tower.model.WorkflowQueryAttribute;
 import picocli.CommandLine;
 
+import javax.ws.rs.QueryParam;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 
 @CommandLine.Command(
         name = "list",
@@ -35,6 +39,9 @@ public class ListCmd extends AbstractRunsCmd {
     public String startsWith;
 
     @CommandLine.Mixin
+    ShowLabelsOption showLabelsOption;
+
+    @CommandLine.Mixin
     PaginationOptions paginationOptions;
 
     @Override
@@ -44,7 +51,14 @@ public class ListCmd extends AbstractRunsCmd {
         Integer max = PaginationOptions.getMax(paginationOptions);
         Integer offset = PaginationOptions.getOffset(paginationOptions, max);
 
-        ListWorkflowsResponse response = api().listWorkflows(Collections.emptyList(), wspId, max, offset, startsWith);
-        return new RunList(workspaceRef(wspId), response.getWorkflows(), baseWorkspaceUrl(wspId));
+        List queryAttribute = Collections.emptyList();
+        if(showLabelsOption.showLabels) {
+             queryAttribute = List.of(WorkflowQueryAttribute.LABELS);
+        }
+
+        ListWorkflowsResponse response = api().listWorkflows(queryAttribute, wspId, max, offset, startsWith);
+        return new RunList(workspaceRef(wspId), response.getWorkflows(), baseWorkspaceUrl(wspId), showLabelsOption.showLabels);
     }
+
+
 }

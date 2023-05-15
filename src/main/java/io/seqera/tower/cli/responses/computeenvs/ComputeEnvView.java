@@ -26,6 +26,7 @@ import java.io.PrintWriter;
 
 import static io.seqera.tower.cli.utils.FormatHelper.formatComputeEnvId;
 import static io.seqera.tower.cli.utils.FormatHelper.formatComputeEnvStatus;
+import static io.seqera.tower.cli.utils.FormatHelper.formatLabels;
 import static io.seqera.tower.cli.utils.FormatHelper.formatTime;
 
 public class ComputeEnvView extends Response {
@@ -80,6 +81,7 @@ public class ComputeEnvView extends Response {
         table.addRow("Last activity", formatTime(computeEnv.getLastUsed()));
         table.addRow("Created", formatTime(computeEnv.getDateCreated()));
         table.addRow("Status", formatComputeEnvStatus(computeEnv.getStatus()));
+        table.addRow("Labels", formatLabels(computeEnv.getLabels()));
         table.print();
 
         out.println(String.format("%n  Configuration:%n%n%s%n", configJson.replaceAll("(?m)^", "     ")));

@@ -15,6 +15,7 @@ import io.seqera.tower.cli.commands.pipelines.AddCmd;
 import io.seqera.tower.cli.commands.pipelines.DeleteCmd;
 import io.seqera.tower.cli.commands.pipelines.ExportCmd;
 import io.seqera.tower.cli.commands.pipelines.ImportCmd;
+import io.seqera.tower.cli.commands.pipelines.LabelsCmd;
 import io.seqera.tower.cli.commands.pipelines.ListCmd;
 import io.seqera.tower.cli.commands.pipelines.UpdateCmd;
 import io.seqera.tower.cli.commands.pipelines.ViewCmd;
@@ -32,6 +33,7 @@ import picocli.CommandLine.Command;
                 UpdateCmd.class,
                 ExportCmd.class,
                 ImportCmd.class,
+                LabelsCmd.class,
         }
 )
 public class PipelinesCmd extends AbstractRootCmd {

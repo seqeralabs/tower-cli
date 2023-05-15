@@ -11,16 +11,22 @@
 
 package io.seqera.tower.cli.utils;
 
+import io.seqera.tower.model.ActionResponseDto;
 import io.seqera.tower.model.ActionStatus;
 import io.seqera.tower.model.ComputeEnvStatus;
+import io.seqera.tower.model.ListActionsResponseActionInfo;
 import io.seqera.tower.model.OrgRole;
 import io.seqera.tower.model.ParticipantType;
+import io.seqera.tower.model.PipelineDbDto;
 import io.seqera.tower.model.WorkflowStatus;
+import io.seqera.tower.model.ListLabelsResponse;
+import io.seqera.tower.model.ListWorkflowsResponseListWorkflowsElement;
 import picocli.CommandLine;
 
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.stream.Collectors;
 
 public class FormatHelper {
 
@@ -285,4 +291,20 @@ public class FormatHelper {
     public static String ansi(String value) {
         return CommandLine.Help.Ansi.AUTO.string(value);
     }
+
+    public static String formatLabels(java.util.List<io.seqera.tower.model.LabelDbDto> res) {
+        if (res == null || res.isEmpty()) {
+            return "";
+        }
+
+        return res.stream().map(label -> {
+            String str = label.getName();
+            if (label.getValue() != null && !label.getValue().isEmpty()) {
+                str += "=" + label.getValue();
+            }
+            return str;
+        })
+        .collect(Collectors.joining(","));
+    }
+
 }

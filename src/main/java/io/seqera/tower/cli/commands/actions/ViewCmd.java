@@ -12,13 +12,18 @@
 package io.seqera.tower.cli.commands.actions;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.commands.global.ShowLabelsOption;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.actions.ActionsView;
+import io.seqera.tower.model.ActionQueryAttribute;
 import io.seqera.tower.model.DescribeActionResponse;
+import io.seqera.tower.model.ListLabelsResponse;
 import picocli.CommandLine;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @CommandLine.Command(
         name = "view",
@@ -36,8 +41,13 @@ public class ViewCmd extends AbstractActionsCmd {
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
 
-        DescribeActionResponse response = fetchDescribeActionResponse(actionRefOptions, wspId);
+        DescribeActionResponse response = fetchDescribeActionResponse(
+                actionRefOptions,
+                wspId,
+                ActionQueryAttribute.LABELS
+        );
 
         return new ActionsView(response.getAction(), baseWorkspaceUrl(wspId));
     }
+
 }
