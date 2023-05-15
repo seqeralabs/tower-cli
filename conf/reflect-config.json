@@ -2133,6 +2133,26 @@
   ]
 },
 {
+  "name":"io.seqera.tower.model.AssociatePipelineLabelsRequest",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"getLabelIds","parameterTypes":[] }, 
+    {"name":"getPipelineIds","parameterTypes":[] }
+  ]
+},
+{
+  "name":"io.seqera.tower.model.AssociateWorkflowLabelsRequest",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"getLabelIds","parameterTypes":[] }, 
+    {"name":"getWorkflowIds","parameterTypes":[] }
+  ]
+},
+{
   "name":"io.seqera.tower.model.Avatar",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -2160,8 +2180,7 @@
   "name":"io.seqera.tower.model.AzBatchForgeConfig",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "allDeclaredConstructors":true
 },
 {
   "name":"io.seqera.tower.model.AzureSecurityKeys",
