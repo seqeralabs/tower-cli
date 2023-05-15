@@ -25,7 +25,7 @@ public class LabelsSubcmdOptions {
     private List<Label> labels;
     @CommandLine.Option(names = "--no-create", description = "Assign labels without creating the ones which were not found.")
     private boolean noCreate;
-    @CommandLine.Option(names = {"--operations", "-o"}, description = "Type of operation (set, append, remove) [default: set].", defaultValue = "set")
+    @CommandLine.Option(names = {"--operations", "-o"}, description = "Type of operation (set, append, delete) [default: set].", defaultValue = "set")
     private Operation operation;
 
     public Operation getOperation() {
@@ -42,9 +42,9 @@ public class LabelsSubcmdOptions {
 
 
     public enum Operation {
-        set("Applied"),
-        append("Added"),
-        delete("Removed");
+        set("set"),
+        append("append"),
+        delete("delete");
 
         public final String prettyName;
 
