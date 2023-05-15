@@ -1242,6 +1242,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.runs.DumpCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.runs.ListCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1723,6 +1729,12 @@
   "allDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.cli.responses.runs.RunDump",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.cli.responses.runs.RunFileDownloaded",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1989,6 +2001,8 @@
   "queryAllDeclaredConstructors":true,
   "methods":[
     {"name":"<init>","parameterTypes":[] }, 
+    {"name":"getSiteId","parameterTypes":[] }, 
+    {"name":"getUrl","parameterTypes":[] }, 
     {"name":"setSiteId","parameterTypes":["java.lang.Integer"] }, 
     {"name":"setUrl","parameterTypes":["java.lang.String"] }
   ]
@@ -3130,6 +3144,12 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true
+},
+{
+  "name":"java.lang.Character",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
 },
 {
   "name":"java.lang.Class[]"

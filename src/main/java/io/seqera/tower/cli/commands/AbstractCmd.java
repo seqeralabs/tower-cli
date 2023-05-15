@@ -38,4 +38,8 @@ public abstract class AbstractCmd implements Callable<Integer> {
     public CommandLine.Model.CommandSpec getSpec() {
         return spec;
     }
+
+    protected String ansi(String value) {
+        return CommandLine.Help.Ansi.AUTO.string(value);
+    }
 }
