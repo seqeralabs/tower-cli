@@ -154,7 +154,9 @@ public class LaunchCmd extends AbstractRootCmd {
 
         WorkflowLaunchRequest launchRequest = createLaunchRequest(launch);
         if (computeEnv != null) {
-            launchRequest.computeEnvId(computeEnvByRef(wspId, computeEnv).getId());
+            ComputeEnvResponseDto ce = computeEnvByRef(wspId, computeEnv);
+            launchRequest.computeEnvId(ce.getId());
+            launchRequest.workDir(ce.getConfig().getWorkDir());
         }
 
         if (launchRequest.getComputeEnvId() == null) {
