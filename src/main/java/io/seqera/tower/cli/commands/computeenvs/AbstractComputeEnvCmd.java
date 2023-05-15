@@ -14,6 +14,7 @@ package io.seqera.tower.cli.commands.computeenvs;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
+import io.seqera.tower.model.ComputeEnvQueryAttribute;
 import io.seqera.tower.model.ComputeEnvResponseDto;
 import io.seqera.tower.model.ListComputeEnvsResponseEntry;
 import picocli.CommandLine.Command;
@@ -47,11 +48,11 @@ public abstract class AbstractComputeEnvCmd extends AbstractApiCmd {
                 .findFirst()
                 .orElseThrow(() -> new ComputeEnvNotFoundException(name, workspaceId));
 
-        return api().describeComputeEnv(entry.getId(), workspaceId, Collections.emptyList()).getComputeEnv();
+        return api().describeComputeEnv(entry.getId(), workspaceId, List.of(ComputeEnvQueryAttribute.LABELS)).getComputeEnv();
     }
 
     private ComputeEnvResponseDto computeEnvById(Long workspaceId, String id) throws ApiException {
-        return api().describeComputeEnv(id, workspaceId, Collections.emptyList()).getComputeEnv();
+        return api().describeComputeEnv(id, workspaceId, List.of(ComputeEnvQueryAttribute.LABELS)).getComputeEnv();
     }
 }
 
