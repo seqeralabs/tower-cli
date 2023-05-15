@@ -33,7 +33,7 @@ public class LabelsCmd extends AbstractActionsCmd {
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(labelsSubcmdOptions.workspace.workspace);
         DefaultApi api = api();
-        String actionId = fetchDescribeActionResponse(actionRefOptions, wspId,Collections.emptyList()).getAction().getId();
+        String actionId = fetchDescribeActionResponse(actionRefOptions, wspId).getAction().getId();
         ActionsLabelsManager creator = new ActionsLabelsManager(api);
         return creator.execute(wspId, actionId, labelsSubcmdOptions);
     }

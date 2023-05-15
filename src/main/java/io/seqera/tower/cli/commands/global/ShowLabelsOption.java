@@ -17,7 +17,7 @@ import javax.annotation.Nullable;
 
 public class ShowLabelsOption {
 
-    @CommandLine.Option(names = {"-l", "--show-labels"}, description = "Show labels.", defaultValue = "false")
+    @CommandLine.Option(names = {"-l", "--labels"}, description = "Show labels.", defaultValue = "false")
     @Nullable
     public Boolean showLabels;
 

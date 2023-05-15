@@ -37,9 +37,6 @@ public class ViewCmd extends AbstractActionsCmd {
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
-    @CommandLine.Mixin
-    public ShowLabelsOption showLabelsOption;
-
     @Override
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
@@ -47,10 +44,10 @@ public class ViewCmd extends AbstractActionsCmd {
         DescribeActionResponse response = fetchDescribeActionResponse(
                 actionRefOptions,
                 wspId,
-                showLabelsOption.showLabels ? List.of(ActionQueryAttribute.LABELS) : NO_ACTION_ATTRIBUTES
+                ActionQueryAttribute.LABELS
         );
 
-        return new ActionsView(response.getAction(), baseWorkspaceUrl(wspId), showLabelsOption.showLabels);
+        return new ActionsView(response.getAction(), baseWorkspaceUrl(wspId));
     }
 
 }

@@ -47,14 +47,14 @@ public abstract class AbstractActionsCmd extends AbstractApiCmd {
         return listActionsResponseActionInfos.stream().findFirst().orElse(null);
     }
 
-    protected DescribeActionResponse fetchDescribeActionResponse(ActionRefOptions actionRefOptions, Long wspId, List<ActionQueryAttribute> actionQueryAttributes) throws ApiException {
+    protected DescribeActionResponse fetchDescribeActionResponse(ActionRefOptions actionRefOptions, Long wspId, ActionQueryAttribute... attributes) throws ApiException {
         DescribeActionResponse response;
 
         if (actionRefOptions.action.actionId != null) {
-            response = api().describeAction(actionRefOptions.action.actionId, wspId, actionQueryAttributes);
+            response = api().describeAction(actionRefOptions.action.actionId, wspId, List.of(attributes));
         } else {
             ListActionsResponseActionInfo listActionsResponseActionInfo = actionByName(wspId, actionRefOptions.action.actionName);
-            response = api().describeAction(listActionsResponseActionInfo.getId(), wspId, actionQueryAttributes);
+            response = api().describeAction(listActionsResponseActionInfo.getId(), wspId, List.of(attributes));
         }
 
         return response;

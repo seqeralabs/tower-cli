@@ -35,13 +35,9 @@ public class ActionsView extends Response {
     @JsonIgnore
     private String baseWorkspaceUrl;
 
-    @JsonIgnore
-    private boolean includeBoolean;
-
-    public ActionsView(ActionResponseDto action, String baseWorkspaceUrl, boolean includeLabels) {
+    public ActionsView(ActionResponseDto action, String baseWorkspaceUrl) {
         this.action = action;
         this.baseWorkspaceUrl = baseWorkspaceUrl;
-        this.includeBoolean = includeLabels;
     }
 
     @Override
@@ -67,7 +63,7 @@ public class ActionsView extends Response {
         table.addRow("Last event", FormatHelper.formatTime(action.getLastSeen()));
         table.addRow("Date created", FormatHelper.formatTime(action.getDateCreated()));
         table.addRow("Last event", FormatHelper.formatTime(action.getLastSeen()));
-        if (includeBoolean) table.addRow("Labels", action.getLabels().isEmpty() ? "No labels found" : formatLabels(action.getLabels()));
+        table.addRow("Labels", action.getLabels().isEmpty() ? "No labels found" : formatLabels(action.getLabels()));
 
         table.print();
 

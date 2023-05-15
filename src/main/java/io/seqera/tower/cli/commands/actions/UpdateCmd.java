@@ -47,7 +47,7 @@ public class UpdateCmd extends AbstractActionsCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
-        ActionResponseDto action = fetchDescribeActionResponse(actionRefOptions, wspId, NO_ACTION_ATTRIBUTES).getAction();
+        ActionResponseDto action = fetchDescribeActionResponse(actionRefOptions, wspId).getAction();
         String actionName = action.getName();
 
         // Retrieve the provided computeEnv or use the primary if not provided

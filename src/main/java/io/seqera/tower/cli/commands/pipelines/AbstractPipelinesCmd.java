@@ -17,9 +17,11 @@ import io.seqera.tower.cli.exceptions.MultiplePipelinesFoundException;
 import io.seqera.tower.cli.exceptions.PipelineNotFoundException;
 import io.seqera.tower.model.ListPipelinesResponse;
 import io.seqera.tower.model.PipelineDbDto;
+import io.seqera.tower.model.PipelineQueryAttribute;
 import picocli.CommandLine.Command;
 
 import java.util.Collections;
+import java.util.List;
 
 @Command
 public abstract class AbstractPipelinesCmd extends AbstractApiCmd {
@@ -42,16 +44,12 @@ public abstract class AbstractPipelinesCmd extends AbstractApiCmd {
         return list.getPipelines().get(0);
     }
 
-    protected PipelineDbDto fetchPipeline(PipelineRefOptions pipelineRefOptions, Long wspId) throws ApiException {
-        PipelineDbDto pipeline;
-
-        if (pipelineRefOptions.pipeline.pipelineId != null) {
-            pipeline = api().describePipeline(pipelineRefOptions.pipeline.pipelineId, Collections.emptyList(), wspId, null).getPipeline();
-        } else {
-            pipeline = pipelineByName(wspId, pipelineRefOptions.pipeline.pipelineName);
+    protected PipelineDbDto fetchPipeline(PipelineRefOptions pipelineRefOptions, Long wspId, PipelineQueryAttribute... attributes) throws ApiException {
+        Long pipelineId = pipelineRefOptions.pipeline.pipelineId;
+        if (pipelineId == null) {
+            pipelineId = pipelineByName(wspId, pipelineRefOptions.pipeline.pipelineName).getPipelineId();
         }
-
-        return pipeline;
+        return api().describePipeline(pipelineId, List.of(attributes), wspId, null).getPipeline();
     }
 
 }
