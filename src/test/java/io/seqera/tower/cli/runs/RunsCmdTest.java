@@ -411,6 +411,7 @@ class RunsCmdTest extends BaseCmdTest {
         general.put("computeEnv", "ce-aws-144996268157965");
         general.put("nextflowVersion", workflow.getNextflow() != null ? workflow.getNextflow().getVersion() : null);
         general.put("status", workflow.getStatus());
+        general.put("labels", "");
 
 
         List<String> configFiles = new ArrayList<>();
