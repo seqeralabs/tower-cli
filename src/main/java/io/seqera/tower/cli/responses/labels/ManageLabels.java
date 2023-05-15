@@ -33,6 +33,6 @@ public class ManageLabels extends Response {
     @Override
     public String toString() {
         return ansi(String.format("%n @|yellow '%s' labels on '%s' with id '%s' at %s workspace|@%n",
-                operation, type, id, workspaceID));
+                operation, type, id, workspaceID == null ? "user" : workspaceID));
     }
 }

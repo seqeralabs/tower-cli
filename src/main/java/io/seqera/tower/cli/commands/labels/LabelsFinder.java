@@ -72,7 +72,7 @@ public class LabelsFinder {
             case FILTER:
                 return null;
             default:
-                throw new TowerRuntimeException(String.format("Label '%s' does not exists in workspace '%s'", label, wspId));
+                throw new TowerRuntimeException(String.format("Label '%s' does not exists in workspace '%s'", label, wspId == null ? "user" : wspId));
 
         }
     }
@@ -86,7 +86,7 @@ public class LabelsFinder {
             }
             return api.createLabel(request, wspId).getId();
         } catch (ApiException e) {
-            throw new TowerRuntimeException(String.format("Failed to create label '%s' in workspace %s", label, wspId));
+            throw new TowerRuntimeException(String.format("Failed to create label '%s' in workspace '%s'", label, wspId == null ? "user" : wspId));
         }
     }
 }
