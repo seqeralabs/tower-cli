@@ -1724,6 +1724,12 @@
   "queryAllDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.cli.responses.labels.ManageLabels",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.cli.responses.members.MembersAdded",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -2114,6 +2120,16 @@
     {"name":"getUrl","parameterTypes":[] }, 
     {"name":"setSiteId","parameterTypes":["java.lang.Integer"] }, 
     {"name":"setUrl","parameterTypes":["java.lang.String"] }
+  ]
+},
+{
+  "name":"io.seqera.tower.model.AssociateActionLabelsRequest",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[
+    {"name":"getActionIds","parameterTypes":[] }, 
+    {"name":"getLabelIds","parameterTypes":[] }
   ]
 },
 {
