@@ -179,7 +179,7 @@ public class DumpCmd extends AbstractRunsCmd {
             File nextflowLog = api().downloadWorkflowLog(workflow.getId(), String.format("nf-%s.log", workflow.getId()), wspId);
             addFile(out, "nextflow.log", nextflowLog);
         } catch (ApiException e) {
-            // Ignore error 404 that means that the file it is no longer available
+            // Ignore error 404 that means that the file is no longer available
             if (e.getCode() != 404) {
                 throw e;
             }
@@ -210,7 +210,7 @@ public class DumpCmd extends AbstractRunsCmd {
                     File taskOut = api().downloadWorkflowTaskLog(workflowId, task.getTaskId(), ".command.out", wspId);
                     addFile(out, String.format("tasks/%d/.command.out", task.getTaskId()), taskOut);
                 } catch (ApiException e) {
-                    // Ignore error 404 that means that the file it is no longer available
+                    // Ignore error 404 that means that the file is no longer available
                     if (e.getCode() != 404) {
                         throw e;
                     }
@@ -220,7 +220,7 @@ public class DumpCmd extends AbstractRunsCmd {
                     File taskOut = api().downloadWorkflowTaskLog(workflowId, task.getTaskId(), ".command.err", wspId);
                     addFile(out, String.format("tasks/%d/.command.err", task.getTaskId()), taskOut);
                 } catch (ApiException e) {
-                    // Ignore error 404 that means that the file it is no longer available
+                    // Ignore error 404 that means that the file is no longer available
                     if (e.getCode() != 404) {
                         throw e;
                     }
@@ -230,7 +230,7 @@ public class DumpCmd extends AbstractRunsCmd {
                     File taskOut = api().downloadWorkflowTaskLog(workflowId, task.getTaskId(), ".command.log", wspId);
                     addFile(out, String.format("tasks/%d/.command.log", task.getTaskId()), taskOut);
                 } catch (ApiException e) {
-                    // Ignore error 404 that means that the file it is no longer available
+                    // Ignore error 404 that means that the file is no longer available
                     if (e.getCode() != 404) {
                         throw e;
                     }
@@ -242,7 +242,7 @@ public class DumpCmd extends AbstractRunsCmd {
                     File taskOut = api().downloadWorkflowTaskLog(workflowId, task.getTaskId(), ".fusion.log", wspId);
                     addFile(out, String.format("tasks/%d/.fusion.log", task.getTaskId()), taskOut);
                 } catch (ApiException e) {
-                    // Ignore error 404 that means that the file it is no longer available
+                    // Ignore error 404 that means that the file is no longer available
                     if (e.getCode() != 404) {
                         throw e;
                     }
