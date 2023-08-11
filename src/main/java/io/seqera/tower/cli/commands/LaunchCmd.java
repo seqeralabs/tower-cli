@@ -145,7 +145,7 @@ public class LaunchCmd extends AbstractRootCmd {
         }
 
         if (pipe == null) {
-            throw new InvalidResponseException(String.format("Pipeline '%s' not found", pipe));
+            throw new InvalidResponseException(String.format("Pipeline '%s' not found", pipeline));
         }
 
         Long sourceWorkspaceId = sourceWorkspaceId(wspId, pipe);
