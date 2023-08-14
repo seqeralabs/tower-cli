@@ -19,7 +19,7 @@ import io.seqera.tower.cli.responses.CredentialsAdded;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.CreateCredentialsRequest;
 import io.seqera.tower.model.CreateCredentialsResponse;
-import io.seqera.tower.model.CredentialsSpec;
+import io.seqera.tower.model.Credentials;
 import io.seqera.tower.model.SecurityKeys;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -40,7 +40,7 @@ public abstract class AbstractAddCmd<T extends SecurityKeys> extends AbstractApi
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
 
-        CredentialsSpec specs = new CredentialsSpec();
+        Credentials specs = new Credentials();
         specs
                 .keys(getProvider().securityKeys())
                 .name(name)

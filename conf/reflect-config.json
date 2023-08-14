@@ -2470,13 +2470,13 @@
   "allDeclaredMethods":true
 },
 {
-  "name":"io.seqera.tower.model.CredentialsSpec",
+  "name":"io.seqera.tower.model.Credentials",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true
 },
 {
-  "name":"io.seqera.tower.model.CredentialsSpec$ProviderEnum",
+  "name":"io.seqera.tower.model.Credentials$ProviderEnum",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "methods":[{"name":"getValue","parameterTypes":[] }]

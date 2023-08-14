@@ -52,7 +52,7 @@ public class LabelsFinder {
         long maxElements = Long.MAX_VALUE;
         try {
             while (offset + pageSize < maxElements) {
-                ListLabelsResponse resp = api.listLabels(wspId, pageSize, offset, label.name, label.getType());
+                ListLabelsResponse resp = api.listLabels(wspId, pageSize, offset, label.name, label.getType(), null);
                 maxElements = Objects.requireNonNull(resp.getTotalSize(), "List labels API didn't return any result.");
                 Optional<LabelDbDto> labelResponse = Objects.requireNonNull(resp.getLabels(), "List labels API didn't return labels.")
                         .stream()

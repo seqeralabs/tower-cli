@@ -51,7 +51,7 @@ public class ListLabelsCmd extends AbstractLabelsCmd {
         Integer offset = PaginationOptions.getOffset(paginationOptions, max);
 
 
-        ListLabelsResponse res = api().listLabels(wspId, max, offset, filter == null ? "" : filter, labelType);
+        ListLabelsResponse res = api().listLabels(wspId, max, offset, filter == null ? "" : filter, labelType, null);
 
         return new ListLabelsCmdResponse(wspId, labelType, res.getLabels());
     }

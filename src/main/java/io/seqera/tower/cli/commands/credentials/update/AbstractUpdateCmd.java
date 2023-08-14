@@ -20,7 +20,6 @@ import io.seqera.tower.cli.exceptions.CredentialsNotFoundException;
 import io.seqera.tower.cli.responses.CredentialsUpdated;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.Credentials;
-import io.seqera.tower.model.CredentialsSpec;
 import io.seqera.tower.model.UpdateCredentialsRequest;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -64,7 +63,7 @@ public abstract class AbstractUpdateCmd extends AbstractCredentialsCmd {
         //TODO do we want to allow to change the name? name must be unique at workspace level?
         String name = creds.getName();
 
-        CredentialsSpec specs = new CredentialsSpec();
+        Credentials specs = new Credentials();
         specs
                 .keys(getProvider().securityKeys())
                 .name(name)

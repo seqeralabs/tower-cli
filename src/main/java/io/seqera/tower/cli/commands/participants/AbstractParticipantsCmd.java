@@ -66,7 +66,7 @@ public class AbstractParticipantsCmd extends AbstractApiCmd {
     }
 
     protected TeamDbDto findOrganizationTeamByName(Long orgId, String name) throws ApiException {
-        ListTeamResponse listTeamResponse = api().listOrganizationTeams(orgId, null, null);
+        ListTeamResponse listTeamResponse = api().listOrganizationTeams(orgId, null, null, null);
 
         if (listTeamResponse.getTeams() != null) {
             TeamDbDto team = listTeamResponse.getTeams().stream().filter(it -> Objects.equals(it.getName(), name)).findFirst().orElse(null);

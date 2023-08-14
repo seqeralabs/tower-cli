@@ -172,7 +172,7 @@ public class LaunchCmd extends AbstractRootCmd {
     }
 
     protected Response submitWorkflow(WorkflowLaunchRequest launch, Long wspId, Long sourceWorkspaceId) throws ApiException {
-        SubmitWorkflowLaunchResponse response = api().createWorkflowLaunch(new SubmitWorkflowLaunchRequest().launch(launch), wspId, null, sourceWorkspaceId);
+        SubmitWorkflowLaunchResponse response = api().createWorkflowLaunch(new SubmitWorkflowLaunchRequest().launch(launch), wspId, sourceWorkspaceId);
         String workflowId = response.getWorkflowId();
         return new RunSubmited(workflowId, wspId, baseWorkspaceUrl(wspId), workspaceRef(wspId));
     }

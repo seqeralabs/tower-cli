@@ -45,7 +45,7 @@ public abstract class AbstractTeamsCmd extends AbstractApiCmd {
     }
 
     public TeamDbDto findTeamByName(Long orgId, String teamName) throws ApiException {
-        ListTeamResponse listTeamResponse = api().listOrganizationTeams(orgId, null, null);
+        ListTeamResponse listTeamResponse = api().listOrganizationTeams(orgId, null, null, null);
 
         if (listTeamResponse == null) {
             throw new TeamNotFoundException(orgId, teamName);

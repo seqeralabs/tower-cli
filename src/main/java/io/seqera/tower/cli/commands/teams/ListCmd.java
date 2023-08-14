@@ -40,7 +40,7 @@ public class ListCmd extends AbstractTeamsCmd {
 
         OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = findOrganizationByRef(organizationRef);
 
-        ListTeamResponse teamResponse = api().listOrganizationTeams(orgAndWorkspaceDbDto.getOrgId(), max, offset);
+        ListTeamResponse teamResponse = api().listOrganizationTeams(orgAndWorkspaceDbDto.getOrgId(), max, offset, null);
 
         return new TeamsList(organizationRef, teamResponse.getTeams(), baseOrgUrl(orgAndWorkspaceDbDto.getOrgName()));
     }
