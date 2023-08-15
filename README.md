@@ -51,15 +51,17 @@ Create a Tower access token using the [Tower](https://tower.nf/) web interface v
 
 Providing `tw` access to Tower with your access token can be achieved in several ways:
 
-1. Export it directly into your terminal:
+- By setting an environment variable:
 
-    ```bash
-    export TOWER_ACCESS_TOKEN=<your access token>
-    ```
+    1. Export the token as a shell variable directly into your terminal:
 
-2. Add the above `export` command to a file such as `.bashrc` to be automatically added into your environment.
+        ```bash
+        export TOWER_ACCESS_TOKEN=<your access token>
+        ```
 
-3. Specify your token as a parameter when running `tw`:
+    2. Add the above `export` command to a file such as `.bashrc` to be automatically added into your environment.
+
+- By specifying the `--access-token` parameter:
 
     ```bash
     tw --access-token=<your access token> <other options>
