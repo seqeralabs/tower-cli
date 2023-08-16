@@ -31,6 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
+import static org.mockserver.model.JsonBody.json;
 
 class AwsProviderTest extends BaseCmdTest {
 
@@ -40,7 +41,11 @@ class AwsProviderTest extends BaseCmdTest {
 
         // Create server expectation
         mock.when(
-                request().withMethod("POST").withPath("/credentials").withBody("{\"credentials\":{\"keys\":{\"assumeRoleArn\":\"arn_role\"},\"name\":\"test_credentials\",\"provider\":\"aws\"}}"), exactly(1)
+                request()
+                        .withMethod("POST")
+                        .withPath("/credentials")
+                        .withBody(json("{\"credentials\":{\"keys\":{\"assumeRoleArn\":\"arn_role\"},\"name\":\"test_credentials\",\"provider\":\"aws\"}}")),
+                exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"credentialsId\":\"6Kyn17toiABGu47qpBXsVX\"}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -56,7 +61,11 @@ class AwsProviderTest extends BaseCmdTest {
     void testAdd(OutputType format, MockServerClient mock) {
 
         mock.when(
-                request().withMethod("POST").withPath("/credentials").withBody("{\"credentials\":{\"keys\":{\"accessKey\":\"access_key\",\"secretKey\":\"secret_key\"},\"name\":\"aws\",\"provider\":\"aws\"}}"), exactly(1)
+                request()
+                        .withMethod("POST")
+                        .withPath("/credentials")
+                        .withBody(json("{\"credentials\":{\"keys\":{\"accessKey\":\"access_key\",\"secretKey\":\"secret_key\"},\"name\":\"aws\",\"provider\":\"aws\"}}")),
+                exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"credentialsId\":\"1cz5A8cuBkB5iJliCwJCFU\"}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -77,7 +86,11 @@ class AwsProviderTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("PUT").withPath("/credentials/kfKx9xRgzpIIZrbCMOcU4").withBody("{\"credentials\":{\"keys\":{\"assumeRoleArn\":\"changeAssumeRole\"},\"id\":\"kfKx9xRgzpIIZrbCMOcU4\",\"name\":\"aws\",\"provider\":\"aws\"}}").withContentType(MediaType.APPLICATION_JSON)
+                request()
+                        .withMethod("PUT")
+                        .withPath("/credentials/kfKx9xRgzpIIZrbCMOcU4")
+                        .withBody(json("{\"credentials\":{\"keys\":{\"assumeRoleArn\":\"changeAssumeRole\"},\"id\":\"kfKx9xRgzpIIZrbCMOcU4\",\"name\":\"aws\",\"provider\":\"aws\"}}"))
+                        .withContentType(MediaType.APPLICATION_JSON)
         ).respond(
                 response().withStatusCode(204)
         );

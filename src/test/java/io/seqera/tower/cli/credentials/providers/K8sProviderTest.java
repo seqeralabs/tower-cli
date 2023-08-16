@@ -17,7 +17,6 @@ package io.seqera.tower.cli.credentials.providers;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.responses.CredentialsAdded;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
@@ -26,10 +25,10 @@ import org.mockserver.model.MediaType;
 import java.io.IOException;
 
 import static io.seqera.tower.cli.commands.AbstractApiCmd.USER_WORKSPACE_NAME;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
+import static org.mockserver.model.JsonBody.json;
 
 class K8sProviderTest extends BaseCmdTest {
 
@@ -38,7 +37,11 @@ class K8sProviderTest extends BaseCmdTest {
     void testAddWithCertificate(OutputType format, MockServerClient mock) throws IOException {
 
         mock.when(
-                request().withMethod("POST").withPath("/credentials").withBody("{\"credentials\":{\"keys\":{\"certificate\":\"my_certificate\",\"privateKey\":\"my_private_key\"},\"name\":\"k8s\",\"provider\":\"k8s\"}}"), exactly(1)
+                request()
+                        .withMethod("POST")
+                        .withPath("/credentials")
+                        .withBody(json("{\"credentials\":{\"keys\":{\"certificate\":\"my_certificate\",\"privateKey\":\"my_private_key\"},\"name\":\"k8s\",\"provider\":\"k8s\"}}")),
+                exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"credentialsId\":\"1cz5A8cuBkB5iJliCwJCFU\"}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -51,7 +54,11 @@ class K8sProviderTest extends BaseCmdTest {
     @EnumSource(OutputType.class)
     void testAddWithToken(OutputType format, MockServerClient mock) {
         mock.when(
-                request().withMethod("POST").withPath("/credentials").withBody("{\"credentials\":{\"keys\":{\"token\":\"my_token\"},\"name\":\"k8s\",\"provider\":\"k8s\"}}"), exactly(1)
+                request()
+                        .withMethod("POST")
+                        .withPath("/credentials")
+                        .withBody(json("{\"credentials\":{\"keys\":{\"token\":\"my_token\"},\"name\":\"k8s\",\"provider\":\"k8s\"}}")),
+                exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"credentialsId\":\"1cz5A8cuBkB5iJliCwJCFU\"}").withContentType(MediaType.APPLICATION_JSON)
         );

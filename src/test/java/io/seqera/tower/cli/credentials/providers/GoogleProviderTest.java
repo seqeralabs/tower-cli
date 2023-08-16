@@ -31,6 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
+import static org.mockserver.model.JsonBody.json;
 
 class GoogleProviderTest extends BaseCmdTest {
 
@@ -39,7 +40,11 @@ class GoogleProviderTest extends BaseCmdTest {
     void testAdd(OutputType format, MockServerClient mock) throws IOException {
 
         mock.when(
-                request().withMethod("POST").withPath("/credentials").withBody("{\"credentials\":{\"keys\":{\"data\":\"private_key\"},\"name\":\"google\",\"provider\":\"google\"}}"), exactly(1)
+                request()
+                        .withMethod("POST")
+                        .withPath("/credentials")
+                        .withBody(json("{\"credentials\":{\"keys\":{\"data\":\"private_key\"},\"name\":\"google\",\"provider\":\"google\"}}")),
+                exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"credentialsId\":\"1cz5A8cuBkB5iJliCwJCFU\"}").withContentType(MediaType.APPLICATION_JSON)
         );

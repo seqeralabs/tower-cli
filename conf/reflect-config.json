@@ -2470,18 +2470,6 @@
   "allDeclaredMethods":true
 },
 {
-  "name":"io.seqera.tower.model.Credentials",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
-},
-{
-  "name":"io.seqera.tower.model.Credentials$ProviderEnum",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "methods":[{"name":"getValue","parameterTypes":[] }]
-},
-{
   "name":"io.seqera.tower.model.Dataset",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
