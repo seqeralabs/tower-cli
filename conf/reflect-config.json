@@ -2097,9 +2097,10 @@
   "methods":[
     {"name":"<init>","parameterTypes":[] }, 
     {"name":"getConnectionId","parameterTypes":[] }, 
-    {"name":"getDiscriminator","parameterTypes":[] }, 
-    {"name":"getWorkDir","parameterTypes":[] }, 
-    {"name":"setConnectionId","parameterTypes":["java.lang.String"] }, 
+    {"name":"getDiscriminator","parameterTypes":[] },
+    {"name":"getWorkDir","parameterTypes":[] },
+    {"name":"getShared","parameterTypes":[] },
+    {"name":"setConnectionId","parameterTypes":["java.lang.String"] },
     {"name":"setWorkDir","parameterTypes":["java.lang.String"] }
   ]
 },
@@ -2373,8 +2374,9 @@
   "queryAllDeclaredConstructors":true,
   "methods":[
     {"name":"getName","parameterTypes":[] }, 
-    {"name":"getResource","parameterTypes":[] }, 
-    {"name":"getValue","parameterTypes":[] }
+    {"name":"getResource","parameterTypes":[] },
+    {"name":"getValue","parameterTypes":[] },
+    {"name":"getIsDefault","parameterTypes":[] }
   ]
 },
 {
@@ -2386,8 +2388,9 @@
     {"name":"<init>","parameterTypes":[] }, 
     {"name":"setId","parameterTypes":["java.lang.Long"] }, 
     {"name":"setName","parameterTypes":["java.lang.String"] }, 
-    {"name":"setResource","parameterTypes":["java.lang.Boolean"] }, 
-    {"name":"setValue","parameterTypes":["java.lang.String"] }
+    {"name":"setResource","parameterTypes":["java.lang.Boolean"] },
+    {"name":"setValue","parameterTypes":["java.lang.String"] },
+    {"name":"setIsDefault","parameterTypes":["java.lang.Boolean"] }
   ]
 },
 {
@@ -2695,9 +2698,14 @@
     {"name":"getSpot","parameterTypes":[] }, 
     {"name":"getSshDaemon","parameterTypes":[] }, 
     {"name":"getSshImage","parameterTypes":[] }, 
-    {"name":"getUsePrivateAddress","parameterTypes":[] }, 
-    {"name":"getWorkDir","parameterTypes":[] }, 
-    {"name":"setBootDiskSizeGb","parameterTypes":["java.lang.Integer"] }, 
+    {"name":"getUsePrivateAddress","parameterTypes":[] },
+    {"name":"getWorkDir","parameterTypes":[] },
+    {"name":"getWaveEnabled","parameterTypes":[] },
+    {"name":"getFusion2Enabled","parameterTypes":[] },
+    {"name":"getServiceAccount","parameterTypes":[] },
+    {"name":"getNetwork","parameterTypes":[] },
+    {"name":"getSubnetwork","parameterTypes":[] },
+    {"name":"setBootDiskSizeGb","parameterTypes":["java.lang.Integer"] },
     {"name":"setCopyImage","parameterTypes":["java.lang.String"] }, 
     {"name":"setCpuPlatform","parameterTypes":["java.lang.String"] }, 
     {"name":"setDebugMode","parameterTypes":["java.lang.Integer"] }, 
@@ -2763,12 +2771,14 @@
     {"name":"<init>","parameterTypes":[] }, 
     {"name":"getId","parameterTypes":[] }, 
     {"name":"getName","parameterTypes":[] }, 
-    {"name":"getResource","parameterTypes":[] }, 
-    {"name":"getValue","parameterTypes":[] }, 
-    {"name":"setId","parameterTypes":["java.lang.Long"] }, 
+    {"name":"getResource","parameterTypes":[] },
+    {"name":"getValue","parameterTypes":[] },
+    {"name":"getIsDefault","parameterTypes":[] },
+    {"name":"setId","parameterTypes":["java.lang.Long"] },
     {"name":"setName","parameterTypes":["java.lang.String"] }, 
-    {"name":"setResource","parameterTypes":["java.lang.Boolean"] }, 
-    {"name":"setValue","parameterTypes":["java.lang.String"] }
+    {"name":"setResource","parameterTypes":["java.lang.Boolean"] },
+    {"name":"setValue","parameterTypes":["java.lang.String"] },
+    {"name":"setIsDefault","parameterTypes":["java.lang.Boolean"] }
   ]
 },
 {
