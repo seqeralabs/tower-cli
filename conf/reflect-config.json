@@ -2222,6 +2222,12 @@
   "allDeclaredMethods":true
 },
 {
+  "name":"io.seqera.tower.model.ComputeEnvDbDto",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.model.ComputeEnvResponseDto",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -3004,6 +3010,11 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.model.PipelineOptimizationStatus",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
 },
 {
   "name":"io.seqera.tower.model.PipelineSecret",

@@ -18,7 +18,12 @@ import io.seqera.tower.cli.exceptions.InvalidResponseException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.runs.RunSubmited;
 import io.seqera.tower.model.ComputeEnvResponseDto;
+import io.seqera.tower.model.CreateLabelRequest;
+import io.seqera.tower.model.CreateLabelResponse;
+import io.seqera.tower.model.LabelDbDto;
+import io.seqera.tower.model.LabelType;
 import io.seqera.tower.model.Launch;
+import io.seqera.tower.model.ListLabelsResponse;
 import io.seqera.tower.model.ListPipelinesResponse;
 import io.seqera.tower.model.PipelineDbDto;
 import io.seqera.tower.model.SubmitWorkflowLaunchRequest;
@@ -31,10 +36,14 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static io.seqera.tower.cli.utils.FilesHelper.readString;
 import static io.seqera.tower.cli.utils.ModelHelper.coalesce;
@@ -75,6 +84,9 @@ public class LaunchCmd extends AbstractRootCmd {
     @Option(names = {"--wait"}, description = "Wait until given status or fail. Valid options: ${COMPLETION-CANDIDATES}.")
     public WorkflowStatus wait;
 
+    @Option(names = {"-l", "--labels"}, split = ",", description = "Comma-separated list of labels for the pipeline")
+    List<String> labels;
+
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
     AdvancedOptions adv;
 
@@ -98,9 +110,12 @@ public class LaunchCmd extends AbstractRootCmd {
     protected Response runNextflowPipeline(Long wspId) throws ApiException, IOException {
         // Retrieve the provided computeEnv or use the primary if not provided
         ComputeEnvResponseDto ce = computeEnv != null ? computeEnvByRef(wspId, computeEnv) : primaryComputeEnv(wspId);
+        // Retrieve the IDs for the labels specified by the user if any
+        List<Long> labels = obtainLabelIDs(wspId);
 
         return submitWorkflow(updateLaunchRequest(new WorkflowLaunchRequest()
                 .pipeline(pipeline)
+                .labelIds(labels.isEmpty() ? null : labels)
                 .computeEnvId(ce.getId())
                 .workDir(ce.getConfig().getWorkDir())
                 .preRunScript(ce.getConfig().getPreRunScript())
@@ -112,6 +127,7 @@ public class LaunchCmd extends AbstractRootCmd {
         return new WorkflowLaunchRequest()
                 .id(base.getId())
                 .pipeline(base.getPipeline())
+                .labelIds(base.getLabelIds())
                 .computeEnvId(base.getComputeEnvId())
                 .runName(coalesce(name, base.getRunName()))
                 .workDir(coalesce(workDir, base.getWorkDir()))
@@ -131,6 +147,7 @@ public class LaunchCmd extends AbstractRootCmd {
     }
 
     protected Response runTowerPipeline(Long wspId) throws ApiException, IOException {
+
         ListPipelinesResponse pipelines = api().listPipelines(Collections.emptyList(), wspId, 50, 0, pipeline, "all");
         if (pipelines.getTotalSize() == 0) {
             throw new InvalidResponseException(String.format("Pipeline '%s' not found on this workspace.", pipeline));
@@ -167,6 +184,9 @@ public class LaunchCmd extends AbstractRootCmd {
             ComputeEnvResponseDto ce = api().describeComputeEnv(launchRequest.getComputeEnvId(), wspId, NO_CE_ATTRIBUTES).getComputeEnv();
             launchRequest.workDir(ce.getConfig().getWorkDir());
         }
+
+        List<Long> labels = obtainLabelIDs(wspId);
+        launchRequest.labelIds(labels.isEmpty() ? null : labels);
 
         return submitWorkflow(updateLaunchRequest(launchRequest), wspId, sourceWorkspaceId);
     }
@@ -207,6 +227,49 @@ public class LaunchCmd extends AbstractRootCmd {
         } catch (ApiException | NullPointerException e) {
             return null;
         }
+    }
+
+    private List<Long> obtainLabelIDs(@Nullable Long workspaceId) throws ApiException {
+
+        if (labels == null || labels.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        // retrieve labels for the workspace and check if we need to create new ones
+        List<LabelDbDto> wspLabels = new ArrayList<>();
+
+        ListLabelsResponse res = api().listLabels(workspaceId, null, null, null, LabelType.SIMPLE, null);
+        if (res.getLabels() != null) {
+            wspLabels.addAll(res.getLabels());
+        }
+
+        Map<String, Long> nameToID = wspLabels
+            .stream()
+            .collect(Collectors.toMap(LabelDbDto::getName, LabelDbDto::getId));
+
+        // get label names not registered in workspace (names are unique per wspID)
+        List<String> newLabels = labels
+            .stream()
+            .filter(labelName -> !nameToID.containsKey(labelName))
+            .collect(Collectors.toList());
+
+        // create the new ones via POST /labels
+        for (String labelName: newLabels) {
+            CreateLabelResponse created = api().createLabel(
+                new CreateLabelRequest()
+                    .name(labelName)
+                    .resource(false)
+                    .isDefault(false),
+                workspaceId
+            );
+            nameToID.put(created.getName(), created.getId());
+        }
+
+        // map requested label names to label IDs
+        return labels
+            .stream()
+            .map(nameToID::get)
+            .collect(Collectors.toList());
     }
 
 
