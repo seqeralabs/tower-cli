@@ -246,10 +246,6 @@ public class LaunchCmd extends AbstractRootCmd {
             return Collections.emptyList();
         }
 
-        if (!labelPermission(workspaceId)) {
-            throw new ApiException("User does not have permission to modify pipeline labels");
-        }
-
         // retrieve labels for the workspace and check if we need to create new ones
         List<LabelDbDto> wspLabels = new ArrayList<>();
 
@@ -267,6 +263,10 @@ public class LaunchCmd extends AbstractRootCmd {
             .stream()
             .filter(labelName -> !nameToID.containsKey(labelName))
             .collect(Collectors.toList());
+
+        if (!newLabels.isEmpty() && !labelPermission(workspaceId)) {
+            throw new ApiException("User does not have permission to modify pipeline labels");
+        }
 
         // create the new ones via POST /labels
         for (String labelName: newLabels) {
