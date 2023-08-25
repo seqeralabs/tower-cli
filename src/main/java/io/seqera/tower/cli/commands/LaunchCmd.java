@@ -95,7 +95,7 @@ public class LaunchCmd extends AbstractRootCmd {
     @Option(names = {"--wait"}, description = "Wait until given status or fail. Valid options: ${COMPLETION-CANDIDATES}.")
     public WorkflowStatus wait;
 
-    @Option(names = {"-l", "--labels"}, split = ",", description = "Comma-separated list of labels for the pipeline")
+    @Option(names = {"-l", "--labels"}, split = ",", description = "Comma-separated list of labels for the pipeline.")
     List<String> labels;
 
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
