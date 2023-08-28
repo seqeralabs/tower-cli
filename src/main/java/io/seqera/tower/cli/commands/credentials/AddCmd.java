@@ -17,6 +17,7 @@ import io.seqera.tower.cli.commands.credentials.add.AddAwsCmd;
 import io.seqera.tower.cli.commands.credentials.add.AddAzureCmd;
 import io.seqera.tower.cli.commands.credentials.add.AddBitbucketCmd;
 import io.seqera.tower.cli.commands.credentials.add.AddContainerRegistryCmd;
+import io.seqera.tower.cli.commands.credentials.add.AddGiteaCmd;
 import io.seqera.tower.cli.commands.credentials.add.AddGithubCmd;
 import io.seqera.tower.cli.commands.credentials.add.AddGitlabCmd;
 import io.seqera.tower.cli.commands.credentials.add.AddGoogleCmd;
@@ -36,6 +37,7 @@ import java.io.IOException;
                 AddGoogleCmd.class,
                 AddGithubCmd.class,
                 AddGitlabCmd.class,
+                AddGiteaCmd.class,
                 AddBitbucketCmd.class,
                 AddSshCmd.class,
                 AddK8sCmd.class,

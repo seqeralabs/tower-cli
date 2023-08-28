@@ -836,6 +836,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.credentials.providers.GiteaProvider",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.credentials.providers.GitlabProvider",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -2644,6 +2650,12 @@
 },
 {
   "name":"io.seqera.tower.model.GitLabSecurityKeys",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.model.GiteaSecurityKeys",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true
