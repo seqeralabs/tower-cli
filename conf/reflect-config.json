@@ -760,6 +760,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.credentials.add.AddGiteaCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.credentials.add.AddGithubCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -830,13 +836,13 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.credentials.providers.GithubProvider",
+  "name":"io.seqera.tower.cli.commands.credentials.providers.GiteaProvider",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.credentials.providers.GiteaProvider",
+  "name":"io.seqera.tower.cli.commands.credentials.providers.GithubProvider",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
@@ -2103,10 +2109,10 @@
   "methods":[
     {"name":"<init>","parameterTypes":[] }, 
     {"name":"getConnectionId","parameterTypes":[] }, 
-    {"name":"getDiscriminator","parameterTypes":[] },
-    {"name":"getWorkDir","parameterTypes":[] },
-    {"name":"getShared","parameterTypes":[] },
-    {"name":"setConnectionId","parameterTypes":["java.lang.String"] },
+    {"name":"getDiscriminator","parameterTypes":[] }, 
+    {"name":"getShared","parameterTypes":[] }, 
+    {"name":"getWorkDir","parameterTypes":[] }, 
+    {"name":"setConnectionId","parameterTypes":["java.lang.String"] }, 
     {"name":"setWorkDir","parameterTypes":["java.lang.String"] }
   ]
 },
@@ -2373,10 +2379,10 @@
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
   "methods":[
+    {"name":"getIsDefault","parameterTypes":[] }, 
     {"name":"getName","parameterTypes":[] }, 
-    {"name":"getResource","parameterTypes":[] },
-    {"name":"getValue","parameterTypes":[] },
-    {"name":"getIsDefault","parameterTypes":[] }
+    {"name":"getResource","parameterTypes":[] }, 
+    {"name":"getValue","parameterTypes":[] }
   ]
 },
 {
@@ -2387,10 +2393,10 @@
   "methods":[
     {"name":"<init>","parameterTypes":[] }, 
     {"name":"setId","parameterTypes":["java.lang.Long"] }, 
+    {"name":"setIsDefault","parameterTypes":["java.lang.Boolean"] }, 
     {"name":"setName","parameterTypes":["java.lang.String"] }, 
-    {"name":"setResource","parameterTypes":["java.lang.Boolean"] },
-    {"name":"setValue","parameterTypes":["java.lang.String"] },
-    {"name":"setIsDefault","parameterTypes":["java.lang.Boolean"] }
+    {"name":"setResource","parameterTypes":["java.lang.Boolean"] }, 
+    {"name":"setValue","parameterTypes":["java.lang.String"] }
   ]
 },
 {
@@ -2691,27 +2697,27 @@
     {"name":"getDebugMode","parameterTypes":[] }, 
     {"name":"getDiscriminator","parameterTypes":[] }, 
     {"name":"getEnvironment","parameterTypes":[] }, 
+    {"name":"getFusion2Enabled","parameterTypes":[] }, 
     {"name":"getHeadJobCpus","parameterTypes":[] }, 
     {"name":"getHeadJobMemoryMb","parameterTypes":[] }, 
     {"name":"getLabels","parameterTypes":[] }, 
     {"name":"getLocation","parameterTypes":[] }, 
     {"name":"getMachineType","parameterTypes":[] }, 
+    {"name":"getNetwork","parameterTypes":[] }, 
     {"name":"getNfsMount","parameterTypes":[] }, 
     {"name":"getNfsTarget","parameterTypes":[] }, 
     {"name":"getPostRunScript","parameterTypes":[] }, 
     {"name":"getPreRunScript","parameterTypes":[] }, 
     {"name":"getProjectId","parameterTypes":[] }, 
+    {"name":"getServiceAccount","parameterTypes":[] }, 
     {"name":"getSpot","parameterTypes":[] }, 
     {"name":"getSshDaemon","parameterTypes":[] }, 
     {"name":"getSshImage","parameterTypes":[] }, 
-    {"name":"getUsePrivateAddress","parameterTypes":[] },
-    {"name":"getWorkDir","parameterTypes":[] },
-    {"name":"getWaveEnabled","parameterTypes":[] },
-    {"name":"getFusion2Enabled","parameterTypes":[] },
-    {"name":"getServiceAccount","parameterTypes":[] },
-    {"name":"getNetwork","parameterTypes":[] },
-    {"name":"getSubnetwork","parameterTypes":[] },
-    {"name":"setBootDiskSizeGb","parameterTypes":["java.lang.Integer"] },
+    {"name":"getSubnetwork","parameterTypes":[] }, 
+    {"name":"getUsePrivateAddress","parameterTypes":[] }, 
+    {"name":"getWaveEnabled","parameterTypes":[] }, 
+    {"name":"getWorkDir","parameterTypes":[] }, 
+    {"name":"setBootDiskSizeGb","parameterTypes":["java.lang.Integer"] }, 
     {"name":"setCopyImage","parameterTypes":["java.lang.String"] }, 
     {"name":"setCpuPlatform","parameterTypes":["java.lang.String"] }, 
     {"name":"setDebugMode","parameterTypes":["java.lang.Integer"] }, 
@@ -2776,15 +2782,15 @@
   "methods":[
     {"name":"<init>","parameterTypes":[] }, 
     {"name":"getId","parameterTypes":[] }, 
+    {"name":"getIsDefault","parameterTypes":[] }, 
     {"name":"getName","parameterTypes":[] }, 
-    {"name":"getResource","parameterTypes":[] },
-    {"name":"getValue","parameterTypes":[] },
-    {"name":"getIsDefault","parameterTypes":[] },
-    {"name":"setId","parameterTypes":["java.lang.Long"] },
+    {"name":"getResource","parameterTypes":[] }, 
+    {"name":"getValue","parameterTypes":[] }, 
+    {"name":"setId","parameterTypes":["java.lang.Long"] }, 
+    {"name":"setIsDefault","parameterTypes":["java.lang.Boolean"] }, 
     {"name":"setName","parameterTypes":["java.lang.String"] }, 
-    {"name":"setResource","parameterTypes":["java.lang.Boolean"] },
-    {"name":"setValue","parameterTypes":["java.lang.String"] },
-    {"name":"setIsDefault","parameterTypes":["java.lang.Boolean"] }
+    {"name":"setResource","parameterTypes":["java.lang.Boolean"] }, 
+    {"name":"setValue","parameterTypes":["java.lang.String"] }
   ]
 },
 {
