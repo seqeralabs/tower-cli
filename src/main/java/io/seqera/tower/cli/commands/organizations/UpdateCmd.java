@@ -30,6 +30,9 @@ public class UpdateCmd extends AbstractOrganizationsCmd {
     @CommandLine.Mixin
     OrganizationRefOptions organizationRefOptions;
 
+    @CommandLine.Option(names = {"--new-name"}, description = "Organization new name.")
+    public String newName;
+
     @CommandLine.Option(names = {"-f", "--full-name"}, description = "Organization full name.")
     public String fullName;
 
@@ -43,6 +46,7 @@ public class UpdateCmd extends AbstractOrganizationsCmd {
         OrganizationDbDto organization = response.getOrganization();
 
         UpdateOrganizationRequest request = new UpdateOrganizationRequest();
+        request.setName(newName != null ? newName : organization.getName());
         request.setFullName(fullName != null ? fullName : organization.getFullName());
         request.setDescription(opts.description != null ? opts.description : organization.getDescription());
         request.setLocation(opts.location != null ? opts.location : organization.getLocation());
