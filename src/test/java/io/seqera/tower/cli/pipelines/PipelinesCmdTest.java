@@ -19,6 +19,7 @@ import io.seqera.tower.JSON;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.commands.labels.LabelsSubcmdOptions;
+import io.seqera.tower.cli.exceptions.InvalidResponseException;
 import io.seqera.tower.cli.exceptions.MultiplePipelinesFoundException;
 import io.seqera.tower.cli.exceptions.NoComputeEnvironmentException;
 import io.seqera.tower.cli.exceptions.PipelineNotFoundException;
@@ -42,6 +43,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
+import org.mockserver.matchers.Times;
+import org.mockserver.model.JsonBody;
 import org.mockserver.model.MediaType;
 
 import java.io.IOException;
@@ -57,6 +60,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
+import static org.mockserver.model.JsonBody.json;
 
 class PipelinesCmdTest extends BaseCmdTest {
 
@@ -126,6 +130,58 @@ class PipelinesCmdTest extends BaseCmdTest {
 
         assertEquals("", out.stdErr);
         assertEquals(new PipelinesUpdated(USER_WORKSPACE_NAME, "sleep_one_minute").toString(), out.stdOut);
+    }
+
+    @Test
+    void testUpdatePipelineName(MockServerClient mock) {
+
+        mock.reset();
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "sleep_one_minute")
+        ).respond(
+                response().withStatusCode(200).withBody("{\"pipelines\":[{\"pipelineId\":217997727159863,\"name\":\"sleep_one_minute\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/pditommaso/nf-sleep\",\"userId\":4,\"userName\":\"jordi\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null}],\"totalSize\":1}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines/217997727159863/launch")
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("pipelines_update")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("PUT").withPath("/pipelines/217997727159863")
+                        .withBody(json("{\"name\": \"sleepOneMinute\", \"launch\":{\"computeEnvId\":\"vYOK4vn7spw7bHHWBDXZ2\",\"pipeline\":\"https://github.com/pditommaso/nf-sleep\",\"workDir\":\"s3://nextflow-ci/jordeu\",\"paramsText\":\"timeout: 60\\n\",\"pullLatest\":false,\"stubRun\":false}}")),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+                        .withBody("{\"pipeline\":{\"pipelineId\":217997727159863,\"name\":\"sleepOneMinute\",\"description\":\"Sleep one minute and exit\",\"icon\":null,\"repository\":\"https://github.com/pditommaso/nf-sleep\",\"userId\":4,\"userName\":\"jordi\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null}}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines/validate").withQueryStringParameter("name", "sleepOneMinute")
+        ).respond(
+                response().withStatusCode(204)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines/validate").withQueryStringParameter("name", "#sleep")
+        ).respond(
+                response().withStatusCode(400)
+                        .withBody(json("{\"message\": \"Pipeline name must contain a minimum of 2 and a maximum of 99 alphanumeric characters separated by dashes or underscores\"}"))
+        );
+
+        // successful update
+        ExecOut out = exec(mock, "pipelines", "update", "-n", "sleep_one_minute", "--new-name", "sleepOneMinute");
+
+        assertEquals("", out.stdErr);
+        assertEquals(new PipelinesUpdated(USER_WORKSPACE_NAME, "sleep_one_minute").toString(), out.stdOut);
+
+        // must fail with invalid name
+        out = exec(mock, "pipelines", "update", "-n", "sleep_one_minute", "--new-name", "#sleep");
+
+        assertEquals(errorMessage(out.app, new InvalidResponseException("Pipeline name '#sleep' is not valid")), out.stdErr);
+        assertEquals("", out.stdOut);
+        assertEquals(1, out.exitCode);
     }
 
     @Test
