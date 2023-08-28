@@ -11,16 +11,7 @@
 
 package io.seqera.tower.cli.utils;
 
-import io.seqera.tower.model.ActionResponseDto;
-import io.seqera.tower.model.ActionStatus;
-import io.seqera.tower.model.ComputeEnvStatus;
-import io.seqera.tower.model.ListActionsResponseActionInfo;
-import io.seqera.tower.model.OrgRole;
-import io.seqera.tower.model.ParticipantType;
-import io.seqera.tower.model.PipelineDbDto;
-import io.seqera.tower.model.WorkflowStatus;
-import io.seqera.tower.model.ListLabelsResponse;
-import io.seqera.tower.model.ListWorkflowsResponseListWorkflowsElement;
+import io.seqera.tower.model.*;
 import picocli.CommandLine;
 
 import java.time.Duration;
@@ -39,6 +30,10 @@ public class FormatHelper {
     }
 
     public static String formatDurationMillis(Long duration) {
+        if (duration == null) {
+            return "";
+        }
+
         Duration d = Duration.ofMillis(duration);
         long days = d.toDaysPart();
         long hours = d.toHoursPart();
