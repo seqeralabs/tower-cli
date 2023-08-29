@@ -123,6 +123,9 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"groovy.lang.Closure"
+},
+{
   "name":"io.seqera.tower.cli.Tower",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
@@ -2023,37 +2026,7 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[
-    {"name":"<init>","parameterTypes":[] }, 
-    {"name":"getConfig","parameterTypes":[] }, 
-    {"name":"getDateCreated","parameterTypes":[] }, 
-    {"name":"getEvent","parameterTypes":[] }, 
-    {"name":"getHookId","parameterTypes":[] }, 
-    {"name":"getHookUrl","parameterTypes":[] }, 
-    {"name":"getId","parameterTypes":[] }, 
-    {"name":"getLabels","parameterTypes":[] }, 
-    {"name":"getLastSeen","parameterTypes":[] }, 
-    {"name":"getLastUpdated","parameterTypes":[] }, 
-    {"name":"getLaunch","parameterTypes":[] }, 
-    {"name":"getMessage","parameterTypes":[] }, 
-    {"name":"getName","parameterTypes":[] }, 
-    {"name":"getSource","parameterTypes":[] }, 
-    {"name":"getStatus","parameterTypes":[] }, 
-    {"name":"setConfig","parameterTypes":["io.seqera.tower.model.ActionConfigType"] }, 
-    {"name":"setDateCreated","parameterTypes":["java.time.OffsetDateTime"] }, 
-    {"name":"setEvent","parameterTypes":["io.seqera.tower.model.ActionEventType"] }, 
-    {"name":"setHookId","parameterTypes":["java.lang.String"] }, 
-    {"name":"setHookUrl","parameterTypes":["java.lang.String"] }, 
-    {"name":"setId","parameterTypes":["java.lang.String"] }, 
-    {"name":"setLabels","parameterTypes":["java.util.List"] }, 
-    {"name":"setLastSeen","parameterTypes":["java.time.OffsetDateTime"] }, 
-    {"name":"setLastUpdated","parameterTypes":["java.time.OffsetDateTime"] }, 
-    {"name":"setLaunch","parameterTypes":["io.seqera.tower.model.Launch"] }, 
-    {"name":"setMessage","parameterTypes":["java.lang.String"] }, 
-    {"name":"setName","parameterTypes":["java.lang.String"] }, 
-    {"name":"setSource","parameterTypes":["io.seqera.tower.model.ActionSource"] }, 
-    {"name":"setStatus","parameterTypes":["io.seqera.tower.model.ActionStatus"] }
-  ]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getConfig","parameterTypes":[] }, {"name":"getDateCreated","parameterTypes":[] }, {"name":"getEvent","parameterTypes":[] }, {"name":"getHookId","parameterTypes":[] }, {"name":"getHookUrl","parameterTypes":[] }, {"name":"getId","parameterTypes":[] }, {"name":"getLabels","parameterTypes":[] }, {"name":"getLastSeen","parameterTypes":[] }, {"name":"getLastUpdated","parameterTypes":[] }, {"name":"getLaunch","parameterTypes":[] }, {"name":"getMessage","parameterTypes":[] }, {"name":"getName","parameterTypes":[] }, {"name":"getSource","parameterTypes":[] }, {"name":"getStatus","parameterTypes":[] }, {"name":"setConfig","parameterTypes":["io.seqera.tower.model.ActionConfigType"] }, {"name":"setDateCreated","parameterTypes":["java.time.OffsetDateTime"] }, {"name":"setEvent","parameterTypes":["io.seqera.tower.model.ActionEventType"] }, {"name":"setHookId","parameterTypes":["java.lang.String"] }, {"name":"setHookUrl","parameterTypes":["java.lang.String"] }, {"name":"setId","parameterTypes":["java.lang.String"] }, {"name":"setLabels","parameterTypes":["java.util.List"] }, {"name":"setLastSeen","parameterTypes":["java.time.OffsetDateTime"] }, {"name":"setLastUpdated","parameterTypes":["java.time.OffsetDateTime"] }, {"name":"setLaunch","parameterTypes":["io.seqera.tower.model.Launch"] }, {"name":"setMessage","parameterTypes":["java.lang.String"] }, {"name":"setName","parameterTypes":["java.lang.String"] }, {"name":"setSource","parameterTypes":["io.seqera.tower.model.ActionSource"] }, {"name":"setStatus","parameterTypes":["io.seqera.tower.model.ActionStatus"] }]
 },
 {
   "name":"io.seqera.tower.model.ActionSource",
@@ -2106,15 +2079,7 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[
-    {"name":"<init>","parameterTypes":[] }, 
-    {"name":"getConnectionId","parameterTypes":[] }, 
-    {"name":"getDiscriminator","parameterTypes":[] }, 
-    {"name":"getShared","parameterTypes":[] }, 
-    {"name":"getWorkDir","parameterTypes":[] }, 
-    {"name":"setConnectionId","parameterTypes":["java.lang.String"] }, 
-    {"name":"setWorkDir","parameterTypes":["java.lang.String"] }
-  ]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getConnectionId","parameterTypes":[] }, {"name":"getDiscriminator","parameterTypes":[] }, {"name":"getShared","parameterTypes":[] }, {"name":"getWorkDir","parameterTypes":[] }, {"name":"setConnectionId","parameterTypes":["java.lang.String"] }, {"name":"setWorkDir","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.model.AltairPbsComputeConfig",
@@ -2127,43 +2092,28 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[
-    {"name":"<init>","parameterTypes":[] }, 
-    {"name":"getSiteId","parameterTypes":[] }, 
-    {"name":"getUrl","parameterTypes":[] }, 
-    {"name":"setSiteId","parameterTypes":["java.lang.Integer"] }, 
-    {"name":"setUrl","parameterTypes":["java.lang.String"] }
-  ]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getSiteId","parameterTypes":[] }, {"name":"getUrl","parameterTypes":[] }, {"name":"setSiteId","parameterTypes":["java.lang.Integer"] }, {"name":"setUrl","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.model.AssociateActionLabelsRequest",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[
-    {"name":"getActionIds","parameterTypes":[] }, 
-    {"name":"getLabelIds","parameterTypes":[] }
-  ]
+  "methods":[{"name":"getActionIds","parameterTypes":[] }, {"name":"getLabelIds","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.AssociatePipelineLabelsRequest",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[
-    {"name":"getLabelIds","parameterTypes":[] }, 
-    {"name":"getPipelineIds","parameterTypes":[] }
-  ]
+  "methods":[{"name":"getLabelIds","parameterTypes":[] }, {"name":"getPipelineIds","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.AssociateWorkflowLabelsRequest",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[
-    {"name":"getLabelIds","parameterTypes":[] }, 
-    {"name":"getWorkflowIds","parameterTypes":[] }
-  ]
+  "methods":[{"name":"getLabelIds","parameterTypes":[] }, {"name":"getWorkflowIds","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.Avatar",
@@ -2245,50 +2195,13 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[
-    {"name":"<init>","parameterTypes":[] }, 
-    {"name":"getConfig","parameterTypes":[] }, 
-    {"name":"getCredentialsId","parameterTypes":[] }, 
-    {"name":"getDateCreated","parameterTypes":[] }, 
-    {"name":"getDeleted","parameterTypes":[] }, 
-    {"name":"getDescription","parameterTypes":[] }, 
-    {"name":"getId","parameterTypes":[] }, 
-    {"name":"getLabels","parameterTypes":[] }, 
-    {"name":"getLastUpdated","parameterTypes":[] }, 
-    {"name":"getLastUsed","parameterTypes":[] }, 
-    {"name":"getMessage","parameterTypes":[] }, 
-    {"name":"getName","parameterTypes":[] }, 
-    {"name":"getOrgId","parameterTypes":[] }, 
-    {"name":"getPlatform","parameterTypes":[] }, 
-    {"name":"getPrimary","parameterTypes":[] }, 
-    {"name":"getStatus","parameterTypes":[] }, 
-    {"name":"getWorkspaceId","parameterTypes":[] }, 
-    {"name":"setConfig","parameterTypes":["io.seqera.tower.model.ComputeConfig"] }, 
-    {"name":"setCredentialsId","parameterTypes":["java.lang.String"] }, 
-    {"name":"setDateCreated","parameterTypes":["java.time.OffsetDateTime"] }, 
-    {"name":"setDeleted","parameterTypes":["java.lang.Boolean"] }, 
-    {"name":"setDescription","parameterTypes":["java.lang.String"] }, 
-    {"name":"setId","parameterTypes":["java.lang.String"] }, 
-    {"name":"setLabels","parameterTypes":["java.util.List"] }, 
-    {"name":"setLastUpdated","parameterTypes":["java.time.OffsetDateTime"] }, 
-    {"name":"setLastUsed","parameterTypes":["java.time.OffsetDateTime"] }, 
-    {"name":"setMessage","parameterTypes":["java.lang.String"] }, 
-    {"name":"setName","parameterTypes":["java.lang.String"] }, 
-    {"name":"setOrgId","parameterTypes":["java.lang.Long"] }, 
-    {"name":"setPlatform","parameterTypes":["io.seqera.tower.model.ComputeEnvResponseDto$PlatformEnum"] }, 
-    {"name":"setPrimary","parameterTypes":["java.lang.Boolean"] }, 
-    {"name":"setStatus","parameterTypes":["io.seqera.tower.model.ComputeEnvStatus"] }, 
-    {"name":"setWorkspaceId","parameterTypes":["java.lang.Long"] }
-  ]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getConfig","parameterTypes":[] }, {"name":"getCredentialsId","parameterTypes":[] }, {"name":"getDateCreated","parameterTypes":[] }, {"name":"getDeleted","parameterTypes":[] }, {"name":"getDescription","parameterTypes":[] }, {"name":"getId","parameterTypes":[] }, {"name":"getLabels","parameterTypes":[] }, {"name":"getLastUpdated","parameterTypes":[] }, {"name":"getLastUsed","parameterTypes":[] }, {"name":"getMessage","parameterTypes":[] }, {"name":"getName","parameterTypes":[] }, {"name":"getOrgId","parameterTypes":[] }, {"name":"getPlatform","parameterTypes":[] }, {"name":"getPrimary","parameterTypes":[] }, {"name":"getStatus","parameterTypes":[] }, {"name":"getWorkspaceId","parameterTypes":[] }, {"name":"setConfig","parameterTypes":["io.seqera.tower.model.ComputeConfig"] }, {"name":"setCredentialsId","parameterTypes":["java.lang.String"] }, {"name":"setDateCreated","parameterTypes":["java.time.OffsetDateTime"] }, {"name":"setDeleted","parameterTypes":["java.lang.Boolean"] }, {"name":"setDescription","parameterTypes":["java.lang.String"] }, {"name":"setId","parameterTypes":["java.lang.String"] }, {"name":"setLabels","parameterTypes":["java.util.List"] }, {"name":"setLastUpdated","parameterTypes":["java.time.OffsetDateTime"] }, {"name":"setLastUsed","parameterTypes":["java.time.OffsetDateTime"] }, {"name":"setMessage","parameterTypes":["java.lang.String"] }, {"name":"setName","parameterTypes":["java.lang.String"] }, {"name":"setOrgId","parameterTypes":["java.lang.Long"] }, {"name":"setPlatform","parameterTypes":["io.seqera.tower.model.ComputeEnvResponseDto$PlatformEnum"] }, {"name":"setPrimary","parameterTypes":["java.lang.Boolean"] }, {"name":"setStatus","parameterTypes":["io.seqera.tower.model.ComputeEnvStatus"] }, {"name":"setWorkspaceId","parameterTypes":["java.lang.Long"] }]
 },
 {
   "name":"io.seqera.tower.model.ComputeEnvResponseDto$PlatformEnum",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[
-    {"name":"fromValue","parameterTypes":["java.lang.String"] }, 
-    {"name":"getValue","parameterTypes":[] }
-  ]
+  "methods":[{"name":"fromValue","parameterTypes":["java.lang.String"] }, {"name":"getValue","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.ComputeEnvStatus",
@@ -2312,16 +2225,7 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[
-    {"name":"<init>","parameterTypes":[] }, 
-    {"name":"getDiscriminator","parameterTypes":[] }, 
-    {"name":"getPassword","parameterTypes":[] }, 
-    {"name":"getRegistry","parameterTypes":[] }, 
-    {"name":"getUserName","parameterTypes":[] }, 
-    {"name":"setPassword","parameterTypes":["java.lang.String"] }, 
-    {"name":"setRegistry","parameterTypes":["java.lang.String"] }, 
-    {"name":"setUserName","parameterTypes":["java.lang.String"] }
-  ]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getDiscriminator","parameterTypes":[] }, {"name":"getPassword","parameterTypes":[] }, {"name":"getRegistry","parameterTypes":[] }, {"name":"getUserName","parameterTypes":[] }, {"name":"setPassword","parameterTypes":["java.lang.String"] }, {"name":"setRegistry","parameterTypes":["java.lang.String"] }, {"name":"setUserName","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.model.CreateActionRequest",
@@ -2364,46 +2268,28 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[
-    {"name":"getDescription","parameterTypes":[] }, 
-    {"name":"getName","parameterTypes":[] }
-  ]
+  "methods":[{"name":"getDescription","parameterTypes":[] }, {"name":"getName","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.CreateDatasetResponse",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[
-    {"name":"<init>","parameterTypes":[] }, 
-    {"name":"setDataset","parameterTypes":["io.seqera.tower.model.Dataset"] }
-  ]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setDataset","parameterTypes":["io.seqera.tower.model.Dataset"] }]
 },
 {
   "name":"io.seqera.tower.model.CreateLabelRequest",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[
-    {"name":"getIsDefault","parameterTypes":[] }, 
-    {"name":"getName","parameterTypes":[] }, 
-    {"name":"getResource","parameterTypes":[] }, 
-    {"name":"getValue","parameterTypes":[] }
-  ]
+  "methods":[{"name":"getIsDefault","parameterTypes":[] }, {"name":"getName","parameterTypes":[] }, {"name":"getResource","parameterTypes":[] }, {"name":"getValue","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.CreateLabelResponse",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[
-    {"name":"<init>","parameterTypes":[] }, 
-    {"name":"setId","parameterTypes":["java.lang.Long"] }, 
-    {"name":"setIsDefault","parameterTypes":["java.lang.Boolean"] }, 
-    {"name":"setName","parameterTypes":["java.lang.String"] }, 
-    {"name":"setResource","parameterTypes":["java.lang.Boolean"] }, 
-    {"name":"setValue","parameterTypes":["java.lang.String"] }
-  ]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setId","parameterTypes":["java.lang.Long"] }, {"name":"setIsDefault","parameterTypes":["java.lang.Boolean"] }, {"name":"setName","parameterTypes":["java.lang.String"] }, {"name":"setResource","parameterTypes":["java.lang.Boolean"] }, {"name":"setValue","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.model.CreateOrganizationRequest",
@@ -2434,20 +2320,14 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[
-    {"name":"getName","parameterTypes":[] }, 
-    {"name":"getValue","parameterTypes":[] }
-  ]
+  "methods":[{"name":"getName","parameterTypes":[] }, {"name":"getValue","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.CreatePipelineSecretResponse",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[
-    {"name":"<init>","parameterTypes":[] }, 
-    {"name":"setSecretId","parameterTypes":["java.lang.Long"] }
-  ]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setSecretId","parameterTypes":["java.lang.Long"] }]
 },
 {
   "name":"io.seqera.tower.model.CreateTeamMemberRequest",
@@ -2495,50 +2375,14 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[
-    {"name":"<init>","parameterTypes":[] }, 
-    {"name":"getDateCreated","parameterTypes":[] }, 
-    {"name":"getDeleted","parameterTypes":[] }, 
-    {"name":"getDescription","parameterTypes":[] }, 
-    {"name":"getId","parameterTypes":[] }, 
-    {"name":"getLastUpdated","parameterTypes":[] }, 
-    {"name":"getMediaType","parameterTypes":[] }, 
-    {"name":"getName","parameterTypes":[] }, 
-    {"name":"setDateCreated","parameterTypes":["java.time.OffsetDateTime"] }, 
-    {"name":"setDeleted","parameterTypes":["java.lang.Boolean"] }, 
-    {"name":"setDescription","parameterTypes":["java.lang.String"] }, 
-    {"name":"setId","parameterTypes":["java.lang.String"] }, 
-    {"name":"setLastUpdated","parameterTypes":["java.time.OffsetDateTime"] }, 
-    {"name":"setMediaType","parameterTypes":["java.lang.String"] }, 
-    {"name":"setName","parameterTypes":["java.lang.String"] }
-  ]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getDateCreated","parameterTypes":[] }, {"name":"getDeleted","parameterTypes":[] }, {"name":"getDescription","parameterTypes":[] }, {"name":"getId","parameterTypes":[] }, {"name":"getLastUpdated","parameterTypes":[] }, {"name":"getMediaType","parameterTypes":[] }, {"name":"getName","parameterTypes":[] }, {"name":"setDateCreated","parameterTypes":["java.time.OffsetDateTime"] }, {"name":"setDeleted","parameterTypes":["java.lang.Boolean"] }, {"name":"setDescription","parameterTypes":["java.lang.String"] }, {"name":"setId","parameterTypes":["java.lang.String"] }, {"name":"setLastUpdated","parameterTypes":["java.time.OffsetDateTime"] }, {"name":"setMediaType","parameterTypes":["java.lang.String"] }, {"name":"setName","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.model.DatasetVersionDbDto",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[
-    {"name":"<init>","parameterTypes":[] }, 
-    {"name":"getDatasetDescription","parameterTypes":[] }, 
-    {"name":"getDatasetId","parameterTypes":[] }, 
-    {"name":"getDatasetName","parameterTypes":[] }, 
-    {"name":"getFileName","parameterTypes":[] }, 
-    {"name":"getHasHeader","parameterTypes":[] }, 
-    {"name":"getLastUpdated","parameterTypes":[] }, 
-    {"name":"getMediaType","parameterTypes":[] }, 
-    {"name":"getUrl","parameterTypes":[] }, 
-    {"name":"getVersion","parameterTypes":[] }, 
-    {"name":"setDatasetDescription","parameterTypes":["java.lang.String"] }, 
-    {"name":"setDatasetId","parameterTypes":["java.lang.String"] }, 
-    {"name":"setDatasetName","parameterTypes":["java.lang.String"] }, 
-    {"name":"setFileName","parameterTypes":["java.lang.String"] }, 
-    {"name":"setHasHeader","parameterTypes":["java.lang.Boolean"] }, 
-    {"name":"setLastUpdated","parameterTypes":["java.time.OffsetDateTime"] }, 
-    {"name":"setMediaType","parameterTypes":["java.lang.String"] }, 
-    {"name":"setUrl","parameterTypes":["java.lang.String"] }, 
-    {"name":"setVersion","parameterTypes":["java.lang.Long"] }
-  ]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getDatasetDescription","parameterTypes":[] }, {"name":"getDatasetId","parameterTypes":[] }, {"name":"getDatasetName","parameterTypes":[] }, {"name":"getFileName","parameterTypes":[] }, {"name":"getHasHeader","parameterTypes":[] }, {"name":"getLastUpdated","parameterTypes":[] }, {"name":"getMediaType","parameterTypes":[] }, {"name":"getUrl","parameterTypes":[] }, {"name":"getVersion","parameterTypes":[] }, {"name":"setDatasetDescription","parameterTypes":["java.lang.String"] }, {"name":"setDatasetId","parameterTypes":["java.lang.String"] }, {"name":"setDatasetName","parameterTypes":["java.lang.String"] }, {"name":"setFileName","parameterTypes":["java.lang.String"] }, {"name":"setHasHeader","parameterTypes":["java.lang.Boolean"] }, {"name":"setLastUpdated","parameterTypes":["java.time.OffsetDateTime"] }, {"name":"setMediaType","parameterTypes":["java.lang.String"] }, {"name":"setUrl","parameterTypes":["java.lang.String"] }, {"name":"setVersion","parameterTypes":["java.lang.Long"] }]
 },
 {
   "name":"io.seqera.tower.model.DescribeActionResponse",
@@ -2563,10 +2407,7 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[
-    {"name":"<init>","parameterTypes":[] }, 
-    {"name":"setDataset","parameterTypes":["io.seqera.tower.model.Dataset"] }
-  ]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setDataset","parameterTypes":["io.seqera.tower.model.Dataset"] }]
 },
 {
   "name":"io.seqera.tower.model.DescribeLaunchResponse",
@@ -2603,10 +2444,7 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[
-    {"name":"<init>","parameterTypes":[] }, 
-    {"name":"setLaunch","parameterTypes":["io.seqera.tower.model.WorkflowLaunchResponse"] }
-  ]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setLaunch","parameterTypes":["io.seqera.tower.model.WorkflowLaunchResponse"] }]
 },
 {
   "name":"io.seqera.tower.model.DescribeWorkflowResponse",
@@ -2695,55 +2533,7 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[
-    {"name":"<init>","parameterTypes":[] }, 
-    {"name":"getBootDiskSizeGb","parameterTypes":[] }, 
-    {"name":"getCopyImage","parameterTypes":[] }, 
-    {"name":"getCpuPlatform","parameterTypes":[] }, 
-    {"name":"getDebugMode","parameterTypes":[] }, 
-    {"name":"getDiscriminator","parameterTypes":[] }, 
-    {"name":"getEnvironment","parameterTypes":[] }, 
-    {"name":"getFusion2Enabled","parameterTypes":[] }, 
-    {"name":"getHeadJobCpus","parameterTypes":[] }, 
-    {"name":"getHeadJobMemoryMb","parameterTypes":[] }, 
-    {"name":"getLabels","parameterTypes":[] }, 
-    {"name":"getLocation","parameterTypes":[] }, 
-    {"name":"getMachineType","parameterTypes":[] }, 
-    {"name":"getNetwork","parameterTypes":[] }, 
-    {"name":"getNfsMount","parameterTypes":[] }, 
-    {"name":"getNfsTarget","parameterTypes":[] }, 
-    {"name":"getPostRunScript","parameterTypes":[] }, 
-    {"name":"getPreRunScript","parameterTypes":[] }, 
-    {"name":"getProjectId","parameterTypes":[] }, 
-    {"name":"getServiceAccount","parameterTypes":[] }, 
-    {"name":"getSpot","parameterTypes":[] }, 
-    {"name":"getSshDaemon","parameterTypes":[] }, 
-    {"name":"getSshImage","parameterTypes":[] }, 
-    {"name":"getSubnetwork","parameterTypes":[] }, 
-    {"name":"getUsePrivateAddress","parameterTypes":[] }, 
-    {"name":"getWaveEnabled","parameterTypes":[] }, 
-    {"name":"getWorkDir","parameterTypes":[] }, 
-    {"name":"setBootDiskSizeGb","parameterTypes":["java.lang.Integer"] }, 
-    {"name":"setCopyImage","parameterTypes":["java.lang.String"] }, 
-    {"name":"setCpuPlatform","parameterTypes":["java.lang.String"] }, 
-    {"name":"setDebugMode","parameterTypes":["java.lang.Integer"] }, 
-    {"name":"setEnvironment","parameterTypes":["java.util.List"] }, 
-    {"name":"setHeadJobCpus","parameterTypes":["java.lang.Integer"] }, 
-    {"name":"setHeadJobMemoryMb","parameterTypes":["java.lang.Integer"] }, 
-    {"name":"setLabels","parameterTypes":["java.util.Map"] }, 
-    {"name":"setLocation","parameterTypes":["java.lang.String"] }, 
-    {"name":"setMachineType","parameterTypes":["java.lang.String"] }, 
-    {"name":"setNfsMount","parameterTypes":["java.lang.String"] }, 
-    {"name":"setNfsTarget","parameterTypes":["java.lang.String"] }, 
-    {"name":"setPostRunScript","parameterTypes":["java.lang.String"] }, 
-    {"name":"setPreRunScript","parameterTypes":["java.lang.String"] }, 
-    {"name":"setProjectId","parameterTypes":["java.lang.String"] }, 
-    {"name":"setSpot","parameterTypes":["java.lang.Boolean"] }, 
-    {"name":"setSshDaemon","parameterTypes":["java.lang.Boolean"] }, 
-    {"name":"setSshImage","parameterTypes":["java.lang.String"] }, 
-    {"name":"setUsePrivateAddress","parameterTypes":["java.lang.Boolean"] }, 
-    {"name":"setWorkDir","parameterTypes":["java.lang.String"] }
-  ]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getBootDiskSizeGb","parameterTypes":[] }, {"name":"getCopyImage","parameterTypes":[] }, {"name":"getCpuPlatform","parameterTypes":[] }, {"name":"getDebugMode","parameterTypes":[] }, {"name":"getDiscriminator","parameterTypes":[] }, {"name":"getEnvironment","parameterTypes":[] }, {"name":"getFusion2Enabled","parameterTypes":[] }, {"name":"getHeadJobCpus","parameterTypes":[] }, {"name":"getHeadJobMemoryMb","parameterTypes":[] }, {"name":"getLabels","parameterTypes":[] }, {"name":"getLocation","parameterTypes":[] }, {"name":"getMachineType","parameterTypes":[] }, {"name":"getNetwork","parameterTypes":[] }, {"name":"getNfsMount","parameterTypes":[] }, {"name":"getNfsTarget","parameterTypes":[] }, {"name":"getPostRunScript","parameterTypes":[] }, {"name":"getPreRunScript","parameterTypes":[] }, {"name":"getProjectId","parameterTypes":[] }, {"name":"getServiceAccount","parameterTypes":[] }, {"name":"getSpot","parameterTypes":[] }, {"name":"getSshDaemon","parameterTypes":[] }, {"name":"getSshImage","parameterTypes":[] }, {"name":"getSubnetwork","parameterTypes":[] }, {"name":"getUsePrivateAddress","parameterTypes":[] }, {"name":"getWaveEnabled","parameterTypes":[] }, {"name":"getWorkDir","parameterTypes":[] }, {"name":"setBootDiskSizeGb","parameterTypes":["java.lang.Integer"] }, {"name":"setCopyImage","parameterTypes":["java.lang.String"] }, {"name":"setCpuPlatform","parameterTypes":["java.lang.String"] }, {"name":"setDebugMode","parameterTypes":["java.lang.Integer"] }, {"name":"setEnvironment","parameterTypes":["java.util.List"] }, {"name":"setHeadJobCpus","parameterTypes":["java.lang.Integer"] }, {"name":"setHeadJobMemoryMb","parameterTypes":["java.lang.Integer"] }, {"name":"setLabels","parameterTypes":["java.util.Map"] }, {"name":"setLocation","parameterTypes":["java.lang.String"] }, {"name":"setMachineType","parameterTypes":["java.lang.String"] }, {"name":"setNfsMount","parameterTypes":["java.lang.String"] }, {"name":"setNfsTarget","parameterTypes":["java.lang.String"] }, {"name":"setPostRunScript","parameterTypes":["java.lang.String"] }, {"name":"setPreRunScript","parameterTypes":["java.lang.String"] }, {"name":"setProjectId","parameterTypes":["java.lang.String"] }, {"name":"setSpot","parameterTypes":["java.lang.Boolean"] }, {"name":"setSshDaemon","parameterTypes":["java.lang.Boolean"] }, {"name":"setSshImage","parameterTypes":["java.lang.String"] }, {"name":"setUsePrivateAddress","parameterTypes":["java.lang.Boolean"] }, {"name":"setWorkDir","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.model.GoogleLifeSciencesConfig",
@@ -2785,19 +2575,7 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[
-    {"name":"<init>","parameterTypes":[] }, 
-    {"name":"getId","parameterTypes":[] }, 
-    {"name":"getIsDefault","parameterTypes":[] }, 
-    {"name":"getName","parameterTypes":[] }, 
-    {"name":"getResource","parameterTypes":[] }, 
-    {"name":"getValue","parameterTypes":[] }, 
-    {"name":"setId","parameterTypes":["java.lang.Long"] }, 
-    {"name":"setIsDefault","parameterTypes":["java.lang.Boolean"] }, 
-    {"name":"setName","parameterTypes":["java.lang.String"] }, 
-    {"name":"setResource","parameterTypes":["java.lang.Boolean"] }, 
-    {"name":"setValue","parameterTypes":["java.lang.String"] }
-  ]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getId","parameterTypes":[] }, {"name":"getIsDefault","parameterTypes":[] }, {"name":"getName","parameterTypes":[] }, {"name":"getResource","parameterTypes":[] }, {"name":"getValue","parameterTypes":[] }, {"name":"setId","parameterTypes":["java.lang.Long"] }, {"name":"setIsDefault","parameterTypes":["java.lang.Boolean"] }, {"name":"setName","parameterTypes":["java.lang.String"] }, {"name":"setResource","parameterTypes":["java.lang.Boolean"] }, {"name":"setValue","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.model.LabelType",
@@ -2858,31 +2636,21 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[
-    {"name":"<init>","parameterTypes":[] }, 
-    {"name":"setVersions","parameterTypes":["java.util.List"] }
-  ]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setVersions","parameterTypes":["java.util.List"] }]
 },
 {
   "name":"io.seqera.tower.model.ListDatasetsResponse",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[
-    {"name":"<init>","parameterTypes":[] }, 
-    {"name":"setDatasets","parameterTypes":["java.util.List"] }
-  ]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setDatasets","parameterTypes":["java.util.List"] }]
 },
 {
   "name":"io.seqera.tower.model.ListLabelsResponse",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[
-    {"name":"<init>","parameterTypes":[] }, 
-    {"name":"setLabels","parameterTypes":["java.util.List"] }, 
-    {"name":"setTotalSize","parameterTypes":["java.lang.Long"] }
-  ]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setLabels","parameterTypes":["java.util.List"] }, {"name":"setTotalSize","parameterTypes":["java.lang.Long"] }]
 },
 {
   "name":"io.seqera.tower.model.ListMembersResponse",
@@ -2901,11 +2669,7 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[
-    {"name":"<init>","parameterTypes":[] }, 
-    {"name":"setPipelineSecrets","parameterTypes":["java.util.List"] }, 
-    {"name":"setTotalSize","parameterTypes":["java.lang.Long"] }
-  ]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setPipelineSecrets","parameterTypes":["java.util.List"] }, {"name":"setTotalSize","parameterTypes":["java.lang.Long"] }]
 },
 {
   "name":"io.seqera.tower.model.ListPipelinesResponse",
@@ -2960,22 +2724,7 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[
-    {"name":"getComputeQueue","parameterTypes":[] }, 
-    {"name":"getDiscriminator","parameterTypes":[] }, 
-    {"name":"getEnvironment","parameterTypes":[] }, 
-    {"name":"getHeadJobOptions","parameterTypes":[] }, 
-    {"name":"getHeadQueue","parameterTypes":[] }, 
-    {"name":"getHostName","parameterTypes":[] }, 
-    {"name":"getLaunchDir","parameterTypes":[] }, 
-    {"name":"getMaxQueueSize","parameterTypes":[] }, 
-    {"name":"getPort","parameterTypes":[] }, 
-    {"name":"getPostRunScript","parameterTypes":[] }, 
-    {"name":"getPreRunScript","parameterTypes":[] }, 
-    {"name":"getPropagateHeadJobOptions","parameterTypes":[] }, 
-    {"name":"getUserName","parameterTypes":[] }, 
-    {"name":"getWorkDir","parameterTypes":[] }
-  ]
+  "methods":[{"name":"getComputeQueue","parameterTypes":[] }, {"name":"getDiscriminator","parameterTypes":[] }, {"name":"getEnvironment","parameterTypes":[] }, {"name":"getHeadJobOptions","parameterTypes":[] }, {"name":"getHeadQueue","parameterTypes":[] }, {"name":"getHostName","parameterTypes":[] }, {"name":"getLaunchDir","parameterTypes":[] }, {"name":"getMaxQueueSize","parameterTypes":[] }, {"name":"getPort","parameterTypes":[] }, {"name":"getPostRunScript","parameterTypes":[] }, {"name":"getPreRunScript","parameterTypes":[] }, {"name":"getPropagateHeadJobOptions","parameterTypes":[] }, {"name":"getUserName","parameterTypes":[] }, {"name":"getWorkDir","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.NavbarConfig",
@@ -3028,10 +2777,7 @@
   "name":"io.seqera.tower.model.ParticipantType",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[
-    {"name":"fromValue","parameterTypes":["java.lang.String"] }, 
-    {"name":"getValue","parameterTypes":[] }
-  ]
+  "methods":[{"name":"fromValue","parameterTypes":["java.lang.String"] }, {"name":"getValue","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.PipelineDbDto",
@@ -3049,16 +2795,7 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[
-    {"name":"<init>","parameterTypes":[] }, 
-    {"name":"getDateCreated","parameterTypes":[] }, 
-    {"name":"getId_JsonNullable","parameterTypes":[] }, 
-    {"name":"getLastUpdated","parameterTypes":[] }, 
-    {"name":"getLastUsed","parameterTypes":[] }, 
-    {"name":"getName","parameterTypes":[] }, 
-    {"name":"setId_JsonNullable","parameterTypes":["org.openapitools.jackson.nullable.JsonNullable"] }, 
-    {"name":"setName","parameterTypes":["java.lang.String"] }
-  ]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getDateCreated","parameterTypes":[] }, {"name":"getId_JsonNullable","parameterTypes":[] }, {"name":"getLastUpdated","parameterTypes":[] }, {"name":"getLastUsed","parameterTypes":[] }, {"name":"getName","parameterTypes":[] }, {"name":"setId_JsonNullable","parameterTypes":["org.openapitools.jackson.nullable.JsonNullable"] }, {"name":"setName","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.model.PodCleanupPolicy",
@@ -3170,32 +2907,21 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[
-    {"name":"getDescription","parameterTypes":[] }, 
-    {"name":"getName","parameterTypes":[] }
-  ]
+  "methods":[{"name":"getDescription","parameterTypes":[] }, {"name":"getName","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.UpdateLabelRequest",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[
-    {"name":"getName","parameterTypes":[] }, 
-    {"name":"getValue","parameterTypes":[] }
-  ]
+  "methods":[{"name":"getName","parameterTypes":[] }, {"name":"getValue","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.UpdateLabelResponse",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[
-    {"name":"<init>","parameterTypes":[] }, 
-    {"name":"setId","parameterTypes":["java.lang.Long"] }, 
-    {"name":"setName","parameterTypes":["java.lang.String"] }, 
-    {"name":"setValue","parameterTypes":["java.lang.String"] }
-  ]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setId","parameterTypes":["java.lang.Long"] }, {"name":"setName","parameterTypes":["java.lang.String"] }, {"name":"setValue","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.model.UpdateMemberRoleRequest",
@@ -3245,10 +2971,7 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[
-    {"name":"<init>","parameterTypes":[] }, 
-    {"name":"setVersion","parameterTypes":["io.seqera.tower.model.DatasetVersionDbDto"] }
-  ]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setVersion","parameterTypes":["io.seqera.tower.model.DatasetVersionDbDto"] }]
 },
 {
   "name":"io.seqera.tower.model.User",
@@ -3261,12 +2984,7 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[
-    {"name":"<init>","parameterTypes":[] }, 
-    {"name":"setGithubToken","parameterTypes":["java.lang.String"] }, 
-    {"name":"setHubspotId","parameterTypes":["java.lang.Long"] }, 
-    {"name":"setMaxRuns","parameterTypes":["java.lang.Integer"] }
-  ]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setGithubToken","parameterTypes":["java.lang.String"] }, {"name":"setHubspotId","parameterTypes":["java.lang.Long"] }, {"name":"setMaxRuns","parameterTypes":["java.lang.Integer"] }]
 },
 {
   "name":"io.seqera.tower.model.Visibility",
@@ -3315,32 +3033,7 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[
-    {"name":"<init>","parameterTypes":[] }, 
-    {"name":"setComputeEnv","parameterTypes":["io.seqera.tower.model.ComputeEnv"] }, 
-    {"name":"setConfigProfiles","parameterTypes":["java.util.List"] }, 
-    {"name":"setConfigText","parameterTypes":["java.lang.String"] }, 
-    {"name":"setDateCreated","parameterTypes":["java.time.OffsetDateTime"] }, 
-    {"name":"setEntryName","parameterTypes":["java.lang.String"] }, 
-    {"name":"setId","parameterTypes":["java.lang.String"] }, 
-    {"name":"setMainScript","parameterTypes":["java.lang.String"] }, 
-    {"name":"setParamsText","parameterTypes":["java.lang.String"] }, 
-    {"name":"setPipeline","parameterTypes":["java.lang.String"] }, 
-    {"name":"setPostRunScript","parameterTypes":["java.lang.String"] }, 
-    {"name":"setPreRunScript","parameterTypes":["java.lang.String"] }, 
-    {"name":"setPullLatest","parameterTypes":["java.lang.Boolean"] }, 
-    {"name":"setResume","parameterTypes":["java.lang.Boolean"] }, 
-    {"name":"setResumeCommitId","parameterTypes":["java.lang.String"] }, 
-    {"name":"setResumeDir","parameterTypes":["java.lang.String"] }, 
-    {"name":"setRevision","parameterTypes":["java.lang.String"] }, 
-    {"name":"setSchemaName","parameterTypes":["java.lang.String"] }, 
-    {"name":"setSessionId","parameterTypes":["java.lang.String"] }, 
-    {"name":"setStubRun","parameterTypes":["java.lang.Boolean"] }, 
-    {"name":"setTowerConfig","parameterTypes":["java.lang.String"] }, 
-    {"name":"setUserSecrets","parameterTypes":["java.util.List"] }, 
-    {"name":"setWorkDir","parameterTypes":["java.lang.String"] }, 
-    {"name":"setWorkspaceSecrets","parameterTypes":["java.util.List"] }
-  ]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setComputeEnv","parameterTypes":["io.seqera.tower.model.ComputeEnv"] }, {"name":"setConfigProfiles","parameterTypes":["java.util.List"] }, {"name":"setConfigText","parameterTypes":["java.lang.String"] }, {"name":"setDateCreated","parameterTypes":["java.time.OffsetDateTime"] }, {"name":"setEntryName","parameterTypes":["java.lang.String"] }, {"name":"setId","parameterTypes":["java.lang.String"] }, {"name":"setMainScript","parameterTypes":["java.lang.String"] }, {"name":"setParamsText","parameterTypes":["java.lang.String"] }, {"name":"setPipeline","parameterTypes":["java.lang.String"] }, {"name":"setPostRunScript","parameterTypes":["java.lang.String"] }, {"name":"setPreRunScript","parameterTypes":["java.lang.String"] }, {"name":"setPullLatest","parameterTypes":["java.lang.Boolean"] }, {"name":"setResume","parameterTypes":["java.lang.Boolean"] }, {"name":"setResumeCommitId","parameterTypes":["java.lang.String"] }, {"name":"setResumeDir","parameterTypes":["java.lang.String"] }, {"name":"setRevision","parameterTypes":["java.lang.String"] }, {"name":"setSchemaName","parameterTypes":["java.lang.String"] }, {"name":"setSessionId","parameterTypes":["java.lang.String"] }, {"name":"setStubRun","parameterTypes":["java.lang.Boolean"] }, {"name":"setTowerConfig","parameterTypes":["java.lang.String"] }, {"name":"setUserSecrets","parameterTypes":["java.util.List"] }, {"name":"setWorkDir","parameterTypes":["java.lang.String"] }, {"name":"setWorkspaceSecrets","parameterTypes":["java.util.List"] }]
 },
 {
   "name":"io.seqera.tower.model.WorkflowLoad",
@@ -3521,10 +3214,7 @@
 },
 {
   "name":"java.sql.DriverManager",
-  "methods":[
-    {"name":"getConnection","parameterTypes":["java.lang.String"] }, 
-    {"name":"getDriver","parameterTypes":["java.lang.String"] }
-  ]
+  "methods":[{"name":"getConnection","parameterTypes":["java.lang.String"] }, {"name":"getDriver","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"java.sql.Time",
@@ -3688,10 +3378,7 @@
 },
 {
   "name":"javax.naming.InitialContext",
-  "methods":[
-    {"name":"<init>","parameterTypes":[] }, 
-    {"name":"lookup","parameterTypes":["java.lang.String"] }
-  ]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"lookup","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"javax.security.auth.x500.X500Principal",
@@ -3794,13 +3481,7 @@
 },
 {
   "name":"org.glassfish.jersey.internal.util.collection.ConcurrentHashMapV8",
-  "fields":[
-    {"name":"baseCount"}, 
-    {"name":"cellsBusy"}, 
-    {"name":"sizeCtl"}, 
-    {"name":"transferIndex"}, 
-    {"name":"transferOrigin"}
-  ]
+  "fields":[{"name":"baseCount"}, {"name":"cellsBusy"}, {"name":"sizeCtl"}, {"name":"transferIndex"}, {"name":"transferOrigin"}]
 },
 {
   "name":"org.glassfish.jersey.internal.util.collection.ConcurrentHashMapV8$CounterCell",
@@ -4005,10 +3686,7 @@
 {
   "name":"sun.misc.Unsafe",
   "allDeclaredFields":true,
-  "methods":[
-    {"name":"objectFieldOffset","parameterTypes":["java.lang.reflect.Field"] }, 
-    {"name":"putBoolean","parameterTypes":["java.lang.Object","long","boolean"] }
-  ]
+  "methods":[{"name":"objectFieldOffset","parameterTypes":["java.lang.reflect.Field"] }, {"name":"putBoolean","parameterTypes":["java.lang.Object","long","boolean"] }]
 },
 {
   "name":"sun.security.pkcs.SignerInfo[]"
