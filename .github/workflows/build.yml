@@ -24,8 +24,8 @@ jobs:
       - name: Setup Graalvm
         uses: graalvm/setup-graalvm@v1
         with:
-          version: '22.0.0.2'
-          java-version: '11'
+          java-version: '17.0.8'
+          distribution: 'graalvm'
           components: 'native-image'
           native-image-musl: 'true'
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -94,8 +94,8 @@ jobs:
       - name: Setup Graalvm
         uses: graalvm/setup-graalvm@v1
         with:
-          version: '22.0.0.2'
-          java-version: '11'
+          java-version: '17.0.8'
+          distribution: 'graalvm'
           components: 'native-image'
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -154,8 +154,8 @@ jobs:
       - name: Setup Graalvm
         uses: graalvm/setup-graalvm@v1
         with:
-          version: '22.0.0.2'
-          java-version: '11'
+          java-version: '17.0.8'
+          distribution: 'graalvm'
           components: 'native-image'
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -216,7 +216,7 @@ jobs:
       - name: Setup Java for JReleaser
         uses: actions/setup-java@v1
         with:
-          java-version: 11
+          java-version: 17.0.8
 
       - name: Version
         id: version
