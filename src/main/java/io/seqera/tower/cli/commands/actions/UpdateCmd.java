@@ -14,6 +14,7 @@ package io.seqera.tower.cli.commands.actions;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.commands.pipelines.LaunchOptions;
+import io.seqera.tower.cli.exceptions.InvalidResponseException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.actions.ActionUpdate;
@@ -38,6 +39,9 @@ public class UpdateCmd extends AbstractActionsCmd {
     @CommandLine.Option(names = {"-s", "--status"}, description = "Action status (pause or active).")
     public String status;
 
+    @CommandLine.Option(names = {"--new-name"}, description = "Action new name.")
+    public String newName;
+
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
@@ -49,6 +53,15 @@ public class UpdateCmd extends AbstractActionsCmd {
         Long wspId = workspaceId(workspace.workspace);
         ActionResponseDto action = fetchDescribeActionResponse(actionRefOptions, wspId).getAction();
         String actionName = action.getName();
+
+        // Validate new action name if any
+        if (newName != null) {
+            try {
+                api().validateActionName(wspId, newName);
+            } catch (ApiException ex) {
+                throw new InvalidResponseException(String.format("Action name '%s' is not valid", newName));
+            }
+        }
 
         // Retrieve the provided computeEnv or use the primary if not provided
         String ceId = opts.computeEnv != null ? computeEnvByRef(wspId, opts.computeEnv).getId() : action.getLaunch().getComputeEnv().getId();
@@ -78,6 +91,7 @@ public class UpdateCmd extends AbstractActionsCmd {
                 .entryName(opts.entryName);
 
         UpdateActionRequest request = new UpdateActionRequest();
+        request.setName(newName != null ? newName : actionName);
         request.setLaunch(workflowLaunchRequest);
 
         try {
