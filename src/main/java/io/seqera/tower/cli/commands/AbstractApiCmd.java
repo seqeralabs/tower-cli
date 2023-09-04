@@ -32,7 +32,7 @@ import io.seqera.tower.model.ListWorkspacesAndOrgResponse;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import io.seqera.tower.model.PipelineDbDto;
 import io.seqera.tower.model.PipelineQueryAttribute;
-import io.seqera.tower.model.User;
+import io.seqera.tower.model.UserDbDto;
 import io.seqera.tower.model.WorkflowQueryAttribute;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.logging.LoggingFeature;
@@ -327,7 +327,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     }
 
     private void loadUser() throws ApiException {
-        User user = api().userInfo().getUser();
+        UserDbDto user = api().userInfo().getUser();
         userName = user.getUserName();
         userId = user.getId();
     }
