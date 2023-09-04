@@ -17,6 +17,7 @@ import io.seqera.tower.cli.commands.computeenvs.ExportCmd;
 import io.seqera.tower.cli.commands.computeenvs.ImportCmd;
 import io.seqera.tower.cli.commands.computeenvs.ListCmd;
 import io.seqera.tower.cli.commands.computeenvs.PrimaryCmd;
+import io.seqera.tower.cli.commands.computeenvs.UpdateCmd;
 import io.seqera.tower.cli.commands.computeenvs.ViewCmd;
 import picocli.CommandLine.Command;
 
@@ -26,6 +27,7 @@ import picocli.CommandLine.Command;
         description = "Manage workspace compute environments.",
         subcommands = {
                 AddCmd.class,
+                UpdateCmd.class,
                 DeleteCmd.class,
                 ViewCmd.class,
                 ListCmd.class,
