@@ -21,6 +21,17 @@
       "primary": true,
       "workspaceName": "wsp-jfernandez",
       "visibility": "PRIVATE"
+    },
+    {
+      "id": "vYOK4vn7spw7bHHWBDXZ2",
+      "name": "demo",
+      "platform": "aws-batch",
+      "status": "AVAILABLE",
+      "message": null,
+      "lastUsed": "2021-10-06T08:08:53Z",
+      "primary": true,
+      "workspaceName": "wsp-jfernandez",
+      "visibility": "PRIVATE"
     }
   ]
 }

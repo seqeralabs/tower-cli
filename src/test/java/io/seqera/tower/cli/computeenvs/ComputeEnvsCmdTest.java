@@ -20,11 +20,13 @@ import io.seqera.tower.JSON;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
+import io.seqera.tower.cli.exceptions.InvalidResponseException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.computeenvs.ComputeEnvAdded;
 import io.seqera.tower.cli.responses.computeenvs.ComputeEnvDeleted;
 import io.seqera.tower.cli.responses.computeenvs.ComputeEnvExport;
 import io.seqera.tower.cli.responses.computeenvs.ComputeEnvList;
+import io.seqera.tower.cli.responses.computeenvs.ComputeEnvUpdated;
 import io.seqera.tower.cli.responses.computeenvs.ComputeEnvView;
 import io.seqera.tower.cli.responses.computeenvs.ComputeEnvsPrimaryGet;
 import io.seqera.tower.cli.responses.computeenvs.ComputeEnvsPrimarySet;
@@ -438,5 +440,88 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
 
         ComputeEnvResponseDto ce = parseJson("{\"id\":\"lkasjdlkfwerjbEcrycwrSSe\",\"name\":\"demo\",\"platform\":\"azure-batch\"}", ComputeEnvResponseDto.class);
         assertOutput(format, out, new ComputeEnvsPrimarySet("[organization2 / workspace2]", ce));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testUpdateName(OutputType format, MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/validate")
+                        .withQueryStringParameter("name", "testCE")
+                        .withQueryStringParameter("workspaceId", "75887156211590"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_envs_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("PUT").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "compute-envs", "update", "-n", "demo", "-w", "75887156211590", "--new-name", "testCE");
+
+        assertEquals("", out.stdErr);
+        assertOutput(format, out, new ComputeEnvUpdated("[organization2 / workspace2]", "demo"));
+        assertEquals(0, out.exitCode);
+
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testUpdateInvalidName(OutputType format, MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/validate")
+                        .withQueryStringParameter("name", "testCE")
+                        .withQueryStringParameter("workspaceId", "75887156211590"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(400)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "compute-envs", "update", "-n", "demo", "-w", "75887156211590", "--new-name", "testCE");
+
+        assertEquals(errorMessage(out.app, new InvalidResponseException("Compute environment name 'testCE' is not valid")), out.stdErr);
+        assertEquals("", out.stdOut);
+        assertEquals(1, out.exitCode);
     }
 }
