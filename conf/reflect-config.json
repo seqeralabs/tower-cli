@@ -1670,6 +1670,12 @@
   "queryAllDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.cli.responses.computeenvs.ComputeEnvUpdated",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.cli.responses.computeenvs.ComputeEnvExport",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -2450,7 +2456,7 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setDefaultWorkspaceId","parameterTypes":["java.lang.Long"] }, {"name":"setNeedConsent","parameterTypes":["java.lang.Boolean"] }, {"name":"setUser","parameterTypes":["io.seqera.tower.model.User"] }]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setDefaultWorkspaceId","parameterTypes":["java.lang.Long"] }, {"name":"setNeedConsent","parameterTypes":["java.lang.Boolean"] }, {"name":"setUser","parameterTypes":["io.seqera.tower.model.UserDbDto"] }]
 },
 {
   "name":"io.seqera.tower.model.DescribeWorkflowLaunchResponse",
@@ -3004,7 +3010,7 @@
   "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setVersion","parameterTypes":["io.seqera.tower.model.DatasetVersionDbDto"] }]
 },
 {
-  "name":"io.seqera.tower.model.User",
+  "name":"io.seqera.tower.model.UserDbDto",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true,
