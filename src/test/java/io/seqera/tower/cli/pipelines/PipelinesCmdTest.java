@@ -18,7 +18,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.JSON;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
-import io.seqera.tower.cli.commands.labels.LabelsSubcmdOptions;
 import io.seqera.tower.cli.exceptions.MultiplePipelinesFoundException;
 import io.seqera.tower.cli.exceptions.NoComputeEnvironmentException;
 import io.seqera.tower.cli.exceptions.PipelineNotFoundException;
@@ -42,6 +41,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
+import org.mockserver.model.JsonBody;
 import org.mockserver.model.MediaType;
 
 import java.io.IOException;
@@ -645,6 +645,71 @@ class PipelinesCmdTest extends BaseCmdTest {
 
         assertEquals("", out.stdErr);
         assertEquals(new PipelinesAdded(USER_WORKSPACE_NAME, "pipelineNew").toString(), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testImportWithOverwrite(MockServerClient mock) throws IOException {
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"isnEDBLvHDAIteOEF44ow\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/isnEDBLvHDAIteOEF44ow"), exactly(1)
+        ).respond(
+                response()
+                        .withStatusCode(200)
+                        .withBody(loadResource("compute_env_view"))
+                        .withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines"),
+                exactly(1)
+        ).respond(
+                response()
+                        .withStatusCode(200)
+                        .withBody(loadResource("pipelines_list"))
+                        .withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("DELETE").withPath("/pipelines/183522618315672"),
+                exactly(1)
+        ).respond(
+                response()
+                        .withStatusCode(200)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/pipelines")
+                        .withBody(JsonBody.json("{" +
+                                "\"name\":\"sleep_one_minute\"," +
+                                "\"launch\":{" +
+                                    "\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"," +
+                                    "\"pipeline\":\"https://github.com/grananda/nextflow-hello\"," +
+                                    "\"workDir\":\"s3://nextflow-ci/julio\"," +
+                                    "\"revision\":\"main\"," +
+                                    "\"resume\":false," +
+                                    "\"pullLatest\":false," +
+                                    "\"stubRun\":false" +
+                                "}" +
+                            "}"))
+                        .withContentType(MediaType.APPLICATION_JSON), exactly(1)
+        ).respond(
+                response()
+                        .withStatusCode(200)
+                        .withBody(loadResource("pipelines_add_response"))
+                        .withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "pipelines", "import", "--overwrite", tempFile(new String(loadResource("pipelines_add"), StandardCharsets.UTF_8), "data", ".json"), "-n", "sleep_one_minute");
+
+        assertEquals("", out.stdErr);
+        assertEquals(new PipelinesAdded(USER_WORKSPACE_NAME, "sleep_one_minute").toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

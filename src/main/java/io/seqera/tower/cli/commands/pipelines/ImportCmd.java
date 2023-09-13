@@ -13,12 +13,14 @@ package io.seqera.tower.cli.commands.pipelines;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
+import io.seqera.tower.cli.exceptions.PipelineNotFoundException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.pipelines.PipelinesAdded;
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.ComputeEnvResponseDto;
 import io.seqera.tower.model.CreatePipelineRequest;
+import io.seqera.tower.model.PipelineDbDto;
 import io.seqera.tower.model.WorkflowLaunchRequest;
 import picocli.CommandLine;
 
@@ -42,6 +44,9 @@ public class ImportCmd extends AbstractPipelinesCmd {
 
     @CommandLine.Option(names = {"-c", "--compute-env"}, description = "Compute environment name [default: as defined in json environment file].")
     public String computeEnv;
+
+    @CommandLine.Option(names = {"--overwrite"}, description = "Overwrite the pipeline if it already exists.", defaultValue = "false")
+    public Boolean overwrite;
 
     @CommandLine.Parameters(index = "0", paramLabel = "FILENAME", description = "File name to import.", arity = "1")
     Path fileName = null;
@@ -73,8 +78,17 @@ public class ImportCmd extends AbstractPipelinesCmd {
         launch.setPreRunScript(preRunScriptValue);
         launch.setPostRunScript(postRunScriptValue);
 
+        if (overwrite) deletePipeline(name, wspId);
+
         api().createPipeline(request, wspId);
 
         return new PipelinesAdded(workspaceRef(wspId), name);
+    }
+
+    private void deletePipeline(String name, Long wspId) throws ApiException {
+        try {
+            PipelineDbDto pipe = pipelineByName(wspId, name);
+            api().deletePipeline(pipe.getPipelineId(), wspId);
+        } catch (PipelineNotFoundException ignored) {}
     }
 }
