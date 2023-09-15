@@ -118,13 +118,6 @@ jobs:
           GITHUB_USERNAME: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
           PLATFORM: osx-x86_64
-
-      - name: Upload Mac native image artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: tw_mac
-          path: build/native/nativeCompile/tw
-
       - name: Codesign binary
         if: "contains(github.event.head_commit.message, '[release]') && github.event.ref=='refs/heads/master'"
         env:
@@ -152,6 +145,12 @@ jobs:
           xcrun notarytool store-credentials "notarytool-profile" -k AuthKey.p8 -d "$MACOS_AC_API_KEY_ID" -i "$MACOS_AC_API_ISSUER_ID"
           ditto -c -k --keepParent "build/native/nativeCompile/tw" "notarization.zip"
           xcrun notarytool submit "notarization.zip" --keychain-profile "notarytool-profile" --wait
+
+      - name: Upload Mac native image artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: tw_mac
+          path: build/native/nativeCompile/tw
 
       - name: Binary tests
         run: ./gradlew cleanTest test
