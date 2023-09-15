@@ -32,6 +32,7 @@ import io.seqera.tower.cli.responses.pipelines.PipelinesList;
 import io.seqera.tower.cli.responses.pipelines.PipelinesUpdated;
 import io.seqera.tower.cli.responses.pipelines.PipelinesView;
 import io.seqera.tower.cli.utils.ModelHelper;
+import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.CreatePipelineRequest;
 import io.seqera.tower.model.Launch;
@@ -307,7 +308,7 @@ class PipelinesCmdTest extends BaseCmdTest {
                         .repository("https://github.com/pditommaso/nf-sleep")
                         .userId(4L)
                         .userName("jordi")
-        ), baseUserUrl(mock, USER_WORKSPACE_NAME), false));
+        ), baseUserUrl(mock, USER_WORKSPACE_NAME), false, null));
     }
 
     @Test
@@ -331,7 +332,7 @@ class PipelinesCmdTest extends BaseCmdTest {
                         .repository("https://github.com/pditommaso/nf-sleep")
                         .userId(4L)
                         .userName("jordi")
-        ), baseUserUrl(mock, USER_WORKSPACE_NAME), false).toString()), out.stdOut);
+        ), baseUserUrl(mock, USER_WORKSPACE_NAME), false, PaginationInfo.from(1, 2, 1L)).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -362,7 +363,7 @@ class PipelinesCmdTest extends BaseCmdTest {
                         .repository("https://github.com/pditommaso/nf-sleep")
                         .userId(4L)
                         .userName("jordi")
-        ), baseUserUrl(mock, USER_WORKSPACE_NAME), false).toString()), out.stdOut);
+        ), baseUserUrl(mock, USER_WORKSPACE_NAME), false, PaginationInfo.from(null, 2,1, 1L)).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -402,7 +403,7 @@ class PipelinesCmdTest extends BaseCmdTest {
         ExecOut out = exec(mock, "pipelines", "list");
 
         assertEquals("", out.stdErr);
-        assertEquals(chop(new PipelinesList(USER_WORKSPACE_NAME, List.of(), baseUserUrl(mock, USER_WORKSPACE_NAME), false).toString()), out.stdOut);
+        assertEquals(chop(new PipelinesList(USER_WORKSPACE_NAME, List.of(), baseUserUrl(mock, USER_WORKSPACE_NAME), false, null).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -485,7 +486,7 @@ class PipelinesCmdTest extends BaseCmdTest {
         ExecOut out = exec(mock, "pipelines", "list", "-w", "222756650686576");
 
         assertEquals("", out.stdErr);
-        assertEquals(chop(new PipelinesList(buildWorkspaceRef("Seqera", "cli"), List.of(), baseWorkspaceUrl(mock, "Seqera", "cli"), false).toString()), out.stdOut);
+        assertEquals(chop(new PipelinesList(buildWorkspaceRef("Seqera", "cli"), List.of(), baseWorkspaceUrl(mock, "Seqera", "cli"), false, null).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

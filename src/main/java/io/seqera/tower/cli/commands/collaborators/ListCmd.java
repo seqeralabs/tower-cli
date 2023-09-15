@@ -15,6 +15,7 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.PaginationOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.collaborators.CollaboratorsList;
+import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.model.ListMembersResponse;
 import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import picocli.CommandLine;
@@ -45,6 +46,6 @@ public class ListCmd extends AbstractCollaboratorsCmd {
 
         ListMembersResponse response = api().listOrganizationCollaborators(orgAndWorkspaceDbDto.getOrgId(), max, offset, startsWith);
 
-        return new CollaboratorsList(orgAndWorkspaceDbDto.getOrgId(), response.getMembers());
+        return new CollaboratorsList(orgAndWorkspaceDbDto.getOrgId(), response.getMembers(), PaginationInfo.from(paginationOptions, response.getTotalSize()));
     }
 }

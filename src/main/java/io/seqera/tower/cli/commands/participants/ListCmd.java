@@ -16,6 +16,7 @@ import io.seqera.tower.cli.commands.global.PaginationOptions;
 import io.seqera.tower.cli.commands.global.WorkspaceRequiredOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.participants.ParticipantsList;
+import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.model.ParticipantDbDto;
 import io.seqera.tower.model.ParticipantType;
 import picocli.CommandLine;
@@ -55,6 +56,6 @@ public class ListCmd extends AbstractParticipantsCmd {
             response = response.stream().filter(it -> it.getType() == type).collect(Collectors.toList());
         }
 
-        return new ParticipantsList(orgName(wspId), workspaceName(wspId), response);
+        return new ParticipantsList(orgName(wspId), workspaceName(wspId), response, PaginationInfo.from(paginationOptions));
     }
 }

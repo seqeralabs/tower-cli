@@ -11,11 +11,14 @@
 
 package io.seqera.tower.cli.responses.runs.tasks;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.seqera.tower.cli.commands.runs.tasks.enums.TaskColumn;
 import io.seqera.tower.cli.responses.Response;
+import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.Task;
 
+import javax.annotation.Nullable;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,10 +31,15 @@ public class TasksView extends Response {
     public final List<TaskColumn> columns;
     public final List<Task> tasks;
 
-    public TasksView(String runId, List<TaskColumn> columns, List<Task> tasks) {
+    @JsonIgnore
+    @Nullable
+    private PaginationInfo paginationInfo;
+
+    public TasksView(String runId, List<TaskColumn> columns, List<Task> tasks, @Nullable PaginationInfo paginationInfo) {
         this.runId = runId;
         this.columns = columns;
         this.tasks = tasks;
+        this.paginationInfo = paginationInfo;
     }
 
     @Override
@@ -64,7 +72,11 @@ public class TasksView extends Response {
         result.forEach(it -> {
             table.addRow(it.toArray(new String[0]));
         });
+
         table.print();
+
+        PaginationInfo.addFooter(out, paginationInfo);
+
         out.println("");
     }
 }
