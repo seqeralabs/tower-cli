@@ -37,8 +37,14 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
     @Option(names = {"--no-ebs-auto-scale"}, description = "Disable the provisioning of EBS auto-expandable disk.")
     public boolean noEbsAutoScale;
 
-    @Option(names = {"--fusion"}, description = "With Fusion enabled, S3 buckets specified in the Pipeline work directory and Allowed S3 Buckets fields will be accessible in the compute nodes storage using the file path /fusion/s3/BUCKET_NAME.")
-    public boolean fusion;
+    @Option(names = {"--fusion-v2"}, description = "With Fusion v2 enabled, S3 buckets specified in the Pipeline work directory and Allowed S3 Buckets fields will be accessible in the compute nodes storage (requires Wave containers service).")
+    public boolean fusionV2;
+
+    @Option(names = {"--wave"}, description = "Allow access to private container repositories and the provisioning of containers in your Nextflow pipelines via the Wave containers service.")
+    public boolean wave;
+
+    @Option(names = {"--fargate"}, description = "Run the Nextflow head job using the Fargate container service (requires Fusion v2 and Spot provisioning model).")
+    public boolean fargate;
 
     @Option(names = {"--gpu"}, description = "Deploys GPU enabled Ec2 instances.")
     public boolean gpu;
@@ -81,6 +87,8 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
                 .postRunScript(postRunScriptString())
                 .environment(environmentVariables())
                 .region(region)
+                .fusion2Enabled(fusionV2)
+                .waveEnabled(wave)
 
                 // Forge
                 .forge(buildForge())
@@ -99,7 +107,7 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
                 .type(provisioningModel)
                 .maxCpus(maxCpus)
                 .ebsAutoScale(!noEbsAutoScale)
-                .fusionEnabled(fusion)
+                .fusionEnabled(false) // Fusion v1 is deprecated, set this field to false independently of fusionV2
                 .gpuEnabled(gpu)
                 .allowBuckets(allowBuckets)
                 .disposeOnDeletion(!preserveResources)
@@ -112,7 +120,8 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
                 .ec2KeyPair(adv().keyPair)
                 .minCpus(adv().minCpus == null ? 0 : adv().minCpus)
                 .ebsBlockSize(adv().ebsBlockSize)
-                .bidPercentage(adv().bidPercentage);
+                .bidPercentage(adv().bidPercentage)
+                .fargateHeadEnabled(fargate);
 
 
         if (efs != null) {
