@@ -18,13 +18,13 @@ import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.exceptions.WorkspaceNotFoundException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.pipelines.PipelinesList;
+import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.model.ListPipelinesResponse;
 import io.seqera.tower.model.PipelineQueryAttribute;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 @Command(
@@ -68,6 +68,6 @@ public class ListCmd extends AbstractPipelinesCmd {
             }
         }
 
-        return new PipelinesList(workspaceRef(wspId), response.getPipelines(), baseWorkspaceUrl(wspId), showLabelsOption.showLabels);
+        return new PipelinesList(workspaceRef(wspId), response.getPipelines(), baseWorkspaceUrl(wspId), showLabelsOption.showLabels, PaginationInfo.from(paginationOptions, response.getTotalSize()));
     }
 }

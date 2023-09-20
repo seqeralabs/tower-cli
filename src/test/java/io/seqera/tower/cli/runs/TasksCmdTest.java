@@ -58,7 +58,7 @@ class TasksCmdTest extends BaseCmdTest {
         );
 
         assertEquals("", out.stdErr);
-        assertEquals(StringUtils.chop(new TasksView("2zGxKoqlnVmGL", cols, tasks).toString()), out.stdOut);
+        assertEquals(StringUtils.chop(new TasksView("2zGxKoqlnVmGL", cols, tasks, null).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 }

@@ -13,9 +13,11 @@ package io.seqera.tower.cli.responses.teams;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.seqera.tower.cli.responses.Response;
+import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.TeamDbDto;
 
+import javax.annotation.Nullable;
 import java.io.PrintWriter;
 import java.util.List;
 
@@ -29,10 +31,15 @@ public class TeamsList extends Response {
     @JsonIgnore
     private String baseOrgUrl;
 
-    public TeamsList(String organizationName, List<TeamDbDto> teams, String baseOrgUrl) {
+    @JsonIgnore
+    @Nullable
+    private PaginationInfo paginationInfo;
+
+    public TeamsList(String organizationName, List<TeamDbDto> teams, String baseOrgUrl, @Nullable PaginationInfo paginationInfo) {
         this.organizationName = organizationName;
         this.teams = teams;
         this.baseOrgUrl = baseOrgUrl;
+        this.paginationInfo = paginationInfo;
     }
 
     @Override
@@ -51,6 +58,9 @@ public class TeamsList extends Response {
         });
 
         table.print();
+
+        PaginationInfo.addFooter(out, paginationInfo);
+
         out.println("");
 
     }

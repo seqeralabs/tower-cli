@@ -19,6 +19,7 @@ import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.teams.TeamAdded;
 import io.seqera.tower.cli.responses.teams.TeamDeleted;
 import io.seqera.tower.cli.responses.teams.TeamsList;
+import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.model.TeamDbDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -89,7 +90,7 @@ class TeamsCmdTest extends BaseCmdTest {
                         "      \"avatarUrl\": null,\n" +
                         "      \"membersCount\": 1\n" +
                         "    }", TeamDbDto.class)
-        ), baseOrgUrl(mock, "organization1")));
+        ), baseOrgUrl(mock, "organization1"), null));
     }
 
     @Test
@@ -111,20 +112,13 @@ class TeamsCmdTest extends BaseCmdTest {
                         .withQueryStringParameter("offset", "1")
                         .withQueryStringParameter("max", "2"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResource("teams/teams_list")).withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(loadResource("teams/teams_list_redux")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         ExecOut out = exec(mock, "teams", "list", "-o", "organization1", "--offset", "1", "--max", "2");
 
         assertEquals("", out.stdErr);
         assertEquals(chop(new TeamsList("organization1", Arrays.asList(
-                parseJson(" {\n" +
-                        "      \"teamId\": 249211453903161,\n" +
-                        "      \"name\": \"team-test-3\",\n" +
-                        "      \"description\": \"AAAAAA\",\n" +
-                        "      \"avatarUrl\": null,\n" +
-                        "      \"membersCount\": 0\n" +
-                        "    }", TeamDbDto.class),
                 parseJson(" {\n" +
                         "      \"teamId\": 69076469523589,\n" +
                         "      \"name\": \"team-test-1\",\n" +
@@ -138,15 +132,8 @@ class TeamsCmdTest extends BaseCmdTest {
                         "      \"description\": \"a new team\",\n" +
                         "      \"avatarUrl\": null,\n" +
                         "      \"membersCount\": 0\n" +
-                        "    }", TeamDbDto.class),
-                parseJson("{\n" +
-                        "      \"teamId\": 267477500890054,\n" +
-                        "      \"name\": \"team1\",\n" +
-                        "      \"description\": \"Team 1\",\n" +
-                        "      \"avatarUrl\": null,\n" +
-                        "      \"membersCount\": 1\n" +
                         "    }", TeamDbDto.class)
-        ), baseOrgUrl(mock, "organization1")).toString()), out.stdOut);
+        ), baseOrgUrl(mock, "organization1"), PaginationInfo.from(1, 2)).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -204,7 +191,7 @@ class TeamsCmdTest extends BaseCmdTest {
                         "      \"avatarUrl\": null,\n" +
                         "      \"membersCount\": 1\n" +
                         "    }", TeamDbDto.class)
-        ), baseOrgUrl(mock, "organization1")).toString()), out.stdOut);
+        ), baseOrgUrl(mock, "organization1"), PaginationInfo.from(null, 2, 1, null)).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -260,7 +247,7 @@ class TeamsCmdTest extends BaseCmdTest {
         ExecOut out = exec(mock, "teams", "list", "-o", "organization1");
 
         assertEquals("", out.stdErr);
-        assertEquals(chop(new TeamsList("organization1", List.of(), baseOrgUrl(mock, "organization1")).toString()), out.stdOut);
+        assertEquals(chop(new TeamsList("organization1", List.of(), baseOrgUrl(mock, "organization1"), null).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

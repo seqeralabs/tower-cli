@@ -11,10 +11,13 @@
 
 package io.seqera.tower.cli.responses.collaborators;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.seqera.tower.cli.responses.Response;
+import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.MemberDbDto;
 
+import javax.annotation.Nullable;
 import java.io.PrintWriter;
 import java.util.List;
 
@@ -23,9 +26,14 @@ public class CollaboratorsList extends Response {
     public final Long organizationId;
     public final List<MemberDbDto> members;
 
-    public CollaboratorsList(Long organizationId, List<MemberDbDto> members) {
+    @JsonIgnore
+    @Nullable
+    private PaginationInfo paginationInfo;
+
+    public CollaboratorsList(Long organizationId, List<MemberDbDto> members, @Nullable PaginationInfo paginationInfo) {
         this.organizationId = organizationId;
         this.members = members;
+        this.paginationInfo = paginationInfo;
     }
 
     @Override
@@ -44,7 +52,9 @@ public class CollaboratorsList extends Response {
         });
 
         table.print();
-        out.println("");
 
+        PaginationInfo.addFooter(out, paginationInfo);
+
+        out.println("");
     }
 }
