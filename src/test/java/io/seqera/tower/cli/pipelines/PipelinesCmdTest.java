@@ -44,7 +44,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
-import org.mockserver.matchers.Times;
 import org.mockserver.model.JsonBody;
 import org.mockserver.model.MediaType;
 
@@ -67,6 +66,8 @@ class PipelinesCmdTest extends BaseCmdTest {
 
     @Test
     void testUpdate(MockServerClient mock) {
+
+        mock.reset();
 
         mock.when(
                 request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "sleep_one_minute"), exactly(1)
@@ -217,6 +218,8 @@ class PipelinesCmdTest extends BaseCmdTest {
     @Test
     void testAdd(MockServerClient mock) throws IOException {
 
+        mock.reset();
+
         mock.when(
                 request().withMethod("GET").withPath("/compute-envs").withQueryStringParameter("status", "AVAILABLE"), exactly(1)
         ).respond(
@@ -245,6 +248,8 @@ class PipelinesCmdTest extends BaseCmdTest {
 
     @Test
     void testAddWithComputeEnv(MockServerClient mock) {
+
+        mock.reset();
 
         mock.when(
                 request().withMethod("GET").withPath("/compute-envs").withQueryStringParameter("status", "AVAILABLE"), exactly(1)
@@ -275,6 +280,8 @@ class PipelinesCmdTest extends BaseCmdTest {
     @Test
     void testAddWithStagingScripts(MockServerClient mock) throws IOException {
 
+        mock.reset();
+
         mock.when(
                 request().withMethod("GET").withPath("/compute-envs").withQueryStringParameter("status", "AVAILABLE"), exactly(1)
         ).respond(
@@ -304,6 +311,8 @@ class PipelinesCmdTest extends BaseCmdTest {
     @Test
     void testMissingComputeEnvironment(MockServerClient mock) {
 
+        mock.reset();
+
         mock.when(
                 request().withMethod("GET").withPath("/compute-envs").withQueryStringParameter("status", "AVAILABLE"), exactly(1)
         ).respond(
@@ -320,6 +329,9 @@ class PipelinesCmdTest extends BaseCmdTest {
 
     @Test
     void testDelete(MockServerClient mock) {
+
+        mock.reset();
+
         mock.when(
                 request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "sleep"), exactly(1)
         ).respond(
@@ -341,6 +353,9 @@ class PipelinesCmdTest extends BaseCmdTest {
 
     @Test
     void testDeleteNotFound(MockServerClient mock) {
+
+        mock.reset();
+
         mock.when(
                 request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "sleep_all"), exactly(1)
         ).respond(
@@ -356,6 +371,9 @@ class PipelinesCmdTest extends BaseCmdTest {
 
     @Test
     void testDeleteMultipleMatch(MockServerClient mock) {
+
+        mock.reset();
+
         mock.when(
                 request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "hello"), exactly(1)
         ).respond(
@@ -372,6 +390,8 @@ class PipelinesCmdTest extends BaseCmdTest {
     @ParameterizedTest
     @EnumSource(OutputType.class)
     void testList(OutputType format, MockServerClient mock) {
+
+        mock.reset();
 
         mock.when(
                 request().withMethod("GET").withPath("/pipelines"), exactly(1)
@@ -399,6 +419,14 @@ class PipelinesCmdTest extends BaseCmdTest {
     @Test
     void testListWithOffset(MockServerClient mock) {
 
+        mock.reset();
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
         mock.when(
                 request().withMethod("GET").withPath("/pipelines")
                         .withQueryStringParameter("offset", "1")
@@ -423,6 +451,8 @@ class PipelinesCmdTest extends BaseCmdTest {
 
     @Test
     void testListWithPage(MockServerClient mock) {
+
+        mock.reset();
 
         mock.when(
                 request().withMethod("GET").withPath("/pipelines")
@@ -455,6 +485,8 @@ class PipelinesCmdTest extends BaseCmdTest {
     @Test
     void testListWithConflictingPageable(MockServerClient mock) {
 
+        mock.reset();
+
         mock.when(
                 request().withMethod("GET").withPath("/pipelines")
                         .withQueryStringParameter("offset", "0")
@@ -472,6 +504,8 @@ class PipelinesCmdTest extends BaseCmdTest {
 
     @Test
     void testListEmpty(MockServerClient mock) {
+
+        mock.reset();
 
         mock.when(
                 request().withMethod("GET").withPath("/pipelines"), exactly(1)
@@ -494,6 +528,8 @@ class PipelinesCmdTest extends BaseCmdTest {
 
     @Test
     void testView(MockServerClient mock) throws JsonProcessingException {
+
+        mock.reset();
 
         mock.when(
                 request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "sleep_one_minute").withQueryStringParameter("visibility", "all"), exactly(1)
@@ -550,6 +586,8 @@ class PipelinesCmdTest extends BaseCmdTest {
     @Test
     void testListFromWorkspace(MockServerClient mock) {
 
+        mock.reset();
+
         mock.when(
                 request().withMethod("GET").withPath("/user-info"), exactly(1)
         ).respond(
@@ -578,6 +616,8 @@ class PipelinesCmdTest extends BaseCmdTest {
     @Test
     void testListFromWorkspaceNotFound(MockServerClient mock) {
 
+        mock.reset();
+
         mock.when(
                 request().withMethod("GET").withPath("/user-info"), exactly(1)
         ).respond(
@@ -599,6 +639,9 @@ class PipelinesCmdTest extends BaseCmdTest {
 
     @Test
     void testExport(MockServerClient mock) throws JsonProcessingException {
+
+        mock.reset();
+
         mock.when(
                 request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "sleep"), exactly(1)
         ).respond(
@@ -638,6 +681,8 @@ class PipelinesCmdTest extends BaseCmdTest {
     @Test
     void testImport(MockServerClient mock) throws IOException {
 
+        mock.reset();
+
         mock.when(
                 request().withMethod("GET").withPath("/compute-envs"), exactly(1)
         ).respond(
@@ -670,6 +715,8 @@ class PipelinesCmdTest extends BaseCmdTest {
 
     @Test
     void testImportWithComputeEnv(MockServerClient mock) throws IOException {
+
+        mock.reset();
 
         mock.when(
                 request().withMethod("GET").withPath("/compute-envs"), exactly(1)
@@ -704,6 +751,8 @@ class PipelinesCmdTest extends BaseCmdTest {
     @Test
     void testImportWithoutWorkdir(MockServerClient mock) throws IOException {
 
+        mock.reset();
+
         mock.when(
                 request().withMethod("GET").withPath("/compute-envs"), exactly(1)
         ).respond(
@@ -736,6 +785,8 @@ class PipelinesCmdTest extends BaseCmdTest {
 
     @Test
     void testImportWithOverwrite(MockServerClient mock) throws IOException {
+
+        mock.reset();
 
         mock.when(
                 request().withMethod("GET").withPath("/compute-envs"), exactly(1)
@@ -802,6 +853,9 @@ class PipelinesCmdTest extends BaseCmdTest {
     @ParameterizedTest
     @EnumSource(OutputType.class)
     void testApplyLabels(OutputType format, MockServerClient mock) {
+
+        mock.reset();
+
         mock.when(
                 request().withMethod("GET")
                         .withPath("/pipelines")
@@ -919,6 +973,9 @@ class PipelinesCmdTest extends BaseCmdTest {
     @ParameterizedTest
     @EnumSource(OutputType.class)
     void testAppendLabels(OutputType format, MockServerClient mock) {
+
+        mock.reset();
+
         mock.when(
                 request().withMethod("GET")
                         .withPath("/pipelines")
@@ -1008,6 +1065,9 @@ class PipelinesCmdTest extends BaseCmdTest {
     @ParameterizedTest
     @EnumSource(OutputType.class)
     void testRemoveLabels(OutputType format, MockServerClient mock) {
+
+        mock.reset();
+
         mock.when(
                 request().withMethod("GET")
                         .withPath("/pipelines")
