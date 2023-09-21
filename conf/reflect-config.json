@@ -1664,6 +1664,12 @@
   "queryAllDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.cli.responses.computeenvs.ComputeEnvUpdated",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.cli.responses.computeenvs.ComputeEnvExport",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -2181,7 +2187,8 @@
   "name":"io.seqera.tower.model.AwsBatchConfig",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getCliPath","parameterTypes":[] }, {"name":"getComputeJobRole","parameterTypes":[] }, {"name":"getComputeQueue","parameterTypes":[] }, {"name":"getDiscriminator","parameterTypes":[] }, {"name":"getDragenQueue","parameterTypes":[] }, {"name":"getEnvironment","parameterTypes":[] }, {"name":"getExecutionRole","parameterTypes":[] }, {"name":"getForge","parameterTypes":[] }, {"name":"getForgedResources","parameterTypes":[] }, {"name":"getFusion2Enabled","parameterTypes":[] }, {"name":"getHeadJobCpus","parameterTypes":[] }, {"name":"getHeadJobMemoryMb","parameterTypes":[] }, {"name":"getHeadJobRole","parameterTypes":[] }, {"name":"getHeadQueue","parameterTypes":[] }, {"name":"getLogGroup","parameterTypes":[] }, {"name":"getNvnmeStorageEnabled","parameterTypes":[] }, {"name":"getPostRunScript","parameterTypes":[] }, {"name":"getPreRunScript","parameterTypes":[] }, {"name":"getRegion","parameterTypes":[] }, {"name":"getVolumes","parameterTypes":[] }, {"name":"getWaveEnabled","parameterTypes":[] }, {"name":"getWorkDir","parameterTypes":[] }, {"name":"setCliPath","parameterTypes":["java.lang.String"] }, {"name":"setComputeJobRole","parameterTypes":["java.lang.String"] }, {"name":"setComputeQueue","parameterTypes":["java.lang.String"] }, {"name":"setDragenQueue","parameterTypes":["java.lang.String"] }, {"name":"setEnvironment","parameterTypes":["java.util.List"] }, {"name":"setExecutionRole","parameterTypes":["java.lang.String"] }, {"name":"setForge","parameterTypes":["io.seqera.tower.model.ForgeConfig"] }, {"name":"setForgedResources","parameterTypes":["java.util.List"] }, {"name":"setFusion2Enabled","parameterTypes":["java.lang.Boolean"] }, {"name":"setHeadJobCpus","parameterTypes":["java.lang.Integer"] }, {"name":"setHeadJobMemoryMb","parameterTypes":["java.lang.Integer"] }, {"name":"setHeadJobRole","parameterTypes":["java.lang.String"] }, {"name":"setHeadQueue","parameterTypes":["java.lang.String"] }, {"name":"setLogGroup","parameterTypes":["java.lang.String"] }, {"name":"setNvnmeStorageEnabled","parameterTypes":["java.lang.Boolean"] }, {"name":"setPostRunScript","parameterTypes":["java.lang.String"] }, {"name":"setPreRunScript","parameterTypes":["java.lang.String"] }, {"name":"setRegion","parameterTypes":["java.lang.String"] }, {"name":"setVolumes","parameterTypes":["java.util.List"] }, {"name":"setWaveEnabled","parameterTypes":["java.lang.Boolean"] }, {"name":"setWorkDir","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.model.AwsSecurityKeys",
@@ -2299,7 +2306,8 @@
 {
   "name":"io.seqera.tower.model.ComputeEnvStatus",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "methods":[{"name":"fromValue","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.model.ComputePlatformDto",
@@ -2556,7 +2564,8 @@
   "name":"io.seqera.tower.model.DescribeComputeEnvResponse",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setComputeEnv","parameterTypes":["io.seqera.tower.model.ComputeEnvResponseDto"] }]
 },
 {
   "name":"io.seqera.tower.model.DescribeCredentialsResponse",
@@ -3055,11 +3064,6 @@
   "allDeclaredConstructors":true
 },
 {
-  "name":"io.seqera.tower.model.PipelineOptimizationStatus",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
-},
-{
   "name":"io.seqera.tower.model.PipelineSecret",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -3175,6 +3179,13 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.model.UpdateComputeEnvRequest",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"getName","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.UpdateCredentialsRequest",
