@@ -366,6 +366,62 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
 
     @ParameterizedTest
     @EnumSource(OutputType.class)
+    void testImportWithOverwrite(OutputType format, MockServerClient mock) throws IOException {
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{" +
+                        "\"computeEnvs\":[" +
+                            "{" +
+                                "\"id\":\"isnEDBLvHDAIteOEF44ow\"," +
+                                "\"name\":\"demo\"," +
+                                "\"platform\":\"aws-batch\"," +
+                                "\"status\":\"AVAILABLE\"," +
+                                "\"message\":null," +
+                                "\"lastUsed\":null," +
+                                "\"primary\":null," +
+                                "\"workspaceName\":null," +
+                                "\"visibility\":null" +
+                            "}" +
+                        "]}"
+                ).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/isnEDBLvHDAIteOEF44ow"), exactly(1)
+        ).respond(
+                response()
+                        .withStatusCode(200)
+                        .withBody(loadResource("compute_env_view"))
+                        .withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"name\":\"demo\",\"platform\":\"aws-batch\",\"config\":{\"region\":\"eu-west-1\",\"cliPath\":\"/home/ec2-user/miniconda/bin/aws\",\"workDir\":\"s3://nextflow-ci/jordeu\",\"forge\":{\"type\":\"SPOT\",\"minCpus\":0,\"maxCpus\":123,\"gpuEnabled\":false,\"ebsAutoScale\":true,\"disposeOnDeletion\":true,\"fusionEnabled\":false,\"efsCreate\":true},\"discriminator\":\"aws-batch\"},\"credentialsId\":\"6g0ER59L4ZoE5zpOmUP48D\"}}"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvId\":\"3T6xWeFD63QIuzdAowvSTC\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("DELETE").withPath("/compute-envs/isnEDBLvHDAIteOEF44ow"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "aws-batch"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"6g0ER59L4ZoE5zpOmUP48D\",\"name\":\"aws\",\"description\":null,\"discriminator\":\"aws\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-09T07:20:53Z\",\"dateCreated\":\"2021-09-08T05:48:51Z\",\"lastUpdated\":\"2021-09-08T05:48:51Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "compute-envs", "import", "--overwrite", tempFile(new String(loadResource("cejson"), StandardCharsets.UTF_8), "ce", "json"), "-n", "demo", "-c", "6g0ER59L4ZoE5zpOmUP48D");
+        assertOutput(format, out, new ComputeEnvAdded(ComputeEnv.PlatformEnum.AWS_BATCH.getValue(), "3T6xWeFD63QIuzdAowvSTC", "demo", null, USER_WORKSPACE_NAME));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
     void testPrimaryGet(OutputType format, MockServerClient mock) throws JsonProcessingException {
         mock.when(
                 request().withMethod("GET").withPath("/compute-envs"), exactly(1)
