@@ -12,11 +12,14 @@
 
 package io.seqera.tower.cli.responses.labels;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.seqera.tower.cli.responses.Response;
+import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.LabelDbDto;
 import io.seqera.tower.model.LabelType;
 
+import javax.annotation.Nullable;
 import java.io.PrintWriter;
 import java.util.List;
 
@@ -27,10 +30,15 @@ public class ListLabelsCmdResponse extends Response {
 
     public LabelType labelType;
 
-    public ListLabelsCmdResponse(Long wspId, LabelType labelType, List<LabelDbDto> labels) {
+    @JsonIgnore
+    @Nullable
+    private PaginationInfo paginationInfo;
+
+    public ListLabelsCmdResponse(Long wspId, LabelType labelType, List<LabelDbDto> labels, @Nullable PaginationInfo paginationInfo) {
         this.workspaceId = wspId;
         this.labels = labels;
         this.labelType = labelType;
+        this.paginationInfo = paginationInfo;
     }
 
     @Override
@@ -55,9 +63,12 @@ public class ListLabelsCmdResponse extends Response {
                 label.getValue(),
                 label.getResource() ? "Resource" : "Normal"
         ));
-        table.print();
-        out.println("");
 
+        table.print();
+
+        PaginationInfo.addFooter(out, paginationInfo);
+
+        out.println("");
     }
 
 }

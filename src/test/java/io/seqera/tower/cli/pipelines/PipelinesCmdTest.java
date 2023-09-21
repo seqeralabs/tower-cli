@@ -18,6 +18,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.JSON;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
+import io.seqera.tower.cli.commands.labels.LabelsSubcmdOptions;
+import io.seqera.tower.cli.exceptions.InvalidResponseException;
 import io.seqera.tower.cli.exceptions.MultiplePipelinesFoundException;
 import io.seqera.tower.cli.exceptions.NoComputeEnvironmentException;
 import io.seqera.tower.cli.exceptions.PipelineNotFoundException;
@@ -31,6 +33,7 @@ import io.seqera.tower.cli.responses.pipelines.PipelinesList;
 import io.seqera.tower.cli.responses.pipelines.PipelinesUpdated;
 import io.seqera.tower.cli.responses.pipelines.PipelinesView;
 import io.seqera.tower.cli.utils.ModelHelper;
+import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.CreatePipelineRequest;
 import io.seqera.tower.model.Launch;
@@ -41,6 +44,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
+import org.mockserver.matchers.Times;
 import org.mockserver.model.JsonBody;
 import org.mockserver.model.MediaType;
 
@@ -57,6 +61,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
+import static org.mockserver.model.JsonBody.json;
 
 class PipelinesCmdTest extends BaseCmdTest {
 
@@ -76,7 +81,8 @@ class PipelinesCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("PUT").withPath("/pipelines/217997727159863").withBody("{\"description\":\"Sleep one minute and exit\",\"launch\":{\"computeEnvId\":\"vYOK4vn7spw7bHHWBDXZ2\",\"pipeline\":\"https://github.com/pditommaso/nf-sleep\",\"workDir\":\"s3://nextflow-ci/jordeu\",\"paramsText\":\"timeout: 60\\n\",\"pullLatest\":false,\"stubRun\":false}}"), exactly(1)
+                request().withMethod("PUT").withPath("/pipelines/217997727159863")
+                        .withBody(json("{\"description\":\"Sleep one minute and exit\",\"name\":\"sleep_one_minute\",\"launch\":{\"computeEnvId\":\"vYOK4vn7spw7bHHWBDXZ2\",\"pipeline\":\"https://github.com/pditommaso/nf-sleep\",\"workDir\":\"s3://nextflow-ci/jordeu\",\"paramsText\":\"timeout: 60\\n\",\"pullLatest\":false,\"stubRun\":false}}")), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"pipeline\":{\"pipelineId\":217997727159863,\"name\":\"sleep_one_minute\",\"description\":\"Sleep one minute and exit\",\"icon\":null,\"repository\":\"https://github.com/pditommaso/nf-sleep\",\"userId\":4,\"userName\":\"jordi\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null}}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -117,7 +123,8 @@ class PipelinesCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("PUT").withPath("/pipelines/217997727159863").withBody("{\"launch\":{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\",\"pipeline\":\"https://github.com/pditommaso/nf-sleep\",\"workDir\":\"s3://nextflow-ci/jordeu\",\"paramsText\":\"timeout: 60\\n\",\"pullLatest\":false,\"stubRun\":false}}"), exactly(1)
+                request().withMethod("PUT").withPath("/pipelines/217997727159863")
+                        .withBody(json("{\"name\":\"sleep_one_minute\",\"launch\":{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\",\"pipeline\":\"https://github.com/pditommaso/nf-sleep\",\"workDir\":\"s3://nextflow-ci/jordeu\",\"paramsText\":\"timeout: 60\\n\",\"pullLatest\":false,\"stubRun\":false}}")), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"pipeline\":{\"pipelineId\":217997727159863,\"name\":\"sleep_one_minute\",\"description\":\"Sleep one minute and exit\",\"icon\":null,\"repository\":\"https://github.com/pditommaso/nf-sleep\",\"userId\":4,\"userName\":\"jordi\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null}}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -126,6 +133,85 @@ class PipelinesCmdTest extends BaseCmdTest {
 
         assertEquals("", out.stdErr);
         assertEquals(new PipelinesUpdated(USER_WORKSPACE_NAME, "sleep_one_minute").toString(), out.stdOut);
+    }
+
+    @Test
+    void testUpdatePipelineName(MockServerClient mock) {
+
+        mock.reset();
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "sleep_one_minute")
+        ).respond(
+                response().withStatusCode(200).withBody("{\"pipelines\":[{\"pipelineId\":217997727159863,\"name\":\"sleep_one_minute\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/pditommaso/nf-sleep\",\"userId\":4,\"userName\":\"jordi\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null}],\"totalSize\":1}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines/217997727159863/launch")
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("pipelines_update")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("PUT").withPath("/pipelines/217997727159863")
+                        .withBody(json("{\"name\": \"sleepOneMinute\", \"launch\":{\"computeEnvId\":\"vYOK4vn7spw7bHHWBDXZ2\",\"pipeline\":\"https://github.com/pditommaso/nf-sleep\",\"workDir\":\"s3://nextflow-ci/jordeu\",\"paramsText\":\"timeout: 60\\n\",\"pullLatest\":false,\"stubRun\":false}}")),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+                        .withBody("{\"pipeline\":{\"pipelineId\":217997727159863,\"name\":\"sleepOneMinute\",\"description\":\"Sleep one minute and exit\",\"icon\":null,\"repository\":\"https://github.com/pditommaso/nf-sleep\",\"userId\":4,\"userName\":\"jordi\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null}}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines/validate").withQueryStringParameter("name", "sleepOneMinute")
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(mock, "pipelines", "update", "-n", "sleep_one_minute", "--new-name", "sleepOneMinute");
+
+        assertEquals("", out.stdErr);
+        assertEquals(new PipelinesUpdated(USER_WORKSPACE_NAME, "sleep_one_minute").toString(), out.stdOut);
+
+    }
+
+    @Test
+    void testUpdatePipelineInvalidName(MockServerClient mock) {
+
+        mock.reset();
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "sleep_one_minute")
+        ).respond(
+                response().withStatusCode(200).withBody("{\"pipelines\":[{\"pipelineId\":217997727159863,\"name\":\"sleep_one_minute\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/pditommaso/nf-sleep\",\"userId\":4,\"userName\":\"jordi\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null}],\"totalSize\":1}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines/217997727159863/launch")
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("pipelines_update")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("PUT").withPath("/pipelines/217997727159863")
+                        .withBody(json("{\"name\": \"sleepOneMinute\", \"launch\":{\"computeEnvId\":\"vYOK4vn7spw7bHHWBDXZ2\",\"pipeline\":\"https://github.com/pditommaso/nf-sleep\",\"workDir\":\"s3://nextflow-ci/jordeu\",\"paramsText\":\"timeout: 60\\n\",\"pullLatest\":false,\"stubRun\":false}}")),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+                        .withBody("{\"pipeline\":{\"pipelineId\":217997727159863,\"name\":\"sleepOneMinute\",\"description\":\"Sleep one minute and exit\",\"icon\":null,\"repository\":\"https://github.com/pditommaso/nf-sleep\",\"userId\":4,\"userName\":\"jordi\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null}}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines/validate").withQueryStringParameter("name", "#sleep")
+        ).respond(
+                response().withStatusCode(400)
+                        .withBody(json("{\"message\": \"Pipeline name must contain a minimum of 2 and a maximum of 99 alphanumeric characters separated by dashes or underscores\"}"))
+        );
+
+        ExecOut out = exec(mock, "pipelines", "update", "-n", "sleep_one_minute", "--new-name", "#sleep");
+
+        assertEquals(errorMessage(out.app, new InvalidResponseException("Pipeline name '#sleep' is not valid")), out.stdErr);
+        assertEquals("", out.stdOut);
+        assertEquals(1, out.exitCode);
     }
 
     @Test
@@ -307,7 +393,7 @@ class PipelinesCmdTest extends BaseCmdTest {
                         .repository("https://github.com/pditommaso/nf-sleep")
                         .userId(4L)
                         .userName("jordi")
-        ), baseUserUrl(mock, USER_WORKSPACE_NAME), false));
+        ), baseUserUrl(mock, USER_WORKSPACE_NAME), false, null));
     }
 
     @Test
@@ -331,7 +417,7 @@ class PipelinesCmdTest extends BaseCmdTest {
                         .repository("https://github.com/pditommaso/nf-sleep")
                         .userId(4L)
                         .userName("jordi")
-        ), baseUserUrl(mock, USER_WORKSPACE_NAME), false).toString()), out.stdOut);
+        ), baseUserUrl(mock, USER_WORKSPACE_NAME), false, PaginationInfo.from(1, 2, 1L)).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -362,7 +448,7 @@ class PipelinesCmdTest extends BaseCmdTest {
                         .repository("https://github.com/pditommaso/nf-sleep")
                         .userId(4L)
                         .userName("jordi")
-        ), baseUserUrl(mock, USER_WORKSPACE_NAME), false).toString()), out.stdOut);
+        ), baseUserUrl(mock, USER_WORKSPACE_NAME), false, PaginationInfo.from(null, 2,1, 1L)).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -402,7 +488,7 @@ class PipelinesCmdTest extends BaseCmdTest {
         ExecOut out = exec(mock, "pipelines", "list");
 
         assertEquals("", out.stdErr);
-        assertEquals(chop(new PipelinesList(USER_WORKSPACE_NAME, List.of(), baseUserUrl(mock, USER_WORKSPACE_NAME), false).toString()), out.stdOut);
+        assertEquals(chop(new PipelinesList(USER_WORKSPACE_NAME, List.of(), baseUserUrl(mock, USER_WORKSPACE_NAME), false, null).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -485,7 +571,7 @@ class PipelinesCmdTest extends BaseCmdTest {
         ExecOut out = exec(mock, "pipelines", "list", "-w", "222756650686576");
 
         assertEquals("", out.stdErr);
-        assertEquals(chop(new PipelinesList(buildWorkspaceRef("Seqera", "cli"), List.of(), baseWorkspaceUrl(mock, "Seqera", "cli"), false).toString()), out.stdOut);
+        assertEquals(chop(new PipelinesList(buildWorkspaceRef("Seqera", "cli"), List.of(), baseWorkspaceUrl(mock, "Seqera", "cli"), false, null).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

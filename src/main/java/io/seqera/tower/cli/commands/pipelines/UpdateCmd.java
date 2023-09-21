@@ -13,6 +13,7 @@ package io.seqera.tower.cli.commands.pipelines;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
+import io.seqera.tower.cli.exceptions.InvalidResponseException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.pipelines.PipelinesUpdated;
 import io.seqera.tower.cli.utils.FilesHelper;
@@ -47,6 +48,9 @@ public class UpdateCmd extends AbstractPipelinesCmd {
     @Option(names = {"-d", "--description"}, description = "Pipeline description.")
     public String description;
 
+    @Option(names = {"--new-name"}, description = "Pipeline new name.")
+    public String newName;
+
     @Mixin
     public LaunchOptions opts;
 
@@ -55,7 +59,9 @@ public class UpdateCmd extends AbstractPipelinesCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
+
         Long wspId = workspaceId(workspace.workspace);
+        Long orgId = wspId != null ? orgId(wspId) : null;
         PipelineDbDto pipe;
         Long id;
 
@@ -67,39 +73,46 @@ public class UpdateCmd extends AbstractPipelinesCmd {
             id = pipe.getPipelineId();
         }
 
+        if (newName != null) {
+            try {
+                api().validatePipelineName(wspId, orgId, newName);
+            } catch (ApiException ex) {
+                throw new InvalidResponseException(String.format("Pipeline name '%s' is not valid", newName));
+            }
+        }
+
         Long sourceWorkspaceId = sourceWorkspaceId(wspId, pipe);
         Launch launch = api().describePipelineLaunch(id, wspId, sourceWorkspaceId).getLaunch();
 
         // Retrieve the provided computeEnv or use the primary if not provided
         String ceId = opts.computeEnv != null ? computeEnvByRef(wspId, opts.computeEnv).getId() : launch.getComputeEnv().getId();
 
-        UpdatePipelineResponse response = api().updatePipeline(
-                pipe.getPipelineId(),
-                new UpdatePipelineRequest()
-                        .description(coalesce(description, pipe.getDescription()))
-                        .launch(new WorkflowLaunchRequest()
-                                .computeEnvId(ceId)
-                                .pipeline(coalesce(pipeline, launch.getPipeline()))
-                                .revision(coalesce(opts.revision, launch.getRevision()))
-                                .workDir(coalesce(opts.workDir, launch.getWorkDir()))
-                                .configProfiles(coalesce(opts.profile, launch.getConfigProfiles()))
-                                .paramsText(coalesce(FilesHelper.readString(opts.paramsFile), launch.getParamsText()))
+        UpdatePipelineRequest updateReq = new UpdatePipelineRequest()
+                .name(coalesce(newName, pipe.getName()))
+                .description(coalesce(description, pipe.getDescription()))
+                .launch(new WorkflowLaunchRequest()
+                        .computeEnvId(ceId)
+                        .pipeline(coalesce(pipeline, launch.getPipeline()))
+                        .revision(coalesce(opts.revision, launch.getRevision()))
+                        .workDir(coalesce(opts.workDir, launch.getWorkDir()))
+                        .configProfiles(coalesce(opts.profile, launch.getConfigProfiles()))
+                        .paramsText(coalesce(FilesHelper.readString(opts.paramsFile), launch.getParamsText()))
 
-                                // Advanced options
-                                .configText(coalesce(FilesHelper.readString(opts.config), launch.getConfigText()))
-                                .preRunScript(coalesce(FilesHelper.readString(opts.preRunScript), launch.getPreRunScript()))
-                                .postRunScript(coalesce(FilesHelper.readString(opts.postRunScript), launch.getPostRunScript()))
-                                .pullLatest(coalesce(opts.pullLatest, launch.getPullLatest()))
-                                .stubRun(coalesce(opts.stubRun, launch.getStubRun()))
-                                .mainScript(coalesce(opts.mainScript, launch.getMainScript()))
-                                .entryName(coalesce(opts.entryName, launch.getEntryName()))
-                                .schemaName(coalesce(opts.schemaName, launch.getSchemaName()))
-                                .userSecrets(coalesce(removeEmptyValues(opts.userSecrets), launch.getUserSecrets()))
-                                .workspaceSecrets(coalesce(removeEmptyValues(opts.workspaceSecrets), launch.getWorkspaceSecrets()))
-                        )
-                , wspId
-        );
+                        // Advanced options
+                        .configText(coalesce(FilesHelper.readString(opts.config), launch.getConfigText()))
+                        .preRunScript(coalesce(FilesHelper.readString(opts.preRunScript), launch.getPreRunScript()))
+                        .postRunScript(coalesce(FilesHelper.readString(opts.postRunScript), launch.getPostRunScript()))
+                        .pullLatest(coalesce(opts.pullLatest, launch.getPullLatest()))
+                        .stubRun(coalesce(opts.stubRun, launch.getStubRun()))
+                        .mainScript(coalesce(opts.mainScript, launch.getMainScript()))
+                        .entryName(coalesce(opts.entryName, launch.getEntryName()))
+                        .schemaName(coalesce(opts.schemaName, launch.getSchemaName()))
+                        .userSecrets(coalesce(removeEmptyValues(opts.userSecrets), launch.getUserSecrets()))
+                        .workspaceSecrets(coalesce(removeEmptyValues(opts.workspaceSecrets), launch.getWorkspaceSecrets()))
+                );
 
-        return new PipelinesUpdated(workspaceRef(wspId), response.getPipeline().getName());
+        api().updatePipeline(pipe.getPipelineId(), updateReq, wspId);
+
+        return new PipelinesUpdated(workspaceRef(wspId), pipe.getName());
     }
 }

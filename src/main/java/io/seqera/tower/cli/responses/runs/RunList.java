@@ -13,13 +13,14 @@ package io.seqera.tower.cli.responses.runs;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.seqera.tower.cli.responses.Response;
+import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.ListWorkflowsResponseListWorkflowsElement;
 
+import javax.annotation.Nullable;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static io.seqera.tower.cli.utils.FormatHelper.formatTime;
 import static io.seqera.tower.cli.utils.FormatHelper.formatWorkflowId;
@@ -36,18 +37,16 @@ public class RunList extends Response {
     @JsonIgnore
     public final String baseWorkspaceUrl;
 
-    public RunList(String workspaceRef, List<ListWorkflowsResponseListWorkflowsElement> runs, String baseWorkspaceUrl, boolean showLabels) {
+    @JsonIgnore
+    @Nullable
+    private final PaginationInfo paginationInfo;
+
+    public RunList(String workspaceRef, List<ListWorkflowsResponseListWorkflowsElement> runs, String baseWorkspaceUrl, boolean showLabels, @Nullable PaginationInfo paginationInfo) {
         this.workspaceRef = workspaceRef;
         this.workflows = runs;
         this.baseWorkspaceUrl = baseWorkspaceUrl;
         this.showLabels = showLabels;
-    }
-
-    public RunList(String workspaceRef, List<ListWorkflowsResponseListWorkflowsElement> runs, String baseWorkspaceUrl) {
-        this.workspaceRef = workspaceRef;
-        this.workflows = runs;
-        this.baseWorkspaceUrl = baseWorkspaceUrl;
-        this.showLabels = false;
+        this.paginationInfo = paginationInfo;
     }
 
     @Override
@@ -83,8 +82,10 @@ public class RunList extends Response {
             table.addRow(rowsArray);
         });
 
-
         table.print();
+
+        PaginationInfo.addFooter(out, paginationInfo);
+
         out.println("");
     }
 

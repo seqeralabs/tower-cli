@@ -13,14 +13,14 @@ package io.seqera.tower.cli.responses.pipelines;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.seqera.tower.cli.responses.Response;
+import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.cli.utils.TableList;
-import io.seqera.tower.model.ListActionsResponseActionInfo;
 import io.seqera.tower.model.PipelineDbDto;
 
+import javax.annotation.Nullable;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static io.seqera.tower.cli.utils.FormatHelper.formatPipelineId;
 import static io.seqera.tower.cli.utils.FormatHelper.formatLabels;
@@ -36,11 +36,16 @@ public class PipelinesList extends Response {
     @JsonIgnore
     private boolean includeLabels;
 
-    public PipelinesList(String workspaceRef, List<PipelineDbDto> pipelines, String baseWorkspaceUrl, boolean includeLabels) {
+    @JsonIgnore
+    @Nullable
+    private PaginationInfo paginationInfo;
+
+    public PipelinesList(String workspaceRef, List<PipelineDbDto> pipelines, String baseWorkspaceUrl, boolean includeLabels, @Nullable PaginationInfo paginationInfo) {
         this.workspaceRef = workspaceRef;
         this.pipelines = pipelines;
         this.baseWorkspaceUrl = baseWorkspaceUrl;
         this.includeLabels = includeLabels;
+        this.paginationInfo = paginationInfo;
     }
 
     @Override
@@ -70,7 +75,11 @@ public class PipelinesList extends Response {
 
             table.addRow(rows.toArray(new String[rows.size()]));
         });
+
         table.print();
+
+        PaginationInfo.addFooter(out, paginationInfo);
+
         out.println("");
     }
 

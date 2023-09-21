@@ -20,6 +20,7 @@ import io.seqera.tower.cli.responses.participants.ParticipantDeleted;
 import io.seqera.tower.cli.responses.participants.ParticipantLeft;
 import io.seqera.tower.cli.responses.participants.ParticipantUpdated;
 import io.seqera.tower.cli.responses.participants.ParticipantsList;
+import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.model.ParticipantDbDto;
 import io.seqera.tower.model.WspRole;
 import org.junit.jupiter.api.Test;
@@ -139,7 +140,7 @@ class ParticipantsCmdTest extends BaseCmdTest {
                                 "      \"type\": \"TEAM\",\n" +
                                 "      \"teamAvatarUrl\": null,\n" +
                                 "      \"userAvatarUrl\": null\n" +
-                                "    }", ParticipantDbDto.class))));
+                                "    }", ParticipantDbDto.class)), null));
     }
 
     @Test
@@ -243,7 +244,7 @@ class ParticipantsCmdTest extends BaseCmdTest {
                                 "      \"type\": \"TEAM\",\n" +
                                 "      \"teamAvatarUrl\": null,\n" +
                                 "      \"userAvatarUrl\": null\n" +
-                                "    }", ParticipantDbDto.class))).toString()), out.stdOut);
+                                "    }", ParticipantDbDto.class)), PaginationInfo.from(1, 2, null, null)).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -348,7 +349,7 @@ class ParticipantsCmdTest extends BaseCmdTest {
                                 "      \"type\": \"TEAM\",\n" +
                                 "      \"teamAvatarUrl\": null,\n" +
                                 "      \"userAvatarUrl\": null\n" +
-                                "    }", ParticipantDbDto.class))).toString()), out.stdOut);
+                                "    }", ParticipantDbDto.class)), PaginationInfo.from(null, 2, 1, null)).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -420,7 +421,7 @@ class ParticipantsCmdTest extends BaseCmdTest {
                                 "      \"type\": \"TEAM\",\n" +
                                 "      \"teamAvatarUrl\": null,\n" +
                                 "      \"userAvatarUrl\": null\n" +
-                                "    }", ParticipantDbDto.class))).toString()), out.stdOut);
+                                "    }", ParticipantDbDto.class)), null).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
