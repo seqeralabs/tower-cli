@@ -117,7 +117,6 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
                 .type(provisioningModel)
                 .maxCpus(maxCpus)
                 .ebsAutoScale(!noEbsAutoScale)
-                .fusionEnabled(false) // Fusion v1 is deprecated, set this field to false independently of fusionV2
                 .gpuEnabled(gpu)
                 .allowBuckets(allowBuckets)
                 .disposeOnDeletion(!preserveResources)

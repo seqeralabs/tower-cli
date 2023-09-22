@@ -43,7 +43,7 @@ class AwsBatchForgePlatformTest extends BaseCmdTest {
 
         mock.when(
                 request().withMethod("POST").withPath("/compute-envs")
-                        .withBody(JsonBody.json("{\"computeEnv\":{\"name\":\"demo\",\"platform\":\"aws-batch\",\"config\":{\"region\":\"eu-west-1\",\"fusion2Enabled\":true,\"waveEnabled\":false,\"workDir\":\"s3://nextflow-ci/jordeu\",\"forge\":{\"type\":\"SPOT\",\"minCpus\":0,\"maxCpus\":123,\"gpuEnabled\":false,\"ebsAutoScale\":true,\"disposeOnDeletion\":true,\"fusionEnabled\":false,\"fargateHeadEnabled\":false}},\"credentialsId\":\"6g0ER59L4ZoE5zpOmUP48D\"}}")), exactly(1)
+                        .withBody(JsonBody.json("{\"computeEnv\":{\"name\":\"demo\",\"platform\":\"aws-batch\",\"config\":{\"region\":\"eu-west-1\",\"fusion2Enabled\":true,\"waveEnabled\":false,\"workDir\":\"s3://nextflow-ci/jordeu\",\"forge\":{\"type\":\"SPOT\",\"minCpus\":0,\"maxCpus\":123,\"gpuEnabled\":false,\"ebsAutoScale\":true,\"disposeOnDeletion\":true,\"fargateHeadEnabled\":false}},\"credentialsId\":\"6g0ER59L4ZoE5zpOmUP48D\"}}")), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -63,7 +63,7 @@ class AwsBatchForgePlatformTest extends BaseCmdTest {
 
         mock.when(
                 request().withMethod("POST").withPath("/compute-envs")
-                        .withBody(JsonBody.json("{\"computeEnv\":{\"name\":\"demo\",\"platform\":\"aws-batch\",\"config\":{\"region\":\"eu-west-1\",\"fusion2Enabled\":false,\"waveEnabled\":false,\"workDir\":\"s3://nextflow-ci/jordeu\",\"forge\":{\"type\":\"SPOT\",\"minCpus\":0,\"maxCpus\":123,\"gpuEnabled\":false,\"ebsAutoScale\":true,\"disposeOnDeletion\":true,\"fusionEnabled\":false,\"efsCreate\":true,\"fargateHeadEnabled\":false}},\"credentialsId\":\"6g0ER59L4ZoE5zpOmUP48D\"}}")), exactly(1)
+                        .withBody(JsonBody.json("{\"computeEnv\":{\"name\":\"demo\",\"platform\":\"aws-batch\",\"config\":{\"region\":\"eu-west-1\",\"fusion2Enabled\":false,\"waveEnabled\":false,\"workDir\":\"s3://nextflow-ci/jordeu\",\"forge\":{\"type\":\"SPOT\",\"minCpus\":0,\"maxCpus\":123,\"gpuEnabled\":false,\"ebsAutoScale\":true,\"disposeOnDeletion\":true,\"efsCreate\":true,\"fargateHeadEnabled\":false}},\"credentialsId\":\"6g0ER59L4ZoE5zpOmUP48D\"}}")), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -86,7 +86,7 @@ class AwsBatchForgePlatformTest extends BaseCmdTest {
 
         mock.when(
                 request().withMethod("POST").withPath("/compute-envs")
-                        .withBody(JsonBody.json("{\"computeEnv\":{\"name\":\"demo\",\"platform\":\"aws-batch\",\"config\":{\"region\":\"eu-west-1\",\"fusion2Enabled\":false,\"waveEnabled\":false,\"workDir\":\"/workdir\",\"forge\":{\"type\":\"SPOT\",\"minCpus\":0,\"maxCpus\":123,\"gpuEnabled\":false,\"ebsAutoScale\":true,\"fsxSize\":1200,\"disposeOnDeletion\":true,\"fusionEnabled\":false, \"fargateHeadEnabled\": false}},\"credentialsId\":\"6g0ER59L4ZoE5zpOmUP48D\"}}")), exactly(1)
+                        .withBody(JsonBody.json("{\"computeEnv\":{\"name\":\"demo\",\"platform\":\"aws-batch\",\"config\":{\"region\":\"eu-west-1\",\"fusion2Enabled\":false,\"waveEnabled\":false,\"workDir\":\"/workdir\",\"forge\":{\"type\":\"SPOT\",\"minCpus\":0,\"maxCpus\":123,\"gpuEnabled\":false,\"ebsAutoScale\":true,\"fsxSize\":1200,\"disposeOnDeletion\":true,\"fargateHeadEnabled\": false}},\"credentialsId\":\"6g0ER59L4ZoE5zpOmUP48D\"}}")), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -109,7 +109,7 @@ class AwsBatchForgePlatformTest extends BaseCmdTest {
 
         mock.when(
                 request().withMethod("POST").withPath("/compute-envs")
-                        .withBody(JsonBody.json("{\"computeEnv\":{\"name\":\"demo\",\"platform\":\"aws-batch\",\"config\":{\"region\":\"eu-west-1\",\"fusion2Enabled\":true,\"waveEnabled\":false,\"cliPath\":\"/bin/aws\",\"workDir\":\"s3://nextflow-ci/jordeu\",\"forge\":{\"type\":\"SPOT\",\"minCpus\":8,\"maxCpus\":123,\"gpuEnabled\":false,\"ebsAutoScale\":true,\"disposeOnDeletion\":true,\"allowBuckets\":[\"bkt1\",\"bkt2\"],\"fusionEnabled\":false,\"fargateHeadEnabled\": false}},\"credentialsId\":\"6g0ER59L4ZoE5zpOmUP48D\"}}")), exactly(1)
+                        .withBody(JsonBody.json("{\"computeEnv\":{\"name\":\"demo\",\"platform\":\"aws-batch\",\"config\":{\"region\":\"eu-west-1\",\"fusion2Enabled\":true,\"waveEnabled\":false,\"cliPath\":\"/bin/aws\",\"workDir\":\"s3://nextflow-ci/jordeu\",\"forge\":{\"type\":\"SPOT\",\"minCpus\":8,\"maxCpus\":123,\"gpuEnabled\":false,\"ebsAutoScale\":true,\"disposeOnDeletion\":true,\"allowBuckets\":[\"bkt1\",\"bkt2\"],\"fargateHeadEnabled\": false}},\"credentialsId\":\"6g0ER59L4ZoE5zpOmUP48D\"}}")), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -132,7 +132,7 @@ class AwsBatchForgePlatformTest extends BaseCmdTest {
 
         mock.when(
                 request().withMethod("POST").withPath("/compute-envs")
-                        .withBody(JsonBody.json("{\"computeEnv\":{\"name\":\"demo\",\"platform\":\"aws-batch\",\"config\":{\"region\":\"eu-west-1\",\"fusion2Enabled\":false,\"waveEnabled\":false,\"workDir\":\"s3://nextflow-ci/jordeu\",\"environment\":[{\"name\":\"HEAD\",\"value\":\"value1\",\"head\":true,\"compute\":false},{\"name\":\"COMPUTE\",\"value\":\"value2\",\"head\":false,\"compute\":true},{\"name\":\"BOTH\",\"value\":\"value3\",\"head\":true,\"compute\":true},{\"name\":\"HEAD\",\"value\":\"value4\",\"head\":true,\"compute\":false}],\"forge\":{\"type\":\"SPOT\",\"minCpus\":0,\"maxCpus\":123,\"gpuEnabled\":false,\"ebsAutoScale\":true,\"disposeOnDeletion\":true,\"fusionEnabled\":false, \"fargateHeadEnabled\": false}},\"credentialsId\":\"6g0ER59L4ZoE5zpOmUP48D\"}}")), exactly(1)
+                        .withBody(JsonBody.json("{\"computeEnv\":{\"name\":\"demo\",\"platform\":\"aws-batch\",\"config\":{\"region\":\"eu-west-1\",\"fusion2Enabled\":false,\"waveEnabled\":false,\"workDir\":\"s3://nextflow-ci/jordeu\",\"environment\":[{\"name\":\"HEAD\",\"value\":\"value1\",\"head\":true,\"compute\":false},{\"name\":\"COMPUTE\",\"value\":\"value2\",\"head\":false,\"compute\":true},{\"name\":\"BOTH\",\"value\":\"value3\",\"head\":true,\"compute\":true},{\"name\":\"HEAD\",\"value\":\"value4\",\"head\":true,\"compute\":false}],\"forge\":{\"type\":\"SPOT\",\"minCpus\":0,\"maxCpus\":123,\"gpuEnabled\":false,\"ebsAutoScale\":true,\"disposeOnDeletion\":true,\"fargateHeadEnabled\": false}},\"credentialsId\":\"6g0ER59L4ZoE5zpOmUP48D\"}}")), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
