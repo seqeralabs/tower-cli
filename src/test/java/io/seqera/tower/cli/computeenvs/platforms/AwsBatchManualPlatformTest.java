@@ -65,12 +65,12 @@ class AwsBatchManualPlatformTest extends BaseCmdTest {
 
         mock.when(
                 request().withMethod("POST").withPath("/compute-envs")
-                        .withBody(JsonBody.json("{\"computeEnv\":{\"name\":\"manual\",\"platform\":\"aws-batch\",\"config\":{\"region\":\"eu-west-1\",\"fusion2Enabled\":true,\"waveEnabled\":true,\"computeQueue\":\"TowerForge-isnEDBLvHDAIteOEF44ow-work\",\"headQueue\":\"TowerForge-isnEDBLvHDAIteOEF44ow-head\",\"cliPath\":\"/bin/aws\",\"workDir\":\"s3://nextflow-ci/jordeu\"},\"credentialsId\":\"6g0ER59L4ZoE5zpOmUP48D\"}}")), exactly(1)
+                        .withBody(JsonBody.json("{\"computeEnv\":{\"name\":\"manual\",\"platform\":\"aws-batch\",\"config\":{\"region\":\"eu-west-1\",\"fusion2Enabled\":true,\"waveEnabled\":true,\"nvnmeStorageEnabled\":true,\"computeQueue\":\"TowerForge-isnEDBLvHDAIteOEF44ow-work\",\"headQueue\":\"TowerForge-isnEDBLvHDAIteOEF44ow-head\",\"cliPath\":\"/bin/aws\",\"workDir\":\"s3://nextflow-ci/jordeu\"},\"credentialsId\":\"6g0ER59L4ZoE5zpOmUP48D\"}}")), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "compute-envs", "add", "aws-batch", "manual", "-n", "manual", "-r", "eu-west-1", "--work-dir", "s3://nextflow-ci/jordeu", "--fusion-v2", "--wave", "--head-queue", "TowerForge-isnEDBLvHDAIteOEF44ow-head", "--compute-queue", "TowerForge-isnEDBLvHDAIteOEF44ow-work", "--cli-path=/bin/aws");
+        ExecOut out = exec(mock, "compute-envs", "add", "aws-batch", "manual", "-n", "manual", "-r", "eu-west-1", "--work-dir", "s3://nextflow-ci/jordeu", "--fusion-v2", "--wave", "--fast-storage", "--head-queue", "TowerForge-isnEDBLvHDAIteOEF44ow-head", "--compute-queue", "TowerForge-isnEDBLvHDAIteOEF44ow-work", "--cli-path=/bin/aws");
 
         assertEquals("", out.stdErr);
         assertEquals(new ComputeEnvAdded("aws-batch", "isnEDBLvHDAIteOEF44ow", "manual", null, USER_WORKSPACE_NAME).toString(), out.stdOut);

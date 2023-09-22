@@ -35,6 +35,9 @@ public class AwsBatchManualPlatform extends AbstractPlatform<AwsBatchConfig> {
     @Option(names = {"--wave"}, description = "Allow access to private container repositories and the provisioning of containers in your Nextflow pipelines via the Wave containers service.")
     public boolean wave;
 
+    @Option(names = {"--fast-storage"}, description = "Allow the use of NVMe instance storage to speed up I/O and disk access operations (requires Fusion v2).")
+    public boolean fastStorage;
+
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
     public AdvancedOptions adv;
 
@@ -60,6 +63,7 @@ public class AwsBatchManualPlatform extends AbstractPlatform<AwsBatchConfig> {
                 .environment(environmentVariables())
                 .fusion2Enabled(fusionV2)
                 .waveEnabled(wave)
+                .nvnmeStorageEnabled(fastStorage)
                 .region(region)
 
                 // Queues
