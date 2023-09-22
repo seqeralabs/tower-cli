@@ -12,6 +12,7 @@
 package io.seqera.tower.cli.commands.computeenvs.platforms;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.model.AwsBatchConfig;
 import io.seqera.tower.model.ComputeEnv.PlatformEnum;
 import io.seqera.tower.model.ForgeConfig;
@@ -36,6 +37,9 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
 
     @Option(names = {"--no-ebs-auto-scale"}, description = "Disable the provisioning of EBS auto-expandable disk.")
     public boolean noEbsAutoScale;
+
+    @Option(names = {"--fusion"}, description = "DEPRECATED - Use '--fusion-v2' instead.")
+    public boolean fusion;
 
     @Option(names = {"--fusion-v2"}, description = "With Fusion v2 enabled, S3 buckets specified in the Pipeline work directory and Allowed S3 Buckets fields will be accessible in the compute nodes storage (requires Wave containers service).")
     public boolean fusionV2;
@@ -102,7 +106,13 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
                 .headJobRole(adv().headJobRole);
     }
 
-    private ForgeConfig buildForge() {
+    private ForgeConfig buildForge() throws TowerException {
+
+        // TODO: delete this once fusion v1 is completely removed
+        if (fusion) {
+            throw new TowerException("Fusion v1 is deprecated, please use '--fusion-v2' instead");
+        }
+
         ForgeConfig forge = new ForgeConfig()
                 .type(provisioningModel)
                 .maxCpus(maxCpus)

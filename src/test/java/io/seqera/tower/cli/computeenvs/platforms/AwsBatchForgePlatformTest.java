@@ -13,6 +13,7 @@ package io.seqera.tower.cli.computeenvs.platforms;
 
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
+import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.computeenvs.ComputeEnvAdded;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -141,6 +142,16 @@ class AwsBatchForgePlatformTest extends BaseCmdTest {
         assertEquals("", out.stdErr);
         assertEquals(new ComputeEnvAdded("aws-batch", "isnEDBLvHDAIteOEF44ow", "demo", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testAddWithDeprecated(MockServerClient mock) {
+
+        ExecOut out = exec(mock, "compute-envs", "add", "aws-batch", "forge", "-n", "demo", "-r", "eu-west-1", "--work-dir", "s3://nextflow-ci/jordeu", "--max-cpus=123", "--fusion");
+
+        assertEquals(errorMessage(out.app, new TowerException("Fusion v1 is deprecated, please use '--fusion-v2' instead")), out.stdErr);
+        assertEquals("", out.stdOut);
+        assertEquals(1, out.exitCode);
     }
 
 }
