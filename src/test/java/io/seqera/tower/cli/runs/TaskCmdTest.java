@@ -54,4 +54,28 @@ public class TaskCmdTest extends BaseCmdTest {
         assertEquals(StringUtils.chop(new TaskView(general, command, environment, times, resources, usage).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
+
+    @Test
+    void testTaskDetailWithNullValues(MockServerClient mock) throws JsonProcessingException {
+        mock.when(
+                request().withMethod("GET").withPath("/workflow/5J9pBnWd6uoC3w/task/1"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("runs/task_detail_null_values")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock,"runs", "view", "-i", "5J9pBnWd6uoC3w", "task", "-t", "1", "--execution-time", "--resources-requested", "--resources-usage");
+
+        Task task = parseJson(new String(loadResource("runs/task_object_null_values")), Task.class);
+
+        Map<String, Object> general = TaskCmd.parseGeneralData(task);
+        String command = task.getScript() != null ? task.getScript() : null;
+        String environment = task.getEnv() != null ? task.getEnv() : null;
+        Map<String, Object> times = TaskCmd.parseExecutionTimeData(task);
+        Map<String, Object> resources = TaskCmd.parseResourcesRequestedData(task);
+        Map<String, Object> usage = TaskCmd.parseResourcesUsageData(task);
+
+        assertEquals("", out.stdErr);
+        assertEquals(StringUtils.chop(new TaskView(general, command, environment, times, resources, usage).toString()), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
 }

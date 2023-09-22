@@ -29,6 +29,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
+import org.mockserver.model.JsonBody;
 import org.mockserver.model.MediaType;
 
 import java.util.Arrays;
@@ -40,6 +41,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
+import static org.mockserver.model.JsonBody.json;
 
 class WorkspacesCmdTest extends BaseCmdTest {
 
@@ -315,6 +317,44 @@ class WorkspacesCmdTest extends BaseCmdTest {
         );
 
         ExecOut out = exec(format, mock, "workspaces", "update", "-i", "75887156211589", "-f", "wsp-new", "-d", "workspace description");
+        assertOutput(format, out, new WorkspaceUpdated("workspace1", "organization1", Visibility.PRIVATE));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testUpdateNameById(OutputType format, MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/orgs/27736513644467/workspaces/75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_view")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("PUT").withPath("/orgs/27736513644467/workspaces/75887156211589")
+                        .withBody(json("{\"name\":\"workspace2\",\"fullName\":\"wsp-new\",\"description\":\"workspace description\",\"visibility\":\"PRIVATE\"}")),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_update_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "workspaces", "update", "-i", "75887156211589",
+                "--new-name", "workspace2",
+                "-f", "wsp-new",
+                "-d", "workspace description"
+        );
         assertOutput(format, out, new WorkspaceUpdated("workspace1", "organization1", Visibility.PRIVATE));
     }
 

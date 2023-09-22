@@ -14,7 +14,6 @@ package io.seqera.tower.cli.actions;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
-import io.seqera.tower.cli.commands.labels.LabelsSubcmdOptions;
 import io.seqera.tower.cli.exceptions.ActionNotFoundException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.actions.ActionAdd;
@@ -22,13 +21,13 @@ import io.seqera.tower.cli.responses.actions.ActionUpdate;
 import io.seqera.tower.cli.responses.actions.ActionsDelete;
 import io.seqera.tower.cli.responses.actions.ActionsList;
 import io.seqera.tower.cli.responses.actions.ActionsView;
-import io.seqera.tower.cli.responses.labels.ManageLabels;
 import io.seqera.tower.model.ActionResponseDto;
 import io.seqera.tower.model.ListActionsResponseActionInfo;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
+import org.mockserver.matchers.MatchType;
 import org.mockserver.model.MediaType;
 
 import java.io.IOException;
@@ -43,6 +42,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
+import static org.mockserver.model.JsonBody.json;
 
 class ActionsCmdTest extends BaseCmdTest {
 
@@ -476,6 +476,106 @@ class ActionsCmdTest extends BaseCmdTest {
         assertEquals("", out.stdOut);
         assertEquals(1, out.exitCode);
         assertEquals(errorMessage(out.app, new TowerException(String.format("Unable to update action '%s' for workspace '%s'", "hello", USER_WORKSPACE_NAME))), out.stdErr);
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testUpdateName(OutputType format, MockServerClient mock) {
+        mock.reset();
+
+        mock.when(
+                request().withMethod("GET").withPath("/actions"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("actions/actions_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/actions/57byWxhmUDLLWIF4J97XEP"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("actions/action_view")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs").withQueryStringParameter("status", "AVAILABLE"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("PUT").withPath("/actions/57byWxhmUDLLWIF4J97XEP")
+                        .withBody(json("{ \"name\": \"hello_world\" }", MatchType.ONLY_MATCHING_FIELDS)),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/actions/validate")
+                        .withQueryStringParameter("name", "hello_world"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(format, mock, "actions", "update", "-n", "hello", "--new-name", "hello_world");
+        assertOutput(format, out, new ActionUpdate("hello", USER_WORKSPACE_NAME, "57byWxhmUDLLWIF4J97XEP"));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testUpdateInvalidName(OutputType format, MockServerClient mock) {
+        mock.reset();
+
+        mock.when(
+                request().withMethod("GET").withPath("/actions"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("actions/actions_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/actions/57byWxhmUDLLWIF4J97XEP"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("actions/action_view")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs").withQueryStringParameter("status", "AVAILABLE"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("PUT").withPath("/actions/57byWxhmUDLLWIF4J97XEP"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/actions/validate")
+                        .withQueryStringParameter("name", "#hello"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(400)
+        );
+
+        ExecOut out = exec(format, mock, "actions", "update", "-n", "hello", "--new-name", "#hello");
+
+        assertEquals("", out.stdOut);
+        assertEquals(1, out.exitCode);
+        assertEquals(errorMessage(out.app, new TowerException(String.format("Action name '%s' is not valid", "#hello"))), out.stdErr);
     }
 
     @ParameterizedTest

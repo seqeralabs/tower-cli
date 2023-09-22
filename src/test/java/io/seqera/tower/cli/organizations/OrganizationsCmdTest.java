@@ -27,6 +27,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
+import org.mockserver.model.JsonBody;
 import org.mockserver.model.MediaType;
 
 import java.util.Arrays;
@@ -38,6 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
+import static org.mockserver.model.JsonBody.json;
 
 class OrganizationsCmdTest extends BaseCmdTest {
 
@@ -292,6 +294,40 @@ class OrganizationsCmdTest extends BaseCmdTest {
         );
 
         ExecOut out = exec(format, mock, "organizations", "update", "-n", "organization1", "-f", "sample organization");
+        assertOutput(format, out, new OrganizationsUpdated(27736513644467L, "organization1"));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testUpdateName(OutputType format, MockServerClient mock) {
+        mock.reset();
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/orgs/27736513644467"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("organizations/organizations_view")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("PUT").withPath("/orgs/27736513644467")
+                        .withBody(json("{\"name\":\"organization2\",\"fullName\":\"sample organization\"}")),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(format, mock, "organizations", "update", "-n", "organization1", "--new-name", "organization2", "-f", "sample organization");
         assertOutput(format, out, new OrganizationsUpdated(27736513644467L, "organization1"));
     }
 
