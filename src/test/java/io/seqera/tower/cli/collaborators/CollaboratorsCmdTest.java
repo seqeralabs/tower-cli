@@ -73,6 +73,6 @@ class CollaboratorsCmdTest extends BaseCmdTest {
                         "      \"avatar\": \"https://www.gravatar.com/avatar/72918a9f674eaa696729917bec58760b?d=404\",\n" +
                         "      \"role\" : \"collaborator\"" +
                         "    }", MemberDbDto.class)
-        )));
+        ), null));
     }
 }

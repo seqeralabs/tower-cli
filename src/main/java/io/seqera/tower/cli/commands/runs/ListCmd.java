@@ -17,11 +17,11 @@ import io.seqera.tower.cli.commands.global.ShowLabelsOption;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.runs.RunList;
+import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.model.ListWorkflowsResponse;
 import io.seqera.tower.model.WorkflowQueryAttribute;
 import picocli.CommandLine;
 
-import javax.ws.rs.QueryParam;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -57,7 +57,7 @@ public class ListCmd extends AbstractRunsCmd {
         }
 
         ListWorkflowsResponse response = api().listWorkflows(queryAttribute, wspId, max, offset, startsWith);
-        return new RunList(workspaceRef(wspId), response.getWorkflows(), baseWorkspaceUrl(wspId), showLabelsOption.showLabels);
+        return new RunList(workspaceRef(wspId), response.getWorkflows(), baseWorkspaceUrl(wspId), showLabelsOption.showLabels, PaginationInfo.from(paginationOptions, response.getTotalSize()));
     }
 
 

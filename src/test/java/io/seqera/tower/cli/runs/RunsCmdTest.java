@@ -25,6 +25,7 @@ import io.seqera.tower.cli.responses.runs.RunFileDownloaded;
 import io.seqera.tower.cli.responses.runs.RunList;
 import io.seqera.tower.cli.responses.runs.RunSubmited;
 import io.seqera.tower.cli.responses.runs.RunView;
+import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.model.ListWorkflowsResponseListWorkflowsElement;
 import io.seqera.tower.model.Workflow;
 import io.seqera.tower.model.WorkflowLoad;
@@ -151,7 +152,7 @@ class RunsCmdTest extends BaseCmdTest {
                         "        \"runName\": \"spontaneous_easley\"\n" +
                         "      }\n" +
                         "    }", ListWorkflowsResponseListWorkflowsElement.class)
-        ), baseUserUrl(mock, USER_WORKSPACE_NAME)));
+        ), baseUserUrl(mock, USER_WORKSPACE_NAME), false, null));
     }
 
     @Test
@@ -199,7 +200,7 @@ class RunsCmdTest extends BaseCmdTest {
                         "        \"runName\": \"spontaneous_easley\"\n" +
                         "      }\n" +
                         "    }", ListWorkflowsResponseListWorkflowsElement.class)
-        ), baseUserUrl(mock, USER_WORKSPACE_NAME)).toString()), out.stdOut);
+        ), baseUserUrl(mock, USER_WORKSPACE_NAME), false, PaginationInfo.from(1, 2)).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -248,7 +249,7 @@ class RunsCmdTest extends BaseCmdTest {
                         "        \"runName\": \"spontaneous_easley\"\n" +
                         "      }\n" +
                         "    }", ListWorkflowsResponseListWorkflowsElement.class)
-        ), baseUserUrl(mock, USER_WORKSPACE_NAME)).toString()), out.stdOut);
+        ), baseUserUrl(mock, USER_WORKSPACE_NAME), false, PaginationInfo.from(null, 2, 1, null)).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -280,7 +281,7 @@ class RunsCmdTest extends BaseCmdTest {
         ExecOut out = exec(mock, "runs", "list");
 
         assertEquals("", out.stdErr);
-        assertEquals(chop(new RunList(USER_WORKSPACE_NAME, List.of(), baseUserUrl(mock, USER_WORKSPACE_NAME)).toString()), out.stdOut);
+        assertEquals(chop(new RunList(USER_WORKSPACE_NAME, List.of(), baseUserUrl(mock, USER_WORKSPACE_NAME), false, null).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

@@ -117,7 +117,8 @@ public class LabelsCmdTest extends BaseCmdTest {
                 List.of(makeLabelDbDto(97027588903667L,"awesome-label",null, false),
                         makeLabelDbDto(250670995082875L, "new-label", null, false),
                         makeLabelDbDto(55286297817389L, "newx-label",null, false),
-                        makeLabelDbDto(232243090533688L, "res-label","aaaa", true))
+                        makeLabelDbDto(232243090533688L, "res-label","aaaa", true)),
+                null
         ));
     }
 
@@ -147,7 +148,8 @@ public class LabelsCmdTest extends BaseCmdTest {
                 LabelType.SIMPLE,
                 List.of(makeLabelDbDto(97027588903667L,"awesome-label",null, false),
                         makeLabelDbDto(250670995082875L, "new-label", null, false),
-                        makeLabelDbDto(55286297817389L, "newx-label",null, false))
+                        makeLabelDbDto(55286297817389L, "newx-label",null, false)),
+                null
         ));
     }
 
@@ -177,7 +179,8 @@ public class LabelsCmdTest extends BaseCmdTest {
                 LabelType.RESOURCE,
                 List.of(makeLabelDbDto(97027588903667L,"awesome-label","aaa", true),
                         makeLabelDbDto(250670995082875L, "new-label", "bbb", true),
-                        makeLabelDbDto(55286297817389L, "newx-label","ccc", true))
+                        makeLabelDbDto(55286297817389L, "newx-label","ccc", true)),
+                null
         ));
     }
 
@@ -207,7 +210,8 @@ public class LabelsCmdTest extends BaseCmdTest {
                 LabelType.ALL,
                 List.of(makeLabelDbDto(97027588903667L,"res-find-label","aaa", true),
                         makeLabelDbDto(250670995082875L, "label-to-find", null, false),
-                        makeLabelDbDto(55286297817389L, "find-label","ccc", true))
+                        makeLabelDbDto(55286297817389L, "find-label","ccc", true)),
+                null
         ));
     }
 

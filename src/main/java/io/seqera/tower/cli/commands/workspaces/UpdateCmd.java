@@ -24,6 +24,8 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
 
 @Command(
         name = "update",
@@ -34,6 +36,9 @@ public class UpdateCmd extends AbstractWorkspaceCmd {
     @CommandLine.Option(names = {"-i", "--id"}, description = "Workspace ID to delete.", required = true)
     public Long workspaceId;
 
+    @Option(names = {"--new-name"}, description = "The workspace new name.")
+    public String workspaceNewName;
+
     @Option(names = {"-f", "--fullName"}, description = "The workspace full name.")
     public String workspaceFullName;
 
@@ -42,7 +47,13 @@ public class UpdateCmd extends AbstractWorkspaceCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        if (workspaceFullName == null && description == null) {
+
+        boolean updates =
+                workspaceFullName != null
+                || workspaceNewName != null
+                || description != null;
+
+        if (!updates) {
             throw new ShowUsageException(getSpec(), "Required at least one option to update");
         }
 
@@ -53,6 +64,10 @@ public class UpdateCmd extends AbstractWorkspaceCmd {
                 .fullName(response.getWorkspace().getFullName())
                 .description(response.getWorkspace().getDescription());
 
+        if (workspaceNewName != null) {
+            request.setName(workspaceNewName);
+        }
+
         if (workspaceFullName != null) {
             request.setFullName(workspaceFullName);
         }
@@ -62,7 +77,7 @@ public class UpdateCmd extends AbstractWorkspaceCmd {
         }
 
         request.setVisibility(Visibility.PRIVATE);
-        response = api().updateWorkspace(ws.getOrgId(), ws.getWorkspaceId(), request);
+        api().updateWorkspace(ws.getOrgId(), ws.getWorkspaceId(), request);
 
         return new WorkspaceUpdated(response.getWorkspace().getName(), ws.getOrgName(), response.getWorkspace().getVisibility());
     }

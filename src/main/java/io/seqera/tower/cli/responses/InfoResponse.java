@@ -37,6 +37,7 @@ public class InfoResponse extends Response {
         String ok = ansi("@|fg(green) OK|@");
         String fail = ansi("@|fg(red) FAILED|@");
         String undefined = ansi("@|fg(yellow) UNDEFINED|@");
+        String skipped = ansi("@|fg(yellow) SKIPPED|@");
 
         out.println(ansi(String.format("%n    @|bold,fg(yellow) Details|@")));
         TableList detailsTable = new TableList(out, 2);
@@ -52,9 +53,9 @@ public class InfoResponse extends Response {
         out.println(ansi(String.format("%n    @|bold,fg(yellow) System health status|@")));
         TableList healthTable = new TableList(out, 2);
         healthTable.setPrefix("    ");
-        healthTable.addRow("Remote API server connection check", connectionCheck == 1 ? ok : connectionCheck == 0 ? fail : undefined);
-        healthTable.addRow("Tower API version check", versionCheck == 1 ? ok : versionCheck == 0 ? fail : undefined);
-        healthTable.addRow("Authentication API credential's token", credentialsCheck == 1 ? ok : credentialsCheck == 0 ? fail : undefined);
+        healthTable.addRow("Remote API server connection check", connectionCheck == 1 ? ok : connectionCheck == 0 ? fail : skipped);
+        healthTable.addRow("Tower API version check", versionCheck == 1 ? ok : versionCheck == 0 ? fail : skipped);
+        healthTable.addRow("Authentication API credential's token", credentialsCheck == 1 ? ok : credentialsCheck == 0 ? fail : skipped);
         healthTable.print();
 
         if (connectionCheck == 0) {

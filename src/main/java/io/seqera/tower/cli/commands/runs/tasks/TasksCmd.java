@@ -18,6 +18,7 @@ import io.seqera.tower.cli.commands.runs.ViewCmd;
 import io.seqera.tower.cli.commands.runs.tasks.enums.TaskColumn;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.runs.tasks.TasksView;
+import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.model.DescribeTaskResponse;
 import io.seqera.tower.model.ListTasksResponse;
 import io.seqera.tower.model.Task;
@@ -65,6 +66,6 @@ public class TasksCmd extends AbstractRunsCmd {
             Task task = describeTaskResponse.getTask();
             tasks.add(task);
         }
-        return new TasksView(parentCommand.id, cols, tasks);
+        return new TasksView(parentCommand.id, cols, tasks, PaginationInfo.from(paginationOptions));
     }
 }
