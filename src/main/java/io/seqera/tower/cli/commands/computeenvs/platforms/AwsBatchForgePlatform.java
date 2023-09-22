@@ -47,6 +47,9 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
     @Option(names = {"--wave"}, description = "Allow access to private container repositories and the provisioning of containers in your Nextflow pipelines via the Wave containers service.")
     public boolean wave;
 
+    @Option(names = {"--fast-storage"}, description = "Allow the use of NVMe instance storage to speed up I/O and disk access operations (requires Fusion v2).")
+    public boolean fastStorage;
+
     @Option(names = {"--fargate"}, description = "Run the Nextflow head job using the Fargate container service (requires Fusion v2 and Spot provisioning model).")
     public boolean fargate;
 
@@ -93,6 +96,7 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
                 .region(region)
                 .fusion2Enabled(fusionV2)
                 .waveEnabled(wave)
+                .nvnmeStorageEnabled(fastStorage)
 
                 // Forge
                 .forge(buildForge())
