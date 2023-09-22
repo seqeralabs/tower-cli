@@ -2810,6 +2810,11 @@
   "allDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.model.PipelineOptimizationStatus",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
   "name":"io.seqera.tower.model.PipelineSecret",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,

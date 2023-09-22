@@ -32,6 +32,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
+import static org.mockserver.model.JsonBody.json;
+
 
 class LaunchCmdTest extends BaseCmdTest {
 
@@ -212,6 +214,92 @@ class LaunchCmdTest extends BaseCmdTest {
 
         // Run the command
         ExecOut out = exec(format, mock, "launch", "sarek", "-n", "custom_run_name");
+
+        // Assert results
+        assertOutput(format, out, new RunSubmited("35aLiS0bIM5efd", null, baseUserUrl(mock, "jordi"), USER_WORKSPACE_NAME));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testSubmitLaunchpadPipelineWithLabels(OutputType format, MockServerClient mock) {
+
+        // labels endpoint mock
+        mock.when(
+                request()
+                    .withMethod("GET")
+                    .withPath("/labels")
+                    .withQueryStringParameter("type", "simple"),
+                exactly(1)
+        ).respond(
+                response()
+                    .withStatusCode(200)
+                    .withBody(loadResource("labels_user"))
+                    .withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request()
+                    .withMethod("POST")
+                    .withPath("/labels")
+                    .withBody(json("    {\n" +
+                                   "        \"name\": \"LabelThree\",\n" +
+                                   "        \"resource\": false,\n" +
+                                   "        \"isDefault\": false\n" +
+                                   "    }\n")),
+                exactly(1)
+        ).respond(
+                response()
+                    .withStatusCode(200)
+                    .withBody(json("{\n" +
+                                   "    \"id\": 3,\n" +
+                                   "    \"name\": \"LabelThree\",\n" +
+                                   "    \"resource\": false,\n" +
+                                   "    \"isDefault\": false\n" +
+                                   "}\n"))
+                    .withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // pipelines endpoint mock
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("pipelines_sarek")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines/250911634275687/launch"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("pipeline_launch_describe")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // launch endpoint mock
+        mock.when(
+                request()
+                    .withMethod("POST")
+                    .withPath("/workflow/launch")
+                    .withBody(json("    {\n" +
+                                   "        \"launch\":{\n" +
+                                   "            \"id\":\"5nmCvXcarkvv8tELMF4KyY\",\n" +
+                                   "            \"computeEnvId\":\"4X7YrYJp9B1d1DUpfur7DS\",\n" +
+                                   "            \"pipeline\":\"https://github.com/nf-core/sarek\",\n" +
+                                   "            \"workDir\":\"/efs\",\n" +
+                                   "            \"pullLatest\":false,\n" +
+                                   "            \"stubRun\":false,\n" +
+                                   "            \"labelIds\": [2, 3]\n" +
+                                   "        }\n" +
+                                   "    }\n")),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workflow_launch")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // Run the command
+        ExecOut out = exec(format, mock, "launch", "sarek", "-l", "LabelTwo,LabelThree");
 
         // Assert results
         assertOutput(format, out, new RunSubmited("35aLiS0bIM5efd", null, baseUserUrl(mock, "jordi"), USER_WORKSPACE_NAME));
