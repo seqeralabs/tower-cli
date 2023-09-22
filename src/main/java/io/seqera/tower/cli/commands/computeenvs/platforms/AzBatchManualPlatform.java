@@ -28,6 +28,12 @@ public class AzBatchManualPlatform extends AbstractPlatform<AzBatchConfig> {
     @Option(names = {"--compute-pool-name"}, description = "The Azure Batch compute pool to be used to run the Nextflow jobs. This needs to be a pre-configured Batch compute pool which includes the azcopy command line (see the Tower documentation for details).", required = true)
     public String computePoolName;
 
+    @Option(names = {"--fusion-v2"}, description = "With Fusion v2 enabled, S3 buckets specified in the Pipeline work directory and Allowed S3 Buckets fields will be accessible in the compute nodes storage (requires Wave containers service).")
+    public boolean fusionV2;
+
+    @Option(names = {"--wave"}, description = "Allow access to private container repositories and the provisioning of containers in your Nextflow pipelines via the Wave containers service.")
+    public boolean wave;
+
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
     public AdvancedOptions adv;
 
@@ -45,6 +51,8 @@ public class AzBatchManualPlatform extends AbstractPlatform<AzBatchConfig> {
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
                 .environment(environmentVariables())
+                .fusion2Enabled(fusionV2)
+                .waveEnabled(wave)
                 .region(location)
                 .headPool(computePoolName);
 
