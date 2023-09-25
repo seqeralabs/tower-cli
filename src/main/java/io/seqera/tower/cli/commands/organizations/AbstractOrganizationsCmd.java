@@ -63,4 +63,13 @@ public class AbstractOrganizationsCmd extends AbstractApiCmd {
 
         return response;
     }
+
+    protected void deleteOrgById(Long orgId) throws OrganizationNotFoundException, ApiException {
+        api().deleteOrganization(orgId);
+    }
+
+    protected void deleteOrgByName(String orgName) throws OrganizationNotFoundException, ApiException {
+        OrgAndWorkspaceDbDto org = organizationByName(orgName);
+        deleteOrgById(org.getOrgId());
+    }
 }
