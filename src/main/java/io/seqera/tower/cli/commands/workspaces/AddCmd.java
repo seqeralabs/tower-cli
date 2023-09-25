@@ -12,6 +12,7 @@
 package io.seqera.tower.cli.commands.workspaces;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.exceptions.WorkspaceNotFoundException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.workspaces.WorkspaceAdded;
 import io.seqera.tower.model.CreateWorkspaceRequest;
@@ -45,6 +46,9 @@ public class AddCmd extends AbstractWorkspaceCmd {
     @CommandLine.Option(names = {"-v", "--visibility"}, description = "The workspace visibility. Valid options PRIVATE, SHARED [default: PRIVATE].")
     public String visibility = "PRIVATE";
 
+    @CommandLine.Option(names = {"--overwrite"}, description = "Overwrite the workspace if it already exists.", defaultValue = "false")
+    public Boolean overwrite;
+
     @Override
     protected Response exec() throws ApiException, IOException {
 
@@ -58,6 +62,7 @@ public class AddCmd extends AbstractWorkspaceCmd {
 
         CreateWorkspaceRequest request = new CreateWorkspaceRequest().workspace(workspace);
 
+        if (overwrite) tryDeleteWsp(organizationName, workspaceName);
         api().workspaceValidate(orgAndWorkspaceDbDto.getOrgId(), workspaceName);
         CreateWorkspaceResponse response = api().createWorkspace(orgAndWorkspaceDbDto.getOrgId(), request);
 
@@ -74,5 +79,12 @@ public class AddCmd extends AbstractWorkspaceCmd {
                     String.format("Invalid value for option '--visibility': expected one of [PRIVATE, SHARED] (case-sensitive) but was '%s'", visibility)
             );
         }
+    }
+
+    private void tryDeleteWsp(String orgName, String wspName) throws ApiException {
+        try {
+            OrgAndWorkspaceDbDto org = findOrgAndWorkspaceByName(orgName, wspName);
+            deleteWorkspaceById(org.getWorkspaceId(), org.getOrgId());
+        }catch (WorkspaceNotFoundException ignored) {}
     }
 }

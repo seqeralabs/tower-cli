@@ -33,7 +33,7 @@ public class DeleteCmd extends AbstractWorkspaceCmd {
     protected Response exec() throws ApiException, IOException {
         OrgAndWorkspaceDbDto ws = fetchOrgAndWorkspaceDbDto(workspaceRefOptions);
 
-        api().deleteWorkspace(ws.getOrgId(), ws.getWorkspaceId());
+        deleteWorkspaceById(ws.getWorkspaceId(), ws.getOrgId());
 
         return new WorkspaceDeleted(ws.getWorkspaceName(), ws.getOrgName());
     }

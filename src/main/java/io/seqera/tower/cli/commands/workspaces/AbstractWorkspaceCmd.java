@@ -80,6 +80,10 @@ public abstract class AbstractWorkspaceCmd extends AbstractApiCmd {
 
         return ws;
     }
+
+    protected void deleteWorkspaceById(Long wspId, Long orgId) throws WorkspaceNotFoundException, ApiException {
+        api().deleteWorkspace(orgId, wspId);
+    }
 }
 
 
