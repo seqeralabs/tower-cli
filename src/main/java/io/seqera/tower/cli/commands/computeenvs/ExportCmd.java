@@ -12,19 +12,21 @@
 package io.seqera.tower.cli.commands.computeenvs;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.seqera.tower.ApiException;
-import io.seqera.tower.JSON;
 import io.seqera.tower.cli.commands.computeenvs.platforms.AwsBatchForgePlatform;
 import io.seqera.tower.cli.commands.computeenvs.platforms.AwsBatchManualPlatform;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.computeenvs.ComputeEnvExport;
+import io.seqera.tower.cli.shared.ComputeEnvExportFormat;
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.AwsBatchConfig;
-import io.seqera.tower.model.ComputeConfig;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.ComputeEnvResponseDto;
 import picocli.CommandLine;
+
+import static com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @CommandLine.Command(
         name = "export",
@@ -64,10 +66,17 @@ public class ExportCmd extends AbstractComputeEnvCmd {
             }
         }
 
+        ComputeEnvExportFormat ceData = new ComputeEnvExportFormat(ce.getConfig(), ce.getLabels());
+
         String configOutput = "";
 
         try {
-            configOutput = new JSON().getContext(ComputeConfig.class).writerWithDefaultPrettyPrinter().writeValueAsString(computeEnv.getConfig());
+            configOutput = new ObjectMapper()
+                    .setSerializationInclusion(Include.NON_NULL)
+                    .setSerializationInclusion(Include.NON_EMPTY)
+                    .writerWithDefaultPrettyPrinter()
+                    .writeValueAsString(ceData);
+
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -78,4 +87,5 @@ public class ExportCmd extends AbstractComputeEnvCmd {
 
         return new ComputeEnvExport(configOutput, fileName);
     }
+
 }

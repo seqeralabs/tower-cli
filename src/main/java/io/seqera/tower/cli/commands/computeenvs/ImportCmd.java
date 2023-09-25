@@ -11,24 +11,24 @@
 
 package io.seqera.tower.cli.commands.computeenvs;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.computeenvs.add.AbstractAddCmd;
 import io.seqera.tower.cli.commands.computeenvs.platforms.Platform;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
-import io.seqera.tower.cli.exceptions.PipelineNotFoundException;
 import io.seqera.tower.cli.responses.Response;
+import io.seqera.tower.cli.shared.ComputeEnvExportFormat;
 import io.seqera.tower.cli.utils.FilesHelper;
-import io.seqera.tower.model.ComputeConfig;
 import io.seqera.tower.model.ComputeEnv;
-import io.seqera.tower.model.ComputeEnvDbDto;
 import io.seqera.tower.model.ComputeEnvResponseDto;
-import io.seqera.tower.model.PipelineDbDto;
+import io.seqera.tower.model.LabelDbDto;
 import picocli.CommandLine;
 
 import java.io.IOException;
 import java.nio.file.Path;
-
-import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @CommandLine.Command(
         name = "import",
@@ -44,14 +44,29 @@ public class ImportCmd extends AbstractAddCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
 
-        ComputeConfig configObj = parseJson(FilesHelper.readString(fileName), ComputeConfig.class);
-        ComputeEnv.PlatformEnum platform = ComputeEnv.PlatformEnum.fromValue(configObj.getDiscriminator());
+        ComputeEnvExportFormat ceData = new ObjectMapper().readValue(
+            FilesHelper.readString(fileName),
+            ComputeEnvExportFormat.class
+        );
+
+        ComputeEnv.PlatformEnum platform = ComputeEnv.PlatformEnum.fromValue(ceData.getConfig().getDiscriminator());
 
         Long wspId = workspaceId(workspace.workspace);
 
         if (overwrite) deleteCE(name, wspId);
 
-        return addComputeEnv(platform, configObj);
+        List<Long> labelIds = Collections.emptyList();
+        if (ceData.getLabels() != null) {
+            List<LabelDbDto> dtos = ceData.getLabels();
+            labelIds = dtos.stream().map(LabelDbDto::getId).collect(Collectors.toList());
+        }
+
+        return addComputeEnvWithLabels(
+                platform,
+                ceData.getConfig(),
+                labelIds
+        );
+
     }
 
     @Override
