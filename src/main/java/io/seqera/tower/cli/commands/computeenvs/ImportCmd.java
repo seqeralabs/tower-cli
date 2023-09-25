@@ -15,14 +15,11 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.computeenvs.add.AbstractAddCmd;
 import io.seqera.tower.cli.commands.computeenvs.platforms.Platform;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
-import io.seqera.tower.cli.exceptions.PipelineNotFoundException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.ComputeConfig;
 import io.seqera.tower.model.ComputeEnv;
-import io.seqera.tower.model.ComputeEnvDbDto;
 import io.seqera.tower.model.ComputeEnvResponseDto;
-import io.seqera.tower.model.PipelineDbDto;
 import picocli.CommandLine;
 
 import java.io.IOException;
@@ -49,7 +46,7 @@ public class ImportCmd extends AbstractAddCmd {
 
         Long wspId = workspaceId(workspace.workspace);
 
-        if (overwrite) deleteCE(name, wspId);
+        if (overwrite) tryDeleteCE(name, wspId);
 
         return addComputeEnv(platform, configObj);
     }
@@ -59,7 +56,7 @@ public class ImportCmd extends AbstractAddCmd {
         throw new UnsupportedOperationException("Unknown platform");
     }
 
-    private void deleteCE(String name, Long wspId) throws ApiException {
+    private void tryDeleteCE(String name, Long wspId) throws ApiException {
         try {
             ComputeEnvResponseDto ce = computeEnvByRef(wspId, name);
             api().deleteComputeEnv(ce.getId(), wspId);
