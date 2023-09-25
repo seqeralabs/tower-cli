@@ -45,7 +45,7 @@ public class DeleteCmd extends AbstractCredentialsCmd {
         }
 
         try {
-            api().deleteCredentials(id, wspId);
+            deleteCredentialsById(id, wspId);
             return new CredentialsDeleted(id, workspaceRef(wspId));
         } catch (ApiException e) {
             if (e.getCode() == 403) {

@@ -54,6 +54,15 @@ public abstract class AbstractCredentialsCmd extends AbstractApiCmd {
         return credentials;
     }
 
+    protected void deleteCredentialsByName(String name, Long wspId) throws CredentialsNotFoundException, ApiException {
+        Credentials credentials = findCredentialsByName(wspId, name);
+        deleteCredentialsById(credentials.getId(), wspId);
+    }
+
+    protected void deleteCredentialsById(String id, Long wspId) throws CredentialsNotFoundException, ApiException {
+        api().deleteCredentials(id, wspId);
+    }
+
 }
 
 
