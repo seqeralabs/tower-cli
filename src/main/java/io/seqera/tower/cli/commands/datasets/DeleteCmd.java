@@ -38,7 +38,7 @@ public class DeleteCmd extends AbstractDatasetsCmd {
         Long wspId = workspaceId(workspace.workspace);
         Dataset dataset = fetchDescribeDatasetResponse(datasetRefOptions, wspId);
 
-        api().deleteDataset(wspId, dataset.getId());
+        deleteDatasetById(dataset.getId(), wspId);
 
         return new DatasetDelete(getDatasetRef(datasetRefOptions), workspace.workspace);
     }
