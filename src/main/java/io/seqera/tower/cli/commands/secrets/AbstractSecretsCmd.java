@@ -38,6 +38,15 @@ public abstract class AbstractSecretsCmd extends AbstractApiCmd {
         return ref.secret.id != null ? api().describePipelineSecret(ref.secret.id, wspId).getPipelineSecret() : secretByName(wspId, ref.secret.name);
     }
 
+    protected void deleteSecretByName(String name, Long wspId) throws SecretNotFoundException, ApiException {
+        PipelineSecret secret = secretByName(wspId, name);
+        deleteSecretById(secret.getId(), wspId);
+    }
+
+    protected void deleteSecretById(Long id, Long wspId) throws SecretNotFoundException, ApiException {
+        api().deletePipelineSecret(id, wspId);
+    }
+
 }
 
 

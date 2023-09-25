@@ -13,10 +13,12 @@ package io.seqera.tower.cli.commands.secrets;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
+import io.seqera.tower.cli.exceptions.SecretNotFoundException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.secrets.SecretAdded;
 import io.seqera.tower.model.CreatePipelineSecretRequest;
 import io.seqera.tower.model.CreatePipelineSecretResponse;
+import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Option;
@@ -38,10 +40,20 @@ public class AddCmd extends AbstractSecretsCmd {
     @Option(names = {"-v", "--value"}, description = "Secret value.")
     public String value;
 
+    @CommandLine.Option(names = {"--overwrite"}, description = "Overwrite the secret if it already exists.", defaultValue = "false")
+    public Boolean overwrite;
+
     @Override
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
+        if (overwrite) tryDeleteSecret(name, wspId);
         CreatePipelineSecretResponse response = api().createPipelineSecret(new CreatePipelineSecretRequest().name(name).value(value), wspId);
         return new SecretAdded(workspaceRef(wspId), response.getSecretId(), name);
+    }
+
+    private void tryDeleteSecret(String name, Long wspId) throws ApiException {
+        try {
+            deleteSecretByName(name, wspId);
+        } catch (SecretNotFoundException ignored) {}
     }
 }
