@@ -92,4 +92,9 @@ public class AbstractParticipantsCmd extends AbstractApiCmd {
 
         throw new ParticipantNotFoundException(workspaceId, name);
     }
+
+    protected void deleteParticipantByNameAndType(Long wspId, String participantName, ParticipantType type) throws ParticipantNotFoundException, ApiException {
+        ParticipantDbDto participant = findWorkspaceParticipant(orgId(wspId), wspId, participantName, type);
+        api().deleteWorkspaceParticipant(orgId(wspId), wspId, participant.getParticipantId());
+    }
 }
