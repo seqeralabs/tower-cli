@@ -123,6 +123,9 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"com.sun.jndi.url.java.javaURLContextFactory"
+},
+{
   "name":"groovy.lang.Closure"
 },
 {
@@ -2766,7 +2769,7 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setOrgId","parameterTypes":["java.lang.Long"] }, {"name":"setOrgLogoUrl","parameterTypes":["java.lang.String"] }, {"name":"setOrgName","parameterTypes":["java.lang.String"] }, {"name":"setWorkspaceFullName","parameterTypes":["java.lang.String"] }, {"name":"setWorkspaceId","parameterTypes":["java.lang.Long"] }, {"name":"setWorkspaceName","parameterTypes":["java.lang.String"] }]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setOrgId","parameterTypes":["java.lang.Long"] }, {"name":"setOrgLogoUrl","parameterTypes":["java.lang.String"] }, {"name":"setOrgName","parameterTypes":["java.lang.String"] }, {"name":"setVisibility","parameterTypes":["io.seqera.tower.model.Visibility"] }, {"name":"setWorkspaceFullName","parameterTypes":["java.lang.String"] }, {"name":"setWorkspaceId","parameterTypes":["java.lang.Long"] }, {"name":"setWorkspaceName","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.model.OrgRole",
@@ -3011,7 +3014,7 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setAvatar","parameterTypes":["java.lang.String"] }, {"name":"setDescription","parameterTypes":["java.lang.String"] }, {"name":"setFirstName","parameterTypes":["java.lang.String"] }, {"name":"setId_JsonNullable","parameterTypes":["org.openapitools.jackson.nullable.JsonNullable"] }, {"name":"setLastName","parameterTypes":["java.lang.String"] }, {"name":"setNotification","parameterTypes":["java.lang.Boolean"] }, {"name":"setOrganization","parameterTypes":["java.lang.String"] }, {"name":"setUserName","parameterTypes":["java.lang.String"] }]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setAvatar","parameterTypes":["java.lang.String"] }, {"name":"setAvatarId","parameterTypes":["java.lang.String"] }, {"name":"setDateCreated","parameterTypes":["java.time.OffsetDateTime"] }, {"name":"setDeleted","parameterTypes":["java.lang.Boolean"] }, {"name":"setDescription","parameterTypes":["java.lang.String"] }, {"name":"setEmail","parameterTypes":["java.lang.String"] }, {"name":"setFirstName","parameterTypes":["java.lang.String"] }, {"name":"setId","parameterTypes":["java.lang.Long"] }, {"name":"setId_JsonNullable","parameterTypes":["org.openapitools.jackson.nullable.JsonNullable"] }, {"name":"setLastAccess","parameterTypes":["java.time.OffsetDateTime"] }, {"name":"setLastName","parameterTypes":["java.lang.String"] }, {"name":"setLastUpdated","parameterTypes":["java.time.OffsetDateTime"] }, {"name":"setMarketingConsent","parameterTypes":["java.lang.Boolean"] }, {"name":"setNotification","parameterTypes":["java.lang.Boolean"] }, {"name":"setOrganization","parameterTypes":["java.lang.String"] }, {"name":"setTermsOfUseConsent","parameterTypes":["java.lang.Boolean"] }, {"name":"setUserName","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.model.UserOptions",
@@ -3023,7 +3026,8 @@
 {
   "name":"io.seqera.tower.model.Visibility",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "methods":[{"name":"fromValue","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.model.WfManifest",
