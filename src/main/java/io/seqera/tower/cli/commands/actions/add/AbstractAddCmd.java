@@ -12,12 +12,13 @@
 package io.seqera.tower.cli.commands.actions.add;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.commands.AbstractApiCmd;
+import io.seqera.tower.cli.commands.actions.AbstractActionsCmd;
 import io.seqera.tower.cli.commands.actions.ActionsLabelsManager;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.commands.labels.Label;
 import io.seqera.tower.cli.commands.labels.LabelsOptionalOptions;
 import io.seqera.tower.cli.commands.pipelines.LaunchOptions;
+import io.seqera.tower.cli.exceptions.ActionNotFoundException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.actions.ActionAdd;
@@ -32,7 +33,7 @@ import picocli.CommandLine;
 import java.io.IOException;
 import java.util.List;
 
-public abstract class AbstractAddCmd extends AbstractApiCmd {
+public abstract class AbstractAddCmd extends AbstractActionsCmd {
 
     @CommandLine.Option(names = {"-n", "--name"}, description = "Action name.", required = true)
     public String actionName;
@@ -48,6 +49,9 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
 
     @CommandLine.Mixin
     public LaunchOptions opts;
+
+    @CommandLine.Option(names = {"--overwrite"}, description = "Overwrite the action if it already exists.", defaultValue = "false")
+    public Boolean overwrite;
 
     @Override
     protected Response exec() throws ApiException, IOException {
@@ -84,6 +88,7 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
         request.setSource(getSource());
         request.setLaunch(workflowLaunchRequest);
 
+        if (overwrite) tryDeleteAction(actionName, wspId);
 
         CreateActionResponse response;
         try {
@@ -99,6 +104,12 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
     private void attachLabels(List<Label> labels,Long wspId, String actionId) throws ApiException {
         ActionsLabelsManager creator = new ActionsLabelsManager(api());
         creator.execute(wspId,actionId, labels);
+    }
+
+    private void tryDeleteAction(String actionName, Long wspId) throws ApiException {
+        try {
+            deleteActionByName(actionName, wspId);
+        } catch (ActionNotFoundException ignored){}
     }
 
     protected abstract ActionSource getSource();

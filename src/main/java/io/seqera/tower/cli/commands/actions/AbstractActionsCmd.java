@@ -18,7 +18,6 @@ import io.seqera.tower.model.ActionQueryAttribute;
 import io.seqera.tower.model.DescribeActionResponse;
 import io.seqera.tower.model.ListActionsResponse;
 import io.seqera.tower.model.ListActionsResponseActionInfo;
-import io.seqera.tower.model.ListLabelsResponse;
 import picocli.CommandLine;
 
 import java.util.List;
@@ -58,6 +57,15 @@ public abstract class AbstractActionsCmd extends AbstractApiCmd {
         }
 
         return response;
+    }
+
+    protected void deleteActionByName(String actionName, Long wspId) throws ActionNotFoundException, ApiException {
+        ListActionsResponseActionInfo info = actionByName(wspId, actionName);
+        deleteActionById(info.getId(), wspId);
+    }
+
+    protected void deleteActionById(String actionId, Long wspId) throws ActionNotFoundException, ApiException {
+        api().deleteAction(actionId, wspId);
     }
 
 }

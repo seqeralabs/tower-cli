@@ -49,7 +49,7 @@ public class DeleteCmd extends AbstractActionsCmd {
         }
 
         try {
-            api().deleteAction(id, wspId);
+            deleteActionById(id, wspId);
         } catch (Exception e) {
             throw new TowerException(String.format("Unable to delete action '%s' for workspace '%s'", actionRef, workspaceRef(wspId)));
         }
