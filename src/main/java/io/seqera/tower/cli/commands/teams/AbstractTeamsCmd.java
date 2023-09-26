@@ -61,8 +61,12 @@ public abstract class AbstractTeamsCmd extends AbstractApiCmd {
                 .orElseThrow(() -> new TeamNotFoundException(orgId, teamName));
     }
 
-    public void deleteTeamByID(String orgRef, Long teamId) throws OrganizationNotFoundException, ApiException {
+    public void deleteTeamById(Long teamId, String orgRef) throws OrganizationNotFoundException, ApiException {
         OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = findOrganizationByRef(orgRef);
-        api().deleteOrganizationTeam(orgAndWorkspaceDbDto.getOrgId(), teamId);
+        deleteTeamById(teamId, orgAndWorkspaceDbDto.getOrgId());
+    }
+
+    public void deleteTeamById(Long teamId, Long orgId) throws OrganizationNotFoundException, ApiException {
+        api().deleteOrganizationTeam(orgId, teamId);
     }
 }

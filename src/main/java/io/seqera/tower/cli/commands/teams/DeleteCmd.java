@@ -32,7 +32,7 @@ public class DeleteCmd extends AbstractTeamsCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        deleteTeamByID(organizationRef, teamId);
+        deleteTeamById(teamId, organizationRef);
         return new TeamDeleted(organizationRef, teamId.toString());
     }
 }

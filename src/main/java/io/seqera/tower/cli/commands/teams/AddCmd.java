@@ -52,17 +52,17 @@ public class AddCmd extends AbstractTeamsCmd {
         CreateTeamRequest request = new CreateTeamRequest();
         request.setTeam(team);
 
-        if(overwrite) tryDeleteTeam(orgAndWorkspaceDbDto.getOrgId(), organizationRef, teamName);
+        if(overwrite) tryDeleteTeam(orgAndWorkspaceDbDto.getOrgId(), teamName);
 
         api().createOrganizationTeam(orgAndWorkspaceDbDto.getOrgId(), request);
 
         return new TeamAdded(organizationRef, teamName);
     }
 
-    private void tryDeleteTeam(Long orgId, String orgRef, String teamName) throws ApiException {
+    private void tryDeleteTeam(Long orgId, String teamName) throws ApiException {
         try {
             TeamDbDto team = findTeamByName(orgId, teamName);
-            deleteTeamByID(orgRef, team.getTeamId());
+            deleteTeamById(team.getTeamId(), orgId);
         } catch (TeamNotFoundException ignored) {}
     }
 }
