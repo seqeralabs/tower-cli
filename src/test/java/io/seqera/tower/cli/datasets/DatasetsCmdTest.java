@@ -28,6 +28,7 @@ import io.seqera.tower.model.DatasetVersionDbDto;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
+import org.mockserver.model.JsonBody;
 import org.mockserver.model.MediaType;
 
 import java.io.File;
@@ -227,7 +228,7 @@ public class DatasetsCmdTest extends BaseCmdTest {
 
     @ParameterizedTest
     @EnumSource(OutputType.class)
-    void testCreate(OutputType format, MockServerClient mock) throws IOException {
+    void testAdd(OutputType format, MockServerClient mock) throws IOException {
         mock.when(
                 request().withMethod("POST").withPath("/workspaces/249664655368293/datasets"), exactly(1)
         ).respond(
@@ -246,6 +247,60 @@ public class DatasetsCmdTest extends BaseCmdTest {
         ExecOut out = exec(format, mock, "datasets", "add", tempFile(new String(loadResource("datasets/dataset_data", "csv"), StandardCharsets.UTF_8), "data", ".csv"), "-w", "249664655368293", "-n", "dataset3", "-d", "Dataset 3 description.");
 
         assertOutput(format, out, new DatasetCreate("dataset3", "249664655368293", "1W3BTHWgRH71OJmOPMdG7S"));
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAddWithOverwrite(OutputType format, MockServerClient mock) throws IOException {
+
+        mock.when(
+                request().withMethod("GET").withPath("/workspaces/249664655368293/datasets/4D9TP0w2pM0qmwqVHgrgBK/metadata"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datasets/dataset_metadata")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/workspaces/249664655368293/datasets"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datasets/datasets_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/workspaces/249664655368293/datasets"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(JsonBody.json("{\n" +
+                        "  \"dataset\": {\n" +
+                        "    \"id\": \"1W3BTHWgRH71OJmOPMdG7S\",\n" +
+                        "    \"name\": \"dataset2\",\n" +
+                        "    \"description\": \"Dataset 2 description.\",\n" +
+                        "    \"mediaType\": null,\n" +
+                        "    \"deleted\": false,\n" +
+                        "    \"dateCreated\": \"2021-11-29T11:18:06.108+01:00\",\n" +
+                        "    \"lastUpdated\": \"2021-11-29T11:18:06.108+01:00\"\n" +
+                        "  }\n" +
+                        "}"))
+        );
+
+        mock.when(
+                request().withMethod("POST")
+                        .withPath("/workspaces/249664655368293/datasets/1W3BTHWgRH71OJmOPMdG7S/upload")
+                        .withQueryStringParameter("header", "false")
+                , exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datasets/dataset_upload_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("DELETE").withPath("/workspaces/249664655368293/datasets/1W2FqBiI6WoNokQTkPkEzo"), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(format, mock, "datasets", "add", "--overwrite", tempFile(new String(loadResource("datasets/dataset_data", "csv"), StandardCharsets.UTF_8), "data", ".csv"), "-w", "249664655368293", "-n", "dataset2", "-d", "Dataset 2 description.");
+
+        assertOutput(format, out, new DatasetCreate("dataset2", "249664655368293", "1W3BTHWgRH71OJmOPMdG7S"));
         assertEquals("", out.stdErr);
         assertEquals(0, out.exitCode);
     }
