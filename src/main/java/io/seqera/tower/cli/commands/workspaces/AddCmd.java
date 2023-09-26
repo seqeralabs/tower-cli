@@ -52,7 +52,11 @@ public class AddCmd extends AbstractWorkspaceCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
 
-        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = organizationByName(organizationName);
+        OrgAndWorkspaceDbDto orgWspDto = findOrgAndWorkspaceByName(organizationName, workspaceName);
+
+        if (overwrite && orgWspDto.getWorkspaceId() != null){
+            tryDeleteWsp(orgWspDto.getWorkspaceId(), orgWspDto.getOrgId());
+        }
 
         Workspace workspace = new Workspace();
         workspace.setName(workspaceName);
@@ -62,9 +66,8 @@ public class AddCmd extends AbstractWorkspaceCmd {
 
         CreateWorkspaceRequest request = new CreateWorkspaceRequest().workspace(workspace);
 
-        if (overwrite) tryDeleteWsp(organizationName, workspaceName);
-        api().workspaceValidate(orgAndWorkspaceDbDto.getOrgId(), workspaceName);
-        CreateWorkspaceResponse response = api().createWorkspace(orgAndWorkspaceDbDto.getOrgId(), request);
+        api().workspaceValidate(orgWspDto.getOrgId(), workspaceName);
+        CreateWorkspaceResponse response = api().createWorkspace(orgWspDto.getOrgId(), request);
 
         return new WorkspaceAdded(response.getWorkspace().getName(), organizationName, response.getWorkspace().getVisibility());
     }
@@ -81,10 +84,9 @@ public class AddCmd extends AbstractWorkspaceCmd {
         }
     }
 
-    private void tryDeleteWsp(String orgName, String wspName) throws ApiException {
+    private void tryDeleteWsp(Long wspId, Long orgId) throws ApiException {
         try {
-            OrgAndWorkspaceDbDto org = findOrgAndWorkspaceByName(orgName, wspName);
-            deleteWorkspaceById(org.getWorkspaceId(), org.getOrgId());
+            deleteWorkspaceById(wspId, orgId);
         }catch (WorkspaceNotFoundException ignored) {}
     }
 }
