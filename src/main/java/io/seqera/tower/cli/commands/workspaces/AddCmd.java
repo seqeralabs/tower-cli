@@ -52,10 +52,12 @@ public class AddCmd extends AbstractWorkspaceCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
 
-        OrgAndWorkspaceDbDto orgWspDto = findOrgAndWorkspaceByName(organizationName, workspaceName);
-
-        if (overwrite && orgWspDto.getWorkspaceId() != null){
+        OrgAndWorkspaceDbDto orgWspDto;
+        if (overwrite) { // check also wsp existence
+            orgWspDto = findOrgAndWorkspaceByName(organizationName, workspaceName);
             tryDeleteWsp(orgWspDto.getWorkspaceId(), orgWspDto.getOrgId());
+        } else { // normal 'add'
+            orgWspDto = organizationByName(organizationName);
         }
 
         Workspace workspace = new Workspace();
