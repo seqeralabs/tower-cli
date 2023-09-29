@@ -1670,12 +1670,6 @@
   "queryAllDeclaredConstructors":true
 },
 {
-  "name":"io.seqera.tower.cli.responses.computeenvs.ComputeEnvUpdated",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
-},
-{
   "name":"io.seqera.tower.cli.responses.computeenvs.ComputeEnvExport",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -1683,6 +1677,12 @@
 },
 {
   "name":"io.seqera.tower.cli.responses.computeenvs.ComputeEnvList",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.computeenvs.ComputeEnvUpdated",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true
@@ -2006,6 +2006,21 @@
   "queryAllDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.cli.shared.ComputeConfigMixin",
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"io.seqera.tower.cli.shared.ComputeEnvExportFormat",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"getConfig","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.shared.ComputeEnvExportFormat$ComputeConfigMixin",
+  "queryAllDeclaredMethods":true
+},
+{
   "name":"io.seqera.tower.cli.utils.VersionProvider",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -2147,7 +2162,8 @@
   "name":"io.seqera.tower.model.AwsSecurityKeys",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setAccessKey","parameterTypes":["java.lang.String"] }, {"name":"setAssumeRoleArn","parameterTypes":["java.lang.String"] }, {"name":"setSecretKey","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.model.AzBatchConfig",
@@ -2193,12 +2209,14 @@
   "name":"io.seqera.tower.model.ComputeEnv",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"getConfig","parameterTypes":[] }, {"name":"getCredentialsId","parameterTypes":[] }, {"name":"getDateCreated","parameterTypes":[] }, {"name":"getDeleted","parameterTypes":[] }, {"name":"getDescription","parameterTypes":[] }, {"name":"getId","parameterTypes":[] }, {"name":"getLastUpdated","parameterTypes":[] }, {"name":"getLastUsed","parameterTypes":[] }, {"name":"getMessage","parameterTypes":[] }, {"name":"getName","parameterTypes":[] }, {"name":"getOrgId","parameterTypes":[] }, {"name":"getPlatform","parameterTypes":[] }, {"name":"getPrimary","parameterTypes":[] }, {"name":"getStatus","parameterTypes":[] }, {"name":"getWorkspaceId","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.ComputeEnv$PlatformEnum",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "methods":[{"name":"getValue","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.ComputeEnvDbDto",
@@ -2260,13 +2278,15 @@
   "name":"io.seqera.tower.model.CreateComputeEnvRequest",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"getComputeEnv","parameterTypes":[] }, {"name":"getLabelIds","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.CreateComputeEnvResponse",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setComputeEnvId","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.model.CreateCredentialsRequest",
@@ -2380,12 +2400,14 @@
   "name":"io.seqera.tower.model.Credentials",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setBaseUrl","parameterTypes":["java.lang.String"] }, {"name":"setCategory","parameterTypes":["java.lang.String"] }, {"name":"setDescription","parameterTypes":["java.lang.String"] }, {"name":"setId","parameterTypes":["java.lang.String"] }, {"name":"setKeys","parameterTypes":["io.seqera.tower.model.SecurityKeys"] }, {"name":"setName","parameterTypes":["java.lang.String"] }, {"name":"setProvider","parameterTypes":["io.seqera.tower.model.Credentials$ProviderEnum"] }]
 },
 {
   "name":"io.seqera.tower.model.Credentials$ProviderEnum",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "methods":[{"name":"fromValue","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.model.Dataset",
@@ -2652,7 +2674,8 @@
   "name":"io.seqera.tower.model.ListCredentialsResponse",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setCredentials","parameterTypes":["java.util.List"] }]
 },
 {
   "name":"io.seqera.tower.model.ListDatasetVersionsResponse",
@@ -3444,13 +3467,15 @@
   "name":"javax.ws.rs.client.Entity",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"getAnnotations","parameterTypes":[] }, {"name":"getEncoding","parameterTypes":[] }, {"name":"getEntity","parameterTypes":[] }, {"name":"getLanguage","parameterTypes":[] }, {"name":"getMediaType","parameterTypes":[] }, {"name":"getVariant","parameterTypes":[] }]
 },
 {
   "name":"javax.ws.rs.core.MediaType",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"getParameters","parameterTypes":[] }, {"name":"getSubtype","parameterTypes":[] }, {"name":"getType","parameterTypes":[] }, {"name":"isWildcardSubtype","parameterTypes":[] }, {"name":"isWildcardType","parameterTypes":[] }]
 },
 {
   "name":"javax.ws.rs.core.MediaType[]"
@@ -3459,7 +3484,8 @@
   "name":"javax.ws.rs.core.Variant",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"getEncoding","parameterTypes":[] }, {"name":"getLanguage","parameterTypes":[] }, {"name":"getLanguageString","parameterTypes":[] }, {"name":"getMediaType","parameterTypes":[] }]
 },
 {
   "name":"long[]"
