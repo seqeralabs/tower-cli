@@ -12,7 +12,6 @@
 package io.seqera.tower.cli.commands.computeenvs;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.computeenvs.platforms.AwsBatchForgePlatform;
 import io.seqera.tower.cli.commands.computeenvs.platforms.AwsBatchManualPlatform;
@@ -25,8 +24,6 @@ import io.seqera.tower.model.AwsBatchConfig;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.ComputeEnvResponseDto;
 import picocli.CommandLine;
-
-import static com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @CommandLine.Command(
         name = "export",
@@ -66,17 +63,14 @@ public class ExportCmd extends AbstractComputeEnvCmd {
             }
         }
 
-        ComputeEnvExportFormat ceData = new ComputeEnvExportFormat(ce.getConfig(), ce.getLabels());
+        ComputeEnvExportFormat ceData = new ComputeEnvExportFormat(
+                ce.getConfig(),
+                ce.getLabels()
+        );
 
         String configOutput = "";
-
         try {
-            configOutput = new ObjectMapper()
-                    .setSerializationInclusion(Include.NON_NULL)
-                    .setSerializationInclusion(Include.NON_EMPTY)
-                    .writerWithDefaultPrettyPrinter()
-                    .writeValueAsString(ceData);
-
+            configOutput = ComputeEnvExportFormat.serialize(ceData);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -87,5 +81,6 @@ public class ExportCmd extends AbstractComputeEnvCmd {
 
         return new ComputeEnvExport(configOutput, fileName);
     }
+
 
 }

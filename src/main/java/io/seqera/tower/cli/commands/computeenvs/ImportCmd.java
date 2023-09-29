@@ -11,7 +11,6 @@
 
 package io.seqera.tower.cli.commands.computeenvs;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.computeenvs.add.AbstractAddCmd;
 import io.seqera.tower.cli.commands.computeenvs.platforms.Platform;
@@ -44,10 +43,7 @@ public class ImportCmd extends AbstractAddCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
 
-        ComputeEnvExportFormat ceData = new ObjectMapper().readValue(
-            FilesHelper.readString(fileName),
-            ComputeEnvExportFormat.class
-        );
+        ComputeEnvExportFormat ceData = ComputeEnvExportFormat.deserialize(FilesHelper.readString(fileName));
 
         ComputeEnv.PlatformEnum platform = ComputeEnv.PlatformEnum.fromValue(ceData.getConfig().getDiscriminator());
 
