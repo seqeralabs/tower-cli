@@ -51,18 +51,19 @@ public class ImportCmd extends AbstractAddCmd {
 
         if (overwrite) deleteCE(name, wspId);
 
-        List<Long> labelIds = Collections.emptyList();
-        if (ceData.getLabels() != null) {
-            List<LabelDbDto> dtos = ceData.getLabels();
-            labelIds = dtos.stream().map(LabelDbDto::getId).collect(Collectors.toList());
+        // prefer specified user labels before imported ones
+        if (labels != null && !labels.isEmpty()) {
+            return addComputeEnv(platform, ceData.getConfig()); // handles 'labels' parameter
         }
-
-        return addComputeEnvWithLabels(
-                platform,
-                ceData.getConfig(),
-                labelIds
-        );
-
+        // use imported labels
+        if (ceData.getLabels() != null) {
+            List<Long> labelIds = ceData.getLabels().stream()
+                    .map(LabelDbDto::getId)
+                    .collect(Collectors.toList());
+            return addComputeEnvWithLabels(platform, ceData.getConfig(), labelIds);
+        }
+        // no labels
+        return addComputeEnvWithLabels(platform, ceData.getConfig(), null);
     }
 
     @Override
