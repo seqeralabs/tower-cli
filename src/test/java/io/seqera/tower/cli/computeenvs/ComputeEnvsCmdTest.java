@@ -41,6 +41,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
+import org.mockserver.model.JsonBody;
 import org.mockserver.model.MediaType;
 
 import java.io.IOException;
@@ -355,7 +356,30 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"name\":\"json\",\"platform\":\"aws-batch\",\"config\":{\"region\":\"eu-west-1\",\"cliPath\":\"/home/ec2-user/miniconda/bin/aws\",\"workDir\":\"s3://nextflow-ci/jordeu\",\"forge\":{\"type\":\"SPOT\",\"minCpus\":0,\"maxCpus\":123,\"gpuEnabled\":false,\"ebsAutoScale\":true,\"disposeOnDeletion\":true,\"fusionEnabled\":false,\"efsCreate\":true},\"discriminator\":\"aws-batch\"},\"credentialsId\":\"6g0ER59L4ZoE5zpOmUP48D\"}}"), exactly(1)
+                request().withMethod("POST").withPath("/compute-envs").withBody(JsonBody.json("{\n" +
+                        "  \"computeEnv\":{\n" +
+                        "    \"name\": \"json\",\n" +
+                        "    \"platform\": \"aws-batch\",\n" +
+                        "    \"config\": {\n" +
+                        "      \"region\": \"eu-west-1\",\n" +
+                        "      \"cliPath\": \"/home/ec2-user/miniconda/bin/aws\",\n" +
+                        "      \"workDir\": \"s3://nextflow-ci/jordeu\",\n" +
+                        "      \"forge\": {\n" +
+                        "        \"type\": \"SPOT\",\n" +
+                        "        \"minCpus\": 0,\n" +
+                        "        \"maxCpus\": 123,\n" +
+                        "        \"gpuEnabled\": false,\n" +
+                        "        \"ebsAutoScale\": true,\n" +
+                        "        \"disposeOnDeletion\": true,\n" +
+                        "        \"fusionEnabled\": false,\n" +
+                        "        \"efsCreate\": true\n" +
+                        "      },\n" +
+                        "      \"discriminator\": \"aws-batch\"\n" +
+                        "    },\n" +
+                        "    \"credentialsId\": \"6g0ER59L4ZoE5zpOmUP48D\"\n" +
+                        "  },\n" +
+                        "  \"labelIds\": []\n" +
+                        "}")), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"3T6xWeFD63QIuzdAowvSTC\"}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -398,7 +422,32 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"name\":\"demo\",\"platform\":\"aws-batch\",\"config\":{\"region\":\"eu-west-1\",\"cliPath\":\"/home/ec2-user/miniconda/bin/aws\",\"workDir\":\"s3://nextflow-ci/jordeu\",\"forge\":{\"type\":\"SPOT\",\"minCpus\":0,\"maxCpus\":123,\"gpuEnabled\":false,\"ebsAutoScale\":true,\"disposeOnDeletion\":true,\"fusionEnabled\":false,\"efsCreate\":true},\"discriminator\":\"aws-batch\"},\"credentialsId\":\"6g0ER59L4ZoE5zpOmUP48D\"}}"), exactly(1)
+                request().withMethod("POST").withPath("/compute-envs")
+                        .withBody(JsonBody.json("{\n" +
+                                "  \"computeEnv\":{\n" +
+                                "    \"name\": \"demo\",\n" +
+                                "    \"platform\": \"aws-batch\",\n" +
+                                "    \"config\": {\n" +
+                                "      \"region\": \"eu-west-1\",\n" +
+                                "      \"cliPath\": \"/home/ec2-user/miniconda/bin/aws\",\n" +
+                                "      \"workDir\": \"s3://nextflow-ci/jordeu\",\n" +
+                                "      \"forge\": {\n" +
+                                "        \"type\": \"SPOT\",\n" +
+                                "        \"minCpus\": 0,\n" +
+                                "        \"maxCpus\": 123,\n" +
+                                "        \"gpuEnabled\": false,\n" +
+                                "        \"ebsAutoScale\": true,\n" +
+                                "        \"disposeOnDeletion\": true,\n" +
+                                "        \"fusionEnabled\": false,\n" +
+                                "        \"efsCreate\": true\n" +
+                                "      },\n" +
+                                "      \"discriminator\": \"aws-batch\"\n" +
+                                "    },\n" +
+                                "    \"credentialsId\": \"6g0ER59L4ZoE5zpOmUP48D\"\n" +
+                                "},\n" +
+                                "  \"labelIds\": []\n" +
+                                "}\n" +
+                                "  ")), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"3T6xWeFD63QIuzdAowvSTC\"}").withContentType(MediaType.APPLICATION_JSON)
         );

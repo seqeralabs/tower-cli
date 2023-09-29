@@ -63,7 +63,7 @@ class ComputeEnvExportFormatTest {
         assertNotNull(ce.getLabels());
 
         assertTrue(ce.getLabels().size() == 1);
-        assertEquals("eu-west-2", ce.getConfig().getDiscriminator());
+        assertEquals("aws-batch", ce.getConfig().getDiscriminator());
     }
 
     @Test
