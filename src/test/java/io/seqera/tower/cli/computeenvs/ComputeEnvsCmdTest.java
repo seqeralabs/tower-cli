@@ -356,6 +356,25 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
         );
 
         mock.when(
+                request().withMethod("GET").withPath("/labels")
+        ).respond(
+                response().withStatusCode(200).withBody(JsonBody.json("{}"))
+        );
+        mock.when(
+                request().withMethod("POST").withPath("/labels")
+        ).respond(
+                response()
+                        .withStatusCode(200)
+                        .withBody(JsonBody.json("{\n" +
+                                "\"id\": 10,\n" +
+                                "\"name\": \"res\",\n" +
+                                "\"resource\": true,\n" +
+                                "\"value\": \"val\"\n" +
+                                "}"
+                        ))
+        );
+
+        mock.when(
                 request().withMethod("POST").withPath("/compute-envs").withBody(JsonBody.json("{\n" +
                         "  \"computeEnv\":{\n" +
                         "    \"name\": \"json\",\n" +
@@ -377,8 +396,7 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
                         "      \"discriminator\": \"aws-batch\"\n" +
                         "    },\n" +
                         "    \"credentialsId\": \"6g0ER59L4ZoE5zpOmUP48D\"\n" +
-                        "  },\n" +
-                        "  \"labelIds\": []\n" +
+                        "  }\n" +
                         "}")), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"3T6xWeFD63QIuzdAowvSTC\"}").withContentType(MediaType.APPLICATION_JSON)
@@ -444,8 +462,7 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
                                 "      \"discriminator\": \"aws-batch\"\n" +
                                 "    },\n" +
                                 "    \"credentialsId\": \"6g0ER59L4ZoE5zpOmUP48D\"\n" +
-                                "},\n" +
-                                "  \"labelIds\": []\n" +
+                                "}\n" +
                                 "}\n" +
                                 "  ")), exactly(1)
         ).respond(
@@ -463,6 +480,25 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
                 request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "aws-batch"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"6g0ER59L4ZoE5zpOmUP48D\",\"name\":\"aws\",\"description\":null,\"discriminator\":\"aws\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-09T07:20:53Z\",\"dateCreated\":\"2021-09-08T05:48:51Z\",\"lastUpdated\":\"2021-09-08T05:48:51Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/labels")
+        ).respond(
+                response().withStatusCode(200).withBody(JsonBody.json("{}"))
+        );
+        mock.when(
+                request().withMethod("POST").withPath("/labels")
+        ).respond(
+                response()
+                        .withStatusCode(200)
+                        .withBody(JsonBody.json("{\n" +
+                                "\"id\": 10,\n" +
+                                "\"name\": \"res\",\n" +
+                                "\"resource\": true,\n" +
+                                "\"value\": \"val\"\n" +
+                                "}"
+                        ))
         );
 
         ExecOut out = exec(format, mock, "compute-envs", "import", "--overwrite", tempFile(new String(loadResource("cejson"), StandardCharsets.UTF_8), "ce", "json"), "-n", "demo", "-c", "6g0ER59L4ZoE5zpOmUP48D");

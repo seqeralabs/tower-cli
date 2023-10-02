@@ -95,13 +95,14 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
     }
 
     protected ComputeEnvAdded addComputeEnv(ComputeEnv.PlatformEnum platform, ComputeConfig config) throws ApiException {
-        Long wspId = workspaceId(workspace.workspace);
-        List<Long> labelIds = findLabels(wspId, labels);
-        return addComputeEnvWithLabels(platform, config, labelIds);
+        return addComputeEnvWithLabels(platform, config, labels);
     }
 
-    protected ComputeEnvAdded addComputeEnvWithLabels(ComputeEnv.PlatformEnum platform, ComputeConfig config, List<Long> labelIds) throws ApiException {
+    protected ComputeEnvAdded addComputeEnvWithLabels(ComputeEnv.PlatformEnum platform, ComputeConfig config, List<Label> labels) throws ApiException {
+
         Long wspId = workspaceId(workspace.workspace);
+
+        List<Long> labelIds = findLabels(wspId, labels);
 
         String credsId = credentialsRef == null ? findWorkspaceCredentials(platform, wspId) : credentialsByRef(platform, wspId, credentialsRef);
 

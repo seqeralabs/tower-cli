@@ -14,18 +14,17 @@ package io.seqera.tower.cli.commands.computeenvs;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.computeenvs.add.AbstractAddCmd;
 import io.seqera.tower.cli.commands.computeenvs.platforms.Platform;
+import io.seqera.tower.cli.commands.labels.Label;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.shared.ComputeEnvExportFormat;
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.ComputeEnv;
 import io.seqera.tower.model.ComputeEnvResponseDto;
-import io.seqera.tower.model.LabelDbDto;
 import picocli.CommandLine;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,14 +52,16 @@ public class ImportCmd extends AbstractAddCmd {
 
         // prefer specified user labels before imported ones
         if (labels != null && !labels.isEmpty()) {
-            return addComputeEnv(platform, ceData.getConfig()); // handles 'labels' parameter
+            // handles 'labels' parameter, creates labels if they do not exist
+            return addComputeEnv(platform, ceData.getConfig());
         }
         // use imported labels
         if (ceData.getLabels() != null) {
-            List<Long> labelIds = ceData.getLabels().stream()
-                    .map(LabelDbDto::getId)
+            List<Label> importLabels = ceData.getLabels().stream()
+                    .map(dto -> new Label(dto.getName(), dto.getValue()))
                     .collect(Collectors.toList());
-            return addComputeEnvWithLabels(platform, ceData.getConfig(), labelIds);
+            // creates labels if they do not exist
+            return addComputeEnvWithLabels(platform, ceData.getConfig(), importLabels);
         }
         // no labels
         return addComputeEnvWithLabels(platform, ceData.getConfig(), null);
