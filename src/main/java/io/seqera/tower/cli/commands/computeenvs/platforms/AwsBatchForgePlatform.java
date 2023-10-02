@@ -91,7 +91,7 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
                 .postRunScript(postRunScriptString())
                 .environment(environmentVariables())
                 .region(region)
-                .fusion2Enabled(fusionV2)
+                .fusion2Enabled(isFusionV2Enabled())
                 .waveEnabled(wave)
 
                 // Forge
@@ -104,6 +104,12 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
                 .headJobCpus(adv().headJobCpus)
                 .headJobMemoryMb(adv().headJobMemoryMb)
                 .headJobRole(adv().headJobRole);
+    }
+
+    private Boolean isFusionV2Enabled() throws TowerException {
+        // TODO: delete this validation once wave is no longer a requirement for Fusion V2
+        if (fusionV2 && !wave) throw new TowerException("Fusion v2 requires Wave service");
+        return fusionV2;
     }
 
     private ForgeConfig buildForge() throws TowerException {
