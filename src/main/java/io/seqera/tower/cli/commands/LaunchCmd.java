@@ -137,24 +137,29 @@ public class LaunchCmd extends AbstractRootCmd {
     private WorkflowLaunchRequest updateLaunchRequest(WorkflowLaunchRequest base) throws IOException {
         return new WorkflowLaunchRequest()
                 .id(base.getId())
-                .pipeline(base.getPipeline())
-                .labelIds(base.getLabelIds())
                 .computeEnvId(base.getComputeEnvId())
                 .runName(coalesce(name, base.getRunName()))
+                .pipeline(base.getPipeline())
                 .workDir(coalesce(workDir, base.getWorkDir()))
-                .paramsText(coalesce(readString(paramsFile), base.getParamsText()))
-                .configProfiles(coalesce(profile, base.getConfigProfiles()))
                 .revision(coalesce(revision, base.getRevision()))
+                .configProfiles(coalesce(profile, base.getConfigProfiles()))
+                .userSecrets(coalesce(removeEmptyValues(adv().userSecrets), base.getUserSecrets()))
+                .workspaceSecrets(coalesce(removeEmptyValues(adv().workspaceSecrets), base.getWorkspaceSecrets()))
                 .configText(coalesce(readString(adv().config), base.getConfigText()))
+                .towerConfig(base.getTowerConfig())
+                .paramsText(coalesce(readString(paramsFile), base.getParamsText()))
                 .preRunScript(coalesce(readString(adv().preRunScript), base.getPreRunScript()))
                 .postRunScript(coalesce(readString(adv().postRunScript), base.getPostRunScript()))
-                .pullLatest(coalesce(adv().pullLatest, base.getPullLatest()))
-                .stubRun(coalesce(adv().stubRun, base.getStubRun()))
                 .mainScript(coalesce(adv().mainScript, base.getMainScript()))
                 .entryName(coalesce(adv().entryName, base.getEntryName()))
                 .schemaName(coalesce(adv().schemaName, base.getSchemaName()))
-                .userSecrets(coalesce(removeEmptyValues(adv().userSecrets), base.getUserSecrets()))
-                .workspaceSecrets(coalesce(removeEmptyValues(adv().workspaceSecrets), base.getWorkspaceSecrets()));
+                .pullLatest(coalesce(adv().pullLatest, base.getPullLatest()))
+                .stubRun(coalesce(adv().stubRun, base.getStubRun()))
+                .optimizationId(base.getOptimizationId())
+                .optimizationTargets(base.getOptimizationTargets())
+                .labelIds(base.getLabelIds())
+                .headJobCpus(base.getHeadJobCpus())
+                .headJobMemoryMb(base.getHeadJobMemoryMb());
     }
 
     protected Response runTowerPipeline(Long wspId) throws ApiException, IOException {
