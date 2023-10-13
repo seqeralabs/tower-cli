@@ -19,7 +19,7 @@ import io.seqera.tower.cli.exceptions.TeamNotFoundException;
 import io.seqera.tower.model.ListMembersResponse;
 import io.seqera.tower.model.ListTeamResponse;
 import io.seqera.tower.model.MemberDbDto;
-import io.seqera.tower.model.OrgAndWorkspaceDbDto;
+import io.seqera.tower.model.OrgAndWorkspaceDto;
 import io.seqera.tower.model.TeamDbDto;
 import picocli.CommandLine.Command;
 
@@ -62,7 +62,7 @@ public abstract class AbstractTeamsCmd extends AbstractApiCmd {
     }
 
     public void deleteTeamById(Long teamId, String orgRef) throws OrganizationNotFoundException, ApiException {
-        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = findOrganizationByRef(orgRef);
+        OrgAndWorkspaceDto orgAndWorkspaceDbDto = findOrganizationByRef(orgRef);
         deleteTeamById(teamId, orgAndWorkspaceDbDto.getOrgId());
     }
 

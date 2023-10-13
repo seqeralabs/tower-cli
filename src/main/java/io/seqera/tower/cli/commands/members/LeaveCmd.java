@@ -14,7 +14,7 @@ package io.seqera.tower.cli.commands.members;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.members.MembersLeave;
-import io.seqera.tower.model.OrgAndWorkspaceDbDto;
+import io.seqera.tower.model.OrgAndWorkspaceDto;
 import picocli.CommandLine;
 
 import java.io.IOException;
@@ -30,7 +30,7 @@ public class LeaveCmd extends AbstractMembersClass {
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = findOrganizationByRef(organizationRef);
+        OrgAndWorkspaceDto orgAndWorkspaceDbDto = findOrganizationByRef(organizationRef);
 
         api().leaveOrganization(orgAndWorkspaceDbDto.getOrgId());
 

@@ -16,7 +16,7 @@ import io.seqera.tower.cli.commands.global.PaginationOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.members.MembersList;
 import io.seqera.tower.model.ListMembersResponse;
-import io.seqera.tower.model.OrgAndWorkspaceDbDto;
+import io.seqera.tower.model.OrgAndWorkspaceDto;
 import picocli.CommandLine;
 
 import java.io.IOException;
@@ -41,7 +41,7 @@ public class ListCmd extends AbstractMembersClass {
         Integer max = PaginationOptions.getMax(paginationOptions);
         Integer offset = PaginationOptions.getOffset(paginationOptions, max);
 
-        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = findOrganizationByRef(organizationRef);
+        OrgAndWorkspaceDto orgAndWorkspaceDbDto = findOrganizationByRef(organizationRef);
 
         ListMembersResponse response = api().listOrganizationMembers(orgAndWorkspaceDbDto.getOrgId(), max, offset, startsWith);
 

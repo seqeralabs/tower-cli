@@ -15,7 +15,7 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.organizations.OrganizationsList;
 import io.seqera.tower.model.ListWorkspacesAndOrgResponse;
-import io.seqera.tower.model.OrgAndWorkspaceDbDto;
+import io.seqera.tower.model.OrgAndWorkspaceDto;
 import picocli.CommandLine;
 
 import java.io.IOException;
@@ -35,7 +35,7 @@ public class ListCmd extends AbstractOrganizationsCmd {
 
 
         if (response.getOrgsAndWorkspaces() != null) {
-            List<OrgAndWorkspaceDbDto> responseOrg = response.getOrgsAndWorkspaces()
+            List<OrgAndWorkspaceDto> responseOrg = response.getOrgsAndWorkspaces()
                     .stream()
                     .filter(item -> Objects.equals(item.getWorkspaceId(), null))
                     .collect(Collectors.toList());

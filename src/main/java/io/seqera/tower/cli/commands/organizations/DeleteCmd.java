@@ -15,7 +15,7 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.organizations.OrganizationsDeleted;
-import io.seqera.tower.model.OrgAndWorkspaceDbDto;
+import io.seqera.tower.model.OrgAndWorkspaceDto;
 import picocli.CommandLine;
 
 import java.io.IOException;
@@ -38,7 +38,7 @@ public class DeleteCmd extends AbstractOrganizationsCmd {
             id = organizationRefOptions.organization.organizationId;
             ref = id.toString();
         } else {
-            OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = organizationByName(organizationRefOptions.organization.organizationName);
+            OrgAndWorkspaceDto orgAndWorkspaceDbDto = organizationByName(organizationRefOptions.organization.organizationName);
             id = orgAndWorkspaceDbDto.getOrgId();
             ref = orgAndWorkspaceDbDto.getOrgName();
         }

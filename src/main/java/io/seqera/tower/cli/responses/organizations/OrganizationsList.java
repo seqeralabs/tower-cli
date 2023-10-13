@@ -14,7 +14,7 @@ package io.seqera.tower.cli.responses.organizations;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.TableList;
-import io.seqera.tower.model.OrgAndWorkspaceDbDto;
+import io.seqera.tower.model.OrgAndWorkspaceDto;
 
 import java.io.PrintWriter;
 import java.util.List;
@@ -24,12 +24,12 @@ import static io.seqera.tower.cli.utils.FormatHelper.formatOrgId;
 public class OrganizationsList extends Response {
 
     public final String userName;
-    public final List<OrgAndWorkspaceDbDto> organizations;
+    public final List<OrgAndWorkspaceDto> organizations;
 
     @JsonIgnore
     private final String serverUrl;
 
-    public OrganizationsList(String userName, List<OrgAndWorkspaceDbDto> organizations, String serverUrl) {
+    public OrganizationsList(String userName, List<OrgAndWorkspaceDto> organizations, String serverUrl) {
         this.userName = userName;
         this.organizations = organizations;
         this.serverUrl = serverUrl;

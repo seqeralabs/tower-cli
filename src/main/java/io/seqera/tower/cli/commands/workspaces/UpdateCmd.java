@@ -16,7 +16,7 @@ import io.seqera.tower.cli.exceptions.ShowUsageException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.workspaces.WorkspaceUpdated;
 import io.seqera.tower.model.DescribeWorkspaceResponse;
-import io.seqera.tower.model.OrgAndWorkspaceDbDto;
+import io.seqera.tower.model.OrgAndWorkspaceDto;
 import io.seqera.tower.model.UpdateWorkspaceRequest;
 import io.seqera.tower.model.Visibility;
 import picocli.CommandLine;
@@ -57,7 +57,7 @@ public class UpdateCmd extends AbstractWorkspaceCmd {
             throw new ShowUsageException(getSpec(), "Required at least one option to update");
         }
 
-        OrgAndWorkspaceDbDto ws = workspaceById(workspaceId);
+        OrgAndWorkspaceDto ws = workspaceById(workspaceId);
 
         DescribeWorkspaceResponse response = api().describeWorkspace(ws.getOrgId(), ws.getWorkspaceId());
         UpdateWorkspaceRequest request = new UpdateWorkspaceRequest()

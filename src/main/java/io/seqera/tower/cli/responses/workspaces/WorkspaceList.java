@@ -14,7 +14,7 @@ package io.seqera.tower.cli.responses.workspaces;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.TableList;
-import io.seqera.tower.model.OrgAndWorkspaceDbDto;
+import io.seqera.tower.model.OrgAndWorkspaceDto;
 
 import java.io.PrintWriter;
 import java.util.List;
@@ -25,12 +25,12 @@ import static io.seqera.tower.cli.utils.FormatHelper.formatWorkspaceId;
 public class WorkspaceList extends Response {
 
     public final String userName;
-    public final List<OrgAndWorkspaceDbDto> workspaces;
+    public final List<OrgAndWorkspaceDto> workspaces;
 
     @JsonIgnore
     private String serverUrl;
 
-    public WorkspaceList(String userName, List<OrgAndWorkspaceDbDto> workspaces, String serverUrl) {
+    public WorkspaceList(String userName, List<OrgAndWorkspaceDto> workspaces, String serverUrl) {
         this.userName = userName;
         this.workspaces = workspaces;
         this.serverUrl = serverUrl;

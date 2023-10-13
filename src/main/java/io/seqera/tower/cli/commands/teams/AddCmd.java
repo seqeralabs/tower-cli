@@ -16,7 +16,7 @@ import io.seqera.tower.cli.exceptions.TeamNotFoundException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.teams.TeamAdded;
 import io.seqera.tower.model.CreateTeamRequest;
-import io.seqera.tower.model.OrgAndWorkspaceDbDto;
+import io.seqera.tower.model.OrgAndWorkspaceDto;
 import io.seqera.tower.model.Team;
 import io.seqera.tower.model.TeamDbDto;
 import picocli.CommandLine;
@@ -43,7 +43,7 @@ public class AddCmd extends AbstractTeamsCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = findOrganizationByRef(organizationRef);
+        OrgAndWorkspaceDto orgAndWorkspaceDbDto = findOrganizationByRef(organizationRef);
 
         Team team = new Team();
         team.setName(teamName);

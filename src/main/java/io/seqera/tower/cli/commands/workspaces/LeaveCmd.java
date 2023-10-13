@@ -14,7 +14,7 @@ package io.seqera.tower.cli.commands.workspaces;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.participants.ParticipantLeft;
-import io.seqera.tower.model.OrgAndWorkspaceDbDto;
+import io.seqera.tower.model.OrgAndWorkspaceDto;
 import picocli.CommandLine;
 
 import java.io.IOException;
@@ -30,7 +30,7 @@ public class LeaveCmd extends AbstractWorkspaceCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        OrgAndWorkspaceDbDto ws = fetchOrgAndWorkspaceDbDto(workspaceRefOptions);
+        OrgAndWorkspaceDto ws = fetchOrgAndWorkspaceDbDto(workspaceRefOptions);
         api().leaveWorkspaceParticipant(ws.getOrgId(), ws.getWorkspaceId());
 
         return new ParticipantLeft(ws.getWorkspaceName());

@@ -16,7 +16,7 @@ import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.exceptions.WorkspaceNotFoundException;
 import io.seqera.tower.model.ListWorkspacesAndOrgResponse;
-import io.seqera.tower.model.OrgAndWorkspaceDbDto;
+import io.seqera.tower.model.OrgAndWorkspaceDto;
 import picocli.CommandLine.Command;
 
 import java.util.List;
@@ -30,26 +30,26 @@ public abstract class AbstractWorkspaceCmd extends AbstractApiCmd {
     public AbstractWorkspaceCmd() {
     }
     
-    protected OrgAndWorkspaceDbDto orgAndWorkspaceByName(String workspaceName, String organizationName) throws ApiException {
+    protected OrgAndWorkspaceDto orgAndWorkspaceByName(String workspaceName, String organizationName) throws ApiException {
         return findOrgAndWorkspaceByName(organizationName, workspaceName);
     }
 
-    protected OrgAndWorkspaceDbDto organizationByName(String organizationName) throws ApiException {
+    protected OrgAndWorkspaceDto organizationByName(String organizationName) throws ApiException {
         return findOrgAndWorkspaceByName(organizationName, null);
     }
 
-    protected OrgAndWorkspaceDbDto workspaceById(Long workspaceId) throws ApiException {
+    protected OrgAndWorkspaceDto workspaceById(Long workspaceId) throws ApiException {
         return findOrgAndWorkspaceById(workspaceId).orElse(null);
     }
 
-    private Optional<OrgAndWorkspaceDbDto> findOrgAndWorkspaceById(Long workspaceId) throws ApiException {
+    private Optional<OrgAndWorkspaceDto> findOrgAndWorkspaceById(Long workspaceId) throws ApiException {
         ListWorkspacesAndOrgResponse workspacesAndOrgResponse = api().listWorkspacesUser(userId());
 
         if (workspacesAndOrgResponse == null || workspacesAndOrgResponse.getOrgsAndWorkspaces() == null) {
             throw new WorkspaceNotFoundException(workspaceId);
         }
 
-        List<OrgAndWorkspaceDbDto> orgAndWorkspaceDbDtoList = workspacesAndOrgResponse
+        List<OrgAndWorkspaceDto> orgAndWorkspaceDbDtoList = workspacesAndOrgResponse
                 .getOrgsAndWorkspaces()
                 .stream()
                 .filter(
@@ -64,8 +64,8 @@ public abstract class AbstractWorkspaceCmd extends AbstractApiCmd {
         return orgAndWorkspaceDbDtoList.stream().findFirst();
     }
 
-    protected OrgAndWorkspaceDbDto fetchOrgAndWorkspaceDbDto(WorkspaceRefOptions workspaceRefOptions) throws ApiException {
-        OrgAndWorkspaceDbDto ws;
+    protected OrgAndWorkspaceDto fetchOrgAndWorkspaceDbDto(WorkspaceRefOptions workspaceRefOptions) throws ApiException {
+        OrgAndWorkspaceDto ws;
 
         if (workspaceRefOptions.workspace.workspaceId != null) {
             ws = workspaceById(workspaceRefOptions.workspace.workspaceId);

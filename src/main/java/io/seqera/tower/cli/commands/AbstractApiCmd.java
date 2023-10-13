@@ -29,7 +29,7 @@ import io.seqera.tower.model.ComputeEnvQueryAttribute;
 import io.seqera.tower.model.ComputeEnvResponseDto;
 import io.seqera.tower.model.ListComputeEnvsResponseEntry;
 import io.seqera.tower.model.ListWorkspacesAndOrgResponse;
-import io.seqera.tower.model.OrgAndWorkspaceDbDto;
+import io.seqera.tower.model.OrgAndWorkspaceDto;
 import io.seqera.tower.model.PipelineDbDto;
 import io.seqera.tower.model.PipelineQueryAttribute;
 import io.seqera.tower.model.UserDbDto;
@@ -224,7 +224,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
                     if (wspRefs.length != 2) {
                         throw new InvalidWorkspaceParameterException(workspaceRef);
                     }
-                    OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = this.findOrgAndWorkspaceByName(wspRefs[0].strip(), wspRefs[1].strip());
+                    OrgAndWorkspaceDto orgAndWorkspaceDbDto = this.findOrgAndWorkspaceByName(wspRefs[0].strip(), wspRefs[1].strip());
                     if (orgAndWorkspaceDbDto != null) {
                         workspaceName = orgAndWorkspaceDbDto.getWorkspaceName();
                         workspaceId = orgAndWorkspaceDbDto.getWorkspaceId();
@@ -282,7 +282,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         return app().token;
     }
 
-    protected OrgAndWorkspaceDbDto findOrgAndWorkspaceByName(String organizationName, String workspaceName) throws ApiException {
+    protected OrgAndWorkspaceDto findOrgAndWorkspaceByName(String organizationName, String workspaceName) throws ApiException {
         ListWorkspacesAndOrgResponse workspacesAndOrgResponse = api().listWorkspacesUser(userId());
 
         if (workspacesAndOrgResponse == null || workspacesAndOrgResponse.getOrgsAndWorkspaces() == null) {
@@ -293,7 +293,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
             throw new WorkspaceNotFoundException(workspaceName, organizationName);
         }
 
-        List<OrgAndWorkspaceDbDto> orgAndWorkspaceDbDtoList = workspacesAndOrgResponse
+        List<OrgAndWorkspaceDto> orgAndWorkspaceDbDtoList = workspacesAndOrgResponse
                 .getOrgsAndWorkspaces()
                 .stream()
                 .filter(
@@ -312,14 +312,14 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         return orgAndWorkspaceDbDtoList.stream().findFirst().orElse(null);
     }
 
-    protected OrgAndWorkspaceDbDto findOrganizationByRef(String organizationRef) throws ApiException {
+    protected OrgAndWorkspaceDto findOrganizationByRef(String organizationRef) throws ApiException {
         ListWorkspacesAndOrgResponse workspacesAndOrgResponse = api().listWorkspacesUser(userId());
 
         if (workspacesAndOrgResponse.getOrgsAndWorkspaces() == null) {
             throw new OrganizationNotFoundException(organizationRef);
         }
 
-        List<OrgAndWorkspaceDbDto> orgAndWorkspaceDbDtoList = workspacesAndOrgResponse
+        List<OrgAndWorkspaceDto> orgAndWorkspaceDbDtoList = workspacesAndOrgResponse
                 .getOrgsAndWorkspaces()
                 .stream()
                 .filter(
@@ -337,7 +337,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     }
 
     private void loadOrgAndWorkspaceFromIds(Long workspaceId) throws ApiException {
-        for (OrgAndWorkspaceDbDto ow : api().listWorkspacesUser(userId()).getOrgsAndWorkspaces()) {
+        for (OrgAndWorkspaceDto ow : api().listWorkspacesUser(userId()).getOrgsAndWorkspaces()) {
             if ((workspaceId == null && ow.getWorkspaceId() == null) || (workspaceId != null && workspaceId.equals(ow.getWorkspaceId()))) {
                 workspaceName = ow.getWorkspaceName();
                 orgId = ow.getOrgId();
@@ -352,7 +352,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     private void loadOrgAndWorkspaceFromNames(Long workspaceId) throws ApiException {
         String wName = workspaceName(workspaceId);
         String oName = orgName(workspaceId);
-        for (OrgAndWorkspaceDbDto ow : api().listWorkspacesUser(userId()).getOrgsAndWorkspaces()) {
+        for (OrgAndWorkspaceDto ow : api().listWorkspacesUser(userId()).getOrgsAndWorkspaces()) {
             if (wName.equalsIgnoreCase(ow.getWorkspaceName()) && oName.equalsIgnoreCase(ow.getOrgName())) {
                 workspaceName = ow.getWorkspaceName();
                 orgName = ow.getOrgName();

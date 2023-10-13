@@ -14,7 +14,7 @@ package io.seqera.tower.cli.commands.workspaces;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.workspaces.WorkspaceDeleted;
-import io.seqera.tower.model.OrgAndWorkspaceDbDto;
+import io.seqera.tower.model.OrgAndWorkspaceDto;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
@@ -31,7 +31,7 @@ public class DeleteCmd extends AbstractWorkspaceCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        OrgAndWorkspaceDbDto ws = fetchOrgAndWorkspaceDbDto(workspaceRefOptions);
+        OrgAndWorkspaceDto ws = fetchOrgAndWorkspaceDbDto(workspaceRefOptions);
 
         deleteWorkspaceById(ws.getWorkspaceId(), ws.getOrgId());
 

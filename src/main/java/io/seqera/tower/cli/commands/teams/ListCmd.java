@@ -17,7 +17,7 @@ import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.teams.TeamsList;
 import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.model.ListTeamResponse;
-import io.seqera.tower.model.OrgAndWorkspaceDbDto;
+import io.seqera.tower.model.OrgAndWorkspaceDto;
 import picocli.CommandLine;
 
 import java.io.IOException;
@@ -39,7 +39,7 @@ public class ListCmd extends AbstractTeamsCmd {
         Integer max = PaginationOptions.getMax(paginationOptions);
         Integer offset = PaginationOptions.getOffset(paginationOptions, max);
 
-        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = findOrganizationByRef(organizationRef);
+        OrgAndWorkspaceDto orgAndWorkspaceDbDto = findOrganizationByRef(organizationRef);
 
         ListTeamResponse teamResponse = api().listOrganizationTeams(orgAndWorkspaceDbDto.getOrgId(), max, offset, null);
 

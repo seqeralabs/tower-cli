@@ -17,7 +17,7 @@ import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.workspaces.WorkspaceAdded;
 import io.seqera.tower.model.CreateWorkspaceRequest;
 import io.seqera.tower.model.CreateWorkspaceResponse;
-import io.seqera.tower.model.OrgAndWorkspaceDbDto;
+import io.seqera.tower.model.OrgAndWorkspaceDto;
 import io.seqera.tower.model.Visibility;
 import io.seqera.tower.model.Workspace;
 import picocli.CommandLine;
@@ -52,7 +52,7 @@ public class AddCmd extends AbstractWorkspaceCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
 
-        OrgAndWorkspaceDbDto orgWspDto;
+        OrgAndWorkspaceDto orgWspDto;
         if (overwrite) { // check also wsp existence
             orgWspDto = findOrgAndWorkspaceByName(organizationName, workspaceName);
             tryDeleteWsp(orgWspDto.getWorkspaceId(), orgWspDto.getOrgId());

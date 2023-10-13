@@ -16,7 +16,7 @@ import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.exceptions.OrganizationNotFoundException;
 import io.seqera.tower.model.DescribeOrganizationResponse;
 import io.seqera.tower.model.ListWorkspacesAndOrgResponse;
-import io.seqera.tower.model.OrgAndWorkspaceDbDto;
+import io.seqera.tower.model.OrgAndWorkspaceDto;
 import picocli.CommandLine;
 
 import java.util.List;
@@ -29,14 +29,14 @@ public class AbstractOrganizationsCmd extends AbstractApiCmd {
     public AbstractOrganizationsCmd() {
     }
 
-    protected OrgAndWorkspaceDbDto organizationByName(String organizationName) throws ApiException {
+    protected OrgAndWorkspaceDto organizationByName(String organizationName) throws ApiException {
         ListWorkspacesAndOrgResponse workspacesAndOrgResponse = api().listWorkspacesUser(userId());
 
         if (workspacesAndOrgResponse.getOrgsAndWorkspaces() == null) {
             throw new OrganizationNotFoundException(organizationName);
         }
 
-        List<OrgAndWorkspaceDbDto> orgAndWorkspaceDbDtoList = workspacesAndOrgResponse
+        List<OrgAndWorkspaceDto> orgAndWorkspaceDbDtoList = workspacesAndOrgResponse
                 .getOrgsAndWorkspaces()
                 .stream()
                 .filter(
@@ -57,7 +57,7 @@ public class AbstractOrganizationsCmd extends AbstractApiCmd {
         if(organizationRefOptions.organization.organizationId != null){
             response = api().describeOrganization(organizationRefOptions.organization.organizationId);
         } else {
-            OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = organizationByName(organizationRefOptions.organization.organizationName);
+            OrgAndWorkspaceDto orgAndWorkspaceDbDto = organizationByName(organizationRefOptions.organization.organizationName);
             response = api().describeOrganization(orgAndWorkspaceDbDto.getOrgId());
         }
 
@@ -69,7 +69,7 @@ public class AbstractOrganizationsCmd extends AbstractApiCmd {
     }
 
     protected void deleteOrgByName(String orgName) throws OrganizationNotFoundException, ApiException {
-        OrgAndWorkspaceDbDto org = organizationByName(orgName);
+        OrgAndWorkspaceDto org = organizationByName(orgName);
         deleteOrgById(org.getOrgId());
     }
 }

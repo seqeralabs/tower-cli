@@ -22,7 +22,7 @@ import io.seqera.tower.cli.responses.workspaces.WorkspaceDeleted;
 import io.seqera.tower.cli.responses.workspaces.WorkspaceList;
 import io.seqera.tower.cli.responses.workspaces.WorkspaceUpdated;
 import io.seqera.tower.cli.responses.workspaces.WorkspaceView;
-import io.seqera.tower.model.OrgAndWorkspaceDbDto;
+import io.seqera.tower.model.OrgAndWorkspaceDto;
 import io.seqera.tower.model.Visibility;
 import io.seqera.tower.model.Workspace;
 import org.junit.jupiter.api.Test;
@@ -67,14 +67,14 @@ class WorkspacesCmdTest extends BaseCmdTest {
                         "      \"orgLogoUrl\": null,\n" +
                         "      \"workspaceId\": 75887156211589,\n" +
                         "      \"workspaceName\": \"workspace1\"\n" +
-                        "    }", OrgAndWorkspaceDbDto.class),
+                        "    }", OrgAndWorkspaceDto.class),
                 parseJson("{\n" +
                         "      \"orgId\": 37736513644467,\n" +
                         "      \"orgName\": \"organization2\",\n" +
                         "      \"orgLogoUrl\": null,\n" +
                         "      \"workspaceId\": 75887156211590,\n" +
                         "      \"workspaceName\": \"workspace2\"\n" +
-                        "    }", OrgAndWorkspaceDbDto.class)
+                        "    }", OrgAndWorkspaceDto.class)
         ), url(mock)));
     }
 
@@ -102,7 +102,7 @@ class WorkspacesCmdTest extends BaseCmdTest {
                 "      \"orgLogoUrl\": null,\n" +
                 "      \"workspaceId\": 75887156211589,\n" +
                 "      \"workspaceName\": \"workspace1\"\n" +
-                "    }", OrgAndWorkspaceDbDto.class)
+                "    }", OrgAndWorkspaceDto.class)
         ), url(mock)));
     }
 

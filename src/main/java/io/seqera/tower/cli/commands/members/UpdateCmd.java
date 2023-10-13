@@ -15,7 +15,7 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.members.MembersUpdate;
 import io.seqera.tower.model.MemberDbDto;
-import io.seqera.tower.model.OrgAndWorkspaceDbDto;
+import io.seqera.tower.model.OrgAndWorkspaceDto;
 import io.seqera.tower.model.OrgRole;
 import io.seqera.tower.model.UpdateMemberRoleRequest;
 import picocli.CommandLine;
@@ -39,7 +39,7 @@ public class UpdateCmd extends AbstractMembersClass {
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = findOrganizationByRef(organizationRef);
+        OrgAndWorkspaceDto orgAndWorkspaceDbDto = findOrganizationByRef(organizationRef);
 
         MemberDbDto member =  findMemberByUser(orgAndWorkspaceDbDto.getOrgId(), user);
 

@@ -21,7 +21,7 @@ import io.seqera.tower.cli.responses.organizations.OrganizationsDeleted;
 import io.seqera.tower.cli.responses.organizations.OrganizationsList;
 import io.seqera.tower.cli.responses.organizations.OrganizationsUpdated;
 import io.seqera.tower.cli.responses.organizations.OrganizationsView;
-import io.seqera.tower.model.OrgAndWorkspaceDbDto;
+import io.seqera.tower.model.OrgAndWorkspaceDto;
 import io.seqera.tower.model.OrganizationDbDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -65,14 +65,14 @@ class OrganizationsCmdTest extends BaseCmdTest {
                         "      \"orgLogoUrl\": null,\n" +
                         "      \"workspaceId\": null,\n" +
                         "      \"workspaceName\": null\n" +
-                        "    }", OrgAndWorkspaceDbDto.class),
+                        "    }", OrgAndWorkspaceDto.class),
                 parseJson(" {\n" +
                         "      \"orgId\": 37736513644467,\n" +
                         "      \"orgName\": \"organization2\",\n" +
                         "      \"orgLogoUrl\": null,\n" +
                         "      \"workspaceId\": null,\n" +
                         "      \"workspaceName\": null\n" +
-                        "    }", OrgAndWorkspaceDbDto.class)
+                        "    }", OrgAndWorkspaceDto.class)
         ), url(mock)));
     }
 

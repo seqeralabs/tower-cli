@@ -2796,7 +2796,7 @@
   "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setLabel","parameterTypes":["java.lang.String"] }, {"name":"setUrl","parameterTypes":["java.lang.String"] }]
 },
 {
-  "name":"io.seqera.tower.model.OrgAndWorkspaceDbDto",
+  "name":"io.seqera.tower.model.OrgAndWorkspaceDto",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true,
