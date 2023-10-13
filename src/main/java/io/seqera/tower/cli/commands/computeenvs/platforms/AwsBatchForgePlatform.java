@@ -12,6 +12,7 @@
 package io.seqera.tower.cli.commands.computeenvs.platforms;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.model.AwsBatchConfig;
 import io.seqera.tower.model.ComputeEnv.PlatformEnum;
 import io.seqera.tower.model.ForgeConfig;
@@ -37,8 +38,17 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
     @Option(names = {"--no-ebs-auto-scale"}, description = "Disable the provisioning of EBS auto-expandable disk.")
     public boolean noEbsAutoScale;
 
-    @Option(names = {"--fusion"}, description = "With Fusion enabled, S3 buckets specified in the Pipeline work directory and Allowed S3 Buckets fields will be accessible in the compute nodes storage using the file path /fusion/s3/BUCKET_NAME.")
+    @Option(names = {"--fusion"}, description = "DEPRECATED - Use '--fusion-v2' instead.")
     public boolean fusion;
+
+    @Option(names = {"--fusion-v2"}, description = "With Fusion v2 enabled, S3 buckets specified in the Pipeline work directory and Allowed S3 Buckets fields will be accessible in the compute nodes storage (requires Wave containers service).")
+    public boolean fusionV2;
+
+    @Option(names = {"--wave"}, description = "Allow access to private container repositories and the provisioning of containers in your Nextflow pipelines via the Wave containers service.")
+    public boolean wave;
+
+    @Option(names = {"--fargate"}, description = "Run the Nextflow head job using the Fargate container service (requires Fusion v2 and Spot provisioning model).")
+    public boolean fargate;
 
     @Option(names = {"--gpu"}, description = "Deploys GPU enabled Ec2 instances.")
     public boolean gpu;
@@ -81,6 +91,8 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
                 .postRunScript(postRunScriptString())
                 .environment(environmentVariables())
                 .region(region)
+                .fusion2Enabled(isFusionV2Enabled())
+                .waveEnabled(wave)
 
                 // Forge
                 .forge(buildForge())
@@ -94,12 +106,23 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
                 .headJobRole(adv().headJobRole);
     }
 
-    private ForgeConfig buildForge() {
+    private Boolean isFusionV2Enabled() throws TowerException {
+        // TODO: delete this validation once wave is no longer a requirement for Fusion V2
+        if (fusionV2 && !wave) throw new TowerException("Fusion v2 requires Wave service");
+        return fusionV2;
+    }
+
+    private ForgeConfig buildForge() throws TowerException {
+
+        // TODO: delete this once fusion v1 is completely removed
+        if (fusion) {
+            throw new TowerException("Fusion v1 is deprecated, please use '--fusion-v2' instead");
+        }
+
         ForgeConfig forge = new ForgeConfig()
                 .type(provisioningModel)
                 .maxCpus(maxCpus)
                 .ebsAutoScale(!noEbsAutoScale)
-                .fusionEnabled(fusion)
                 .gpuEnabled(gpu)
                 .allowBuckets(allowBuckets)
                 .disposeOnDeletion(!preserveResources)
@@ -112,7 +135,8 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
                 .ec2KeyPair(adv().keyPair)
                 .minCpus(adv().minCpus == null ? 0 : adv().minCpus)
                 .ebsBlockSize(adv().ebsBlockSize)
-                .bidPercentage(adv().bidPercentage);
+                .bidPercentage(adv().bidPercentage)
+                .fargateHeadEnabled(fargate);
 
 
         if (efs != null) {
