@@ -41,6 +41,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
+import org.mockserver.model.JsonBody;
 import org.mockserver.model.MediaType;
 
 import java.io.IOException;
@@ -355,7 +356,48 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"name\":\"json\",\"platform\":\"aws-batch\",\"config\":{\"region\":\"eu-west-1\",\"cliPath\":\"/home/ec2-user/miniconda/bin/aws\",\"workDir\":\"s3://nextflow-ci/jordeu\",\"forge\":{\"type\":\"SPOT\",\"minCpus\":0,\"maxCpus\":123,\"gpuEnabled\":false,\"ebsAutoScale\":true,\"disposeOnDeletion\":true,\"fusionEnabled\":false,\"efsCreate\":true},\"discriminator\":\"aws-batch\"},\"credentialsId\":\"6g0ER59L4ZoE5zpOmUP48D\"}}"), exactly(1)
+                request().withMethod("GET").withPath("/labels")
+        ).respond(
+                response().withStatusCode(200).withBody(JsonBody.json("{}"))
+        );
+        mock.when(
+                request().withMethod("POST").withPath("/labels")
+        ).respond(
+                response()
+                        .withStatusCode(200)
+                        .withBody(JsonBody.json("{\n" +
+                                "\"id\": 10,\n" +
+                                "\"name\": \"res\",\n" +
+                                "\"resource\": true,\n" +
+                                "\"value\": \"val\"\n" +
+                                "}"
+                        ))
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/compute-envs").withBody(JsonBody.json("{\n" +
+                        "  \"computeEnv\":{\n" +
+                        "    \"name\": \"json\",\n" +
+                        "    \"platform\": \"aws-batch\",\n" +
+                        "    \"config\": {\n" +
+                        "      \"region\": \"eu-west-1\",\n" +
+                        "      \"cliPath\": \"/home/ec2-user/miniconda/bin/aws\",\n" +
+                        "      \"workDir\": \"s3://nextflow-ci/jordeu\",\n" +
+                        "      \"forge\": {\n" +
+                        "        \"type\": \"SPOT\",\n" +
+                        "        \"minCpus\": 0,\n" +
+                        "        \"maxCpus\": 123,\n" +
+                        "        \"gpuEnabled\": false,\n" +
+                        "        \"ebsAutoScale\": true,\n" +
+                        "        \"disposeOnDeletion\": true,\n" +
+                        "        \"fusionEnabled\": false,\n" +
+                        "        \"efsCreate\": true\n" +
+                        "      },\n" +
+                        "      \"discriminator\": \"aws-batch\"\n" +
+                        "    },\n" +
+                        "    \"credentialsId\": \"6g0ER59L4ZoE5zpOmUP48D\"\n" +
+                        "  }\n" +
+                        "}")), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"3T6xWeFD63QIuzdAowvSTC\"}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -398,7 +440,31 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"name\":\"demo\",\"platform\":\"aws-batch\",\"config\":{\"region\":\"eu-west-1\",\"cliPath\":\"/home/ec2-user/miniconda/bin/aws\",\"workDir\":\"s3://nextflow-ci/jordeu\",\"forge\":{\"type\":\"SPOT\",\"minCpus\":0,\"maxCpus\":123,\"gpuEnabled\":false,\"ebsAutoScale\":true,\"disposeOnDeletion\":true,\"fusionEnabled\":false,\"efsCreate\":true},\"discriminator\":\"aws-batch\"},\"credentialsId\":\"6g0ER59L4ZoE5zpOmUP48D\"}}"), exactly(1)
+                request().withMethod("POST").withPath("/compute-envs")
+                        .withBody(JsonBody.json("{\n" +
+                                "  \"computeEnv\":{\n" +
+                                "    \"name\": \"demo\",\n" +
+                                "    \"platform\": \"aws-batch\",\n" +
+                                "    \"config\": {\n" +
+                                "      \"region\": \"eu-west-1\",\n" +
+                                "      \"cliPath\": \"/home/ec2-user/miniconda/bin/aws\",\n" +
+                                "      \"workDir\": \"s3://nextflow-ci/jordeu\",\n" +
+                                "      \"forge\": {\n" +
+                                "        \"type\": \"SPOT\",\n" +
+                                "        \"minCpus\": 0,\n" +
+                                "        \"maxCpus\": 123,\n" +
+                                "        \"gpuEnabled\": false,\n" +
+                                "        \"ebsAutoScale\": true,\n" +
+                                "        \"disposeOnDeletion\": true,\n" +
+                                "        \"fusionEnabled\": false,\n" +
+                                "        \"efsCreate\": true\n" +
+                                "      },\n" +
+                                "      \"discriminator\": \"aws-batch\"\n" +
+                                "    },\n" +
+                                "    \"credentialsId\": \"6g0ER59L4ZoE5zpOmUP48D\"\n" +
+                                "}\n" +
+                                "}\n" +
+                                "  ")), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"3T6xWeFD63QIuzdAowvSTC\"}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -414,6 +480,25 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
                 request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "aws-batch"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"6g0ER59L4ZoE5zpOmUP48D\",\"name\":\"aws\",\"description\":null,\"discriminator\":\"aws\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-09T07:20:53Z\",\"dateCreated\":\"2021-09-08T05:48:51Z\",\"lastUpdated\":\"2021-09-08T05:48:51Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/labels")
+        ).respond(
+                response().withStatusCode(200).withBody(JsonBody.json("{}"))
+        );
+        mock.when(
+                request().withMethod("POST").withPath("/labels")
+        ).respond(
+                response()
+                        .withStatusCode(200)
+                        .withBody(JsonBody.json("{\n" +
+                                "\"id\": 10,\n" +
+                                "\"name\": \"res\",\n" +
+                                "\"resource\": true,\n" +
+                                "\"value\": \"val\"\n" +
+                                "}"
+                        ))
         );
 
         ExecOut out = exec(format, mock, "compute-envs", "import", "--overwrite", tempFile(new String(loadResource("cejson"), StandardCharsets.UTF_8), "ce", "json"), "-n", "demo", "-c", "6g0ER59L4ZoE5zpOmUP48D");

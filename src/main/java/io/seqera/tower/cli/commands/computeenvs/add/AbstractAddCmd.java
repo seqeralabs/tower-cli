@@ -95,18 +95,26 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
     }
 
     protected ComputeEnvAdded addComputeEnv(ComputeEnv.PlatformEnum platform, ComputeConfig config) throws ApiException {
+        return addComputeEnvWithLabels(platform, config, labels);
+    }
+
+    protected ComputeEnvAdded addComputeEnvWithLabels(ComputeEnv.PlatformEnum platform, ComputeConfig config, List<Label> labels) throws ApiException {
+
         Long wspId = workspaceId(workspace.workspace);
+
+        List<Long> labelIds = findLabels(wspId, labels);
 
         String credsId = credentialsRef == null ? findWorkspaceCredentials(platform, wspId) : credentialsByRef(platform, wspId, credentialsRef);
 
-        List<Long> labelIds = findLabels(wspId, labels);
-        CreateComputeEnvRequest request =  new CreateComputeEnvRequest().computeEnv(
-                new ComputeEnv()
-                        .name(name)
-                        .platform(platform)
-                        .credentialsId(credsId)
-                        .config(config)
-        ).labelIds(labelIds);
+        CreateComputeEnvRequest request =  new CreateComputeEnvRequest()
+                .computeEnv(
+                        new ComputeEnv()
+                                .name(name)
+                                .platform(platform)
+                                .credentialsId(credsId)
+                                .config(config)
+                )
+                .labelIds(labelIds);
 
         CreateComputeEnvResponse resp = api().createComputeEnv(request, wspId);
 

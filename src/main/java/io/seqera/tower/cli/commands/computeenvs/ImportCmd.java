@@ -14,21 +14,19 @@ package io.seqera.tower.cli.commands.computeenvs;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.computeenvs.add.AbstractAddCmd;
 import io.seqera.tower.cli.commands.computeenvs.platforms.Platform;
+import io.seqera.tower.cli.commands.labels.Label;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
-import io.seqera.tower.cli.exceptions.PipelineNotFoundException;
 import io.seqera.tower.cli.responses.Response;
+import io.seqera.tower.cli.shared.ComputeEnvExportFormat;
 import io.seqera.tower.cli.utils.FilesHelper;
-import io.seqera.tower.model.ComputeConfig;
 import io.seqera.tower.model.ComputeEnv;
-import io.seqera.tower.model.ComputeEnvDbDto;
 import io.seqera.tower.model.ComputeEnvResponseDto;
-import io.seqera.tower.model.PipelineDbDto;
 import picocli.CommandLine;
 
 import java.io.IOException;
 import java.nio.file.Path;
-
-import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @CommandLine.Command(
         name = "import",
@@ -44,14 +42,29 @@ public class ImportCmd extends AbstractAddCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
 
-        ComputeConfig configObj = parseJson(FilesHelper.readString(fileName), ComputeConfig.class);
-        ComputeEnv.PlatformEnum platform = ComputeEnv.PlatformEnum.fromValue(configObj.getDiscriminator());
+        ComputeEnvExportFormat ceData = ComputeEnvExportFormat.deserialize(FilesHelper.readString(fileName));
+
+        ComputeEnv.PlatformEnum platform = ComputeEnv.PlatformEnum.fromValue(ceData.getConfig().getDiscriminator());
 
         Long wspId = workspaceId(workspace.workspace);
 
         if (overwrite) deleteCE(name, wspId);
 
-        return addComputeEnv(platform, configObj);
+        // prefer specified user labels before imported ones
+        if (labels != null && !labels.isEmpty()) {
+            // handles 'labels' parameter, creates labels if they do not exist
+            return addComputeEnv(platform, ceData.getConfig());
+        }
+        // use imported labels
+        if (ceData.getLabels() != null) {
+            List<Label> importLabels = ceData.getLabels().stream()
+                    .map(dto -> new Label(dto.getName(), dto.getValue()))
+                    .collect(Collectors.toList());
+            // creates labels if they do not exist
+            return addComputeEnvWithLabels(platform, ceData.getConfig(), importLabels);
+        }
+        // no labels
+        return addComputeEnvWithLabels(platform, ceData.getConfig(), null);
     }
 
     @Override
