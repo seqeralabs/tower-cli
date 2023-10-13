@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
+import org.mockserver.model.JsonBody;
 import org.mockserver.model.MediaType;
 
 import java.io.IOException;
@@ -35,6 +36,8 @@ class GoogleBatchPlatformTest extends BaseCmdTest {
     @EnumSource(OutputType.class)
     void testAdd(OutputType format, MockServerClient mock) throws IOException {
 
+        mock.reset();
+
         mock.when(
                 request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "google-batch"), exactly(1)
         ).respond(
@@ -42,7 +45,8 @@ class GoogleBatchPlatformTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"name\":\"google\",\"platform\":\"google-batch\",\"config\":{\"location\":\"europe\",\"workDir\":\"gs://workdir\"},\"credentialsId\":\"6XfOhoztUq6de3Dw3X9LSb\"}}"), exactly(1)
+                request().withMethod("POST").withPath("/compute-envs")
+                        .withBody(JsonBody.json("{\"computeEnv\":{\"name\":\"google\",\"platform\":\"google-batch\",\"config\":{\"location\":\"europe\",\"fusion2Enabled\":false,\"waveEnabled\":false,\"workDir\":\"gs://workdir\"},\"credentialsId\":\"6XfOhoztUq6de3Dw3X9LSb\"}}")), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -54,6 +58,8 @@ class GoogleBatchPlatformTest extends BaseCmdTest {
     @Test
     void testAddWithAdvancedOptions(MockServerClient mock) throws IOException {
 
+        mock.reset();
+
         mock.when(
                 request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "google-batch"), exactly(1)
         ).respond(
@@ -61,12 +67,13 @@ class GoogleBatchPlatformTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"name\":\"google\",\"platform\":\"google-batch\",\"config\":{\"location\":\"europe\",\"workDir\":\"gs://workdir\",\"usePrivateAddress\":true},\"credentialsId\":\"6XfOhoztUq6de3Dw3X9LSb\"}}"), exactly(1)
+                request().withMethod("POST").withPath("/compute-envs")
+                        .withBody(JsonBody.json("{\"computeEnv\":{\"name\":\"google\",\"platform\":\"google-batch\",\"config\":{\"location\":\"europe\",\"fusion2Enabled\":true,\"waveEnabled\":true,\"workDir\":\"gs://workdir\",\"usePrivateAddress\":true},\"credentialsId\":\"6XfOhoztUq6de3Dw3X9LSb\"}}")), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "compute-envs", "add", "google-batch", "-n", "google", "--work-dir", "gs://workdir", "-l", "europe", "--use-private-address");
+        ExecOut out = exec(mock, "compute-envs", "add", "google-batch", "-n", "google", "--work-dir", "gs://workdir", "-l", "europe", "--fusion-v2", "--wave", "--use-private-address");
         assertEquals("", out.stdErr);
         assertEquals(new ComputeEnvAdded("google-batch", "isnEDBLvHDAIteOEF44ow", "google", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);

@@ -64,6 +64,7 @@ public class AwsBatchManualPlatform extends AbstractPlatform<AwsBatchConfig> {
                 .fusion2Enabled(fusionV2)
                 .waveEnabled(wave)
                 .nvnmeStorageEnabled(fastStorage)
+
                 .region(region)
 
                 // Queues

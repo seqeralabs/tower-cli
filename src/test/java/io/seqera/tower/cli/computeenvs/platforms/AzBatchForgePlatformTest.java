@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
+import org.mockserver.model.JsonBody;
 import org.mockserver.model.MediaType;
 
 import static io.seqera.tower.cli.commands.AbstractApiCmd.USER_WORKSPACE_NAME;
@@ -33,6 +34,8 @@ class AzBatchForgePlatformTest extends BaseCmdTest {
     @EnumSource(OutputType.class)
     void testAdd(OutputType format, MockServerClient mock) {
 
+        mock.reset();
+
         mock.when(
                 request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "azure-batch"), exactly(1)
         ).respond(
@@ -40,7 +43,7 @@ class AzBatchForgePlatformTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"name\":\"azure\",\"platform\":\"azure-batch\",\"config\":{\"workDir\":\"az://nextflow-ci/jordeu\",\"region\":\"europe\",\"forge\":{\"vmCount\":10,\"autoScale\":true,\"disposeOnDeletion\":true}},\"credentialsId\":\"57Ic6reczFn78H1DTaaXkp\"}}"), exactly(1)
+                request().withMethod("POST").withPath("/compute-envs").withBody(JsonBody.json("{\"computeEnv\":{\"name\":\"azure\",\"platform\":\"azure-batch\",\"config\":{\"workDir\":\"az://nextflow-ci/jordeu\",\"region\":\"europe\",\"forge\":{\"vmCount\":10,\"autoScale\":true,\"disposeOnDeletion\":true}},\"credentialsId\":\"57Ic6reczFn78H1DTaaXkp\"}}")), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -52,6 +55,8 @@ class AzBatchForgePlatformTest extends BaseCmdTest {
     @Test
     void testAddWithAdvancedOptions(MockServerClient mock) {
 
+        mock.reset();
+
         mock.when(
                 request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "azure-batch"), exactly(1)
         ).respond(
@@ -59,12 +64,12 @@ class AzBatchForgePlatformTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"name\":\"azure\",\"platform\":\"azure-batch\",\"config\":{\"workDir\":\"az://nextflow-ci/jordeu\",\"region\":\"europe\",\"forge\":{\"vmCount\":10,\"autoScale\":true,\"disposeOnDeletion\":true},\"tokenDuration\":\"24\"},\"credentialsId\":\"57Ic6reczFn78H1DTaaXkp\"}}"), exactly(1)
+                request().withMethod("POST").withPath("/compute-envs").withBody(JsonBody.json("{\"computeEnv\":{\"name\":\"azure\",\"platform\":\"azure-batch\",\"config\":{\"workDir\":\"az://nextflow-ci/jordeu\",\"region\":\"europe\",\"fusion2Enabled\":true,\"waveEnabled\":true,\"forge\":{\"vmCount\":10,\"autoScale\":true,\"disposeOnDeletion\":true},\"tokenDuration\":\"24\"},\"credentialsId\":\"57Ic6reczFn78H1DTaaXkp\"}}")), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "compute-envs", "add", "azure-batch", "forge",  "-n", "azure", "-l", "europe", "--work-dir", "az://nextflow-ci/jordeu", "--token-duration=24", "--vm-count", "10");
+        ExecOut out = exec(mock, "compute-envs", "add", "azure-batch", "forge",  "-n", "azure", "-l", "europe", "--work-dir", "az://nextflow-ci/jordeu", "--fusion-v2", "--wave", "--token-duration=24", "--vm-count", "10");
 
         assertEquals("", out.stdErr);
         assertEquals(new ComputeEnvAdded("azure-batch", "isnEDBLvHDAIteOEF44ow", "azure", null, USER_WORKSPACE_NAME).toString(), out.stdOut);

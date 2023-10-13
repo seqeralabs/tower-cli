@@ -48,6 +48,11 @@ public class AzBatchForgePlatform extends AbstractPlatform<AzBatchConfig> {
     @Option(names = {"--registry-credentials"}, split = ",", paramLabel = "<credential_name>", description = "Comma-separated list of container registry credentials name.")
     public List<String> registryCredentials;
 
+    @Option(names = {"--fusion-v2"}, description = "With Fusion v2 enabled, Azure blob containers specified in the pipeline work directory and blob containers within the Azure storage account will be accessible in the compute nodes storage (requires Wave containers service).")
+    public boolean fusionV2;
+
+    @Option(names = {"--wave"}, description = "Allow access to private container repositories and the provisioning of containers in your Nextflow pipelines via the Wave containers service.")
+    public boolean wave;
 
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
     public AdvancedOptions adv;
@@ -66,6 +71,8 @@ public class AzBatchForgePlatform extends AbstractPlatform<AzBatchConfig> {
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
                 .environment(environmentVariables())
+                .fusion2Enabled(fusionV2)
+                .waveEnabled(wave)
                 .region(location);
 
         if (adv != null) {
