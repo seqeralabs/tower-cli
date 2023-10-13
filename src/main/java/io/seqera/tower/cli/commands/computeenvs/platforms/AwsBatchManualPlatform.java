@@ -11,6 +11,8 @@
 
 package io.seqera.tower.cli.commands.computeenvs.platforms;
 
+import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.model.AwsBatchConfig;
 import io.seqera.tower.model.ComputeEnv.PlatformEnum;
 import picocli.CommandLine.ArgGroup;
@@ -55,13 +57,13 @@ public class AwsBatchManualPlatform extends AbstractPlatform<AwsBatchConfig> {
     }
 
     @Override
-    public AwsBatchConfig computeConfig() throws IOException {
+    public AwsBatchConfig computeConfig() throws IOException, ApiException {
         return new AwsBatchConfig()
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
                 .environment(environmentVariables())
-                .fusion2Enabled(fusionV2)
+                .fusion2Enabled(isFusionV2Enabled())
                 .waveEnabled(wave)
                 .nvnmeStorageEnabled(fastStorage)
 
@@ -77,6 +79,12 @@ public class AwsBatchManualPlatform extends AbstractPlatform<AwsBatchConfig> {
                 .headJobCpus(adv().headJobCpus)
                 .headJobMemoryMb(adv().headJobMemoryMb)
                 .headJobRole(adv().headJobRole);
+    }
+
+    private Boolean isFusionV2Enabled() throws TowerException {
+        // TODO: delete this validation once wave is no longer a requirement for Fusion V2
+        if (fusionV2 && !wave) throw new TowerException("Fusion v2 requires Wave service");
+        return fusionV2;
     }
 
     private AdvancedOptions adv() {
