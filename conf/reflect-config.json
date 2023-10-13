@@ -2155,19 +2155,22 @@
   "name":"io.seqera.tower.model.AzBatchConfig",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"getAutoPoolMode","parameterTypes":[] }, {"name":"getDeleteJobsOnCompletion","parameterTypes":[] }, {"name":"getDeletePoolsOnCompletion","parameterTypes":[] }, {"name":"getDiscriminator","parameterTypes":[] }, {"name":"getEnvironment","parameterTypes":[] }, {"name":"getForge","parameterTypes":[] }, {"name":"getFusion2Enabled","parameterTypes":[] }, {"name":"getHeadPool","parameterTypes":[] }, {"name":"getPostRunScript","parameterTypes":[] }, {"name":"getPreRunScript","parameterTypes":[] }, {"name":"getRegion","parameterTypes":[] }, {"name":"getTokenDuration","parameterTypes":[] }, {"name":"getWaveEnabled","parameterTypes":[] }, {"name":"getWorkDir","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.AzBatchForgeConfig",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"getAutoScale","parameterTypes":[] }, {"name":"getContainerRegIds","parameterTypes":[] }, {"name":"getDisposeOnDeletion","parameterTypes":[] }, {"name":"getVmCount","parameterTypes":[] }, {"name":"getVmType","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.AzureSecurityKeys",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setBatchKey","parameterTypes":["java.lang.String"] }, {"name":"setBatchName","parameterTypes":["java.lang.String"] }, {"name":"setStorageKey","parameterTypes":["java.lang.String"] }, {"name":"setStorageName","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.model.BitBucketSecurityKeys",
