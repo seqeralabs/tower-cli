@@ -27,6 +27,12 @@ public class GoogleBatchPlatform extends AbstractPlatform<GoogleBatchConfig> {
     @Option(names = {"--spot"}, description = "Use Spot virtual machines.")
     public Boolean spot;
 
+    @Option(names = {"--fusion-v2"}, description = "With Fusion v2 enabled, S3 buckets specified in the Pipeline work directory and Allowed S3 Buckets fields will be accessible in the compute nodes storage (requires Wave containers service).")
+    public boolean fusionV2;
+
+    @Option(names = {"--wave"}, description = "Allow access to private container repositories and the provisioning of containers in your Nextflow pipelines via the Wave containers service.")
+    public boolean wave;
+
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
     public AdvancedOptions adv;
 
@@ -44,6 +50,8 @@ public class GoogleBatchPlatform extends AbstractPlatform<GoogleBatchConfig> {
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
                 .environment(environmentVariables())
+                .fusion2Enabled(fusionV2)
+                .waveEnabled(wave)
 
                 // Main
                 .location(location)
