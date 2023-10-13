@@ -48,7 +48,7 @@ public class ImportCmd extends AbstractAddCmd {
 
         Long wspId = workspaceId(workspace.workspace);
 
-        if (overwrite) deleteCE(name, wspId);
+        if (overwrite) tryDeleteCE(name, wspId);
 
         // prefer specified user labels before imported ones
         if (labels != null && !labels.isEmpty()) {
@@ -72,7 +72,7 @@ public class ImportCmd extends AbstractAddCmd {
         throw new UnsupportedOperationException("Unknown platform");
     }
 
-    private void deleteCE(String name, Long wspId) throws ApiException {
+    private void tryDeleteCE(String name, Long wspId) throws ApiException {
         try {
             ComputeEnvResponseDto ce = computeEnvByRef(wspId, name);
             api().deleteComputeEnv(ce.getId(), wspId);

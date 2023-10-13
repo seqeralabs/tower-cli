@@ -12,6 +12,7 @@
 package io.seqera.tower.cli.commands.workspaces;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.exceptions.WorkspaceNotFoundException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.workspaces.WorkspaceAdded;
 import io.seqera.tower.model.CreateWorkspaceRequest;
@@ -45,10 +46,19 @@ public class AddCmd extends AbstractWorkspaceCmd {
     @CommandLine.Option(names = {"-v", "--visibility"}, description = "The workspace visibility. Valid options PRIVATE, SHARED [default: PRIVATE].")
     public String visibility = "PRIVATE";
 
+    @CommandLine.Option(names = {"--overwrite"}, description = "Overwrite the workspace if it already exists.", defaultValue = "false")
+    public Boolean overwrite;
+
     @Override
     protected Response exec() throws ApiException, IOException {
 
-        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = organizationByName(organizationName);
+        OrgAndWorkspaceDbDto orgWspDto;
+        if (overwrite) { // check also wsp existence
+            orgWspDto = findOrgAndWorkspaceByName(organizationName, workspaceName);
+            tryDeleteWsp(orgWspDto.getWorkspaceId(), orgWspDto.getOrgId());
+        } else { // normal 'add'
+            orgWspDto = organizationByName(organizationName);
+        }
 
         Workspace workspace = new Workspace();
         workspace.setName(workspaceName);
@@ -58,8 +68,8 @@ public class AddCmd extends AbstractWorkspaceCmd {
 
         CreateWorkspaceRequest request = new CreateWorkspaceRequest().workspace(workspace);
 
-        api().workspaceValidate(orgAndWorkspaceDbDto.getOrgId(), workspaceName);
-        CreateWorkspaceResponse response = api().createWorkspace(orgAndWorkspaceDbDto.getOrgId(), request);
+        api().workspaceValidate(orgWspDto.getOrgId(), workspaceName);
+        CreateWorkspaceResponse response = api().createWorkspace(orgWspDto.getOrgId(), request);
 
         return new WorkspaceAdded(response.getWorkspace().getName(), organizationName, response.getWorkspace().getVisibility());
     }
@@ -74,5 +84,11 @@ public class AddCmd extends AbstractWorkspaceCmd {
                     String.format("Invalid value for option '--visibility': expected one of [PRIVATE, SHARED] (case-sensitive) but was '%s'", visibility)
             );
         }
+    }
+
+    private void tryDeleteWsp(Long wspId, Long orgId) throws ApiException {
+        try {
+            deleteWorkspaceById(wspId, orgId);
+        }catch (WorkspaceNotFoundException ignored) {}
     }
 }

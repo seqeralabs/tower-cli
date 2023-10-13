@@ -44,7 +44,7 @@ public class DeleteCmd extends AbstractOrganizationsCmd {
         }
 
         try {
-            api().deleteOrganization(id);
+            deleteOrgById(id);
         } catch (Exception e) {
             throw new TowerException(String.format("Organization %s could not be deleted", ref));
         }

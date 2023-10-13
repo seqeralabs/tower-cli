@@ -268,6 +268,54 @@ class WorkspacesCmdTest extends BaseCmdTest {
         assertOutput(format, out, new WorkspaceAdded("wspNew", "organization1", Visibility.PRIVATE));
     }
 
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAddWithOverwrite(OutputType format, MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/orgs/27736513644467/workspaces/validate").withQueryStringParameter("name", "workspace1"), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/orgs/27736513644467/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(JsonBody.json("{\n" +
+                        "  \"workspace\": {\n" +
+                        "    \"id\": 52957572657821,\n" +
+                        "    \"name\": \"workspace1\",\n" +
+                        "    \"fullName\": \"wsp-new\",\n" +
+                        "    \"description\": \"workspace description\",\n" +
+                        "    \"visibility\": \"PRIVATE\",\n" +
+                        "    \"dateCreated\": \"2021-09-28T07:15:26.696627Z\",\n" +
+                        "    \"lastUpdated\": \"2021-09-28T07:15:26.696627Z\"\n" +
+                        "  }\n" +
+                        "}"))
+        );
+
+        mock.when(
+                request().withMethod("DELETE").withPath("/orgs/27736513644467/workspaces/75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(format, mock, "workspaces", "add", "--overwrite", "-n", "workspace1", "-o", "organization1", "-f", "wsp-one", "-d", "workspace description", "-v", "PRIVATE");
+        assertOutput(format, out, new WorkspaceAdded("workspace1", "organization1", Visibility.PRIVATE));
+    }
+
     @Test
     void testAddOrganizationNotFound(MockServerClient mock) {
         mock.when(

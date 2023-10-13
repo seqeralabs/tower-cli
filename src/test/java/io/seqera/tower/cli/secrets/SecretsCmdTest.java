@@ -76,6 +76,35 @@ public class SecretsCmdTest extends BaseCmdTest {
 
     @ParameterizedTest
     @EnumSource(OutputType.class)
+    void testAddWithOverride(OutputType format, MockServerClient mock) {
+
+        // Mock API
+        mock.when(
+                request().withMethod("GET").withPath("/pipeline-secrets"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"pipelineSecrets\":[{\"id\":5002114781502,\"name\":\"name01\",\"lastUsed\":null,\"dateCreated\":\"2022-10-25T12:42:21Z\",\"lastUpdated\":\"2022-10-25T12:42:21Z\"},{\"id\":171740984431657,\"name\":\"name02\",\"lastUsed\":null,\"dateCreated\":\"2022-10-25T13:21:15Z\",\"lastUpdated\":\"2022-10-25T13:21:15Z\"},{\"id\":164410928765888,\"name\":\"name03\",\"lastUsed\":null,\"dateCreated\":\"2022-10-26T07:05:17Z\",\"lastUpdated\":\"2022-10-26T07:05:17Z\"}],\"totalSize\":3}").withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("DELETE").withPath("/pipeline-secrets/164410928765888"), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+        mock.when(
+                request().withMethod("POST").withPath("/pipeline-secrets").withBody("{\"name\":\"name03\",\"value\":\"value03\"}"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"secretId\":164410928765888}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // Run command
+        ExecOut out = exec(format, mock, "secrets", "add", "--overwrite", "-n", "name03", "-v", "value03");
+
+        // Assert output
+        assertOutput(format, out, new SecretAdded(USER_WORKSPACE_NAME, 164410928765888L, "name03"));
+
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
     void testDelete(OutputType format, MockServerClient mock) throws JsonProcessingException {
         mock.when(
                 request().withMethod("GET").withPath("/pipeline-secrets"), exactly(1)

@@ -14,7 +14,6 @@ package io.seqera.tower.cli.commands.teams;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.teams.TeamDeleted;
-import io.seqera.tower.model.OrgAndWorkspaceDbDto;
 import picocli.CommandLine;
 
 import java.io.IOException;
@@ -33,10 +32,7 @@ public class DeleteCmd extends AbstractTeamsCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        OrgAndWorkspaceDbDto orgAndWorkspaceDbDto = findOrganizationByRef(organizationRef);
-
-        api().deleteOrganizationTeam(orgAndWorkspaceDbDto.getOrgId(), teamId);
-
+        deleteTeamById(teamId, organizationRef);
         return new TeamDeleted(organizationRef, teamId.toString());
     }
 }

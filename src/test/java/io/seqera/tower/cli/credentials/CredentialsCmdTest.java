@@ -20,6 +20,7 @@ import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.CredentialsNotFoundException;
 import io.seqera.tower.cli.exceptions.ShowUsageException;
+import io.seqera.tower.cli.responses.CredentialsAdded;
 import io.seqera.tower.cli.responses.CredentialsDeleted;
 import io.seqera.tower.cli.responses.CredentialsList;
 import io.seqera.tower.model.Credentials;
@@ -40,6 +41,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
+import static org.mockserver.model.JsonBody.json;
 
 class CredentialsCmdTest extends BaseCmdTest {
 
@@ -157,6 +159,40 @@ class CredentialsCmdTest extends BaseCmdTest {
             assertEquals(1, out.exitCode);
             assertTrue(out.stdErr.contains("Missing Required Subcommand"));
         }
+    }
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAddWithOverride(OutputType format, MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/credentials"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("credentials_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/credentials")
+                        .withBody(json("{\"credentials\":{\"keys\":{\"accessKey\":\"access_key\",\"secretKey\":\"secret_key\"},\"name\":\"aws\",\"provider\":\"aws\"}}")),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentialsId\":\"1cz5A8cuBkB5iJliCwJCFU\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("DELETE").withPath("/credentials/1cz5A8cuBkB5iJliCwJCFU"), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(format, mock, "credentials", "add", "aws", "--overwrite", "-n", "aws", "-a", "access_key", "-s", "secret_key");
+        assertOutput(format, out, new CredentialsAdded("AWS", "1cz5A8cuBkB5iJliCwJCFU", "aws", USER_WORKSPACE_NAME));
+
     }
 
 

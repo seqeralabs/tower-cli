@@ -580,7 +580,7 @@ class ParticipantsCmdTest extends BaseCmdTest {
 
     @ParameterizedTest
     @EnumSource(OutputType.class)
-    void testCreateMemberParticipantRole(OutputType format, MockServerClient mock) throws JsonProcessingException {
+    void testAddMemberParticipantRole(OutputType format, MockServerClient mock) throws JsonProcessingException {
         mock.when(
                 request().withMethod("GET").withPath("/user-info"), exactly(1)
         ).respond(
@@ -606,6 +606,65 @@ class ParticipantsCmdTest extends BaseCmdTest {
         );
 
         ExecOut out = exec(format, mock, "participants", "add", "-w", "75887156211589", "-n", "julio", "-t", "MEMBER");
+
+        assertOutput(format, out, new ParticipantAdded(parseJson("{\n" +
+                "    \"participantId\": 110330443206779,\n" +
+                "    \"memberId\": 80726606082762,\n" +
+                "    \"userName\": \"julio\",\n" +
+                "    \"firstName\": null,\n" +
+                "    \"lastName\": null,\n" +
+                "    \"email\": \"user@seqera.io\",\n" +
+                "    \"orgRole\": \"member\",\n" +
+                "    \"teamId\": null,\n" +
+                "    \"teamName\": null,\n" +
+                "    \"wspRole\": \"launch\",\n" +
+                "    \"type\": \"MEMBER\",\n" +
+                "    \"teamAvatarUrl\": null,\n" +
+                "    \"userAvatarUrl\": null\n" +
+                "  }", ParticipantDbDto.class), "workspace1"));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAddParticipantWithOverwrite(OutputType format, MockServerClient mock) throws JsonProcessingException {
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/orgs/27736513644467/workspaces/75887156211589/participants"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("participants/participants_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/orgs/27736513644467/members"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("members/members_list_filter")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("PUT").withPath("/orgs/27736513644467/workspaces/75887156211589/participants/add"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("participants/participant_add")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("DELETE").withPath("/orgs/27736513644467/workspaces/75887156211589/participants/48516118433516"), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(format, mock, "participants", "add", "--overwrite", "-w", "75887156211589", "-n", "julio", "-t", "MEMBER");
 
         assertOutput(format, out, new ParticipantAdded(parseJson("{\n" +
                 "    \"participantId\": 110330443206779,\n" +

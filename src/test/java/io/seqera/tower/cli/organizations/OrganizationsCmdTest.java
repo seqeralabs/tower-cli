@@ -251,6 +251,50 @@ class OrganizationsCmdTest extends BaseCmdTest {
                 "  }", OrganizationDbDto.class)));
     }
 
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAddWithOverwrite(OutputType format, MockServerClient mock) throws JsonProcessingException {
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/orgs"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("organizations/organizations_add_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("DELETE").withPath("/orgs/275484385882108"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+        );
+
+        ExecOut out = exec(format, mock, "organizations", "add", "--overwrite", "-n", "sample-organization", "-f", "sample organization");
+        assertOutput(format, out, new OrganizationsAdded(parseJson("{\n" +
+                "    \"orgId\": 275484385882108,\n" +
+                "    \"name\": \"sample-organization\",\n" +
+                "    \"fullName\": \"sample organization\",\n" +
+                "    \"description\": \"sample organization description\",\n" +
+                "    \"location\": \"office\",\n" +
+                "    \"website\": \"http://www.seqera.io\",\n" +
+                "    \"logoId\": null,\n" +
+                "    \"logoUrl\": null,\n" +
+                "    \"memberId\": null,\n" +
+                "    \"memberRole\": null\n" +
+                "  }", OrganizationDbDto.class)));
+    }
+
     @Test
     void testAddError(MockServerClient mock) {
         mock.when(

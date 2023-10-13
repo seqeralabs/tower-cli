@@ -12,9 +12,10 @@
 package io.seqera.tower.cli.commands.credentials.add;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.commands.AbstractApiCmd;
+import io.seqera.tower.cli.commands.credentials.AbstractCredentialsCmd;
 import io.seqera.tower.cli.commands.credentials.providers.CredentialsProvider;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
+import io.seqera.tower.cli.exceptions.CredentialsNotFoundException;
 import io.seqera.tower.cli.responses.CredentialsAdded;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.CreateCredentialsRequest;
@@ -28,7 +29,7 @@ import picocli.CommandLine.Option;
 import java.io.IOException;
 
 @Command
-public abstract class AbstractAddCmd<T extends SecurityKeys> extends AbstractApiCmd {
+public abstract class AbstractAddCmd<T extends SecurityKeys> extends AbstractCredentialsCmd {
 
     @Option(names = {"-n", "--name"}, description = "Credentials name.", required = true)
     public String name;
@@ -36,16 +37,21 @@ public abstract class AbstractAddCmd<T extends SecurityKeys> extends AbstractApi
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
+    @CommandLine.Option(names = {"--overwrite"}, description = "Overwrite the credentials if it already exists.", defaultValue = "false")
+    public Boolean overwrite;
+
     @Override
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
 
         Credentials specs = new Credentials();
         specs
-                .keys(getProvider().securityKeys())
-                .name(name)
-                .baseUrl(getProvider().baseUrl())
-                .provider(getProvider().type());
+            .keys(getProvider().securityKeys())
+            .name(name)
+            .baseUrl(getProvider().baseUrl())
+            .provider(getProvider().type());
+
+        if (overwrite) tryDeleteCredentials(name, wspId);
 
         CreateCredentialsResponse resp = api().createCredentials(new CreateCredentialsRequest().credentials(specs), wspId);
 
@@ -53,4 +59,10 @@ public abstract class AbstractAddCmd<T extends SecurityKeys> extends AbstractApi
     }
 
     protected abstract CredentialsProvider getProvider();
+
+    private void tryDeleteCredentials(String name, Long wspId) throws ApiException {
+        try {
+            deleteCredentialsByName(name, wspId);
+        } catch (CredentialsNotFoundException ignored) {}
+    }
 }

@@ -299,6 +299,43 @@ class TeamsCmdTest extends BaseCmdTest {
 
     @ParameterizedTest
     @EnumSource(OutputType.class)
+    void testAddWithOverwrite(OutputType format, MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/orgs/27736513644467/teams"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("teams/teams_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("DELETE").withPath("/orgs/27736513644467/teams/249211453903161"), exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/orgs/27736513644467/teams"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("teams/teams_add")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "teams", "add", "-o", "organization1", "-n", "team-test-3", "--overwrite");
+        assertOutput(format, out, new TeamAdded("organization1", "team-test-3"));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
     void testDeleteTeam(OutputType format, MockServerClient mock) {
         mock.when(
                 request().withMethod("GET").withPath("/user-info"), exactly(1)

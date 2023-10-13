@@ -36,7 +36,7 @@ public class DeleteCmd extends AbstractSecretsCmd {
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
         PipelineSecret secret = fetchSecret(ref, wspId);
-        api().deletePipelineSecret(secret.getId(), wspId);
+        deleteSecretById(secret.getId(), wspId);
         return new SecretDeleted(secret, workspaceRef(wspId));
     }
 }

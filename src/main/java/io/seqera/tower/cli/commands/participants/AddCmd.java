@@ -14,6 +14,7 @@ package io.seqera.tower.cli.commands.participants;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceRequiredOptions;
 import io.seqera.tower.cli.exceptions.MemberNotFoundException;
+import io.seqera.tower.cli.exceptions.ParticipantNotFoundException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.participants.ParticipantAdded;
@@ -40,6 +41,9 @@ public class AddCmd extends AbstractParticipantsCmd {
     @CommandLine.Mixin
     public WorkspaceRequiredOptions workspace;
 
+    @CommandLine.Option(names = {"--overwrite"}, description = "Overwrite the participant if it already exists.", defaultValue = "false")
+    public Boolean overwrite;
+
     @Override
     protected Response exec() throws ApiException, IOException {
         AddParticipantRequest request = new AddParticipantRequest();
@@ -64,8 +68,16 @@ public class AddCmd extends AbstractParticipantsCmd {
             throw new TowerException("Unknown participant candidate type provided.");
         }
 
+        if (overwrite) tryDeleteParticipant(wspId, name, type);
+
         AddParticipantResponse response = api().createWorkspaceParticipant(orgId(wspId), wspId, request);
 
         return new ParticipantAdded(response.getParticipant(), workspaceName(wspId));
+    }
+
+    private void tryDeleteParticipant(Long wspId, String participantName, ParticipantType type) throws ApiException {
+        try {
+            deleteParticipantByNameAndType(wspId, participantName, type);
+        }catch (ParticipantNotFoundException ignored) {}
     }
 }

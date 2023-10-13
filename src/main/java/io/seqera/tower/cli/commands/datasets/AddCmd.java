@@ -13,6 +13,7 @@ package io.seqera.tower.cli.commands.datasets;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceRequiredOptions;
+import io.seqera.tower.cli.exceptions.DatasetNotFoundException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.datasets.DatasetCreate;
@@ -45,6 +46,9 @@ public class AddCmd extends AbstractDatasetsCmd {
     @CommandLine.Mixin
     public WorkspaceRequiredOptions workspace;
 
+    @CommandLine.Option(names = {"--overwrite"}, description = "Overwrite the dataset if it already exists.", defaultValue = "false")
+    public Boolean overwrite;
+
     @Override
     protected Response exec() throws ApiException, IOException {
         File dataset = fileName.toFile();
@@ -61,10 +65,18 @@ public class AddCmd extends AbstractDatasetsCmd {
         request.setName(name);
         request.setDescription(description);
 
+        if (overwrite) tryDeleteDataset(name, wspId);
+
         CreateDatasetResponse response = api().createDataset(wspId, request);
 
         api().uploadDataset(wspId, response.getDataset().getId(), header, fileName.toFile());
 
         return new DatasetCreate(response.getDataset().getName(), workspace.workspace, response.getDataset().getId());
+    }
+
+    private void tryDeleteDataset(String datasetName, Long wspId) throws ApiException {
+        try {
+            deleteDatasetByName(datasetName, wspId);
+        } catch (DatasetNotFoundException ignored){}
     }
 }

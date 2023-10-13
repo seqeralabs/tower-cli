@@ -2110,7 +2110,7 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getConnectionId","parameterTypes":[] }, {"name":"getDiscriminator","parameterTypes":[] }, {"name":"getShared","parameterTypes":[] }, {"name":"getWorkDir","parameterTypes":[] }, {"name":"setConnectionId","parameterTypes":["java.lang.String"] }, {"name":"setWorkDir","parameterTypes":["java.lang.String"] }]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getConnectionId","parameterTypes":[] }, {"name":"getDiscriminator","parameterTypes":[] }, {"name":"getShared","parameterTypes":[] }, {"name":"getWorkDir","parameterTypes":[] }, {"name":"setConnectionId","parameterTypes":["java.lang.String"] }, {"name":"setShared","parameterTypes":["java.lang.Boolean"] }, {"name":"setWorkDir","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.model.AltairPbsComputeConfig",
@@ -2545,7 +2545,8 @@
   "name":"io.seqera.tower.model.GitHubSecurityKeys",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setPassword","parameterTypes":["java.lang.String"] }, {"name":"setUsername","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.model.GitLabSecurityKeys",
@@ -2594,7 +2595,8 @@
   "name":"io.seqera.tower.model.GoogleSecurityKeys",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setData","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.model.JobCleanupPolicy",
@@ -2880,7 +2882,8 @@
   "name":"io.seqera.tower.model.SSHSecurityKeys",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setPassphrase","parameterTypes":["java.lang.String"] }, {"name":"setPrivateKey","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.model.SecurityKeys",

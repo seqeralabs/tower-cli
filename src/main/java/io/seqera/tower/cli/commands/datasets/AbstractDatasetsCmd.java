@@ -123,4 +123,15 @@ public abstract class AbstractDatasetsCmd extends AbstractApiCmd {
     protected String getDatasetRef(DatasetRefOptions datasetRefOptions) {
         return datasetRefOptions.dataset.datasetName != null ? datasetRefOptions.dataset.datasetName : datasetRefOptions.dataset.datasetId;
     }
+
+    protected void deleteDatasetByName(String datasetName, Long wspId) throws DatasetNotFoundException, ApiException {
+        Dataset response = datasetByName(wspId, datasetName);
+        deleteDatasetById(response.getId(), wspId);
+    }
+
+    protected void deleteDatasetById(String datasetId, Long wspId) throws DatasetNotFoundException, ApiException {
+        api().deleteDataset(wspId, datasetId);
+    }
+
+
 }
