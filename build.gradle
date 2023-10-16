@@ -42,7 +42,7 @@ license {
     header = project.file('HEADER.txt')
     properties {
         name = 'Seqera'
-        year = 2023
+        year = '2021-2023'
     }
     exclude '**/*.properties'
     exclude 'gradlew'
