@@ -27,7 +27,7 @@ public class LabelsSubcmdOptions {
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
-    @CommandLine.Parameters(split = ",", description = "List of labels seperated by coma.", converter = Label.LabelConverter.class)
+    @CommandLine.Parameters(split = ",", description = "Comma-separated list of labels.", converter = Label.LabelConverter.class)
     private List<Label> labels;
     @CommandLine.Option(names = "--no-create", description = "Assign labels without creating the ones which were not found.")
     private boolean noCreate;
