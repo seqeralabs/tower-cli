@@ -186,7 +186,8 @@ public class DumpCmd extends AbstractRunsCmd {
             addFile(out, "nextflow.log", nextflowLog);
         } catch (ApiException e) {
             // Ignore error 404 that means that the file is no longer available
-            if (e.getCode() != 404) {
+            // Ignore error 400 that means that the run was launch using Nextflow CLI
+            if (e.getCode() != 404 && e.getCode() != 400) {
                 throw e;
             }
         }
@@ -217,7 +218,8 @@ public class DumpCmd extends AbstractRunsCmd {
                     addFile(out, String.format("tasks/%d/.command.out", task.getTaskId()), taskOut);
                 } catch (ApiException e) {
                     // Ignore error 404 that means that the file is no longer available
-                    if (e.getCode() != 404) {
+                    // Ignore error 400 that means that the run was launch using Nextflow CLI
+                    if (e.getCode() != 404 && e.getCode() != 400) {
                         throw e;
                     }
                 }
@@ -227,7 +229,8 @@ public class DumpCmd extends AbstractRunsCmd {
                     addFile(out, String.format("tasks/%d/.command.err", task.getTaskId()), taskOut);
                 } catch (ApiException e) {
                     // Ignore error 404 that means that the file is no longer available
-                    if (e.getCode() != 404) {
+                    // Ignore error 400 that means that the run was launch using Nextflow CLI
+                    if (e.getCode() != 404 && e.getCode() != 400) {
                         throw e;
                     }
                 }
@@ -237,7 +240,8 @@ public class DumpCmd extends AbstractRunsCmd {
                     addFile(out, String.format("tasks/%d/.command.log", task.getTaskId()), taskOut);
                 } catch (ApiException e) {
                     // Ignore error 404 that means that the file is no longer available
-                    if (e.getCode() != 404) {
+                    // Ignore error 400 that means that the run was launch using Nextflow CLI
+                    if (e.getCode() != 404 && e.getCode() != 400) {
                         throw e;
                     }
                 }
@@ -249,7 +253,8 @@ public class DumpCmd extends AbstractRunsCmd {
                     addFile(out, String.format("tasks/%d/.fusion.log", task.getTaskId()), taskOut);
                 } catch (ApiException e) {
                     // Ignore error 404 that means that the file is no longer available
-                    if (e.getCode() != 404) {
+                    // Ignore error 400 that means that the run was launch using Nextflow CLI
+                    if (e.getCode() != 404 && e.getCode() != 400) {
                         throw e;
                     }
                 }

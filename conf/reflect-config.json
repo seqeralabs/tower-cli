@@ -2477,7 +2477,8 @@
   "name":"io.seqera.tower.model.DescribeTaskResponse",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setTask","parameterTypes":["io.seqera.tower.model.Task"] }]
 },
 {
   "name":"io.seqera.tower.model.DescribeUserResponse",
@@ -2497,7 +2498,8 @@
   "name":"io.seqera.tower.model.DescribeWorkflowResponse",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setJobInfo","parameterTypes":["io.seqera.tower.model.JobInfoDto"] }, {"name":"setLabels","parameterTypes":["java.util.List"] }, {"name":"setOptimized","parameterTypes":["java.lang.Boolean"] }, {"name":"setOrgId","parameterTypes":["java.lang.Long"] }, {"name":"setOrgName","parameterTypes":["java.lang.String"] }, {"name":"setPlatform","parameterTypes":["io.seqera.tower.model.ComputePlatformDto"] }, {"name":"setProgress","parameterTypes":["io.seqera.tower.model.ProgressData"] }, {"name":"setWorkflow","parameterTypes":["io.seqera.tower.model.Workflow"] }, {"name":"setWorkspaceId","parameterTypes":["java.lang.Long"] }, {"name":"setWorkspaceName","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.model.DescribeWorkspaceResponse",
@@ -2533,13 +2535,15 @@
   "name":"io.seqera.tower.model.GetProgressResponse",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setProgress","parameterTypes":["io.seqera.tower.model.ProgressData"] }]
 },
 {
   "name":"io.seqera.tower.model.GetWorkflowMetricsResponse",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setMetrics","parameterTypes":["java.util.List"] }]
 },
 {
   "name":"io.seqera.tower.model.GitHubSecurityKeys",
@@ -2735,7 +2739,8 @@
   "name":"io.seqera.tower.model.ListTasksResponse",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setTasks","parameterTypes":["java.util.List"] }, {"name":"setTotal","parameterTypes":["java.lang.Long"] }]
 },
 {
   "name":"io.seqera.tower.model.ListTeamResponse",
@@ -2786,14 +2791,14 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setMenus","parameterTypes":["java.util.List"] }]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getMenus","parameterTypes":[] }, {"name":"setMenus","parameterTypes":["java.util.List"] }]
 },
 {
   "name":"io.seqera.tower.model.NavbarConfigNavbarMenu",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setLabel","parameterTypes":["java.lang.String"] }, {"name":"setUrl","parameterTypes":["java.lang.String"] }]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getLabel","parameterTypes":[] }, {"name":"getUrl","parameterTypes":[] }, {"name":"setLabel","parameterTypes":["java.lang.String"] }, {"name":"setUrl","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.model.OrgAndWorkspaceDto",
@@ -2864,19 +2869,22 @@
   "name":"io.seqera.tower.model.ProcessLoad",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setCached","parameterTypes":["java.lang.Long"] }, {"name":"setCpuEfficiency","parameterTypes":["java.lang.Float"] }, {"name":"setCpuLoad","parameterTypes":["java.lang.Long"] }, {"name":"setCpuTime","parameterTypes":["java.lang.Long"] }, {"name":"setCpus","parameterTypes":["java.lang.Long"] }, {"name":"setDateCreated","parameterTypes":["java.time.OffsetDateTime"] }, {"name":"setFailed","parameterTypes":["java.lang.Long"] }, {"name":"setInvCtxSwitch","parameterTypes":["java.lang.Long"] }, {"name":"setLastUpdated","parameterTypes":["java.time.OffsetDateTime"] }, {"name":"setLoadCpus","parameterTypes":["java.lang.Long"] }, {"name":"setLoadMemory","parameterTypes":["java.lang.Long"] }, {"name":"setLoadTasks","parameterTypes":["java.lang.Long"] }, {"name":"setMemoryEfficiency","parameterTypes":["java.lang.Float"] }, {"name":"setMemoryReq","parameterTypes":["java.lang.Long"] }, {"name":"setMemoryRss","parameterTypes":["java.lang.Long"] }, {"name":"setPeakCpus","parameterTypes":["java.lang.Long"] }, {"name":"setPeakMemory","parameterTypes":["java.lang.Long"] }, {"name":"setPeakTasks","parameterTypes":["java.lang.Long"] }, {"name":"setPending","parameterTypes":["java.lang.Long"] }, {"name":"setProcess","parameterTypes":["java.lang.String"] }, {"name":"setReadBytes","parameterTypes":["java.lang.Long"] }, {"name":"setRunning","parameterTypes":["java.lang.Long"] }, {"name":"setSubmitted","parameterTypes":["java.lang.Long"] }, {"name":"setSucceeded","parameterTypes":["java.lang.Long"] }, {"name":"setVolCtxSwitch","parameterTypes":["java.lang.Long"] }, {"name":"setWriteBytes","parameterTypes":["java.lang.Long"] }]
 },
 {
   "name":"io.seqera.tower.model.ProgressData",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setProcessesProgress","parameterTypes":["java.util.List"] }, {"name":"setWorkflowProgress","parameterTypes":["io.seqera.tower.model.WorkflowLoad"] }]
 },
 {
   "name":"io.seqera.tower.model.ResourceData",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getMax","parameterTypes":[] }, {"name":"getMaxLabel","parameterTypes":[] }, {"name":"getMean","parameterTypes":[] }, {"name":"getMin","parameterTypes":[] }, {"name":"getMinLabel","parameterTypes":[] }, {"name":"getQ1","parameterTypes":[] }, {"name":"getQ1Label","parameterTypes":[] }, {"name":"getQ2","parameterTypes":[] }, {"name":"getQ2Label","parameterTypes":[] }, {"name":"getQ3","parameterTypes":[] }, {"name":"getQ3Label","parameterTypes":[] }, {"name":"getWarnings","parameterTypes":[] }, {"name":"setMax","parameterTypes":["java.lang.Float"] }, {"name":"setMaxLabel","parameterTypes":["java.lang.String"] }, {"name":"setMean","parameterTypes":["java.lang.Float"] }, {"name":"setMin","parameterTypes":["java.lang.Float"] }, {"name":"setMinLabel","parameterTypes":["java.lang.String"] }, {"name":"setQ1","parameterTypes":["java.lang.Float"] }, {"name":"setQ1Label","parameterTypes":["java.lang.String"] }, {"name":"setQ2","parameterTypes":["java.lang.Float"] }, {"name":"setQ2Label","parameterTypes":["java.lang.String"] }, {"name":"setQ3","parameterTypes":["java.lang.Float"] }, {"name":"setQ3Label","parameterTypes":["java.lang.String"] }, {"name":"setWarnings","parameterTypes":["java.util.List"] }]
 },
 {
   "name":"io.seqera.tower.model.SSHSecurityKeys",
@@ -2894,7 +2902,7 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setAllowInstanceCredentials","parameterTypes":["java.lang.Boolean"] }, {"name":"setAllowLocalRepos","parameterTypes":["java.lang.Boolean"] }, {"name":"setAnalytics","parameterTypes":["io.seqera.tower.model.Analytics"] }, {"name":"setApiVersion","parameterTypes":["java.lang.String"] }, {"name":"setArm64Enabled","parameterTypes":["java.lang.Boolean"] }, {"name":"setAuthTypes","parameterTypes":["java.util.List"] }, {"name":"setCommitId","parameterTypes":["java.lang.String"] }, {"name":"setContentMaxFileSize","parameterTypes":["java.lang.Long"] }, {"name":"setContentUrl","parameterTypes":["java.lang.String"] }, {"name":"setDataExplorerAllowedWorkspaces","parameterTypes":["java.util.List"] }, {"name":"setEvalWorkspaceIds","parameterTypes":["java.util.List"] }, {"name":"setForgePrefix","parameterTypes":["java.lang.String"] }, {"name":"setGroundswellAllowedWorkspaces","parameterTypes":["java.util.List"] }, {"name":"setGroundswellEnabled","parameterTypes":["java.lang.Boolean"] }, {"name":"setHeartbeatInterval","parameterTypes":["java.lang.Integer"] }, {"name":"setLandingUrl","parameterTypes":["java.lang.String"] }, {"name":"setLoginPath","parameterTypes":["java.lang.String"] }, {"name":"setNavbar","parameterTypes":["io.seqera.tower.model.NavbarConfig"] }, {"name":"setSeqeraCloud","parameterTypes":["java.lang.Boolean"] }, {"name":"setTermsOfUseUrl","parameterTypes":["java.lang.String"] }, {"name":"setUserWorkspaceEnabled","parameterTypes":["java.lang.Boolean"] }, {"name":"setVersion","parameterTypes":["java.lang.String"] }, {"name":"setWaveAllowedWorkspaces","parameterTypes":["java.util.List"] }, {"name":"setWaveEnabled","parameterTypes":["java.lang.Boolean"] }]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getAllowInstanceCredentials","parameterTypes":[] }, {"name":"getAllowLocalRepos","parameterTypes":[] }, {"name":"getAnalytics","parameterTypes":[] }, {"name":"getApiVersion","parameterTypes":[] }, {"name":"getArm64Enabled","parameterTypes":[] }, {"name":"getAuthTypes","parameterTypes":[] }, {"name":"getCommitId","parameterTypes":[] }, {"name":"getContentMaxFileSize","parameterTypes":[] }, {"name":"getContentUrl","parameterTypes":[] }, {"name":"getDataExplorerAllowedWorkspaces","parameterTypes":[] }, {"name":"getEvalWorkspaceIds","parameterTypes":[] }, {"name":"getForgePrefix","parameterTypes":[] }, {"name":"getGroundswellAllowedWorkspaces","parameterTypes":[] }, {"name":"getGroundswellEnabled","parameterTypes":[] }, {"name":"getHeartbeatInterval","parameterTypes":[] }, {"name":"getLandingUrl","parameterTypes":[] }, {"name":"getLoginPath","parameterTypes":[] }, {"name":"getNavbar","parameterTypes":[] }, {"name":"getSeqeraCloud","parameterTypes":[] }, {"name":"getTermsOfUseUrl","parameterTypes":[] }, {"name":"getUserWorkspaceEnabled","parameterTypes":[] }, {"name":"getVersion","parameterTypes":[] }, {"name":"getWaveAllowedWorkspaces","parameterTypes":[] }, {"name":"getWaveEnabled","parameterTypes":[] }, {"name":"setAllowInstanceCredentials","parameterTypes":["java.lang.Boolean"] }, {"name":"setAllowLocalRepos","parameterTypes":["java.lang.Boolean"] }, {"name":"setAnalytics","parameterTypes":["io.seqera.tower.model.Analytics"] }, {"name":"setApiVersion","parameterTypes":["java.lang.String"] }, {"name":"setArm64Enabled","parameterTypes":["java.lang.Boolean"] }, {"name":"setAuthTypes","parameterTypes":["java.util.List"] }, {"name":"setCommitId","parameterTypes":["java.lang.String"] }, {"name":"setContentMaxFileSize","parameterTypes":["java.lang.Long"] }, {"name":"setContentUrl","parameterTypes":["java.lang.String"] }, {"name":"setDataExplorerAllowedWorkspaces","parameterTypes":["java.util.List"] }, {"name":"setEvalWorkspaceIds","parameterTypes":["java.util.List"] }, {"name":"setForgePrefix","parameterTypes":["java.lang.String"] }, {"name":"setGroundswellAllowedWorkspaces","parameterTypes":["java.util.List"] }, {"name":"setGroundswellEnabled","parameterTypes":["java.lang.Boolean"] }, {"name":"setHeartbeatInterval","parameterTypes":["java.lang.Integer"] }, {"name":"setLandingUrl","parameterTypes":["java.lang.String"] }, {"name":"setLoginPath","parameterTypes":["java.lang.String"] }, {"name":"setNavbar","parameterTypes":["io.seqera.tower.model.NavbarConfig"] }, {"name":"setSeqeraCloud","parameterTypes":["java.lang.Boolean"] }, {"name":"setTermsOfUseUrl","parameterTypes":["java.lang.String"] }, {"name":"setUserWorkspaceEnabled","parameterTypes":["java.lang.Boolean"] }, {"name":"setVersion","parameterTypes":["java.lang.String"] }, {"name":"setWaveAllowedWorkspaces","parameterTypes":["java.util.List"] }, {"name":"setWaveEnabled","parameterTypes":["java.lang.Boolean"] }]
 },
 {
   "name":"io.seqera.tower.model.ServiceInfoResponse",
@@ -2926,12 +2934,14 @@
   "name":"io.seqera.tower.model.Task",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getAttempt","parameterTypes":[] }, {"name":"getCloudZone","parameterTypes":[] }, {"name":"getComplete","parameterTypes":[] }, {"name":"getContainer","parameterTypes":[] }, {"name":"getCost","parameterTypes":[] }, {"name":"getCpus","parameterTypes":[] }, {"name":"getDateCreated_JsonNullable","parameterTypes":[] }, {"name":"getDisk","parameterTypes":[] }, {"name":"getDuration","parameterTypes":[] }, {"name":"getEnv","parameterTypes":[] }, {"name":"getErrorAction","parameterTypes":[] }, {"name":"getExecutor","parameterTypes":[] }, {"name":"getExit","parameterTypes":[] }, {"name":"getExitStatus","parameterTypes":[] }, {"name":"getHash","parameterTypes":[] }, {"name":"getId_JsonNullable","parameterTypes":[] }, {"name":"getInvCtxt","parameterTypes":[] }, {"name":"getLastUpdated_JsonNullable","parameterTypes":[] }, {"name":"getMachineType","parameterTypes":[] }, {"name":"getMemory","parameterTypes":[] }, {"name":"getModule","parameterTypes":[] }, {"name":"getName","parameterTypes":[] }, {"name":"getNativeId","parameterTypes":[] }, {"name":"getPcpu","parameterTypes":[] }, {"name":"getPeakRss","parameterTypes":[] }, {"name":"getPeakVmem","parameterTypes":[] }, {"name":"getPmem","parameterTypes":[] }, {"name":"getPriceModel","parameterTypes":[] }, {"name":"getProcess","parameterTypes":[] }, {"name":"getQueue","parameterTypes":[] }, {"name":"getRchar","parameterTypes":[] }, {"name":"getReadBytes","parameterTypes":[] }, {"name":"getRealtime","parameterTypes":[] }, {"name":"getRss","parameterTypes":[] }, {"name":"getScratch","parameterTypes":[] }, {"name":"getScript","parameterTypes":[] }, {"name":"getStart","parameterTypes":[] }, {"name":"getStatus","parameterTypes":[] }, {"name":"getSubmit","parameterTypes":[] }, {"name":"getSyscr","parameterTypes":[] }, {"name":"getSyscw","parameterTypes":[] }, {"name":"getTag","parameterTypes":[] }, {"name":"getTaskId","parameterTypes":[] }, {"name":"getTime","parameterTypes":[] }, {"name":"getVmem","parameterTypes":[] }, {"name":"getVolCtxt","parameterTypes":[] }, {"name":"getWchar","parameterTypes":[] }, {"name":"getWorkdir","parameterTypes":[] }, {"name":"getWriteBytes","parameterTypes":[] }, {"name":"setAttempt","parameterTypes":["java.lang.Integer"] }, {"name":"setCloudZone","parameterTypes":["java.lang.String"] }, {"name":"setComplete","parameterTypes":["java.time.OffsetDateTime"] }, {"name":"setContainer","parameterTypes":["java.lang.String"] }, {"name":"setCost","parameterTypes":["java.math.BigDecimal"] }, {"name":"setCpus","parameterTypes":["java.lang.Integer"] }, {"name":"setDateCreated_JsonNullable","parameterTypes":["org.openapitools.jackson.nullable.JsonNullable"] }, {"name":"setDisk","parameterTypes":["java.lang.Long"] }, {"name":"setDuration","parameterTypes":["java.lang.Long"] }, {"name":"setEnv","parameterTypes":["java.lang.String"] }, {"name":"setErrorAction","parameterTypes":["java.lang.String"] }, {"name":"setExecutor","parameterTypes":["java.lang.String"] }, {"name":"setExit","parameterTypes":["java.lang.String"] }, {"name":"setExitStatus","parameterTypes":["java.lang.Integer"] }, {"name":"setHash","parameterTypes":["java.lang.String"] }, {"name":"setId_JsonNullable","parameterTypes":["org.openapitools.jackson.nullable.JsonNullable"] }, {"name":"setInvCtxt","parameterTypes":["java.lang.Long"] }, {"name":"setLastUpdated_JsonNullable","parameterTypes":["org.openapitools.jackson.nullable.JsonNullable"] }, {"name":"setMachineType","parameterTypes":["java.lang.String"] }, {"name":"setMemory","parameterTypes":["java.lang.Long"] }, {"name":"setModule","parameterTypes":["java.util.List"] }, {"name":"setName","parameterTypes":["java.lang.String"] }, {"name":"setNativeId","parameterTypes":["java.lang.String"] }, {"name":"setPcpu","parameterTypes":["java.lang.Double"] }, {"name":"setPeakRss","parameterTypes":["java.lang.Long"] }, {"name":"setPeakVmem","parameterTypes":["java.lang.Long"] }, {"name":"setPmem","parameterTypes":["java.lang.Double"] }, {"name":"setPriceModel","parameterTypes":["io.seqera.tower.model.CloudPriceModel"] }, {"name":"setProcess","parameterTypes":["java.lang.String"] }, {"name":"setQueue","parameterTypes":["java.lang.String"] }, {"name":"setRchar","parameterTypes":["java.lang.Long"] }, {"name":"setReadBytes","parameterTypes":["java.lang.Long"] }, {"name":"setRealtime","parameterTypes":["java.lang.Long"] }, {"name":"setRss","parameterTypes":["java.lang.Long"] }, {"name":"setScratch","parameterTypes":["java.lang.String"] }, {"name":"setScript","parameterTypes":["java.lang.String"] }, {"name":"setStart","parameterTypes":["java.time.OffsetDateTime"] }, {"name":"setStatus","parameterTypes":["io.seqera.tower.model.TaskStatus"] }, {"name":"setSubmit","parameterTypes":["java.time.OffsetDateTime"] }, {"name":"setSyscr","parameterTypes":["java.lang.Long"] }, {"name":"setSyscw","parameterTypes":["java.lang.Long"] }, {"name":"setTag","parameterTypes":["java.lang.String"] }, {"name":"setTaskId","parameterTypes":["java.lang.Long"] }, {"name":"setTime","parameterTypes":["java.lang.Long"] }, {"name":"setVmem","parameterTypes":["java.lang.Long"] }, {"name":"setVolCtxt","parameterTypes":["java.lang.Long"] }, {"name":"setWchar","parameterTypes":["java.lang.Long"] }, {"name":"setWorkdir","parameterTypes":["java.lang.String"] }, {"name":"setWriteBytes","parameterTypes":["java.lang.Long"] }]
 },
 {
   "name":"io.seqera.tower.model.TaskStatus",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "methods":[{"name":"fromValue","parameterTypes":["java.lang.String"] }, {"name":"getValue","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.Team",
@@ -3065,25 +3075,29 @@
   "name":"io.seqera.tower.model.WfManifest",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getAuthor","parameterTypes":[] }, {"name":"getDefaultBranch","parameterTypes":[] }, {"name":"getDescription","parameterTypes":[] }, {"name":"getGitmodules","parameterTypes":[] }, {"name":"getHomePage","parameterTypes":[] }, {"name":"getMainScript","parameterTypes":[] }, {"name":"getName","parameterTypes":[] }, {"name":"getNextflowVersion","parameterTypes":[] }, {"name":"getVersion","parameterTypes":[] }, {"name":"setAuthor","parameterTypes":["java.lang.String"] }, {"name":"setDefaultBranch","parameterTypes":["java.lang.String"] }, {"name":"setDescription","parameterTypes":["java.lang.String"] }, {"name":"setGitmodules","parameterTypes":["java.lang.String"] }, {"name":"setHomePage","parameterTypes":["java.lang.String"] }, {"name":"setMainScript","parameterTypes":["java.lang.String"] }, {"name":"setName","parameterTypes":["java.lang.String"] }, {"name":"setNextflowVersion","parameterTypes":["java.lang.String"] }, {"name":"setVersion","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.model.WfNextflow",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getBuild","parameterTypes":[] }, {"name":"getTimestamp","parameterTypes":[] }, {"name":"getVersion","parameterTypes":[] }, {"name":"setBuild","parameterTypes":["java.lang.String"] }, {"name":"setTimestamp","parameterTypes":["java.time.OffsetDateTime"] }, {"name":"setVersion","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.model.WfStats",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getCachedCount","parameterTypes":[] }, {"name":"getCachedCountFmt","parameterTypes":[] }, {"name":"getCachedDuration","parameterTypes":[] }, {"name":"getCachedPct","parameterTypes":[] }, {"name":"getComputeTimeFmt","parameterTypes":[] }, {"name":"getFailedCount","parameterTypes":[] }, {"name":"getFailedCountFmt","parameterTypes":[] }, {"name":"getFailedDuration","parameterTypes":[] }, {"name":"getFailedPct","parameterTypes":[] }, {"name":"getIgnoredCount","parameterTypes":[] }, {"name":"getIgnoredCountFmt","parameterTypes":[] }, {"name":"getIgnoredPct","parameterTypes":[] }, {"name":"getSucceedCount","parameterTypes":[] }, {"name":"getSucceedCountFmt","parameterTypes":[] }, {"name":"getSucceedDuration","parameterTypes":[] }, {"name":"getSucceedPct","parameterTypes":[] }, {"name":"setCachedCount","parameterTypes":["java.lang.Integer"] }, {"name":"setCachedCountFmt","parameterTypes":["java.lang.String"] }, {"name":"setCachedDuration","parameterTypes":["java.lang.Long"] }, {"name":"setCachedPct","parameterTypes":["java.lang.Float"] }, {"name":"setComputeTimeFmt","parameterTypes":["java.lang.String"] }, {"name":"setFailedCount","parameterTypes":["java.lang.Integer"] }, {"name":"setFailedCountFmt","parameterTypes":["java.lang.String"] }, {"name":"setFailedDuration","parameterTypes":["java.lang.Long"] }, {"name":"setFailedPct","parameterTypes":["java.lang.Float"] }, {"name":"setIgnoredCount","parameterTypes":["java.lang.Integer"] }, {"name":"setIgnoredCountFmt","parameterTypes":["java.lang.String"] }, {"name":"setIgnoredPct","parameterTypes":["java.lang.Float"] }, {"name":"setSucceedCount","parameterTypes":["java.lang.Integer"] }, {"name":"setSucceedCountFmt","parameterTypes":["java.lang.String"] }, {"name":"setSucceedDuration","parameterTypes":["java.lang.Long"] }, {"name":"setSucceedPct","parameterTypes":["java.lang.Float"] }]
 },
 {
   "name":"io.seqera.tower.model.Workflow",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getCommandLine","parameterTypes":[] }, {"name":"getCommitId","parameterTypes":[] }, {"name":"getComplete","parameterTypes":[] }, {"name":"getConfigFiles","parameterTypes":[] }, {"name":"getConfigText","parameterTypes":[] }, {"name":"getContainer","parameterTypes":[] }, {"name":"getContainerEngine","parameterTypes":[] }, {"name":"getDateCreated_JsonNullable","parameterTypes":[] }, {"name":"getDeleted","parameterTypes":[] }, {"name":"getDuration","parameterTypes":[] }, {"name":"getErrorMessage","parameterTypes":[] }, {"name":"getErrorReport","parameterTypes":[] }, {"name":"getExitStatus","parameterTypes":[] }, {"name":"getHomeDir","parameterTypes":[] }, {"name":"getId","parameterTypes":[] }, {"name":"getLastUpdated_JsonNullable","parameterTypes":[] }, {"name":"getLaunchDir","parameterTypes":[] }, {"name":"getLaunchId","parameterTypes":[] }, {"name":"getLogFile","parameterTypes":[] }, {"name":"getManifest","parameterTypes":[] }, {"name":"getNextflow","parameterTypes":[] }, {"name":"getOperationId","parameterTypes":[] }, {"name":"getOutFile","parameterTypes":[] }, {"name":"getOwnerId","parameterTypes":[] }, {"name":"getParams","parameterTypes":[] }, {"name":"getProfile","parameterTypes":[] }, {"name":"getProjectDir","parameterTypes":[] }, {"name":"getProjectName","parameterTypes":[] }, {"name":"getRepository","parameterTypes":[] }, {"name":"getResume","parameterTypes":[] }, {"name":"getRevision","parameterTypes":[] }, {"name":"getRunName","parameterTypes":[] }, {"name":"getScriptFile","parameterTypes":[] }, {"name":"getScriptId","parameterTypes":[] }, {"name":"getScriptName","parameterTypes":[] }, {"name":"getSessionId","parameterTypes":[] }, {"name":"getStart","parameterTypes":[] }, {"name":"getStats","parameterTypes":[] }, {"name":"getStatus","parameterTypes":[] }, {"name":"getSubmit","parameterTypes":[] }, {"name":"getSuccess","parameterTypes":[] }, {"name":"getUserName","parameterTypes":[] }, {"name":"getWorkDir","parameterTypes":[] }, {"name":"setCommandLine","parameterTypes":["java.lang.String"] }, {"name":"setCommitId","parameterTypes":["java.lang.String"] }, {"name":"setComplete","parameterTypes":["java.time.OffsetDateTime"] }, {"name":"setConfigFiles","parameterTypes":["java.util.List"] }, {"name":"setConfigText","parameterTypes":["java.lang.String"] }, {"name":"setContainer","parameterTypes":["java.lang.String"] }, {"name":"setContainerEngine","parameterTypes":["java.lang.String"] }, {"name":"setDateCreated_JsonNullable","parameterTypes":["org.openapitools.jackson.nullable.JsonNullable"] }, {"name":"setDuration","parameterTypes":["java.lang.Long"] }, {"name":"setErrorMessage","parameterTypes":["java.lang.String"] }, {"name":"setErrorReport","parameterTypes":["java.lang.String"] }, {"name":"setExitStatus","parameterTypes":["java.lang.Integer"] }, {"name":"setHomeDir","parameterTypes":["java.lang.String"] }, {"name":"setId","parameterTypes":["java.lang.String"] }, {"name":"setLastUpdated_JsonNullable","parameterTypes":["org.openapitools.jackson.nullable.JsonNullable"] }, {"name":"setLaunchDir","parameterTypes":["java.lang.String"] }, {"name":"setLaunchId","parameterTypes":["java.lang.String"] }, {"name":"setLogFile","parameterTypes":["java.lang.String"] }, {"name":"setManifest","parameterTypes":["io.seqera.tower.model.WfManifest"] }, {"name":"setNextflow","parameterTypes":["io.seqera.tower.model.WfNextflow"] }, {"name":"setOperationId","parameterTypes":["java.lang.String"] }, {"name":"setOutFile","parameterTypes":["java.lang.String"] }, {"name":"setParams","parameterTypes":["java.util.Map"] }, {"name":"setProfile","parameterTypes":["java.lang.String"] }, {"name":"setProjectDir","parameterTypes":["java.lang.String"] }, {"name":"setProjectName","parameterTypes":["java.lang.String"] }, {"name":"setRepository","parameterTypes":["java.lang.String"] }, {"name":"setResume","parameterTypes":["java.lang.Boolean"] }, {"name":"setRevision","parameterTypes":["java.lang.String"] }, {"name":"setRunName","parameterTypes":["java.lang.String"] }, {"name":"setScriptFile","parameterTypes":["java.lang.String"] }, {"name":"setScriptId","parameterTypes":["java.lang.String"] }, {"name":"setScriptName","parameterTypes":["java.lang.String"] }, {"name":"setSessionId","parameterTypes":["java.lang.String"] }, {"name":"setStart","parameterTypes":["java.time.OffsetDateTime"] }, {"name":"setStats","parameterTypes":["io.seqera.tower.model.WfStats"] }, {"name":"setStatus","parameterTypes":["io.seqera.tower.model.WorkflowStatus"] }, {"name":"setSubmit","parameterTypes":["java.time.OffsetDateTime"] }, {"name":"setSuccess","parameterTypes":["java.lang.Boolean"] }, {"name":"setUserName","parameterTypes":["java.lang.String"] }, {"name":"setWorkDir","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.model.WorkflowDbDto",
@@ -3109,18 +3123,21 @@
   "name":"io.seqera.tower.model.WorkflowLoad",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getCached","parameterTypes":[] }, {"name":"getCost","parameterTypes":[] }, {"name":"getCpuEfficiency","parameterTypes":[] }, {"name":"getCpuLoad","parameterTypes":[] }, {"name":"getCpuTime","parameterTypes":[] }, {"name":"getCpus","parameterTypes":[] }, {"name":"getDateCreated","parameterTypes":[] }, {"name":"getExecutors","parameterTypes":[] }, {"name":"getFailed","parameterTypes":[] }, {"name":"getInvCtxSwitch","parameterTypes":[] }, {"name":"getLastUpdated","parameterTypes":[] }, {"name":"getLoadCpus","parameterTypes":[] }, {"name":"getLoadMemory","parameterTypes":[] }, {"name":"getLoadTasks","parameterTypes":[] }, {"name":"getMemoryEfficiency","parameterTypes":[] }, {"name":"getMemoryReq","parameterTypes":[] }, {"name":"getMemoryRss","parameterTypes":[] }, {"name":"getPeakCpus","parameterTypes":[] }, {"name":"getPeakMemory","parameterTypes":[] }, {"name":"getPeakTasks","parameterTypes":[] }, {"name":"getPending","parameterTypes":[] }, {"name":"getReadBytes","parameterTypes":[] }, {"name":"getRunning","parameterTypes":[] }, {"name":"getSubmitted","parameterTypes":[] }, {"name":"getSucceeded","parameterTypes":[] }, {"name":"getVolCtxSwitch","parameterTypes":[] }, {"name":"getWriteBytes","parameterTypes":[] }, {"name":"setCached","parameterTypes":["java.lang.Long"] }, {"name":"setCost","parameterTypes":["java.math.BigDecimal"] }, {"name":"setCpuEfficiency","parameterTypes":["java.lang.Float"] }, {"name":"setCpuLoad","parameterTypes":["java.lang.Long"] }, {"name":"setCpuTime","parameterTypes":["java.lang.Long"] }, {"name":"setCpus","parameterTypes":["java.lang.Long"] }, {"name":"setDateCreated","parameterTypes":["java.time.OffsetDateTime"] }, {"name":"setExecutors","parameterTypes":["java.util.List"] }, {"name":"setFailed","parameterTypes":["java.lang.Long"] }, {"name":"setInvCtxSwitch","parameterTypes":["java.lang.Long"] }, {"name":"setLastUpdated","parameterTypes":["java.time.OffsetDateTime"] }, {"name":"setLoadCpus","parameterTypes":["java.lang.Long"] }, {"name":"setLoadMemory","parameterTypes":["java.lang.Long"] }, {"name":"setLoadTasks","parameterTypes":["java.lang.Long"] }, {"name":"setMemoryEfficiency","parameterTypes":["java.lang.Float"] }, {"name":"setMemoryReq","parameterTypes":["java.lang.Long"] }, {"name":"setMemoryRss","parameterTypes":["java.lang.Long"] }, {"name":"setPeakCpus","parameterTypes":["java.lang.Long"] }, {"name":"setPeakMemory","parameterTypes":["java.lang.Long"] }, {"name":"setPeakTasks","parameterTypes":["java.lang.Long"] }, {"name":"setPending","parameterTypes":["java.lang.Long"] }, {"name":"setReadBytes","parameterTypes":["java.lang.Long"] }, {"name":"setRunning","parameterTypes":["java.lang.Long"] }, {"name":"setSubmitted","parameterTypes":["java.lang.Long"] }, {"name":"setSucceeded","parameterTypes":["java.lang.Long"] }, {"name":"setVolCtxSwitch","parameterTypes":["java.lang.Long"] }, {"name":"setWriteBytes","parameterTypes":["java.lang.Long"] }]
 },
 {
   "name":"io.seqera.tower.model.WorkflowMetrics",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getCpu","parameterTypes":[] }, {"name":"getCpuUsage","parameterTypes":[] }, {"name":"getId_JsonNullable","parameterTypes":[] }, {"name":"getMem","parameterTypes":[] }, {"name":"getMemUsage","parameterTypes":[] }, {"name":"getProcess","parameterTypes":[] }, {"name":"getReads","parameterTypes":[] }, {"name":"getTime","parameterTypes":[] }, {"name":"getTimeUsage","parameterTypes":[] }, {"name":"getVmem","parameterTypes":[] }, {"name":"getWrites","parameterTypes":[] }, {"name":"setCpu","parameterTypes":["io.seqera.tower.model.ResourceData"] }, {"name":"setCpuUsage","parameterTypes":["io.seqera.tower.model.ResourceData"] }, {"name":"setId_JsonNullable","parameterTypes":["org.openapitools.jackson.nullable.JsonNullable"] }, {"name":"setMem","parameterTypes":["io.seqera.tower.model.ResourceData"] }, {"name":"setMemUsage","parameterTypes":["io.seqera.tower.model.ResourceData"] }, {"name":"setProcess","parameterTypes":["java.lang.String"] }, {"name":"setReads","parameterTypes":["io.seqera.tower.model.ResourceData"] }, {"name":"setTime","parameterTypes":["io.seqera.tower.model.ResourceData"] }, {"name":"setTimeUsage","parameterTypes":["io.seqera.tower.model.ResourceData"] }, {"name":"setVmem","parameterTypes":["io.seqera.tower.model.ResourceData"] }, {"name":"setWrites","parameterTypes":["io.seqera.tower.model.ResourceData"] }]
 },
 {
   "name":"io.seqera.tower.model.WorkflowStatus",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "methods":[{"name":"fromValue","parameterTypes":["java.lang.String"] }, {"name":"getValue","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.Workspace",
