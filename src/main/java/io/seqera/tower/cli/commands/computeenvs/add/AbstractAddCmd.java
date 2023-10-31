@@ -59,7 +59,7 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
     @Option(names = {"--wait"}, description = "Wait until given status or fail. Valid options: ${COMPLETION-CANDIDATES}.")
     public ComputeEnvStatus wait;
 
-    @Option(names = {"--labels"}, description = "List of labels seperated by coma.", split = ",", converter = Label.ResourceLabelsConverter.class)
+    @Option(names = {"--labels"}, description = "Comma-separated list of labels.", split = ",", converter = Label.ResourceLabelsConverter.class)
     public  List<Label> labels;
 
     @Override
