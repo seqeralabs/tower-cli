@@ -168,7 +168,7 @@ jobs:
 
   mac-ARM64-image:
     name: MAC-ARM64
-    runs-on: macos-latest-large
+    runs-on: macos-latest-xlarge
     timeout-minutes: 90
 
     steps:
