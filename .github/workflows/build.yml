@@ -181,10 +181,18 @@ jobs:
       - name: Setup Graalvm
         uses: graalvm/setup-graalvm@v1
         with:
+          version: 'latest'
           java-version: '17.0.8'
           distribution: 'graalvm'
           components: 'native-image'
           github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Show GraalVM info
+        run: |
+          echo "GRAALVM_HOME: $GRAALVM_HOME"
+          echo "JAVA_HOME: $JAVA_HOME"
+          java --version
+          native-image --version
 
       - name: Tests
         run: ./gradlew cleanTest test
