@@ -324,7 +324,7 @@ jobs:
   release:
     name: Release
     if: "contains(github.event.head_commit.message, '[release]') && github.event.ref=='refs/heads/master'"
-    needs: [ linux-image, mac-image, windows-image ]
+    needs: [ linux-image, mac-image, mac-ARM64-image, windows-image ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
