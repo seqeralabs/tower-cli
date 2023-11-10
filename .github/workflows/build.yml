@@ -24,7 +24,7 @@ jobs:
       - name: Setup Graalvm
         uses: graalvm/setup-graalvm@v1
         with:
-          java-version: '17.0.8'
+          java-version: '21.0.1'
           distribution: 'graalvm'
           components: 'native-image'
           native-image-musl: 'true'
@@ -94,7 +94,7 @@ jobs:
       - name: Setup Graalvm
         uses: graalvm/setup-graalvm@v1
         with:
-          java-version: '17.0.8'
+          java-version: '21.0.1'
           distribution: 'graalvm'
           components: 'native-image'
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -118,6 +118,7 @@ jobs:
           GITHUB_USERNAME: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
           PLATFORM: osx-x86_64
+
       - name: Codesign binary
         if: "contains(github.event.head_commit.message, '[release]') && github.event.ref=='refs/heads/master'"
         env:
@@ -182,7 +183,7 @@ jobs:
         uses: graalvm/setup-graalvm@v1
         with:
           version: 'latest'
-          java-version: '17.0.8'
+          java-version: '21.0.1'
           distribution: 'graalvm'
           components: 'native-image'
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -276,7 +277,7 @@ jobs:
       - name: Setup Graalvm
         uses: graalvm/setup-graalvm@v1
         with:
-          java-version: '17.0.8'
+          java-version: '21.0.1'
           distribution: 'graalvm'
           components: 'native-image'
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -338,7 +339,7 @@ jobs:
       - name: Setup Java for JReleaser
         uses: actions/setup-java@v1
         with:
-          java-version: 17.0.8
+          java-version: 21.0.1
 
       - name: Version
         id: version
