@@ -69,7 +69,7 @@ task buildInfo {
 
 compileJava {
     sourceCompatibility = JavaVersion.toVersion("11")
-    targetCompatibility = JavaVersion.toVersion("11")
+    targetCompatibility = JavaVersion.toVersion("21")
     options.compilerArgs += ["-Aproject=${project.name}"]
     dependsOn buildInfo
 }
@@ -109,7 +109,7 @@ graalvmNative {
             buildArgs.add('-H:+ReportExceptionStackTraces')
 
             javaLauncher = javaToolchains.launcherFor {
-                languageVersion = JavaLanguageVersion.of(17)
+                languageVersion = JavaLanguageVersion.of(21)
             }
 
         }
