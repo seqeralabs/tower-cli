@@ -166,8 +166,8 @@ jobs:
           name: mac-binary-test-reports
           path: build/reports/tests/test/
 
-  mac-ARM64-image:
-    name: MAC-ARM64
+  mac-arm64-image:
+    name: MAC-arm64
     runs-on: macos-latest-xlarge
     timeout-minutes: 90
 
@@ -324,7 +324,7 @@ jobs:
   release:
     name: Release
     if: "contains(github.event.head_commit.message, '[release]') && github.event.ref=='refs/heads/master'"
-    needs: [ linux-image, mac-image, mac-ARM64-image, windows-image ]
+    needs: [ linux-image, mac-image, mac-arm64-image, windows-image ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
