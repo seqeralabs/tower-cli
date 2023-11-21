@@ -166,6 +166,101 @@ jobs:
           name: mac-binary-test-reports
           path: build/reports/tests/test/
 
+  mac-arm64-image:
+    name: MAC-arm64
+    runs-on: macos-latest-xlarge
+    timeout-minutes: 90
+
+    steps:
+      - name: Environment
+        run: env | sort
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Graalvm
+        uses: graalvm/setup-graalvm@v1
+        with:
+          version: 'latest'
+          java-version: '17.0.8'
+          distribution: 'graalvm'
+          components: 'native-image'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Show GraalVM info
+        run: |
+          echo "GRAALVM_HOME: $GRAALVM_HOME"
+          echo "JAVA_HOME: $JAVA_HOME"
+          java --version
+          native-image --version
+
+      - name: Tests
+        run: ./gradlew cleanTest test
+        env:
+          GITHUB_USERNAME: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
+
+      - name: Tests reports
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: mac-arm64-test-reports
+          path: build/reports/tests/test/
+
+      - name: Build Native Image
+        run: ./gradlew nativeCompile
+        env:
+          GITHUB_USERNAME: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
+          PLATFORM: osx-arm64
+      - name: Codesign binary
+        if: "contains(github.event.head_commit.message, '[release]') && github.event.ref=='refs/heads/master'"
+        env:
+          MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
+          MACOS_CERTIFICATE_PWD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
+          MACOS_CERTIFICATE_NAME: ${{ secrets.MACOS_CERTIFICATE_NAME }}
+          MACOS_CI_KEYCHAIN_PWD: ${{ secrets.MACOS_CI_KEYCHAIN_PWD }}
+        run: |
+          echo $MACOS_CERTIFICATE | base64 --decode > certificate.p12
+          security create-keychain -p "$MACOS_CI_KEYCHAIN_PWD" build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p "$MACOS_CI_KEYCHAIN_PWD" build.keychain
+          security import certificate.p12 -k build.keychain -P "$MACOS_CERTIFICATE_PWD" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$MACOS_CI_KEYCHAIN_PWD" build.keychain
+          /usr/bin/codesign --force -s "$MACOS_CERTIFICATE_NAME" --options runtime build/native/nativeCompile/tw -v
+
+      - name: Notarize binary
+        if: "contains(github.event.head_commit.message, '[release]') && github.event.ref=='refs/heads/master'"
+        env:
+          MACOS_AC_API_CERT: ${{ secrets.MACOS_AC_API_CERT }}
+          MACOS_AC_API_ISSUER_ID: ${{ secrets.MACOS_AC_API_ISSUER_ID }}
+          MACOS_AC_API_KEY_ID: ${{ secrets.MACOS_AC_API_KEY_ID }}
+        run: |
+          echo $MACOS_AC_API_CERT | base64 --decode > AuthKey.p8
+          xcrun notarytool store-credentials "notarytool-profile" -k AuthKey.p8 -d "$MACOS_AC_API_KEY_ID" -i "$MACOS_AC_API_ISSUER_ID"
+          ditto -c -k --keepParent "build/native/nativeCompile/tw" "notarization.zip"
+          xcrun notarytool submit "notarization.zip" --keychain-profile "notarytool-profile" --wait
+
+      - name: Upload Mac arm64 native image artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: tw_mac_arm64
+          path: build/native/nativeCompile/tw
+
+      - name: Binary tests
+        run: ./gradlew cleanTest test
+        env:
+          TOWER_CLI: build/native/nativeCompile/tw
+          GITHUB_USERNAME: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
+
+      - name: Binary tests reports
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: mac-arm64-binary-test-reports
+          path: build/reports/tests/test/
+
   windows-image:
     name: Windows
     runs-on: windows-latest
@@ -229,7 +324,7 @@ jobs:
   release:
     name: Release
     if: "contains(github.event.head_commit.message, '[release]') && github.event.ref=='refs/heads/master'"
-    needs: [ linux-image, mac-image, windows-image ]
+    needs: [ linux-image, mac-image, mac-arm64-image, windows-image ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
