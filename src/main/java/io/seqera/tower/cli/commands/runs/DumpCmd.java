@@ -24,14 +24,17 @@ import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.runs.RunDump;
+import io.seqera.tower.cli.shared.WorkflowDumpExportFormat;
 import io.seqera.tower.cli.utils.SilentPrintWriter;
 import io.seqera.tower.model.DescribeTaskResponse;
+import io.seqera.tower.model.DescribeWorkflowLaunchResponse;
 import io.seqera.tower.model.DescribeWorkflowResponse;
 import io.seqera.tower.model.Launch;
 import io.seqera.tower.model.ListTasksResponse;
 import io.seqera.tower.model.ServiceInfo;
 import io.seqera.tower.model.Task;
 import io.seqera.tower.model.TaskStatus;
+import io.seqera.tower.model.UserDbDto;
 import io.seqera.tower.model.Workflow;
 import io.seqera.tower.model.WorkflowLoad;
 import io.seqera.tower.model.WorkflowMetrics;
@@ -167,15 +170,36 @@ public class DumpCmd extends AbstractRunsCmd {
     private void dumpWorkflowDetails(PrintWriter progress, TarArchiveOutputStream out, Long wspId) throws ApiException, IOException {
         progress.println(ansi("- Workflow details"));
 
+        // User info
+        UserDbDto user = api().userInfo().getUser();
+
+        // General workflow info
         DescribeWorkflowResponse workflowResponse = workflowById(wspId, id);
         Workflow workflow = workflowResponse.getWorkflow();
         if (workflow == null) {
             throw new TowerException("Unknown workflow");
         }
+
+        // Launch info
+        Launch launch = null;
+        Long pipelineId = null;
+        if (workflow.getLaunchId() != null) {
+
+            launch = launchById(wspId, workflow.getLaunchId());
+
+            DescribeWorkflowLaunchResponse wfLaunchResponse = workflowLaunchById(wspId, workflow.getId());
+            if (wfLaunchResponse != null && wfLaunchResponse.getLaunch() != null) {
+                pipelineId = wfLaunchResponse.getLaunch().getPipelineId();
+            }
+        }
+
+        // Load and metrics info
         WorkflowLoad workflowLoad = workflowLoadByWorkflowId(wspId, id);
-        Launch launch = workflow.getLaunchId() != null ? launchById(wspId, workflow.getLaunchId()) : null;
         List<WorkflowMetrics> metrics = api().describeWorkflowMetrics(workflow.getId(), wspId).getMetrics();
-        addEntry(out, "workflow.json", Workflow.class, workflow);
+
+        WorkflowDumpExportFormat wfDetails = new WorkflowDumpExportFormat(workflow, pipelineId, wspId, user.getId(), user.getEmail());
+        addEntry(out, "workflow.json", WorkflowDumpExportFormat.serialize(wfDetails).getBytes());
+
         addEntry(out, "workflow-load.json", WorkflowLoad.class, workflowLoad);
         addEntry(out, "workflow-launch.json", Launch.class, launch);
         addEntry(out, "workflow-metrics.json", List.class, metrics);
@@ -285,8 +309,14 @@ public class DumpCmd extends AbstractRunsCmd {
         if (value == null) {
             return;
         }
+        addEntry(out, fileName, toJSON(type, value));
+    }
+
+    private void addEntry(TarArchiveOutputStream out, String fileName, byte[] data) throws IOException {
+        if (data == null) {
+            return;
+        }
         TarArchiveEntry entry = new TarArchiveEntry(fileName);
-        byte[] data = toJSON(type, value);
         entry.setSize(data.length);
         out.putArchiveEntry(entry);
         out.write(data);
