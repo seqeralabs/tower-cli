@@ -85,6 +85,9 @@ distributions:
       - path: "tw_mac/tw"
         transform: "{{distributionName}}-osx-x86_64"
         platform: osx-x86_64
+      - path: "tw_mac_arm64/tw"
+        transform: "{{distributionName}}-osx-arm64"
+        platform: osx-arm64
       - path: "tw_windows/tw.exe"
         transform: "{{distributionName}}-windows-x86_64.exe"
         platform: windows-x86_64
