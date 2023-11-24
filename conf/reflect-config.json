@@ -1970,10 +1970,11 @@
   "queryAllDeclaredMethods":true
 },
 {
-  "name":"io.seqera.tower.cli.shared.WorkflowDumpExportFormat$WorkflowDumpMixin",
+  "name":"io.seqera.tower.cli.shared.WorkflowMetadata",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"getPipelineId","parameterTypes":[] }, {"name":"getUserEmail","parameterTypes":[] }, {"name":"getUserId","parameterTypes":[] }, {"name":"getWorkspaceId","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.utils.VersionProvider",
@@ -2666,7 +2667,8 @@
   "name":"io.seqera.tower.model.ListParticipantsResponse",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setParticipants","parameterTypes":["java.util.List"] }, {"name":"setTotalSize","parameterTypes":["java.lang.Long"] }]
 },
 {
   "name":"io.seqera.tower.model.ListPipelineSecretsResponse",
@@ -2757,7 +2759,8 @@
 {
   "name":"io.seqera.tower.model.OrgRole",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "methods":[{"name":"fromValue","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.model.Organization",
@@ -2775,7 +2778,8 @@
   "name":"io.seqera.tower.model.ParticipantDbDto",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setEmail","parameterTypes":["java.lang.String"] }, {"name":"setFirstName","parameterTypes":["java.lang.String"] }, {"name":"setLastName","parameterTypes":["java.lang.String"] }, {"name":"setMemberId","parameterTypes":["java.lang.Long"] }, {"name":"setOrgRole","parameterTypes":["io.seqera.tower.model.OrgRole"] }, {"name":"setParticipantId","parameterTypes":["java.lang.Long"] }, {"name":"setTeamAvatarUrl","parameterTypes":["java.lang.String"] }, {"name":"setTeamId","parameterTypes":["java.lang.Long"] }, {"name":"setTeamName","parameterTypes":["java.lang.String"] }, {"name":"setType","parameterTypes":["io.seqera.tower.model.ParticipantType"] }, {"name":"setUserAvatarUrl","parameterTypes":["java.lang.String"] }, {"name":"setUserName","parameterTypes":["java.lang.String"] }, {"name":"setWspRole","parameterTypes":["io.seqera.tower.model.WspRole"] }]
 },
 {
   "name":"io.seqera.tower.model.ParticipantType",
@@ -3083,7 +3087,8 @@
 {
   "name":"io.seqera.tower.model.WspRole",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "methods":[{"name":"fromValue","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"java.io.Console",
