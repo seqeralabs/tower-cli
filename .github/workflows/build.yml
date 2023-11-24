@@ -6,6 +6,8 @@ on:
       - '!refs/tags/.*'
     tags-ignore:
       - '*'
+  pull_request:
+    types: [opened, reopened, synchronize]
 
 jobs:
 
