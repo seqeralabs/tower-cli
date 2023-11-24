@@ -24,17 +24,18 @@ import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.runs.RunDump;
-import io.seqera.tower.cli.shared.WorkflowDumpExportFormat;
+import io.seqera.tower.cli.shared.WorkflowMetadata;
 import io.seqera.tower.cli.utils.SilentPrintWriter;
 import io.seqera.tower.model.DescribeTaskResponse;
 import io.seqera.tower.model.DescribeWorkflowLaunchResponse;
 import io.seqera.tower.model.DescribeWorkflowResponse;
 import io.seqera.tower.model.Launch;
+import io.seqera.tower.model.ListParticipantsResponse;
 import io.seqera.tower.model.ListTasksResponse;
+import io.seqera.tower.model.ParticipantDbDto;
 import io.seqera.tower.model.ServiceInfo;
 import io.seqera.tower.model.Task;
 import io.seqera.tower.model.TaskStatus;
-import io.seqera.tower.model.UserDbDto;
 import io.seqera.tower.model.Workflow;
 import io.seqera.tower.model.WorkflowLoad;
 import io.seqera.tower.model.WorkflowMetrics;
@@ -170,9 +171,6 @@ public class DumpCmd extends AbstractRunsCmd {
     private void dumpWorkflowDetails(PrintWriter progress, TarArchiveOutputStream out, Long wspId) throws ApiException, IOException {
         progress.println(ansi("- Workflow details"));
 
-        // User info
-        UserDbDto user = api().userInfo().getUser();
-
         // General workflow info
         DescribeWorkflowResponse workflowResponse = workflowById(wspId, id);
         Workflow workflow = workflowResponse.getWorkflow();
@@ -193,13 +191,27 @@ public class DumpCmd extends AbstractRunsCmd {
             }
         }
 
+        // User info
+        Long userId = workflow.getOwnerId();
+        String userMail = null;
+        String userName = workflow.getUserName();
+        try {
+            ListParticipantsResponse participants = api().listWorkspaceParticipants(workflowResponse.getOrgId(), workflowResponse.getWorkspaceId(), null, null, null);
+            userMail = participants.getParticipants().stream()
+                    .filter(participant -> userName.equals(participant.getUserName()))
+                    .findFirst()
+                    .map(ParticipantDbDto::getEmail)
+                    .orElse(null);
+        } catch (ApiException ignored) {}
+
         // Load and metrics info
         WorkflowLoad workflowLoad = workflowLoadByWorkflowId(wspId, id);
         List<WorkflowMetrics> metrics = api().describeWorkflowMetrics(workflow.getId(), wspId).getMetrics();
 
-        WorkflowDumpExportFormat wfDetails = new WorkflowDumpExportFormat(workflow, pipelineId, wspId, user.getId(), user.getEmail());
-        addEntry(out, "workflow.json", WorkflowDumpExportFormat.serialize(wfDetails).getBytes());
+        WorkflowMetadata wfMetadata = new WorkflowMetadata(pipelineId, wspId, userId, userMail);
 
+        addEntry(out, "workflow.json", Workflow.class, workflow);
+        addEntry(out, "workflow-metadata.json", WorkflowMetadata.class, wfMetadata);
         addEntry(out, "workflow-load.json", WorkflowLoad.class, workflowLoad);
         addEntry(out, "workflow-launch.json", Launch.class, launch);
         addEntry(out, "workflow-metrics.json", List.class, metrics);
