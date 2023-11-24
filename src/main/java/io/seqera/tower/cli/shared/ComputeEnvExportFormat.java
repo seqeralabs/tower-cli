@@ -121,13 +121,20 @@ public final class ComputeEnvExportFormat {
 
             ComputeConfig cfg = mapper.readValue(root.toString(), ComputeConfig.class);
 
-            JsonNode labels = root.get("labels");
-            if (labels != null) {
-                List<LabelDbDto> labelDbDtos = mapper.readValue(labels.toString(), new TypeReference<List<LabelDbDto>>() {});
-                return new ComputeEnvExportFormat(cfg, labelDbDtos);
+            List<LabelDbDto> labelDbDtos = extractJsonNodeValue(root, "labels", mapper);
+            if (labelDbDtos == null) {
+                labelDbDtos = Collections.emptyList();
             }
 
-            return new ComputeEnvExportFormat(cfg, Collections.emptyList());
+            return new ComputeEnvExportFormat(cfg, labelDbDtos);
+        }
+
+        private static <T> T extractJsonNodeValue(JsonNode root, String nodeName, ObjectMapper mapper) throws JsonProcessingException {
+            JsonNode node = root.get(nodeName);
+            if (node != null) {
+                return mapper.readValue(node.toString(), new TypeReference<>() {});
+            }
+            return null;
         }
     }
 }
