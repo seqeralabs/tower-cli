@@ -196,7 +196,7 @@ public class DumpCmd extends AbstractRunsCmd {
         String userMail = null;
         String userName = workflow.getUserName();
         try {
-            /**
+            /*
              * There is no way of obtaining the user email directly, we need to extract it out of the workspace participant list.
              * List the participants of the workspace, find the participant by username, then return that participant email.
              */
@@ -218,7 +218,8 @@ public class DumpCmd extends AbstractRunsCmd {
                 workflowResponse.getWorkspaceName(),
                 userId,
                 userMail,
-                generateUrl(wspId, userName, workflow.getId())
+                generateUrl(wspId, userName, workflow.getId()),
+                workflowResponse.getLabels()
         );
 
         addEntry(out, "workflow.json", Workflow.class, workflow);

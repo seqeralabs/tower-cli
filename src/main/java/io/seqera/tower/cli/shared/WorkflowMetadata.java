@@ -18,6 +18,9 @@
 package io.seqera.tower.cli.shared;
 
 import io.seqera.tower.cli.commands.runs.DumpCmd;
+import io.seqera.tower.model.LabelDbDto;
+
+import java.util.List;
 
 /**
  * This is the class used by {@link DumpCmd} to structure Workflow metadata as JSON.
@@ -36,6 +39,7 @@ public final class WorkflowMetadata {
 
     private final String runUrl;
 
+    private final List<LabelDbDto> labels;
 
     public WorkflowMetadata(
             final Long pipelineId,
@@ -43,7 +47,8 @@ public final class WorkflowMetadata {
             final String workspaceName,
             final Long userId,
             final String userEmail,
-            final String runUrl
+            final String runUrl,
+            final List<LabelDbDto> labels
     ) {
         this.pipelineId = pipelineId;
         this.workspaceId = workspaceId;
@@ -51,6 +56,7 @@ public final class WorkflowMetadata {
         this.userId = userId;
         this.userEmail = userEmail;
         this.runUrl = runUrl;
+        this.labels = labels;
     }
 
     public Long getPipelineId() {
@@ -75,5 +81,9 @@ public final class WorkflowMetadata {
 
     public String getRunUrl() {
         return runUrl;
+    }
+
+    public List<LabelDbDto> getLabels() {
+        return labels;
     }
 }
