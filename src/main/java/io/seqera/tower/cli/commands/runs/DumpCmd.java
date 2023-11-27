@@ -217,7 +217,8 @@ public class DumpCmd extends AbstractRunsCmd {
                 wspId,
                 workflowResponse.getWorkspaceName(),
                 userId,
-                userMail
+                userMail,
+                generateUrl(wspId, userName, workflow.getId())
         );
 
         addEntry(out, "workflow.json", Workflow.class, workflow);
@@ -358,5 +359,13 @@ public class DumpCmd extends AbstractRunsCmd {
                 .writerWithDefaultPrettyPrinter()
                 .writeValueAsBytes(value);
     }
+
+    private String generateUrl(Long wspId, String userName, String wfId) throws ApiException {
+        if (wspId == null) {
+            return String.format("%s/user/%s/watch/%s", serverUrl(), userName, wfId);
+        }
+        return String.format("%s/orgs/%s/workspaces/%s/watch/%s", serverUrl(), orgName(wspId), workspaceName(wspId), wfId);
+    }
+
 }
 

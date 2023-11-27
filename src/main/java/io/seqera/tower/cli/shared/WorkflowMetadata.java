@@ -34,19 +34,23 @@ public final class WorkflowMetadata {
 
     private final String userEmail;
 
+    private final String runUrl;
+
 
     public WorkflowMetadata(
             final Long pipelineId,
             final Long workspaceId,
             final String workspaceName,
             final Long userId,
-            final String userEmail
+            final String userEmail,
+            final String runUrl
     ) {
         this.pipelineId = pipelineId;
         this.workspaceId = workspaceId;
         this.workspaceName = workspaceName;
         this.userId = userId;
         this.userEmail = userEmail;
+        this.runUrl = runUrl;
     }
 
     public Long getPipelineId() {
@@ -69,4 +73,7 @@ public final class WorkflowMetadata {
         return userEmail;
     }
 
+    public String getRunUrl() {
+        return runUrl;
+    }
 }
