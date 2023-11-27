@@ -1974,7 +1974,7 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[{"name":"getPipelineId","parameterTypes":[] }, {"name":"getUserEmail","parameterTypes":[] }, {"name":"getUserId","parameterTypes":[] }, {"name":"getWorkspaceId","parameterTypes":[] }]
+  "methods":[{"name":"getPipelineId","parameterTypes":[] }, {"name":"getUserEmail","parameterTypes":[] }, {"name":"getUserId","parameterTypes":[] }, {"name":"getWorkspaceId","parameterTypes":[] }, {"name":"getWorkspaceName","parameterTypes":[] }, {"name":"getRunUrl","parameterTypes":[] }, {"name":"getLabels","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.utils.VersionProvider",
