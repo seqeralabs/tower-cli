@@ -212,7 +212,13 @@ public class DumpCmd extends AbstractRunsCmd {
         WorkflowLoad workflowLoad = workflowLoadByWorkflowId(wspId, id);
         List<WorkflowMetrics> metrics = api().describeWorkflowMetrics(workflow.getId(), wspId).getMetrics();
 
-        WorkflowMetadata wfMetadata = new WorkflowMetadata(pipelineId, wspId, userId, userMail);
+        WorkflowMetadata wfMetadata = new WorkflowMetadata(
+                pipelineId,
+                wspId,
+                workflowResponse.getWorkspaceName(),
+                userId,
+                userMail
+        );
 
         addEntry(out, "workflow.json", Workflow.class, workflow);
         addEntry(out, "workflow-metadata.json", WorkflowMetadata.class, wfMetadata);
