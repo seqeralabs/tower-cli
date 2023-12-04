@@ -35,8 +35,6 @@ public final class WorkflowMetadata {
 
     private final Long userId;
 
-    private final String userEmail;
-
     private final String runUrl;
 
     private final List<LabelDbDto> labels;
@@ -46,7 +44,6 @@ public final class WorkflowMetadata {
             final Long workspaceId,
             final String workspaceName,
             final Long userId,
-            final String userEmail,
             final String runUrl,
             final List<LabelDbDto> labels
     ) {
@@ -54,7 +51,6 @@ public final class WorkflowMetadata {
         this.workspaceId = workspaceId;
         this.workspaceName = workspaceName;
         this.userId = userId;
-        this.userEmail = userEmail;
         this.runUrl = runUrl;
         this.labels = labels;
     }
@@ -73,10 +69,6 @@ public final class WorkflowMetadata {
 
     public Long getUserId() {
         return userId;
-    }
-
-    public String getUserEmail() {
-        return userEmail;
     }
 
     public String getRunUrl() {

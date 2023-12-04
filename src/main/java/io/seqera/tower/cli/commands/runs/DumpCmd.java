@@ -30,9 +30,7 @@ import io.seqera.tower.model.DescribeTaskResponse;
 import io.seqera.tower.model.DescribeWorkflowLaunchResponse;
 import io.seqera.tower.model.DescribeWorkflowResponse;
 import io.seqera.tower.model.Launch;
-import io.seqera.tower.model.ListParticipantsResponse;
 import io.seqera.tower.model.ListTasksResponse;
-import io.seqera.tower.model.ParticipantDbDto;
 import io.seqera.tower.model.ServiceInfo;
 import io.seqera.tower.model.Task;
 import io.seqera.tower.model.TaskStatus;
@@ -191,23 +189,6 @@ public class DumpCmd extends AbstractRunsCmd {
             }
         }
 
-        // User info
-        Long userId = workflow.getOwnerId();
-        String userMail = null;
-        String userName = workflow.getUserName();
-        try {
-            /*
-             * There is no way of obtaining the user email directly, we need to extract it out of the workspace participant list.
-             * List the participants of the workspace, find the participant by username, then return that participant email.
-             */
-            ListParticipantsResponse participants = api().listWorkspaceParticipants(workflowResponse.getOrgId(), workflowResponse.getWorkspaceId(), null, null, null);
-            userMail = participants.getParticipants().stream()
-                    .filter(participant -> userName.equals(participant.getUserName()))
-                    .findFirst()
-                    .map(ParticipantDbDto::getEmail)
-                    .orElse(null);
-        } catch (ApiException ignored) {}
-
         // Load and metrics info
         WorkflowLoad workflowLoad = workflowLoadByWorkflowId(wspId, id);
         List<WorkflowMetrics> metrics = api().describeWorkflowMetrics(workflow.getId(), wspId).getMetrics();
@@ -216,9 +197,8 @@ public class DumpCmd extends AbstractRunsCmd {
                 pipelineId,
                 wspId,
                 workflowResponse.getWorkspaceName(),
-                userId,
-                userMail,
-                generateUrl(wspId, userName, workflow.getId()),
+                workflow.getOwnerId(),
+                generateUrl(wspId, workflow.getUserName(), workflow.getId()),
                 workflowResponse.getLabels()
         );
 
