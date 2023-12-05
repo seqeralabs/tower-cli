@@ -23,6 +23,7 @@ import io.seqera.tower.cli.exceptions.LaunchNotFoundException;
 import io.seqera.tower.cli.exceptions.RunNotFoundException;
 import io.seqera.tower.cli.exceptions.WorkflowProgressNotFoundException;
 import io.seqera.tower.model.DescribeLaunchResponse;
+import io.seqera.tower.model.DescribeWorkflowLaunchResponse;
 import io.seqera.tower.model.DescribeWorkflowResponse;
 import io.seqera.tower.model.GetProgressResponse;
 import io.seqera.tower.model.Launch;
@@ -43,6 +44,16 @@ abstract public class AbstractRunsCmd extends AbstractApiCmd {
         }
 
         return workflowResponse;
+    }
+
+    protected DescribeWorkflowLaunchResponse workflowLaunchById(Long workspaceId, String workflowId) throws ApiException {
+        DescribeWorkflowLaunchResponse wfLaunchResponse = api().describeWorkflowLaunch(workflowId, workspaceId);
+
+        if (wfLaunchResponse == null) {
+            throw new ApiException(String.format("Workflow '%s' launch not found at %d workspace", workflowId, workspaceId));
+        }
+
+        return wfLaunchResponse;
     }
 
     protected Launch launchById(Long workspaceId, String id) throws ApiException {

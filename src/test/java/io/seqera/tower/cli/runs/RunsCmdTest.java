@@ -27,6 +27,7 @@ import io.seqera.tower.cli.exceptions.ShowUsageException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.runs.RunCanceled;
 import io.seqera.tower.cli.responses.runs.RunDeleted;
+import io.seqera.tower.cli.responses.runs.RunDump;
 import io.seqera.tower.cli.responses.runs.RunFileDownloaded;
 import io.seqera.tower.cli.responses.runs.RunList;
 import io.seqera.tower.cli.responses.runs.RunSubmited;
@@ -552,5 +553,66 @@ class RunsCmdTest extends BaseCmdTest {
         assertEquals("", out.stdErr);
         assertEquals(new RunFileDownloaded(file, RunDownloadFileType.stdout).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testDumpRuns(MockServerClient mock) throws IOException {
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/service-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("info/service-info")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/workflow/5mDfiUtqyptDib"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workflow_view")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/workflow/5mDfiUtqyptDib/progress"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workflow_progress")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/workflow/5mDfiUtqyptDib/metrics"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("runs/runs_metrics")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/workflow/5mDfiUtqyptDib/tasks"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("runs/tasks_list_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/workflow/5mDfiUtqyptDib/launch"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("runs/workflow_launch")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/launch/5SCyEXKrCqFoGzOXGpesr5"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("launch_view")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        File file = new File(tempFile("", "test-dump-runs", ".tar.gz"));
+        String workflowRunId = "5mDfiUtqyptDib";
+
+        ExecOut out = exec(mock, "runs", "dump", "-i", workflowRunId, "-o", file.getAbsolutePath(), "--silent");
+        assertEquals("", out.stdErr);
+        assertEquals(new RunDump(workflowRunId, "user", file.toPath()).toString(), out.stdOut);
+        assertEquals(0, out.exitCode);
+
     }
 }

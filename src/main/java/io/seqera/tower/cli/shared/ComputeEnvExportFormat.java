@@ -30,6 +30,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import io.seqera.tower.JSON;
 import io.seqera.tower.model.ComputeConfig;
 import io.seqera.tower.model.LabelDbDto;
 
@@ -78,7 +79,7 @@ public final class ComputeEnvExportFormat {
     }
 
     private static ObjectMapper buildMapper() {
-        ObjectMapper mapper = new ObjectMapper()
+        ObjectMapper mapper = new JSON().getContext(ComputeConfig.class)
                 .setSerializationInclusion(JsonInclude.Include.NON_NULL)
                 .addMixIn(ComputeConfig.class, ComputeConfigMixin.class);
         mapper.configOverride(List.class).setSetterInfo(JsonSetter.Value.forContentNulls(Nulls.AS_EMPTY));
@@ -115,18 +116,25 @@ public final class ComputeEnvExportFormat {
 
             JsonNode root = parser.getCodec().readTree(parser);
 
-            ObjectMapper mapper = new ObjectMapper()
+            ObjectMapper mapper = buildMapper()
                     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false); // ignore 'labels' field for now
 
             ComputeConfig cfg = mapper.readValue(root.toString(), ComputeConfig.class);
 
-            JsonNode labels = root.get("labels");
-            if (labels != null) {
-                List<LabelDbDto> labelDbDtos = mapper.readValue(labels.toString(), new TypeReference<List<LabelDbDto>>() {});
-                return new ComputeEnvExportFormat(cfg, labelDbDtos);
+            List<LabelDbDto> labelDbDtos = extractJsonNodeValue(root, "labels", mapper);
+            if (labelDbDtos == null) {
+                labelDbDtos = Collections.emptyList();
             }
 
-            return new ComputeEnvExportFormat(cfg, Collections.emptyList());
+            return new ComputeEnvExportFormat(cfg, labelDbDtos);
+        }
+
+        private static <T> T extractJsonNodeValue(JsonNode root, String nodeName, ObjectMapper mapper) throws JsonProcessingException {
+            JsonNode node = root.get(nodeName);
+            if (node != null) {
+                return mapper.readValue(node.toString(), new TypeReference<>() {});
+            }
+            return null;
         }
     }
 }
