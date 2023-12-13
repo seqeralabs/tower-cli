@@ -2294,7 +2294,8 @@
   "name":"io.seqera.tower.model.CreatePipelineRequest",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"getDescription","parameterTypes":[] }, {"name":"getIcon","parameterTypes":[] }, {"name":"getLabelIds","parameterTypes":[] }, {"name":"getLaunch","parameterTypes":[] }, {"name":"getName","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.CreatePipelineResponse",
@@ -2416,7 +2417,8 @@
   "name":"io.seqera.tower.model.DescribePipelineResponse",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setPipeline","parameterTypes":["io.seqera.tower.model.PipelineDbDto"] }]
 },
 {
   "name":"io.seqera.tower.model.DescribeTaskResponse",
@@ -3049,7 +3051,7 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getComputeEnvId","parameterTypes":[] }, {"name":"getConfigProfiles","parameterTypes":[] }, {"name":"getConfigText","parameterTypes":[] }, {"name":"getDateCreated","parameterTypes":[] }, {"name":"getEntryName","parameterTypes":[] }, {"name":"getHeadJobCpus","parameterTypes":[] }, {"name":"getHeadJobMemoryMb","parameterTypes":[] }, {"name":"getId","parameterTypes":[] }, {"name":"getLabelIds","parameterTypes":[] }, {"name":"getMainScript","parameterTypes":[] }, {"name":"getOptimizationId","parameterTypes":[] }, {"name":"getOptimizationTargets","parameterTypes":[] }, {"name":"getParamsText","parameterTypes":[] }, {"name":"getPipeline","parameterTypes":[] }, {"name":"getPostRunScript","parameterTypes":[] }, {"name":"getPreRunScript","parameterTypes":[] }, {"name":"getPullLatest","parameterTypes":[] }, {"name":"getResume","parameterTypes":[] }, {"name":"getRevision","parameterTypes":[] }, {"name":"getRunName","parameterTypes":[] }, {"name":"getSchemaName","parameterTypes":[] }, {"name":"getSessionId","parameterTypes":[] }, {"name":"getStubRun","parameterTypes":[] }, {"name":"getTowerConfig","parameterTypes":[] }, {"name":"getUserSecrets","parameterTypes":[] }, {"name":"getWorkDir","parameterTypes":[] }, {"name":"getWorkspaceSecrets","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.WorkflowLaunchResponse",

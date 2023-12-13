@@ -18,7 +18,6 @@
 package io.seqera.tower.cli.commands.runs;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.commands.global.ShowLabelsOption;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.commands.runs.download.DownloadCmd;
 import io.seqera.tower.cli.commands.runs.metrics.MetricsCmd;
@@ -28,8 +27,8 @@ import io.seqera.tower.cli.exceptions.RunNotFoundException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.runs.RunView;
 import io.seqera.tower.model.ComputeEnv;
+import io.seqera.tower.model.DescribeWorkflowLaunchResponse;
 import io.seqera.tower.model.DescribeWorkflowResponse;
-import io.seqera.tower.model.ListLabelsResponse;
 import io.seqera.tower.model.ProgressData;
 import io.seqera.tower.model.Workflow;
 import io.seqera.tower.model.WorkflowLoad;
@@ -42,7 +41,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import static io.seqera.tower.cli.utils.FormatHelper.formatLabels;
 
@@ -81,7 +79,8 @@ public class ViewCmd extends AbstractRunsCmd {
             Workflow workflow = workflowResponse.getWorkflow();
             WorkflowLoad workflowLoad = workflowLoadByWorkflowId(wspId, id);
 
-            ComputeEnv computeEnv = workflow.getLaunchId() != null ? launchById(wspId, workflow.getLaunchId()).getComputeEnv() : null;
+            DescribeWorkflowLaunchResponse wfLaunch = api().describeWorkflowLaunch(workflow.getId(), wspId);
+            ComputeEnv computeEnv = wfLaunch.getLaunch() != null ? wfLaunch.getLaunch().getComputeEnv() : null;
 
             ProgressData progress = null;
             if (opts.processes || opts.stats || opts.load || opts.utilization) {
