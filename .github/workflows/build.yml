@@ -349,8 +349,20 @@ jobs:
           echo "VERSION = $VERSION"
           echo "::set-output name=VERSION::$VERSION"
 
-      - name: Run JReleaser
-        uses: jreleaser/release-action@v1
-        env:
-          JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          JRELEASER_PROJECT_VERSION: ${{ steps.version.outputs.VERSION }}
+      - name: Send message to slack
+        uses: archive/github-actions-slack@v2.6.0
+        id: send-message
+        continue-on-error: true
+        with:
+          slack-bot-user-oauth-access-token: ${{ secrets.SLACK_BOT_OAUTH_TOKEN }}
+          slack-channel: ${{ vars.SLACK_CLI_CHANNEL }}
+          slack-optional-blocks: |
+            [
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "🆕 Tower CLI v${{ steps.version.outputs.VERSION }} ${{ format('\nSee <https://github.com/seqeralabs/tower-cli/releases/tag/{0}|released.>', steps.version.outputs.tag) || '' }}"
+                },
+              }
+            ]
