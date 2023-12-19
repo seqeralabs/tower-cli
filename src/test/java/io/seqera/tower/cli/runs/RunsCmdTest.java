@@ -295,26 +295,27 @@ class RunsCmdTest extends BaseCmdTest {
     @ParameterizedTest
     @EnumSource(OutputType.class)
     void testView(OutputType format, MockServerClient mock) throws JsonProcessingException {
+
         mock.when(
-                request().withMethod("GET").withPath("/workflow/5dAZoXrcmZXRO4"), exactly(1)
+                request().withMethod("GET").withPath("/workflow/5mDfiUtqyptDib"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("workflow_view")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
-                request().withMethod("GET").withPath("/workflow/5dAZoXrcmZXRO4/progress"), exactly(1)
+                request().withMethod("GET").withPath("/workflow/5mDfiUtqyptDib/progress"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("workflow_progress")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
-                request().withMethod("GET").withPath("/launch/5SCyEXKrCqFoGzOXGpesr5"), exactly(1)
+                request().withMethod("GET").withPath("/workflow/5mDfiUtqyptDib/launch"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("launch_view")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
-                request().withMethod("GET").withPath("/compute-envs/isnEDBLvHDAIteOEF44ow"), exactly(1)
+                request().withMethod("GET").withPath("/compute-envs/3xkkzYH2nbD3nZjrzKm0oR"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("compute_env_view")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -325,7 +326,7 @@ class RunsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(format, mock, "runs", "view", "-i", "5dAZoXrcmZXRO4");
+        ExecOut out = exec(format, mock, "runs", "view", "-i", "5mDfiUtqyptDib");
 
         Workflow workflow = parseJson("{\n" +
                 "    \"id\": \"5mDfiUtqyptDib\",\n" +
