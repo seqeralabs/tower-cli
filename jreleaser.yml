@@ -77,21 +77,41 @@ release:
 
 distributions:
   tw:
-    type: NATIVE_IMAGE
+    type: FLAT_BINARY
+    executable:
+      name: tw
     artifacts:
       - path: "tw_linux/tw"
         transform: "{{distributionName}}-linux-x86_64"
         platform: linux-x86_64
+        extraProperties:
+          graalVMNativeImage: true
       - path: "tw_mac/tw"
         transform: "{{distributionName}}-osx-x86_64"
         platform: osx-x86_64
+        extraProperties:
+          graalVMNativeImage: true
       - path: "tw_mac_arm64/tw"
         transform: "{{distributionName}}-osx-arm64"
-        platform: osx-arm64
+        platform: osx-aarch_64
+        extraProperties:
+          graalVMNativeImage: true
       - path: "tw_windows/tw.exe"
         transform: "{{distributionName}}-windows-x86_64.exe"
         platform: windows-x86_64
+        extraProperties:
+          graalVMNativeImage: true
   tw-jar:
     type: SINGLE_JAR
     artifacts:
       - path: "tw_jar/tw.jar"
+packagers:
+  brew:
+    active: ALWAYS
+    continueOnError: false
+    multiPlatform: true
+    repository:
+      active: RELEASE
+      tagName: '{{distributionName}}-{{tagName}}'
+      branch: HEAD
+      commitMessage: '{{distributionName}} {{tagName}}'
