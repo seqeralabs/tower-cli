@@ -121,7 +121,7 @@ $ tw compute-envs import --name=my_aws_ce_v1 ./my_aws_ce_v1.json
 
 ## Pipelines
 
-A Pipeline is composed of a workflow repository, launch parameters, and a Compute Environment. Pipelines are used to define pre-configured workflows in a Workspace.
+A pipeline consists of a workflow repository, launch parameters, and a Compute Environment. Pipelines are used to define pre-configured workflows in a Workspace.
 
 ### Adding a Pipeline
 
