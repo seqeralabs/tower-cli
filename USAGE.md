@@ -169,7 +169,7 @@ tw pipelines update --name=my_rnaseq_nf_pipeline --params-file=my_rnaseq_nf_pipe
 
 When launching a pipeline from the Launchpad, if no custom parameters are passed via the CLI then the defaults set for the pipeline in the Launchpad will be used.
 
-> **NOTE**: Platform CLI users are bound to the same user permissions that apply in the platform UI. Launchpad users can launch pre-configured pipelines in the workspaces they have access to, but they cannot add or run new pipelines. 
+> **NOTE**: Platform CLI users are bound to the same user permissions that apply in the platform UI. Launch users can launch pre-configured pipelines in the workspaces they have access to, but they cannot add or run new pipelines. 
 
 ```console
 $ tw launch my_rnaseq_nf_pipeline 
