@@ -121,11 +121,11 @@ $ tw compute-envs import --name=my_aws_ce_v1 ./my_aws_ce_v1.json
 
 ## Pipelines
 
-A Pipeline is composed of a workflow repository, launch parameters, and a Compute Environment. Pipelines are used to define frequently used pre-configured workflows in a Workspace.
+A pipeline consists of a workflow repository, launch parameters, and a Compute Environment. Pipelines are used to define pre-configured workflows in a Workspace.
 
 ### Adding a Pipeline
 
-Add a pre-configured Pipeline to the Launchpad that can be re-used later:
+Add a pre-configured pipeline to the Launchpad that can be re-used later:
 
 ```console
 $ tw pipelines add --name=my_rnaseq_nf_pipeline --params-file=my_rnaseq_nf_pipeline_params.yaml https://github.com/nextflow-io/rnaseq-nf
@@ -133,13 +133,13 @@ $ tw pipelines add --name=my_rnaseq_nf_pipeline --params-file=my_rnaseq_nf_pipel
  New pipeline 'my_rnaseq_nf_pipeline' added at user workspace
 ```
 
-The `--params-file` option was used to pass a set of default parameters that will be associated with the Pipeline in the Launchpad.
+The `--params-file` option was used to pass a set of default parameters that will be associated with the pipeline in the Launchpad.
 
 > **NOTE**: The `params-file` option should be a YAML or JSON file.
 
-### Importing/exporting a Pipeline
+### Importing/exporting a pipeline
 
-It is possible to export the configuration details for a Pipeline in JSON format for scripting and reproducibility purposes.
+You can export the configuration details of a pipeline in JSON format for scripting and reproducibility purposes.
 
 ```console
 $ tw pipelines export --name=my_rnaseq_nf_pipeline my_rnaseq_nf_pipeline_v1.json
@@ -147,7 +147,7 @@ $ tw pipelines export --name=my_rnaseq_nf_pipeline my_rnaseq_nf_pipeline_v1.json
   Pipeline exported into 'my_rnaseq_nf_pipeline_v1.json' 
 ```
 
-Similarly, a Pipeline can easily be imported into a Workspace from a previously exported JSON file.
+Similarly, a pipeline can easily be imported into a Workspace from a previously exported JSON file.
 
 ```console
 $ tw pipelines import --name=my_rnaseq_nf_pipeline_v1 ./my_rnaseq_nf_pipeline_v1.json
@@ -155,7 +155,7 @@ $ tw pipelines import --name=my_rnaseq_nf_pipeline_v1 ./my_rnaseq_nf_pipeline_v1
   New pipeline 'my_rnaseq_nf_pipeline_v1' added at user workspace
 ```
 
-### Updating a Pipeline
+### Updating a pipeline
 
 The default launch parameters can be changed using the `update` command:
 
@@ -163,11 +163,13 @@ The default launch parameters can be changed using the `update` command:
 tw pipelines update --name=my_rnaseq_nf_pipeline --params-file=my_rnaseq_nf_pipeline_params_2.yaml
 ```
 
-## Launching Pipelines
+## Launching pipelines
 
-### Launching a preconfigured Pipeline
+### Launching a preconfigured pipeline
 
-When launching a Pipeline from the Launchpad, if no custom parameters are passed via the CLI then the defaults set for the Pipeline in the Launchpad will be used.
+When launching a pipeline from the Launchpad, if no custom parameters are passed via the CLI then the defaults set for the pipeline in the Launchpad will be used.
+
+> **NOTE**: Platform CLI users are bound to the same user permissions that apply in the platform UI. Launch users can launch pre-configured pipelines in the workspaces they have access to, but they cannot add or run new pipelines. 
 
 ```console
 $ tw launch my_rnaseq_nf_pipeline 
@@ -184,9 +186,9 @@ When using `--wait`, `tw` can exit with one of two exit codes:
 
 > **TIP**: Use `--wait=SUCCEEDED` if you want the command to wait until the Pipeline execution is complete.
 
-### Launching a Pipeline with custom parameters
+### Launching a pipeline with custom parameters
 
-Launch the Pipeline with different parameters
+To launch the pipeline with different parameters:
 
 ```console
 $ tw launch my_rnaseq_nf_pipeline --params-file=my_rnaseq_nf_pipeline_params_2.yaml
@@ -196,9 +198,9 @@ $ tw launch my_rnaseq_nf_pipeline --params-file=my_rnaseq_nf_pipeline_params_2.y
     https://tower.nf/user/abhinav/watch/2XDXxX0vCX8xhx
 ```
 
-### Launching any Pipeline
+### Launching any pipeline
 
-It is also possible to directly launch Pipelines that have not been explicitly added to the Launchpad in a Tower Workspace by using the full Pipeline repository URL:
+Platform CLI can directly launch pipelines that have not been explicitly added to the Launchpad in a platform workspace by using the full pipeline repository URL:
 
 ```console
 $ tw launch https://github.com/nf-core/rnaseq --params-file=./custom_rnaseq_params.yaml --compute-env=my_aws_ce --revision 3.8.1 --profile=test,docker  
@@ -208,11 +210,13 @@ $ tw launch https://github.com/nf-core/rnaseq --params-file=./custom_rnaseq_para
     https://tower.nf/user/abhinav/watch/2XDXxX0vCX8xhx
 ```
 
+> **NOTE**: Platform CLI users are bound to the same user permissions that apply in the platform UI. Launch users can launch pre-configured pipelines in the workspaces they have access to, but they cannot add or run new pipelines. 
+
 In the above command:
 
 - Pipeline level parameters are defined within the `custom_rnaseq_params.yaml` file
 - Other parameters such as `--profile` and `--revision` can also be specified
-- A non-primary Compute Environment has been used to launch the Pipeline
+- A non-primary Compute Environment has been used to launch the pipeline
 
 ## Workspaces
 
