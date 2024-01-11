@@ -210,7 +210,7 @@ $ tw launch https://github.com/nf-core/rnaseq --params-file=./custom_rnaseq_para
     https://tower.nf/user/abhinav/watch/2XDXxX0vCX8xhx
 ```
 
-> **NOTE**: Platform CLI users are bound to the same user permissions that apply in the platform UI. Launchpad users can launch pre-configured pipelines in the workspaces they have access to, but they cannot add or run new pipelines. 
+> **NOTE**: Platform CLI users are bound to the same user permissions that apply in the platform UI. Launch users can launch pre-configured pipelines in the workspaces they have access to, but they cannot add or run new pipelines. 
 
 In the above command:
 
