@@ -21,7 +21,7 @@ jobs:
         run: env | sort
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Setup Graalvm
         uses: graalvm/setup-graalvm@v1
@@ -39,7 +39,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
 
       - name: Tests reports
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: linux-test-reports
@@ -49,9 +49,9 @@ jobs:
         run: ./gradlew shadowJar
 
       - name: Upload fat JAR artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
-          name: tw_jar
+          name: tw-jar
           path: build/libs/tw.jar
 
       - name: Build Native Image
@@ -62,9 +62,9 @@ jobs:
           PLATFORM: linux-x86_64
 
       - name: Upload linux native image artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
-          name: tw_linux
+          name: tw-linux
           path: build/native/nativeCompile/tw
 
       - name: Binary tests
@@ -75,7 +75,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
 
       - name: Binary tests reports
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: linux-binary-test-reports
@@ -91,7 +91,7 @@ jobs:
         run: env | sort
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Setup Graalvm
         uses: graalvm/setup-graalvm@v1
@@ -108,7 +108,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
 
       - name: Tests reports
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: mac-test-reports
@@ -149,9 +149,9 @@ jobs:
           xcrun notarytool submit "notarization.zip" --keychain-profile "notarytool-profile" --wait
 
       - name: Upload Mac native image artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
-          name: tw_mac
+          name: tw-mac
           path: build/native/nativeCompile/tw
 
       - name: Binary tests
@@ -162,7 +162,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
 
       - name: Binary tests reports
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: mac-binary-test-reports
@@ -178,7 +178,7 @@ jobs:
         run: env | sort
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Setup Graalvm
         uses: graalvm/setup-graalvm@v1
@@ -203,7 +203,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
 
       - name: Tests reports
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: mac-arm64-test-reports
@@ -244,9 +244,9 @@ jobs:
           xcrun notarytool submit "notarization.zip" --keychain-profile "notarytool-profile" --wait
 
       - name: Upload Mac arm64 native image artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
-          name: tw_mac_arm64
+          name: tw-mac-arm64
           path: build/native/nativeCompile/tw
 
       - name: Binary tests
@@ -257,7 +257,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
 
       - name: Binary tests reports
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: mac-arm64-binary-test-reports
@@ -273,7 +273,7 @@ jobs:
         run: env | sort
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Setup Graalvm
         uses: graalvm/setup-graalvm@v1
@@ -290,7 +290,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
 
       - name: Tests reports
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: windows-test-reports
@@ -304,9 +304,9 @@ jobs:
           PLATFORM: windows-x86_64
 
       - name: Upload Windows native image artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
-          name: tw_windows
+          name: tw-windows
           path: build/native/nativeCompile/tw.exe
 
       - name: Binary tests
@@ -317,7 +317,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
 
       - name: Binary tests reports
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: windows-binary-test-reports
@@ -330,12 +330,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Download all build artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
 
       - name: Setup Java for JReleaser
         uses: actions/setup-java@v1
