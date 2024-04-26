@@ -1,4 +1,4 @@
-# Seqera CLI
+# tw CLI
 
 `tw` is [Seqeta Platform](https://cloud.seqera.io/) on the command line. It brings Seqera concepts like pipelines, actions, and compute environments to the terminal.
 
@@ -10,17 +10,17 @@ The CLI interacts with Seqera to provide an interface to launch pipelines, manag
 
 The key features are:
 
-- **A Nextflow-like experience**: Seqera CLI provides a developer-friendly environment. Pipelines can be launched with the CLI similarly to Nextflow but with the Seqera benefits of monitoring, logging, resource provisioning, dataset management, and collaborative sharing.
+- **A Nextflow-like experience**: tw CLI provides a developer-friendly environment. Pipelines can be launched with the CLI similarly to Nextflow but with the Seqera benefits of monitoring, logging, resource provisioning, dataset management, and collaborative sharing.
 
 - **Infrastructure as Code**: All Seqera resources, including pipelines and compute environments, can be described in a declarative manner. This enables a complete definition of an analysis environment that can be versioned and treated as code. It greatly simplifies configuration sharing and routine administration.
 
-- **Built on OpenAPI**: The CLI interacts with Seqera via the [Seqera Platform API](https://cloud.seqera.io/openapi/index.html) which uses the OpenAPI 3.0 specification. Seqera CLI provides full control of the Seqera application, allowing users to get maximum insights into pipeline submissions and execution environments.
+- **Built on OpenAPI**: tw CLI interacts with Seqera via the [Seqera Platform API](https://cloud.seqera.io/openapi/index.html) which uses the OpenAPI 3.0 specification. The CLI provides full control of the Seqera application, allowing users to get maximum insights into pipeline submissions and execution environments.
 
 See the [Seqera Platform documentation](https://docs.seqera.io/platform/latest) to learn more about the application.
 
 ## Availability
 
-Seqera CLI can be installed on macOS, Windows, and Linux.
+tw CLI can be installed on macOS, Windows, and Linux.
 
 It is compatible with [Seqera Cloud](https://cloud.seqera.io/) and Enterprise versions 21.08 and later.
 
@@ -119,7 +119,7 @@ tw-binary -Djavax.net.ssl.trustStore=/absolute/path/to/cacerts $@
 
 ## Build binary development versions
 
-The Seqera CLI is a platform binary executable created by a native compilation from Java GraalVM. To compile and build a development version of the binary:
+tw CLI is a platform binary executable created by a native compilation from Java GraalVM. To compile and build a development version of the binary:
 
 1. Install [SDKMan!](https://sdkman.io/)
 2. Install GraalVM:
