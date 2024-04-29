@@ -48,9 +48,9 @@ Seqera requires access credentials to interact with pipeline Git repositories. S
 
 #### Container registry credentials
 
-Configure credentials for the Nextflow Wave container service to authenticate to private and public container registries. See the Container registry credentials section in the [Seqera docs](https://docs.seqera.io/platform/latest/credentials/overview) for registry-specific instructions. 
+Configure credentials for the Nextflow Wave container service to authenticate to private and public container registries. See the **Container registry credentials** section under [Credentials](https://docs.seqera.io/platform/latest/credentials/overview) for registry-specific instructions. 
 
-Continer registry credentials are only used by the Wave container service. See [Wave containers](https://www.nextflow.io/docs/latest/wave.html) for more information.
+> **Note**: Container registry credentials are only used by the Wave container service. See [Wave containers](https://www.nextflow.io/docs/latest/wave.html) for more information.
 
 ### List credentials
 
@@ -84,7 +84,7 @@ Compute environments in Seqera define the execution platform where a pipeline wi
 ### Add a compute environment
 
 Run `tw compute-envs add -h` to view the list of supported platforms.
-Run `tw compute-envs add <provider> -h` to view the required and optional fields for your provider.
+Run `tw compute-envs add <platform> -h` to view the required and optional fields for your platform.
 
 You must add the credentials for your provider before creating your compute environment. 
 
@@ -155,9 +155,9 @@ $ tw pipelines add --name=my_rnaseq_nf_pipeline --params-file=my_rnaseq_nf_pipel
  New pipeline 'my_rnaseq_nf_pipeline' added at user workspace
 ```
 
-The optional `--params-file` parameter is used to pass a set of default parameters that will be associated with the pipeline in the Launchpad.
+The optional `--params-file` flag is used to pass a set of default parameters that will be associated with the pipeline in the Launchpad.
 
-> **Note**: The `params-file` must be a YAML or JSON file., using [Nextflow configuration file](https://www.nextflow.io/docs/latest/config.html#config-syntax) syntax.
+> **Note**: The `params-file` must be a YAML or JSON file using [Nextflow configuration file](https://www.nextflow.io/docs/latest/config.html#config-syntax) syntax.
 
 ### Import and export a pipeline
 
@@ -189,9 +189,9 @@ tw pipelines update --name=my_rnaseq_nf_pipeline --params-file=my_rnaseq_nf_pipe
 
 ### Launch a preconfigured pipeline
 
-When launching a pipeline from the Launchpad, if no custom parameters are passed via the CLI then the defaults set for the pipeline in the Launchpad will be used.
+If no custom parameters are passed via the CLI during launch, the defaults set for the pipeline in the Launchpad will be used.
 
-> **Note**: Platform CLI users are bound to the same user permissions that apply in the platform UI. Launch users can launch pre-configured pipelines in the workspaces they have access to, but they cannot add or run new pipelines.
+> **Note**: tw CLI users are bound to the same user permissions that apply in the Platform UI. Launch users can launch pre-configured pipelines in the workspaces they have access to, but they cannot add or run new pipelines.
 
 ```console
 $ tw launch my_rnaseq_nf_pipeline 
@@ -210,7 +210,7 @@ When using `--wait`, `tw` can exit with one of two exit codes:
 
 ### Launch a pipeline with custom parameters
 
-To specify custom parameters when launching a pipeline, specify a different `--params-file`:
+To specify custom parameters during pipeline launch, specify a custom `--params-file`:
 
 ```console
 $ tw launch my_rnaseq_nf_pipeline --params-file=my_rnaseq_nf_pipeline_params_2.yaml
@@ -219,6 +219,8 @@ $ tw launch my_rnaseq_nf_pipeline --params-file=my_rnaseq_nf_pipeline_params_2.y
 
     https://tower.nf/user/abhinav/watch/2XDXxX0vCX8xhx
 ```
+
+See [Nextflow configuration](https://www.nextflow.io/docs/latest/config.html#config-syntax) for more information.
 
 ### Launch an unconfigured pipeline
 
@@ -232,25 +234,23 @@ $ tw launch https://github.com/nf-core/rnaseq --params-file=./custom_rnaseq_para
     https://tower.nf/user/abhinav/watch/2XDXxX0vCX8xhx
 ```
 
-> **Note**: CLI users are bound to the same user permissions that apply in the Platform UI. Launch users can launch pre-configured pipelines in the workspaces they have access to, but they cannot add or run new pipelines.
-
-In the command above:
-
-- Pipeline level parameters are defined within the `custom_rnaseq_params.yaml` file
+- Pipeline parameters are defined within the `custom_rnaseq_params.yaml` file
 - Other parameters such as `--profile` and `--revision` can also be specified
-- A non-primary compute environment has been used to launch the pipeline
+- A non-primary compute environment has been used to launch the pipeline. Omit `--compute-env` to launch with the workspace default compute environment.
+
+> **Note**: CLI users are bound to the same user permissions that apply in the Platform UI. Launch users can launch pre-configured pipelines in the workspaces they have access to, but they cannot add or run new pipelines.
 
 ## Workspaces
 
 Workspaces provide the context in which a user launches workflow executions, defines the available resources, and manages who can access those resources. Workspaces contain pipelines, runs, actions, datasets, compute environments, and credentials. Access permissions are controlled with participants, collaborators, and teams.
 
-Comprehensive details about [Users and Workspaces](https://help.tower.nf/22.1/orgs-and-teams/overview/) are available in the Tower Usage docs.
+See [User workspaces](https://docs.seqera.io/platform/latest/orgs-and-teams/workspace-management) for more information.
 
 > **Note**: This section assumes that you already have access to an organization in Seqera Platform.
 
 ### Create a workspace
 
-In the example below, we create a shared workspace to be used for sharing pipelines with other private workspaces. Please refer to the Tower usage docs for detailed information about [shared Workspaces](https://help.tower.nf/22.1/orgs-and-teams/shared-workspaces/).
+In the example below, we create a shared workspace to be used for sharing pipelines with other private workspaces. See [Shared workspaces](https://docs.seqera.io/platform/latest/orgs-and-teams/shared-workspaces) for more information.
 
 ```console
 $ tw workspaces add --name=shared-workspace --full-name=shared-workspace-for-all  --org=my-tower-org --visibility=SHARED
@@ -258,7 +258,7 @@ $ tw workspaces add --name=shared-workspace --full-name=shared-workspace-for-all
   A 'SHARED' workspace 'shared-workspace' added for 'my-tower-org' organization
 ```
 
-> **Note**: By default, a Workspace is set to private when created.
+> **Note**: By default, a workspace is set to private when created.
 
 ### List workspaces
 
@@ -292,7 +292,7 @@ $ tw participants list
 
 To add a new _collaborator_ to the workspace, use the `add` subcommand. The default role assigned to a _collaborator_ is `Launch`.
 
-Please refer to the Tower usage docs for detailed information about [collaborators and members](https://help.tower.nf/22.1/orgs-and-teams/workspace-management/).
+See [Participant roles](https://docs.seqera.io/platform/latest/orgs-and-teams/workspace-management#participant-roles) for more information.
 
 ```console
 $ tw participants add --name=collaborator@mydomain.com --type=MEMBER                           
