@@ -6,32 +6,55 @@ Use the `-h` or `--help` parameter to list the available commands and their asso
 
 ![`tw --help`](./assets/img/rich_codex/tw-info.svg)
 
-> **TIP**: Use `tw --output=json <command>` to dump and store Tower entities in JSON format.
+For help with a specific subcommand, run the command with `-h` or `--help` appended. For example, `tw credentials add google -h`. 
+
+> **Tip**: Use `tw --output=json <command>` to dump and store Seqera Platform entities in JSON format.
 >
-> **TIP**: Use `tw --output=json <command> | jq -r '.[].<key>'`  pipe the command to jq to get specific entries within the JSON output.
+> **Tip**: Use `tw --output=json <command> | jq -r '.[].<key>'`  to pipe the command to jq to retrieve specific values in the JSON output. For example, `tw --output=json workspaces list | jq -r '.workspaces[].orgId'` returns the organization ID for each workspace listed.
 
 ## Credentials
 
-To launch Pipelines in a Tower Workspace you will need to add Credentials for:
+To launch pipelines in a Seqera workspace, you need [credentials](https://docs.seqera.io/platform/latest/credentials/overview) for:
 
-1. Any Compute Environment(s) you would like to use
-2. Git provider e.g. Github
-3. (Optional) [Tower agent](https://github.com/seqeralabs/tower-agent) if using a HPC cluster
-4. (Optional) Container registries e.g. docker.io
+1. Compute environments
+2. Pipeline repository Git providers
+3. (Optional) [Tower agent](https://github.com/seqeralabs/tower-agent) — used with HPC clusters
+4. (Optional) Container registries, such as docker.io
 
-All of these can be added with the `tw credentials add <provider>` command as highlighted in the next section.
+> **Note**: The CLI performs operations in the user workspace context by default. Use the `TOWER_WORKSPACE_ID` environment variable or the `--workspace` parameter to specify an organization workspace ID.
 
-> **NOTE**: The default Workspace used by the CLI is the user Workspace. Use the `TOWER_WORKSPACE_ID` environment variable or the `--workspace` parameter to override this behaviour.
+### Add credentials
 
-### Adding Credentials
+Run `tw credentials add -h` to view a list of providers.
+Run `tw credentials add <provider> -h` to view the required fields for your provider.
 
-```console
-$ tw credentials add aws --name=my_aws_creds --access-key=<aws access key> --secret-key=<aws secret key>
+#### Compute environment credentials
 
-  New AWS credentials 'my_aws_creds (1sxCxvxfx8xnxdxGxQxqxH)' added at user workspace
-```
+Seqera requires credentials to access your cloud compute environments. See the [compute environment page](https://docs.seqera.io/platform/latest/compute-envs/overview) for your cloud provider for more information.
 
-### Listing Credentials
+  ```console
+  $ tw credentials add aws --name=my_aws_creds --access-key=<aws access key> --secret-key=<aws secret key>
+
+    New AWS credentials 'my_aws_creds (1sxCxvxfx8xnxdxGxQxqxH)' added at user workspace
+  ```
+
+#### Git credentials
+
+Seqera requires access credentials to interact with pipeline Git repositories. See [Git integration](https://docs.seqera.io/platform/latest/git/overview) for more information.
+
+  ```console
+  $ tw credentials add github -n=my_GH_creds -u=<GitHub username> -p=<GitHub access token>
+
+    New GITHUB credentials 'my_GH_creds (xxxxx3prfGlpxxxvR2xxxxo7ow)' added at user workspace
+  ```
+
+#### Container registry credentials
+
+Configure credentials for the Nextflow Wave container service to authenticate to private and public container registries. See the Container registry credentials section in the [Seqera docs](https://docs.seqera.io/platform/latest/credentials/overview) for registry-specific instructions. 
+
+Continer registry credentials are only used by the Wave container service. See [Wave containers](https://www.nextflow.io/docs/latest/wave.html) for more information.
+
+### List credentials
 
 ```console
 $ tw credentials list
@@ -46,9 +69,9 @@ $ tw credentials list
      4xxxIeUx7xex1xqx1xxesk | github    | my_github_cred                     | Wed, 22 Jun 2022 09:18:05 GMT 
 ```
 
-> **NOTE**: You can add multiple Credentials from the same "provider". For example, for AWS Batch you can add `my_aws_creds_1` as well as `my_aws_creds_2` in the same Workspace.
+> **Note**: You can add multiple credentials from the same provider in the same workspace.
 
-### Deleting Credentials
+### Delete credentials
 
 ```console
 $ tw credentials delete --name=my_aws_creds
@@ -56,13 +79,16 @@ $ tw credentials delete --name=my_aws_creds
   Credentials '1sxCxvxfx8xnxdxGxQxqxH' deleted at user workspace
 ```
 
-## Compute Environments
+## Compute environments
 
-Tower uses the concept of Compute Environments to define the execution platform where a Pipeline will run. A Compute Environment is composed of Credentials and configuration and storage options related to a particular computing platform.  Comprehensive details for supported Compute Environments can be obtained from the [Tower Usage docs](https://help.tower.nf/22.1/compute-envs/overview/#introduction).
+Compute environments in Seqera define the execution platform where a pipeline will run. A compute environment is composed of the credentials, configuration, and storage options related to a particular computing platform.  See [Seqera Platform compute environments](https://docs.seqera.io/platform/latest/compute-envs/overview) for more information on supported compute environments.
 
-### Adding a Compute Environment
+### Add a compute environment
 
-Once Credentials have been added to a Workspace, a Compute Environment (e.g AWS Batch) can be created using those Credentials with automatic provisioning of cloud computing resources via **Tower Forge**:
+Run `tw compute-envs add -h` to view the list of supported platforms.
+Run `tw compute-envs add <provider> -h` to view the required and optional fields for your provider.
+
+You must add the credentials for your provider before creating your compute environment. 
 
 ```console
 $ tw compute-envs add aws-batch forge --name=my_aws_ce --credentials=<my_aws_creds_1> --region=eu-west-1 --max-cpus=256 --work-dir=s3://<bucket name> --wait=AVAILABLE
@@ -70,20 +96,18 @@ $ tw compute-envs add aws-batch forge --name=my_aws_ce --credentials=<my_aws_cre
   New AWS-BATCH compute environment 'my_aws_ce' added at user workspace
 ```
 
-The command above will:
+This command will:
 
-- Use the **Tower Forge** mechanism to automatically manage the AWS Batch resource lifecycle (`forge`)
-- Use the Credentials added to the Workspace in the previous section (`--credentials`)
-- Create all of the required AWS Batch resources in the AWS Ireland (`eu-west-1`) region
-- Provision a maximum of 256 CPUs in the Compute Environment (`--max-cpus`)
-- Use an existing S3 bucket to store the work directory when running Nextflow (`--work-dir`)
-- Wait until the Compute Environment has been successfully created and is ready to use (`--wait`)
+- Use **Batch Forge** to automatically manage the AWS Batch resource lifecycle (`forge`)
+- Use the credentials previously added to the workspace (`--credentials`)
+- Create the required AWS Batch resources in the AWS Ireland (`eu-west-1`) region
+- Provision a maximum of 256 CPUs in the compute environment (`--max-cpus`)
+- Use an existing S3 bucket to store the Nextflow work directory (`--work-dir`)
+- Wait until the compute environment has been successfully created and is ready to use (`--wait`)
 
-Comprehensive details about the Tower Forge feature are available in the [user documentation](https://help.tower.nf/compute-envs/aws-batch/#forge).
+See the [compute environment page](https://docs.seqera.io/platform/latest/compute-envs/overview) for your provider for detailed information on Batch Forge and manual compute environment creation.
 
-> **NOTE**: Compute Environment creation will fail if you haven't set the appropriate [IAM policies](https://github.com/seqeralabs/nf-tower-aws/tree/master/forge) for Tower Forge when using AWS Batch.
-
-### Deleting a Compute Environment
+### Delete a compute environment
 
 ```console
 $ tw compute-envs delete --name=my_aws_ce
@@ -91,9 +115,9 @@ $ tw compute-envs delete --name=my_aws_ce
   Compute environment '1sxCxvxfx8xnxdxGxQxqxH' deleted at user workspace
 ```
 
-### Default Compute Environment
+### Default compute environment
 
-It is possible to select a **primary** Compute Environment within a Workspace which will be used by default unless a different Compute Environment is explicitly specified when creating or launching a Pipeline.
+Select a **primary** compute environment to be used by default in a workspace. You can override the workspace primary compute environment by explicitly specifying an alternative compute environment when you create or launch a pipeline.
 
 ```console
 $ tw compute-envs primary set --name=my_aws_ce
@@ -101,9 +125,9 @@ $ tw compute-envs primary set --name=my_aws_ce
   Primary compute environment for workspace 'user' was set to 'my_aws_ce (1sxCxvxfx8xnxdxGxQxqxH)'  
 ```
 
-### Importing/Exporting a Compute Environment
+### Import and export a compute environment
 
-It is possible to export the configuration details for a Compute Environment in JSON format for scripting and reproducibility purposes.
+Export the configuration details of a compute environment in JSON format for scripting and reproducibility purposes.
 
 ```console
 $ tw compute-envs export --name=my_aws_ce my_aws_ce_v1.json
@@ -111,7 +135,7 @@ $ tw compute-envs export --name=my_aws_ce my_aws_ce_v1.json
   Compute environment exported into 'my_aws_ce_v1.json' 
 ```
 
-Similarly, a Compute Environment can easily be imported into a Workspace from a previously exported JSON file.
+Similarly, a compute environment can be imported to a workspace from a previously exported JSON file.
 
 ```console
 $ tw compute-envs import --name=my_aws_ce_v1 ./my_aws_ce_v1.json
@@ -121,11 +145,11 @@ $ tw compute-envs import --name=my_aws_ce_v1 ./my_aws_ce_v1.json
 
 ## Pipelines
 
-A pipeline consists of a workflow repository, launch parameters, and a Compute Environment. Pipelines are used to define pre-configured workflows in a Workspace.
+Pipelines define pre-configured workflows in a workspace. A pipeline consists of a workflow repository, launch parameters, and a compute environment. 
 
-### Adding a Pipeline
+### Add a pipeline
 
-Add a pre-configured pipeline to the Launchpad that can be re-used later:
+Add a pre-configured pipeline to the Launchpad:
 
 ```console
 $ tw pipelines add --name=my_rnaseq_nf_pipeline --params-file=my_rnaseq_nf_pipeline_params.yaml https://github.com/nextflow-io/rnaseq-nf
@@ -133,13 +157,13 @@ $ tw pipelines add --name=my_rnaseq_nf_pipeline --params-file=my_rnaseq_nf_pipel
  New pipeline 'my_rnaseq_nf_pipeline' added at user workspace
 ```
 
-The `--params-file` option was used to pass a set of default parameters that will be associated with the pipeline in the Launchpad.
+The optional `--params-file` parameter is used to pass a set of default parameters that will be associated with the pipeline in the Launchpad.
 
-> **NOTE**: The `params-file` option should be a YAML or JSON file.
+> **Note**: The `params-file` must be a YAML or JSON file., using [Nextflow configuration file](https://www.nextflow.io/docs/latest/config.html#config-syntax) syntax.
 
-### Importing/exporting a pipeline
+### Import and export a pipeline
 
-You can export the configuration details of a pipeline in JSON format for scripting and reproducibility purposes.
+Export the configuration details of a pipeline in JSON format for scripting and reproducibility purposes.
 
 ```console
 $ tw pipelines export --name=my_rnaseq_nf_pipeline my_rnaseq_nf_pipeline_v1.json
@@ -147,7 +171,7 @@ $ tw pipelines export --name=my_rnaseq_nf_pipeline my_rnaseq_nf_pipeline_v1.json
   Pipeline exported into 'my_rnaseq_nf_pipeline_v1.json' 
 ```
 
-Similarly, a pipeline can easily be imported into a Workspace from a previously exported JSON file.
+Similarly, a pipeline can be imported to a workspace from a previously exported JSON file.
 
 ```console
 $ tw pipelines import --name=my_rnaseq_nf_pipeline_v1 ./my_rnaseq_nf_pipeline_v1.json
@@ -155,21 +179,21 @@ $ tw pipelines import --name=my_rnaseq_nf_pipeline_v1 ./my_rnaseq_nf_pipeline_v1
   New pipeline 'my_rnaseq_nf_pipeline_v1' added at user workspace
 ```
 
-### Updating a pipeline
+### Update a pipeline
 
-The default launch parameters can be changed using the `update` command:
+The default launch parameters can be changed with the `update` command:
 
 ```console
 tw pipelines update --name=my_rnaseq_nf_pipeline --params-file=my_rnaseq_nf_pipeline_params_2.yaml
 ```
 
-## Launching pipelines
+## Launch pipelines
 
-### Launching a preconfigured pipeline
+### Launch a preconfigured pipeline
 
 When launching a pipeline from the Launchpad, if no custom parameters are passed via the CLI then the defaults set for the pipeline in the Launchpad will be used.
 
-> **NOTE**: Platform CLI users are bound to the same user permissions that apply in the platform UI. Launch users can launch pre-configured pipelines in the workspaces they have access to, but they cannot add or run new pipelines.
+> **Note**: Platform CLI users are bound to the same user permissions that apply in the platform UI. Launch users can launch pre-configured pipelines in the workspaces they have access to, but they cannot add or run new pipelines.
 
 ```console
 $ tw launch my_rnaseq_nf_pipeline 
@@ -184,11 +208,11 @@ When using `--wait`, `tw` can exit with one of two exit codes:
 - `0`: When the run reaches the desired state.
 - `1`: When the run reaches a state that makes it impossible to reach the desired state.
 
-> **TIP**: Use `--wait=SUCCEEDED` if you want the command to wait until the Pipeline execution is complete.
+> **Tip**: Use `--wait=SUCCEEDED` if you want the command to wait until the pipeline execution is complete.
 
-### Launching a pipeline with custom parameters
+### Launch a pipeline with custom parameters
 
-To launch the pipeline with different parameters:
+To specify custom parameters when launching a pipeline, specify a different `--params-file`:
 
 ```console
 $ tw launch my_rnaseq_nf_pipeline --params-file=my_rnaseq_nf_pipeline_params_2.yaml
@@ -198,9 +222,9 @@ $ tw launch my_rnaseq_nf_pipeline --params-file=my_rnaseq_nf_pipeline_params_2.y
     https://tower.nf/user/abhinav/watch/2XDXxX0vCX8xhx
 ```
 
-### Launching any pipeline
+### Launch an unconfigured pipeline
 
-Platform CLI can directly launch pipelines that have not been explicitly added to the Launchpad in a platform workspace by using the full pipeline repository URL:
+The CLI can directly launch pipelines that have not been added to the Launchpad in a Seqera workspace by using the full pipeline repository URL:
 
 ```console
 $ tw launch https://github.com/nf-core/rnaseq --params-file=./custom_rnaseq_params.yaml --compute-env=my_aws_ce --revision 3.8.1 --profile=test,docker  
@@ -210,25 +234,25 @@ $ tw launch https://github.com/nf-core/rnaseq --params-file=./custom_rnaseq_para
     https://tower.nf/user/abhinav/watch/2XDXxX0vCX8xhx
 ```
 
-> **NOTE**: Platform CLI users are bound to the same user permissions that apply in the platform UI. Launch users can launch pre-configured pipelines in the workspaces they have access to, but they cannot add or run new pipelines.
+> **Note**: CLI users are bound to the same user permissions that apply in the Platform UI. Launch users can launch pre-configured pipelines in the workspaces they have access to, but they cannot add or run new pipelines.
 
-In the above command:
+In the command above:
 
 - Pipeline level parameters are defined within the `custom_rnaseq_params.yaml` file
 - Other parameters such as `--profile` and `--revision` can also be specified
-- A non-primary Compute Environment has been used to launch the pipeline
+- A non-primary compute environment has been used to launch the pipeline
 
 ## Workspaces
 
-Workspaces provide the context in which a user operates, i.e. to launch workflow executions, define the available resources and to manage who can access/operate on those resources. Workspaces are composed of Pipelines, Runs, Actions, Datasets, Compute Environments and Credentials. Access permissions are controlled through Participants, Collaborators, and Teams.
+Workspaces provide the context in which a user launches workflow executions, defines the available resources, and manages who can access those resources. Workspaces contain pipelines, runs, actions, datasets, compute environments, and credentials. Access permissions are controlled with participants, collaborators, and teams.
 
 Comprehensive details about [Users and Workspaces](https://help.tower.nf/22.1/orgs-and-teams/overview/) are available in the Tower Usage docs.
 
-> **NOTE**: This section assumes that you already have access to an organization within Tower.
+> **Note**: This section assumes that you already have access to an organization in Seqera Platform.
 
-### Creating Workspaces
+### Create a workspace
 
-In the example below, we create a shared Workspace which can be used for sharing Pipelines across other private Workspaces. Please refer to the Tower usage docs for detailed information about [shared Workspaces](https://help.tower.nf/22.1/orgs-and-teams/shared-workspaces/).
+In the example below, we create a shared workspace to be used for sharing pipelines with other private workspaces. Please refer to the Tower usage docs for detailed information about [shared Workspaces](https://help.tower.nf/22.1/orgs-and-teams/shared-workspaces/).
 
 ```console
 $ tw workspaces add --name=shared-workspace --full-name=shared-workspace-for-all  --org=my-tower-org --visibility=SHARED
@@ -236,11 +260,11 @@ $ tw workspaces add --name=shared-workspace --full-name=shared-workspace-for-all
   A 'SHARED' workspace 'shared-workspace' added for 'my-tower-org' organization
 ```
 
-> **NOTE**: By default, a Workspace is set to private when created.
+> **Note**: By default, a Workspace is set to private when created.
 
-### Listing Workspaces
+### List workspaces
 
-It is possible to list all the Workspaces in which you are participating
+List all the workspaces in which you are a participant:
 
 ```console
 $ tw workspaces list                      
@@ -254,7 +278,7 @@ $ tw workspaces list
 
 ## Participants
 
-### Listing Participants
+### List participants
 
 ```console
 $ tw participants list
@@ -266,9 +290,9 @@ $ tw participants list
      45678460861822 | MEMBER           | abhinav (abhinav@mydomain.com) | owner          
 ```
 
-### Adding Participants
+### Add participants
 
-To add a new _Collaborator_ to the Workspace, you can use the `add` subcommand, the default role assigned to a _Collaborator_ is `Launch`.
+To add a new _collaborator_ to the workspace, use the `add` subcommand. The default role assigned to a _collaborator_ is `Launch`.
 
 Please refer to the Tower usage docs for detailed information about [collaborators and members](https://help.tower.nf/22.1/orgs-and-teams/workspace-management/).
 
@@ -278,9 +302,9 @@ $ tw participants add --name=collaborator@mydomain.com --type=MEMBER
   User 'collaborator' was added as participant to 'shared-workspace' workspace with role 'launch'
 ```
 
-### Updating Participants
+### Update participant roles
 
-If you would like to update the role of a _Collaborator_, to `ADMIN` or `MAINTAIN`, you can use the `update` subcommand.
+To update the role of a _Collaborator_ to `ADMIN` or `MAINTAIN`, use the `update` subcommand:
 
 ```console
 $ tw  participants update --name=collaborator@mydomain.com --type=COLLABORATOR --role=MAINTAIN
