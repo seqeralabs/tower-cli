@@ -1,6 +1,6 @@
-# Usage examples
+# tw CLI commands
 
-## View available commands
+> **Note**: The CLI performs operations in the user workspace context by default. Use the `TOWER_WORKSPACE_ID` environment variable or the `--workspace` parameter to specify an organization workspace ID.
 
 Use the `-h` or `--help` parameter to list the available commands and their associated options.
 
@@ -20,8 +20,6 @@ To launch pipelines in a Seqera workspace, you need [credentials](https://docs.s
 2. Pipeline repository Git providers
 3. (Optional) [Tower agent](https://github.com/seqeralabs/tower-agent) — used with HPC clusters
 4. (Optional) Container registries, such as docker.io
-
-> **Note**: The CLI performs operations in the user workspace context by default. Use the `TOWER_WORKSPACE_ID` environment variable or the `--workspace` parameter to specify an organization workspace ID.
 
 ### Add credentials
 
