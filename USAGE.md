@@ -14,11 +14,11 @@ For help with a specific subcommand, run the command with `-h` or `--help` appen
 
 ## Credentials
 
-To launch pipelines in a Seqera workspace, you need [credentials](https://docs.seqera.io/platform/latest/credentials/overview) for:
+To launch pipelines in a Seqera workspace, you need [credentials][credentials] for:
 
 1. Compute environments
 2. Pipeline repository Git providers
-3. (Optional) [Tower agent](https://github.com/seqeralabs/tower-agent) — used with HPC clusters
+3. (Optional) [Tower agent][tower-agent] — used with HPC clusters
 4. (Optional) Container registries, such as docker.io
 
 ### Add credentials
@@ -30,7 +30,7 @@ Run `tw credentials add <provider> -h` to view the required fields for your prov
 
 #### Compute environment credentials
 
-Seqera requires credentials to access your cloud compute environments. See the [compute environment page](https://docs.seqera.io/platform/latest/compute-envs/overview) for your cloud provider for more information.
+Seqera requires credentials to access your cloud compute environments. See the [compute environment page][compute-envs] for your cloud provider for more information.
 
   ```console
   $ tw credentials add aws --name=my_aws_creds --access-key=<aws access key> --secret-key=<aws secret key>
@@ -40,7 +40,7 @@ Seqera requires credentials to access your cloud compute environments. See the [
 
 #### Git credentials
 
-Seqera requires access credentials to interact with pipeline Git repositories. See [Git integration](https://docs.seqera.io/platform/latest/git/overview) for more information.
+Seqera requires access credentials to interact with pipeline Git repositories. See [Git integration][git-integration] for more information.
 
   ```console
   $ tw credentials add github -n=my_GH_creds -u=<GitHub username> -p=<GitHub access token>
@@ -50,9 +50,9 @@ Seqera requires access credentials to interact with pipeline Git repositories. S
 
 #### Container registry credentials
 
-Configure credentials for the Nextflow Wave container service to authenticate to private and public container registries. See the **Container registry credentials** section under [Credentials](https://docs.seqera.io/platform/latest/credentials/overview) for registry-specific instructions. 
+Configure credentials for the Nextflow Wave container service to authenticate to private and public container registries. See the **Container registry credentials** section under [Credentials][credentials] for registry-specific instructions. 
 
-> **Note**: Container registry credentials are only used by the Wave container service. See [Wave containers](https://www.nextflow.io/docs/latest/wave.html) for more information.
+> **Note**: Container registry credentials are only used by the Wave container service. See [Wave containers][wave-docs] for more information.
 
 ### List credentials
 
@@ -79,7 +79,7 @@ $ tw credentials delete --name=my_aws_creds
 
 ## Compute environments
 
-Compute environments in Seqera define the execution platform where a pipeline runs. A compute environment is composed of the credentials, configuration, and storage options related to a particular computing platform.  See [Seqera Platform compute environments](https://docs.seqera.io/platform/latest/compute-envs/overview) for more information on supported compute environments.
+Compute environments in Seqera define the execution platform where a pipeline runs. A compute environment is composed of the credentials, configuration, and storage options related to a particular computing platform.  See [Seqera Platform compute environments][compute-envs] for more information on supported compute environments.
 
 ### Add a compute environment
 
@@ -103,7 +103,7 @@ This command will:
 - Use an existing S3 bucket to store the Nextflow work directory (`--work-dir`)
 - Wait until the compute environment has been successfully created and is ready to use (`--wait`)
 
-See the [compute environment page](https://docs.seqera.io/platform/latest/compute-envs/overview) for your provider for detailed information on Batch Forge and manual compute environment creation.
+See the [compute environment page][compute-envs] for your provider for detailed information on Batch Forge and manual compute environment creation.
 
 ### Delete a compute environment
 
@@ -160,7 +160,7 @@ $ tw pipelines add --name=my_rnaseq_nf_pipeline --params-file=my_rnaseq_nf_pipel
 
 The optional `--params-file` flag is used to pass a set of default parameters that will be associated with the pipeline in the Launchpad.
 
-> **Note**: The `params-file` must be a YAML or JSON file using [Nextflow configuration file](https://www.nextflow.io/docs/latest/config.html#config-syntax) syntax.
+> **Note**: The `params-file` must be a YAML or JSON file using [Nextflow configuration file][nextflow-config] syntax.
 
 ### Import and export a pipeline
 
@@ -225,7 +225,7 @@ $ tw launch my_rnaseq_nf_pipeline --params-file=my_rnaseq_nf_pipeline_params_2.y
     https://tower.nf/user/abhinav/watch/2XDXxX0vCX8xhx
 ```
 
-See [Nextflow configuration](https://www.nextflow.io/docs/latest/config.html#config-syntax) for more information.
+See [Nextflow configuration][nextflow-config] for more information.
 
 ### Launch an unconfigured pipeline
 
@@ -240,7 +240,7 @@ $ tw launch https://github.com/nf-core/rnaseq --params-file=./custom_rnaseq_para
 ```
 
 - Pipeline parameters are defined within the `custom_rnaseq_params.yaml` file.
-- Other parameters such as `--profile` and `--revision` can also be specified
+- Other parameters such as `--profile` and `--revision` can also be specified.
 - A non-primary compute environment can be used to launch the pipeline. Omit `--compute-env` to launch with the workspace default compute environment.
 
 > **Note**: CLI users are bound to the same user permissions that apply in the Platform UI. Launch users can launch pre-configured pipelines in the workspaces they have access to, but they cannot add or run new pipelines.
@@ -252,13 +252,13 @@ Run `tw workspaces add -h` to view the required and optional fields for adding y
 
 Workspaces provide the context in which a user launches workflow executions, defines the available resources, and manages who can access those resources. Workspaces contain pipelines, runs, actions, datasets, compute environments, and credentials. Access permissions are controlled with participants, collaborators, and teams.
 
-See [User workspaces](https://docs.seqera.io/platform/latest/orgs-and-teams/workspace-management) for more information.
+See [User workspaces][user-workspaces] for more information.
 
 > **Note**: This section assumes that you already have access to an organization in Seqera Platform.
 
 ### Create a workspace
 
-In the example below, we create a shared workspace to be used for sharing pipelines with other private workspaces. See [Shared workspaces](https://docs.seqera.io/platform/latest/orgs-and-teams/shared-workspaces) for more information.
+In the example below, we create a shared workspace to be used for sharing pipelines with other private workspaces. See [Shared workspaces][shared-workspaces] for more information.
 
 ```console
 $ tw workspaces add --name=shared-workspace --full-name=shared-workspace-for-all  --org=my-tower-org --visibility=SHARED
@@ -303,7 +303,7 @@ $ tw participants list
 
 To add a new _collaborator_ to the workspace, use the `add` subcommand. The default role assigned to a _collaborator_ is `Launch`.
 
-See [Participant roles](https://docs.seqera.io/platform/latest/orgs-and-teams/workspace-management#participant-roles) for more information.
+See [Participant roles][participant-roles] for more information.
 
 ```console
 $ tw participants add --name=collaborator@mydomain.com --type=MEMBER                           
@@ -320,3 +320,13 @@ $ tw  participants update --name=collaborator@mydomain.com --type=COLLABORATOR -
 
   Participant 'collaborator@mydomain.com' has now role 'maintain' for workspace 'shared-workspace'
 ```
+
+[compute-envs]: https://docs.seqera.io/platform/latest/compute-envs/overview
+[credentials]: https://docs.seqera.io/platform/latest/credentials/overview
+[git-integration]: https://docs.seqera.io/platform/latest/git/overview
+[nextflow-config]: https://www.nextflow.io/docs/latest/config.html#config-syntax
+[participant-roles]: https://docs.seqera.io/platform/latest/orgs-and-teams/workspace-management#participant-roles
+[shared-workspaces]: https://docs.seqera.io/platform/latest/orgs-and-teams/shared-workspaces
+[tower-agent]: https://github.com/seqeralabs/tower-agent
+[user-workspaces]: https://docs.seqera.io/platform/latest/orgs-and-teams/workspace-management
+[wave-docs]: https://www.nextflow.io/docs/latest/wave.html
