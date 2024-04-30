@@ -10,7 +10,7 @@ For help with a specific subcommand, run the command with `-h` or `--help` appen
 
 > **Tip**: Use `tw --output=json <command>` to dump and store Seqera Platform entities in JSON format.
 >
-> **Tip**: Use `tw --output=json <command> | jq -r '.[].<key>'`  to pipe the command to jq to retrieve specific values in the JSON output. For example, `tw --output=json workspaces list | jq -r '.workspaces[].orgId'` returns the organization ID for each workspace listed.
+> **Tip**: Use `tw --output=json <command> | jq -r '.[].<key>'`  to pipe the command to use jq to retrieve specific values in the JSON output. For example, `tw --output=json workspaces list | jq -r '.workspaces[].orgId'` returns the organization ID for each workspace listed.
 
 ## Credentials
 
@@ -25,6 +25,8 @@ To launch pipelines in a Seqera workspace, you need [credentials](https://docs.s
 
 Run `tw credentials add -h` to view a list of providers.
 Run `tw credentials add <provider> -h` to view the required fields for your provider.
+
+> **Note**: You can add multiple credentials from the same provider in the same workspace.
 
 #### Compute environment credentials
 
@@ -66,8 +68,6 @@ $ tw credentials list
      2x7xNsf2xkxxUIxXKxsTCx | ssh       | my_ssh_key                         | Thu, 8 Jul 2021 07:09:46 GMT  
      4xxxIeUx7xex1xqx1xxesk | github    | my_github_cred                     | Wed, 22 Jun 2022 09:18:05 GMT 
 ```
-
-> **Note**: You can add multiple credentials from the same provider in the same workspace.
 
 ### Delete credentials
 
@@ -145,6 +145,9 @@ $ tw compute-envs import --name=my_aws_ce_v1 ./my_aws_ce_v1.json
 
 Pipelines define pre-configured workflows in a workspace. A pipeline consists of a workflow repository, launch parameters, and a compute environment. 
 
+Run `tw pipelines -h` to view the list of supported operations.
+Run `tw pipelines add -h` to view the required and optional fields for adding your pipeline.
+
 ### Add a pipeline
 
 Add a pre-configured pipeline to the Launchpad:
@@ -186,6 +189,8 @@ tw pipelines update --name=my_rnaseq_nf_pipeline --params-file=my_rnaseq_nf_pipe
 ```
 
 ## Launch pipelines
+
+Run `tw launch -h` to view supported launch options.
 
 ### Launch a preconfigured pipeline
 
@@ -236,11 +241,14 @@ $ tw launch https://github.com/nf-core/rnaseq --params-file=./custom_rnaseq_para
 
 - Pipeline parameters are defined within the `custom_rnaseq_params.yaml` file
 - Other parameters such as `--profile` and `--revision` can also be specified
-- A non-primary compute environment has been used to launch the pipeline. Omit `--compute-env` to launch with the workspace default compute environment.
+- A non-primary compute environment can be used to launch the pipeline. Omit `--compute-env` to launch with the workspace default compute environment.
 
 > **Note**: CLI users are bound to the same user permissions that apply in the Platform UI. Launch users can launch pre-configured pipelines in the workspaces they have access to, but they cannot add or run new pipelines.
 
 ## Workspaces
+
+Run `tw workspaces -h` to view supported workspace operations.
+Run `tw workspaces add -h` to view the required and optional fields for adding your workspace.
 
 Workspaces provide the context in which a user launches workflow executions, defines the available resources, and manages who can access those resources. Workspaces contain pipelines, runs, actions, datasets, compute environments, and credentials. Access permissions are controlled with participants, collaborators, and teams.
 
@@ -275,6 +283,9 @@ $ tw workspaces list
 ```
 
 ## Participants
+
+Run `tw participants -h` to view supported participant operations. 
+Run `tw participants add -h` to view the required and optoinal fields for adding a participant. 
 
 ### List participants
 
