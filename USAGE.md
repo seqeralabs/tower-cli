@@ -239,7 +239,7 @@ $ tw launch https://github.com/nf-core/rnaseq --params-file=./custom_rnaseq_para
     https://tower.nf/user/abhinav/watch/2XDXxX0vCX8xhx
 ```
 
-- Pipeline parameters are defined within the `custom_rnaseq_params.yaml` file
+- Pipeline parameters are defined within the `custom_rnaseq_params.yaml` file.
 - Other parameters such as `--profile` and `--revision` can also be specified
 - A non-primary compute environment can be used to launch the pipeline. Omit `--compute-env` to launch with the workspace default compute environment.
 
