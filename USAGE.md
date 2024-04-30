@@ -86,7 +86,7 @@ Compute environments in Seqera define the execution platform where a pipeline ru
 Run `tw compute-envs add -h` to view the list of supported platforms.
 Run `tw compute-envs add <platform> -h` to view the required and optional fields for your platform.
 
-You must add the credentials for your provider before creating your compute environment. 
+You must add the credentials for your provider before creating your compute environment.
 
 ```console
 $ tw compute-envs add aws-batch forge --name=my_aws_ce --credentials=<my_aws_creds_1> --region=eu-west-1 --max-cpus=256 --work-dir=s3://<bucket name> --wait=AVAILABLE
