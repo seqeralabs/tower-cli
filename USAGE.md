@@ -79,7 +79,7 @@ $ tw credentials delete --name=my_aws_creds
 
 ## Compute environments
 
-Compute environments in Seqera define the execution platform where a pipeline will run. A compute environment is composed of the credentials, configuration, and storage options related to a particular computing platform.  See [Seqera Platform compute environments](https://docs.seqera.io/platform/latest/compute-envs/overview) for more information on supported compute environments.
+Compute environments in Seqera define the execution platform where a pipeline runs. A compute environment is composed of the credentials, configuration, and storage options related to a particular computing platform.  See [Seqera Platform compute environments](https://docs.seqera.io/platform/latest/compute-envs/overview) for more information on supported compute environments.
 
 ### Add a compute environment
 
