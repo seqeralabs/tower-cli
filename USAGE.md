@@ -227,7 +227,7 @@ $ tw launch my_rnaseq_nf_pipeline --params-file=my_rnaseq_nf_pipeline_params_2.y
 
 See [Nextflow configuration][nextflow-config] for more information.
 
-### Launch an unconfigured pipeline
+### Launch an unsaved pipeline
 
 The CLI can directly launch pipelines that have not been added to the Launchpad in a Seqera workspace by using the full pipeline repository URL:
 
@@ -250,7 +250,7 @@ $ tw launch https://github.com/nf-core/rnaseq --params-file=./custom_rnaseq_para
 Run `tw workspaces -h` to view supported workspace operations.
 Run `tw workspaces add -h` to view the required and optional fields for adding your workspace.
 
-Workspaces provide the context in which a user launches workflow executions, defines the available resources, and manages who can access those resources. Workspaces contain pipelines, runs, actions, datasets, compute environments, and credentials. Access permissions are controlled with participants, collaborators, and teams.
+Workspaces provide the context in which a user launches workflow executions, defines the available resources, and manages who can access those resources. Workspaces contain pipelines, runs, actions, datasets, compute environments, credentials, and secrets. Access permissions are controlled with participants, collaborators, and teams.
 
 See [User workspaces][user-workspaces] for more information.
 
