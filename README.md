@@ -150,7 +150,7 @@ tw CLI is a platform binary executable created by a native compilation from Java
 6. Run `tw`:
 
     ```bash
-    ./build/graal/tw
+    ./build/native/nativeCompile/tw
     ```
 
 ## Non-binary development versions
