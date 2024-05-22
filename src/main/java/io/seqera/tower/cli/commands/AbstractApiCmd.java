@@ -102,7 +102,9 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     protected DefaultApi api() throws ApiException {
 
         // Check we are using HTTPS (unless 'insecure' option is enabled)
-
+        if (!app().insecure && !app().url.startsWith("https")) {
+            throw new TowerException(String.format("You are trying to connect to an insecure server: %s%n        if you want to force the connection use '--insecure'. NOT RECOMMENDED!", app().url));
+        }
 
         if (api == null) {
 

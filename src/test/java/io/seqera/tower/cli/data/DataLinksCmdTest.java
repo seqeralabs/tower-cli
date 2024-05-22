@@ -98,67 +98,67 @@ public class DataLinksCmdTest extends BaseCmdTest {
 
         assertOutput(format, out, new DataLinksList("[organization1 / workspace1]",
                 Arrays.asList(
-                parseJson("{\n" +
-                        "      \"id\": \"v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4\",\n" +
-                        "      \"name\": \"a-test-bucket-eend-us-east-1\",\n" +
-                        "      \"description\": null,\n" +
-                        "      \"resourceRef\": \"s3://a-test-bucket-eend-us-east-1\",\n" +
-                        "      \"type\": \"bucket\",\n" +
-                        "      \"provider\": \"aws\",\n" +
-                        "      \"region\": \"us-east-1\",\n" +
-                        "      \"credentials\": [\n" +
-                        "        {\n" +
-                        "          \"id\": \"3irHXig7k3TG3mKRnFR75e\",\n" +
-                        "          \"name\": \"aws\",\n" +
-                        "          \"provider\": \"aws\"\n" +
-                        "        }\n" +
-                        "      ],\n" +
-                        "      \"publicAccessible\": false,\n" +
-                        "      \"hidden\": false,\n" +
-                        "      \"status\": null,\n" +
-                        "      \"message\": null\n" +
-                        "    }", DataLinkDto.class),
-                parseJson("{\n" +
-                        "      \"id\": \"v1-cloud-b89b60014c225c11f59048294354d174\",\n" +
-                        "      \"name\": \"adrian-navarro-test\",\n" +
-                        "      \"description\": null,\n" +
-                        "      \"resourceRef\": \"s3://adrian-navarro-test\",\n" +
-                        "      \"type\": \"bucket\",\n" +
-                        "      \"provider\": \"aws\",\n" +
-                        "      \"region\": \"us-east-1\",\n" +
-                        "      \"credentials\": [\n" +
-                        "        {\n" +
-                        "          \"id\": \"3irHXig7k3TG3mKRnFR75e\",\n" +
-                        "          \"name\": \"aws\",\n" +
-                        "          \"provider\": \"aws\"\n" +
-                        "        }\n" +
-                        "      ],\n" +
-                        "      \"publicAccessible\": false,\n" +
-                        "      \"hidden\": false,\n" +
-                        "      \"status\": null,\n" +
-                        "      \"message\": null\n" +
-                        "    }", DataLinkDto.class),
-                parseJson("{\n" +
-                        "      \"id\": \"v1-cloud-422306eddadfc64de0676a5923517733\",\n" +
-                        "      \"name\": \"adrian-navarro-test-us-west-2\",\n" +
-                        "      \"description\": null,\n" +
-                        "      \"resourceRef\": \"s3://adrian-navarro-test-us-west-2\",\n" +
-                        "      \"type\": \"bucket\",\n" +
-                        "      \"provider\": \"aws\",\n" +
-                        "      \"region\": \"us-west-2\",\n" +
-                        "      \"credentials\": [\n" +
-                        "        {\n" +
-                        "          \"id\": \"3irHXig7k3TG3mKRnFR75e\",\n" +
-                        "          \"name\": \"aws\",\n" +
-                        "          \"provider\": \"aws\"\n" +
-                        "        }\n" +
-                        "      ],\n" +
-                        "      \"publicAccessible\": false,\n" +
-                        "      \"hidden\": false,\n" +
-                        "      \"status\": null,\n" +
-                        "      \"message\": null\n" +
-                        "    }", DataLinkDto.class)
-                ), AbstractDataLinksCmd.DataLinksFetchStatus.DONE, PaginationInfo.from(0, 100)));
+                        parseJson("{\n" +
+                                "      \"id\": \"v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4\",\n" +
+                                "      \"name\": \"a-test-bucket-eend-us-east-1\",\n" +
+                                "      \"description\": null,\n" +
+                                "      \"resourceRef\": \"s3://a-test-bucket-eend-us-east-1\",\n" +
+                                "      \"type\": \"bucket\",\n" +
+                                "      \"provider\": \"aws\",\n" +
+                                "      \"region\": \"us-east-1\",\n" +
+                                "      \"credentials\": [\n" +
+                                "        {\n" +
+                                "          \"id\": \"3irHXig7k3TG3mKRnFR75e\",\n" +
+                                "          \"name\": \"aws\",\n" +
+                                "          \"provider\": \"aws\"\n" +
+                                "        }\n" +
+                                "      ],\n" +
+                                "      \"publicAccessible\": false,\n" +
+                                "      \"hidden\": false,\n" +
+                                "      \"status\": null,\n" +
+                                "      \"message\": null\n" +
+                                "    }", DataLinkDto.class),
+                        parseJson("{\n" +
+                                "      \"id\": \"v1-cloud-b89b60014c225c11f59048294354d174\",\n" +
+                                "      \"name\": \"adrian-navarro-test\",\n" +
+                                "      \"description\": null,\n" +
+                                "      \"resourceRef\": \"s3://adrian-navarro-test\",\n" +
+                                "      \"type\": \"bucket\",\n" +
+                                "      \"provider\": \"aws\",\n" +
+                                "      \"region\": \"us-east-1\",\n" +
+                                "      \"credentials\": [\n" +
+                                "        {\n" +
+                                "          \"id\": \"3irHXig7k3TG3mKRnFR75e\",\n" +
+                                "          \"name\": \"aws\",\n" +
+                                "          \"provider\": \"aws\"\n" +
+                                "        }\n" +
+                                "      ],\n" +
+                                "      \"publicAccessible\": false,\n" +
+                                "      \"hidden\": false,\n" +
+                                "      \"status\": null,\n" +
+                                "      \"message\": null\n" +
+                                "    }", DataLinkDto.class),
+                        parseJson("{\n" +
+                                "      \"id\": \"v1-cloud-422306eddadfc64de0676a5923517733\",\n" +
+                                "      \"name\": \"adrian-navarro-test-us-west-2\",\n" +
+                                "      \"description\": null,\n" +
+                                "      \"resourceRef\": \"s3://adrian-navarro-test-us-west-2\",\n" +
+                                "      \"type\": \"bucket\",\n" +
+                                "      \"provider\": \"aws\",\n" +
+                                "      \"region\": \"us-west-2\",\n" +
+                                "      \"credentials\": [\n" +
+                                "        {\n" +
+                                "          \"id\": \"3irHXig7k3TG3mKRnFR75e\",\n" +
+                                "          \"name\": \"aws\",\n" +
+                                "          \"provider\": \"aws\"\n" +
+                                "        }\n" +
+                                "      ],\n" +
+                                "      \"publicAccessible\": false,\n" +
+                                "      \"hidden\": false,\n" +
+                                "      \"status\": null,\n" +
+                                "      \"message\": null\n" +
+                                "    }", DataLinkDto.class)
+                ), false, PaginationInfo.from(0, 100)));
 
         // No errors thrown
         assertEquals("", out.stdErr);
@@ -231,7 +231,7 @@ public class DataLinksCmdTest extends BaseCmdTest {
                 new DataLinksList(
                         "[organization1 / workspace1]",
                         Collections.singletonList(parseJson(json, DataLinkDto.class)),
-                        AbstractDataLinksCmd.DataLinksFetchStatus.DONE,
+                        false,
                         PaginationInfo.from(0, 100)
                 )
         );

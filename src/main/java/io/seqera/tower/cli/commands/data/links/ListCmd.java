@@ -59,7 +59,7 @@ public class ListCmd extends AbstractDataLinksCmd {
         Integer max = PaginationOptions.getMax(paginationOptions);
         Integer offset = PaginationOptions.getOffset(paginationOptions, max);
         Long wspId = workspaceId(workspace.workspace);
-        String search = buildSearch(searchOption.startsWith, searchOption.providers, searchOption.region, searchOption.uri);
+        String search = buildSearch(searchOption.startsWith, searchOption.providers.toString(), searchOption.region, searchOption.uri);
 
         DataLinksFetchStatus status = checkDataLinksFetchStatus(wspId, credentialsRef);
         if (wait && status == DataLinksFetchStatus.FETCHING) {
@@ -67,7 +67,9 @@ public class ListCmd extends AbstractDataLinksCmd {
         }
 
         DataLinksListResponse data = api().listDataLinks(wspId, credentialsRef, search, max, offset, null);
-        return new DataLinksList(workspaceRef(wspId), data.getDataLinks(), status, PaginationInfo.from(offset, max, data.getTotalSize()));
+        return new DataLinksList(workspaceRef(wspId), data.getDataLinks(),
+                !wait && status == DataLinksFetchStatus.FETCHING,
+                PaginationInfo.from(offset, max, data.getTotalSize()));
     }
 
     private void waitForDoneStatus(Long wspId, String credId) {
