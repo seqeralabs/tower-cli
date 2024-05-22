@@ -18,11 +18,13 @@
 package io.seqera.tower.cli.commands.data.links;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.commands.global.PaginationOptions;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.data.DataLinksList;
 import io.seqera.tower.cli.utils.PaginationInfo;
+import io.seqera.tower.cli.utils.ResponseHelper;
 import io.seqera.tower.model.DataLinksListResponse;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -41,8 +43,11 @@ public class ListCmd extends AbstractDataLinksCmd {
     @CommandLine.Mixin
     PaginationOptions paginationOptions;
 
-    @CommandLine.Option(names = {"-c", "--credentials"}, description = "Show only data links that can be ")
+    @CommandLine.Option(names = {"-c", "--credentials"}, description = "Credentials identifier.")
     public String credentialsRef;
+
+    @CommandLine.Option(names = {"--wait"}, description = "When present program will wait till all data links are fetched to cache.")
+    public boolean wait;
 
     // Search params
     @CommandLine.Mixin
@@ -53,15 +58,30 @@ public class ListCmd extends AbstractDataLinksCmd {
     protected Response exec() throws ApiException, IOException {
         Integer max = PaginationOptions.getMax(paginationOptions);
         Integer offset = PaginationOptions.getOffset(paginationOptions, max);
-
         Long wspId = workspaceId(workspace.workspace);
-
         String search = buildSearch(searchOption.startsWith, searchOption.providers, searchOption.region, searchOption.uri);
 
-        DataLinksListResponse response = api().listDataLinks(
-                wspId, credentialsRef, search, max, offset, null
-        );
+        DataLinksFetchStatus status = checkDataLinksFetchStatus(wspId, credentialsRef);
+        if (wait && status == DataLinksFetchStatus.FETCHING) {
+            waitForDoneStatus(wspId, credentialsRef);
+        }
 
-        return new DataLinksList(workspaceRef(wspId), response.getDataLinks(), PaginationInfo.from(offset, max, response.getTotalSize()));
+        DataLinksListResponse data = api().listDataLinks(wspId, credentialsRef, search, max, offset, null);
+        return new DataLinksList(workspaceRef(wspId), data.getDataLinks(), status, PaginationInfo.from(offset, max, data.getTotalSize()));
+    }
+
+    private void waitForDoneStatus(Long wspId, String credId) {
+        try {
+            ResponseHelper.waitStatus(
+                    app().getOut(),
+                    app().output != OutputType.json,
+                    DataLinksFetchStatus.DONE,
+                    DataLinksFetchStatus.values(),
+                    () -> checkDataLinksFetchStatus(wspId, credId),
+                    DataLinksFetchStatus.DONE, DataLinksFetchStatus.ERROR
+            );
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

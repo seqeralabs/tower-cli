@@ -18,10 +18,12 @@
 package io.seqera.tower.cli.responses.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.seqera.tower.cli.commands.data.links.AbstractDataLinksCmd;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.DataLinkDto;
+import io.seqera.tower.model.DataLinkStatus;
 
 import javax.annotation.Nullable;
 import java.io.PrintWriter;
@@ -33,20 +35,28 @@ public class DataLinksList extends Response {
     public final String workspaceRef;
     public final List<DataLinkDto> dataLinks;
 
+    public final AbstractDataLinksCmd.DataLinksFetchStatus status;
+
     @JsonIgnore
     @Nullable
     private PaginationInfo paginationInfo;
 
-    public DataLinksList(String workspaceRef, List<DataLinkDto> dataLinks, @Nullable PaginationInfo paginationInfo) {
+    public DataLinksList(String workspaceRef, List<DataLinkDto> dataLinks,
+                         AbstractDataLinksCmd.DataLinksFetchStatus status, @Nullable PaginationInfo paginationInfo) {
         this.workspaceRef = workspaceRef;
         this.dataLinks = dataLinks;
         this.paginationInfo = paginationInfo;
+        this.status = status;
     }
 
     @Override
     public void toString(PrintWriter out) {
 
         out.println(ansi(String.format("%n  @|bold Data links at %s workspace:|@%n", workspaceRef)));
+
+        if (status == AbstractDataLinksCmd.DataLinksFetchStatus.FETCHING) {
+            out.println("Data links are being fetched: result might be incomplete, launch the command again to check the status");
+        }
 
         if (dataLinks.isEmpty()) {
             out.println(ansi("    @|yellow No data links found|@"));
