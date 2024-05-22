@@ -34,6 +34,7 @@ import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -58,81 +59,187 @@ public class DataLinksCmdTest extends BaseCmdTest {
     @ParameterizedTest
     @EnumSource(OutputType.class)
     void testList(OutputType format, MockServerClient mock) throws JsonProcessingException {
-        // mock status check
-        mock.when(request().withMethod("GET").withPath("/data-links?workspaceId=1234&max=1&offset=0"), exactly(1))
-                .respond(response().withStatusCode(200).withBody("").withContentType(MediaType.APPLICATION_JSON));
+        // status check
+        mock.when(
+                request()
+                        .withMethod("GET").withPath("/data-links")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("offset", "0")
+                        .withQueryStringParameter("max", "1"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("data/links/datalinks_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
         // mock fetch data links
-        mock.when(request().withMethod("GET").withPath("/data-links?workspaceId=1234&max=100&offset=0"), exactly(1))
-                .respond(response().withStatusCode(200).withBody("").withContentType(MediaType.APPLICATION_JSON));
+        mock.when(
+                request()
+                        .withMethod("GET").withPath("/data-links")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("offset", "0")
+                        .withQueryStringParameter("max", "100"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("data/links/datalinks_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
 
-        ExecOut out = exec(format, mock, "data-links", "list", "-w", "1234");
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
 
-        assertOutput(format, out, new DataLinksList("1234",
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "data-links", "list", "-w", "75887156211589");
+
+        assertOutput(format, out, new DataLinksList("[organization1 / workspace1]",
                 Arrays.asList(
-                        parseJson("{\n" +
-                                "      \"id\": \"v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4\",\n" +
-                                "      \"name\": \"a-test-bucket-eend-us-east-1\",\n" +
-                                "      \"description\": null,\n" +
-                                "      \"resourceRef\": \"s3://a-test-bucket-eend-us-east-1\",\n" +
-                                "      \"type\": \"bucket\",\n" +
-                                "      \"provider\": \"aws\",\n" +
-                                "      \"region\": \"us-east-1\",\n" +
-                                "      \"credentials\": [\n" +
-                                "        {\n" +
-                                "          \"id\": \"3irHXig7k3TG3mKRnFR75e\",\n" +
-                                "          \"name\": \"aws\",\n" +
-                                "          \"provider\": \"aws\"\n" +
-                                "        }\n" +
-                                "      ],\n" +
-                                "      \"publicAccessible\": false,\n" +
-                                "      \"hidden\": false,\n" +
-                                "      \"status\": null,\n" +
-                                "      \"message\": null\n" +
-                                "    }", DataLinkDto.class),
-                        parseJson("{\n" +
-                                "      \"id\": \"v1-cloud-b89b60014c225c11f59048294354d174\",\n" +
-                                "      \"name\": \"adrian-navarro-test\",\n" +
-                                "      \"description\": null,\n" +
-                                "      \"resourceRef\": \"s3://adrian-navarro-test\",\n" +
-                                "      \"type\": \"bucket\",\n" +
-                                "      \"provider\": \"aws\",\n" +
-                                "      \"region\": \"us-east-1\",\n" +
-                                "      \"credentials\": [\n" +
-                                "        {\n" +
-                                "          \"id\": \"3irHXig7k3TG3mKRnFR75e\",\n" +
-                                "          \"name\": \"aws\",\n" +
-                                "          \"provider\": \"aws\"\n" +
-                                "        }\n" +
-                                "      ],\n" +
-                                "      \"publicAccessible\": false,\n" +
-                                "      \"hidden\": false,\n" +
-                                "      \"status\": null,\n" +
-                                "      \"message\": null\n" +
-                                "    }", DataLinkDto.class),
-                        parseJson("{\n" +
-                                "      \"id\": \"v1-cloud-422306eddadfc64de0676a5923517733\",\n" +
-                                "      \"name\": \"adrian-navarro-test-us-west-2\",\n" +
-                                "      \"description\": null,\n" +
-                                "      \"resourceRef\": \"s3://adrian-navarro-test-us-west-2\",\n" +
-                                "      \"type\": \"bucket\",\n" +
-                                "      \"provider\": \"aws\",\n" +
-                                "      \"region\": \"us-west-2\",\n" +
-                                "      \"credentials\": [\n" +
-                                "        {\n" +
-                                "          \"id\": \"3irHXig7k3TG3mKRnFR75e\",\n" +
-                                "          \"name\": \"aws\",\n" +
-                                "          \"provider\": \"aws\"\n" +
-                                "        }\n" +
-                                "      ],\n" +
-                                "      \"publicAccessible\": false,\n" +
-                                "      \"hidden\": false,\n" +
-                                "      \"status\": null,\n" +
-                                "      \"message\": null\n" +
-                                "    }", DataLinkDto.class)
+                parseJson("{\n" +
+                        "      \"id\": \"v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4\",\n" +
+                        "      \"name\": \"a-test-bucket-eend-us-east-1\",\n" +
+                        "      \"description\": null,\n" +
+                        "      \"resourceRef\": \"s3://a-test-bucket-eend-us-east-1\",\n" +
+                        "      \"type\": \"bucket\",\n" +
+                        "      \"provider\": \"aws\",\n" +
+                        "      \"region\": \"us-east-1\",\n" +
+                        "      \"credentials\": [\n" +
+                        "        {\n" +
+                        "          \"id\": \"3irHXig7k3TG3mKRnFR75e\",\n" +
+                        "          \"name\": \"aws\",\n" +
+                        "          \"provider\": \"aws\"\n" +
+                        "        }\n" +
+                        "      ],\n" +
+                        "      \"publicAccessible\": false,\n" +
+                        "      \"hidden\": false,\n" +
+                        "      \"status\": null,\n" +
+                        "      \"message\": null\n" +
+                        "    }", DataLinkDto.class),
+                parseJson("{\n" +
+                        "      \"id\": \"v1-cloud-b89b60014c225c11f59048294354d174\",\n" +
+                        "      \"name\": \"adrian-navarro-test\",\n" +
+                        "      \"description\": null,\n" +
+                        "      \"resourceRef\": \"s3://adrian-navarro-test\",\n" +
+                        "      \"type\": \"bucket\",\n" +
+                        "      \"provider\": \"aws\",\n" +
+                        "      \"region\": \"us-east-1\",\n" +
+                        "      \"credentials\": [\n" +
+                        "        {\n" +
+                        "          \"id\": \"3irHXig7k3TG3mKRnFR75e\",\n" +
+                        "          \"name\": \"aws\",\n" +
+                        "          \"provider\": \"aws\"\n" +
+                        "        }\n" +
+                        "      ],\n" +
+                        "      \"publicAccessible\": false,\n" +
+                        "      \"hidden\": false,\n" +
+                        "      \"status\": null,\n" +
+                        "      \"message\": null\n" +
+                        "    }", DataLinkDto.class),
+                parseJson("{\n" +
+                        "      \"id\": \"v1-cloud-422306eddadfc64de0676a5923517733\",\n" +
+                        "      \"name\": \"adrian-navarro-test-us-west-2\",\n" +
+                        "      \"description\": null,\n" +
+                        "      \"resourceRef\": \"s3://adrian-navarro-test-us-west-2\",\n" +
+                        "      \"type\": \"bucket\",\n" +
+                        "      \"provider\": \"aws\",\n" +
+                        "      \"region\": \"us-west-2\",\n" +
+                        "      \"credentials\": [\n" +
+                        "        {\n" +
+                        "          \"id\": \"3irHXig7k3TG3mKRnFR75e\",\n" +
+                        "          \"name\": \"aws\",\n" +
+                        "          \"provider\": \"aws\"\n" +
+                        "        }\n" +
+                        "      ],\n" +
+                        "      \"publicAccessible\": false,\n" +
+                        "      \"hidden\": false,\n" +
+                        "      \"status\": null,\n" +
+                        "      \"message\": null\n" +
+                        "    }", DataLinkDto.class)
                 ), AbstractDataLinksCmd.DataLinksFetchStatus.DONE, PaginationInfo.from(0, 100)));
 
         // No errors thrown
         assertEquals("", out.stdErr);
         assertEquals(0, out.exitCode);
     }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testFilteredList(OutputType format, MockServerClient mock) throws JsonProcessingException {
+        String json = "{\n" +
+                "      \"id\": \"v1-cloud-b89b60014c225c11f59048294354d174\",\n" +
+                "      \"name\": \"adrian-navarro-test\",\n" +
+                "      \"description\": null,\n" +
+                "      \"resourceRef\": \"s3://adrian-navarro-test\",\n" +
+                "      \"type\": \"bucket\",\n" +
+                "      \"provider\": \"aws\",\n" +
+                "      \"region\": \"us-east-1\",\n" +
+                "      \"credentials\": [\n" +
+                "        {\n" +
+                "          \"id\": \"3irHXig7k3TG3mKRnFR75e\",\n" +
+                "          \"name\": \"aws\",\n" +
+                "          \"provider\": \"aws\"\n" +
+                "        }\n" +
+                "      ],\n" +
+                "      \"publicAccessible\": false,\n" +
+                "      \"hidden\": false,\n" +
+                "      \"status\": null,\n" +
+                "      \"message\": null\n" +
+                "    }";
+        DataLinkDto link = parseJson(json, DataLinkDto.class);
+        // status check
+        mock.when(
+                request()
+                        .withMethod("GET").withPath("/data-links")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("offset", "0")
+                        .withQueryStringParameter("max", "1"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("data/links/datalinks_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        // mock fetch data links
+        mock.when(
+                request()
+                        .withMethod("GET").withPath("/data-links")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("search", "adrian provider:aws region:us-east-1")
+                        .withQueryStringParameter("offset", "0")
+                        .withQueryStringParameter("max", "100"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"dataLinks\": [" + json + "] }").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "data-links", "list", "-w", "75887156211589", "-n", "adrian", "-p", "aws", "-r", "us-east-1");
+
+        assertOutput(format, out,
+                new DataLinksList(
+                        "[organization1 / workspace1]",
+                        Collections.singletonList(parseJson(json, DataLinkDto.class)),
+                        AbstractDataLinksCmd.DataLinksFetchStatus.DONE,
+                        PaginationInfo.from(0, 100)
+                )
+        );
+
+        // No errors thrown
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+    }
+
+
 }
