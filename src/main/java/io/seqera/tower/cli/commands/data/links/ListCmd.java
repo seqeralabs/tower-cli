@@ -59,7 +59,8 @@ public class ListCmd extends AbstractDataLinksCmd {
         Integer max = PaginationOptions.getMax(paginationOptions);
         Integer offset = PaginationOptions.getOffset(paginationOptions, max);
         Long wspId = workspaceId(workspace.workspace);
-        String search = buildSearch(searchOption.startsWith, searchOption.providers.toString(), searchOption.region, searchOption.uri);
+        String provider = searchOption.providers == null ? null : searchOption.providers.toString();
+        String search = buildSearch(searchOption.startsWith, provider, searchOption.region, searchOption.uri);
 
         DataLinksFetchStatus status = checkDataLinksFetchStatus(wspId, credentialsRef);
         if (wait && status == DataLinksFetchStatus.FETCHING) {

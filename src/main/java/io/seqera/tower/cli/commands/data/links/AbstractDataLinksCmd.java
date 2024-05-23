@@ -18,7 +18,14 @@
 package io.seqera.tower.cli.commands.data.links;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.StringUtil;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
+import io.seqera.tower.model.DataLinkCreateRequest;
+import io.seqera.tower.model.DataLinkDto;
+import io.seqera.tower.model.DataLinkProvider;
+import io.seqera.tower.model.DataLinkType;
+
+import java.util.Objects;
 
 public class AbstractDataLinksCmd extends AbstractApiCmd {
 
@@ -65,6 +72,24 @@ public class AbstractDataLinksCmd extends AbstractApiCmd {
             default:
                 return DataLinksFetchStatus.ERROR;
         }
+    }
+
+    DataLinkDto addDataLink(Long wspId, String name, String description, String url, String provider, String credsId) throws ApiException {
+        DataLinkCreateRequest req = new DataLinkCreateRequest();
+        req.name(name);
+        req.description(description);
+        req.resourceRef(url);
+        req.type(DataLinkType.BUCKET);
+        req.provider(DataLinkProvider.fromValue(provider.toLowerCase()));
+
+        if (Objects.isNull(credsId)) {
+            req.publicAccessible(true);
+        } else {
+            req.publicAccessible(false);
+            req.credentialsId(credsId);
+        }
+
+        return api().createCustomDataLink(req, wspId);
     }
 
     public enum DataLinksFetchStatus {

@@ -17,6 +17,7 @@
 
 package io.seqera.tower.cli.commands;
 
+import io.seqera.tower.cli.commands.data.links.AddCmd;
 import io.seqera.tower.cli.commands.data.links.ListCmd;
 import picocli.CommandLine;
 
@@ -24,7 +25,8 @@ import picocli.CommandLine;
         name = "data-links",
         description = "Manage data links.",
         subcommands = {
-                ListCmd.class
+                ListCmd.class,
+                AddCmd.class
         }
 )
 public class DataLinksCmd extends AbstractRootCmd {
