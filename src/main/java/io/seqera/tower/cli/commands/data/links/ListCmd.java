@@ -41,7 +41,7 @@ public class ListCmd extends AbstractDataLinksCmd {
     public WorkspaceOptionalOptions workspace;
 
     @CommandLine.Mixin
-    PaginationOptions paginationOptions;
+    public PaginationOptions paginationOptions;
 
     @CommandLine.Option(names = {"-c", "--credentials"}, description = "Credentials identifier.")
     public String credentialsRef;
@@ -49,9 +49,12 @@ public class ListCmd extends AbstractDataLinksCmd {
     @CommandLine.Option(names = {"--wait"}, description = "When present program will wait till all data links are fetched to cache.")
     public boolean wait;
 
+    @CommandLine.Option(names = {"--visibility"}, description = "Show  only data links that are [hidden, visible, all]. When not present all will be shown.")
+    public Visibility visibilityOption;
+
     // Search params
     @CommandLine.Mixin
-    SearchOption searchOption;
+    public SearchOption searchOption;
 
 
     @Override
@@ -61,13 +64,14 @@ public class ListCmd extends AbstractDataLinksCmd {
         Long wspId = workspaceId(workspace.workspace);
         String provider = searchOption.providers == null ? null : searchOption.providers.toString();
         String search = buildSearch(searchOption.startsWith, provider, searchOption.region, searchOption.uri);
+        String visibility = visibilityOption == null ? null : visibilityOption.toString();
 
         DataLinksFetchStatus status = checkDataLinksFetchStatus(wspId, credentialsRef);
         if (wait && status == DataLinksFetchStatus.FETCHING) {
             waitForDoneStatus(wspId, credentialsRef);
         }
 
-        DataLinksListResponse data = api().listDataLinks(wspId, credentialsRef, search, max, offset, null);
+        DataLinksListResponse data = api().listDataLinks(wspId, credentialsRef, search, max, offset, visibility);
         return new DataLinksList(workspaceRef(wspId), data.getDataLinks(),
                 !wait && status == DataLinksFetchStatus.FETCHING,
                 PaginationInfo.from(offset, max, data.getTotalSize()));
@@ -86,5 +90,9 @@ public class ListCmd extends AbstractDataLinksCmd {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    enum Visibility {
+        hidden, visible, all
     }
 }
