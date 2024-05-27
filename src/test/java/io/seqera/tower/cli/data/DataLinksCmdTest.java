@@ -25,6 +25,7 @@ import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.data.links.AbstractDataLinksCmd;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.responses.data.DataLinksList;
+import io.seqera.tower.cli.responses.datasets.DatasetDelete;
 import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.model.DataLinkCreateRequest;
 import io.seqera.tower.model.DataLinkDto;
@@ -302,5 +303,22 @@ public class DataLinksCmdTest extends BaseCmdTest {
         assertEquals("", out.stdErr);
         assertEquals(0, out.exitCode);
     }
-    
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testDelete(OutputType format, MockServerClient mock) {
+        mock.when(
+                request().withMethod("DELETE").withPath("/data-links/v1-datalinkid")
+                        .withQueryStringParameter("workspaceId", "75887156211589"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+        );
+
+        ExecOut out = exec(format, mock, "data-links", "delete", "-w", "75887156211589", "-i", "v1-datalinkid");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+    }
+
 }

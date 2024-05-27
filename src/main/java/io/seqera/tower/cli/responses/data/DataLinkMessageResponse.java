@@ -15,21 +15,21 @@
  *
  */
 
-package io.seqera.tower.cli.commands;
+package io.seqera.tower.cli.responses.data;
 
-import io.seqera.tower.cli.commands.data.links.AddCmd;
-import io.seqera.tower.cli.commands.data.links.DeleteCmd;
-import io.seqera.tower.cli.commands.data.links.ListCmd;
-import picocli.CommandLine;
+import io.seqera.tower.cli.responses.Response;
 
-@CommandLine.Command(
-        name = "data-links",
-        description = "Manage data links.",
-        subcommands = {
-                ListCmd.class,
-                AddCmd.class,
-                DeleteCmd.class
-        }
-)
-public class DataLinksCmd extends AbstractRootCmd {
+public class DataLinkMessageResponse extends Response {
+
+    public final String message;
+
+    public DataLinkMessageResponse(String message) {
+        this.message = message;
+    }
+
+    @Override
+    public String toString() {
+
+        return ansi(String.format("%n  @|yellow  %s|@%n", message));
+    }
 }
