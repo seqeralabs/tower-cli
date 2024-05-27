@@ -28,14 +28,17 @@ public class DataLinkView extends Response {
 
     public final DataLinkDto dataLink;
 
-    public DataLinkView(DataLinkDto dataLink) {
+    public final String message;
+
+    public DataLinkView(DataLinkDto dataLink, String message) {
         this.dataLink = dataLink;
+        this.message = message;
     }
 
     @Override
     public void toString(PrintWriter out) {
 
-        out.println(ansi(String.format("%n  @|bold Data link created:|@%n")));
+        out.println(ansi(String.format("%n  @|bold %s:|@%n", message)));
 
         TableList table = new TableList(out, 5, "ID", "Provider", "Name", "Resource ref", "Region").sortBy(0);
 

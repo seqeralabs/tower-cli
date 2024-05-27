@@ -24,6 +24,7 @@ import io.seqera.tower.model.DataLinkCreateRequest;
 import io.seqera.tower.model.DataLinkDto;
 import io.seqera.tower.model.DataLinkProvider;
 import io.seqera.tower.model.DataLinkType;
+import io.seqera.tower.model.DataLinkUpdateRequest;
 
 import java.util.Objects;
 
@@ -90,6 +91,18 @@ public class AbstractDataLinksCmd extends AbstractApiCmd {
         }
 
         return api().createCustomDataLink(req, wspId);
+    }
+
+    DataLinkDto updateDataLink(Long wspId, String id, String name, String description, String credsId) throws ApiException {
+        DataLinkUpdateRequest req = new DataLinkUpdateRequest();
+        if (name != null)
+            req.name(name);
+        if (description != null)
+            req.description(description);
+        if (credsId != null)
+            req.credentialsId(credsId);
+
+        return api().updateCustomDataLink(id, req, wspId);
     }
 
     public enum DataLinksFetchStatus {
