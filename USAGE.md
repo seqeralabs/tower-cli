@@ -6,6 +6,7 @@ Use the `-h` or `--help` parameter to list the available commands and their asso
 
 ![`tw --help`](./assets/img/rich_codex/tw-info.svg)
 
+
 For help with a specific subcommand, run the command with `-h` or `--help` appended. For example, `tw credentials add google -h`. 
 
 > **Tip**: Use `tw --output=json <command>` to dump and store Seqera Platform entities in JSON format.
@@ -48,7 +49,9 @@ Seqera requires access credentials to interact with pipeline Git repositories. S
     New GITHUB credentials 'my_GH_creds (xxxxx3prfGlpxxxvR2xxxxo7ow)' added at user workspace
   ```
 
+
 #### Container registry credentials
+
 
 Configure credentials for the Nextflow Wave container service to authenticate to private and public container registries. See the **Container registry credentials** section under [Credentials][credentials] for registry-specific instructions. 
 
@@ -140,6 +143,7 @@ $ tw compute-envs import --name=my_aws_ce_v1 ./my_aws_ce_v1.json
 
   New AWS-BATCH compute environment 'my_aws_ce_v1' added at user workspace
 ```
+
 
 ## Pipelines
 
@@ -251,12 +255,12 @@ Run `tw runs -h` to view supported runs operations.
 
 Runs display all the current and previous pipeline runs in the specified workspace. Each new or resumed run is given a random name such as _grave_williams_ by default, which can be overridden with a custom value at launch. See [Runs](https://docs.seqera.io/platform/latest/monitoring/overview) for more information. As a run executes, it can transition through the following states:
 
-* `submitted`: Pending execution
-* `running`: Running
-* `succeeded`: Completed successfully
-* `failed`: Successfully executed, where at least one task failed with a terminate [error strategy](https://www.nextflow.io/docs/latest/process.html#errorstrategy)
-* `cancelled`: Stopped manually during execution
-* `unknown`: Indeterminate status
+- `submitted`: Pending execution
+- `running`: Running
+- `succeeded`: Completed successfully
+- `failed`: Successfully executed, where at least one task failed with a terminate [error strategy](https://www.nextflow.io/docs/latest/process.html#errorstrategy)
+- `cancelled`: Stopped manually during execution
+- `unknown`: Indeterminate status
 
 ### View pipeline's runs
 
@@ -309,16 +313,16 @@ $ tw runs list
 
 Use the optional `--filter` flag to filter the list of runs returned by one or more `keyword:value` entries:
 
-* `status`
-* `label`
-* `workflowId`
-* `runName`
-* `username`
-* `projectName`
-* `after`
-* `before`
-* `sessionId`
-* `is:starred`
+- `status`
+- `label`
+- `workflowId`
+- `runName`
+- `username`
+- `projectName`
+- `after`
+- `before`
+- `sessionId`
+- `is:starred`
 
 If no `keyword` is defined, the filtering is applied to the `runName`, `projectName` (the pipeline name), and `username`.
 
@@ -447,8 +451,8 @@ $ tw workspaces list
 
 ## Participants
 
-Run `tw participants -h` to view supported participant operations. 
-Run `tw participants add -h` to view the required and optional fields for adding a participant. 
+Run `tw participants -h` to view supported participant operations.
+Run `tw participants add -h` to view the required and optional fields for adding a participant.
 
 ### List participants
 
