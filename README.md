@@ -147,7 +147,7 @@ tw CLI is a platform binary executable created by a native compilation from Java
     ./gradlew nativeCompile
     ```
 
-This will install a locally compiled version of `tw` in the nativeCompile directory:
+    This will install a locally compiled version of `tw` in the nativeCompile directory:
 
     ```console
     Produced artifacts:
