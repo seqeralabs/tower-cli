@@ -47,7 +47,7 @@ This guide covers the installation and configuration of the CLI, cloud infrastru
 
 ### 2. Configuration
 
-You need an access token for the CLI to interact with your Seqera instance. Select **User tokens** from the user menu in the [Seqera UI](https://cloud.seqera.io), then select **Add token** to create a new token. 
+You need an access token for the CLI to interact with your Seqera instance. Select **User tokens** from the user menu in the [Seqera UI](https://cloud.seqera.io), then select **Add token** to create a new token.
 
 Copy the access token value and use it with the CLI in one of two ways:
 

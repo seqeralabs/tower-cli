@@ -6,7 +6,6 @@ Use the `-h` or `--help` parameter to list the available commands and their asso
 
 ![`tw --help`](./assets/img/rich_codex/tw-info.svg)
 
-
 For help with a specific subcommand, run the command with `-h` or `--help` appended. For example, `tw credentials add google -h`. 
 
 > **Tip**: Use `tw --output=json <command>` to dump and store Seqera Platform entities in JSON format.
@@ -49,9 +48,7 @@ Seqera requires access credentials to interact with pipeline Git repositories. S
     New GITHUB credentials 'my_GH_creds (xxxxx3prfGlpxxxvR2xxxxo7ow)' added at user workspace
   ```
 
-
 #### Container registry credentials
-
 
 Configure credentials for the Nextflow Wave container service to authenticate to private and public container registries. See the **Container registry credentials** section under [Credentials][credentials] for registry-specific instructions. 
 
@@ -143,7 +140,6 @@ $ tw compute-envs import --name=my_aws_ce_v1 ./my_aws_ce_v1.json
 
   New AWS-BATCH compute environment 'my_aws_ce_v1' added at user workspace
 ```
-
 
 ## Pipelines
 
