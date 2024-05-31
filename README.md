@@ -125,7 +125,7 @@ tw CLI is a platform binary executable created by a native compilation from Java
 2. Install GraalVM:
 
     ```bash
-    sdk env install
+    sdk env install graalvm
     ```
 
 3. Install `native-image`:
@@ -147,10 +147,23 @@ tw CLI is a platform binary executable created by a native compilation from Java
     ./gradlew nativeCompile
     ```
 
+This will install a locally compiled version of `tw` in the nativeCompile directory:
+
+    ```console
+    Produced artifacts:
+     <tower-cli-repository-root>/build/native/nativeCompile/tw (executable)
+    ========================================================================================================================
+    Finished generating 'tw' in 1m 6s.
+    [native-image-plugin] Native Image written to: <tower-cli-repository-root>/build/native/nativeCompile
+    
+    BUILD SUCCESSFUL in 1m 8s
+    6 actionable tasks: 2 executed, 4 up-to-date
+    ```
+
 6. Run `tw`:
 
     ```bash
-    ./build/graal/tw
+    ./build/native/nativeCompile/tw
     ```
 
 ## Non-binary development versions
