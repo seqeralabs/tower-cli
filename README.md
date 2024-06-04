@@ -122,26 +122,34 @@ tw-binary -Djavax.net.ssl.trustStore=/absolute/path/to/cacerts $@
 tw CLI is a platform binary executable created by a native compilation from Java GraalVM. To compile and build a development version of the binary:
 
 1. Install [SDKMan!](https://sdkman.io/)
-2. Install GraalVM:
+1. If necessary, update your `.sdkmanrc` to the Java GraalVM 
 
     ```bash
-    sdk env install graalvm
+     # Enable auto-env through the sdkman_auto_env config
+     # Add key=value pairs of SDKs to use below
+     java 17.0.8-graalce
     ```
 
-3. Install `native-image`:
+1. Install GraalVM:
+
+    ```bash
+    sdk env install
+    ```
+
+1. Install `native-image`:
 
     ```bash
     gu install native-image
     ```
 
-4. Export your Github credentials. Github requires authentication for public packages (the token only requires the `read:packages` scope):
+1. Export your Github credentials. Github requires authentication for public packages (the token only requires the `read:packages` scope):
 
     ```bash
     export GITHUB_USERNAME=...
     export GITHUB_TOKEN=...
     ```
 
-5. Create the native client:
+1. Create the native client:
 
     ```bash
     ./gradlew nativeCompile
@@ -160,7 +168,7 @@ tw CLI is a platform binary executable created by a native compilation from Java
     6 actionable tasks: 2 executed, 4 up-to-date
     ```
 
-6. Run `tw`:
+1. Run `tw`:
 
     ```bash
     ./build/native/nativeCompile/tw
