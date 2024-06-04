@@ -122,7 +122,7 @@ tw-binary -Djavax.net.ssl.trustStore=/absolute/path/to/cacerts $@
 tw CLI is a platform binary executable created by a native compilation from Java GraalVM. To compile and build a development version of the binary:
 
 1. Install [SDKMan!](https://sdkman.io/)
-1. If necessary, update your `.sdkmanrc` to the Java GraalVM 
+1. If necessary, update your `.sdkmanrc` to the Java GraalVM:
 
     ```bash
      # Enable auto-env through the sdkman_auto_env config
