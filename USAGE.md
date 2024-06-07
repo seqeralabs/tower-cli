@@ -6,7 +6,7 @@ Use the `-h` or `--help` parameter to list the available commands and their asso
 
 ![`tw --help`](./assets/img/rich_codex/tw-info.svg)
 
-For help with a specific subcommand, run the command with `-h` or `--help` appended. For example, `tw credentials add google -h`. 
+For help with a specific subcommand, run the command with `-h` or `--help` appended. For example, `tw credentials add google -h`.
 
 > **Tip**: Use `tw --output=json <command>` to dump and store Seqera Platform entities in JSON format.
 >
@@ -50,7 +50,7 @@ Seqera requires access credentials to interact with pipeline Git repositories. S
 
 #### Container registry credentials
 
-Configure credentials for the Nextflow Wave container service to authenticate to private and public container registries. See the **Container registry credentials** section under [Credentials][credentials] for registry-specific instructions. 
+Configure credentials for the Nextflow Wave container service to authenticate to private and public container registries. See the **Container registry credentials** section under [Credentials][credentials] for registry-specific instructions.
 
 > **Note**: Container registry credentials are only used by the Wave container service. See [Wave containers][wave-docs] for more information.
 
@@ -143,7 +143,7 @@ $ tw compute-envs import --name=my_aws_ce_v1 ./my_aws_ce_v1.json
 
 ## Pipelines
 
-Pipelines define pre-configured workflows in a workspace. A pipeline consists of a workflow repository, launch parameters, and a compute environment. 
+Pipelines define pre-configured workflows in a workspace. A pipeline consists of a workflow repository, launch parameters, and a compute environment.
 
 Run `tw pipelines -h` to view the list of supported operations.
 Run `tw pipelines add -h` to view the required and optional fields for adding your pipeline.
@@ -284,8 +284,8 @@ $ tw workspaces list
 
 ## Participants
 
-Run `tw participants -h` to view supported participant operations. 
-Run `tw participants add -h` to view the required and optoinal fields for adding a participant. 
+Run `tw participants -h` to view supported participant operations.
+Run `tw participants add -h` to view the required and optoinal fields for adding a participant.
 
 ### List participants
 
