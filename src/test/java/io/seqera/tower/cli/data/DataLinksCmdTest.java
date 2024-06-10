@@ -41,6 +41,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
+import static org.mockserver.model.JsonBody.json;
 
 public class DataLinksCmdTest extends BaseCmdTest {
 
@@ -241,5 +242,179 @@ public class DataLinksCmdTest extends BaseCmdTest {
         assertEquals(0, out.exitCode);
     }
 
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAdd(OutputType format, MockServerClient mock) throws JsonProcessingException {
+        // status check
+        mock.when(
+                request()
+                        .withMethod("POST").withPath("/data-links")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withBody(json("{\n" +
+                                "   \"name\":\"name\",\n" +
+                                "   \"description\":\"somedesc\",\n" +
+                                "   \"type\":\"bucket\",\n" +
+                                "   \"provider\":\"aws\",\n" +
+                                "   \"resourceRef\":\"s3://bucket\",\n" +
+                                "   \"publicAccessible\":false,\n" +
+                                "   \"credentialsId\":\"57Ic6reczFn78H1DTaaXkp\"\n" +
+                                "}")),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\n" +
+                        "    \"id\": \"v1-user-ad5192871d3d65e1218ec6c4a2f7cde5\",\n" +
+                        "    \"name\": \"name\",\n" +
+                        "    \"description\": \"somedesc\",\n" +
+                        "    \"resourceRef\": \"s3://bucket\",\n" +
+                        "    \"type\": \"bucket\",\n" +
+                        "    \"provider\": \"aws\",\n" +
+                        "    \"region\": \"us-east-1\",\n" +
+                        "    \"credentials\": [\n" +
+                        "        {\n" +
+                        "            \"id\": \"57Ic6reczFn78H1DTaaXkp\",\n" +
+                        "            \"name\": \"aws\",\n" +
+                        "            \"provider\": \"aws\"\n" +
+                        "        }\n" +
+                        "    ],\n" +
+                        "    \"publicAccessible\": false,\n" +
+                        "    \"hidden\": false,\n" +
+                        "    \"status\": null,\n" +
+                        "    \"message\": null\n" +
+                        "}").withContentType(MediaType.APPLICATION_JSON)
+        );
 
+        ExecOut out = exec(format, mock, "data-links", "add", "-w", "75887156211589", "-n", "name", "-d", "somedesc", "-p", "aws",
+                "-u", "s3://bucket", "-c", "57Ic6reczFn78H1DTaaXkp");
+
+        // No errors thrown
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testDelete(OutputType format, MockServerClient mock) {
+        mock.when(
+                request().withMethod("DELETE").withPath("/data-links/v1-datalinkid")
+                        .withQueryStringParameter("workspaceId", "75887156211589"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+        );
+
+        ExecOut out = exec(format, mock, "data-links", "delete", "-w", "75887156211589", "-i", "v1-datalinkid");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testUpdate(OutputType format, MockServerClient mock) {
+        // status check
+        mock.when(
+                request()
+                        .withMethod("PUT").withPath("/data-links/v1-somedatalinkid")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withBody(json("{\n" +
+                                "   \"name\":\"name\",\n" +
+                                "   \"description\":\"somedesc\",\n" +
+                                "   \"credentialsId\":\"57Ic6reczFn78H1DTaaXkp\"\n" +
+                                "}")),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\n" +
+                        "    \"id\": \"v1-user-ad5192871d3d65e1218ec6c4a2f7cde5\",\n" +
+                        "    \"name\": \"name\",\n" +
+                        "    \"description\": \"somedesc\",\n" +
+                        "    \"resourceRef\": \"s3://bucket\",\n" +
+                        "    \"type\": \"bucket\",\n" +
+                        "    \"provider\": \"aws\",\n" +
+                        "    \"region\": \"us-east-1\",\n" +
+                        "    \"credentials\": [\n" +
+                        "        {\n" +
+                        "            \"id\": \"57Ic6reczFn78H1DTaaXkp\",\n" +
+                        "            \"name\": \"aws\",\n" +
+                        "            \"provider\": \"aws\"\n" +
+                        "        }\n" +
+                        "    ],\n" +
+                        "    \"publicAccessible\": false,\n" +
+                        "    \"hidden\": false,\n" +
+                        "    \"status\": null,\n" +
+                        "    \"message\": null\n" +
+                        "}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "data-links", "update", "-w", "75887156211589", "-i", "v1-somedatalinkid", "-n", "name", "-d", "somedesc", "-c", "57Ic6reczFn78H1DTaaXkp");
+
+        // No errors thrown
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testBrowse(OutputType format, MockServerClient mock) {
+        mock.when(
+                request()
+                        .withMethod("GET").withPath("/data-links/v1-somedatalinkid")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("credentialsId", "57Ic6reczFn78H1DTaaXkp"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\n" +
+                        "    \"dataLink\": {\n" +
+                        "        \"id\": \"v1-cloud-9beb9b921331ce1427d23bd62ac4c4f7\",\n" +
+                        "        \"name\": \"adrian-navarro-test\",\n" +
+                        "        \"description\": null,\n" +
+                        "        \"resourceRef\": \"s3://adrian-navarro-test\",\n" +
+                        "        \"type\": \"bucket\",\n" +
+                        "        \"provider\": \"aws\",\n" +
+                        "        \"region\": \"us-east-1\",\n" +
+                        "        \"credentials\": [\n" +
+                        "            {\n" +
+                        "                \"id\": \"5EXFx2R5zWuwYtpKHhCZ0X\",\n" +
+                        "                \"name\": \"seqera_aws\",\n" +
+                        "                \"provider\": \"aws\"\n" +
+                        "            }\n" +
+                        "        ],\n" +
+                        "        \"publicAccessible\": false,\n" +
+                        "        \"hidden\": false,\n" +
+                        "        \"status\": null,\n" +
+                        "        \"message\": null\n" +
+                        "    }\n" +
+                        "}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request()
+                        .withMethod("GET").withPath("/data-links/v1-somedatalinkid/browse/path")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("credentialsId", "57Ic6reczFn78H1DTaaXkp")
+                        .withQueryStringParameter("search", "name")
+                        .withQueryStringParameter("nextPageToken", "sometoken")
+                        .withQueryStringParameter("pageSize", "1"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\n" +
+                        "    \"originalPath\": \"s3://adrian-navarro-test/lambda_tutorial_adrian\",\n" +
+                        "    \"objects\": [\n" +
+                        "        {\n" +
+                        "            \"type\": \"FILE\",\n" +
+                        "            \"name\": \"test4.csv\",\n" +
+                        "            \"size\": 1286,\n" +
+                        "            \"mimeType\": \"text/csv\"\n" +
+                        "        }\n" +
+                        "    ],\n" +
+                        "    \"nextPageToken\": null\n" +
+                        "}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "data-links", "browse", "-w", "75887156211589", "-i", "v1-somedatalinkid", "-f", "name", "-p", "path",
+                "-c", "57Ic6reczFn78H1DTaaXkp", "-t", "sometoken", "--page", "1");
+
+        // No errors thrown
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+    }
 }
