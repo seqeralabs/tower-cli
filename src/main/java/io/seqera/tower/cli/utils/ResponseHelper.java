@@ -106,6 +106,7 @@ public class ResponseHelper {
         }
 
         if (e instanceof ProcessingException) {
+            print(err, e.getMessage());
             print(err, "Connection error. Check the connection using the command 'tw info'.");
             return;
         }

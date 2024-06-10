@@ -26,6 +26,7 @@ import io.seqera.tower.cli.commands.ActionsCmd;
 import io.seqera.tower.cli.commands.CollaboratorsCmd;
 import io.seqera.tower.cli.commands.ComputeEnvsCmd;
 import io.seqera.tower.cli.commands.CredentialsCmd;
+import io.seqera.tower.cli.commands.DataLinksCmd;
 import io.seqera.tower.cli.commands.DatasetsCmd;
 import io.seqera.tower.cli.commands.InfoCmd;
 import io.seqera.tower.cli.commands.LaunchCmd;
@@ -58,6 +59,7 @@ import static picocli.AutoComplete.GenerateCompletion;
                 CollaboratorsCmd.class,
                 ComputeEnvsCmd.class,
                 CredentialsCmd.class,
+                DataLinksCmd.class,
                 DatasetsCmd.class,
                 GenerateCompletion.class,
                 InfoCmd.class,

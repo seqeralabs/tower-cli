@@ -1,0 +1,64 @@
+{
+  "dataLinks": [
+    {
+      "id": "v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4",
+      "name": "a-test-bucket-eend-us-east-1",
+      "description": null,
+      "resourceRef": "s3://a-test-bucket-eend-us-east-1",
+      "type": "bucket",
+      "provider": "aws",
+      "region": "us-east-1",
+      "credentials": [
+        {
+          "id": "3irHXig7k3TG3mKRnFR75e",
+          "name": "aws",
+          "provider": "aws"
+        }
+      ],
+      "publicAccessible": false,
+      "hidden": false,
+      "status": null,
+      "message": null
+    },
+    {
+      "id": "v1-cloud-b89b60014c225c11f59048294354d174",
+      "name": "adrian-navarro-test",
+      "description": null,
+      "resourceRef": "s3://adrian-navarro-test",
+      "type": "bucket",
+      "provider": "aws",
+      "region": "us-east-1",
+      "credentials": [
+        {
+          "id": "3irHXig7k3TG3mKRnFR75e",
+          "name": "aws",
+          "provider": "aws"
+        }
+      ],
+      "publicAccessible": false,
+      "hidden": false,
+      "status": null,
+      "message": null
+    },
+    {
+      "id": "v1-cloud-422306eddadfc64de0676a5923517733",
+      "name": "adrian-navarro-test-us-west-2",
+      "description": null,
+      "resourceRef": "s3://adrian-navarro-test-us-west-2",
+      "type": "bucket",
+      "provider": "aws",
+      "region": "us-west-2",
+      "credentials": [
+        {
+          "id": "3irHXig7k3TG3mKRnFR75e",
+          "name": "aws",
+          "provider": "aws"
+        }
+      ],
+      "publicAccessible": false,
+      "hidden": false,
+      "status": null,
+      "message": null
+    }
+  ]
+}
