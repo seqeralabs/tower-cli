@@ -121,36 +121,52 @@ tw-binary -Djavax.net.ssl.trustStore=/absolute/path/to/cacerts $@
 
 tw CLI is a platform binary executable created by a native compilation from Java GraalVM. To compile and build a development version of the binary:
 
-1. Install [SDKMan!](https://sdkman.io/)
-2. Install GraalVM:
+1. If necessary, install [SDKMan!](https://sdkman.io/)
+
+1. From the root of the tower-cli project, install GraalVM:
 
     ```bash
     sdk env install
     ```
 
-3. Install `native-image`:
+    This ensures that SDKMan uses the tower-cli project-specific `.sdkmanrc` configuration.
+
+1. Install `native-image`:
 
     ```bash
     gu install native-image
     ```
 
-4. Export your Github credentials. Github requires authentication for public packages (the token only requires the `read:packages` scope):
+1. Export your Github credentials. Github requires authentication for public packages (the token only requires the `read:packages` scope):
 
     ```bash
     export GITHUB_USERNAME=...
     export GITHUB_TOKEN=...
     ```
 
-5. Create the native client:
+1. Create the native client:
 
     ```bash
     ./gradlew nativeCompile
     ```
 
-6. Run `tw`:
+    This will install a locally compiled version of `tw` in the nativeCompile directory:
+
+    ```console
+    Produced artifacts:
+     <tower-cli-repository-root>/build/native/nativeCompile/tw (executable)
+    ========================================================================================================================
+    Finished generating 'tw' in 1m 6s.
+    [native-image-plugin] Native Image written to: <tower-cli-repository-root>/build/native/nativeCompile
+    
+    BUILD SUCCESSFUL in 1m 8s
+    6 actionable tasks: 2 executed, 4 up-to-date
+    ```
+
+1. Run `tw`:
 
     ```bash
-    ./build/graal/tw
+    ./build/native/nativeCompile/tw
     ```
 
 ## Non-binary development versions
