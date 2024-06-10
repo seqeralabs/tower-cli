@@ -121,20 +121,15 @@ tw-binary -Djavax.net.ssl.trustStore=/absolute/path/to/cacerts $@
 
 tw CLI is a platform binary executable created by a native compilation from Java GraalVM. To compile and build a development version of the binary:
 
-1. Install [SDKMan!](https://sdkman.io/)
-1. If necessary, update your `.sdkmanrc` to the Java GraalVM:
+1. If necessary, install [SDKMan!](https://sdkman.io/)
 
-    ```bash
-     # Enable auto-env through the sdkman_auto_env config
-     # Add key=value pairs of SDKs to use below
-     java 17.0.8-graalce
-    ```
-
-1. Install GraalVM:
+1. From the root of the tower-cli project, install GraalVM:
 
     ```bash
     sdk env install
     ```
+
+    This ensures that SDKMan uses the tower-cli project-specific `.sdkmanrc` configuration.
 
 1. Install `native-image`:
 
