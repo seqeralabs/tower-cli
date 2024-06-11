@@ -6,7 +6,7 @@ Use the `-h` or `--help` parameter to list the available commands and their asso
 
 ![`tw --help`](./assets/img/rich_codex/tw-info.svg)
 
-For help with a specific subcommand, run the command with `-h` or `--help` appended. For example, `tw credentials add google -h`. 
+For help with a specific subcommand, run the command with `-h` or `--help` appended. For example, `tw credentials add google -h`.
 
 > **Tip**: Use `tw --output=json <command>` to dump and store Seqera Platform entities in JSON format.
 >
@@ -50,7 +50,7 @@ Seqera requires access credentials to interact with pipeline Git repositories. S
 
 #### Container registry credentials
 
-Configure credentials for the Nextflow Wave container service to authenticate to private and public container registries. See the **Container registry credentials** section under [Credentials][credentials] for registry-specific instructions. 
+Configure credentials for the Nextflow Wave container service to authenticate to private and public container registries. See the **Container registry credentials** section under [Credentials][credentials] for registry-specific instructions.
 
 > **Note**: Container registry credentials are only used by the Wave container service. See [Wave containers][wave-docs] for more information.
 
@@ -143,7 +143,7 @@ $ tw compute-envs import --name=my_aws_ce_v1 ./my_aws_ce_v1.json
 
 ## Pipelines
 
-Pipelines define pre-configured workflows in a workspace. A pipeline consists of a workflow repository, launch parameters, and a compute environment. 
+Pipelines define pre-configured workflows in a workspace. A pipeline consists of a workflow repository, launch parameters, and a compute environment.
 
 Run `tw pipelines -h` to view the list of supported operations.
 Run `tw pipelines add -h` to view the required and optional fields for adding your pipeline.
@@ -245,6 +245,169 @@ $ tw launch https://github.com/nf-core/rnaseq --params-file=./custom_rnaseq_para
 
 > **Note**: CLI users are bound to the same user permissions that apply in the Platform UI. Launch users can launch pre-configured pipelines in the workspaces they have access to, but they cannot add or run new pipelines.
 
+## Runs
+
+Run `tw runs -h` to view supported runs operations.  
+
+Runs display all the current and previous pipeline runs in the specified workspace. Each new or resumed run is given a random name such as _grave_williams_ by default, which can be overridden with a custom value at launch. See [Runs](https://docs.seqera.io/platform/latest/monitoring/overview) for more information. As a run executes, it can transition through the following states:
+
+- `submitted`: Pending execution
+- `running`: Running
+- `succeeded`: Completed successfully
+- `failed`: Successfully executed, where at least one task failed with a terminate [error strategy](https://www.nextflow.io/docs/latest/process.html#errorstrategy)
+- `cancelled`: Stopped manually during execution
+- `unknown`: Indeterminate status
+
+### View pipeline's runs
+
+Run `tw runs view -h` to view all the required and optional fields for viewing a pipeline's runs.
+
+```console
+$ tw runs view -i 2vFUbBx63cfsBY -w seqeralabs/showcase
+
+  Run at [seqeralabs / showcase] workspace:
+
+
+    General
+    ---------------------+-------------------------------------------------
+     ID                  | 2vFUbBx63cfsBY                                  
+     Operation ID        | b5d55384-734e-4af0-8e47-0d3abec71264            
+     Run name            | adoring_brown                                   
+     Status              | SUCCEEDED                                       
+     Starting date       | Fri, 31 May 2024 10:38:30 GMT                   
+     Commit ID           | b89fac32650aacc86fcda9ee77e00612a1d77066        
+     Session ID          | 9365c6f4-6d79-4ca9-b6e1-2425f4d957fe            
+     Username            | drpatelhh                                       
+     Workdir             | s3://seqeralabs-showcase/scratch/2vFUbBx63cfsBY 
+     Container           | No container was reported                       
+     Executors           | awsbatch                                        
+     Compute Environment | seqera_aws_ireland_fusionv2_nvme                
+     Nextflow Version    | 23.10.1                                         
+     Labels              | star_salmon,yeast  
+```
+
+### List runs
+
+Run `tw runs list -h` to view all the required and optional fields for listing runs in a workspace.
+
+```console
+$ tw runs list
+
+  Pipeline runs at [seqeralabs / testing] workspace:
+
+     ID             | Status    | Project Name               | Run Name                        | Username              | Submit Date                   
+    ----------------+-----------+----------------------------+---------------------------------+-----------------------+-------------------------------
+     49Gb5XVMud2e7H | FAILED    | seqeralabs/nf-aggregate    | distraught_archimedes           | adrian-navarro-seqera | Fri, 31 May 2024 16:22:10 GMT 
+     4anNFvTUwRFDp  | SUCCEEDED | nextflow-io/rnaseq-nf      | nasty_kilby                     | mattia-bosio-seqera   | Fri, 31 May 2024 15:23:12 GMT 
+     3wo3Kfni6Kl3hO | SUCCEEDED | nf-core/proteinfold        | reverent_linnaeus               | mattia-bosio-seqera   | Fri, 31 May 2024 15:22:38 GMT 
+
+<snip>
+
+     4fIRrFgZV3eDb1 | FAILED    | nextflow-io/hello          | gigantic_lichterman             | pedro-geadas          | Mon, 29 Apr 2024 08:44:47 GMT 
+     cHEdKBXmdoQQM  | FAILED    | mathysgrapotte/stimulus    | mighty_poitras                  | evanfloden            | Mon, 29 Apr 2024 08:08:52 GMT
+```
+
+Use the optional `--filter` flag to filter the list of runs returned by one or more `keyword:value` entries:
+
+- `status`
+- `label`
+- `workflowId`
+- `runName`
+- `username`
+- `projectName`
+- `after`
+- `before`
+- `sessionId`
+- `is:starred`
+
+If no `keyword` is defined, the filtering is applied to the `runName`, `projectName` (the pipeline name), and `username`.
+
+> Note: The `after` and `before` flags require an [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) timestamp with UTC timezone (`YYYY-MM-DDThh:mm:ss.sssZ`)
+
+```console
+$ tw runs list --filter hello_slurm_20240530
+
+  Pipeline runs at [seqeralabs / showcase] workspace:
+
+     ID            | Status    | Project Name      | Run Name                             | Username   | Submit Date                   
+    ---------------+-----------+-------------------+--------------------------------------+------------+-------------------------------
+     pZeJBOLtIvP7R | SUCCEEDED | nextflow-io/hello | hello_slurm_20240530_e75584566f774e7 | adamtalbot | Thu, 30 May 2024 09:12:51 GMT
+```
+
+Multiple filter criteria can be defined:
+
+```console
+$ tw runs list --filter="after:2024-05-29T00:00:00.000Z before:2024-05-30T00:00:00.000Z username:mark-panganiban"
+
+  Pipeline runs at [seqeralabs / testing] workspace:
+
+     ID             | Status    | Project Name          | Run Name           | Username              | Submit Date                   
+    ----------------+-----------+-----------------------+--------------------+-----------------------+-------------------------------
+     xJvK95W6YUmEz  | SUCCEEDED | nextflow-io/rnaseq-nf | ondemand2          | mark-panganiban       | Wed, 29 May 2024 20:35:28 GMT 
+     1c1ckn9a3j0xF0 | SUCCEEDED | nextflow-io/rnaseq-nf | fargate            | mark-panganiban       | Wed, 29 May 2024 20:28:02 GMT 
+     3sYX1acJ01T7rL | SUCCEEDED | nextflow-io/rnaseq-nf | min1vpcu-spot      | mark-panganiban       | Wed, 29 May 2024 20:27:47 GMT 
+     4ZYJGWJCttXqXq | SUCCEEDED | nextflow-io/rnaseq-nf | min1cpu-ondemand   | mark-panganiban       | Wed, 29 May 2024 20:25:21 GMT 
+     4LCxsffTqf3ysT | SUCCEEDED | nextflow-io/rnaseq-nf | lonely_northcutt   | mark-panganiban       | Wed, 29 May 2024 20:09:51 GMT 
+     4Y8EcyopNiYBlJ | SUCCEEDED | nextflow-io/rnaseq-nf | fargate            | mark-panganiban       | Wed, 29 May 2024 18:53:47 GMT 
+     dyKevNwxK50XX  | SUCCEEDED | mark814/nr-test       | cheeky_cuvier      | mark-panganiban       | Wed, 29 May 2024 12:21:10 GMT 
+     eS6sVB5A387aR  | SUCCEEDED | mark814/nr-test       | evil_murdock       | mark-panganiban       | Wed, 29 May 2024 12:11:08 GMT 
+```
+
+A leading and trailing `*` wildcard character is supported:
+
+```console
+$ tw runs list --filter="*man/rnaseq-*"    
+
+  Pipeline runs at [seqeralabs / testing] workspace:
+
+     ID             | Status    | Project Name        | Run Name            | Username       | Submit Date                   
+    ----------------+-----------+---------------------+---------------------+----------------+-------------------------------
+     5z4AMshti4g0GK | SUCCEEDED | robnewman/rnaseq-nf | admiring_darwin     | rob-newman     | Tue, 16 Jan 2024 19:56:29 GMT 
+     62LqiS4O4FatSy | SUCCEEDED | robnewman/rnaseq-nf | cheeky_yonath       | joaquim-gamero | Wed, 3 Jan 2024 12:36:09 GMT  
+     3k2nu8ZmcBFSGv | SUCCEEDED | robnewman/rnaseq-nf | compassionate_jones | pedro-geadas   | Tue, 2 Jan 2024 16:22:26 GMT  
+     3zG2ggf5JsniNW | SUCCEEDED | robnewman/rnaseq-nf | fervent_payne       | rob-newman     | Wed, 20 Dec 2023 23:55:17 GMT 
+     1SNIcSXRuJMSNZ | SUCCEEDED | robnewman/rnaseq-nf | curious_babbage     | rob-newman     | Thu, 28 Sep 2023 17:48:04 GMT 
+     5lI2fZUZfiokBI | SUCCEEDED | robnewman/rnaseq-nf | boring_heisenberg   | rob-newman     | Thu, 28 Sep 2023 12:29:27 GMT 
+     5I4lsRXIHVEjNB | SUCCEEDED | robnewman/rnaseq-nf | ecstatic_ptolemy    | rob-newman     | Wed, 27 Sep 2023 22:06:19 GMT 
+```
+
+### Relaunch run
+
+Run `tw runs relaunch -h` to view all the required and optional fields for relaunching a run in a workspace.
+
+### Cancel a run
+
+Run `tw runs cancel -h` to view all the required and optional fields for canceling a run in a workspace.
+
+### Manage labels for runs
+
+Run `tw runs labels -h` to view all the required and optional fields for managing labels for runs in a workspace.
+
+In the example below, we add the labels `test` and `rnaseq-demo` to the run with ID `5z4AMshti4g0GK`:
+
+```console
+$ tw runs labels -i 5z4AMshti4g0GK test,rnaseq-demo 
+
+ 'set' labels on 'run' with id '5z4AMshti4g0GK' at 34830707738561 workspace
+```
+
+### Delete a run
+
+Run `tw runs delete -h` to view all the required and optional fields for deleting a run in a workspace.
+
+### Dump all logs and details of a run
+
+Run `tw runs dump -h` to view all the required and optional fields for dumping all logs and details of a run in a workspace. The supported formats are `.tar.xz` and `.tar.gz`. In the example below, we dump all the logs and details for the run with ID `5z4AMshti4g0GK` to the output file `file.tar.gz`.
+
+```console
+$ tw runs dump -i 5z4AMshti4g0GK -o file.tar.gz
+- Tower info
+- Workflow details
+- Task details
+
+  Pipeline run '5z4AMshti4g0GK' at [seqeralabs / testing] workspace details dump at 'file.tar.gz' 
+```
+
 ## Workspaces
 
 Run `tw workspaces -h` to view supported workspace operations.
@@ -284,8 +447,8 @@ $ tw workspaces list
 
 ## Participants
 
-Run `tw participants -h` to view supported participant operations. 
-Run `tw participants add -h` to view the required and optoinal fields for adding a participant. 
+Run `tw participants -h` to view supported participant operations.
+Run `tw participants add -h` to view the required and optional fields for adding a participant.
 
 ### List participants
 
