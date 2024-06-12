@@ -2951,7 +2951,8 @@
   "name":"io.seqera.tower.model.UpdateCredentialsRequest",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"getCredentials","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.UpdateDatasetRequest",
