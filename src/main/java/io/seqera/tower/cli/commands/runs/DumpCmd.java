@@ -37,6 +37,7 @@ import io.seqera.tower.model.TaskStatus;
 import io.seqera.tower.model.Workflow;
 import io.seqera.tower.model.WorkflowLoad;
 import io.seqera.tower.model.WorkflowMetrics;
+import io.seqera.tower.model.WorkflowQueryAttribute;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
@@ -169,8 +170,8 @@ public class DumpCmd extends AbstractRunsCmd {
     private void dumpWorkflowDetails(PrintWriter progress, TarArchiveOutputStream out, Long wspId) throws ApiException, IOException {
         progress.println(ansi("- Workflow details"));
 
-        // General workflow info
-        DescribeWorkflowResponse workflowResponse = workflowById(wspId, id);
+        // General workflow info (including labels)
+        DescribeWorkflowResponse workflowResponse = workflowById(wspId, id, List.of(WorkflowQueryAttribute.LABELS));
         Workflow workflow = workflowResponse.getWorkflow();
         if (workflow == null) {
             throw new TowerException("Unknown workflow");
