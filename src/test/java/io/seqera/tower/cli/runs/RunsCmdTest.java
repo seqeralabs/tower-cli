@@ -154,30 +154,34 @@ class RunsCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "runs", "list");
         assertOutput(format, out, new RunList(USER_WORKSPACE_NAME, Arrays.asList(
-                parseJson(" {\n" +
-                        "      \"starred\": false,\n" +
-                        "      \"workflow\": {\n" +
-                        "        \"id\": \"5mDfiUtqyptDib\",\n" +
-                        "        \"commandLine\": \"nextflow run https://github.com/grananda/nextflow-hello -name spontaneous_easley -with-tower https://scratch.staging-tower.xyz/api -r main\",\n" +
-                        "        \"ownerId\": 9,\n" +
-                        "        \"submit\": \"2021-09-22T05:45:44Z\",\n" +
-                        "        \"dateCreated\": \"2021-09-22T05:45:44Z\",\n" +
-                        "        \"lastUpdated\": \"2021-09-22T05:45:44Z\",\n" +
-                        "        \"runName\": \"spontaneous_easley\"\n" +
-                        "      }\n" +
-                        "    }", ListWorkflowsResponseListWorkflowsElement.class),
-                parseJson(" {\n" +
-                        "      \"starred\": false,\n" +
-                        "      \"workflow\": {\n" +
-                        "        \"id\": \"6mDfiUtqyptDib\",\n" +
-                        "        \"commandLine\": \"nextflow run https://github.com/grananda/nextflow-hello -name spontaneous_easley -with-tower https://scratch.staging-tower.xyz/api -r main\",\n" +
-                        "        \"ownerId\": 9,\n" +
-                        "        \"submit\": \"2021-09-22T05:45:44Z\",\n" +
-                        "        \"dateCreated\": \"2021-09-22T05:45:44Z\",\n" +
-                        "        \"lastUpdated\": \"2021-09-22T05:45:44Z\",\n" +
-                        "        \"runName\": \"spontaneous_easley\"\n" +
-                        "      }\n" +
-                        "    }", ListWorkflowsResponseListWorkflowsElement.class)
+                parseJson("""
+                         {
+                              "starred": false,
+                              "workflow": {
+                                "id": "5mDfiUtqyptDib",
+                                "commandLine": "nextflow run https://github.com/grananda/nextflow-hello -name spontaneous_easley -with-tower https://scratch.staging-tower.xyz/api -r main",
+                                "ownerId": 9,
+                                "submit": "2021-09-22T05:45:44Z",
+                                "dateCreated": "2021-09-22T05:45:44Z",
+                                "lastUpdated": "2021-09-22T05:45:44Z",
+                                "runName": "spontaneous_easley"
+                              }
+                            }\
+                        """, ListWorkflowsResponseListWorkflowsElement.class),
+                parseJson("""
+                         {
+                              "starred": false,
+                              "workflow": {
+                                "id": "6mDfiUtqyptDib",
+                                "commandLine": "nextflow run https://github.com/grananda/nextflow-hello -name spontaneous_easley -with-tower https://scratch.staging-tower.xyz/api -r main",
+                                "ownerId": 9,
+                                "submit": "2021-09-22T05:45:44Z",
+                                "dateCreated": "2021-09-22T05:45:44Z",
+                                "lastUpdated": "2021-09-22T05:45:44Z",
+                                "runName": "spontaneous_easley"
+                              }
+                            }\
+                        """, ListWorkflowsResponseListWorkflowsElement.class)
         ), baseUserUrl(mock, USER_WORKSPACE_NAME), false, null));
     }
 
@@ -202,30 +206,34 @@ class RunsCmdTest extends BaseCmdTest {
 
         assertEquals("", out.stdErr);
         assertEquals(chop(new RunList(USER_WORKSPACE_NAME, Arrays.asList(
-                parseJson(" {\n" +
-                        "      \"starred\": false,\n" +
-                        "      \"workflow\": {\n" +
-                        "        \"id\": \"5mDfiUtqyptDib\",\n" +
-                        "        \"commandLine\": \"nextflow run https://github.com/grananda/nextflow-hello -name spontaneous_easley -with-tower https://scratch.staging-tower.xyz/api -r main\",\n" +
-                        "        \"ownerId\": 9,\n" +
-                        "        \"submit\": \"2021-09-22T05:45:44Z\",\n" +
-                        "        \"dateCreated\": \"2021-09-22T05:45:44Z\",\n" +
-                        "        \"lastUpdated\": \"2021-09-22T05:45:44Z\",\n" +
-                        "        \"runName\": \"spontaneous_easley\"\n" +
-                        "      }\n" +
-                        "    }", ListWorkflowsResponseListWorkflowsElement.class),
-                parseJson(" {\n" +
-                        "      \"starred\": false,\n" +
-                        "      \"workflow\": {\n" +
-                        "        \"id\": \"6mDfiUtqyptDib\",\n" +
-                        "        \"commandLine\": \"nextflow run https://github.com/grananda/nextflow-hello -name spontaneous_easley -with-tower https://scratch.staging-tower.xyz/api -r main\",\n" +
-                        "        \"ownerId\": 9,\n" +
-                        "        \"submit\": \"2021-09-22T05:45:44Z\",\n" +
-                        "        \"dateCreated\": \"2021-09-22T05:45:44Z\",\n" +
-                        "        \"lastUpdated\": \"2021-09-22T05:45:44Z\",\n" +
-                        "        \"runName\": \"spontaneous_easley\"\n" +
-                        "      }\n" +
-                        "    }", ListWorkflowsResponseListWorkflowsElement.class)
+                parseJson("""
+                         {
+                              "starred": false,
+                              "workflow": {
+                                "id": "5mDfiUtqyptDib",
+                                "commandLine": "nextflow run https://github.com/grananda/nextflow-hello -name spontaneous_easley -with-tower https://scratch.staging-tower.xyz/api -r main",
+                                "ownerId": 9,
+                                "submit": "2021-09-22T05:45:44Z",
+                                "dateCreated": "2021-09-22T05:45:44Z",
+                                "lastUpdated": "2021-09-22T05:45:44Z",
+                                "runName": "spontaneous_easley"
+                              }
+                            }\
+                        """, ListWorkflowsResponseListWorkflowsElement.class),
+                parseJson("""
+                         {
+                              "starred": false,
+                              "workflow": {
+                                "id": "6mDfiUtqyptDib",
+                                "commandLine": "nextflow run https://github.com/grananda/nextflow-hello -name spontaneous_easley -with-tower https://scratch.staging-tower.xyz/api -r main",
+                                "ownerId": 9,
+                                "submit": "2021-09-22T05:45:44Z",
+                                "dateCreated": "2021-09-22T05:45:44Z",
+                                "lastUpdated": "2021-09-22T05:45:44Z",
+                                "runName": "spontaneous_easley"
+                              }
+                            }\
+                        """, ListWorkflowsResponseListWorkflowsElement.class)
         ), baseUserUrl(mock, USER_WORKSPACE_NAME), false, PaginationInfo.from(1, 2)).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
@@ -251,30 +259,34 @@ class RunsCmdTest extends BaseCmdTest {
 
         assertEquals("", out.stdErr);
         assertEquals(chop(new RunList(USER_WORKSPACE_NAME, Arrays.asList(
-                parseJson(" {\n" +
-                        "      \"starred\": false,\n" +
-                        "      \"workflow\": {\n" +
-                        "        \"id\": \"5mDfiUtqyptDib\",\n" +
-                        "        \"commandLine\": \"nextflow run https://github.com/grananda/nextflow-hello -name spontaneous_easley -with-tower https://scratch.staging-tower.xyz/api -r main\",\n" +
-                        "        \"ownerId\": 9,\n" +
-                        "        \"submit\": \"2021-09-22T05:45:44Z\",\n" +
-                        "        \"dateCreated\": \"2021-09-22T05:45:44Z\",\n" +
-                        "        \"lastUpdated\": \"2021-09-22T05:45:44Z\",\n" +
-                        "        \"runName\": \"spontaneous_easley\"\n" +
-                        "      }\n" +
-                        "    }", ListWorkflowsResponseListWorkflowsElement.class),
-                parseJson(" {\n" +
-                        "      \"starred\": false,\n" +
-                        "      \"workflow\": {\n" +
-                        "        \"id\": \"6mDfiUtqyptDib\",\n" +
-                        "        \"commandLine\": \"nextflow run https://github.com/grananda/nextflow-hello -name spontaneous_easley -with-tower https://scratch.staging-tower.xyz/api -r main\",\n" +
-                        "        \"ownerId\": 9,\n" +
-                        "        \"submit\": \"2021-09-22T05:45:44Z\",\n" +
-                        "        \"dateCreated\": \"2021-09-22T05:45:44Z\",\n" +
-                        "        \"lastUpdated\": \"2021-09-22T05:45:44Z\",\n" +
-                        "        \"runName\": \"spontaneous_easley\"\n" +
-                        "      }\n" +
-                        "    }", ListWorkflowsResponseListWorkflowsElement.class)
+                parseJson("""
+                         {
+                              "starred": false,
+                              "workflow": {
+                                "id": "5mDfiUtqyptDib",
+                                "commandLine": "nextflow run https://github.com/grananda/nextflow-hello -name spontaneous_easley -with-tower https://scratch.staging-tower.xyz/api -r main",
+                                "ownerId": 9,
+                                "submit": "2021-09-22T05:45:44Z",
+                                "dateCreated": "2021-09-22T05:45:44Z",
+                                "lastUpdated": "2021-09-22T05:45:44Z",
+                                "runName": "spontaneous_easley"
+                              }
+                            }\
+                        """, ListWorkflowsResponseListWorkflowsElement.class),
+                parseJson("""
+                         {
+                              "starred": false,
+                              "workflow": {
+                                "id": "6mDfiUtqyptDib",
+                                "commandLine": "nextflow run https://github.com/grananda/nextflow-hello -name spontaneous_easley -with-tower https://scratch.staging-tower.xyz/api -r main",
+                                "ownerId": 9,
+                                "submit": "2021-09-22T05:45:44Z",
+                                "dateCreated": "2021-09-22T05:45:44Z",
+                                "lastUpdated": "2021-09-22T05:45:44Z",
+                                "runName": "spontaneous_easley"
+                              }
+                            }\
+                        """, ListWorkflowsResponseListWorkflowsElement.class)
         ), baseUserUrl(mock, USER_WORKSPACE_NAME), false, PaginationInfo.from(null, 2, 1, null)).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
@@ -347,84 +359,86 @@ class RunsCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "runs", "view", "-i", "5mDfiUtqyptDib");
 
-        Workflow workflow = parseJson("{\n" +
-                "    \"id\": \"5mDfiUtqyptDib\",\n" +
-                "    \"submit\": \"2021-09-22T05:45:44Z\",\n" +
-                "    \"start\": null,\n" +
-                "    \"complete\": null,\n" +
-                "    \"dateCreated\": \"2021-09-22T05:45:44Z\",\n" +
-                "    \"lastUpdated\": \"2021-09-22T05:45:44Z\",\n" +
-                "    \"runName\": \"spontaneous_easley\",\n" +
-                "    \"sessionId\": \"ecaad2dd-83bb-4e0d-9418-d84f177e1e74\",\n" +
-                "    \"profile\": null,\n" +
-                "    \"workDir\": \"s3://nextflow-ci/julio\",\n" +
-                "    \"commitId\": null,\n" +
-                "    \"userName\": \"jfernandez74\",\n" +
-                "    \"scriptId\": null,\n" +
-                "    \"revision\": \"main\",\n" +
-                "    \"commandLine\": \"nextflow run https://github.com/grananda/nextflow-hello -name spontaneous_easley -with-tower https://scratch.staging-tower.xyz/api -r main\",\n" +
-                "    \"projectName\": \"grananda/nextflow-hello\",\n" +
-                "    \"scriptName\": null,\n" +
-                "    \"launchId\": \"5SCyEXKrCqFoGzOXGpesr5\",\n" +
-                "    \"status\": \"SUBMITTED\",\n" +
-                "    \"configFiles\": null,\n" +
-                "    \"params\": null,\n" +
-                "    \"configText\": null,\n" +
-                "    \"manifest\": null,\n" +
-                "    \"nextflow\": null,\n" +
-                "    \"stats\": null,\n" +
-                "    \"errorMessage\": null,\n" +
-                "    \"errorReport\": null,\n" +
-                "    \"deleted\": null,\n" +
-                "    \"peakLoadCpus\": null,\n" +
-                "    \"peakLoadTasks\": null,\n" +
-                "    \"peakLoadMemory\": null,\n" +
-                "    \"projectDir\": null,\n" +
-                "    \"homeDir\": null,\n" +
-                "    \"container\": null,\n" +
-                "    \"repository\": null,\n" +
-                "    \"containerEngine\": null,\n" +
-                "    \"scriptFile\": null,\n" +
-                "    \"launchDir\": null,\n" +
-                "    \"duration\": null,\n" +
-                "    \"exitStatus\": null,\n" +
-                "    \"resume\": false,\n" +
-                "    \"success\": null,\n" +
-                "    \"logFile\": null,\n" +
-                "    \"outFile\": null,\n" +
-                "    \"operationId\": null,\n" +
-                "    \"ownerId\": 9\n" +
-                "  }", Workflow.class);
+        Workflow workflow = parseJson("""
+                {
+                    "id": "5mDfiUtqyptDib",
+                    "submit": "2021-09-22T05:45:44Z",
+                    "start": null,
+                    "complete": null,
+                    "dateCreated": "2021-09-22T05:45:44Z",
+                    "lastUpdated": "2021-09-22T05:45:44Z",
+                    "runName": "spontaneous_easley",
+                    "sessionId": "ecaad2dd-83bb-4e0d-9418-d84f177e1e74",
+                    "profile": null,
+                    "workDir": "s3://nextflow-ci/julio",
+                    "commitId": null,
+                    "userName": "jfernandez74",
+                    "scriptId": null,
+                    "revision": "main",
+                    "commandLine": "nextflow run https://github.com/grananda/nextflow-hello -name spontaneous_easley -with-tower https://scratch.staging-tower.xyz/api -r main",
+                    "projectName": "grananda/nextflow-hello",
+                    "scriptName": null,
+                    "launchId": "5SCyEXKrCqFoGzOXGpesr5",
+                    "status": "SUBMITTED",
+                    "configFiles": null,
+                    "params": null,
+                    "configText": null,
+                    "manifest": null,
+                    "nextflow": null,
+                    "stats": null,
+                    "errorMessage": null,
+                    "errorReport": null,
+                    "deleted": null,
+                    "peakLoadCpus": null,
+                    "peakLoadTasks": null,
+                    "peakLoadMemory": null,
+                    "projectDir": null,
+                    "homeDir": null,
+                    "container": null,
+                    "repository": null,
+                    "containerEngine": null,
+                    "scriptFile": null,
+                    "launchDir": null,
+                    "duration": null,
+                    "exitStatus": null,
+                    "resume": false,
+                    "success": null,
+                    "logFile": null,
+                    "outFile": null,
+                    "operationId": null,
+                    "ownerId": 9
+                  }""", Workflow.class);
 
-        WorkflowLoad workflowLoad = parseJson("{\n" +
-                "      \"cpus\": 0,\n" +
-                "      \"cpuTime\": 0,\n" +
-                "      \"cpuLoad\": 0,\n" +
-                "      \"memoryRss\": 0,\n" +
-                "      \"memoryReq\": 0,\n" +
-                "      \"readBytes\": 0,\n" +
-                "      \"writeBytes\": 0,\n" +
-                "      \"volCtxSwitch\": 0,\n" +
-                "      \"invCtxSwitch\": 0,\n" +
-                "      \"cost\": null,\n" +
-                "      \"loadTasks\": 0,\n" +
-                "      \"loadCpus\": 0,\n" +
-                "      \"loadMemory\": 0,\n" +
-                "      \"peakCpus\": 0,\n" +
-                "      \"peakTasks\": 0,\n" +
-                "      \"peakMemory\": 0,\n" +
-                "      \"executors\": null,\n" +
-                "      \"dateCreated\": null,\n" +
-                "      \"lastUpdated\": null,\n" +
-                "      \"cached\": 0,\n" +
-                "      \"pending\": 0,\n" +
-                "      \"submitted\": 0,\n" +
-                "      \"running\": 0,\n" +
-                "      \"succeeded\": 0,\n" +
-                "      \"failed\": 0,\n" +
-                "      \"memoryEfficiency\": 0,\n" +
-                "      \"cpuEfficiency\": 0\n" +
-                "    }", WorkflowLoad.class);
+        WorkflowLoad workflowLoad = parseJson("""
+                {
+                      "cpus": 0,
+                      "cpuTime": 0,
+                      "cpuLoad": 0,
+                      "memoryRss": 0,
+                      "memoryReq": 0,
+                      "readBytes": 0,
+                      "writeBytes": 0,
+                      "volCtxSwitch": 0,
+                      "invCtxSwitch": 0,
+                      "cost": null,
+                      "loadTasks": 0,
+                      "loadCpus": 0,
+                      "loadMemory": 0,
+                      "peakCpus": 0,
+                      "peakTasks": 0,
+                      "peakMemory": 0,
+                      "executors": null,
+                      "dateCreated": null,
+                      "lastUpdated": null,
+                      "cached": 0,
+                      "pending": 0,
+                      "submitted": 0,
+                      "running": 0,
+                      "succeeded": 0,
+                      "failed": 0,
+                      "memoryEfficiency": 0,
+                      "cpuEfficiency": 0
+                    }""", WorkflowLoad.class);
 
         Map<String, Object> general = new LinkedHashMap<>();
         general.put("id", workflow.getId());

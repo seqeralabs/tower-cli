@@ -98,8 +98,8 @@ public class TarFileHelper {
 
     public static class TarFileAppender implements AutoCloseable {
 
-        private TarArchiveOutputStream tarStream;
-        private ExecutorService executor;
+        private final TarArchiveOutputStream tarStream;
+        private final ExecutorService executor;
 
         protected TarFileAppender(TarArchiveOutputStream tarStream) {
             this.tarStream = tarStream;
@@ -172,8 +172,8 @@ public class TarFileHelper {
                 if (!executor.awaitTermination(1, TimeUnit.MINUTES)) {
                     throw new TowerException("Timeout compressing logs");
                 }
-            } catch (InterruptedException ignore) {
-                throw new RuntimeException(ignore);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
 
             tarStream.close();

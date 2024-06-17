@@ -47,7 +47,6 @@ import picocli.CommandLine.Option;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,8 +80,6 @@ public class DumpCmd extends AbstractRunsCmd {
 
     @Mixin
     public WorkspaceOptionalOptions workspace;
-
-    private final static JSON JSON = new JSON();
 
     private PrintWriter progress;
 
@@ -256,7 +253,7 @@ public class DumpCmd extends AbstractRunsCmd {
         }
     }
 
-    private File collectNfLog(Long workspaceId) throws ApiException, IOException {
+    private File collectNfLog(Long workspaceId) throws ApiException {
         progress.println(ansi("- Workflow nextflow.log"));
 
         var workflow = getWorkflowDescription(workspaceId).getWorkflow();
