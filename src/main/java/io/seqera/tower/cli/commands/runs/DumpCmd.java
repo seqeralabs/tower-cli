@@ -25,6 +25,7 @@ import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.runs.RunDump;
 import io.seqera.tower.cli.shared.WorkflowMetadata;
+import io.seqera.tower.cli.utils.JsonHelper;
 import io.seqera.tower.cli.utils.SilentPrintWriter;
 import io.seqera.tower.cli.utils.TarFileHelper;
 import io.seqera.tower.model.DescribeTaskResponse;
@@ -122,27 +123,27 @@ public class DumpCmd extends AbstractRunsCmd {
         return new RunDump(id, workspaceRef(wspId), outputFile);
     }
 
-    private byte[] collectTowerInfo() throws IOException, ApiException {
+    private String collectTowerInfo() throws IOException, ApiException {
         progress.println(ansi("- Tower info"));
 
-        var serviceInfo = api().info().getServiceInfo();
-        return toJSON(ServiceInfo.class, serviceInfo);
+        ServiceInfo serviceInfo = api().info().getServiceInfo();
+        return JsonHelper.prettyJson(serviceInfo);
     }
 
-    private byte[] collectWorkflowInfo(Long workspaceId) throws IOException, ApiException {
+    private String collectWorkflowInfo(Long workspaceId) throws IOException, ApiException {
         progress.println(ansi("- Workflow general information"));
 
         // General workflow info (including labels)
 
-        var workflow = getWorkflowDescription(workspaceId).getWorkflow();
+        Workflow workflow = getWorkflowDescription(workspaceId).getWorkflow();
         if (workflow == null) {
             throw new TowerException("Unknown workflow");
         }
 
-        return toJSON(Workflow.class, workflow);
+        return JsonHelper.prettyJson(workflow);
     }
 
-    private byte[] collectWorkflowMetadata(Long workspaceId) throws IOException, ApiException {
+    private String collectWorkflowMetadata(Long workspaceId) throws IOException, ApiException {
         progress.println(ansi("- Workflow metadata"));
 
         // Workflow metadata aggregates
@@ -169,18 +170,18 @@ public class DumpCmd extends AbstractRunsCmd {
                 workflowDesc.getLabels()
         );
 
-        return toJSON(WorkflowMetadata.class, wfMetadata);
+        return JsonHelper.prettyJson(wfMetadata);
     }
 
-    private byte[] collectWorkflowLoad(Long workspaceId) throws ApiException, JsonProcessingException {
+    private String collectWorkflowLoad(Long workspaceId) throws ApiException, JsonProcessingException {
         progress.println(ansi("- Workflow load data"));
 
         WorkflowLoad workflowLoad = workflowLoadByWorkflowId(workspaceId, id);
 
-        return toJSON(WorkflowLoad.class, workflowLoad);
+        return JsonHelper.prettyJson(workflowLoad);
     }
 
-    private byte[] collectWorkflowLaunch(Long workspaceId) throws ApiException, JsonProcessingException {
+    private String collectWorkflowLaunch(Long workspaceId) throws ApiException, JsonProcessingException {
         progress.println(ansi("- Workflow launch"));
 
         var workflow = getWorkflowDescription(workspaceId).getWorkflow();
@@ -191,10 +192,10 @@ public class DumpCmd extends AbstractRunsCmd {
         String launchId = workflow.getLaunchId();
         Launch launch = (launchId == null) ? null : launchById(workspaceId, launchId);
 
-        return toJSON(Launch.class, launch);
+        return JsonHelper.prettyJson(launch);
     }
 
-    private byte[] collectWorkflowMetrics(Long workspaceId) throws ApiException, JsonProcessingException {
+    private String collectWorkflowMetrics(Long workspaceId) throws ApiException, JsonProcessingException {
         progress.println(ansi("- Workflow metrics"));
 
         var workflow = getWorkflowDescription(workspaceId).getWorkflow();
@@ -204,15 +205,15 @@ public class DumpCmd extends AbstractRunsCmd {
 
         List<WorkflowMetrics> metrics = api().describeWorkflowMetrics(workflow.getId(), workspaceId).getMetrics();
 
-        return toJSON(List.class, metrics);
+        return JsonHelper.prettyJson(metrics);
     }
 
-    private byte[] collectWorkflowTasks(Long workspaceId) throws ApiException, JsonProcessingException {
+    private String collectWorkflowTasks(Long workspaceId) throws ApiException, JsonProcessingException {
         progress.println(ansi("- Task details"));
 
         List<Task> tasks = getWorkflowTasks(workspaceId, id);
 
-        return toJSON(List.class, tasks);
+        return JsonHelper.prettyJson(tasks);
     }
 
     private void collectWorkflowTaskLogs(TarFileHelper.TarFileAppender tar, Long workspaceId) throws ApiException, IOException {
@@ -255,7 +256,7 @@ public class DumpCmd extends AbstractRunsCmd {
         }
     }
 
-    private byte[] collectNfLog(Long workspaceId) throws ApiException, IOException {
+    private File collectNfLog(Long workspaceId) throws ApiException, IOException {
         progress.println(ansi("- Workflow nextflow.log"));
 
         var workflow = getWorkflowDescription(workspaceId).getWorkflow();
@@ -265,7 +266,7 @@ public class DumpCmd extends AbstractRunsCmd {
 
         File nextflowLog = api().downloadWorkflowLog(workflow.getId(), String.format("nf-%s.log", workflow.getId()), workspaceId);
 
-        return Files.readAllBytes(nextflowLog.toPath());
+        return nextflowLog;
     }
 
     private void addTaskLog(TarFileHelper.TarFileAppender tar, Long taskId, String logName, Long workspaceId, String workflowId) throws ApiException, IOException {
@@ -335,13 +336,6 @@ public class DumpCmd extends AbstractRunsCmd {
         }
 
         return this.workflowTasks;
-    }
-
-    private <T> byte[] toJSON(Class<T> type, T value) throws JsonProcessingException {
-        return JSON
-            .getContext(type)
-            .writerWithDefaultPrettyPrinter()
-            .writeValueAsBytes(value);
     }
 
     private String generateUrl(Long wspId, String userName, String wfId) throws ApiException {
