@@ -18,7 +18,9 @@
 package io.seqera.tower.cli.runs;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import io.seqera.tower.ApiException;
+import io.seqera.tower.JSON;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.commands.runs.download.enums.RunDownloadFileType;
@@ -32,10 +34,25 @@ import io.seqera.tower.cli.responses.runs.RunFileDownloaded;
 import io.seqera.tower.cli.responses.runs.RunList;
 import io.seqera.tower.cli.responses.runs.RunSubmited;
 import io.seqera.tower.cli.responses.runs.RunView;
+import io.seqera.tower.cli.shared.WorkflowMetadata;
+import io.seqera.tower.cli.utils.JsonHelper;
 import io.seqera.tower.cli.utils.PaginationInfo;
+import io.seqera.tower.cli.utils.TarFileHelper;
+import io.seqera.tower.model.DescribeLaunchResponse;
+import io.seqera.tower.model.DescribeTaskResponse;
+import io.seqera.tower.model.DescribeWorkflowLaunchResponse;
+import io.seqera.tower.model.DescribeWorkflowResponse;
+import io.seqera.tower.model.GetProgressResponse;
+import io.seqera.tower.model.GetWorkflowMetricsResponse;
+import io.seqera.tower.model.Launch;
+import io.seqera.tower.model.ListTasksResponse;
 import io.seqera.tower.model.ListWorkflowsResponseListWorkflowsElement;
+import io.seqera.tower.model.ServiceInfo;
+import io.seqera.tower.model.ServiceInfoResponse;
+import io.seqera.tower.model.Task;
 import io.seqera.tower.model.Workflow;
 import io.seqera.tower.model.WorkflowLoad;
+import io.seqera.tower.model.WorkflowMetrics;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -44,6 +61,7 @@ import org.mockserver.model.MediaType;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -55,6 +73,7 @@ import static io.seqera.tower.cli.commands.AbstractApiCmd.USER_WORKSPACE_NAME;
 import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
 import static org.apache.commons.lang3.StringUtils.chop;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
@@ -559,53 +578,84 @@ class RunsCmdTest extends BaseCmdTest {
     @Test
     void testDumpRuns(MockServerClient mock) throws IOException {
 
+        byte[] sampleUserInfoBytes = loadResource("user");
+        byte[] sampleServiceInfoBytes = loadResource("info/service-info");
+        byte[] sampleDescribeWorkflowBytes = loadResource("workflow_view");
+        byte[] sampleWorkflowProgressBytes = loadResource("workflow_progress");
+        byte[] sampleWorkflowLog = loadResource("runs/download", "txt");
+        byte[] sampleWorkflowMetricsBytes = loadResource("runs/runs_metrics");
+        byte[] sampleTaskListBytes = loadResource("runs/tasks_list_response");
+        byte[] sampleWorkflowLaunchBytes = loadResource("runs/workflow_launch");
+        byte[] sampleLaunchBytes = loadResource("launch_view");
+
+        //DescribeUserResponse sampleUserInfo = fromJSON(sampleUserInfoBytes, DescribeUserResponse.class);
+        ServiceInfoResponse sampleServiceInfo = fromJSON(sampleServiceInfoBytes, ServiceInfoResponse.class);
+        DescribeWorkflowResponse sampleDescribeWorkflow = fromJSON(sampleDescribeWorkflowBytes, DescribeWorkflowResponse.class);
+        GetProgressResponse sampleWorkflowProgress = fromJSON(sampleWorkflowProgressBytes, GetProgressResponse.class);
+        GetWorkflowMetricsResponse sampleWorkflowMetrics = fromJSON(sampleWorkflowMetricsBytes, GetWorkflowMetricsResponse.class);
+        ListTasksResponse sampleTaskList = fromJSON(sampleTaskListBytes, ListTasksResponse.class);
+        DescribeWorkflowLaunchResponse sampleWorkflowLaunch = fromJSON(sampleWorkflowLaunchBytes, DescribeWorkflowLaunchResponse.class);
+        DescribeLaunchResponse sampleLaunch = fromJSON(sampleLaunchBytes, DescribeLaunchResponse.class);
+
+
         mock.when(
                 request().withMethod("GET").withPath("/user-info"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(sampleUserInfoBytes).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
                 request().withMethod("GET").withPath("/service-info"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResource("info/service-info")).withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(sampleServiceInfoBytes).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
-                request().withMethod("GET").withPath("/workflow/5mDfiUtqyptDib"), exactly(1)
+                request().withMethod("GET")
+                        .withPath("/workflow/5mDfiUtqyptDib")
+                        .withQueryStringParameter("attributes", "labels"),
+                exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResource("workflow_view")).withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(sampleDescribeWorkflowBytes).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
                 request().withMethod("GET").withPath("/workflow/5mDfiUtqyptDib/progress"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResource("workflow_progress")).withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(sampleWorkflowProgressBytes).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/workflow/5mDfiUtqyptDib/download")
+                        .withQueryStringParameter("fileName", "nf-5mDfiUtqyptDib.log"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(sampleWorkflowLog).withContentType(MediaType.APPLICATION_BINARY)
         );
 
         mock.when(
                 request().withMethod("GET").withPath("/workflow/5mDfiUtqyptDib/metrics"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResource("runs/runs_metrics")).withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(sampleWorkflowMetricsBytes).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
                 request().withMethod("GET").withPath("/workflow/5mDfiUtqyptDib/tasks"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResource("runs/tasks_list_response")).withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(sampleTaskListBytes).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
                 request().withMethod("GET").withPath("/workflow/5mDfiUtqyptDib/launch"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResource("runs/workflow_launch")).withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(sampleWorkflowLaunchBytes).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
                 request().withMethod("GET").withPath("/launch/5SCyEXKrCqFoGzOXGpesr5"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResource("launch_view")).withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(sampleLaunchBytes).withContentType(MediaType.APPLICATION_JSON)
         );
+
 
         File file = new File(tempFile("", "test-dump-runs", ".tar.gz"));
         String workflowRunId = "5mDfiUtqyptDib";
@@ -615,5 +665,91 @@ class RunsCmdTest extends BaseCmdTest {
         assertEquals(new RunDump(workflowRunId, "user", file.toPath()).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
 
+        var serviceInfoJsonContent = TarFileHelper.readContentFile(file.toPath(), "service-info.json");
+        var workflowJsonContent = TarFileHelper.readContentFile(file.toPath(), "workflow.json");
+        var wfMetadataJsonContent = TarFileHelper.readContentFile(file.toPath(), "workflow-metadata.json");
+        var wfLoadJsonContent = TarFileHelper.readContentFile(file.toPath(), "workflow-load.json");
+        var wfLaunchJsonContent = TarFileHelper.readContentFile(file.toPath(), "workflow-launch.json");
+        var wfMetricsJsonContent = TarFileHelper.readContentFile(file.toPath(), "workflow-metrics.json");
+        var wfTasksJsonContent = TarFileHelper.readContentFile(file.toPath(), "workflow-tasks.json");
+        var nxfLogJsonContent = TarFileHelper.readContentFile(file.toPath(), "nextflow.log");
+
+        assertTrue(serviceInfoJsonContent.isPresent());
+        assertTrue(workflowJsonContent.isPresent());
+        assertTrue(wfMetadataJsonContent.isPresent());
+        assertTrue(wfLoadJsonContent.isPresent());
+        assertTrue(wfLaunchJsonContent.isPresent());
+        assertTrue(wfMetricsJsonContent.isPresent());
+        assertTrue(wfTasksJsonContent.isPresent());
+        assertTrue(nxfLogJsonContent.isPresent());
+
+        // service-info.json
+        {
+            ServiceInfo actual = fromJSON(serviceInfoJsonContent.get(), ServiceInfo.class);
+            assertEquals(actual, sampleServiceInfo.getServiceInfo());
+        }
+
+        // workflow.json
+        {
+            Workflow actual = fromJSON(workflowJsonContent.get(), Workflow.class);
+            assertEquals(sampleDescribeWorkflow.getWorkflow(), actual);
+        }
+
+        // workflow-metadata.json
+        {
+            WorkflowMetadata actual = fromJSON(wfMetadataJsonContent.get(), WorkflowMetadata.class);
+
+            assertEquals(sampleWorkflowLaunch.getLaunch().getPipelineId(), actual.getPipelineId());
+            assertEquals(null, actual.getWorkspaceId());
+            assertEquals(sampleDescribeWorkflow.getWorkflow().getOwnerId(), actual.getUserId());
+            assertEquals(sampleDescribeWorkflow.getLabels(), actual.getLabels());
+        }
+
+        // workflow-load.json
+        {
+            WorkflowLoad actual = fromJSON(wfLoadJsonContent.get(), WorkflowLoad.class);
+            assertEquals(sampleWorkflowProgress.getProgress().getWorkflowProgress(), actual);
+        }
+
+        // workflow-launch.json
+        {
+            Launch actual = fromJSON(wfLaunchJsonContent.get(), Launch.class);
+            assertEquals(sampleLaunch.getLaunch(), actual);
+        }
+
+        // workflow-metrics.json
+        {
+            List<WorkflowMetrics> actual = new JSON()
+                    .getContext(List.class)
+                    .readValue(wfMetricsJsonContent.get(), new TypeReference<List<WorkflowMetrics>>(){});
+            assertEquals(sampleWorkflowMetrics.getMetrics(), actual);
+        }
+
+        // workflow-tasks.json
+        {
+            List<Task> actual = new JSON()
+                    .getContext(List.class)
+                    .readValue(wfTasksJsonContent.get(), new TypeReference<List<Task>>(){});
+
+            List<Task> expected = sampleTaskList.getTasks()
+                    .stream()
+                    .map(DescribeTaskResponse::getTask)
+                    .toList();
+
+            assertEquals(expected, actual);
+        }
+
+        // nextflow.log
+        {
+            String actual = new String(nxfLogJsonContent.get(), StandardCharsets.UTF_8);
+            String expect = new String(sampleWorkflowLog, StandardCharsets.UTF_8);
+            assertEquals(expect, actual);
+        }
+
     }
+
+    private static <T> T fromJSON(byte[] json, Class<T> clazz) throws JsonProcessingException {
+        return JsonHelper.parseJson(new String(json, StandardCharsets.UTF_8), clazz);
+    }
+
 }
