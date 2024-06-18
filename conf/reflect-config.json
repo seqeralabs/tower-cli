@@ -760,6 +760,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.credentials.add.AddCodeCommitCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.credentials.add.AddContainerRegistryCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -833,6 +839,12 @@
   "name":"io.seqera.tower.cli.commands.credentials.providers.BitbucketProvider",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.credentials.providers.CodeCommitProvider",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -922,6 +934,12 @@
   "name":"io.seqera.tower.cli.commands.credentials.update.UpdateBitbucketCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.credentials.update.UpdateCodeCommitCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1974,7 +1992,7 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[{"name":"getLabels","parameterTypes":[] }, {"name":"getPipelineId","parameterTypes":[] }, {"name":"getRunUrl","parameterTypes":[] }, {"name":"getUserId","parameterTypes":[] }, {"name":"getWorkspaceId","parameterTypes":[] }, {"name":"getWorkspaceName","parameterTypes":[] }]
+  "methods":[{"name":"getLabels","parameterTypes":[] }, {"name":"getOrganizationId","parameterTypes":[] }, {"name":"getOrganizationName","parameterTypes":[] }, {"name":"getPipelineId","parameterTypes":[] }, {"name":"getRunUrl","parameterTypes":[] }, {"name":"getUserId","parameterTypes":[] }, {"name":"getWorkspaceId","parameterTypes":[] }, {"name":"getWorkspaceName","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.utils.VersionProvider",
@@ -2147,6 +2165,13 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"fromValue","parameterTypes":["java.lang.String"] }, {"name":"getValue","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.model.CodeCommitSecurityKeys",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getDiscriminator","parameterTypes":[] }, {"name":"getPassword","parameterTypes":[] }, {"name":"getUsername","parameterTypes":[] }, {"name":"setPassword","parameterTypes":["java.lang.String"] }, {"name":"setUsername","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.model.ComputeConfig",
@@ -2927,7 +2952,8 @@
   "name":"io.seqera.tower.model.UpdateCredentialsRequest",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"getCredentials","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.UpdateDatasetRequest",

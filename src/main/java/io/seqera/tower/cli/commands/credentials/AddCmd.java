@@ -22,6 +22,7 @@ import io.seqera.tower.cli.commands.credentials.add.AddAgentCmd;
 import io.seqera.tower.cli.commands.credentials.add.AddAwsCmd;
 import io.seqera.tower.cli.commands.credentials.add.AddAzureCmd;
 import io.seqera.tower.cli.commands.credentials.add.AddBitbucketCmd;
+import io.seqera.tower.cli.commands.credentials.add.AddCodeCommitCmd;
 import io.seqera.tower.cli.commands.credentials.add.AddContainerRegistryCmd;
 import io.seqera.tower.cli.commands.credentials.add.AddGiteaCmd;
 import io.seqera.tower.cli.commands.credentials.add.AddGithubCmd;
@@ -40,6 +41,7 @@ import java.io.IOException;
         description = "Add new workspace credentials.",
         subcommands = {
                 AddAwsCmd.class,
+                AddCodeCommitCmd.class,
                 AddGoogleCmd.class,
                 AddGithubCmd.class,
                 AddGitlabCmd.class,
