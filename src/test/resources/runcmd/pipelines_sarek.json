@@ -12,6 +12,9 @@
       "organizationName": null,
       "workspaceName": null,
       "visibility": null,
+      "optimizationId": "rOYdwTnmTaRCJjUq",
+      "optimizationTargets": "cpus, memory",
+      "optimizationStatus": "OPTIMIZED",
       "newUnknownAttribute": "check that in the future to add a new attribute doesn't affect old versions"
     }
   ],

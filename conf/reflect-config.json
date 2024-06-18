@@ -2824,7 +2824,8 @@
 {
   "name":"io.seqera.tower.model.PipelineOptimizationStatus",
   "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String"] }, {"name":"fromValue","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.model.PipelineSecret",
@@ -2895,13 +2896,14 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getLaunch","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.SubmitWorkflowLaunchResponse",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setWorkflowId","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.model.Task",
