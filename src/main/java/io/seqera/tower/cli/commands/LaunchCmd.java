@@ -245,7 +245,7 @@ public class LaunchCmd extends AbstractRootCmd {
 
     private WorkflowStatus checkWorkflowStatus(String workflowId, Long workspaceId) {
         try {
-            return api().describeWorkflow(workflowId, workspaceId, Collections.emptyList()).getWorkflow().getStatus();
+            return api().describeWorkflow(workflowId, workspaceId, NO_WORKFLOW_ATTRIBUTES).getWorkflow().getStatus();
         } catch (ApiException | NullPointerException e) {
             return null;
         }

@@ -77,6 +77,29 @@
       "memoryEfficiency": 0,
       "cpuEfficiency": 0
     },
-    "processesProgress": []
+    "processesProgress": [],
+    "labels": [
+      {
+        "id": 1,
+        "name": "LabelOne",
+        "value": null,
+        "resource": false,
+        "isDefault": true
+      },
+      {
+        "id": 2,
+        "name": "LabelTwo",
+        "value": null,
+        "resource": false,
+        "isDefault": false
+      },
+      {
+        "id" : 213027699544669,
+        "name" : "LabelThree",
+        "value" : "label-value",
+        "resource" : true,
+        "isDefault" : false
+      }
+    ]
   }
 }

@@ -2163,7 +2163,8 @@
 {
   "name":"io.seqera.tower.model.CloudPriceModel",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "methods":[{"name":"fromValue","parameterTypes":["java.lang.String"] }, {"name":"getValue","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.CodeCommitSecurityKeys",
