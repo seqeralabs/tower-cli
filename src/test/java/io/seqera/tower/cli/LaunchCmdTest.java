@@ -98,7 +98,22 @@ class LaunchCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/workflow/launch").withBody("{\"launch\":{\"id\":\"5nmCvXcarkvv8tELMF4KyY\",\"computeEnvId\":\"4X7YrYJp9B1d1DUpfur7DS\",\"pipeline\":\"https://github.com/nf-core/sarek\",\"workDir\":\"/efs\",\"pullLatest\":false,\"stubRun\":false}}"), exactly(1)
+                request().withMethod("POST").withPath("/workflow/launch")
+                        .withBody(json("""
+                            {
+                                "launch":{
+                                    "id":"5nmCvXcarkvv8tELMF4KyY",
+                                    "computeEnvId":"4X7YrYJp9B1d1DUpfur7DS",
+                                    "pipeline":"https://github.com/nf-core/sarek",
+                                    "workDir":"/efs",
+                                    "pullLatest":false,
+                                    "stubRun":false,
+                                    "optimizationId": "rOYdwTnmTaRCJjUq",
+                                    "optimizationTargets": "cpus, memory"
+                                }
+                            }"""
+                        )),
+                exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("workflow_launch")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -166,7 +181,27 @@ class LaunchCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/workflow/launch").withBody("{\"launch\":{\"id\":\"5nmCvXcarkvv8tELMF4KyY\",\"computeEnvId\":\"4X7YrYJp9B1d1DUpfur7DS\",\"pipeline\":\"https://github.com/nf-core/sarek\",\"workDir\":\"/my_work_dir\",\"revision\":\"develop\",\"configProfiles\":[\"test\",\"docker\"],\"configText\":\"extra_config\",\"preRunScript\":\"pre_run_me\",\"postRunScript\":\"post_run_me\",\"mainScript\":\"alternate.nf\",\"entryName\":\"dsl2\",\"schemaName\":\"my_schema.json\",\"pullLatest\":true,\"stubRun\":true}}"), exactly(1)
+                request().withMethod("POST").withPath("/workflow/launch")
+                        .withBody(json("""
+                            {
+                            "launch":{
+                                "id":"5nmCvXcarkvv8tELMF4KyY",
+                                "computeEnvId":"4X7YrYJp9B1d1DUpfur7DS",
+                                "pipeline":"https://github.com/nf-core/sarek",
+                                "workDir":"/my_work_dir",
+                                "revision":"develop",
+                                "configProfiles":["test","docker"],
+                                "configText":"extra_config",
+                                "preRunScript":"pre_run_me",
+                                "postRunScript":"post_run_me",
+                                "mainScript":"alternate.nf",
+                                "entryName":"dsl2",
+                                "schemaName":"my_schema.json",
+                                "pullLatest":true,
+                                "stubRun":true
+                            }}"""
+                        )),
+                exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("workflow_launch")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -207,7 +242,24 @@ class LaunchCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/workflow/launch").withBody("{\"launch\":{\"id\":\"5nmCvXcarkvv8tELMF4KyY\",\"computeEnvId\":\"4X7YrYJp9B1d1DUpfur7DS\",\"runName\":\"custom_run_name\",\"pipeline\":\"https://github.com/nf-core/sarek\",\"workDir\":\"/efs\",\"pullLatest\":false,\"stubRun\":false}}"), exactly(1)
+                request().withMethod("POST").withPath("/workflow/launch")
+                        .withBody(json("""
+                            {
+                                "launch":{
+                                    "id":"5nmCvXcarkvv8tELMF4KyY",
+                                    "computeEnvId":"4X7YrYJp9B1d1DUpfur7DS",
+                                    "runName":"custom_run_name",
+                                    "pipeline":"https://github.com/nf-core/sarek",
+                                    "workDir":"/efs",
+                                    "pullLatest":false,
+                                    "stubRun":false,
+                                    "optimizationId": "rOYdwTnmTaRCJjUq",
+                                    "optimizationTargets": "cpus, memory"
+                                    
+                                }
+                            }"""
+                        )),
+                exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("workflow_launch")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -246,21 +298,25 @@ class LaunchCmdTest extends BaseCmdTest {
                 request()
                     .withMethod("POST")
                     .withPath("/labels")
-                    .withBody(json("    {\n" +
-                                   "        \"name\": \"LabelThree\",\n" +
-                                   "        \"resource\": false,\n" +
-                                   "        \"isDefault\": false\n" +
-                                   "    }\n")),
+                    .withBody(json("""
+                        {
+                            "name": "LabelThree",
+                            "resource": false,
+                            "isDefault": false
+                        }
+                    """)),
                 exactly(1)
         ).respond(
                 response()
                     .withStatusCode(200)
-                    .withBody(json("{\n" +
-                                   "    \"id\": 3,\n" +
-                                   "    \"name\": \"LabelThree\",\n" +
-                                   "    \"resource\": false,\n" +
-                                   "    \"isDefault\": false\n" +
-                                   "}\n"))
+                    .withBody(json("""
+                        {
+                            "id": 3,
+                            "name": "LabelThree",
+                            "resource": false,
+                            "isDefault": false
+                        }
+                    """))
                     .withContentType(MediaType.APPLICATION_JSON)
         );
 
@@ -282,17 +338,19 @@ class LaunchCmdTest extends BaseCmdTest {
                 request()
                     .withMethod("POST")
                     .withPath("/workflow/launch")
-                    .withBody(json("    {\n" +
-                                   "        \"launch\":{\n" +
-                                   "            \"id\":\"5nmCvXcarkvv8tELMF4KyY\",\n" +
-                                   "            \"computeEnvId\":\"4X7YrYJp9B1d1DUpfur7DS\",\n" +
-                                   "            \"pipeline\":\"https://github.com/nf-core/sarek\",\n" +
-                                   "            \"workDir\":\"/efs\",\n" +
-                                   "            \"pullLatest\":false,\n" +
-                                   "            \"stubRun\":false,\n" +
-                                   "            \"labelIds\": [2, 3]\n" +
-                                   "        }\n" +
-                                   "    }\n")),
+                    .withBody(json("""
+                        {
+                            "launch":{
+                                "id":"5nmCvXcarkvv8tELMF4KyY",
+                                "computeEnvId":"4X7YrYJp9B1d1DUpfur7DS",
+                                "pipeline":"https://github.com/nf-core/sarek",
+                                "workDir":"/efs",
+                                "pullLatest":false,
+                                "stubRun":false,
+                                "labelIds": [2, 3]
+                            }
+                        }
+                    """)),
                 exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("workflow_launch")).withContentType(MediaType.APPLICATION_JSON)
@@ -317,13 +375,100 @@ class LaunchCmdTest extends BaseCmdTest {
         mock.when(
                 request().withMethod("GET").withPath("/compute-envs").withQueryStringParameter("status", "AVAILABLE").withQueryStringParameter("workspaceId", "222756650686576"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"4iqCDE6C2Stq0jzBsHJvHn\",\"name\":\"aws\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":\"cli\",\"visibility\":\"PRIVATE\"}]}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200)
+                        .withBody("""
+                            {
+                                "computeEnvs":[
+                                    {
+                                        "id":"4iqCDE6C2Stq0jzBsHJvHn",
+                                        "name":"aws",
+                                        "platform":"aws-batch",
+                                        "status":"AVAILABLE",
+                                        "message":null,
+                                        "lastUsed":null,
+                                        "primary":true,
+                                        "workspaceName":"cli",
+                                        "visibility":"PRIVATE"
+                                    }
+                                ]
+                            }"""
+                        )
+                        .withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
                 request().withMethod("GET").withPath("/compute-envs/4iqCDE6C2Stq0jzBsHJvHn").withQueryStringParameter("workspaceId", "222756650686576"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"computeEnv\":{\"id\":\"4iqCDE6C2Stq0jzBsHJvHn\",\"name\":\"aws\",\"description\":null,\"platform\":\"aws-batch\",\"config\":{\"region\":\"eu-west-1\",\"computeQueue\":\"TowerForge-4iqCDE6C2Stq0jzBsHJvHn-work\",\"computeJobRole\":null,\"headQueue\":\"TowerForge-4iqCDE6C2Stq0jzBsHJvHn-head\",\"headJobRole\":null,\"cliPath\":\"/home/ec2-user/miniconda/bin/aws\",\"volumes\":[],\"workDir\":\"s3://nextflow-ci/jordeu\",\"preRunScript\":null,\"postRunScript\":null,\"headJobCpus\":null,\"headJobMemoryMb\":null,\"forge\":{\"type\":\"SPOT\",\"minCpus\":0,\"maxCpus\":123,\"gpuEnabled\":false,\"ebsAutoScale\":true,\"instanceTypes\":[],\"allocStrategy\":null,\"imageId\":null,\"vpcId\":null,\"subnets\":[],\"securityGroups\":[],\"fsxMount\":null,\"fsxName\":null,\"fsxSize\":null,\"disposeOnDeletion\":true,\"ec2KeyPair\":null,\"allowBuckets\":[],\"ebsBlockSize\":null,\"fusionEnabled\":false,\"bidPercentage\":null,\"efsCreate\":false,\"efsId\":null,\"efsMount\":null},\"forgedResources\":[{\"IamRole\":\"arn:aws:iam::195996028523:role/TowerForge-4iqCDE6C2Stq0jzBsHJvHn-ServiceRole\"},{\"IamRole\":\"arn:aws:iam::195996028523:role/TowerForge-4iqCDE6C2Stq0jzBsHJvHn-FleetRole\"},{\"IamInstanceProfile\":\"arn:aws:iam::195996028523:instance-profile/TowerForge-4iqCDE6C2Stq0jzBsHJvHn-InstanceRole\"},{\"Ec2LaunchTemplate\":\"TowerForge-4iqCDE6C2Stq0jzBsHJvHn\"},{\"BatchEnv\":\"arn:aws:batch:eu-west-1:195996028523:compute-environment/TowerForge-4iqCDE6C2Stq0jzBsHJvHn-head\"},{\"BatchQueue\":\"arn:aws:batch:eu-west-1:195996028523:job-queue/TowerForge-4iqCDE6C2Stq0jzBsHJvHn-head\"},{\"BatchEnv\":\"arn:aws:batch:eu-west-1:195996028523:compute-environment/TowerForge-4iqCDE6C2Stq0jzBsHJvHn-work\"},{\"BatchQueue\":\"arn:aws:batch:eu-west-1:195996028523:job-queue/TowerForge-4iqCDE6C2Stq0jzBsHJvHn-work\"}],\"discriminator\":\"aws-batch\"},\"dateCreated\":\"2021-09-09T08:53:37Z\",\"lastUpdated\":\"2021-09-09T08:54:13Z\",\"lastUsed\":null,\"deleted\":null,\"status\":\"AVAILABLE\",\"message\":null,\"primary\":null,\"credentialsId\":\"3WzBlcFy1nSE9dSqFT1xPS\"}}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200)
+                        .withBody("""
+                            {
+                                "computeEnv":{
+                                    "id":"4iqCDE6C2Stq0jzBsHJvHn",
+                                    "name":"aws",
+                                    "description":null,
+                                    "platform":"aws-batch",
+                                    "config":{
+                                        "region":"eu-west-1",
+                                        "computeQueue":"TowerForge-4iqCDE6C2Stq0jzBsHJvHn-work",
+                                        "computeJobRole":null,
+                                        "headQueue":"TowerForge-4iqCDE6C2Stq0jzBsHJvHn-head",
+                                        "headJobRole":null,
+                                        "cliPath":"/home/ec2-user/miniconda/bin/aws",
+                                        "volumes":[],
+                                        "workDir":"s3://nextflow-ci/jordeu",
+                                        "preRunScript":null,
+                                        "postRunScript":null,
+                                        "headJobCpus":null,
+                                        "headJobMemoryMb":null,
+                                        "forge":{
+                                            "type":"SPOT",
+                                            "minCpus":0,
+                                            "maxCpus":123,
+                                            "gpuEnabled":false,
+                                            "ebsAutoScale":true,
+                                            "instanceTypes":[],
+                                            "allocStrategy":null,
+                                            "imageId":null,
+                                            "vpcId":null,
+                                            "subnets":[],
+                                            "securityGroups":[],
+                                            "fsxMount":null,
+                                            "fsxName":null,
+                                            "fsxSize":null,
+                                            "disposeOnDeletion":true,
+                                            "ec2KeyPair":null,
+                                            "allowBuckets":[],
+                                            "ebsBlockSize":null,
+                                            "fusionEnabled":false,
+                                            "bidPercentage":null,
+                                            "efsCreate":false,
+                                            "efsId":null,
+                                            "efsMount":null
+                                        },
+                                        "forgedResources":[
+                                            {"IamRole":"arn:aws:iam::195996028523:role/TowerForge-4iqCDE6C2Stq0jzBsHJvHn-ServiceRole"},
+                                            {"IamRole":"arn:aws:iam::195996028523:role/TowerForge-4iqCDE6C2Stq0jzBsHJvHn-FleetRole"},
+                                            {"IamInstanceProfile":"arn:aws:iam::195996028523:instance-profile/TowerForge-4iqCDE6C2Stq0jzBsHJvHn-InstanceRole"},
+                                            {"Ec2LaunchTemplate":"TowerForge-4iqCDE6C2Stq0jzBsHJvHn"},
+                                            {"BatchEnv":"arn:aws:batch:eu-west-1:195996028523:compute-environment/TowerForge-4iqCDE6C2Stq0jzBsHJvHn-head"},
+                                            {"BatchQueue":"arn:aws:batch:eu-west-1:195996028523:job-queue/TowerForge-4iqCDE6C2Stq0jzBsHJvHn-head"},
+                                            {"BatchEnv":"arn:aws:batch:eu-west-1:195996028523:compute-environment/TowerForge-4iqCDE6C2Stq0jzBsHJvHn-work"},
+                                            {"BatchQueue":"arn:aws:batch:eu-west-1:195996028523:job-queue/TowerForge-4iqCDE6C2Stq0jzBsHJvHn-work"}
+                                        ],
+                                        "discriminator":"aws-batch"
+                                    },
+                                    "dateCreated":"2021-09-09T08:53:37Z",
+                                    "lastUpdated":"2021-09-09T08:54:13Z",
+                                    "lastUsed":null,
+                                    "deleted":null,
+                                    "status":"AVAILABLE",
+                                    "message":null,
+                                    "primary":null,
+                                    "credentialsId":"3WzBlcFy1nSE9dSqFT1xPS"
+                                }
+                            }"""
+                        )
+                        .withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
@@ -341,7 +486,28 @@ class LaunchCmdTest extends BaseCmdTest {
         mock.when(
                 request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"orgsAndWorkspaces\":[{\"orgId\":166815615776895,\"name\":\"Seqera\",\"orgLogoUrl\":null,\"workspaceId\":null,\"workspaceName\":null},{\"orgId\":166815615776895,\"orgName\":\"Seqera\",\"orgLogoUrl\":null,\"workspaceId\":222756650686576,\"workspaceName\":\"cli\"}]}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200)
+                        .withBody("""
+                            {
+                                "orgsAndWorkspaces":[
+                                    {
+                                        "orgId":166815615776895,
+                                        "name":"Seqera",
+                                        "orgLogoUrl":null,
+                                        "workspaceId":null,
+                                        "workspaceName":null
+                                    },
+                                    {
+                                        "orgId":166815615776895,
+                                        "orgName":"Seqera",
+                                        "orgLogoUrl":null,
+                                        "workspaceId":222756650686576,
+                                        "workspaceName":"cli"
+                                    }
+                                ]
+                            }"""
+                        )
+                        .withContentType(MediaType.APPLICATION_JSON)
         );
 
         // Run the command
