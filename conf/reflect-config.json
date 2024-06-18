@@ -2824,7 +2824,8 @@
 {
   "name":"io.seqera.tower.model.PipelineOptimizationStatus",
   "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String"] }, {"name":"fromValue","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.model.PipelineSecret",
