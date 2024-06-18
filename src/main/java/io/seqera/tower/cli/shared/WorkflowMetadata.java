@@ -45,6 +45,8 @@ public final class WorkflowMetadata {
 
     public WorkflowMetadata() {
         pipelineId = null;
+        organizationId = null;
+        organizationName = null;
         workspaceId = null;
         workspaceName = null;
         userId = null;
