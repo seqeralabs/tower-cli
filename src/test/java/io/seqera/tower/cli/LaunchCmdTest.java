@@ -216,7 +216,7 @@ class LaunchCmdTest extends BaseCmdTest {
         ExecOut out = exec(mock, "launch", "sarek", "-p", "test,docker", "-r", "develop", "--work-dir", "/my_work_dir",
                 "--config", tempFile("extra_config", "nextflow", "config"), "--pull-latest", "--stub-run",
                 "--pre-run", tempFile("pre_run_me", "pre", "sh"), "--post-run", tempFile("post_run_me", "post", "sh"),
-                "--main-script", "alternate.nf", "--entry-name", "dsl2", "--schema-name", "my_schema.json");
+                "--main-script", "alternate.nf", "--entry-name", "dsl2", "--schema-name", "my_schema.json", "--disable-optimization");
 
         // Assert results
         assertEquals("", out.stdErr);
@@ -517,6 +517,64 @@ class LaunchCmdTest extends BaseCmdTest {
         assertEquals("", out.stdErr);
         assertEquals(new RunSubmited("52KAMEcqXFyhZ9", 1L, baseWorkspaceUrl(mock, "Seqera", "cli"), buildWorkspaceRef("Seqera", "cli")).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testSubmitLaunchpadPipelineWithOptimizationDisabled(OutputType format, MockServerClient mock) {
+
+        // Create server expectation
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("pipelines_sarek")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines/250911634275687/launch"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("pipeline_launch_describe")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/workflow/launch")
+                        .withBody(json("""
+                            {
+                                "launch":{
+                                    "id":"5nmCvXcarkvv8tELMF4KyY",
+                                    "computeEnvId":"4X7YrYJp9B1d1DUpfur7DS",
+                                    "runName":"custom_run_name",
+                                    "pipeline":"https://github.com/nf-core/sarek",
+                                    "workDir":"/efs",
+                                    "pullLatest":false,
+                                    "stubRun":false
+                                }
+                            }"""
+                        )),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workflow_launch")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // Run the command
+        ExecOut out = exec(format, mock,
+                "launch", "sarek",
+                "-n", "custom_run_name",
+                /*
+                    NOTE: when setting this flag, the 'launch.optimizationId' and 'launch.optimizationTargets' fields
+                    in the POST request should be null, and therefore are not present in the mock JSON body expectation.
+                */
+                "--disable-optimization"
+        );
+
+        // Assert results
+        assertOutput(format, out, new RunSubmited("35aLiS0bIM5efd", null, baseUserUrl(mock, "jordi"), USER_WORKSPACE_NAME));
     }
 
 }
