@@ -170,8 +170,10 @@ public class DumpCmd extends AbstractRunsCmd {
     private void dumpWorkflowDetails(PrintWriter progress, TarArchiveOutputStream out, Long wspId) throws ApiException, IOException {
         progress.println(ansi("- Workflow details"));
 
-        // General workflow info (including labels)
-        DescribeWorkflowResponse workflowResponse = workflowById(wspId, id, List.of(WorkflowQueryAttribute.LABELS));
+        // General workflow info including:
+        // + labels
+        // + optimization status
+        DescribeWorkflowResponse workflowResponse = workflowById(wspId, id, List.of(WorkflowQueryAttribute.LABELS, WorkflowQueryAttribute.OPTIMIZED));
         Workflow workflow = workflowResponse.getWorkflow();
         if (workflow == null) {
             throw new TowerException("Unknown workflow");
