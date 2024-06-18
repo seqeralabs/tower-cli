@@ -195,6 +195,8 @@ public class DumpCmd extends AbstractRunsCmd {
 
         WorkflowMetadata wfMetadata = new WorkflowMetadata(
                 pipelineId,
+                workflowResponse.getOrgId(),
+                workflowResponse.getOrgName(),
                 wspId,
                 workflowResponse.getWorkspaceName(),
                 workflow.getOwnerId(),
