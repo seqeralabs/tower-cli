@@ -22,6 +22,7 @@ import io.seqera.tower.cli.commands.credentials.update.UpdateAgentCmd;
 import io.seqera.tower.cli.commands.credentials.update.UpdateAwsCmd;
 import io.seqera.tower.cli.commands.credentials.update.UpdateAzureCmd;
 import io.seqera.tower.cli.commands.credentials.update.UpdateBitbucketCmd;
+import io.seqera.tower.cli.commands.credentials.update.UpdateCodeCommitCmd;
 import io.seqera.tower.cli.commands.credentials.update.UpdateContainerRegistryCmd;
 import io.seqera.tower.cli.commands.credentials.update.UpdateGithubCmd;
 import io.seqera.tower.cli.commands.credentials.update.UpdateGitlabCmd;
@@ -39,6 +40,7 @@ import java.io.IOException;
         description = "Update workspace credentials.",
         subcommands = {
                 UpdateAwsCmd.class,
+                UpdateCodeCommitCmd.class,
                 UpdateGoogleCmd.class,
                 UpdateGithubCmd.class,
                 UpdateGitlabCmd.class,
