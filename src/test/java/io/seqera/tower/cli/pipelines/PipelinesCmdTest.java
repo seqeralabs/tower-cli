@@ -76,7 +76,7 @@ class PipelinesCmdTest extends BaseCmdTest {
         mock.reset();
 
         mock.when(
-                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "sleep_one_minute"), exactly(1)
+                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "\"sleep_one_minute\""), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"pipelines\":[{\"pipelineId\":217997727159863,\"name\":\"sleep_one_minute\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/pditommaso/nf-sleep\",\"userId\":4,\"userName\":\"jordi\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null}],\"totalSize\":1}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -106,7 +106,7 @@ class PipelinesCmdTest extends BaseCmdTest {
         mock.reset();
 
         mock.when(
-                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "sleep_one_minute"), exactly(1)
+                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "\"sleep_one_minute\""), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"pipelines\":[{\"pipelineId\":217997727159863,\"name\":\"sleep_one_minute\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/pditommaso/nf-sleep\",\"userId\":4,\"userName\":\"jordi\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null}],\"totalSize\":1}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -148,7 +148,7 @@ class PipelinesCmdTest extends BaseCmdTest {
         mock.reset();
 
         mock.when(
-                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "sleep_one_minute")
+                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "\"sleep_one_minute\"")
         ).respond(
                 response().withStatusCode(200).withBody("{\"pipelines\":[{\"pipelineId\":217997727159863,\"name\":\"sleep_one_minute\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/pditommaso/nf-sleep\",\"userId\":4,\"userName\":\"jordi\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null}],\"totalSize\":1}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -187,7 +187,7 @@ class PipelinesCmdTest extends BaseCmdTest {
         mock.reset();
 
         mock.when(
-                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "sleep_one_minute")
+                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "\"sleep_one_minute\"")
         ).respond(
                 response().withStatusCode(200).withBody("{\"pipelines\":[{\"pipelineId\":217997727159863,\"name\":\"sleep_one_minute\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/pditommaso/nf-sleep\",\"userId\":4,\"userName\":\"jordi\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null}],\"totalSize\":1}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -339,7 +339,7 @@ class PipelinesCmdTest extends BaseCmdTest {
         mock.reset();
 
         mock.when(
-                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "sleep"), exactly(1)
+                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "\"sleep\""), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("pipelines_sleep")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -363,14 +363,14 @@ class PipelinesCmdTest extends BaseCmdTest {
         mock.reset();
 
         mock.when(
-                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "sleep_all"), exactly(1)
+                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "\"sleep_all\""), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"pipelines\":[],\"totalSize\":0}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         ExecOut out = exec(mock, "pipelines", "delete", "-n", "sleep_all");
 
-        assertEquals(errorMessage(out.app, new PipelineNotFoundException("sleep_all", USER_WORKSPACE_NAME)), out.stdErr);
+        assertEquals(errorMessage(out.app, new PipelineNotFoundException("\"sleep_all\"", USER_WORKSPACE_NAME)), out.stdErr);
         assertEquals("", out.stdOut);
         assertEquals(1, out.exitCode);
     }
@@ -381,14 +381,14 @@ class PipelinesCmdTest extends BaseCmdTest {
         mock.reset();
 
         mock.when(
-                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "hello"), exactly(1)
+                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "\"hello\""), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("pipelines_multiple")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         ExecOut out = exec(mock, "pipelines", "delete", "-n", "hello");
 
-        assertEquals(errorMessage(out.app, new MultiplePipelinesFoundException("hello", USER_WORKSPACE_NAME)), out.stdErr);
+        assertEquals(errorMessage(out.app, new MultiplePipelinesFoundException("\"hello\"", USER_WORKSPACE_NAME)), out.stdErr);
         assertEquals("", out.stdOut);
         assertEquals(1, out.exitCode);
     }
@@ -538,7 +538,7 @@ class PipelinesCmdTest extends BaseCmdTest {
         mock.reset();
 
         mock.when(
-                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "sleep_one_minute").withQueryStringParameter("visibility", "all"), exactly(1)
+                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "\"sleep_one_minute\"").withQueryStringParameter("visibility", "all"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"pipelines\":[{\"pipelineId\":213164477645856,\"name\":\"sleep_one_minute\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/pditommaso/nf-sleep\",\"userId\":1776,\"userName\":\"jordi10\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null,\"deleted\":false,\"lastUpdated\":\"2023-05-15T13:59:19Z\",\"optimized\":null,\"labels\":null,\"computeEnv\":null}],\"totalSize\":1}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -649,7 +649,7 @@ class PipelinesCmdTest extends BaseCmdTest {
         mock.reset();
 
         mock.when(
-                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "sleep"), exactly(1)
+                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "\"sleep\""), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("pipelines_sleep")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -866,7 +866,7 @@ class PipelinesCmdTest extends BaseCmdTest {
                 request().withMethod("GET")
                         .withPath("/pipelines")
                         .withQueryStringParameter("workspaceId", "69509535922157")
-                        .withQueryStringParameter("search", "cli_pipeline")
+                        .withQueryStringParameter("search", "\"cli_pipeline\"")
                         .withQueryStringParameter("visibility", "all"),
                 exactly(1)
         ).respond(
@@ -986,7 +986,7 @@ class PipelinesCmdTest extends BaseCmdTest {
                 request().withMethod("GET")
                         .withPath("/pipelines")
                         .withQueryStringParameter("workspaceId", "69509535922157")
-                        .withQueryStringParameter("search", "cli_pipeline")
+                        .withQueryStringParameter("search", "\"cli_pipeline\"")
                         .withQueryStringParameter("visibility", "all"),
                 exactly(1)
         ).respond(
@@ -1077,7 +1077,7 @@ class PipelinesCmdTest extends BaseCmdTest {
         mock.when(
                 request().withMethod("GET")
                         .withPath("/pipelines")
-                        .withQueryStringParameter("search", "lab1")
+                        .withQueryStringParameter("search", "\"lab1\"")
                         .withQueryStringParameter("visibility", "all"),
                 exactly(1)
         ).respond(
