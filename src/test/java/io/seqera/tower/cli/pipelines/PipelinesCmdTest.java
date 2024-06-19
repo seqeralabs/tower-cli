@@ -24,7 +24,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.JSON;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
-import io.seqera.tower.cli.commands.labels.LabelsSubcmdOptions;
 import io.seqera.tower.cli.exceptions.InvalidResponseException;
 import io.seqera.tower.cli.exceptions.MultiplePipelinesFoundException;
 import io.seqera.tower.cli.exceptions.NoComputeEnvironmentException;
@@ -872,15 +871,31 @@ class PipelinesCmdTest extends BaseCmdTest {
         ).respond(
                 response().withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody(
-                                "{\n" +
-                                "\"pipelines\":[{\"pipelineId\":227906339448730,\"name\":\"cli_pipeline\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/nextflow-io/hello\",\"userId\":1,\"userName\":\"eliantor\",\n" +
-                                "\"userFirstName\":null,\"userLastName\":null,\"orgId\":109383401867759,\"orgName\":\"CliOrg\",\n" +
-                                "\"workspaceId\":69509535922157,\"workspaceName\":\"cli-wsp\",\"visibility\":\"PRIVATE\",\n" +
-                                "\"deleted\":false,\"lastUpdated\":\"2023-04-12T14:30:44.541301+02:00\",\"optimized\":null,\"labels\":null,\"computeEnv\":null}],\n" +
-                                "\"totalSize\":1" +
-                                "}"
-                        )
+                        .withBody("""
+                          {
+                            "pipelines":[{
+                                "pipelineId":227906339448730,
+                                "name":"cli_pipeline",
+                                "description":null,
+                                "icon":null,
+                                "repository":"https://github.com/nextflow-io/hello",
+                                "userId":1,
+                                "userName":"eliantor",
+                                "userFirstName":null,
+                                "userLastName":null,
+                                "orgId":109383401867759,
+                                "orgName":"CliOrg",
+                                "workspaceId":69509535922157,
+                                "workspaceName":"cli-wsp",
+                                "visibility":"PRIVATE",
+                                "deleted":false,
+                                "lastUpdated":"2023-04-12T14:30:44.541301+02:00",
+                                "optimized":null,
+                                "labels":null,
+                                "computeEnv":null
+                              }],
+                            "totalSize":1
+                          }""")
                 );
 
         mock.when(
@@ -890,7 +905,30 @@ class PipelinesCmdTest extends BaseCmdTest {
         ).respond(
                 response().withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody("{\"pipeline\":{\"pipelineId\":227906339448730,\"name\":\"cli_pipeline\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/nf-core/rnaseq\",\"userId\":1776,\"userName\":\"jordi10\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null,\"deleted\":false,\"lastUpdated\":\"2023-05-15T11:53:49Z\",\"optimized\":null,\"labels\":null,\"computeEnv\":null}}")
+                        .withBody("""
+                          {
+                            "pipeline":{
+                              "pipelineId":227906339448730,
+                              "name":"cli_pipeline",
+                              "description":null,
+                              "icon":null,
+                              "repository":"https://github.com/nf-core/rnaseq",
+                              "userId":1776,
+                              "userName":"jordi10",
+                              "userFirstName":null,
+                              "userLastName":null,
+                              "orgId":null,
+                              "orgName":null,
+                              "workspaceId":null,
+                              "workspaceName":null,
+                              "visibility":null,
+                              "deleted":false,
+                              "lastUpdated":"2023-05-15T11:53:49Z",
+                              "optimized":null,
+                              "labels":null,
+                              "computeEnv":null
+                            }
+                        }""")
         );
 
         mock.when(
@@ -904,9 +942,20 @@ class PipelinesCmdTest extends BaseCmdTest {
         ).respond(
                 response().withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody("" +
-                            "{\"labels\":[{\"id\":20504124310835,\"name\":\"test_label0\",\"value\":null,\"resource\":false,\"isDefault\":false}],\"totalSize\":1}" +
-                        "")
+                        .withBody("""
+                                {
+                                  "labels":[
+                                    {
+                                      "id":20504124310835,
+                                      "name":"test_label0",
+                                      "value":null,
+                                      "resource":false,
+                                      "isDefault":false
+                                    }
+                                  ],
+                                  "totalSize":1
+                                }
+                        """)
         );
         mock.when(
                 request().withMethod("GET").withPath("/labels")
@@ -919,9 +968,9 @@ class PipelinesCmdTest extends BaseCmdTest {
         ).respond(
                 response().withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody("" +
-                            "{\"labels\":[],\"totalSize\":0}" +
-                        "")
+                        .withBody("""
+                                {"labels":[],"totalSize":0}
+                        """)
         );
         mock.when(
                 request().withMethod("POST")
@@ -992,14 +1041,31 @@ class PipelinesCmdTest extends BaseCmdTest {
         ).respond(
                 response().withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody(
-                                "{\n" +
-                                "\"pipelines\":[{\"pipelineId\":227906339448730,\"name\":\"cli_pipeline\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/nextflow-io/hello\",\"userId\":1,\"userName\":\"eliantor\",\n" +
-                                "\"userFirstName\":null,\"userLastName\":null,\"orgId\":109383401867759,\"orgName\":\"CliOrg\",\n" +
-                                "\"workspaceId\":69509535922157,\"workspaceName\":\"cli-wsp\",\"visibility\":\"PRIVATE\",\n" +
-                                "\"deleted\":false,\"lastUpdated\":\"2023-04-12T14:30:44.541301+02:00\",\"optimized\":null,\"labels\":null,\"computeEnv\":null}],\n" +
-                                "\"totalSize\":1}"
-                        )
+                        .withBody("""
+                          {
+                            "pipelines":[{
+                              "pipelineId":227906339448730,
+                              "name":"cli_pipeline",
+                              "description":null,
+                              "icon":null,
+                              "repository":"https://github.com/nextflow-io/hello",
+                              "userId":1,
+                              "userName":"eliantor",
+                              "userFirstName":null,
+                              "userLastName":null,
+                              "orgId":109383401867759,
+                              "orgName":"CliOrg",
+                              "workspaceId":69509535922157,
+                              "workspaceName":"cli-wsp",
+                              "visibility":"PRIVATE",
+                              "deleted":false,
+                              "lastUpdated":"2023-04-12T14:30:44.541301+02:00",
+                              "optimized":null,
+                              "labels":null,
+                              "computeEnv":null
+                            }],
+                            "totalSize":1
+                        }""")
         );
 
         mock.when(
@@ -1009,7 +1075,30 @@ class PipelinesCmdTest extends BaseCmdTest {
         ).respond(
                 response().withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody("{\"pipeline\":{\"pipelineId\":227906339448730,\"name\":\"cli_pipeline\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/nf-core/rnaseq\",\"userId\":1776,\"userName\":\"jordi10\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null,\"deleted\":false,\"lastUpdated\":\"2023-05-15T11:53:49Z\",\"optimized\":null,\"labels\":null,\"computeEnv\":null}}")
+                        .withBody("""
+                          {
+                            "pipeline":{
+                              "pipelineId":227906339448730,
+                              "name":"cli_pipeline",
+                              "description":null,
+                              "icon":null,
+                              "repository":"https://github.com/nf-core/rnaseq",
+                              "userId":1776,
+                              "userName":"jordi10",
+                              "userFirstName":null,
+                              "userLastName":null,
+                              "orgId":null,
+                              "orgName":null,
+                              "workspaceId":null,
+                              "workspaceName":null,
+                              "visibility":null,
+                              "deleted":false,
+                              "lastUpdated":"2023-05-15T11:53:49Z",
+                              "optimized":null,
+                              "labels":null,
+                              "computeEnv":null
+                            }
+                        }""")
         );
 
         mock.when(
@@ -1023,9 +1112,17 @@ class PipelinesCmdTest extends BaseCmdTest {
         ).respond(
                 response().withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody("" +
-                            "{\"labels\":[{\"id\":20504124310835,\"name\":\"test_label0\",\"value\":null,\"resource\":false,\"isDefault\":false}],\"totalSize\":1}" +
-                        "")
+                        .withBody("""
+                          {
+                            "labels":[{
+                              "id":20504124310835,
+                              "name":"test_label0",
+                              "value":null,
+                              "resource":false,
+                              "isDefault":false
+                            }],
+                            "totalSize":1}
+                        """)
         );
         mock.when(
                 request().withMethod("GET").withPath("/labels")

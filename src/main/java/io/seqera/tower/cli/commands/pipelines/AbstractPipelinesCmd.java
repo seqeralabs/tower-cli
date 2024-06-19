@@ -26,7 +26,6 @@ import io.seqera.tower.model.PipelineDbDto;
 import io.seqera.tower.model.PipelineQueryAttribute;
 import picocli.CommandLine.Command;
 
-import java.util.Collections;
 import java.util.List;
 
 @Command
