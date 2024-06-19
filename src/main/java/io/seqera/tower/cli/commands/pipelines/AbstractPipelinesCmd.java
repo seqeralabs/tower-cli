@@ -71,7 +71,7 @@ public abstract class AbstractPipelinesCmd extends AbstractApiCmd {
         // replace '"' with '\"'
         String escaped = pipelineName.replace("\"", "\\\"");
 
-        if (escaped.startsWith("\"") && escaped.endsWith("\"")) {
+        if (escaped.startsWith("\\\"") && escaped.endsWith("\\\"")) {
             return escaped;
         }
 
