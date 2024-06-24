@@ -66,10 +66,11 @@ public class GoogleBatchPlatform extends AbstractPlatform<GoogleBatchConfig> {
         // Advanced
         if (adv != null) {
             config
-                    .usePrivateAddress(adv.usePrivateAddress)
-                    .bootDiskSizeGb(adv.bootDiskSizeGb)
-                    .headJobCpus(adv.headJobCpus)
-                    .headJobMemoryMb(adv.headJobMemoryMb);
+                .usePrivateAddress(adv.usePrivateAddress)
+                .bootDiskSizeGb(adv.bootDiskSizeGb)
+                .headJobCpus(adv.headJobCpus)
+                .headJobMemoryMb(adv.headJobMemoryMb)
+                .serviceAccount(adv.serviceAccountEmail);
         }
 
         return config;
@@ -87,5 +88,9 @@ public class GoogleBatchPlatform extends AbstractPlatform<GoogleBatchConfig> {
 
         @Option(names = {"--head-job-memory"}, description = "The number of MiB of memory reserved for the Nextflow runner job (value should be a multiple of 256MiB and from 0.5 GB to 8 GB per CPU).")
         public Integer headJobMemoryMb;
+
+        @Option(names = {"--service-account-email"}, description = "The service account email address used when deploying pipeline executions with this compute environment.")
+        public String serviceAccountEmail;
+
     }
 }
