@@ -325,7 +325,7 @@ jobs:
 
   release:
     name: Release
-    if: "contains(github.event.head_commit.message, '[release]') && github.event.ref=='refs/heads/master'"
+    if: "contains(github.event.head_commit.message, '[release]')"
     needs: [ linux-image, mac-image, mac-arm64-image, windows-image ]
     runs-on: ubuntu-latest
     steps:
