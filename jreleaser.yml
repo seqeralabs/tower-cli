@@ -106,14 +106,3 @@ distributions:
     artifacts:
       - path: "tw-jar/tw.jar"
         transform: "{{distributionName}}.jar"
-
-packagers:
-  brew:
-    active: ALWAYS
-    continueOnError: false
-    multiPlatform: true
-    repository:
-      active: RELEASE
-      tagName: '{{distributionName}}-{{tagName}}'
-      branch: HEAD
-      commitMessage: '{{distributionName}} {{tagName}}'
