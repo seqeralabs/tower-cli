@@ -19,7 +19,7 @@ package io.seqera.tower.cli.commands.computeenvs.platforms;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.model.AltairPbsComputeConfig;
-import io.seqera.tower.model.ComputeEnv.PlatformEnum;
+import io.seqera.tower.model.ComputeEnvComputeConfig;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Option;
 
@@ -49,7 +49,7 @@ public class AltairPlatform extends AbstractPlatform<AltairPbsComputeConfig> {
     public AdvancedOptions adv;
 
     public AltairPlatform() {
-        super(PlatformEnum.ALTAIR_PLATFORM);
+        super(ComputeEnvComputeConfig.PlatformEnum.ALTAIR_PLATFORM);
     }
 
     @Override

@@ -28,7 +28,7 @@ import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.computeenvs.ComputeEnvAdded;
 import io.seqera.tower.model.ComputeConfig;
-import io.seqera.tower.model.ComputeEnv;
+import io.seqera.tower.model.ComputeEnvComputeConfig;
 import io.seqera.tower.model.ComputeEnvStatus;
 import io.seqera.tower.model.CreateComputeEnvRequest;
 import io.seqera.tower.model.CreateComputeEnvResponse;
@@ -100,11 +100,11 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
         }
     }
 
-    protected ComputeEnvAdded addComputeEnv(ComputeEnv.PlatformEnum platform, ComputeConfig config) throws ApiException {
+    protected ComputeEnvAdded addComputeEnv(ComputeEnvComputeConfig.PlatformEnum platform, ComputeConfig config) throws ApiException {
         return addComputeEnvWithLabels(platform, config, labels);
     }
 
-    protected ComputeEnvAdded addComputeEnvWithLabels(ComputeEnv.PlatformEnum platform, ComputeConfig config, List<Label> labels) throws ApiException {
+    protected ComputeEnvAdded addComputeEnvWithLabels(ComputeEnvComputeConfig.PlatformEnum platform, ComputeConfig config, List<Label> labels) throws ApiException {
 
         Long wspId = workspaceId(workspace.workspace);
 
@@ -114,7 +114,7 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
 
         CreateComputeEnvRequest request =  new CreateComputeEnvRequest()
                 .computeEnv(
-                        new ComputeEnv()
+                        new ComputeEnvComputeConfig()
                                 .name(name)
                                 .platform(platform)
                                 .credentialsId(credsId)
@@ -136,7 +136,7 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
         }
     }
 
-    private String credentialsByRef(ComputeEnv.PlatformEnum type, Long wspId, String credentialsRef) throws ApiException {
+    private String credentialsByRef(ComputeEnvComputeConfig.PlatformEnum type, Long wspId, String credentialsRef) throws ApiException {
         List<Credentials> credentials = api().listCredentials(wspId, type.getValue()).getCredentials();
 
         if (credentials.isEmpty()) {
@@ -157,7 +157,7 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
         return cred.getId();
     }
 
-    private String findWorkspaceCredentials(ComputeEnv.PlatformEnum type, Long wspId) throws ApiException {
+    private String findWorkspaceCredentials(ComputeEnvComputeConfig.PlatformEnum type, Long wspId) throws ApiException {
         List<Credentials> credentials = api().listCredentials(wspId, type.getValue()).getCredentials();
         if (credentials.isEmpty()) {
             throw new TowerException("No valid credentials found at the workspace");

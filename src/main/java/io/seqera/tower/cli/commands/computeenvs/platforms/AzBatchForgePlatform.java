@@ -22,8 +22,7 @@ import io.seqera.tower.api.DefaultApi;
 import io.seqera.tower.cli.exceptions.CredentialsNotFoundException;
 import io.seqera.tower.model.AzBatchConfig;
 import io.seqera.tower.model.AzBatchForgeConfig;
-import io.seqera.tower.model.ComputeEnv;
-import io.seqera.tower.model.ComputeEnv.PlatformEnum;
+import io.seqera.tower.model.ComputeEnvComputeConfig;
 import io.seqera.tower.model.Credentials;
 import io.seqera.tower.model.JobCleanupPolicy;
 import picocli.CommandLine.ArgGroup;
@@ -64,7 +63,7 @@ public class AzBatchForgePlatform extends AbstractPlatform<AzBatchConfig> {
     public AdvancedOptions adv;
 
     public AzBatchForgePlatform() {
-        super(PlatformEnum.AZURE_BATCH);
+        super(ComputeEnvComputeConfig.PlatformEnum.AZURE_BATCH);
     }
 
     @Override

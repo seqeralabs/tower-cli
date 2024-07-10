@@ -18,7 +18,7 @@
 package io.seqera.tower.cli.commands.computeenvs.platforms;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.model.ComputeEnv.PlatformEnum;
+import io.seqera.tower.model.ComputeEnvComputeConfig;
 import io.seqera.tower.model.GoogleLifeSciencesConfig;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Option;
@@ -46,7 +46,7 @@ public class GoogleLifeSciencesPlatform extends AbstractPlatform<GoogleLifeScien
     public AdvancedOptions adv;
 
     public GoogleLifeSciencesPlatform() {
-        super(PlatformEnum.GOOGLE_LIFESCIENCES);
+        super(ComputeEnvComputeConfig.PlatformEnum.GOOGLE_LIFESCIENCES);
     }
 
     @Override

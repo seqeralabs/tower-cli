@@ -19,7 +19,7 @@ package io.seqera.tower.cli.commands.computeenvs.platforms;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.model.AzBatchConfig;
-import io.seqera.tower.model.ComputeEnv.PlatformEnum;
+import io.seqera.tower.model.ComputeEnvComputeConfig.PlatformEnum;
 import io.seqera.tower.model.JobCleanupPolicy;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Option;

@@ -18,7 +18,7 @@
 package io.seqera.tower.cli.commands.computeenvs.platforms;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.model.ComputeEnv.PlatformEnum;
+import io.seqera.tower.model.ComputeEnvComputeConfig.PlatformEnum;
 import io.seqera.tower.model.SlurmComputeConfig;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Option;
@@ -58,10 +58,10 @@ public class SlurmPlatform extends AbstractPlatform<SlurmComputeConfig> {
 
         config
                 // Common
+                .environment(environmentVariables())
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
-                .environment(environmentVariables())
 
                 // Main
                 .launchDir(launchDir)
