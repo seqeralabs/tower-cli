@@ -48,7 +48,7 @@ class K8sPlatformTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"name\":\"k8s\",\"platform\":\"k8s-platform\",\"config\":{\"workDir\":\"/workdir\",\"server\":\"k8s.mydomain.net\",\"sslCert\":\"ssl_cert\",\"namespace\":\"nf\",\"headServiceAccount\":\"head\",\"storageClaimName\":\"nf\"},\"credentialsId\":\"2iEjbUUbqbuOaQEx03OxyH\"}}"), exactly(1)
+                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"credentialsId\":\"2iEjbUUbqbuOaQEx03OxyH\",\"name\":\"k8s\",\"platform\":\"k8s-platform\",\"config\":{\"workDir\":\"/workdir\",\"server\":\"k8s.mydomain.net\",\"sslCert\":\"ssl_cert\",\"namespace\":\"nf\",\"headServiceAccount\":\"head\",\"storageClaimName\":\"nf\"}}}"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );

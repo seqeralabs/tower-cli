@@ -38,7 +38,7 @@ class LsfPlatformTest extends BaseCmdTest {
     @ParameterizedTest
     @EnumSource(OutputType.class)
     void testAdd(OutputType format, MockServerClient mock) {
-
+        mock.openUI();
         mock.when(
                 request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "lsf-platform"), exactly(1)
         ).respond(
@@ -46,7 +46,7 @@ class LsfPlatformTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"name\":\"lsf\",\"platform\":\"lsf-platform\",\"config\":{\"workDir\":\"/home/jordeu/nf\",\"userName\":\"jordi\",\"hostName\":\"ssh.mydomain.net\",\"headQueue\":\"normal\"},\"credentialsId\":\"2ba2oekqeTEBzwSDgXg7xf\"}}"), exactly(1)
+                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"credentialsId\":\"2ba2oekqeTEBzwSDgXg7xf\",\"name\":\"lsf\",\"platform\":\"lsf-platform\",\"config\":{\"userName\":\"jordi\",\"hostName\":\"ssh.mydomain.net\",\"workDir\":\"/home/jordeu/nf\",\"headQueue\":\"normal\"}}}"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
