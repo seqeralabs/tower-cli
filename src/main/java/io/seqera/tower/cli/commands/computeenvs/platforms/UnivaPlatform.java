@@ -18,7 +18,7 @@
 package io.seqera.tower.cli.commands.computeenvs.platforms;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.model.ComputeEnvComputeConfig;
+import io.seqera.tower.model.ComputeEnvComputeConfig.PlatformEnum;
 import io.seqera.tower.model.UnivaComputeConfig;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Option;
@@ -49,7 +49,7 @@ public class UnivaPlatform extends AbstractPlatform<UnivaComputeConfig> {
     public AdvancedOptions adv;
 
     public UnivaPlatform() {
-        super(ComputeEnvComputeConfig.PlatformEnum.UGE_PLATFORM);
+        super(PlatformEnum.UGE_PLATFORM);
     }
 
     @Override

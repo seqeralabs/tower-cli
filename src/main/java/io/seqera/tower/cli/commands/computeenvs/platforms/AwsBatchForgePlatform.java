@@ -20,7 +20,7 @@ package io.seqera.tower.cli.commands.computeenvs.platforms;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.model.AwsBatchConfig;
-import io.seqera.tower.model.ComputeEnvComputeConfig;
+import io.seqera.tower.model.ComputeEnvComputeConfig.PlatformEnum;
 import io.seqera.tower.model.ForgeConfig;
 import io.seqera.tower.model.ForgeConfig.AllocStrategyEnum;
 import io.seqera.tower.model.ForgeConfig.TypeEnum;
@@ -76,7 +76,7 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
     public AdvancedOptions adv;
 
     public AwsBatchForgePlatform() {
-        super(ComputeEnvComputeConfig.PlatformEnum.AWS_BATCH);
+        super(PlatformEnum.AWS_BATCH);
     }
 
     /**

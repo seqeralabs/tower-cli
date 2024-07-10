@@ -25,7 +25,7 @@ import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.shared.ComputeEnvExportFormat;
 import io.seqera.tower.cli.utils.FilesHelper;
-import io.seqera.tower.model.ComputeEnvComputeConfig;
+import io.seqera.tower.model.ComputeEnvComputeConfig.PlatformEnum;
 import io.seqera.tower.model.ComputeEnvResponseDto;
 import picocli.CommandLine;
 
@@ -50,7 +50,7 @@ public class ImportCmd extends AbstractAddCmd {
 
         ComputeEnvExportFormat ceData = ComputeEnvExportFormat.deserialize(FilesHelper.readString(fileName));
 
-        ComputeEnvComputeConfig.PlatformEnum platform = ComputeEnvComputeConfig.PlatformEnum.fromValue(ceData.getConfig().getDiscriminator());
+        PlatformEnum platform = PlatformEnum.fromValue(ceData.getConfig().getDiscriminator());
 
         Long wspId = workspaceId(workspace.workspace);
 

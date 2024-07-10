@@ -28,6 +28,7 @@ import io.seqera.tower.cli.shared.ComputeEnvExportFormat;
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.AwsBatchConfig;
 import io.seqera.tower.model.ComputeEnvComputeConfig;
+import io.seqera.tower.model.ComputeEnvComputeConfig.PlatformEnum;
 import io.seqera.tower.model.ComputeEnvResponseDto;
 import picocli.CommandLine;
 
@@ -56,7 +57,7 @@ public class ExportCmd extends AbstractComputeEnvCmd {
         computeEnv.setDescription(ce.getDescription());
         computeEnv.setCredentialsId(ce.getCredentialsId());
         computeEnv.setMessage(ce.getMessage());
-        computeEnv.setPlatform(ce.getPlatform() != null ? ComputeEnvComputeConfig.PlatformEnum.fromValue(ce.getPlatform().getValue()) : null);
+        computeEnv.setPlatform(ce.getPlatform() != null ? PlatformEnum.fromValue(ce.getPlatform().getValue()) : null);
         computeEnv.setConfig(ce.getConfig());
 
         // Remove forged resources

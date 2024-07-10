@@ -21,7 +21,7 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.api.DefaultApi;
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.ComputeConfig;
-import io.seqera.tower.model.ComputeEnvComputeConfig;
+import io.seqera.tower.model.ComputeEnvComputeConfig.PlatformEnum;
 import io.seqera.tower.model.ConfigEnvVariable;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Option;
@@ -43,9 +43,9 @@ public abstract class AbstractPlatform<T extends ComputeConfig> implements Platf
     @ArgGroup(heading = "%nEnvironment variables:%n", validate = false)
     public Environment environment;
 
-    private ComputeEnvComputeConfig.PlatformEnum type;
+    private PlatformEnum type;
 
-    public AbstractPlatform(ComputeEnvComputeConfig.PlatformEnum type) {
+    public AbstractPlatform(PlatformEnum type) {
         this.type = type;
     }
 
@@ -90,7 +90,7 @@ public abstract class AbstractPlatform<T extends ComputeConfig> implements Platf
         return vars;
     }
 
-    public ComputeEnvComputeConfig.PlatformEnum type() {
+    public PlatformEnum type() {
         return type;
     }
 
