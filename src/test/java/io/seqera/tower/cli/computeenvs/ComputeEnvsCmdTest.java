@@ -38,7 +38,7 @@ import io.seqera.tower.cli.responses.computeenvs.ComputeEnvsPrimaryGet;
 import io.seqera.tower.cli.responses.computeenvs.ComputeEnvsPrimarySet;
 import io.seqera.tower.model.AwsBatchConfig;
 import io.seqera.tower.model.ComputeConfig;
-import io.seqera.tower.model.ComputeEnv;
+import io.seqera.tower.model.ComputeEnvComputeConfig;
 import io.seqera.tower.model.ComputeEnvResponseDto;
 import io.seqera.tower.model.ComputeEnvStatus;
 import io.seqera.tower.model.ForgeConfig;
@@ -409,7 +409,7 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
         );
 
         ExecOut out = exec(format, mock, "compute-envs", "import", tempFile(new String(loadResource("cejson"), StandardCharsets.UTF_8), "ce", "json"), "-n", "json", "-c", "6g0ER59L4ZoE5zpOmUP48D");
-        assertOutput(format, out, new ComputeEnvAdded(ComputeEnv.PlatformEnum.AWS_BATCH.getValue(), "3T6xWeFD63QIuzdAowvSTC", "json", null, USER_WORKSPACE_NAME));
+        assertOutput(format, out, new ComputeEnvAdded(ComputeEnvComputeConfig.PlatformEnum.AWS_BATCH.getValue(), "3T6xWeFD63QIuzdAowvSTC", "json", null, USER_WORKSPACE_NAME));
     }
 
     @ParameterizedTest
@@ -508,7 +508,7 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
         );
 
         ExecOut out = exec(format, mock, "compute-envs", "import", "--overwrite", tempFile(new String(loadResource("cejson"), StandardCharsets.UTF_8), "ce", "json"), "-n", "demo", "-c", "6g0ER59L4ZoE5zpOmUP48D");
-        assertOutput(format, out, new ComputeEnvAdded(ComputeEnv.PlatformEnum.AWS_BATCH.getValue(), "3T6xWeFD63QIuzdAowvSTC", "demo", null, USER_WORKSPACE_NAME));
+        assertOutput(format, out, new ComputeEnvAdded(ComputeEnvComputeConfig.PlatformEnum.AWS_BATCH.getValue(), "3T6xWeFD63QIuzdAowvSTC", "demo", null, USER_WORKSPACE_NAME));
     }
 
     @ParameterizedTest
