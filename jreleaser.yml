@@ -105,6 +105,8 @@ distributions:
     type: SINGLE_JAR
     artifacts:
       - path: "tw-jar/tw.jar"
+        transform: "{{distributionName}}.jar"
+
 packagers:
   brew:
     active: ALWAYS
