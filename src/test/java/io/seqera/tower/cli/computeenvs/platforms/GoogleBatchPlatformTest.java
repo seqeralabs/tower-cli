@@ -74,7 +74,7 @@ class GoogleBatchPlatformTest extends BaseCmdTest {
 
         mock.when(
                 request().withMethod("POST").withPath("/compute-envs")
-                        .withBody(JsonBody.json("{\"computeEnv\":{\"name\":\"google\",\"platform\":\"google-batch\",\"config\":{\"location\":\"europe\",\"fusion2Enabled\":true,\"waveEnabled\":true,\"workDir\":\"gs://workdir\",\"usePrivateAddress\":true},\"credentialsId\":\"6XfOhoztUq6de3Dw3X9LSb\"}}")), exactly(1)
+                        .withBody(JsonBody.json("{\"computeEnv\":{\"credentialsId\":\"6XfOhoztUq6de3Dw3X9LSb\",\"name\":\"google\",\"platform\":\"google-batch\",\"config\":{\"location\":\"europe\",\"workDir\":\"gs://workdir\",\"usePrivateAddress\":true,\"waveEnabled\":true,\"fusion2Enabled\":true}}}")), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );

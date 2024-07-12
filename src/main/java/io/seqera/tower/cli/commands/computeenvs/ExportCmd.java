@@ -27,7 +27,8 @@ import io.seqera.tower.cli.responses.computeenvs.ComputeEnvExport;
 import io.seqera.tower.cli.shared.ComputeEnvExportFormat;
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.AwsBatchConfig;
-import io.seqera.tower.model.ComputeEnv;
+import io.seqera.tower.model.ComputeEnvComputeConfig;
+import io.seqera.tower.model.ComputeEnvComputeConfig.PlatformEnum;
 import io.seqera.tower.model.ComputeEnvResponseDto;
 import picocli.CommandLine;
 
@@ -49,14 +50,14 @@ public class ExportCmd extends AbstractComputeEnvCmd {
     @Override
     protected Response exec() throws ApiException {
         Long wspId = workspaceId(workspace.workspace);
-        
+
         ComputeEnvResponseDto ce = fetchComputeEnv(computeEnvRefOptions, wspId);
 
-        ComputeEnv computeEnv = new ComputeEnv();
+        ComputeEnvComputeConfig computeEnv = new ComputeEnvComputeConfig();
         computeEnv.setDescription(ce.getDescription());
         computeEnv.setCredentialsId(ce.getCredentialsId());
         computeEnv.setMessage(ce.getMessage());
-        computeEnv.setPlatform(ce.getPlatform() != null ? ComputeEnv.PlatformEnum.fromValue(ce.getPlatform().getValue()) : null);
+        computeEnv.setPlatform(ce.getPlatform() != null ? PlatformEnum.fromValue(ce.getPlatform().getValue()) : null);
         computeEnv.setConfig(ce.getConfig());
 
         // Remove forged resources
