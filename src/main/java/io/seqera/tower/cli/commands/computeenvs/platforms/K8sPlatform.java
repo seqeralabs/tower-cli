@@ -18,7 +18,7 @@
 package io.seqera.tower.cli.commands.computeenvs.platforms;
 
 import io.seqera.tower.cli.utils.FilesHelper;
-import io.seqera.tower.model.ComputeEnv.PlatformEnum;
+import io.seqera.tower.model.ComputeEnvComputeConfig.PlatformEnum;
 import io.seqera.tower.model.K8sComputeConfig;
 import io.seqera.tower.model.PodCleanupPolicy;
 import picocli.CommandLine.ArgGroup;

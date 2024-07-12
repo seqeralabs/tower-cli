@@ -26,7 +26,7 @@ import io.seqera.tower.cli.commands.runs.tasks.TasksCmd;
 import io.seqera.tower.cli.exceptions.RunNotFoundException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.runs.RunView;
-import io.seqera.tower.model.ComputeEnv;
+import io.seqera.tower.model.ComputeEnvComputeConfig;
 import io.seqera.tower.model.DescribeWorkflowLaunchResponse;
 import io.seqera.tower.model.DescribeWorkflowResponse;
 import io.seqera.tower.model.ProgressData;
@@ -80,7 +80,7 @@ public class ViewCmd extends AbstractRunsCmd {
             WorkflowLoad workflowLoad = workflowLoadByWorkflowId(wspId, id);
 
             DescribeWorkflowLaunchResponse wfLaunch = api().describeWorkflowLaunch(workflow.getId(), wspId);
-            ComputeEnv computeEnv = wfLaunch.getLaunch() != null ? wfLaunch.getLaunch().getComputeEnv() : null;
+            ComputeEnvComputeConfig computeEnv = wfLaunch.getLaunch() != null ? wfLaunch.getLaunch().getComputeEnv() : null;
 
             ProgressData progress = null;
             if (opts.processes || opts.stats || opts.load || opts.utilization) {

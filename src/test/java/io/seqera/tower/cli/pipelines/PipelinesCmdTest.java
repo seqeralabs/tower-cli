@@ -40,7 +40,7 @@ import io.seqera.tower.cli.responses.pipelines.PipelinesUpdated;
 import io.seqera.tower.cli.responses.pipelines.PipelinesView;
 import io.seqera.tower.cli.utils.ModelHelper;
 import io.seqera.tower.cli.utils.PaginationInfo;
-import io.seqera.tower.model.ComputeEnv;
+import io.seqera.tower.model.ComputeEnvComputeConfig;
 import io.seqera.tower.model.CreatePipelineRequest;
 import io.seqera.tower.model.Launch;
 import io.seqera.tower.model.PipelineDbDto;
@@ -579,7 +579,7 @@ class PipelinesCmdTest extends BaseCmdTest {
                                 .pullLatest(false)
                                 .stubRun(false)
                                 .computeEnv(
-                                        parseJson("{\"id\": \"509cXW9NmIKYTe7KbjxyZn\"}", ComputeEnv.class)
+                                        parseJson("{\"id\": \"509cXW9NmIKYTe7KbjxyZn\"}", ComputeEnvComputeConfig.class)
                                                 .name("slurm_vallibierna")
                                 ),
                 baseUserUrl(mock, USER_WORKSPACE_NAME)
