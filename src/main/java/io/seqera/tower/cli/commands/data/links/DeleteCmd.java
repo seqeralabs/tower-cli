@@ -42,9 +42,6 @@ public class DeleteCmd extends AbstractDataLinksCmd {
         Long wspId = workspaceId(workspace.workspace);
 
         api().deleteCustomDataLink(id, wspId);
-
-        if (wspId != null)
-            return new DataLinkMessageResponse(String.format("Data link '%s' deleted at '%s' workspace.", id, wspId));
-        return new DataLinkMessageResponse(String.format("Data link '%s' deleted at user workspace.", id));
+        return new DataLinkMessageResponse(id, wspId);
     }
 }

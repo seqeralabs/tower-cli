@@ -21,15 +21,19 @@ import io.seqera.tower.cli.responses.Response;
 
 public class DataLinkMessageResponse extends Response {
 
-    public final String message;
+    public final String id;
+    public final Long wspId;
 
-    public DataLinkMessageResponse(String message) {
-        this.message = message;
+    public DataLinkMessageResponse(String id, Long wspId) {
+        this.id = id;
+        this.wspId = wspId;
     }
 
     @Override
     public String toString() {
-
-        return ansi(String.format("%n  @|yellow  %s|@%n", message));
+        if (wspId != null) {
+            return ansi(String.format("%n  @|yellow Data link '%s' deleted at '%s' workspace.|@%n", id, wspId));
+        }
+        return ansi(String.format("%n  @|yellow Data link '%s' deleted at user workspace.|@%n", id));
     }
 }

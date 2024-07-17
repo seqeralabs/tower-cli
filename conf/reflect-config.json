@@ -173,6 +173,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.DataLinksCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.DatasetsCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -979,6 +985,47 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.data.links.AbstractDataLinksCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"io.seqera.tower.cli.commands.data.links.AddCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.data.links.BrowseCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.data.links.DeleteCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.data.links.ListCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.data.links.SearchOption",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.data.links.UpdateCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.datasets.AbstractDatasetsCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true
@@ -1660,6 +1707,30 @@
 },
 {
   "name":"io.seqera.tower.cli.responses.computeenvs.ComputeEnvUpdated",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.data.DataLinkContentList",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.data.DataLinkMessageResponse",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.data.DataLinksList",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.data.DataLinkView",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true
@@ -3117,6 +3188,78 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "methods":[{"name":"fromValue","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"io.seqera.tower.model.DataLinkContentResponse",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] },{"name":"originalPath","parameterTypes":["java.lang.String"] }, {"name":"setOriginalPath","parameterTypes":["java.lang.String"] }, {"name":"getOriginalPath","parameterTypes":[] }, {"name":"objects","parameterTypes":["java.util.List"] }, {"name":"setObjects","parameterTypes":["java.util.List"] }, {"name":"addObjectsItem","parameterTypes":["io.seqera.tower.model.DataLinkItem"] }, {"name":"getObjects","parameterTypes":[] }, {"name":"nextPageToken","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"io.seqera.tower.model.DataLinkCreateRequest",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] },{"name":"fromValue","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"io.seqera.tower.model.DataLinkCredentials",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] },{"name":"fromValue","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"io.seqera.tower.model.DataLinkDto",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] },{"name":"fromValue","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"io.seqera.tower.model.DataLinkItem",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] },{"name":"fromValue","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"io.seqera.tower.model.DataLinkItemType",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] },{"name":"fromValue","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"io.seqera.tower.model.DataLinkProvider",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] },{"name":"fromValue","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"io.seqera.tower.model.DataLinkResponse",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] },{"name":"fromValue","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"io.seqera.tower.model.DataLinksListResponse",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] },{"name":"fromValue","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"io.seqera.tower.model.DataLinkStatus",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] },{"name":"fromValue","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"io.seqera.tower.model.DataLinkType",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"fromValue","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"io.seqera.tower.model.DataLinkUpdateRequest",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] },{"name":"fromValue","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"java.io.Console",

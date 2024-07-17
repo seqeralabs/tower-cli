@@ -18,7 +18,6 @@
 package io.seqera.tower.cli.responses.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.seqera.tower.cli.commands.data.links.AbstractDataLinksCmd;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.cli.utils.TableList;
