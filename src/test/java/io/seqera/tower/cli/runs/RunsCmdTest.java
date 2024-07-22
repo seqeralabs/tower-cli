@@ -627,7 +627,7 @@ class RunsCmdTest extends BaseCmdTest {
         mock.when(
                 request().withMethod("GET")
                         .withPath("/workflow/5mDfiUtqyptDib")
-                        .withQueryStringParameter("attributes", "labels"),
+                        .withQueryStringParameter("attributes", "labels,optimized"),
                 exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(sampleDescribeWorkflowBytes).withContentType(MediaType.APPLICATION_JSON)
