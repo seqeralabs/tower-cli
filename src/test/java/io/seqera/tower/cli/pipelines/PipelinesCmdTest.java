@@ -24,7 +24,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.JSON;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
-import io.seqera.tower.cli.commands.labels.LabelsSubcmdOptions;
 import io.seqera.tower.cli.exceptions.InvalidResponseException;
 import io.seqera.tower.cli.exceptions.MultiplePipelinesFoundException;
 import io.seqera.tower.cli.exceptions.NoComputeEnvironmentException;
@@ -40,7 +39,7 @@ import io.seqera.tower.cli.responses.pipelines.PipelinesUpdated;
 import io.seqera.tower.cli.responses.pipelines.PipelinesView;
 import io.seqera.tower.cli.utils.ModelHelper;
 import io.seqera.tower.cli.utils.PaginationInfo;
-import io.seqera.tower.model.ComputeEnv;
+import io.seqera.tower.model.ComputeEnvComputeConfig;
 import io.seqera.tower.model.CreatePipelineRequest;
 import io.seqera.tower.model.Launch;
 import io.seqera.tower.model.PipelineDbDto;
@@ -76,7 +75,7 @@ class PipelinesCmdTest extends BaseCmdTest {
         mock.reset();
 
         mock.when(
-                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "sleep_one_minute"), exactly(1)
+                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "\"sleep_one_minute\""), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"pipelines\":[{\"pipelineId\":217997727159863,\"name\":\"sleep_one_minute\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/pditommaso/nf-sleep\",\"userId\":4,\"userName\":\"jordi\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null}],\"totalSize\":1}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -106,7 +105,7 @@ class PipelinesCmdTest extends BaseCmdTest {
         mock.reset();
 
         mock.when(
-                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "sleep_one_minute"), exactly(1)
+                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "\"sleep_one_minute\""), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"pipelines\":[{\"pipelineId\":217997727159863,\"name\":\"sleep_one_minute\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/pditommaso/nf-sleep\",\"userId\":4,\"userName\":\"jordi\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null}],\"totalSize\":1}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -148,7 +147,7 @@ class PipelinesCmdTest extends BaseCmdTest {
         mock.reset();
 
         mock.when(
-                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "sleep_one_minute")
+                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "\"sleep_one_minute\"")
         ).respond(
                 response().withStatusCode(200).withBody("{\"pipelines\":[{\"pipelineId\":217997727159863,\"name\":\"sleep_one_minute\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/pditommaso/nf-sleep\",\"userId\":4,\"userName\":\"jordi\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null}],\"totalSize\":1}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -187,7 +186,7 @@ class PipelinesCmdTest extends BaseCmdTest {
         mock.reset();
 
         mock.when(
-                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "sleep_one_minute")
+                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "\"sleep_one_minute\"")
         ).respond(
                 response().withStatusCode(200).withBody("{\"pipelines\":[{\"pipelineId\":217997727159863,\"name\":\"sleep_one_minute\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/pditommaso/nf-sleep\",\"userId\":4,\"userName\":\"jordi\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null}],\"totalSize\":1}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -339,7 +338,7 @@ class PipelinesCmdTest extends BaseCmdTest {
         mock.reset();
 
         mock.when(
-                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "sleep"), exactly(1)
+                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "\"sleep\""), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("pipelines_sleep")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -363,14 +362,14 @@ class PipelinesCmdTest extends BaseCmdTest {
         mock.reset();
 
         mock.when(
-                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "sleep_all"), exactly(1)
+                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "\"sleep_all\""), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"pipelines\":[],\"totalSize\":0}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         ExecOut out = exec(mock, "pipelines", "delete", "-n", "sleep_all");
 
-        assertEquals(errorMessage(out.app, new PipelineNotFoundException("sleep_all", USER_WORKSPACE_NAME)), out.stdErr);
+        assertEquals(errorMessage(out.app, new PipelineNotFoundException("\"sleep_all\"", USER_WORKSPACE_NAME)), out.stdErr);
         assertEquals("", out.stdOut);
         assertEquals(1, out.exitCode);
     }
@@ -381,14 +380,14 @@ class PipelinesCmdTest extends BaseCmdTest {
         mock.reset();
 
         mock.when(
-                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "hello"), exactly(1)
+                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "\"hello\""), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("pipelines_multiple")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         ExecOut out = exec(mock, "pipelines", "delete", "-n", "hello");
 
-        assertEquals(errorMessage(out.app, new MultiplePipelinesFoundException("hello", USER_WORKSPACE_NAME)), out.stdErr);
+        assertEquals(errorMessage(out.app, new MultiplePipelinesFoundException("\"hello\"", USER_WORKSPACE_NAME)), out.stdErr);
         assertEquals("", out.stdOut);
         assertEquals(1, out.exitCode);
     }
@@ -538,7 +537,7 @@ class PipelinesCmdTest extends BaseCmdTest {
         mock.reset();
 
         mock.when(
-                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "sleep_one_minute").withQueryStringParameter("visibility", "all"), exactly(1)
+                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "\"sleep_one_minute\"").withQueryStringParameter("visibility", "all"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"pipelines\":[{\"pipelineId\":213164477645856,\"name\":\"sleep_one_minute\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/pditommaso/nf-sleep\",\"userId\":1776,\"userName\":\"jordi10\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null,\"deleted\":false,\"lastUpdated\":\"2023-05-15T13:59:19Z\",\"optimized\":null,\"labels\":null,\"computeEnv\":null}],\"totalSize\":1}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -579,7 +578,7 @@ class PipelinesCmdTest extends BaseCmdTest {
                                 .pullLatest(false)
                                 .stubRun(false)
                                 .computeEnv(
-                                        parseJson("{\"id\": \"509cXW9NmIKYTe7KbjxyZn\"}", ComputeEnv.class)
+                                        parseJson("{\"id\": \"509cXW9NmIKYTe7KbjxyZn\"}", ComputeEnvComputeConfig.class)
                                                 .name("slurm_vallibierna")
                                 ),
                 baseUserUrl(mock, USER_WORKSPACE_NAME)
@@ -649,7 +648,7 @@ class PipelinesCmdTest extends BaseCmdTest {
         mock.reset();
 
         mock.when(
-                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "sleep"), exactly(1)
+                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "\"sleep\""), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("pipelines_sleep")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -866,21 +865,37 @@ class PipelinesCmdTest extends BaseCmdTest {
                 request().withMethod("GET")
                         .withPath("/pipelines")
                         .withQueryStringParameter("workspaceId", "69509535922157")
-                        .withQueryStringParameter("search", "cli_pipeline")
+                        .withQueryStringParameter("search", "\"cli_pipeline\"")
                         .withQueryStringParameter("visibility", "all"),
                 exactly(1)
         ).respond(
                 response().withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody(
-                                "{\n" +
-                                "\"pipelines\":[{\"pipelineId\":227906339448730,\"name\":\"cli_pipeline\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/nextflow-io/hello\",\"userId\":1,\"userName\":\"eliantor\",\n" +
-                                "\"userFirstName\":null,\"userLastName\":null,\"orgId\":109383401867759,\"orgName\":\"CliOrg\",\n" +
-                                "\"workspaceId\":69509535922157,\"workspaceName\":\"cli-wsp\",\"visibility\":\"PRIVATE\",\n" +
-                                "\"deleted\":false,\"lastUpdated\":\"2023-04-12T14:30:44.541301+02:00\",\"optimized\":null,\"labels\":null,\"computeEnv\":null}],\n" +
-                                "\"totalSize\":1" +
-                                "}"
-                        )
+                        .withBody("""
+                          {
+                            "pipelines":[{
+                                "pipelineId":227906339448730,
+                                "name":"cli_pipeline",
+                                "description":null,
+                                "icon":null,
+                                "repository":"https://github.com/nextflow-io/hello",
+                                "userId":1,
+                                "userName":"eliantor",
+                                "userFirstName":null,
+                                "userLastName":null,
+                                "orgId":109383401867759,
+                                "orgName":"CliOrg",
+                                "workspaceId":69509535922157,
+                                "workspaceName":"cli-wsp",
+                                "visibility":"PRIVATE",
+                                "deleted":false,
+                                "lastUpdated":"2023-04-12T14:30:44.541301+02:00",
+                                "optimized":null,
+                                "labels":null,
+                                "computeEnv":null
+                              }],
+                            "totalSize":1
+                          }""")
                 );
 
         mock.when(
@@ -890,7 +905,30 @@ class PipelinesCmdTest extends BaseCmdTest {
         ).respond(
                 response().withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody("{\"pipeline\":{\"pipelineId\":227906339448730,\"name\":\"cli_pipeline\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/nf-core/rnaseq\",\"userId\":1776,\"userName\":\"jordi10\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null,\"deleted\":false,\"lastUpdated\":\"2023-05-15T11:53:49Z\",\"optimized\":null,\"labels\":null,\"computeEnv\":null}}")
+                        .withBody("""
+                          {
+                            "pipeline":{
+                              "pipelineId":227906339448730,
+                              "name":"cli_pipeline",
+                              "description":null,
+                              "icon":null,
+                              "repository":"https://github.com/nf-core/rnaseq",
+                              "userId":1776,
+                              "userName":"jordi10",
+                              "userFirstName":null,
+                              "userLastName":null,
+                              "orgId":null,
+                              "orgName":null,
+                              "workspaceId":null,
+                              "workspaceName":null,
+                              "visibility":null,
+                              "deleted":false,
+                              "lastUpdated":"2023-05-15T11:53:49Z",
+                              "optimized":null,
+                              "labels":null,
+                              "computeEnv":null
+                            }
+                        }""")
         );
 
         mock.when(
@@ -904,9 +942,20 @@ class PipelinesCmdTest extends BaseCmdTest {
         ).respond(
                 response().withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody("" +
-                            "{\"labels\":[{\"id\":20504124310835,\"name\":\"test_label0\",\"value\":null,\"resource\":false,\"isDefault\":false}],\"totalSize\":1}" +
-                        "")
+                        .withBody("""
+                                {
+                                  "labels":[
+                                    {
+                                      "id":20504124310835,
+                                      "name":"test_label0",
+                                      "value":null,
+                                      "resource":false,
+                                      "isDefault":false
+                                    }
+                                  ],
+                                  "totalSize":1
+                                }
+                        """)
         );
         mock.when(
                 request().withMethod("GET").withPath("/labels")
@@ -919,9 +968,9 @@ class PipelinesCmdTest extends BaseCmdTest {
         ).respond(
                 response().withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody("" +
-                            "{\"labels\":[],\"totalSize\":0}" +
-                        "")
+                        .withBody("""
+                                {"labels":[],"totalSize":0}
+                        """)
         );
         mock.when(
                 request().withMethod("POST")
@@ -986,20 +1035,37 @@ class PipelinesCmdTest extends BaseCmdTest {
                 request().withMethod("GET")
                         .withPath("/pipelines")
                         .withQueryStringParameter("workspaceId", "69509535922157")
-                        .withQueryStringParameter("search", "cli_pipeline")
+                        .withQueryStringParameter("search", "\"cli_pipeline\"")
                         .withQueryStringParameter("visibility", "all"),
                 exactly(1)
         ).respond(
                 response().withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody(
-                                "{\n" +
-                                "\"pipelines\":[{\"pipelineId\":227906339448730,\"name\":\"cli_pipeline\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/nextflow-io/hello\",\"userId\":1,\"userName\":\"eliantor\",\n" +
-                                "\"userFirstName\":null,\"userLastName\":null,\"orgId\":109383401867759,\"orgName\":\"CliOrg\",\n" +
-                                "\"workspaceId\":69509535922157,\"workspaceName\":\"cli-wsp\",\"visibility\":\"PRIVATE\",\n" +
-                                "\"deleted\":false,\"lastUpdated\":\"2023-04-12T14:30:44.541301+02:00\",\"optimized\":null,\"labels\":null,\"computeEnv\":null}],\n" +
-                                "\"totalSize\":1}"
-                        )
+                        .withBody("""
+                          {
+                            "pipelines":[{
+                              "pipelineId":227906339448730,
+                              "name":"cli_pipeline",
+                              "description":null,
+                              "icon":null,
+                              "repository":"https://github.com/nextflow-io/hello",
+                              "userId":1,
+                              "userName":"eliantor",
+                              "userFirstName":null,
+                              "userLastName":null,
+                              "orgId":109383401867759,
+                              "orgName":"CliOrg",
+                              "workspaceId":69509535922157,
+                              "workspaceName":"cli-wsp",
+                              "visibility":"PRIVATE",
+                              "deleted":false,
+                              "lastUpdated":"2023-04-12T14:30:44.541301+02:00",
+                              "optimized":null,
+                              "labels":null,
+                              "computeEnv":null
+                            }],
+                            "totalSize":1
+                        }""")
         );
 
         mock.when(
@@ -1009,7 +1075,30 @@ class PipelinesCmdTest extends BaseCmdTest {
         ).respond(
                 response().withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody("{\"pipeline\":{\"pipelineId\":227906339448730,\"name\":\"cli_pipeline\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/nf-core/rnaseq\",\"userId\":1776,\"userName\":\"jordi10\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null,\"deleted\":false,\"lastUpdated\":\"2023-05-15T11:53:49Z\",\"optimized\":null,\"labels\":null,\"computeEnv\":null}}")
+                        .withBody("""
+                          {
+                            "pipeline":{
+                              "pipelineId":227906339448730,
+                              "name":"cli_pipeline",
+                              "description":null,
+                              "icon":null,
+                              "repository":"https://github.com/nf-core/rnaseq",
+                              "userId":1776,
+                              "userName":"jordi10",
+                              "userFirstName":null,
+                              "userLastName":null,
+                              "orgId":null,
+                              "orgName":null,
+                              "workspaceId":null,
+                              "workspaceName":null,
+                              "visibility":null,
+                              "deleted":false,
+                              "lastUpdated":"2023-05-15T11:53:49Z",
+                              "optimized":null,
+                              "labels":null,
+                              "computeEnv":null
+                            }
+                        }""")
         );
 
         mock.when(
@@ -1023,9 +1112,17 @@ class PipelinesCmdTest extends BaseCmdTest {
         ).respond(
                 response().withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody("" +
-                            "{\"labels\":[{\"id\":20504124310835,\"name\":\"test_label0\",\"value\":null,\"resource\":false,\"isDefault\":false}],\"totalSize\":1}" +
-                        "")
+                        .withBody("""
+                          {
+                            "labels":[{
+                              "id":20504124310835,
+                              "name":"test_label0",
+                              "value":null,
+                              "resource":false,
+                              "isDefault":false
+                            }],
+                            "totalSize":1}
+                        """)
         );
         mock.when(
                 request().withMethod("GET").withPath("/labels")
@@ -1077,7 +1174,7 @@ class PipelinesCmdTest extends BaseCmdTest {
         mock.when(
                 request().withMethod("GET")
                         .withPath("/pipelines")
-                        .withQueryStringParameter("search", "lab1")
+                        .withQueryStringParameter("search", "\"lab1\"")
                         .withQueryStringParameter("visibility", "all"),
                 exactly(1)
         ).respond(

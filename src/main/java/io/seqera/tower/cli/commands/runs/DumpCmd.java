@@ -25,7 +25,9 @@ import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.runs.RunDump;
 import io.seqera.tower.cli.shared.WorkflowMetadata;
+import io.seqera.tower.cli.utils.JsonHelper;
 import io.seqera.tower.cli.utils.SilentPrintWriter;
+import io.seqera.tower.cli.utils.TarFileHelper;
 import io.seqera.tower.model.DescribeTaskResponse;
 import io.seqera.tower.model.DescribeWorkflowLaunchResponse;
 import io.seqera.tower.model.DescribeWorkflowResponse;
@@ -38,185 +40,243 @@ import io.seqera.tower.model.Workflow;
 import io.seqera.tower.model.WorkflowLoad;
 import io.seqera.tower.model.WorkflowMetrics;
 import io.seqera.tower.model.WorkflowQueryAttribute;
-import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
-import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
-import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
-import org.apache.commons.compress.compressors.xz.XZCompressorOutputStream;
-import org.apache.commons.compress.utils.IOUtils;
-import picocli.CommandLine;
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Mixin;
+import picocli.CommandLine.Option;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-@CommandLine.Command(
-        name = "dump",
-        description = "Dump all logs and details of a run into a compressed tarball file for troubleshooting."
+@Command(
+    name = "dump",
+    description = "Dump all logs and details of a run into a compressed tarball file for troubleshooting."
 )
 public class DumpCmd extends AbstractRunsCmd {
 
-    @CommandLine.Option(names = {"-i", "-id"}, description = "Pipeline run identifier.", required = true)
+    public static final List<String> SUPPORTED_FILE_FORMATS = List.of(".tar.xz", ".tar.gz");
+
+    @Option(names = {"-i", "-id"}, description = "Pipeline run identifier.", required = true)
     public String id;
 
-    @CommandLine.Option(names = {"-o", "--output"}, description = "Output file to store the dump. (supported formats: .tar.xz and .tar.gz)", required = true)
+    @Option(names = {"-o", "--output"}, description = "Output file to store the dump. (supported formats: .tar.xz and .tar.gz)", required = true)
     Path outputFile;
 
-    @CommandLine.Option(names = {"--add-task-logs"}, description = "Add all task stdout, stderr and log files.")
+    @Option(names = {"--add-task-logs"}, description = "Add all task stdout, stderr and log files.")
     public boolean addTaskLogs;
 
-    @CommandLine.Option(names = {"--add-fusion-logs"}, description = "Add all Fusion task logs.")
+    @Option(names = {"--add-fusion-logs"}, description = "Add all Fusion task logs.")
     public boolean addFusionLogs;
 
-    @CommandLine.Option(names = {"--only-failed"}, description = "Dump only failed tasks.")
+    @Option(names = {"--only-failed"}, description = "Dump only failed tasks.")
     public boolean onlyFailed;
 
-    @CommandLine.Option(names = {"--silent"}, description = "Do not show download progress.")
+    @Option(names = {"--silent"}, description = "Do not show download progress.")
     public boolean silent;
 
-    @CommandLine.Mixin
+    @Mixin
     public WorkspaceOptionalOptions workspace;
 
-    private final static JSON JSON = new JSON();
+    private PrintWriter progress;
 
-    private ExecutorService compressExecutor;
-    private static class AddEntry implements Runnable {
-        TarArchiveOutputStream out;
-        String fileName;
-        File file;
-
-        public AddEntry(TarArchiveOutputStream out, String fileName, File file) {
-            this.out = out;
-            this.fileName = fileName;
-            this.file = file;
-        }
-
-        @Override
-        public void run() {
-            TarArchiveEntry entry = new TarArchiveEntry(file, fileName);
-            try {
-                out.putArchiveEntry(entry);
-                IOUtils.copy(new FileInputStream(file), out);
-                out.closeArchiveEntry();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+    // cached responses
+    private DescribeWorkflowResponse workflowDescription;
+    private DescribeWorkflowLaunchResponse workflowLaunch;
+    private List<Task> workflowTasks;
 
     @Override
     protected Response exec() throws ApiException, IOException {
 
         Long wspId = workspaceId(workspace.workspace);
-        String workflowId = id;
-        PrintWriter progress = silent ? new SilentPrintWriter() : app().getOut();
-        FileOutputStream fileOut = new FileOutputStream(outputFile.toFile());
-        BufferedOutputStream buffOut = new BufferedOutputStream(fileOut);
+        progress = silent ? new SilentPrintWriter() : app().getOut();
 
         String fileName = outputFile.getFileName().toString();
-        OutputStream compressOut = compressStream(fileName, buffOut);
-        if (compressOut == null) {
+        if (SUPPORTED_FILE_FORMATS.stream().noneMatch(fileName::endsWith)) {
             throw new TowerException("Unknown file format. Only 'tar.xz' and 'tar.gz' formats are supported.");
         }
 
-        TarArchiveOutputStream out = new TarArchiveOutputStream(compressOut);
-        compressExecutor = Executors.newSingleThreadExecutor();
+        try(
+            var tar = new TarFileHelper()
+                    .withFilepath(outputFile)
+                    .buildAppender();
+        ) {
 
-        dumpTowerInfo(progress, out);
-        dumpWorkflowDetails(progress, out, wspId);
-        dumpTasks(progress, out, wspId, workflowId);
+            tar.add("service-info.json", collectTowerInfo());
+            tar.add("workflow.json", collectWorkflowInfo(wspId));
+            tar.add("workflow-metadata.json", collectWorkflowMetadata(wspId));
+            tar.add("workflow-load.json", collectWorkflowLoad(wspId));
+            tar.add("workflow-launch.json", collectWorkflowLaunch(wspId));
+            tar.add("workflow-metrics.json", collectWorkflowMetrics(wspId));
+            tar.add("workflow-tasks.json", collectWorkflowTasks(wspId));
+            tar.add("nextflow.log", collectNfLog(wspId));
+            collectWorkflowTaskLogs(tar, wspId); // tasks/{taskId}/.command.[out,err,log], .fusion.log
 
-        compressExecutor.shutdown();
-        try {
-            if (!compressExecutor.awaitTermination(1, TimeUnit.MINUTES)) {
-                throw new TowerException("Timeout compressing logs");
-            }
-        } catch (InterruptedException ignored) {
-        }
-        out.close();
+        } // blocks until data is written to tar file, or timeout
+
         return new RunDump(id, workspaceRef(wspId), outputFile);
     }
 
-    private OutputStream compressStream(String fileName, OutputStream out) throws IOException {
-        if (fileName.endsWith(".tar.xz")) {
-            return new XZCompressorOutputStream(out);
-        }
+    private String collectTowerInfo() throws IOException, ApiException {
+        progress.println(ansi("- Tower info"));
 
-        if (fileName.endsWith(".tar.gz")) {
-            return new GzipCompressorOutputStream(out);
-        }
-
-        return null;
+        ServiceInfo serviceInfo = api().info().getServiceInfo();
+        return JsonHelper.prettyJson(serviceInfo);
     }
 
-    private void dumpTasks(PrintWriter progress, TarArchiveOutputStream out, Long wspId, String workflowId) throws ApiException, IOException {
-        progress.println(ansi("- Task details"));
-        List<Task> tasks = loadTasks(wspId, workflowId);
-        addEntry(out, "workflow-tasks.json", List.class, tasks);
-        addTaskLogs(progress, out, wspId, workflowId, tasks);
-    }
+    private String collectWorkflowInfo(Long workspaceId) throws IOException, ApiException {
+        progress.println(ansi("- Workflow general information"));
 
-    private void dumpWorkflowDetails(PrintWriter progress, TarArchiveOutputStream out, Long wspId) throws ApiException, IOException {
-        progress.println(ansi("- Workflow details"));
+        // General workflow info (including labels)
 
-        // General workflow info including:
-        // + labels
-        // + optimization status
-        DescribeWorkflowResponse workflowResponse = workflowById(wspId, id, List.of(WorkflowQueryAttribute.LABELS, WorkflowQueryAttribute.OPTIMIZED));
-        Workflow workflow = workflowResponse.getWorkflow();
+        Workflow workflow = getWorkflowDescription(workspaceId).getWorkflow();
         if (workflow == null) {
             throw new TowerException("Unknown workflow");
         }
 
-        // Launch info
-        Launch launch = null;
-        Long pipelineId = null;
-        if (workflow.getLaunchId() != null) {
+        return JsonHelper.prettyJson(workflow);
+    }
 
-            launch = launchById(wspId, workflow.getLaunchId());
+    private String collectWorkflowMetadata(Long workspaceId) throws IOException, ApiException {
+        progress.println(ansi("- Workflow metadata"));
 
-            DescribeWorkflowLaunchResponse wfLaunchResponse = workflowLaunchById(wspId, workflow.getId());
-            if (wfLaunchResponse != null && wfLaunchResponse.getLaunch() != null) {
-                pipelineId = wfLaunchResponse.getLaunch().getPipelineId();
-            }
+        // Workflow metadata aggregates including:
+        // + labels
+        // + optimization status
+
+        var workflowDesc = getWorkflowDescription(workspaceId);
+        var workflowLaunchDesc = getWorkflowLaunchDescription(workspaceId);
+
+        var workflow = workflowDesc.getWorkflow();
+        if (workflow == null) {
+            throw new TowerException("Unknown workflow");
         }
 
-        // Load and metrics info
-        WorkflowLoad workflowLoad = workflowLoadByWorkflowId(wspId, id);
-        List<WorkflowMetrics> metrics = api().describeWorkflowMetrics(workflow.getId(), wspId).getMetrics();
+        Long pipelineId = null;
+        if (workflowLaunchDesc != null && workflowLaunchDesc.getLaunch() != null) {
+            pipelineId = workflowLaunchDesc.getLaunch().getPipelineId();
+        }
 
         WorkflowMetadata wfMetadata = new WorkflowMetadata(
                 pipelineId,
-                workflowResponse.getOrgId(),
-                workflowResponse.getOrgName(),
-                wspId,
-                workflowResponse.getWorkspaceName(),
+                workflowDesc.getOrgId(),
+                workflowDesc.getOrgName(),
+                workspaceId,
+                workflowDesc.getWorkspaceName(),
                 workflow.getOwnerId(),
-                generateUrl(wspId, workflow.getUserName(), workflow.getId()),
-                workflowResponse.getLabels()
+                generateUrl(workspaceId, workflow.getUserName(), workflow.getId()),
+                workflowDesc.getLabels()
         );
 
-        addEntry(out, "workflow.json", Workflow.class, workflow);
-        addEntry(out, "workflow-metadata.json", WorkflowMetadata.class, wfMetadata);
-        addEntry(out, "workflow-load.json", WorkflowLoad.class, workflowLoad);
-        addEntry(out, "workflow-launch.json", Launch.class, launch);
-        addEntry(out, "workflow-metrics.json", List.class, metrics);
+        return JsonHelper.prettyJson(wfMetadata);
+    }
 
-        // Files
+    private String collectWorkflowLoad(Long workspaceId) throws ApiException, JsonProcessingException {
+        progress.println(ansi("- Workflow load data"));
+
+        WorkflowLoad workflowLoad = workflowLoadByWorkflowId(workspaceId, id);
+
+        return JsonHelper.prettyJson(workflowLoad);
+    }
+
+    private String collectWorkflowLaunch(Long workspaceId) throws ApiException, JsonProcessingException {
+        progress.println(ansi("- Workflow launch"));
+
+        var workflow = getWorkflowDescription(workspaceId).getWorkflow();
+        if (workflow == null) {
+            throw new TowerException("Unknown workflow");
+        }
+
+        String launchId = workflow.getLaunchId();
+        Launch launch = (launchId == null) ? null : launchById(workspaceId, launchId);
+
+        return JsonHelper.prettyJson(launch);
+    }
+
+    private String collectWorkflowMetrics(Long workspaceId) throws ApiException, JsonProcessingException {
+        progress.println(ansi("- Workflow metrics"));
+
+        var workflow = getWorkflowDescription(workspaceId).getWorkflow();
+        if (workflow == null) {
+            throw new TowerException("Unknown workflow");
+        }
+
+        List<WorkflowMetrics> metrics = api().describeWorkflowMetrics(workflow.getId(), workspaceId).getMetrics();
+
+        return JsonHelper.prettyJson(metrics);
+    }
+
+    private String collectWorkflowTasks(Long workspaceId) throws ApiException, JsonProcessingException {
+        progress.println(ansi("- Task details"));
+
+        List<Task> tasks = getWorkflowTasks(workspaceId, id);
+
+        return JsonHelper.prettyJson(tasks);
+    }
+
+    private void collectWorkflowTaskLogs(TarFileHelper.TarFileAppender tar, Long workspaceId) throws ApiException, IOException {
+
+        if (!addTaskLogs && !addFusionLogs) {
+            return;
+        }
+
+        progress.println(ansi("- Task logs"));
+
+        var workflow = getWorkflowDescription(workspaceId).getWorkflow();
+        if (workflow == null) {
+            throw new TowerException("Unknown workflow");
+        }
+
+        String workflowId = id;
+
+        List<Task> tasks = getWorkflowTasks(workspaceId, id);
+
+        if (onlyFailed) {
+            tasks = tasks.stream().filter(t -> t.getStatus() == TaskStatus.FAILED).collect(Collectors.toList());
+        }
+
+        int current = 1;
+        int total = tasks.size();
+
+        for (Task task : tasks) {
+
+            progress.println(ansi(String.format("     [%d/%d] adding task logs '%s'", current++, total, task.getName())));
+
+            if (addTaskLogs) {
+                addTaskLog(tar, task.getTaskId(), ".command.out", workspaceId, workflowId);
+                addTaskLog(tar, task.getTaskId(), ".command.err", workspaceId, workflowId);
+                addTaskLog(tar, task.getTaskId(), ".command.log", workspaceId, workflowId);
+            }
+
+            if (addFusionLogs) {
+                addTaskLog(tar, task.getTaskId(), ".fusion.log", workspaceId, workflowId);
+            }
+        }
+    }
+
+    private File collectNfLog(Long workspaceId) throws ApiException {
+        progress.println(ansi("- Workflow nextflow.log"));
+
+        var workflow = getWorkflowDescription(workspaceId).getWorkflow();
+        if (workflow == null) {
+            throw new TowerException("Unknown workflow");
+        }
+
+        File nextflowLog = api().downloadWorkflowLog(workflow.getId(), String.format("nf-%s.log", workflow.getId()), workspaceId);
+
+        return nextflowLog;
+    }
+
+    private void addTaskLog(TarFileHelper.TarFileAppender tar, Long taskId, String logName, Long workspaceId, String workflowId) throws ApiException, IOException {
         try {
-            File nextflowLog = api().downloadWorkflowLog(workflow.getId(), String.format("nf-%s.log", workflow.getId()), wspId);
-            addFile(out, "nextflow.log", nextflowLog);
+
+            File file = api().downloadWorkflowTaskLog(workflowId, taskId, logName, workspaceId);
+            String fileName = String.format("tasks/%d/%s", taskId, logName);
+            tar.add(fileName, file);
+
         } catch (ApiException e) {
             // Ignore error 404 that means that the file is no longer available
             // Ignore error 400 that means that the run was launch using Nextflow CLI
@@ -226,124 +286,57 @@ public class DumpCmd extends AbstractRunsCmd {
         }
     }
 
-    private void dumpTowerInfo(PrintWriter progress, TarArchiveOutputStream out) throws IOException, ApiException {
-        progress.println(ansi("- Tower info"));
-        addEntry(out, "service-info.json", ServiceInfo.class, api().info().getServiceInfo());
+    private DescribeWorkflowResponse getWorkflowDescription(Long workspaceId) throws ApiException {
+        if (this.workflowDescription == null) {
+            this.workflowDescription = workflowById(workspaceId, id, List.of(WorkflowQueryAttribute.LABELS, WorkflowQueryAttribute.OPTIMIZED));
+        }
+        return this.workflowDescription;
     }
 
-    private void addTaskLogs(PrintWriter progress, TarArchiveOutputStream out, Long wspId, String workflowId, List<Task> tasks) throws IOException, ApiException {
-        if (!addTaskLogs && !addFusionLogs) {
-            return;
-        }
-
-        if (onlyFailed) {
-            tasks = tasks.stream().filter(t -> t.getStatus() == TaskStatus.FAILED).collect(Collectors.toList());
-        }
-
-        int current = 1;
-        int total = tasks.size();
-        for (Task task : tasks) {
-            progress.println(ansi(String.format("     [%d/%d] adding task logs '%s'", current++, total, task.getName())));
-
-            if (addTaskLogs) {
-                try {
-                    File taskOut = api().downloadWorkflowTaskLog(workflowId, task.getTaskId(), ".command.out", wspId);
-                    addFile(out, String.format("tasks/%d/.command.out", task.getTaskId()), taskOut);
-                } catch (ApiException e) {
-                    // Ignore error 404 that means that the file is no longer available
-                    // Ignore error 400 that means that the run was launch using Nextflow CLI
-                    if (e.getCode() != 404 && e.getCode() != 400) {
-                        throw e;
-                    }
-                }
-
-                try {
-                    File taskOut = api().downloadWorkflowTaskLog(workflowId, task.getTaskId(), ".command.err", wspId);
-                    addFile(out, String.format("tasks/%d/.command.err", task.getTaskId()), taskOut);
-                } catch (ApiException e) {
-                    // Ignore error 404 that means that the file is no longer available
-                    // Ignore error 400 that means that the run was launch using Nextflow CLI
-                    if (e.getCode() != 404 && e.getCode() != 400) {
-                        throw e;
-                    }
-                }
-
-                try {
-                    File taskOut = api().downloadWorkflowTaskLog(workflowId, task.getTaskId(), ".command.log", wspId);
-                    addFile(out, String.format("tasks/%d/.command.log", task.getTaskId()), taskOut);
-                } catch (ApiException e) {
-                    // Ignore error 404 that means that the file is no longer available
-                    // Ignore error 400 that means that the run was launch using Nextflow CLI
-                    if (e.getCode() != 404 && e.getCode() != 400) {
-                        throw e;
-                    }
-                }
+    private DescribeWorkflowLaunchResponse getWorkflowLaunchDescription(Long workspaceId) throws ApiException {
+        if (this.workflowLaunch == null) {
+            var workflow = getWorkflowDescription(workspaceId).getWorkflow();
+            if (workflow == null) {
+                throw new TowerException("Unknown workflow");
             }
-
-            if (addFusionLogs) {
-                try {
-                    File taskOut = api().downloadWorkflowTaskLog(workflowId, task.getTaskId(), ".fusion.log", wspId);
-                    addFile(out, String.format("tasks/%d/.fusion.log", task.getTaskId()), taskOut);
-                } catch (ApiException e) {
-                    // Ignore error 404 that means that the file is no longer available
-                    // Ignore error 400 that means that the run was launch using Nextflow CLI
-                    if (e.getCode() != 404 && e.getCode() != 400) {
-                        throw e;
-                    }
-                }
+            if (workflow.getLaunchId() != null) {
+                this.workflowLaunch = workflowLaunchById(workspaceId, workflow.getId());
             }
         }
+        return this.workflowLaunch;
     }
 
-    private List<Task> loadTasks(Long wspId, String workflowId) throws ApiException {
+    private List<Task> getWorkflowTasks(Long wspId, String workflowId) throws ApiException {
+
+        if (this.workflowTasks != null) return this.workflowTasks;
+
         int max = 100;
         int offset = 0;
         int added = max;
 
-        List<Task> tasks = new ArrayList<>();
+        this.workflowTasks = new ArrayList<>();
+
         while (added == max) {
+
             added = 0;
             ListTasksResponse response = api().listWorkflowTasks(workflowId, wspId, max, offset, null, null, null);
-            for (DescribeTaskResponse describeTaskResponse : Objects.requireNonNull(response.getTasks())) {
+
+            if (response.getTasks() == null) {
+                throw new TowerException("No tasks found for workflow");
+            }
+
+            for (DescribeTaskResponse describeTaskResponse : response.getTasks()) {
+
                 Task task = describeTaskResponse.getTask();
-                tasks.add(task);
+                this.workflowTasks.add(task);
+
                 added++;
             }
+
             offset += max;
         }
-        return tasks;
-    }
 
-    private <T> void addEntry(TarArchiveOutputStream out, String fileName, Class<T> type, T value) throws IOException {
-        if (value == null) {
-            return;
-        }
-        addEntry(out, fileName, toJSON(type, value));
-    }
-
-    private void addEntry(TarArchiveOutputStream out, String fileName, byte[] data) throws IOException {
-        if (data == null) {
-            return;
-        }
-        TarArchiveEntry entry = new TarArchiveEntry(fileName);
-        entry.setSize(data.length);
-        out.putArchiveEntry(entry);
-        out.write(data);
-        out.closeArchiveEntry();
-    }
-
-    private void addFile(TarArchiveOutputStream out, String fileName, File file) throws IOException {
-        if (file == null) {
-            return;
-        }
-        compressExecutor.submit(new AddEntry(out, fileName, file));
-    }
-
-    private <T> byte[] toJSON(Class<T> type, T value) throws JsonProcessingException {
-        return JSON
-                .getContext(type)
-                .writerWithDefaultPrettyPrinter()
-                .writeValueAsBytes(value);
+        return this.workflowTasks;
     }
 
     private String generateUrl(Long wspId, String userName, String wfId) throws ApiException {
@@ -353,5 +346,5 @@ public class DumpCmd extends AbstractRunsCmd {
         return String.format("%s/orgs/%s/workspaces/%s/watch/%s", serverUrl(), orgName(wspId), workspaceName(wspId), wfId);
     }
 
-}
 
+}

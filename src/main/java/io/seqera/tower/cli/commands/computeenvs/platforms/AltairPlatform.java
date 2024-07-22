@@ -19,7 +19,7 @@ package io.seqera.tower.cli.commands.computeenvs.platforms;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.model.AltairPbsComputeConfig;
-import io.seqera.tower.model.ComputeEnv.PlatformEnum;
+import io.seqera.tower.model.ComputeEnvComputeConfig.PlatformEnum;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Option;
 

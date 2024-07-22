@@ -105,13 +105,4 @@ distributions:
     type: SINGLE_JAR
     artifacts:
       - path: "tw-jar/tw.jar"
-packagers:
-  brew:
-    active: ALWAYS
-    continueOnError: false
-    multiPlatform: true
-    repository:
-      active: RELEASE
-      tagName: '{{distributionName}}-{{tagName}}'
-      branch: HEAD
-      commitMessage: '{{distributionName}} {{tagName}}'
+        transform: "{{distributionName}}.jar"
