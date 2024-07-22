@@ -161,8 +161,8 @@ public class LaunchCmd extends AbstractRootCmd {
                 .schemaName(coalesce(adv().schemaName, base.getSchemaName()))
                 .pullLatest(coalesce(adv().pullLatest, base.getPullLatest()))
                 .stubRun(coalesce(adv().stubRun, base.getStubRun()))
-                .optimizationId(base.getOptimizationId())
-                .optimizationTargets(base.getOptimizationTargets())
+                .optimizationId(coalesce(adv().disableOptimization, false) ? null : base.getOptimizationId())
+                .optimizationTargets(coalesce(adv().disableOptimization, false) ? null : base.getOptimizationTargets())
                 .labelIds(base.getLabelIds())
                 .headJobCpus(base.getHeadJobCpus())
                 .headJobMemoryMb(base.getHeadJobMemoryMb());
@@ -372,6 +372,9 @@ public class LaunchCmd extends AbstractRootCmd {
 
         @Option(names = {"--workspace-secrets"}, split = ",", description = "Pipeline Secrets required by the pipeline execution. Those secrets must be defined in the launching workspace.")
         public List<String> workspaceSecrets;
+
+        @Option(names = {"--disable-optimization"}, description = "Turn off the optimization for the pipeline before launching.")
+        public Boolean disableOptimization;
 
     }
 

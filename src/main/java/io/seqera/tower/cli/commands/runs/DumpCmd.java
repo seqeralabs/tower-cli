@@ -143,7 +143,9 @@ public class DumpCmd extends AbstractRunsCmd {
     private String collectWorkflowMetadata(Long workspaceId) throws IOException, ApiException {
         progress.println(ansi("- Workflow metadata"));
 
-        // Workflow metadata aggregates
+        // Workflow metadata aggregates including:
+        // + labels
+        // + optimization status
 
         var workflowDesc = getWorkflowDescription(workspaceId);
         var workflowLaunchDesc = getWorkflowLaunchDescription(workspaceId);
@@ -286,7 +288,7 @@ public class DumpCmd extends AbstractRunsCmd {
 
     private DescribeWorkflowResponse getWorkflowDescription(Long workspaceId) throws ApiException {
         if (this.workflowDescription == null) {
-            this.workflowDescription = workflowById(workspaceId, id, List.of(WorkflowQueryAttribute.LABELS));
+            this.workflowDescription = workflowById(workspaceId, id, List.of(WorkflowQueryAttribute.LABELS, WorkflowQueryAttribute.OPTIMIZED));
         }
         return this.workflowDescription;
     }
