@@ -19,12 +19,12 @@ package io.seqera.tower.cli.responses.data;
 
 import io.seqera.tower.cli.responses.Response;
 
-public class DataLinkMessageResponse extends Response {
+public class DataLinkDeleted extends Response {
 
     public final String id;
     public final Long wspId;
 
-    public DataLinkMessageResponse(String id, Long wspId) {
+    public DataLinkDeleted(String id, Long wspId) {
         this.id = id;
         this.wspId = wspId;
     }

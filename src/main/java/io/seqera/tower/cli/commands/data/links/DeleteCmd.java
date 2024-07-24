@@ -20,7 +20,7 @@ package io.seqera.tower.cli.commands.data.links;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.cli.responses.data.DataLinkMessageResponse;
+import io.seqera.tower.cli.responses.data.DataLinkDeleted;
 import picocli.CommandLine;
 
 import java.io.IOException;
@@ -42,6 +42,6 @@ public class DeleteCmd extends AbstractDataLinksCmd {
         Long wspId = workspaceId(workspace.workspace);
 
         api().deleteCustomDataLink(id, wspId);
-        return new DataLinkMessageResponse(id, wspId);
+        return new DataLinkDeleted(id, wspId);
     }
 }

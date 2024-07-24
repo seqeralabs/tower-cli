@@ -39,7 +39,7 @@ public class BrowseCmd extends AbstractDataLinksCmd {
     @CommandLine.Option(names = {"-i", "--id"}, description = "Data link id.", required = true)
     public String id;
 
-    @CommandLine.Option(names = {"-c", "--credentials"}, description = "Credentials identifier.", required = true)
+    @CommandLine.Option(names = {"-c", "--credentials"}, description = "Credentials identifier.")
     public String credentialsRef;
 
     @CommandLine.Option(names = {"-p", "--path"}, description = "Path to the folder to browse.")

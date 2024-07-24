@@ -24,7 +24,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.data.links.AbstractDataLinksCmd;
 import io.seqera.tower.cli.commands.enums.OutputType;
-import io.seqera.tower.cli.responses.data.DataLinkMessageResponse;
+import io.seqera.tower.cli.responses.data.DataLinkDeleted;
 import io.seqera.tower.cli.responses.data.DataLinksList;
 import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.model.DataLinkDto;
@@ -305,7 +305,7 @@ public class DataLinksCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "data-links", "delete", "-w", "75887156211589", "-i", "v1-datalinkid");
 
-        assertOutput(format, out, new DataLinkMessageResponse("v1-datalinkid", 75887156211589L));
+        assertOutput(format, out, new DataLinkDeleted("v1-datalinkid", 75887156211589L));
     }
 
     @ParameterizedTest
