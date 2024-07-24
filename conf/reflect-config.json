@@ -1718,7 +1718,7 @@
   "queryAllDeclaredConstructors":true
 },
 {
-  "name":"io.seqera.tower.cli.responses.data.DataLinkMessageResponse",
+  "name":"io.seqera.tower.cli.responses.data.DataLinkDeleted",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true
