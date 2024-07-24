@@ -18,10 +18,12 @@
 package io.seqera.tower.cli.commands.data.links;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.data.DataLinkView;
 import io.seqera.tower.model.DataLinkDto;
+import io.seqera.tower.model.DataLinkUpdateRequest;
 import picocli.CommandLine;
 
 import java.io.IOException;
@@ -31,7 +33,7 @@ import java.util.Objects;
         name = "update",
         description = "Update custom data link."
 )
-public class UpdateCmd extends AbstractDataLinksCmd {
+public class UpdateCmd extends AbstractApiCmd {
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
@@ -61,4 +63,15 @@ public class UpdateCmd extends AbstractDataLinksCmd {
         return new DataLinkView(updated, "Data link updated");
     }
 
+    DataLinkDto updateDataLink(Long wspId, String id, String name, String description, String credsId) throws ApiException {
+        DataLinkUpdateRequest req = new DataLinkUpdateRequest();
+        if (name != null)
+            req.name(name);
+        if (description != null)
+            req.description(description);
+        if (credsId != null)
+            req.credentialsId(credsId);
+
+        return api().updateCustomDataLink(id, req, wspId);
+    }
 }

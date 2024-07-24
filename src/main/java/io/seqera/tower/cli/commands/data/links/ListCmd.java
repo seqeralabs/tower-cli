@@ -18,6 +18,7 @@
 package io.seqera.tower.cli.commands.data.links;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.commands.global.PaginationOptions;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
@@ -35,7 +36,7 @@ import java.io.IOException;
         name = "list",
         description = "List data links."
 )
-public class ListCmd extends AbstractDataLinksCmd {
+public class ListCmd extends AbstractApiCmd {
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
@@ -92,7 +93,56 @@ public class ListCmd extends AbstractDataLinksCmd {
         }
     }
 
+    public static String buildSearch(String name, String providers, String region, String uri) {
+        StringBuilder builder = new StringBuilder();
+        if (name != null && !name.isBlank()) {
+            builder.append(name);
+        }
+        if (providers != null && !providers.isBlank()) {
+            appendParameter(builder, providers, "provider");
+        }
+        if (region != null && !region.isBlank()) {
+            appendParameter(builder, region, "region");
+        }
+        if (uri != null && !uri.isBlank()) {
+            appendParameter(builder, uri, "resourceRef");
+        }
+        if (builder.length() > 0)
+            return builder.toString();
+        return null;
+    }
+
+    private static void appendParameter(StringBuilder input, String param, String paramName) {
+        if (param != null && !param.isBlank()) {
+            if (input.length() > 0) {
+                input.append(" ");
+            }
+            input.append(paramName).append(":").append(param);
+        }
+    }
+
     enum Visibility {
         hidden, visible, all
+    }
+
+    DataLinksFetchStatus checkDataLinksFetchStatus(Long wspId, String credentialsId) {
+        int status = 0;
+        try {
+            status = api().listDataLinksWithHttpInfo(wspId, credentialsId, null, 1, 0, null).getStatusCode();
+        } catch (ApiException e) {
+            return DataLinksFetchStatus.ERROR;
+        }
+        switch (status) {
+            case 200:
+                return DataLinksFetchStatus.DONE;
+            case 202:
+                return DataLinksFetchStatus.FETCHING;
+            default:
+                return DataLinksFetchStatus.ERROR;
+        }
+    }
+
+    public enum DataLinksFetchStatus {
+        FETCHING, DONE, ERROR
     }
 }

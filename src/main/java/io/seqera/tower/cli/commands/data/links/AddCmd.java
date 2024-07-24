@@ -18,11 +18,14 @@
 package io.seqera.tower.cli.commands.data.links;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.data.DataLinkView;
 import io.seqera.tower.cli.utils.data.DataLinkProvider;
+import io.seqera.tower.model.DataLinkCreateRequest;
 import io.seqera.tower.model.DataLinkDto;
+import io.seqera.tower.model.DataLinkType;
 import picocli.CommandLine;
 
 import java.io.IOException;
@@ -32,7 +35,7 @@ import java.util.Objects;
         name = "add",
         description = "Add custom data link."
 )
-public class AddCmd extends AbstractDataLinksCmd {
+public class AddCmd extends AbstractApiCmd {
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
@@ -65,5 +68,24 @@ public class AddCmd extends AbstractDataLinksCmd {
 
         return new DataLinkView(created, "Data link created");
     }
+
+    DataLinkDto addDataLink(Long wspId, String name, String description, String url, String provider, String credsId) throws ApiException {
+        DataLinkCreateRequest req = new DataLinkCreateRequest();
+        req.name(name);
+        req.description(description);
+        req.resourceRef(url);
+        req.type(DataLinkType.BUCKET);
+        req.provider(io.seqera.tower.model.DataLinkProvider.fromValue(provider.toLowerCase()));
+
+        if (Objects.isNull(credsId)) {
+            req.publicAccessible(true);
+        } else {
+            req.publicAccessible(false);
+            req.credentialsId(credsId);
+        }
+
+        return api().createCustomDataLink(req, wspId);
+    }
+
 
 }

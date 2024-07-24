@@ -18,6 +18,7 @@
 package io.seqera.tower.cli.commands.data.links;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.data.DataLinkDeleted;
@@ -29,7 +30,7 @@ import java.io.IOException;
         name = "delete",
         description = "Delete custom data link."
 )
-public class DeleteCmd extends AbstractDataLinksCmd {
+public class DeleteCmd extends AbstractApiCmd {
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;

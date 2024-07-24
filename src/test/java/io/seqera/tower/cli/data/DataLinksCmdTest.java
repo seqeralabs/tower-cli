@@ -22,7 +22,7 @@ package io.seqera.tower.cli.data;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
-import io.seqera.tower.cli.commands.data.links.AbstractDataLinksCmd;
+import io.seqera.tower.cli.commands.data.links.ListCmd;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.responses.data.DataLinkDeleted;
 import io.seqera.tower.cli.responses.data.DataLinksList;
@@ -54,7 +54,7 @@ public class DataLinksCmdTest extends BaseCmdTest {
             ";;;;"
     })
     void testBuildingSearchParameter(String name, String providers, String region, String uri, String expected) {
-        String result = AbstractDataLinksCmd.buildSearch(name, providers, region, uri);
+        String result = ListCmd.buildSearch(name, providers, region, uri);
         assertEquals(result, expected);
     }
 

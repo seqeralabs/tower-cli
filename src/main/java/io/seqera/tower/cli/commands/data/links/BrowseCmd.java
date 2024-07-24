@@ -18,6 +18,7 @@
 package io.seqera.tower.cli.commands.data.links;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.data.DataLinkContentList;
@@ -31,7 +32,7 @@ import java.io.IOException;
         name = "browse",
         description = "Browse content of data link."
 )
-public class BrowseCmd extends AbstractDataLinksCmd {
+public class BrowseCmd extends AbstractApiCmd {
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
