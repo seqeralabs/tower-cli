@@ -20,6 +20,8 @@ package io.seqera.tower.cli.commands.data.links;
 import io.seqera.tower.cli.utils.data.DataLinkProvider;
 import picocli.CommandLine;
 
+import java.util.List;
+
 public class SearchOption {
 
     @CommandLine.Option(names = {"-n", "--name"}, description = "Show only data links with names that start with the given word.")
@@ -29,7 +31,7 @@ public class SearchOption {
     public String region;
 
     @CommandLine.Option(names = {"-p", "--providers"}, description = "Show only data links belonging to given providers. [aws,azure,google]")
-    public DataLinkProvider providers;
+    public List<DataLinkProvider> providers;
 
     @CommandLine.Option(names = {"-u", "--uri"}, description = "Show only data links with URI (resource reference) that start with the given URI.")
     public String uri;

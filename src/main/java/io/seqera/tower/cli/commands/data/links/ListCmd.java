@@ -26,11 +26,13 @@ import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.data.DataLinksList;
 import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.cli.utils.ResponseHelper;
+import io.seqera.tower.cli.utils.data.DataLinkProvider;
 import io.seqera.tower.model.DataLinksListResponse;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
 import java.io.IOException;
+import java.util.List;
 
 @Command(
         name = "list",
@@ -63,7 +65,7 @@ public class ListCmd extends AbstractApiCmd {
         Integer max = PaginationOptions.getMax(paginationOptions);
         Integer offset = PaginationOptions.getOffset(paginationOptions, max);
         Long wspId = workspaceId(workspace.workspace);
-        String provider = searchOption.providers == null ? null : searchOption.providers.toString();
+        String provider = searchOption.providers == null ? null : formatProviders(searchOption.providers);
         String search = buildSearch(searchOption.startsWith, provider, searchOption.region, searchOption.uri);
         String visibility = visibilityOption == null ? null : visibilityOption.toString();
 
@@ -91,6 +93,20 @@ public class ListCmd extends AbstractApiCmd {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static String formatProviders(List<DataLinkProvider> providers) {
+        if (providers == null || providers.isEmpty()) {
+            return null;
+        }
+        StringBuilder builder = new StringBuilder();
+        for (DataLinkProvider provider : providers) {
+            if (builder.length() > 0) {
+                builder.append(",");
+            }
+            builder.append(provider);
+        }
+        return builder.toString();
     }
 
     public static String buildSearch(String name, String providers, String region, String uri) {
