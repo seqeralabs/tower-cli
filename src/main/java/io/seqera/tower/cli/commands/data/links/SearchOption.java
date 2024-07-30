@@ -30,7 +30,7 @@ public class SearchOption {
     @CommandLine.Option(names = {"-r", "--region"}, description = "Show only data links belonging to given region")
     public String region;
 
-    @CommandLine.Option(names = {"-p", "--providers"}, description = "Show only data links belonging to given providers. [aws,azure,google]")
+    @CommandLine.Option(names = {"-p", "--providers"}, description = "Show only data links belonging to given providers. [aws,azure,google]", split = ",")
     public List<DataLinkProvider> providers;
 
     @CommandLine.Option(names = {"-u", "--uri"}, description = "Show only data links with URI (resource reference) that start with the given URI.")
