@@ -59,13 +59,14 @@ public class BrowseCmd extends AbstractApiCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
-        DataLinkDto dataLink = api().describeDataLink(id, wspId, credentialsRef).getDataLink();
+        String credId = credentialsRef != null ? credentialsByRef(null, wspId, credentialsRef) : null;
+        DataLinkDto dataLink = api().describeDataLink(id, wspId, credId).getDataLink();
         DataLinkContentResponse response;
 
         if (path != null)
-            response = api().exploreDataLink1(id, path, wspId, credentialsRef, startsWith, nextPageToken, page);
+            response = api().exploreDataLink1(id, path, wspId, credId, startsWith, nextPageToken, page);
         else
-            response = api().exploreDataLink(id, wspId, credentialsRef, startsWith, nextPageToken, page);
+            response = api().exploreDataLink(id, wspId, credId, startsWith, nextPageToken, page);
 
         return new DataLinkContentList(dataLink, path, response.getObjects(), response.getNextPageToken());
     }

@@ -53,7 +53,8 @@ public class UpdateCmd extends AbstractApiCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
-        DataLinkDto updated = updateDataLink(wspId, id, name, description, credentialsRef);
+        String credId = credentialsRef != null ? credentialsByRef(null, wspId, credentialsRef) : null;
+        DataLinkDto updated = updateDataLink(wspId, id, name, description, credId);
 
         if (Objects.isNull(updated)) {
             app().getOut().println("Data link update failed.");

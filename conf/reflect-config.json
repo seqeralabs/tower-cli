@@ -2460,13 +2460,15 @@
   "name":"io.seqera.tower.model.DataLinkContentResponse",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"addObjectsItem","parameterTypes":["io.seqera.tower.model.DataLinkItem"] }, {"name":"getObjects","parameterTypes":[] }, {"name":"getOriginalPath","parameterTypes":[] }, {"name":"nextPageToken","parameterTypes":["java.lang.String"] }, {"name":"objects","parameterTypes":["java.util.List"] }, {"name":"originalPath","parameterTypes":["java.lang.String"] }, {"name":"setObjects","parameterTypes":["java.util.List"] }, {"name":"setOriginalPath","parameterTypes":["java.lang.String"] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"addObjectsItem","parameterTypes":["io.seqera.tower.model.DataLinkItem"] }, {"name":"getObjects","parameterTypes":[] }, {"name":"getOriginalPath","parameterTypes":[] }, {"name":"nextPageToken","parameterTypes":["java.lang.String"] }, {"name":"objects","parameterTypes":["java.util.List"] }, {"name":"originalPath","parameterTypes":["java.lang.String"] }, {"name":"setNextPageToken","parameterTypes":["java.lang.String"] }, {"name":"setObjects","parameterTypes":["java.util.List"] }, {"name":"setOriginalPath","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.model.DataLinkCreateRequest",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"fromValue","parameterTypes":["java.lang.String"] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"fromValue","parameterTypes":["java.lang.String"] }, {"name":"getCredentialsId","parameterTypes":[] }, {"name":"getDescription","parameterTypes":[] }, {"name":"getName","parameterTypes":[] }, {"name":"getProvider","parameterTypes":[] }, {"name":"getPublicAccessible","parameterTypes":[] }, {"name":"getResourceRef","parameterTypes":[] }, {"name":"getType","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.DataLinkCredentials",
@@ -2486,7 +2488,8 @@
   "name":"io.seqera.tower.model.DataLinkItem",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"fromValue","parameterTypes":["java.lang.String"] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"fromValue","parameterTypes":["java.lang.String"] }, {"name":"setMimeType","parameterTypes":["java.lang.String"] }, {"name":"setName","parameterTypes":["java.lang.String"] }, {"name":"setSize","parameterTypes":["java.lang.Long"] }, {"name":"setType","parameterTypes":["io.seqera.tower.model.DataLinkItemType"] }]
 },
 {
   "name":"io.seqera.tower.model.DataLinkItemType",
@@ -2498,13 +2501,14 @@
   "name":"io.seqera.tower.model.DataLinkProvider",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"fromValue","parameterTypes":["java.lang.String"] }]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"fromValue","parameterTypes":["java.lang.String"] }, {"name":"getValue","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.DataLinkResponse",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"fromValue","parameterTypes":["java.lang.String"] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"fromValue","parameterTypes":["java.lang.String"] }, {"name":"setDataLink","parameterTypes":["io.seqera.tower.model.DataLinkDto"] }]
 },
 {
   "name":"io.seqera.tower.model.DataLinkStatus",
@@ -2516,7 +2520,7 @@
   "name":"io.seqera.tower.model.DataLinkType",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"fromValue","parameterTypes":["java.lang.String"] }]
+  "methods":[{"name":"fromValue","parameterTypes":["java.lang.String"] }, {"name":"getValue","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.DataLinkUpdateRequest",

@@ -59,7 +59,8 @@ public class AddCmd extends AbstractApiCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
-        DataLinkDto created = addDataLink(wspId, name, description, url, provider.name(), credentialsRef);
+        String credId = credentialsRef != null ? credentialsByRef(null, wspId, credentialsRef) : null;
+        DataLinkDto created = addDataLink(wspId, name, description, url, provider.name(), credId);
 
         if (Objects.isNull(created)) {
             app().getOut().println("Data link creation failed.");

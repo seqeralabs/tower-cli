@@ -137,27 +137,6 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
         }
     }
 
-    private String credentialsByRef(PlatformEnum type, Long wspId, String credentialsRef) throws ApiException {
-        List<Credentials> credentials = api().listCredentials(wspId, type.getValue()).getCredentials();
-
-        if (credentials.isEmpty()) {
-            throw new TowerException("No valid credentials found at the workspace");
-        }
-
-        Credentials cred;
-
-        cred = credentials.stream()
-                .filter(it -> Objects.equals(it.getId(), credentialsRef) || Objects.equals(it.getName(), credentialsRef))
-                .findFirst()
-                .orElse(null);
-
-        if (cred == null) {
-            throw new TowerException("No valid credentials found at the workspace");
-        }
-
-        return cred.getId();
-    }
-
     private String findWorkspaceCredentials(PlatformEnum type, Long wspId) throws ApiException {
         List<Credentials> credentials = api().listCredentials(wspId, type.getValue()).getCredentials();
         if (credentials.isEmpty()) {
