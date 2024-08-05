@@ -10,7 +10,7 @@
       "region": "us-east-1",
       "credentials": [
         {
-          "id": "3irHXig7k3TG3mKRnFR75e",
+          "id": "57Ic6reczFn78H1DTaaXkp",
           "name": "aws",
           "provider": "aws"
         }
@@ -30,7 +30,7 @@
       "region": "us-east-1",
       "credentials": [
         {
-          "id": "3irHXig7k3TG3mKRnFR75e",
+          "id": "57Ic6reczFn78H1DTaaXkp",
           "name": "aws",
           "provider": "aws"
         }
@@ -50,7 +50,7 @@
       "region": "us-west-2",
       "credentials": [
         {
-          "id": "3irHXig7k3TG3mKRnFR75e",
+          "id": "57Ic6reczFn78H1DTaaXkp",
           "name": "aws",
           "provider": "aws"
         }

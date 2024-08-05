@@ -61,6 +61,12 @@ public class DataLinksCmdTest extends BaseCmdTest {
     @ParameterizedTest
     @EnumSource(OutputType.class)
     void testList(OutputType format, MockServerClient mock) throws JsonProcessingException {
+        // credentials fetch
+        mock.when(
+                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"57Ic6reczFn78H1DTaaXkp\",\"name\":\"aws\",\"description\":null,\"discriminator\":\"aws\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-09T07:20:53Z\",\"dateCreated\":\"2021-09-08T05:48:51Z\",\"lastUpdated\":\"2021-09-08T05:48:51Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
         // status check
         mock.when(
                 request()
@@ -114,7 +120,7 @@ public class DataLinksCmdTest extends BaseCmdTest {
                                 "      \"region\": \"us-east-1\",\n" +
                                 "      \"credentials\": [\n" +
                                 "        {\n" +
-                                "          \"id\": \"3irHXig7k3TG3mKRnFR75e\",\n" +
+                                "          \"id\": \"57Ic6reczFn78H1DTaaXkp\",\n" +
                                 "          \"name\": \"aws\",\n" +
                                 "          \"provider\": \"aws\"\n" +
                                 "        }\n" +
@@ -134,7 +140,7 @@ public class DataLinksCmdTest extends BaseCmdTest {
                                 "      \"region\": \"us-east-1\",\n" +
                                 "      \"credentials\": [\n" +
                                 "        {\n" +
-                                "          \"id\": \"3irHXig7k3TG3mKRnFR75e\",\n" +
+                                "          \"id\": \"57Ic6reczFn78H1DTaaXkp\",\n" +
                                 "          \"name\": \"aws\",\n" +
                                 "          \"provider\": \"aws\"\n" +
                                 "        }\n" +
@@ -154,7 +160,7 @@ public class DataLinksCmdTest extends BaseCmdTest {
                                 "      \"region\": \"us-west-2\",\n" +
                                 "      \"credentials\": [\n" +
                                 "        {\n" +
-                                "          \"id\": \"3irHXig7k3TG3mKRnFR75e\",\n" +
+                                "          \"id\": \"57Ic6reczFn78H1DTaaXkp\",\n" +
                                 "          \"name\": \"aws\",\n" +
                                 "          \"provider\": \"aws\"\n" +
                                 "        }\n" +
@@ -180,7 +186,7 @@ public class DataLinksCmdTest extends BaseCmdTest {
                 "      \"region\": \"us-east-1\",\n" +
                 "      \"credentials\": [\n" +
                 "        {\n" +
-                "          \"id\": \"3irHXig7k3TG3mKRnFR75e\",\n" +
+                "          \"id\": \"57Ic6reczFn78H1DTaaXkp\",\n" +
                 "          \"name\": \"aws\",\n" +
                 "          \"provider\": \"aws\"\n" +
                 "        }\n" +
@@ -190,7 +196,13 @@ public class DataLinksCmdTest extends BaseCmdTest {
                 "      \"status\": null,\n" +
                 "      \"message\": null\n" +
                 "    }";
-        DataLinkDto link = parseJson(json, DataLinkDto.class);
+
+        // credentials fetch
+        mock.when(
+                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"57Ic6reczFn78H1DTaaXkp\",\"name\":\"aws\",\"description\":null,\"discriminator\":\"aws\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-09T07:20:53Z\",\"dateCreated\":\"2021-09-08T05:48:51Z\",\"lastUpdated\":\"2021-09-08T05:48:51Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
         // status check
         mock.when(
                 request()
@@ -246,6 +258,12 @@ public class DataLinksCmdTest extends BaseCmdTest {
     @ParameterizedTest
     @EnumSource(OutputType.class)
     void testAdd(OutputType format, MockServerClient mock) throws JsonProcessingException {
+        // credentials fetch
+        mock.when(
+                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"57Ic6reczFn78H1DTaaXkp\",\"name\":\"aws\",\"description\":null,\"discriminator\":\"aws\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-09T07:20:53Z\",\"dateCreated\":\"2021-09-08T05:48:51Z\",\"lastUpdated\":\"2021-09-08T05:48:51Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
         // status check
         mock.when(
                 request()
@@ -311,6 +329,12 @@ public class DataLinksCmdTest extends BaseCmdTest {
     @ParameterizedTest
     @EnumSource(OutputType.class)
     void testUpdate(OutputType format, MockServerClient mock) {
+        // credentials fetch
+        mock.when(
+                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"57Ic6reczFn78H1DTaaXkp\",\"name\":\"aws\",\"description\":null,\"discriminator\":\"aws\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-09T07:20:53Z\",\"dateCreated\":\"2021-09-08T05:48:51Z\",\"lastUpdated\":\"2021-09-08T05:48:51Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
         // status check
         mock.when(
                 request()
@@ -355,6 +379,12 @@ public class DataLinksCmdTest extends BaseCmdTest {
     @ParameterizedTest
     @EnumSource(OutputType.class)
     void testBrowse(OutputType format, MockServerClient mock) {
+        // credentials fetch
+        mock.when(
+                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"57Ic6reczFn78H1DTaaXkp\",\"name\":\"aws\",\"description\":null,\"discriminator\":\"aws\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-09T07:20:53Z\",\"dateCreated\":\"2021-09-08T05:48:51Z\",\"lastUpdated\":\"2021-09-08T05:48:51Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
         mock.when(
                 request()
                         .withMethod("GET").withPath("/data-links/v1-somedatalinkid")
