@@ -559,7 +559,7 @@ $ tw data-links delete -w seqeralabs/showcase -i v1-user-152116183ee325463901430
 
 ### Browse the contents of a data link
 
-Run `tw data-links browse -h` to view all the required and optional fields for browsing a data link in a workspace. Define the data link id using the required `-i` or `--id` argument, which can be found by first using the `list` operation for a workspace:
+Run `tw data-links browse -h` to view all the required and optional fields for browsing a data link in a workspace. Define the data link id using the required `-i` or `--id` argument, which can be found by first using the `list` operation for a workspace. In the example below, a `name` is optionally defined to only retrieve data links with names that start with the given word:
 
 ```console
 $ tw data-links list -w seqeralabs/showcase -n 1000genomes
