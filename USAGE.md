@@ -513,7 +513,7 @@ $ tw data-links list -w seqeralabs/showcase
 
 <snip>
 
-  v1-user-bb4fa9625a44721510c47ac1cb97905b | aws      | genome-in-a-bottle             | s3://giab                                                       | us-east-1 
+ v1-user-bb4fa9625a44721510c47ac1cb97905b | aws      | genome-in-a-bottle             | s3://giab                                                       | us-east-1 
  v1-user-e7bf26921ba74032bd6ae1870df381fc | aws      | NCBI_Sequence_Read_Archive_SRA | s3://sra-pub-src-1/                                             | us-east-1 
 
   Showing from 0 to 99 from a total of 16 entries. 
