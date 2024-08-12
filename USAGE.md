@@ -514,7 +514,7 @@ $ tw data-links list -w seqeralabs/showcase
  v1-cloud-60700a33ec3fae68d424cf948fa8d10c | aws     | nf-tower-bucket                | s3://nf-tower-bucket                                            | eu-west-1 
  v1-user-09705781697816b62f9454bc4b9434b4  | aws     | vscode-analysis-demo           | s3://seqera-development-permanent-bucket/studios-demo/vscode/   | eu-west-2 
  v1-user-0dede00fabbc4b9e2610261822a2d6ae  | aws     | seqeralabs-showcase            | s3://seqeralabs-showcase                                        | eu-west-1 
- v1-user-171aa8801cabe4af71500335f193d649  | aws     | projectA-rnaseq-analysis       | s3://seqeralabs-showcase/demo/nf-core-rnaseq/                    | eu-west-1 
+ v1-user-171aa8801cabe4af71500335f193d649  | aws     | projectA-rnaseq-analysis       | s3://seqeralabs-showcase/demo/nf-core-rnaseq/                   | eu-west-1 
 
 <snip>
 
