@@ -488,7 +488,7 @@ $ tw  participants update --name=collaborator@mydomain.com --type=COLLABORATOR -
 
 Run `tw data-links -h` to view supported data link operations.  
 
-Data links allow you to work with public and private cloud storage buckets in Data Explorer in the specified workspace. See [Data Explorer][data-explorer] for more information. AWS S3, Azure Blob Storage, and Google Cloud Storage repositories are supported. The full list of operations are:
+Data links allow you to work with public and private cloud storage buckets in Data Explorer in the specified workspace. See [Data Explorer][data-explorer] for more information. AWS S3, Azure Blob Storage, and Google Cloud Storage are supported. The full list of operations are:
 
 - `list`: List data links in a workspace
 - `add`: Add a custom data link to a workspace
@@ -498,7 +498,10 @@ Data links allow you to work with public and private cloud storage buckets in Da
 
 ### List data links
 
-Run `tw data-links list -h` to view all the optional fields for listing data links in a workspace. If a workspace is not defined, the `TOWER_WORKSPACE_ID` workspace is used by default.
+Run `tw data-links list -h` to view all the optional fields for listing data links in a workspace. If a workspace is not defined, the `TOWER_WORKSPACE_ID` workspace is used by default. Data links can be one of two types:
+
+- `v1-cloud-<id>`: **cloud** data links auto-discovered using credentials attached to the workspace
+- `v1-user-<id>`: **custom** data links created by users
 
 ```console
 $ tw data-links list -w seqeralabs/showcase
@@ -507,9 +510,11 @@ $ tw data-links list -w seqeralabs/showcase
 
  ID                                       | Provider | Name                           | Resource ref                                                    | Region    
 ------------------------------------------+----------+--------------------------------+-----------------------------------------------------------------+-----------
- v1-user-09705781697816b62f9454bc4b9434b4 | aws      | vscode-analysis-demo           | s3://seqera-development-permanent-bucket/studios-demo/vscode/   | eu-west-2 
+ v1-cloud-833bb845bd9ec1970c4a7b0bb7b8c4ad | aws     | e2e-data-explorer-tests-aws    | s3://e2e-data-explorer-tests-aws                                | eu-west-2 
+ v1-cloud-60700a33ec3fae68d424cf948fa8d10c | aws     | nf-tower-bucket                | s3://nf-tower-bucket                                            | eu-west-1 
+ v1-user-09705781697816b62f9454bc4b9434b4 | aws      | vscode-analysis-demo           | s3://seqera-development-permanent-bucket/studios-demo/vscode/                                       | eu-west-2 
  v1-user-0dede00fabbc4b9e2610261822a2d6ae | aws      | seqeralabs-showcase            | s3://seqeralabs-showcase                                        | eu-west-1 
- v1-user-171aa8801cabe4af71500335f193d649 | aws      | projectA-rnaseq-analysis       | s3://seqeralabs-showcase/demo/nf-core-rnaseq/                   | eu-west-1 
+ v1-user-171aa8801cabe4af71500335f193d649 | aws      | projectA-rnaseq-analysis       | s3://seqeralabs-showcase/demo/nf-core-rnaseq/                                            | eu-west-1 
 
 <snip>
 
