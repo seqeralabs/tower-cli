@@ -168,8 +168,8 @@ public class LaunchCmd extends AbstractRootCmd {
                 .optimizationTargets(coalesce(adv().disableOptimization, false) ? null : base.getOptimizationTargets())
                 .labelIds(base.getLabelIds())
                 .headJobCpus(base.getHeadJobCpus())
-                .headJobMemoryMb(base.getHeadJobMemoryMb()
-                .launchContainer(launchContainer));
+                .headJobMemoryMb(base.getHeadJobMemoryMb())
+                .launchContainer(launchContainer);
     }
 
     protected Response runTowerPipeline(Long wspId) throws ApiException, IOException {
