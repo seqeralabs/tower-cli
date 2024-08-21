@@ -104,7 +104,7 @@ public class LaunchCmd extends AbstractRootCmd {
     @Option(names = {"-l", "--labels"}, split = ",", description = "Comma-separated list of labels for the pipeline.")
     List<String> labels;
 
-    @Option(names = {"--launch-container"}, split = ",", description = "Container to be used to run the nextflow head job.")
+    @Option(names = {"--launch-container"}, description = "Container to be used to run the nextflow head job.")
     List<String> launchContainer;
 
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
