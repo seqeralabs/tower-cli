@@ -3272,12 +3272,6 @@
   "methods":[{"name":"fromValue","parameterTypes":["java.lang.String"] }]
 },
 {
-  "name":"io.seqera.tower.model.GoogleBatchConfig",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"getNextflowConfig","parameterTypes":[] }]
-},
-{
   "name":"java.io.Console",
   "methods":[{"name":"readPassword","parameterTypes":["java.lang.String","java.lang.Object[]"] }]
 },
