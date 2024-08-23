@@ -104,6 +104,9 @@ public class LaunchCmd extends AbstractRootCmd {
     @Option(names = {"-l", "--labels"}, split = ",", description = "Comma-separated list of labels for the pipeline.")
     List<String> labels;
 
+    @Option(names = {"--launch-container"}, description = "Container to be used to run the nextflow head job (BETA).")
+    String launchContainer;
+
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
     AdvancedOptions adv;
 
@@ -165,7 +168,8 @@ public class LaunchCmd extends AbstractRootCmd {
                 .optimizationTargets(coalesce(adv().disableOptimization, false) ? null : base.getOptimizationTargets())
                 .labelIds(base.getLabelIds())
                 .headJobCpus(base.getHeadJobCpus())
-                .headJobMemoryMb(base.getHeadJobMemoryMb());
+                .headJobMemoryMb(base.getHeadJobMemoryMb())
+                .launchContainer(launchContainer);
     }
 
     protected Response runTowerPipeline(Long wspId) throws ApiException, IOException {
