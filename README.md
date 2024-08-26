@@ -111,6 +111,7 @@ tw -Djavax.net.ssl.trustStore=/absolute/path/to/cacerts info
 ```
 
 You can also set the trustStore's password in case you are not using the default password which is `changeit`:
+
 ```bash
 tw -Djavax.net.ssl.trustStore=<path_to_user_keystore> -Djavax.net.ssl.trustStorePassword=<yourPassword> info
 ```
