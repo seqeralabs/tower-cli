@@ -110,6 +110,11 @@ If you are using a Private CA SSL certificate not recognized by the default Java
 tw -Djavax.net.ssl.trustStore=/absolute/path/to/cacerts info
 ```
 
+You can also set the trustStore's password in case you are not using the default password which is `changeit`:
+```bash
+tw -Djavax.net.ssl.trustStore=<path_to_user_keystore> -Djavax.net.ssl.trustStorePassword=<yourPassword> info
+```
+
 You can rename the binary to `tw-binary` and create a `tw` script to automatically include the custom `cacerts` store in every session:
 
 ```bash
