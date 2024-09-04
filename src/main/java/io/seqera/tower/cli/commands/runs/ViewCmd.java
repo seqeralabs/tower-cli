@@ -145,15 +145,17 @@ public class ViewCmd extends AbstractRunsCmd {
             Map<String, Object> stats = new HashMap<>();
             if (opts.stats) {
                 stats.put("wallTime", TimeUnit.MILLISECONDS.toSeconds(workflow.getDuration()) / 60D);
-                stats.put("cpuTime", TimeUnit.MILLISECONDS.toMinutes(progress.getWorkflowProgress().getCpuTime()) / 60D);
-                stats.put("totalMemory", progress.getWorkflowProgress().getMemoryRss() / 1024 / 1024 / 1024D);
-                stats.put("read", progress.getWorkflowProgress().getReadBytes() / 1024 / 1024 / 1024D);
-                stats.put("write", progress.getWorkflowProgress().getWriteBytes() / 1024 / 1024 / 1024D);
-                stats.put("cost", progress.getWorkflowProgress().getCost());
+                if(progress.getWorkflowProgress() != null) {
+                    stats.put("cpuTime", TimeUnit.MILLISECONDS.toMinutes(progress.getWorkflowProgress().getCpuTime()) / 60D);
+                    stats.put("totalMemory", progress.getWorkflowProgress().getMemoryRss() / 1024 / 1024 / 1024D);
+                    stats.put("read", progress.getWorkflowProgress().getReadBytes() / 1024 / 1024 / 1024D);
+                    stats.put("write", progress.getWorkflowProgress().getWriteBytes() / 1024 / 1024 / 1024D);
+                    stats.put("cost", progress.getWorkflowProgress().getCost());
+                }
             }
 
             Map<String, Object> load = new HashMap<>();
-            if (opts.load) {
+            if (opts.load && progress.getWorkflowProgress() != null) {
                 load.put("peakCpus", progress.getWorkflowProgress().getPeakCpus());
                 load.put("loadCpus", progress.getWorkflowProgress().getLoadCpus());
                 load.put("peakTasks", progress.getWorkflowProgress().getPeakTasks());
@@ -161,7 +163,7 @@ public class ViewCmd extends AbstractRunsCmd {
             }
 
             Map<String, Object> utilization = new HashMap<>();
-            if (opts.utilization) {
+            if (opts.utilization && progress.getWorkflowProgress() != null) {
                 utilization.put("memoryEfficiency", progress.getWorkflowProgress().getMemoryEfficiency());
                 utilization.put("cpuEfficiency", progress.getWorkflowProgress().getCpuEfficiency());
             }
