@@ -203,7 +203,7 @@ $ tw launch my_rnaseq_nf_pipeline
 
   Workflow 1XCXxX0vCX8xhx submitted at user workspace.
 
-    https://tower.nf/user/abhinav/watch/1XCXxX0vCX8xhx
+    https://cloud.seqera.io/user/abhinav/watch/1XCXxX0vCX8xhx
 ```
 
 When using `--wait`, `tw` can exit with one of two exit codes:
@@ -222,7 +222,7 @@ $ tw launch my_rnaseq_nf_pipeline --params-file=my_rnaseq_nf_pipeline_params_2.y
 
   Workflow 2XDXxX0vCX8xhx submitted at user workspace.
 
-    https://tower.nf/user/abhinav/watch/2XDXxX0vCX8xhx
+    https://cloud.seqera.io/user/abhinav/watch/2XDXxX0vCX8xhx
 ```
 
 See [Nextflow configuration][nextflow-config] for more information.
@@ -236,7 +236,7 @@ $ tw launch https://github.com/nf-core/rnaseq --params-file=./custom_rnaseq_para
 
   Workflow 2XDXxX0vCX8xhx submitted at user workspace.
 
-    https://tower.nf/user/abhinav/watch/2XDXxX0vCX8xhx
+    https://cloud.seqera.io/user/abhinav/watch/2XDXxX0vCX8xhx
 ```
 
 - Pipeline parameters are defined within the `custom_rnaseq_params.yaml` file.
