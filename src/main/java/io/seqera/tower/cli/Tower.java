@@ -82,7 +82,7 @@ public class Tower extends AbstractCmd {
     @Option(names = {"-t", "--access-token"}, description = "Tower personal access token (TOWER_ACCESS_TOKEN).", defaultValue = "${TOWER_ACCESS_TOKEN}")
     public String token;
 
-    @Option(names = {"-u", "--url"}, description = "Tower server API endpoint URL (TOWER_API_ENDPOINT) [default: 'tower.nf'].", defaultValue = "${TOWER_API_ENDPOINT:-https://api.tower.nf}")
+    @Option(names = {"-u", "--url"}, description = "Tower server API endpoint URL (TOWER_API_ENDPOINT) [default: 'api.cloud.seqera.io'].", defaultValue = "${TOWER_API_ENDPOINT:-https://api.cloud.seqera.io}")
     public String url;
 
     @Option(names = {"-o", "--output"}, description = "Show output in defined format (only the 'json' option is available at the moment).", defaultValue = "${TOWER_CLI_OUTPUT_FORMAT:-console}")
