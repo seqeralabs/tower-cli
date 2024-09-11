@@ -90,7 +90,7 @@ Uploading local `bin` scripts folder to s3://nextflow-ci/scratch/wzV8gF5Nh6QO8/t
 WARN: Process 'NFCORE_RNASEQ:RNASEQ:MULTIQC_TSV_FAIL_MAPPED' cannot be executed by 'awsbatch' executor -- Using 'local' executor instead
 WARN: Local executor only supports default file system -- Check work directory: s3://nextflow-ci/scratch/wzV8gF5Nh6QO8
 WARN: Process 'NFCORE_RNASEQ:RNASEQ:MULTIQC_TSV_STRAND_CHECK' cannot be executed by 'awsbatch' executor -- Using 'local' executor instead
-Monitor the execution with Nextflow Tower using this url https://tower.nf/orgs/seqeralabs/workspaces/verified-pipelines/watch/wzV8gF5Nh6QO8
+Monitor the execution with Nextflow Tower using this url https://cloud.seqera.io/orgs/seqeralabs/workspaces/verified-pipelines/watch/wzV8gF5Nh6QO8
 [9f/17b790] Submitted process > NFCORE_RNASEQ:RNASEQ:PREPARE_GENOME:UNTAR_SALMON_INDEX (salmon.tar.gz)
 [58/ed03ae] Submitted process > NFCORE_RNASEQ:RNASEQ:INPUT_CHECK:SAMPLESHEET_CHECK (samplesheet_test.csv)
 [a1/ff94c7] Submitted process > NFCORE_RNASEQ:RNASEQ:PREPARE_GENOME:GUNZIP_GTF (genes.gtf.gz)
