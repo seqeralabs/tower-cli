@@ -175,4 +175,4 @@ Run a non-binary development version by executing the [`./tw`](tw) script in the
 
 ## License
 
-[Mozilla Public License v2.0](https://github.com/seqeralabs/tower-cli/blob/master/LICENSE.txt)
+[Apache 2.0](https://github.com/seqeralabs/tower-cli/blob/master/LICENSE.txt)

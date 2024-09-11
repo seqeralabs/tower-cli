@@ -66,7 +66,7 @@ public abstract class AbstractCredentialsCmd extends AbstractApiCmd {
     }
 
     protected void deleteCredentialsById(String id, Long wspId) throws CredentialsNotFoundException, ApiException {
-        api().deleteCredentials(id, wspId);
+        api().deleteCredentials(id, wspId, false);
     }
 
 }
