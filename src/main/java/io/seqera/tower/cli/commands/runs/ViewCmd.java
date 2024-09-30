@@ -58,7 +58,6 @@ import static io.seqera.tower.cli.utils.FormatHelper.formatLabels;
 )
 public class ViewCmd extends AbstractRunsCmd {
 
-    private static final Logger log = LoggerFactory.getLogger(ViewCmd.class);
     @CommandLine.Option(names = {"-i", "--id"}, description = "Pipeline run identifier.", required = true)
     public String id;
 
