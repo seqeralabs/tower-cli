@@ -33,8 +33,6 @@ import io.seqera.tower.model.ProgressData;
 import io.seqera.tower.model.Workflow;
 import io.seqera.tower.model.WorkflowLoad;
 import io.seqera.tower.model.WorkflowQueryAttribute;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 
 import java.util.ArrayList;
