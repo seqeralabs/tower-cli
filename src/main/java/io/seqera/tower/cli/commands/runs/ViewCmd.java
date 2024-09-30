@@ -33,6 +33,8 @@ import io.seqera.tower.model.ProgressData;
 import io.seqera.tower.model.Workflow;
 import io.seqera.tower.model.WorkflowLoad;
 import io.seqera.tower.model.WorkflowQueryAttribute;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 
 import java.util.ArrayList;
@@ -56,6 +58,7 @@ import static io.seqera.tower.cli.utils.FormatHelper.formatLabels;
 )
 public class ViewCmd extends AbstractRunsCmd {
 
+    private static final Logger log = LoggerFactory.getLogger(ViewCmd.class);
     @CommandLine.Option(names = {"-i", "--id"}, description = "Pipeline run identifier.", required = true)
     public String id;
 
@@ -144,7 +147,8 @@ public class ViewCmd extends AbstractRunsCmd {
 
             Map<String, Object> stats = new HashMap<>();
             if (opts.stats) {
-                stats.put("wallTime", TimeUnit.MILLISECONDS.toSeconds(workflow.getDuration()) / 60D);
+                if( workflow.getDuration() != null )
+                    stats.put("wallTime", TimeUnit.MILLISECONDS.toSeconds(workflow.getDuration()) / 60D);
                 if(progress.getWorkflowProgress() != null) {
                     stats.put("cpuTime", TimeUnit.MILLISECONDS.toMinutes(progress.getWorkflowProgress().getCpuTime()) / 60D);
                     stats.put("totalMemory", progress.getWorkflowProgress().getMemoryRss() / 1024 / 1024 / 1024D);
