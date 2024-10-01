@@ -144,7 +144,8 @@ public class ViewCmd extends AbstractRunsCmd {
 
             Map<String, Object> stats = new HashMap<>();
             if (opts.stats) {
-                stats.put("wallTime", TimeUnit.MILLISECONDS.toSeconds(workflow.getDuration()) / 60D);
+                if( workflow.getDuration() != null )
+                    stats.put("wallTime", TimeUnit.MILLISECONDS.toSeconds(workflow.getDuration()) / 60D);
                 if(progress.getWorkflowProgress() != null) {
                     stats.put("cpuTime", TimeUnit.MILLISECONDS.toMinutes(progress.getWorkflowProgress().getCpuTime()) / 60D);
                     stats.put("totalMemory", progress.getWorkflowProgress().getMemoryRss() / 1024 / 1024 / 1024D);
