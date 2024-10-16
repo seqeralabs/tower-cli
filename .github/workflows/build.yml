@@ -83,7 +83,7 @@ jobs:
 
   mac-image:
     name: MAC
-    runs-on: macos-12
+    runs-on: macos-latest-large
     timeout-minutes: 90
 
     steps:
