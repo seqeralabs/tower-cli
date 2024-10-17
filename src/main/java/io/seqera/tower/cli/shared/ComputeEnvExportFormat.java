@@ -129,10 +129,10 @@ public final class ComputeEnvExportFormat {
             return new ComputeEnvExportFormat(cfg, labelDbDtos);
         }
 
-        private static <T> T extractJsonNodeValue(JsonNode root, String nodeName, ObjectMapper mapper) throws JsonProcessingException {
+        private static List<LabelDbDto> extractJsonNodeValue(JsonNode root, String nodeName, ObjectMapper mapper) throws JsonProcessingException {
             JsonNode node = root.get(nodeName);
             if (node != null) {
-                return mapper.readValue(node.toString(), new TypeReference<>() {});
+                return mapper.readValue(node.toString(), new TypeReference<List<LabelDbDto>>() {});
             }
             return null;
         }
