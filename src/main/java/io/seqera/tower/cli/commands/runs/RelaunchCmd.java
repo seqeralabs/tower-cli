@@ -64,6 +64,9 @@ public class RelaunchCmd extends AbstractRunsCmd {
     @Option(names = {"-n", "--name"}, description = "Custom workflow run name")
     public String name;
 
+    @Option(names = {"--launch-container"}, description = "Container to be used to run the nextflow head job (BETA).")
+    public String launchContainer;
+
     @Mixin
     public LaunchOptions opts;
 
@@ -109,7 +112,9 @@ public class RelaunchCmd extends AbstractRunsCmd {
                 .pullLatest(coalesce(opts.pullLatest, launch.getPullLatest()))
                 .stubRun(coalesce(opts.stubRun, launch.getStubRun()))
                 .dateCreated(OffsetDateTime.now())
-                .runName(name);
+                .runName(name)
+                .launchContainer(launchContainer)
+                ;
 
         if (!noResume) {
             workflowLaunchRequest.sessionId(workflow.getSessionId());
