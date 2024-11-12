@@ -269,7 +269,7 @@ class PipelinesCmdTest extends BaseCmdTest {
                         .withBody("{\"pipeline\":{\"pipelineId\":68359275903286,\"name\":\"hello-pipeline\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/nextflow-io/hello\",\"userId\":312,\"userName\":\"andrea-tortorella\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":44406019030987,\"orgName\":\"test-cli-org\",\"workspaceId\":59563405657242,\"workspaceName\":\"SharedWS\",\"visibility\":\"SHARED\",\"deleted\":false,\"lastUpdated\":\"2024-11-12T13:34:06.403300434Z\",\"optimizationId\":null,\"optimizationTargets\":null,\"optimizationStatus\":null,\"labels\":null,\"computeEnv\":null}}")
         );
 
-        ExecOut  out = exec(mock,"--verbose", "pipelines", "update", "--id", "68359275903286", "--workspace", "59563405657242", "--pre-run", tempFile("yyy","pre-run","txt"));
+        ExecOut  out = exec(mock,"pipelines", "update", "--id", "68359275903286", "--workspace", "59563405657242", "--pre-run", tempFile("yyy","pre-run","txt"));
         assertEquals("", out.stdErr);
         assertEquals(0, out.exitCode);
         assertEquals(new PipelinesUpdated("[test-cli-org / SharedWS]", "hello-pipeline").toString(), out.stdOut);
