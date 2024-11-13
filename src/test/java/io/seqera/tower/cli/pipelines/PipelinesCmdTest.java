@@ -221,6 +221,61 @@ class PipelinesCmdTest extends BaseCmdTest {
     }
 
     @Test
+    void testUpdateInSharedWorkspaceWithoutCE(MockServerClient mock) throws IOException {
+
+        mock.reset();
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info")
+        ).respond(
+                response().withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("{\"user\":{\"id\":312,\"userName\":\"user\",\"email\":\"email@seqera.io\",\"firstName\":null,\"lastName\":null,\"organization\":null,\"description\":null,\"avatar\":\"https://avatars.githubusercontent.com/u/118266524?v=4\",\"avatarId\":null,\"notification\":null,\"termsOfUseConsent\":true,\"marketingConsent\":false,\"lastAccess\":\"2024-11-12T13:14:55Z\",\"dateCreated\":\"2023-10-14T08:30:58Z\",\"lastUpdated\":\"2024-11-12T13:14:55Z\",\"deleted\":false,\"trusted\":true,\"options\":{\"githubToken\":\"some\",\"maxRuns\":null,\"hubspotId\":1}},\"needConsent\":false,\"defaultWorkspaceId\":null}\n")
+        );
+
+        mock.when(
+                request().withPath("GET").withPath("/user/312/workspaces")
+        ).respond(
+                response().withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("{\"orgsAndWorkspaces\":[{\"orgId\":44406019030987,\"orgName\":\"test-cli-org\",\"orgLogoUrl\":null,\"workspaceId\":59563405657242,\"workspaceName\":\"SharedWS\",\"workspaceFullName\":\"SharedWS\",\"visibility\":\"SHARED\",\"roles\":[\"owner\"]}]}\n")
+
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines/68359275903286").withQueryStringParameter("workspaceId","59563405657242")
+        ).respond(
+                response().withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("{\"pipeline\":{\"pipelineId\":68359275903286,\"name\":\"hello-pipeline\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/nextflow-io/hello\",\"userId\":312,\"userName\":\"user\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":44406019030987,\"orgName\":\"test-cli-org\",\"workspaceId\":59563405657242,\"workspaceName\":\"SharedWS\",\"visibility\":\"SHARED\",\"deleted\":false,\"lastUpdated\":\"2024-11-12T13:27:32Z\",\"optimizationId\":null,\"optimizationTargets\":null,\"optimizationStatus\":null,\"labels\":null,\"computeEnv\":null}}\n")
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines/68359275903286/launch").withQueryStringParameter("workspaceId","59563405657242")
+        ).respond(
+                response().withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("{\"launch\":{\"id\":\"64nBrwcvM7WYdDRgNvpWrZ\",\"computeEnv\":null,\"pipeline\":\"https://github.com/nextflow-io/hello\",\"workDir\":null,\"revision\":\"master\",\"configText\":null,\"towerConfig\":null,\"paramsText\":null,\"preRunScript\":\"xxx\\n\",\"postRunScript\":null,\"mainScript\":null,\"entryName\":null,\"schemaName\":null,\"resume\":false,\"resumeLaunchId\":null,\"pullLatest\":false,\"stubRun\":false,\"sessionId\":null,\"runName\":null,\"configProfiles\":null,\"userSecrets\":null,\"workspaceSecrets\":null,\"optimizationId\":null,\"optimizationTargets\":null,\"headJobCpus\":null,\"headJobMemoryMb\":null,\"launchContainer\":null,\"dateCreated\":\"2024-11-12T13:16:23Z\",\"lastUpdated\":\"2024-11-12T13:27:32Z\"}}\n")
+
+        );
+        mock.when(
+                request().withMethod("PUT").withPath("/pipelines/68359275903286").withQueryStringParameter("workspaceId","59563405657242")
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("{\"name\":\"hello-pipeline\",\"launch\":{\"pipeline\":\"https://github.com/nextflow-io/hello\",\"revision\":\"master\",\"preRunScript\":\"yyy\",\"pullLatest\":false,\"stubRun\":false}}"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("{\"pipeline\":{\"pipelineId\":68359275903286,\"name\":\"hello-pipeline\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/nextflow-io/hello\",\"userId\":312,\"userName\":\"andrea-tortorella\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":44406019030987,\"orgName\":\"test-cli-org\",\"workspaceId\":59563405657242,\"workspaceName\":\"SharedWS\",\"visibility\":\"SHARED\",\"deleted\":false,\"lastUpdated\":\"2024-11-12T13:34:06.403300434Z\",\"optimizationId\":null,\"optimizationTargets\":null,\"optimizationStatus\":null,\"labels\":null,\"computeEnv\":null}}")
+        );
+
+        ExecOut  out = exec(mock,"pipelines", "update", "--id", "68359275903286", "--workspace", "59563405657242", "--pre-run", tempFile("yyy","pre-run","txt"));
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        assertEquals(new PipelinesUpdated("[test-cli-org / SharedWS]", "hello-pipeline").toString(), out.stdOut);
+    }
+
+    @Test
     void testAdd(MockServerClient mock) throws IOException {
 
         mock.reset();
