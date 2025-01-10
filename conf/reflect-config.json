@@ -1120,6 +1120,29 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.datastudios.AbstractStudiosCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"io.seqera.tower.cli.commands.datastudios.DataStudioRefOptions",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.datastudios.DataStudioRefOptions$DataStudioRef",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.datastudios.ViewCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.global.PaginationOptions",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -2309,7 +2332,7 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getConfig","parameterTypes":[] }, {"name":"getCredentialsId","parameterTypes":[] }, {"name":"getDateCreated","parameterTypes":[] }, {"name":"getDeleted","parameterTypes":[] }, {"name":"getDescription","parameterTypes":[] }, {"name":"getId","parameterTypes":[] }, {"name":"getLabels","parameterTypes":[] }, {"name":"getLastUpdated","parameterTypes":[] }, {"name":"getLastUsed","parameterTypes":[] }, {"name":"getMessage","parameterTypes":[] }, {"name":"getName","parameterTypes":[] }, {"name":"getOrgId","parameterTypes":[] }, {"name":"getPlatform","parameterTypes":[] }, {"name":"getPrimary","parameterTypes":[] }, {"name":"getStatus","parameterTypes":[] }, {"name":"getWorkspaceId","parameterTypes":[] }, {"name":"setConfig","parameterTypes":["io.seqera.tower.model.ComputeConfig"] }, {"name":"setCredentialsId","parameterTypes":["java.lang.String"] }, {"name":"setDateCreated","parameterTypes":["java.time.OffsetDateTime"] }, {"name":"setDeleted","parameterTypes":["java.lang.Boolean"] }, {"name":"setDescription","parameterTypes":["java.lang.String"] }, {"name":"setId","parameterTypes":["java.lang.String"] }, {"name":"setLabels","parameterTypes":["java.util.List"] }, {"name":"setLastUpdated","parameterTypes":["java.time.OffsetDateTime"] }, {"name":"setLastUsed","parameterTypes":["java.time.OffsetDateTime"] }, {"name":"setMessage","parameterTypes":["java.lang.String"] }, {"name":"setName","parameterTypes":["java.lang.String"] }, {"name":"setOrgId","parameterTypes":["java.lang.Long"] }, {"name":"setPlatform","parameterTypes":["io.seqera.tower.model.ComputeEnvResponseDto$PlatformEnum"] }, {"name":"setPrimary","parameterTypes":["java.lang.Boolean"] }, {"name":"setStatus","parameterTypes":["io.seqera.tower.model.ComputeEnvStatus"] }, {"name":"setWorkspaceId","parameterTypes":["java.lang.Long"] }]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getConfig","parameterTypes":[] }, {"name":"getCredentialsId","parameterTypes":[] }, {"name":"getDateCreated","parameterTypes":[] }, {"name":"getDeleted","parameterTypes":[] }, {"name":"getDescription","parameterTypes":[] }, {"name":"getId","parameterTypes":[] }, {"name":"getLabels","parameterTypes":[] }, {"name":"getLastUpdated","parameterTypes":[] }, {"name":"getLastUsed","parameterTypes":[] }, {"name":"getManagedIdentityId","parameterTypes":[] }, {"name":"getMessage","parameterTypes":[] }, {"name":"getName","parameterTypes":[] }, {"name":"getOrgId","parameterTypes":[] }, {"name":"getPlatform","parameterTypes":[] }, {"name":"getPrimary","parameterTypes":[] }, {"name":"getStatus","parameterTypes":[] }, {"name":"getWorkspaceId","parameterTypes":[] }, {"name":"setConfig","parameterTypes":["io.seqera.tower.model.ComputeConfig"] }, {"name":"setCredentialsId","parameterTypes":["java.lang.String"] }, {"name":"setDateCreated","parameterTypes":["java.time.OffsetDateTime"] }, {"name":"setDeleted","parameterTypes":["java.lang.Boolean"] }, {"name":"setDescription","parameterTypes":["java.lang.String"] }, {"name":"setId","parameterTypes":["java.lang.String"] }, {"name":"setLabels","parameterTypes":["java.util.List"] }, {"name":"setLastUpdated","parameterTypes":["java.time.OffsetDateTime"] }, {"name":"setLastUsed","parameterTypes":["java.time.OffsetDateTime"] }, {"name":"setManagedIdentityId","parameterTypes":["java.lang.String"] } ,{"name":"setMessage","parameterTypes":["java.lang.String"] }, {"name":"setName","parameterTypes":["java.lang.String"] }, {"name":"setOrgId","parameterTypes":["java.lang.Long"] }, {"name":"setPlatform","parameterTypes":["io.seqera.tower.model.ComputeEnvResponseDto$PlatformEnum"] }, {"name":"setPrimary","parameterTypes":["java.lang.Boolean"] }, {"name":"setStatus","parameterTypes":["io.seqera.tower.model.ComputeEnvStatus"] }, {"name":"setWorkspaceId","parameterTypes":["java.lang.Long"] }]
 },
 {
   "name":"io.seqera.tower.model.ComputeEnvResponseDto$PlatformEnum",
@@ -2722,7 +2745,8 @@
   "name":"io.seqera.tower.model.DescribeWorkspaceResponse",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setWorkspace","parameterTypes":["io.seqera.tower.model.Workspace"] }]
 },
 {
   "name":"io.seqera.tower.model.EksComputeConfig",
@@ -3199,7 +3223,7 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[{"name":"getName","parameterTypes":[] }]
+  "methods":[{"name":"getName","parameterTypes":[] }, {"name":"getCredentialsId","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.UpdateCredentialsRequest",
@@ -3364,7 +3388,8 @@
   "name":"io.seqera.tower.model.Workspace",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setDateCreated","parameterTypes":["java.time.OffsetDateTime"] }, {"name":"setDescription","parameterTypes":["java.lang.String"] }, {"name":"setFullName","parameterTypes":["java.lang.String"] }, {"name":"setId_JsonNullable","parameterTypes":["org.openapitools.jackson.nullable.JsonNullable"] }, {"name":"setLastUpdated","parameterTypes":["java.time.OffsetDateTime"] }, {"name":"setName","parameterTypes":["java.lang.String"] }, {"name":"setVisibility","parameterTypes":["io.seqera.tower.model.Visibility"] }]
 },
 {
   "name":"io.seqera.tower.model.WspRole",
