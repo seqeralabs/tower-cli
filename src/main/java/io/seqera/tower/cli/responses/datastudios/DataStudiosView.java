@@ -15,7 +15,7 @@
  *
  */
 
-package io.seqera.tower.cli.responses.data;
+package io.seqera.tower.cli.responses.datastudios;
 
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.TableList;

@@ -21,7 +21,7 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.cli.responses.data.DataStudiosView;
+import io.seqera.tower.cli.responses.datastudios.DataStudiosView;
 import io.seqera.tower.model.DataStudioDto;
 import picocli.CommandLine;
 

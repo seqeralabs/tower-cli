@@ -20,7 +20,7 @@ package io.seqera.tower.cli.datastudios;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
-import io.seqera.tower.cli.responses.data.DataStudiosView;
+import io.seqera.tower.cli.responses.datastudios.DataStudiosView;
 import io.seqera.tower.model.DataStudioDto;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
