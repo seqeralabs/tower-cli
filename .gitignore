@@ -8,3 +8,6 @@ build
 
 # Location for unshared files
 .user/
+
+
+*.iml

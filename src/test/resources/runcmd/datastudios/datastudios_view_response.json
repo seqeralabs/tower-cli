@@ -1,0 +1,18 @@
+{
+  "sessionId": "3e8370e7",
+  "workspaceId": 75887156211589,
+  "name": "studio-a66d",
+  "description": null,
+  "studioUrl": "https://a3e8370e7.dev-tower.click",
+  "template": {
+    "repository": "cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot",
+    "icon": "vscode"
+  },
+  "dateCreated": "2024-12-19T06:49:24.893122+01:00",
+  "lastUpdated": "2024-12-19T06:52:50.686822+01:00",
+  "statusInfo": {
+    "status": "running",
+    "message": "",
+    "lastUpdate": "2024-12-19T05:52:41.823Z"
+  }
+}
