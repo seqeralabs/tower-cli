@@ -2606,14 +2606,14 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setCredentialsId","parameterTypes":["java.lang.String"] }]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setCredentialsId","parameterTypes":["java.lang.String"] }, {"name":"getCredentialsId","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.DataStudioConfiguration",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setCondaEnvironment","parameterTypes":["java.lang.String"] }, {"name":"setCpu","parameterTypes":["java.lang.Integer"] }, {"name":"setGpu","parameterTypes":["java.lang.Integer"] }, {"name":"setMemory","parameterTypes":["java.lang.Integer"] }, {"name":"setMountData","parameterTypes":["java.util.List"] }]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setCondaEnvironment","parameterTypes":["java.lang.String"] }, {"name":"setCpu","parameterTypes":["java.lang.Integer"] }, {"name":"setGpu","parameterTypes":["java.lang.Integer"] }, {"name":"setMemory","parameterTypes":["java.lang.Integer"] }, {"name":"setMountData","parameterTypes":["java.util.List"] }, {"name":"getCondaEnvironment","parameterTypes":[] }, {"name":"getCpu","parameterTypes":[] }, {"name":"getGpu","parameterTypes":[] }, {"name":"getMemory","parameterTypes":[] }, {"name":"getMountData","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.DataStudioDto",
@@ -2643,21 +2643,21 @@
   "name":"io.seqera.tower.model.DataStudioStatus",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"fromValue","parameterTypes":["java.lang.String"] }]
+  "methods":[{"name":"fromValue","parameterTypes":["java.lang.String"] }, {"name": "getValue", "parameterTypes": []}]
 },
 {
   "name":"io.seqera.tower.model.DataStudioStatusInfo",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setLastUpdate","parameterTypes":["java.time.OffsetDateTime"] }, {"name":"setMessage","parameterTypes":["java.lang.String"] }, {"name":"setStatus","parameterTypes":["io.seqera.tower.model.DataStudioStatus"] }]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setLastUpdate","parameterTypes":["java.time.OffsetDateTime"] }, {"name":"setMessage","parameterTypes":["java.lang.String"] }, {"name":"setStatus","parameterTypes":["io.seqera.tower.model.DataStudioStatus"] }, {"name":"getLastUpdate","parameterTypes":[] }, {"name":"getMessage","parameterTypes":[] }, {"name":"getStatus","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.DataStudioTemplate",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setIcon","parameterTypes":["java.lang.String"] }, {"name":"setRepository","parameterTypes":["java.lang.String"] }]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setIcon","parameterTypes":["java.lang.String"] }, {"name":"setRepository","parameterTypes":["java.lang.String"] }, {"name": "getIcon", "parameterTypes": []}, {"name": "getRepository", "parameterTypes": []}]
 },
 {
   "name":"io.seqera.tower.model.Dataset",
