@@ -2331,7 +2331,7 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[{"name":"setId","parameterTypes":["java.lang.String"] }, {"name":"setName","parameterTypes":["java.lang.String"] }, {"name":"setPlatform","parameterTypes":["java.lang.String"] }, {"name":"setRegion","parameterTypes":["java.lang.String"] }, {"name":"getId","parameterTypes":[] }, {"name":"getName","parameterTypes":[] }, {"name":"getPlatform","parameterTypes":[] }, {"name":"getRegion","parameterTypes":[] }]
+  "methods":[{"name":"getId","parameterTypes":[] }, {"name":"getName","parameterTypes":[] }, {"name":"getPlatform","parameterTypes":[] }, {"name":"getRegion","parameterTypes":[] }, {"name":"setId","parameterTypes":["java.lang.String"] }, {"name":"setName","parameterTypes":["java.lang.String"] }, {"name":"setPlatform","parameterTypes":["java.lang.String"] }, {"name":"setRegion","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.model.ComputeEnvResponseDto",
@@ -3173,7 +3173,7 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setAvatar","parameterTypes":["java.lang.String"] }, {"name":"setEmail","parameterTypes":["java.lang.String"] }, {"name":"setId","parameterTypes":["java.lang.Long"] }, {"name":"setUserName","parameterTypes":["java.lang.String"] }, {"name":"getAvatar","parameterTypes":[] }, {"name":"getEmail","parameterTypes":[] }, {"name":"getId","parameterTypes":[] }, {"name":"getUserName","parameterTypes":[] }]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getAvatar","parameterTypes":[] }, {"name":"getEmail","parameterTypes":[] }, {"name":"getId","parameterTypes":[] }, {"name":"getUserName","parameterTypes":[] }, {"name":"setAvatar","parameterTypes":["java.lang.String"] }, {"name":"setEmail","parameterTypes":["java.lang.String"] }, {"name":"setId","parameterTypes":["java.lang.Long"] }, {"name":"setUserName","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.model.SubmitWorkflowLaunchRequest",

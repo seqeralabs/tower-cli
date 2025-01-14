@@ -69,7 +69,7 @@ public class DataStudiosView extends Response {
 
         table.print();
         if (config != null && config.getCondaEnvironment() != null && !config.getCondaEnvironment().isEmpty()) {
-            out.println(String.format("%n  Conda Environment:%n%n%s%n", config.getCondaEnvironment()));
+            out.println(String.format("%n  Conda Environment:%n%n%s%n", config.getCondaEnvironment().replaceAll("(?m)^", "     ")));
         }
 
     }
