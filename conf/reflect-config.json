@@ -3173,7 +3173,7 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setAvatar","parameterTypes":["java.lang.String"] }, {"name":"setEmail","parameterTypes":["java.lang.String"] }, {"name":"setId","parameterTypes":["java.lang.Long"] }, {"name":"setUserName","parameterTypes":["java.lang.String"] }]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setAvatar","parameterTypes":["java.lang.String"] }, {"name":"setEmail","parameterTypes":["java.lang.String"] }, {"name":"setId","parameterTypes":["java.lang.Long"] }, {"name":"setUserName","parameterTypes":["java.lang.String"] }, {"name":"getAvatar","parameterTypes":[] }, {"name":"getEmail","parameterTypes":[] }, {"name":"getId","parameterTypes":[] }, {"name":"getUserName","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.SubmitWorkflowLaunchRequest",
