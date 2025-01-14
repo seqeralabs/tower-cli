@@ -2331,7 +2331,7 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[{"name":"setId","parameterTypes":["java.lang.String"] }, {"name":"setName","parameterTypes":["java.lang.String"] }, {"name":"setPlatform","parameterTypes":["java.lang.String"] }, {"name":"setRegion","parameterTypes":["java.lang.String"] }]
+  "methods":[{"name":"setId","parameterTypes":["java.lang.String"] }, {"name":"setName","parameterTypes":["java.lang.String"] }, {"name":"setPlatform","parameterTypes":["java.lang.String"] }, {"name":"setRegion","parameterTypes":["java.lang.String"] }, {"name":"getId","parameterTypes":[] }, {"name":"getName","parameterTypes":[] }, {"name":"getPlatform","parameterTypes":[] }, {"name":"getRegion","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.ComputeEnvResponseDto",
