@@ -19,8 +19,11 @@ package io.seqera.tower.cli.responses.datastudios;
 
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.TableList;
+import io.seqera.tower.model.DataLinkDto;
+import io.seqera.tower.model.DataStudioConfiguration;
 import io.seqera.tower.model.DataStudioDto;
 import io.seqera.tower.model.DataStudioStatusInfo;
+import io.seqera.tower.model.StudioUser;
 
 import java.io.PrintWriter;
 
@@ -42,17 +45,32 @@ public class DataStudiosView extends Response {
         out.println(ansi(String.format("%n  @|bold DataStudio at workspace '%s'|@%n", workspaceRef)));
 
         DataStudioStatusInfo statusInfo = dataStudio.getStatusInfo();
+        StudioUser studioUser = dataStudio.getUser();
+        DataStudioConfiguration config = dataStudio.getConfiguration();
         TableList table = new TableList(out, 2);
         table.setPrefix(" ");
         table.addRow("SessionID", dataStudio.getSessionId());
         table.addRow("Name", dataStudio.getName());
-        table.addRow("Description", dataStudio.getDescription());
-        table.addRow("Template", dataStudio.getTemplate() == null ? "NA" : dataStudio.getTemplate().getRepository());
         table.addRow("Status", formatDataStudioStatus(statusInfo == null ? null : statusInfo.getStatus()));
         table.addRow("Status Last Update", statusInfo == null ? "NA" : formatTime(statusInfo.getLastUpdate()));
-        table.addRow("Studio Created", formatTime(dataStudio.getDateCreated()));
-        table.addRow("Studio Last Updated", formatTime(dataStudio.getLastUpdated()));
+        table.addRow("Studio URL", dataStudio.getStudioUrl());
+        table.addRow("Description", dataStudio.getDescription());
+        table.addRow("Created on", formatTime(dataStudio.getDateCreated()));
+        table.addRow("Created by", studioUser == null ? "NA" : String.format("%s | %s",studioUser.getUserName(), studioUser.getEmail()));
+        table.addRow("Template", dataStudio.getTemplate() == null ? "NA" : dataStudio.getTemplate().getRepository());
+        table.addRow("Mounted Data", dataStudio.getMountedDataLinks() == null ? "NA" : dataStudio.getMountedDataLinks()
+                .stream().map(DataLinkDto::getResourceRef).collect(java.util.stream.Collectors.joining(", ")));
+        table.addRow("Compute environment", dataStudio.getComputeEnv() == null ? "NA" : dataStudio.getComputeEnv().getName());
+        table.addRow("Region", dataStudio.getComputeEnv() == null ? "NA" : dataStudio.getComputeEnv().getRegion());
+        table.addRow("GPU allocated",  config == null ? "-" : String.valueOf(config.getGpu()));
+        table.addRow("CPU allocated",  config == null ? "-" : String.valueOf(config.getCpu()));
+        table.addRow("Memory allocated", config == null ? "-" : String.valueOf(config.getMemory()));
+        table.addRow("Build reports", dataStudio.getWaveBuildUrl() == null ? "NA" : dataStudio.getWaveBuildUrl());
+
         table.print();
+        if (config != null && config.getCondaEnvironment() != null && !config.getCondaEnvironment().isEmpty()) {
+            out.println(String.format("%n  Conda Environment:%n%n%s%n", config.getCondaEnvironment()));
+        }
 
     }
 }
