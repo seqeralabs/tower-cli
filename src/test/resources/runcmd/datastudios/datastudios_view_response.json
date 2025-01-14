@@ -27,7 +27,7 @@
     "mountData": [
       "v1-user-1ccf131810375d303bf0402dd8423433"
     ],
-    "condaEnvironment": "name: example-env\nchannels:\n  - conda-forge\ndependencies:\n  - numpy\n  - pip:\n    - matplotlib\n    - seaborn"
+    "condaEnvironment":null
   },
   "dateCreated": "2024-12-19T06:49:24.893122+01:00",
   "lastUpdated": "2024-12-19T06:52:50.686822+01:00",
