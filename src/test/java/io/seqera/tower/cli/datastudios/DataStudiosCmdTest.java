@@ -20,10 +20,16 @@ package io.seqera.tower.cli.datastudios;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
+import io.seqera.tower.cli.responses.datastudios.DataStudiosList;
 import io.seqera.tower.cli.responses.datastudios.DataStudiosView;
+import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.model.DataStudioDto;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+
+import java.util.Arrays;
+import java.util.Collections;
+
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 
@@ -108,5 +114,376 @@ public class DataStudiosCmdTest extends BaseCmdTest {
                 "    }\n" +
                 "  ]\n" +
                 "}", DataStudioDto.class), "[organization1 / workspace1]" ));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testList(OutputType format, MockServerClient mock) throws JsonProcessingException {
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/studios").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datastudios/datastudios_list_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "list", "-w", "75887156211589");
+
+        assertOutput(format, out, new DataStudiosList("[organization1 / workspace1]", Arrays.asList(parseJson(" {\n" +
+                        "            \"sessionId\": \"ddfd5e14\",\n" +
+                        "            \"workspaceId\": 75887156211589,\n" +
+                        "            \"parentCheckpoint\": null,\n" +
+                        "            \"user\": {\n" +
+                        "                \"id\": 1,\n" +
+                        "                \"userName\": \"samurai-jack\",\n" +
+                        "                \"email\": \"jack@seqera.io\",\n" +
+                        "                \"avatar\": null\n" +
+                        "            },\n" +
+                        "            \"name\": \"studio-7728\",\n" +
+                        "            \"description\": \"Local studio\",\n" +
+                        "            \"studioUrl\": \"http://addfd5e14.studio.localhost:9191\",\n" +
+                        "            \"computeEnv\": {\n" +
+                        "                \"id\": \"16esMgELkyQ3QPcHGNTiXQ\",\n" +
+                        "                \"name\": \"my-other-local-ce\",\n" +
+                        "                \"platform\": \"local-platform\",\n" +
+                        "                \"region\": null\n" +
+                        "            },\n" +
+                        "            \"template\": {\n" +
+                        "                \"repository\": \"cr.seqera.io/public/data-studio-jupyter:4.2.5-snapshot\",\n" +
+                        "                \"icon\": \"jupyter\"\n" +
+                        "            },\n" +
+                        "            \"configuration\": {\n" +
+                        "                \"gpu\": 0,\n" +
+                        "                \"cpu\": 2,\n" +
+                        "                \"memory\": 8192,\n" +
+                        "                \"mountData\": [],\n" +
+                        "                \"condaEnvironment\": null\n" +
+                        "            },\n" +
+                        "            \"dateCreated\": \"2025-01-14T11:51:05.393498Z\",\n" +
+                        "            \"lastUpdated\": \"2025-01-15T09:10:30.016752Z\",\n" +
+                        "            \"activeConnections\": [],\n" +
+                        "            \"statusInfo\": {\n" +
+                        "                \"status\": \"running\",\n" +
+                        "                \"message\": \"\",\n" +
+                        "                \"lastUpdate\": \"2025-01-15T09:10:30.016588Z\"\n" +
+                        "            },\n" +
+                        "            \"waveBuildUrl\": null,\n" +
+                        "            \"baseImage\": null,\n" +
+                        "            \"customImage\": false,\n" +
+                        "            \"progress\": null\n" +
+                        "        }", DataStudioDto.class),
+                parseJson("{\n" +
+                        "            \"sessionId\": \"c779bf09\",\n" +
+                        "            \"workspaceId\": 75887156211589,\n" +
+                        "            \"parentCheckpoint\": null,\n" +
+                        "            \"user\": {\n" +
+                        "                \"id\": 1,\n" +
+                        "                \"userName\": \"johnny-bravo\",\n" +
+                        "                \"email\": \"johnny@seqera.io\",\n" +
+                        "                \"avatar\": null\n" +
+                        "            },\n" +
+                        "            \"name\": \"studio-d456\",\n" +
+                        "            \"description\": null,\n" +
+                        "            \"studioUrl\": \"http://ac779bf09.studio.localhost:9191\",\n" +
+                        "            \"computeEnv\": {\n" +
+                        "                \"id\": \"61DYXYj3XQAYbJIHrI1XSg\",\n" +
+                        "                \"name\": \"my-local-ce\",\n" +
+                        "                \"platform\": \"local-platform\",\n" +
+                        "                \"region\": null\n" +
+                        "            },\n" +
+                        "            \"template\": {\n" +
+                        "                \"repository\": \"cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot\",\n" +
+                        "                \"icon\": \"vscode\"\n" +
+                        "            },\n" +
+                        "            \"configuration\": {\n" +
+                        "                \"gpu\": 0,\n" +
+                        "                \"cpu\": 2,\n" +
+                        "                \"memory\": 8192,\n" +
+                        "                \"mountData\": [],\n" +
+                        "                \"condaEnvironment\": null\n" +
+                        "            },\n" +
+                        "            \"dateCreated\": \"2025-01-10T17:26:36.83703Z\",\n" +
+                        "            \"lastUpdated\": \"2025-01-12T03:00:30.014415Z\",\n" +
+                        "            \"activeConnections\": [],\n" +
+                        "            \"statusInfo\": {\n" +
+                        "                \"status\": \"errored\",\n" +
+                        "                \"message\": \"\",\n" +
+                        "                \"lastUpdate\": \"2025-01-12T03:00:30.010738Z\"\n" +
+                        "            },\n" +
+                        "            \"waveBuildUrl\": null,\n" +
+                        "            \"baseImage\": null,\n" +
+                        "            \"customImage\": false,\n" +
+                        "            \"progress\": null\n" +
+                        "        }", DataStudioDto.class)
+        ), null));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testListWithOffset(OutputType format, MockServerClient mock) throws JsonProcessingException {
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/studios")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("offset", "1")
+                        .withQueryStringParameter("max", "2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datastudios/datastudios_list_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "list", "-w", "75887156211589", "--offset", "1", "--max", "2");
+
+        assertOutput(format, out, new DataStudiosList("[organization1 / workspace1]", Arrays.asList(parseJson(" {\n" +
+                        "            \"sessionId\": \"ddfd5e14\",\n" +
+                        "            \"workspaceId\": 75887156211589,\n" +
+                        "            \"parentCheckpoint\": null,\n" +
+                        "            \"user\": {\n" +
+                        "                \"id\": 1,\n" +
+                        "                \"userName\": \"samurai-jack\",\n" +
+                        "                \"email\": \"jack@seqera.io\",\n" +
+                        "                \"avatar\": null\n" +
+                        "            },\n" +
+                        "            \"name\": \"studio-7728\",\n" +
+                        "            \"description\": \"Local studio\",\n" +
+                        "            \"studioUrl\": \"http://addfd5e14.studio.localhost:9191\",\n" +
+                        "            \"computeEnv\": {\n" +
+                        "                \"id\": \"16esMgELkyQ3QPcHGNTiXQ\",\n" +
+                        "                \"name\": \"my-other-local-ce\",\n" +
+                        "                \"platform\": \"local-platform\",\n" +
+                        "                \"region\": null\n" +
+                        "            },\n" +
+                        "            \"template\": {\n" +
+                        "                \"repository\": \"cr.seqera.io/public/data-studio-jupyter:4.2.5-snapshot\",\n" +
+                        "                \"icon\": \"jupyter\"\n" +
+                        "            },\n" +
+                        "            \"configuration\": {\n" +
+                        "                \"gpu\": 0,\n" +
+                        "                \"cpu\": 2,\n" +
+                        "                \"memory\": 8192,\n" +
+                        "                \"mountData\": [],\n" +
+                        "                \"condaEnvironment\": null\n" +
+                        "            },\n" +
+                        "            \"dateCreated\": \"2025-01-14T11:51:05.393498Z\",\n" +
+                        "            \"lastUpdated\": \"2025-01-15T09:10:30.016752Z\",\n" +
+                        "            \"activeConnections\": [],\n" +
+                        "            \"statusInfo\": {\n" +
+                        "                \"status\": \"running\",\n" +
+                        "                \"message\": \"\",\n" +
+                        "                \"lastUpdate\": \"2025-01-15T09:10:30.016588Z\"\n" +
+                        "            },\n" +
+                        "            \"waveBuildUrl\": null,\n" +
+                        "            \"baseImage\": null,\n" +
+                        "            \"customImage\": false,\n" +
+                        "            \"progress\": null\n" +
+                        "        }", DataStudioDto.class),
+                parseJson("{\n" +
+                        "            \"sessionId\": \"c779bf09\",\n" +
+                        "            \"workspaceId\": 75887156211589,\n" +
+                        "            \"parentCheckpoint\": null,\n" +
+                        "            \"user\": {\n" +
+                        "                \"id\": 1,\n" +
+                        "                \"userName\": \"johnny-bravo\",\n" +
+                        "                \"email\": \"johnny@seqera.io\",\n" +
+                        "                \"avatar\": null\n" +
+                        "            },\n" +
+                        "            \"name\": \"studio-d456\",\n" +
+                        "            \"description\": null,\n" +
+                        "            \"studioUrl\": \"http://ac779bf09.studio.localhost:9191\",\n" +
+                        "            \"computeEnv\": {\n" +
+                        "                \"id\": \"61DYXYj3XQAYbJIHrI1XSg\",\n" +
+                        "                \"name\": \"my-local-ce\",\n" +
+                        "                \"platform\": \"local-platform\",\n" +
+                        "                \"region\": null\n" +
+                        "            },\n" +
+                        "            \"template\": {\n" +
+                        "                \"repository\": \"cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot\",\n" +
+                        "                \"icon\": \"vscode\"\n" +
+                        "            },\n" +
+                        "            \"configuration\": {\n" +
+                        "                \"gpu\": 0,\n" +
+                        "                \"cpu\": 2,\n" +
+                        "                \"memory\": 8192,\n" +
+                        "                \"mountData\": [],\n" +
+                        "                \"condaEnvironment\": null\n" +
+                        "            },\n" +
+                        "            \"dateCreated\": \"2025-01-10T17:26:36.83703Z\",\n" +
+                        "            \"lastUpdated\": \"2025-01-12T03:00:30.014415Z\",\n" +
+                        "            \"activeConnections\": [],\n" +
+                        "            \"statusInfo\": {\n" +
+                        "                \"status\": \"errored\",\n" +
+                        "                \"message\": \"\",\n" +
+                        "                \"lastUpdate\": \"2025-01-12T03:00:30.010738Z\"\n" +
+                        "            },\n" +
+                        "            \"waveBuildUrl\": null,\n" +
+                        "            \"baseImage\": null,\n" +
+                        "            \"customImage\": false,\n" +
+                        "            \"progress\": null\n" +
+                        "        }", DataStudioDto.class)
+        ), PaginationInfo.from(1, 2, null, 2L)));
+    }
+
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testListWithPage(OutputType format, MockServerClient mock) throws JsonProcessingException {
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/studios")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("offset", "0")
+                        .withQueryStringParameter("max", "1"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datastudios/datastudios_list_filtered_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "list", "-w", "75887156211589", "--page", "1", "--max", "1");
+
+        assertOutput(format, out, new DataStudiosList("[organization1 / workspace1]", Arrays.asList(parseJson(" {\n" +
+                        "            \"sessionId\": \"ddfd5e14\",\n" +
+                        "            \"workspaceId\": 75887156211589,\n" +
+                        "            \"parentCheckpoint\": null,\n" +
+                        "            \"user\": {\n" +
+                        "                \"id\": 1,\n" +
+                        "                \"userName\": \"samurai-jack\",\n" +
+                        "                \"email\": \"jack@seqera.io\",\n" +
+                        "                \"avatar\": null\n" +
+                        "            },\n" +
+                        "            \"name\": \"studio-7728\",\n" +
+                        "            \"description\": \"Local studio\",\n" +
+                        "            \"studioUrl\": \"http://addfd5e14.studio.localhost:9191\",\n" +
+                        "            \"computeEnv\": {\n" +
+                        "                \"id\": \"16esMgELkyQ3QPcHGNTiXQ\",\n" +
+                        "                \"name\": \"my-other-local-ce\",\n" +
+                        "                \"platform\": \"local-platform\",\n" +
+                        "                \"region\": null\n" +
+                        "            },\n" +
+                        "            \"template\": {\n" +
+                        "                \"repository\": \"cr.seqera.io/public/data-studio-jupyter:4.2.5-snapshot\",\n" +
+                        "                \"icon\": \"jupyter\"\n" +
+                        "            },\n" +
+                        "            \"configuration\": {\n" +
+                        "                \"gpu\": 0,\n" +
+                        "                \"cpu\": 2,\n" +
+                        "                \"memory\": 8192,\n" +
+                        "                \"mountData\": [],\n" +
+                        "                \"condaEnvironment\": null\n" +
+                        "            },\n" +
+                        "            \"dateCreated\": \"2025-01-14T11:51:05.393498Z\",\n" +
+                        "            \"lastUpdated\": \"2025-01-15T09:10:30.016752Z\",\n" +
+                        "            \"activeConnections\": [],\n" +
+                        "            \"statusInfo\": {\n" +
+                        "                \"status\": \"running\",\n" +
+                        "                \"message\": \"\",\n" +
+                        "                \"lastUpdate\": \"2025-01-15T09:10:30.016588Z\"\n" +
+                        "            },\n" +
+                        "            \"waveBuildUrl\": null,\n" +
+                        "            \"baseImage\": null,\n" +
+                        "            \"customImage\": false,\n" +
+                        "            \"progress\": null\n" +
+                        "        }", DataStudioDto.class)
+        ), PaginationInfo.from(null, 1, 1, 2L)));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testListWithFilter(OutputType format, MockServerClient mock) throws JsonProcessingException {
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/studios")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("search", "status:running"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datastudios/datastudios_list_filtered_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "list", "-w", "75887156211589", "--filter", "status:running");
+
+        assertOutput(format, out, new DataStudiosList("[organization1 / workspace1]", Collections.singletonList(parseJson(" {\n" +
+                "            \"sessionId\": \"ddfd5e14\",\n" +
+                "            \"workspaceId\": 75887156211589,\n" +
+                "            \"parentCheckpoint\": null,\n" +
+                "            \"user\": {\n" +
+                "                \"id\": 1,\n" +
+                "                \"userName\": \"samurai-jack\",\n" +
+                "                \"email\": \"jack@seqera.io\",\n" +
+                "                \"avatar\": null\n" +
+                "            },\n" +
+                "            \"name\": \"studio-7728\",\n" +
+                "            \"description\": \"Local studio\",\n" +
+                "            \"studioUrl\": \"http://addfd5e14.studio.localhost:9191\",\n" +
+                "            \"computeEnv\": {\n" +
+                "                \"id\": \"16esMgELkyQ3QPcHGNTiXQ\",\n" +
+                "                \"name\": \"my-other-local-ce\",\n" +
+                "                \"platform\": \"local-platform\",\n" +
+                "                \"region\": null\n" +
+                "            },\n" +
+                "            \"template\": {\n" +
+                "                \"repository\": \"cr.seqera.io/public/data-studio-jupyter:4.2.5-snapshot\",\n" +
+                "                \"icon\": \"jupyter\"\n" +
+                "            },\n" +
+                "            \"configuration\": {\n" +
+                "                \"gpu\": 0,\n" +
+                "                \"cpu\": 2,\n" +
+                "                \"memory\": 8192,\n" +
+                "                \"mountData\": [],\n" +
+                "                \"condaEnvironment\": null\n" +
+                "            },\n" +
+                "            \"dateCreated\": \"2025-01-14T11:51:05.393498Z\",\n" +
+                "            \"lastUpdated\": \"2025-01-15T09:10:30.016752Z\",\n" +
+                "            \"activeConnections\": [],\n" +
+                "            \"statusInfo\": {\n" +
+                "                \"status\": \"running\",\n" +
+                "                \"message\": \"\",\n" +
+                "                \"lastUpdate\": \"2025-01-15T09:10:30.016588Z\"\n" +
+                "            },\n" +
+                "            \"waveBuildUrl\": null,\n" +
+                "            \"baseImage\": null,\n" +
+                "            \"customImage\": false,\n" +
+                "            \"progress\": null\n" +
+                "        }", DataStudioDto.class)
+        ), null));
     }
 }

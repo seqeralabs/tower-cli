@@ -17,6 +17,7 @@
 
 package io.seqera.tower.cli.commands;
 
+import io.seqera.tower.cli.commands.datastudios.ListCmd;
 import io.seqera.tower.cli.commands.datastudios.ViewCmd;
 import picocli.CommandLine;
 
@@ -25,6 +26,7 @@ import picocli.CommandLine;
         description = "Manage data studios.",
         subcommands = {
                 ViewCmd.class,
+                ListCmd.class,
         }
 )
 public class DataStudiosCmd extends AbstractRootCmd {
