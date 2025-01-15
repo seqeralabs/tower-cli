@@ -1137,6 +1137,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.datastudios.ListCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.datastudios.ViewCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -2175,7 +2181,8 @@
   "name":"io.seqera.tower.model.ActiveConnection",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setLastActive","parameterTypes":["java.time.OffsetDateTime"] }]
 },
 {
   "name":"io.seqera.tower.model.AddMemberRequest",
@@ -2627,6 +2634,13 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.model.DataStudioListResponse",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setStudios","parameterTypes":["java.util.List"] }, {"name":"setTotalSize","parameterTypes":["java.lang.Long"] }]
 },
 {
   "name":"io.seqera.tower.model.DataStudioProgressStep",
