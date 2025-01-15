@@ -19,6 +19,7 @@ package io.seqera.tower.cli.commands.datastudios;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
+import io.seqera.tower.cli.exceptions.DataStudioNotFoundException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.datastudios.DataStudiosView;
@@ -46,8 +47,11 @@ public class ViewCmd extends AbstractStudiosCmd {
 
             return new DataStudiosView(dataStudioDto, workspaceRef(wspId));
         } catch (ApiException e) {
+            if (e.getCode() == 404) {
+                throw new DataStudioNotFoundException(dataStudioRefOptions.dataStudio.sessionId, wspId);
+            }
             if (e.getCode() == 403) {
-                throw new TowerException(String.format("DataStudio '%s' not found at %s workspace", dataStudioRefOptions.dataStudio.sessionId, wspId));
+                throw new TowerException(String.format("User not entitled to view studio '%s' at %s workspace", dataStudioRefOptions.dataStudio.sessionId, wspId));
             }
             throw e;
         }

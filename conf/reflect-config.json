@@ -1836,13 +1836,13 @@
   "queryAllDeclaredConstructors":true
 },
 {
-  "name":"io.seqera.tower.cli.responses.datastudios.DataStudiosView",
+  "name":"io.seqera.tower.cli.responses.datastudios.DataStudiosList",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true
 },
 {
-  "name":"io.seqera.tower.cli.responses.datastudios.DataStudiosList",
+  "name":"io.seqera.tower.cli.responses.datastudios.DataStudiosView",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true

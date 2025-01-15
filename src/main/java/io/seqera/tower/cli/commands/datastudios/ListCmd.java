@@ -19,23 +19,17 @@ package io.seqera.tower.cli.commands.datastudios;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.PaginationOptions;
-import io.seqera.tower.cli.commands.global.ShowLabelsOption;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
-import io.seqera.tower.cli.commands.pipelines.AbstractPipelinesCmd;
-import io.seqera.tower.cli.commands.pipelines.PipelineVisibility;
+import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.exceptions.WorkspaceNotFoundException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.datastudios.DataStudiosList;
-import io.seqera.tower.cli.responses.pipelines.PipelinesList;
 import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.model.DataStudioListResponse;
-import io.seqera.tower.model.ListPipelinesResponse;
-import io.seqera.tower.model.PipelineQueryAttribute;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
 import java.io.IOException;
-import java.util.List;
 
 @Command(
         name = "list",
@@ -63,9 +57,12 @@ public class ListCmd extends AbstractStudiosCmd {
 
         try {
            response = api().listDataStudios(wspId, filter, max, offset);
-        } catch (ApiException apiException) {
-            if (apiException.getCode() == 404){
+        } catch (ApiException e) {
+            if (e.getCode() == 404){
                 throw new WorkspaceNotFoundException(wspId);
+            }
+            if (e.getCode() == 403) {
+                throw new TowerException(String.format("User not entitled to %s workspace", wspId));
             }
         }
 

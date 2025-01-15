@@ -31,7 +31,6 @@ import io.seqera.tower.model.DataStudioStatusInfo;
 import io.seqera.tower.model.StudioUser;
 
 import static io.seqera.tower.cli.utils.FormatHelper.formatDataStudioStatus;
-import static io.seqera.tower.cli.utils.FormatHelper.formatPipelineId;
 
 public class DataStudiosList extends Response {
 
