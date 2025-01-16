@@ -1,0 +1,91 @@
+{
+    "studios": [
+        {
+            "sessionId": "ddfd5e14",
+            "workspaceId": 75887156211589,
+            "parentCheckpoint": null,
+            "user": {
+                "id": 1,
+                "userName": "samurai-jack",
+                "email": "jack@seqera.io",
+                "avatar": null
+            },
+            "name": "studio-7728",
+            "description": "Local studio",
+            "studioUrl": "http://addfd5e14.studio.localhost:9191",
+            "computeEnv": {
+                "id": "16esMgELkyQ3QPcHGNTiXQ",
+                "name": "my-other-local-ce",
+                "platform": "local-platform",
+                "region": null
+            },
+            "template": {
+                "repository": "cr.seqera.io/public/data-studio-jupyter:4.2.5-snapshot",
+                "icon": "jupyter"
+            },
+            "configuration": {
+                "gpu": 0,
+                "cpu": 2,
+                "memory": 8192,
+                "mountData": [],
+                "condaEnvironment": null
+            },
+            "dateCreated": "2025-01-14T11:51:05.393498Z",
+            "lastUpdated": "2025-01-15T09:10:30.016752Z",
+            "activeConnections": [],
+            "statusInfo": {
+                "status": "running",
+                "message": "",
+                "lastUpdate": "2025-01-15T09:10:30.016588Z"
+            },
+            "waveBuildUrl": null,
+            "baseImage": null,
+            "customImage": false,
+            "progress": null
+        },
+        {
+            "sessionId": "c779bf09",
+            "workspaceId": 75887156211589,
+            "parentCheckpoint": null,
+            "user": {
+                "id": 1,
+                "userName": "johnny-bravo",
+                "email": "johnny@seqera.io",
+                "avatar": null
+            },
+            "name": "studio-d456",
+            "description": null,
+            "studioUrl": "http://ac779bf09.studio.localhost:9191",
+            "computeEnv": {
+                "id": "61DYXYj3XQAYbJIHrI1XSg",
+                "name": "my-local-ce",
+                "platform": "local-platform",
+                "region": null
+            },
+            "template": {
+                "repository": "cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot",
+                "icon": "vscode"
+            },
+            "configuration": {
+                "gpu": 0,
+                "cpu": 2,
+                "memory": 8192,
+                "mountData": [],
+                "condaEnvironment": null
+            },
+            "dateCreated": "2025-01-10T17:26:36.83703Z",
+            "lastUpdated": "2025-01-12T03:00:30.014415Z",
+            "activeConnections": [],
+            "statusInfo": {
+                "status": "errored",
+                "message": "",
+                "lastUpdate": "2025-01-12T03:00:30.010738Z"
+            },
+            "waveBuildUrl": null,
+            "baseImage": null,
+            "customImage": false,
+            "progress": null
+        }
+    ],
+    "totalSize": 2
+}
