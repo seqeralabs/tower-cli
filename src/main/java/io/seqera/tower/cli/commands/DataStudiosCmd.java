@@ -22,7 +22,7 @@ import io.seqera.tower.cli.commands.datastudios.ViewCmd;
 import picocli.CommandLine;
 
 @CommandLine.Command(
-        name = "studios", // alternative "data-studio"
+        name = "studios",
         description = "Manage data studios.",
         subcommands = {
                 ViewCmd.class,

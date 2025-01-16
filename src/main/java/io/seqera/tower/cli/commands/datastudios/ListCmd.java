@@ -64,6 +64,7 @@ public class ListCmd extends AbstractStudiosCmd {
             if (e.getCode() == 403) {
                 throw new TowerException(String.format("User not entitled to %s workspace", wspId));
             }
+            throw e;
         }
 
         return new DataStudiosList(workspaceRef(wspId), response.getStudios(), PaginationInfo.from(paginationOptions, response.getTotalSize()));
