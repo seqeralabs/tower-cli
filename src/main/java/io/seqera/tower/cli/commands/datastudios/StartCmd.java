@@ -66,7 +66,7 @@ public class StartCmd extends AbstractStudiosCmd {
 
             DataStudioStartResponse response = api().startDataStudio(dataStudioRefOptions.dataStudio.sessionId, request, wspId);
 
-            return new DataStudioStartSubmitted(dataStudioRefOptions.dataStudio.sessionId, wspId, workspaceRef(wspId), dataStudioDto.getStudioUrl(), response.getJobSubmitted());
+            return new DataStudioStartSubmitted(dataStudioRefOptions.dataStudio.sessionId, wspId, workspaceRef(wspId), baseWorkspaceUrl(wspId), response.getJobSubmitted());
         } catch (ApiException e) {
             if (e.getCode() == 404) {
                 throw new DataStudioNotFoundException(dataStudioRefOptions.dataStudio.sessionId, wspId);

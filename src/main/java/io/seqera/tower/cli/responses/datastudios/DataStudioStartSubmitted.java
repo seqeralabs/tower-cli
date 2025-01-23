@@ -29,11 +29,11 @@ public class DataStudioStartSubmitted extends Response {
     public final String workspaceRef;
     public final Boolean jobSubmitted;
 
-    public DataStudioStartSubmitted(String sessionId, Long workspaceId, String workspaceRef, String studioUrl, Boolean jobSubmitted) {
+    public DataStudioStartSubmitted(String sessionId, Long workspaceId, String workspaceRef, String baseWorkspaceUrl, Boolean jobSubmitted) {
         this.sessionId = sessionId;
         this.workspaceId = workspaceId;
         this.workspaceRef = workspaceRef;
-        this.studioUrl = studioUrl;
+        this.studioUrl = String.format("%s/studios/%s/connect", baseWorkspaceUrl, sessionId);
         this.jobSubmitted = jobSubmitted;
     }
 
