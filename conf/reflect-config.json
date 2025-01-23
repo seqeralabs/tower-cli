@@ -1125,6 +1125,12 @@
   "queryAllDeclaredMethods":true
 },
 {
+  "name":"io.seqera.tower.cli.commands.datastudios.DataStudioConfigurationOptions",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.datastudios.DataStudioRefOptions",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -1138,6 +1144,12 @@
 },
 {
   "name":"io.seqera.tower.cli.commands.datastudios.ListCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.datastudios.StartCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
@@ -1831,6 +1843,12 @@
 },
 {
   "name":"io.seqera.tower.cli.responses.datasets.DatasetView",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.datastudios.DataStudioStartSubmitted",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true
@@ -2639,7 +2657,8 @@
   "name":"io.seqera.tower.model.DataStudioDtoParentCheckpoint",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getCheckpointId","parameterTypes":[] }, {"name":"getCheckpointName","parameterTypes":[] }, {"name":"getSessionId","parameterTypes":[] }, {"name":"getStudioName","parameterTypes":[] }, {"name":"setCheckpointId","parameterTypes":["java.lang.Long"] }, {"name":"setCheckpointName","parameterTypes":["java.lang.String"] }, {"name":"setSessionId","parameterTypes":["java.lang.String"] }, {"name":"setStudioName","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.model.DataStudioListResponse",
@@ -2660,6 +2679,20 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "methods":[{"name":"fromValue","parameterTypes":["java.lang.String"] }, {"name":"getValue","parameterTypes":[] }, {"name":"setValue","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"io.seqera.tower.model.DataStudioStartRequest",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"getConfiguration_JsonNullable","parameterTypes":[] }, {"name":"getDescription_JsonNullable","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.model.DataStudioStartResponse",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setJobSubmitted","parameterTypes":["java.lang.Boolean"] }, {"name":"setSessionId","parameterTypes":["java.lang.String"] }, {"name":"setStatusInfo","parameterTypes":["io.seqera.tower.model.DataStudioStatusInfo"] }]
 },
 {
   "name":"io.seqera.tower.model.DataStudioStatus",

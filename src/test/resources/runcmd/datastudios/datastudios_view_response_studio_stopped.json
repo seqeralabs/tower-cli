@@ -32,7 +32,7 @@
   "dateCreated": "2024-12-19T06:49:24.893122+01:00",
   "lastUpdated": "2024-12-19T06:52:50.686822+01:00",
   "statusInfo": {
-    "status": "running",
+    "status": "stopped",
     "message": "",
     "lastUpdate": "2024-12-19T05:52:41.823Z"
   },
@@ -46,18 +46,6 @@
       "type": "bucket",
       "provider": "aws",
       "region": "us-east-2"
-    }
-  ],
-  "progress": [
-    {
-      "status": "succeeded",
-      "message": "Provisioning compute resources",
-      "warnings": null
-    },
-    {
-      "status": "succeeded",
-      "message": "Mounting checkpoints",
-      "warnings": null
     }
   ]
 }
