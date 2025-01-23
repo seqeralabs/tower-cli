@@ -32,7 +32,7 @@
   "dateCreated": "2024-12-19T06:49:24.893122+01:00",
   "lastUpdated": "2024-12-19T06:52:50.686822+01:00",
   "statusInfo": {
-    "status": "running",
+    "status": "starting",
     "message": "",
     "lastUpdate": "2024-12-19T05:52:41.823Z"
   },
@@ -50,12 +50,12 @@
   ],
   "progress": [
     {
-      "status": "succeeded",
+      "status": "in-progress",
       "message": "Provisioning compute resources",
       "warnings": null
     },
     {
-      "status": "succeeded",
+      "status": "pending",
       "message": "Mounting checkpoints",
       "warnings": null
     }

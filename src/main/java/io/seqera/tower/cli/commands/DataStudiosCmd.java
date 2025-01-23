@@ -18,6 +18,7 @@
 package io.seqera.tower.cli.commands;
 
 import io.seqera.tower.cli.commands.datastudios.ListCmd;
+import io.seqera.tower.cli.commands.datastudios.StartCmd;
 import io.seqera.tower.cli.commands.datastudios.ViewCmd;
 import picocli.CommandLine;
 
@@ -27,6 +28,7 @@ import picocli.CommandLine;
         subcommands = {
                 ViewCmd.class,
                 ListCmd.class,
+                StartCmd.class,
         }
 )
 public class DataStudiosCmd extends AbstractRootCmd {
