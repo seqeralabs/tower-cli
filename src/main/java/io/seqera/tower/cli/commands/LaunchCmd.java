@@ -104,6 +104,9 @@ public class LaunchCmd extends AbstractRootCmd {
     @Option(names = {"-l", "--labels"}, split = ",", description = "Comma-separated list of labels for the pipeline.")
     List<String> labels;
 
+    @Option(names = {"--launch-container"}, description = "Container to be used to run the nextflow head job (BETA).")
+    String launchContainer;
+
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
     AdvancedOptions adv;
 
@@ -161,11 +164,12 @@ public class LaunchCmd extends AbstractRootCmd {
                 .schemaName(coalesce(adv().schemaName, base.getSchemaName()))
                 .pullLatest(coalesce(adv().pullLatest, base.getPullLatest()))
                 .stubRun(coalesce(adv().stubRun, base.getStubRun()))
-                .optimizationId(base.getOptimizationId())
-                .optimizationTargets(base.getOptimizationTargets())
+                .optimizationId(coalesce(adv().disableOptimization, false) ? null : base.getOptimizationId())
+                .optimizationTargets(coalesce(adv().disableOptimization, false) ? null : base.getOptimizationTargets())
                 .labelIds(base.getLabelIds())
                 .headJobCpus(base.getHeadJobCpus())
-                .headJobMemoryMb(base.getHeadJobMemoryMb());
+                .headJobMemoryMb(base.getHeadJobMemoryMb())
+                .launchContainer(launchContainer);
     }
 
     protected Response runTowerPipeline(Long wspId) throws ApiException, IOException {
@@ -245,7 +249,7 @@ public class LaunchCmd extends AbstractRootCmd {
 
     private WorkflowStatus checkWorkflowStatus(String workflowId, Long workspaceId) {
         try {
-            return api().describeWorkflow(workflowId, workspaceId, Collections.emptyList()).getWorkflow().getStatus();
+            return api().describeWorkflow(workflowId, workspaceId, NO_WORKFLOW_ATTRIBUTES).getWorkflow().getStatus();
         } catch (ApiException | NullPointerException e) {
             return null;
         }
@@ -372,6 +376,9 @@ public class LaunchCmd extends AbstractRootCmd {
 
         @Option(names = {"--workspace-secrets"}, split = ",", description = "Pipeline Secrets required by the pipeline execution. Those secrets must be defined in the launching workspace.")
         public List<String> workspaceSecrets;
+
+        @Option(names = {"--disable-optimization"}, description = "Turn off the optimization for the pipeline before launching.")
+        public Boolean disableOptimization;
 
     }
 

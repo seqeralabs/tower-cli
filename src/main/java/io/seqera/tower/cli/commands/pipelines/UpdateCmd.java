@@ -91,7 +91,15 @@ public class UpdateCmd extends AbstractPipelinesCmd {
         Launch launch = api().describePipelineLaunch(id, wspId, sourceWorkspaceId).getLaunch();
 
         // Retrieve the provided computeEnv or use the primary if not provided
-        String ceId = opts.computeEnv != null ? computeEnvByRef(wspId, opts.computeEnv).getId() : launch.getComputeEnv().getId();
+        String ceId = null;
+        if (opts.computeEnv != null) {
+            ceId = computeEnvByRef(wspId, opts.computeEnv).getId();
+        } else {
+            final var ce = launch.getComputeEnv();
+            if (ce != null) {
+                ceId = ce.getId();
+            }
+        }
 
         UpdatePipelineRequest updateReq = new UpdatePipelineRequest()
                 .name(coalesce(newName, pipe.getName()))

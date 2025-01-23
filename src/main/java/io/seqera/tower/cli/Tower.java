@@ -26,6 +26,8 @@ import io.seqera.tower.cli.commands.ActionsCmd;
 import io.seqera.tower.cli.commands.CollaboratorsCmd;
 import io.seqera.tower.cli.commands.ComputeEnvsCmd;
 import io.seqera.tower.cli.commands.CredentialsCmd;
+import io.seqera.tower.cli.commands.DataLinksCmd;
+import io.seqera.tower.cli.commands.DataStudiosCmd;
 import io.seqera.tower.cli.commands.DatasetsCmd;
 import io.seqera.tower.cli.commands.InfoCmd;
 import io.seqera.tower.cli.commands.LaunchCmd;
@@ -58,6 +60,8 @@ import static picocli.AutoComplete.GenerateCompletion;
                 CollaboratorsCmd.class,
                 ComputeEnvsCmd.class,
                 CredentialsCmd.class,
+                DataLinksCmd.class,
+                DataStudiosCmd.class,
                 DatasetsCmd.class,
                 GenerateCompletion.class,
                 InfoCmd.class,
@@ -80,7 +84,7 @@ public class Tower extends AbstractCmd {
     @Option(names = {"-t", "--access-token"}, description = "Tower personal access token (TOWER_ACCESS_TOKEN).", defaultValue = "${TOWER_ACCESS_TOKEN}")
     public String token;
 
-    @Option(names = {"-u", "--url"}, description = "Tower server API endpoint URL (TOWER_API_ENDPOINT) [default: 'tower.nf'].", defaultValue = "${TOWER_API_ENDPOINT:-https://api.tower.nf}")
+    @Option(names = {"-u", "--url"}, description = "Tower server API endpoint URL (TOWER_API_ENDPOINT) [default: 'api.cloud.seqera.io'].", defaultValue = "${TOWER_API_ENDPOINT:-https://api.cloud.seqera.io}")
     public String url;
 
     @Option(names = {"-o", "--output"}, description = "Show output in defined format (only the 'json' option is available at the moment).", defaultValue = "${TOWER_CLI_OUTPUT_FORMAT:-console}")

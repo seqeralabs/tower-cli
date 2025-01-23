@@ -97,6 +97,8 @@
     "schemaName": null,
     "sessionId": null,
     "stubRun": false,
-    "workDir": "/efs"
+    "workDir": "/efs",
+    "optimizationId": "rOYdwTnmTaRCJjUq",
+    "optimizationTargets": "cpus, memory"
   }
 }

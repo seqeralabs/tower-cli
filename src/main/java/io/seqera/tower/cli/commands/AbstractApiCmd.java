@@ -31,8 +31,10 @@ import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.exceptions.WorkspaceNotFoundException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.ActionQueryAttribute;
+import io.seqera.tower.model.ComputeEnvComputeConfig;
 import io.seqera.tower.model.ComputeEnvQueryAttribute;
 import io.seqera.tower.model.ComputeEnvResponseDto;
+import io.seqera.tower.model.Credentials;
 import io.seqera.tower.model.ListComputeEnvsResponseEntry;
 import io.seqera.tower.model.ListWorkspacesAndOrgResponse;
 import io.seqera.tower.model.OrgAndWorkspaceDto;
@@ -271,6 +273,27 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         }
 
         return api().describeComputeEnv(primaryComputeEnvId, workspaceId, NO_CE_ATTRIBUTES).getComputeEnv();
+    }
+
+    protected String credentialsByRef(ComputeEnvComputeConfig.PlatformEnum type, Long wspId, String credentialsRef) throws ApiException {
+        List<Credentials> credentials = api().listCredentials(wspId, type == null ? null : type.getValue()).getCredentials();
+
+        if (credentials.isEmpty()) {
+            throw new TowerException("No valid credentials found at the workspace");
+        }
+
+        Credentials cred;
+
+        cred = credentials.stream()
+                .filter(it -> Objects.equals(it.getId(), credentialsRef) || Objects.equals(it.getName(), credentialsRef))
+                .findFirst()
+                .orElse(null);
+
+        if (cred == null) {
+            throw new TowerException("No valid credentials found at the workspace");
+        }
+
+        return cred.getId();
     }
 
     protected String serverUrl() {

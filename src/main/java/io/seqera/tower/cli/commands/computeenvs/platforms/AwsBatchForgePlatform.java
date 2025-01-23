@@ -20,7 +20,7 @@ package io.seqera.tower.cli.commands.computeenvs.platforms;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.model.AwsBatchConfig;
-import io.seqera.tower.model.ComputeEnv.PlatformEnum;
+import io.seqera.tower.model.ComputeEnvComputeConfig.PlatformEnum;
 import io.seqera.tower.model.ForgeConfig;
 import io.seqera.tower.model.ForgeConfig.AllocStrategyEnum;
 import io.seqera.tower.model.ForgeConfig.TypeEnum;

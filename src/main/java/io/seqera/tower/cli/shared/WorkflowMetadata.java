@@ -43,6 +43,17 @@ public final class WorkflowMetadata {
 
     private final List<LabelDbDto> labels;
 
+    public WorkflowMetadata() {
+        pipelineId = null;
+        organizationId = null;
+        organizationName = null;
+        workspaceId = null;
+        workspaceName = null;
+        userId = null;
+        runUrl = null;
+        labels = null;
+    }
+
     public WorkflowMetadata(
             final Long pipelineId,
             final Long organizationId,

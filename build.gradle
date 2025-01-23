@@ -3,17 +3,21 @@ plugins {
     id 'application'
     id 'jacoco'
     id 'org.cadixdev.licenser' version '0.6.1'
-    id 'org.graalvm.buildtools.native'
+    id 'org.graalvm.buildtools.native' version '0.10.2'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
+
+// define these in the `gradle.properties` file
+ext.githubUser = project.findProperty('github.packages.user')
+ext.githubToken = project.findProperty('github.packages.token')
 
 repositories {
     mavenCentral()
     maven {
         url = uri("https://maven.pkg.github.com/seqeralabs/tower-java-sdk")
         credentials {
-            username = System.getenv("GITHUB_USERNAME")
-            password = System.getenv("GITHUB_TOKEN")
+            username = githubUser ?: System.getenv("GITHUB_USERNAME")
+            password = githubToken ?: System.getenv("GITHUB_TOKEN")
         }
     }
 }
@@ -23,7 +27,7 @@ dependencies {
     implementation 'org.slf4j:slf4j-api:1.7.36'
     implementation 'ch.qos.logback:logback-core:1.2.11'
     implementation 'ch.qos.logback:logback-classic:1.2.11'
-    implementation 'io.seqera.tower:tower-java-sdk:1.9.5'
+    implementation 'io.seqera.tower:tower-java-sdk:1.9.9'
     implementation 'info.picocli:picocli:4.6.3'
     implementation 'org.apache.commons:commons-compress:1.22'
     implementation 'org.tukaani:xz:1.9'
@@ -67,6 +71,12 @@ task buildInfo {
     }
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
 compileJava {
     sourceCompatibility = JavaVersion.toVersion("11")
     targetCompatibility = JavaVersion.toVersion("11")
@@ -93,6 +103,7 @@ test {
 }
 
 graalvmNative {
+    toolchainDetection = true
     binaries {
         main {
             imageName = 'tw'
@@ -109,14 +120,14 @@ graalvmNative {
             buildArgs.add('-H:+ReportExceptionStackTraces')
 
             javaLauncher = javaToolchains.launcherFor {
-                languageVersion = JavaLanguageVersion.of(17)
+                languageVersion = JavaLanguageVersion.of(21)
+                vendor = JvmVendorSpec.matching("Oracle Corporation")
             }
 
         }
 
         test {
             verbose = true
-            agent = false
         }
     }
 }
