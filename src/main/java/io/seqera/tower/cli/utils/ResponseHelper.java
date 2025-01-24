@@ -135,6 +135,10 @@ public class ResponseHelper {
     }
 
     public static <S extends Enum<?>> Integer waitStatus(PrintWriter out, boolean showProgress, S targetStatus, S[] allStates, Supplier<S> checkStatus, S... endStates ) throws InterruptedException {
+        return waitStatus(out, showProgress, null, targetStatus, allStates, checkStatus, endStates);
+    }
+
+    public static <S extends Enum<?>> Integer waitStatus(PrintWriter out, boolean showProgress, Supplier<String> additionalProgressSteps, S targetStatus, S[] allStates, Supplier<S> checkStatus, S... endStates ) throws InterruptedException {
 
         Map<S, Integer> positions = new HashMap<>();
         for (int i=0; i < allStates.length; i++) {
@@ -162,8 +166,14 @@ public class ResponseHelper {
             if (showProgress) {
                 out.print('.');
                 if (lastReported != status) {
+                    if(additionalProgressSteps != null) {
+                        out.print("\n  Status transitioned to: ");
+                    }
                     out.print(String.format("%s", status));
                     lastReported = status;
+                }
+                if (additionalProgressSteps != null) {
+                    out.print(additionalProgressSteps.get());
                 }
                 out.flush();
             }
@@ -173,6 +183,9 @@ public class ResponseHelper {
         } while (currentPos < targetPos && !immutableStates.contains(status));
 
         if (showProgress) {
+            if (additionalProgressSteps != null) {
+                out.print(additionalProgressSteps.get());
+            }
             out.print(currentPos == targetPos ? "  [DONE]\n\n" : "  [ERROR]\n\n");
             out.flush();
         }
