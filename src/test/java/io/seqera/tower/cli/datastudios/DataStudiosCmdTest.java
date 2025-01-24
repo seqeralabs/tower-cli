@@ -22,6 +22,7 @@ import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.responses.datastudios.DataStudioStartSubmitted;
 import io.seqera.tower.cli.responses.datastudios.DataStudiosCreated;
+import io.seqera.tower.cli.responses.datastudios.DataStudioStopSubmitted;
 import io.seqera.tower.cli.responses.datastudios.DataStudiosList;
 import io.seqera.tower.cli.responses.datastudios.DataStudiosTemplatesList;
 import io.seqera.tower.cli.responses.datastudios.DataStudiosView;

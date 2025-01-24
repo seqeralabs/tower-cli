@@ -22,6 +22,7 @@ import io.seqera.tower.cli.commands.datastudios.ListCmd;
 import io.seqera.tower.cli.commands.datastudios.StartAsNewCmd;
 import io.seqera.tower.cli.commands.datastudios.StartCmd;
 import io.seqera.tower.cli.commands.datastudios.TemplatesCmd;
+import io.seqera.tower.cli.commands.datastudios.StopCmd;
 import io.seqera.tower.cli.commands.datastudios.ViewCmd;
 import picocli.CommandLine;
 
@@ -34,7 +35,8 @@ import picocli.CommandLine;
                 StartCmd.class,
                 AddCmd.class,
                 TemplatesCmd.class,
-                StartAsNewCmd.class
+                StartAsNewCmd.class,
+                StopCmd.class
         }
 )
 public class DataStudiosCmd extends AbstractRootCmd {
