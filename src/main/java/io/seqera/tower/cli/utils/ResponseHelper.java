@@ -173,10 +173,7 @@ public class ResponseHelper {
                     lastReported = status;
                 }
                 if (additionalProgressSteps != null) {
-                    String progressStep = additionalProgressSteps.get();
-                    if (progressStep != null) {
-                        out.print(progressStep);
-                    }
+                    out.print(additionalProgressSteps.get());
                 }
                 out.flush();
             }
@@ -187,10 +184,7 @@ public class ResponseHelper {
 
         if (showProgress) {
             if (additionalProgressSteps != null) {
-                String progressStep = additionalProgressSteps.get();
-                if (progressStep != null) {
-                    out.print(progressStep);
-                }
+                out.print(additionalProgressSteps.get());
             }
             out.print(currentPos == targetPos ? "  [DONE]\n\n" : "  [ERROR]\n\n");
             out.flush();

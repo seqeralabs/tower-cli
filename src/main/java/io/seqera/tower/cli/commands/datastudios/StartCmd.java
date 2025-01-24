@@ -134,9 +134,6 @@ public class StartCmd extends AbstractStudiosCmd {
         dataStudioConfiguration.setMountData(dataStudioConfigOptions.mountData == null
                 ? dataStudioConfiguration.getMountData()
                 : dataStudioConfigOptions.mountData);
-        dataStudioConfiguration.setCondaEnvironment(dataStudioConfigOptions.condaEnvironment == null
-                ? dataStudioConfiguration.getCondaEnvironment()
-                : dataStudioConfigOptions.condaEnvironment);
 
         String appliedDescription = description == null
                 ? dataStudioDto.getDescription()

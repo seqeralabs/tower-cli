@@ -566,7 +566,7 @@ public class DataStudiosCmdTest extends BaseCmdTest {
         ExecOut out = exec(format, mock, "studios", "start", "-w", "75887156211589", "-i" ,"3e8370e7");
 
         assertOutput(format, out, new DataStudioStartSubmitted("3e8370e7", 75887156211589L,
-                "[organization1 / workspace1]", "https://a3e8370e7.dev-tower.com", true));
+                "[organization1 / workspace1]",  "http://localhost:"+mock.getPort()+"/orgs/organization1/workspaces/workspace1", true));
     }
 
     @ParameterizedTest
@@ -615,7 +615,7 @@ public class DataStudiosCmdTest extends BaseCmdTest {
         ExecOut out = exec(format, mock, "studios", "start", "-w", "75887156211589", "-i" ,"3e8370e7", "-c", "4", "--description", "Override description");
 
         assertOutput(format, out, new DataStudioStartSubmitted("3e8370e7", 75887156211589L,
-                "[organization1 / workspace1]", "https://a3e8370e7.dev-tower.com", true));
+                "[organization1 / workspace1]", "http://localhost:"+mock.getPort()+"/orgs/organization1/workspaces/workspace1", true));
     }
 
     // Only run this test in json output format, since extra stdout output is printed out to console with --wait flag
@@ -676,7 +676,7 @@ public class DataStudiosCmdTest extends BaseCmdTest {
         ExecOut out = exec(format, mock, "studios", "start", "-w", "75887156211589", "-i" ,"3e8370e7", "--wait", "RUNNING");
 
         assertOutput(format, out, new DataStudioStartSubmitted("3e8370e7", 75887156211589L,
-                "[organization1 / workspace1]", "https://a3e8370e7.dev-tower.com", true));
+                "[organization1 / workspace1]", "http://localhost:"+mock.getPort()+"/orgs/organization1/workspaces/workspace1", true));
 
         // verify the API has been polled additionally for the status
         mock.verify(request().withMethod("GET").withPath("/studios/3e8370e7"), VerificationTimes.exactly(4));

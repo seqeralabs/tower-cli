@@ -48,7 +48,6 @@ public class AbstractStudiosCmd extends AbstractApiCmd {
 
         @Override
         public String get() {
-
             try {
                 DataStudioDto dataStudioDto = api().describeDataStudio(sessionId, workspaceId);
 
@@ -63,9 +62,9 @@ public class AbstractStudiosCmd extends AbstractApiCmd {
                             : String.format("\n  %s - Error encountered: %s", currentProgressStep.getMessage(), dataStudioDto.getStatusInfo().getMessage());
                 }
 
-                return null;
+                return "";
             } catch (Exception e) {
-                return null;
+                return "";
             }
         }
     }

@@ -35,7 +35,4 @@ public class DataStudioConfigurationOptions {
     @CommandLine.Option(names = {"--mount-data"}, description = "Optional configuration override for 'mountData' setting (comma separate list of datalinkIds)", split = ",")
     public List<String> mountData;
 
-    @CommandLine.Option(names = {"--conda-env"}, description = "Optional configuration override for 'condaEnvironment' setting (YAML conda packages configurations)")
-    public String condaEnvironment;
-
 }
