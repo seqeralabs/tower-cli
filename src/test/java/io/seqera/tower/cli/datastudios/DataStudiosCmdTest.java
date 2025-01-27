@@ -212,7 +212,7 @@ public class DataStudiosCmdTest extends BaseCmdTest {
                         """, DataStudioDto.class),
                 parseJson("""
                         {
-                                    "sessionId": "c779bf09",
+                                    "sessionId": "3e8370e7",
                                     "workspaceId": 75887156211589,
                                     "parentCheckpoint": null,
                                     "user": {
@@ -221,9 +221,9 @@ public class DataStudiosCmdTest extends BaseCmdTest {
                                         "email": "johnny@seqera.io",
                                         "avatar": null
                                     },
-                                    "name": "studio-d456",
-                                    "description": null,
-                                    "studioUrl": "http://ac779bf09.studio.localhost:9191",
+                                    "name": "studio-a66d",
+                                    "description": "my first studio",
+                                    "studioUrl": "http://a3e8370e7.studio.localhost:9191",
                                     "computeEnv": {
                                         "id": "61DYXYj3XQAYbJIHrI1XSg",
                                         "name": "my-local-ce",
@@ -238,7 +238,9 @@ public class DataStudiosCmdTest extends BaseCmdTest {
                                         "gpu": 0,
                                         "cpu": 2,
                                         "memory": 8192,
-                                        "mountData": [],
+                                        "mountData": [
+                                             "v1-user-1ccf131810375d303bf0402dd8423433"
+                                           ],
                                         "condaEnvironment": null
                                     },
                                     "dateCreated": "2025-01-10T17:26:36.83703Z",
@@ -330,7 +332,7 @@ public class DataStudiosCmdTest extends BaseCmdTest {
                         """, DataStudioDto.class),
                 parseJson("""
                         {
-                                    "sessionId": "c779bf09",
+                                    "sessionId": "3e8370e7",
                                     "workspaceId": 75887156211589,
                                     "parentCheckpoint": null,
                                     "user": {
@@ -339,9 +341,9 @@ public class DataStudiosCmdTest extends BaseCmdTest {
                                         "email": "johnny@seqera.io",
                                         "avatar": null
                                     },
-                                    "name": "studio-d456",
-                                    "description": null,
-                                    "studioUrl": "http://ac779bf09.studio.localhost:9191",
+                                    "name": "studio-a66d",
+                                    "description": "my first studio",
+                                    "studioUrl": "http://a3e8370e7.studio.localhost:9191",
                                     "computeEnv": {
                                         "id": "61DYXYj3XQAYbJIHrI1XSg",
                                         "name": "my-local-ce",
@@ -356,7 +358,9 @@ public class DataStudiosCmdTest extends BaseCmdTest {
                                         "gpu": 0,
                                         "cpu": 2,
                                         "memory": 8192,
-                                        "mountData": [],
+                                        "mountData": [
+                                             "v1-user-1ccf131810375d303bf0402dd8423433"
+                                           ],
                                         "condaEnvironment": null
                                     },
                                     "dateCreated": "2025-01-10T17:26:36.83703Z",
@@ -570,6 +574,62 @@ public class DataStudiosCmdTest extends BaseCmdTest {
         ExecOut out = exec(format, mock, "studios", "start", "-w", "75887156211589", "-i" ,"3e8370e7");
 
         assertOutput(format, out, new DataStudioStartSubmitted("3e8370e7", 75887156211589L,
+                "[organization1 / workspace1]",  "http://localhost:"+mock.getPort()+"/orgs/organization1/workspaces/workspace1", true));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testStartByName(OutputType format, MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/studios").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datastudios/datastudios_list_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/studios/3e8370e7").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datastudios/datastudios_view_response_studio_stopped")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("PUT").withPath("/studios/3e8370e7/start").withQueryStringParameter("workspaceId", "75887156211589").withBody(json("""
+                           {
+                             "configuration": {
+                               "gpu": 0,
+                               "cpu": 2,
+                               "memory": 8192,
+                               "mountData": [
+                                 "v1-user-1ccf131810375d303bf0402dd8423433"
+                               ]
+                             },
+                             "description": "my first studio"
+                           }
+                           """
+                        )
+
+                ), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datastudios/datastudios_start_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+
+        ExecOut out = exec(format, mock, "studios", "start", "-w", "organization1/workspace1", "-n" ,"studio-a66d");
+
+        assertOutput(format, out, new DataStudioStartSubmitted("studio-a66d", 75887156211589L,
                 "[organization1 / workspace1]",  "http://localhost:"+mock.getPort()+"/orgs/organization1/workspaces/workspace1", true));
     }
 

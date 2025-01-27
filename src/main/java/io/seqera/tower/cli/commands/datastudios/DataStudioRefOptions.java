@@ -27,5 +27,12 @@ public class DataStudioRefOptions {
     public static class DataStudioRef {
         @CommandLine.Option(names = {"-i", "--id"}, description = "DataStudio session ID.")
         public String sessionId;
+
+        @CommandLine.Option(names = {"-n", "--name"}, description = "DataStudio name.")
+        public String dataStudioName;
+    }
+
+    public String getDataStudioIdentifier() {
+        return dataStudio.sessionId != null ? dataStudio.sessionId : dataStudio.dataStudioName;
     }
 }

@@ -44,7 +44,7 @@
             "progress": null
         },
         {
-            "sessionId": "c779bf09",
+            "sessionId": "3e8370e7",
             "workspaceId": 75887156211589,
             "parentCheckpoint": null,
             "user": {
@@ -53,9 +53,9 @@
                 "email": "johnny@seqera.io",
                 "avatar": null
             },
-            "name": "studio-d456",
-            "description": null,
-            "studioUrl": "http://ac779bf09.studio.localhost:9191",
+            "name": "studio-a66d",
+            "description": "my first studio",
+            "studioUrl": "http://a3e8370e7.studio.localhost:9191",
             "computeEnv": {
                 "id": "61DYXYj3XQAYbJIHrI1XSg",
                 "name": "my-local-ce",
@@ -70,7 +70,9 @@
                 "gpu": 0,
                 "cpu": 2,
                 "memory": 8192,
-                "mountData": [],
+                "mountData": [
+                  "v1-user-1ccf131810375d303bf0402dd8423433"
+                ],
                 "condaEnvironment": null
             },
             "dateCreated": "2025-01-10T17:26:36.83703Z",

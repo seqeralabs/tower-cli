@@ -43,15 +43,19 @@ public class StopCmd extends AbstractStudiosCmd {
         Long wspId = workspaceId(workspace.workspace);
 
         try {
-            DataStudioStopResponse response = api().stopDataStudio(dataStudioRefOptions.dataStudio.sessionId, wspId);
+            String sessionId = dataStudioRefOptions.dataStudio.sessionId != null
+                    ? dataStudioRefOptions.dataStudio.sessionId
+                    : fetchDataStudio(dataStudioRefOptions, wspId).getSessionId();
 
-            return new DataStudioStopSubmitted(dataStudioRefOptions.dataStudio.sessionId, wspId, workspaceRef(wspId), response.getJobSubmitted());
+            DataStudioStopResponse response = api().stopDataStudio(sessionId, wspId);
+
+            return new DataStudioStopSubmitted(dataStudioRefOptions.getDataStudioIdentifier(), wspId, workspaceRef(wspId), response.getJobSubmitted());
         } catch (ApiException e) {
             if (e.getCode() == 404) {
-                throw new DataStudioNotFoundException(dataStudioRefOptions.dataStudio.sessionId, wspId);
+                throw new DataStudioNotFoundException(dataStudioRefOptions.getDataStudioIdentifier(), workspace.workspace);
             }
             if (e.getCode() == 403) {
-                throw new TowerException(String.format("User not entitled to view studio '%s' at %s workspace", dataStudioRefOptions.dataStudio.sessionId, wspId));
+                throw new TowerException(String.format("User not entitled to view studio '%s' at %s workspace", dataStudioRefOptions.getDataStudioIdentifier(), workspace.workspace));
             }
             throw e;
         }

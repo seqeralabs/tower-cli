@@ -63,15 +63,15 @@ public class StartCmd extends AbstractStudiosCmd {
 
             DataStudioStartRequest request = getStartRequestWithOverridesApplied(dataStudioDto);
 
-            DataStudioStartResponse response = api().startDataStudio(dataStudioRefOptions.dataStudio.sessionId, request, wspId);
+            DataStudioStartResponse response = api().startDataStudio(dataStudioDto.getSessionId(), request, wspId);
 
-            return new DataStudioStartSubmitted(dataStudioRefOptions.dataStudio.sessionId, wspId, workspaceRef(wspId), baseWorkspaceUrl(wspId), response.getJobSubmitted());
+            return new DataStudioStartSubmitted(dataStudioRefOptions.getDataStudioIdentifier(), wspId, workspaceRef(wspId), baseWorkspaceUrl(wspId), response.getJobSubmitted());
         } catch (ApiException e) {
             if (e.getCode() == 404) {
-                throw new DataStudioNotFoundException(dataStudioRefOptions.dataStudio.sessionId, wspId);
+                throw new DataStudioNotFoundException(dataStudioRefOptions.getDataStudioIdentifier(), workspace.workspace);
             }
             if (e.getCode() == 403) {
-                throw new TowerException(String.format("User not entitled to view studio '%s' at %s workspace", dataStudioRefOptions.dataStudio.sessionId, wspId));
+                throw new TowerException(String.format("User not entitled to view studio '%s' at %s workspace", dataStudioRefOptions.getDataStudioIdentifier(), workspace.workspace));
             }
             throw e;
         }
@@ -92,7 +92,7 @@ public class StartCmd extends AbstractStudiosCmd {
             return exitCode;
         }
 
-        return onBeforeExit(exitCode, submitted.sessionId, submitted.workspaceId, wait);
+        return onBeforeExit(exitCode, submitted.studioIdentifier, submitted.workspaceId, wait);
     }
 
     private DataStudioStartRequest getStartRequestWithOverridesApplied(DataStudioDto dataStudioDto) {

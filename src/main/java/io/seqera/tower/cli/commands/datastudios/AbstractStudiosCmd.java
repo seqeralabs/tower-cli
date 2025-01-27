@@ -19,11 +19,13 @@ package io.seqera.tower.cli.commands.datastudios;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
+import io.seqera.tower.cli.exceptions.DataStudioNotFoundException;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.utils.FilesHelper;
@@ -40,7 +42,28 @@ import static io.seqera.tower.model.DataStudioProgressStepStatus.IN_PROGRESS;
 public class AbstractStudiosCmd extends AbstractApiCmd {
 
     protected DataStudioDto fetchDataStudio(DataStudioRefOptions dataStudioRefOptions, Long wspId) throws ApiException {
-        return api().describeDataStudio(dataStudioRefOptions.dataStudio.sessionId, wspId);
+        DataStudioDto dataStudio;
+
+        if (dataStudioRefOptions.dataStudio.sessionId != null) {
+            dataStudio = getDataStudioById(wspId, dataStudioRefOptions.dataStudio.sessionId);
+        } else {
+            dataStudio = getDataStudioByName(wspId, dataStudioRefOptions.dataStudio.dataStudioName );
+        }
+
+        return dataStudio;
+    }
+
+    private DataStudioDto getDataStudioByName(Long wspId, String dataStudioName) throws ApiException {
+        List<DataStudioDto> studios = api().listDataStudios(wspId, null, null, null).getStudios();
+
+        return studios.stream()
+                .filter(s -> dataStudioName.equals(s.getName()))
+                .findFirst()
+                .orElseThrow(() -> new DataStudioNotFoundException(dataStudioName, wspId));
+    }
+
+    private DataStudioDto getDataStudioById(Long wspId, String sessionId) throws ApiException {
+        return api().describeDataStudio(sessionId, wspId);
     }
 
     protected Integer onBeforeExit(int exitCode, String sessionId, Long workspaceId, DataStudioStatus targetStatus) {
