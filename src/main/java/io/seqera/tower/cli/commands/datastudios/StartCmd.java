@@ -18,7 +18,6 @@
 package io.seqera.tower.cli.commands.datastudios;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.exceptions.DataStudioNotFoundException;
 import io.seqera.tower.cli.exceptions.TowerException;
@@ -78,6 +77,7 @@ public class StartCmd extends AbstractStudiosCmd {
         }
     }
 
+
     @Override
     protected Integer onBeforeExit(int exitCode, Response response) {
 
@@ -92,61 +92,21 @@ public class StartCmd extends AbstractStudiosCmd {
             return exitCode;
         }
 
-        boolean showProgress = app().output != OutputType.json;
-
-        try {
-            return waitStatus(
-                    app().getOut(),
-                    showProgress,
-                    new ProgressStepMessageSupplier(submitted.sessionId, submitted.workspaceId),
-                    wait,
-                    DataStudioStatus.values(),
-                    () -> checkDataStudioStatus(submitted.sessionId, submitted.workspaceId),
-                    DataStudioStatus.STOPPED, DataStudioStatus.ERRORED, DataStudioStatus.RUNNING
-            );
-        } catch (InterruptedException e) {
-            return exitCode;
-        }
-    }
-
-    private DataStudioStatus checkDataStudioStatus(String sessionId, Long workspaceId) {
-        try {
-            return api().describeDataStudio(sessionId, workspaceId).getStatusInfo().getStatus();
-        } catch (ApiException | NullPointerException e) {
-            return null;
-        }
+        return onBeforeExit(exitCode, submitted.sessionId, submitted.workspaceId, wait);
     }
 
     private DataStudioStartRequest getStartRequestWithOverridesApplied(DataStudioDto dataStudioDto) {
-        DataStudioConfiguration dataStudioConfiguration = dataStudioDto.getConfiguration() == null
-                ? new DataStudioConfiguration()
-                : dataStudioDto.getConfiguration();
 
-        dataStudioConfiguration.setGpu(dataStudioConfigOptions.gpu == null
-                ? dataStudioConfiguration.getGpu()
-                : dataStudioConfigOptions.gpu);
-        dataStudioConfiguration.setCpu(dataStudioConfigOptions.cpu == null
-                ? dataStudioConfiguration.getCpu()
-                : dataStudioConfigOptions.cpu);
-        dataStudioConfiguration.setMemory(dataStudioConfigOptions.memory == null
-                ? dataStudioConfiguration.getMemory()
-                : dataStudioConfigOptions.memory);
-        dataStudioConfiguration.setMountData(dataStudioConfigOptions.mountData == null
-                ? dataStudioConfiguration.getMountData()
-                : dataStudioConfigOptions.mountData);
-
+        DataStudioConfiguration newConfig = dataStudioConfigurationFrom(dataStudioDto, dataStudioConfigOptions);
         String appliedDescription = description == null
                 ? dataStudioDto.getDescription()
                 : description;
 
         DataStudioStartRequest request = new DataStudioStartRequest();
 
-        request.setConfiguration(dataStudioConfiguration);
+        request.setConfiguration(newConfig);
         request.setDescription(appliedDescription);
 
         return request;
     }
-
-
-
 }

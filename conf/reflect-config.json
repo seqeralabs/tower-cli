@@ -1125,6 +1125,12 @@
   "queryAllDeclaredMethods":true
 },
 {
+  "name":"io.seqera.tower.cli.commands.datastudios.AddCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.datastudios.DataStudioConfigurationOptions",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -1149,7 +1155,19 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.datastudios.StartAsNewCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.datastudios.StartCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.datastudios.TemplatesCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
@@ -1861,6 +1879,18 @@
 },
 {
   "name":"io.seqera.tower.cli.responses.datastudios.DataStudiosView",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.datastudios.DataStudiosCreated",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.datastudios.DataStudiosTemplatesList",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true
@@ -2634,6 +2664,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"fromValue","parameterTypes":["java.lang.String"] }, {"name":"setDataLinks","parameterTypes":["java.util.List"] }, {"name":"setTotalSize","parameterTypes":["java.lang.Long"] }]
 },
 {
+  "name":"io.seqera.tower.model.DataStudioCheckpointDto",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.model.DataStudioComputeEnvDto",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -2648,6 +2684,20 @@
   "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getCondaEnvironment","parameterTypes":[] }, {"name":"getCpu","parameterTypes":[] }, {"name":"getGpu","parameterTypes":[] }, {"name":"getMemory","parameterTypes":[] }, {"name":"getMountData","parameterTypes":[] }, {"name":"setCondaEnvironment","parameterTypes":["java.lang.String"] }, {"name":"setCpu","parameterTypes":["java.lang.Integer"] }, {"name":"setGpu","parameterTypes":["java.lang.Integer"] }, {"name":"setMemory","parameterTypes":["java.lang.Integer"] }, {"name":"setMountData","parameterTypes":["java.util.List"] }]
 },
 {
+  "name":"io.seqera.tower.model.DataStudioCreateRequest",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"getComputeEnvId","parameterTypes":[] }, {"name":"getConfiguration","parameterTypes":[] }, {"name":"getDataStudioToolUrl","parameterTypes":[] }, {"name":"getDescription","parameterTypes":[] }, {"name":"getInitialCheckpointId","parameterTypes":[] }, {"name":"getName","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.model.DataStudioCreateResponse",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setStudio","parameterTypes":["io.seqera.tower.model.DataStudioDto"] }]
+},
+{
   "name":"io.seqera.tower.model.DataStudioDto",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -2660,6 +2710,13 @@
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getCheckpointId","parameterTypes":[] }, {"name":"getCheckpointName","parameterTypes":[] }, {"name":"getSessionId","parameterTypes":[] }, {"name":"getStudioName","parameterTypes":[] }, {"name":"setCheckpointId","parameterTypes":["java.lang.Long"] }, {"name":"setCheckpointName","parameterTypes":["java.lang.String"] }, {"name":"setSessionId","parameterTypes":["java.lang.String"] }, {"name":"setStudioName","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"io.seqera.tower.model.DataStudioListCheckpointsResponse",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setCheckpoints","parameterTypes":["java.util.List"] }, {"name":"setTotalSize","parameterTypes":["java.lang.Long"] }]
 },
 {
   "name":"io.seqera.tower.model.DataStudioListResponse",
@@ -2714,6 +2771,13 @@
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getIcon","parameterTypes":[] }, {"name":"getRepository","parameterTypes":[] }, {"name":"setIcon","parameterTypes":["java.lang.String"] }, {"name":"setRepository","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"io.seqera.tower.model.DataStudioTemplatesListResponse",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setTemplates","parameterTypes":["java.util.List"] }, {"name":"setTotalSize","parameterTypes":["java.lang.Long"] }]
 },
 {
   "name":"io.seqera.tower.model.Dataset",
@@ -3581,6 +3645,10 @@
   "queryAllDeclaredConstructors":true
 },
 {
+  "name":"java.net.UnknownHostException",
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String"] }]
+},
+{
   "name":"java.nio.file.Path"
 },
 {
@@ -4144,6 +4212,10 @@
   "name":"sun.misc.Unsafe",
   "allDeclaredFields":true,
   "methods":[{"name":"objectFieldOffset","parameterTypes":["java.lang.reflect.Field"] }, {"name":"putBoolean","parameterTypes":["java.lang.Object","long","boolean"] }]
+},
+{
+  "name":"sun.net.www.protocol.http.ntlm.NTLMAuthentication",
+  "methods":[{"name":"<init>","parameterTypes":["boolean","java.lang.String","int","java.net.PasswordAuthentication"] }, {"name":"<init>","parameterTypes":["boolean","java.net.URL","java.net.PasswordAuthentication"] }, {"name":"isTrustedSite","parameterTypes":["java.net.URL"] }, {"name":"supportsTransparentAuth","parameterTypes":[] }]
 },
 {
   "name":"sun.security.pkcs.SignerInfo[]"

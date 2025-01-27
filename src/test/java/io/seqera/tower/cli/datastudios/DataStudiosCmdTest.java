@@ -21,10 +21,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.responses.datastudios.DataStudioStartSubmitted;
+import io.seqera.tower.cli.responses.datastudios.DataStudiosCreated;
 import io.seqera.tower.cli.responses.datastudios.DataStudiosList;
+import io.seqera.tower.cli.responses.datastudios.DataStudiosTemplatesList;
 import io.seqera.tower.cli.responses.datastudios.DataStudiosView;
 import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.model.DataStudioDto;
+import io.seqera.tower.model.DataStudioTemplatesListResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -612,7 +615,7 @@ public class DataStudiosCmdTest extends BaseCmdTest {
         );
 
 
-        ExecOut out = exec(format, mock, "studios", "start", "-w", "75887156211589", "-i" ,"3e8370e7", "-c", "4", "--description", "Override description");
+        ExecOut out = exec(format, mock, "studios", "start", "-w", "75887156211589", "-i" ,"3e8370e7", "--cpu", "4", "--description", "Override description");
 
         assertOutput(format, out, new DataStudioStartSubmitted("3e8370e7", 75887156211589L,
                 "[organization1 / workspace1]", "http://localhost:"+mock.getPort()+"/orgs/organization1/workspaces/workspace1", true));
@@ -681,4 +684,226 @@ public class DataStudiosCmdTest extends BaseCmdTest {
         // verify the API has been polled additionally for the status
         mock.verify(request().withMethod("GET").withPath("/studios/3e8370e7"), VerificationTimes.exactly(4));
     }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testTemplates(OutputType format, MockServerClient mock) throws JsonProcessingException {
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/studios/templates")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("max", "20"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datastudios/datastudios_templates_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "templates", "-w", "75887156211589");
+
+        assertOutput(format, out, new DataStudiosTemplatesList(parseJson("""
+                {
+                  "templates": [
+                    {
+                      "repository": "cr.seqera.io/public/data-studio-jupyter:4.2.5-snapshot",
+                      "icon": "jupyter"
+                    },
+                    {
+                      "repository": "cr.seqera.io/public/data-studio-rstudio:4.4.1-u1-snapshot",
+                      "icon": "rstudio"
+                    },
+                    {
+                      "repository": "cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot",
+                      "icon": "vscode"
+                    },
+                    {
+                      "repository": "cr.seqera.io/public/data-studio-xpra:6.2.0-r2-1-snapshot",
+                      "icon": "xpra"
+                    }
+                  ],
+                  "totalSize": 4
+                }""", DataStudioTemplatesListResponse.class).getTemplates())
+        );
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAdd(OutputType format, MockServerClient mock){
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/studios")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("autostart", "false"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datastudios/datastudios_created_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t" ,"cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot", "-c", "7WgvfmcjAwp3Or75UphCJl");
+
+        assertOutput(format, out, new DataStudiosCreated("3e8370e7",75887156211589L, "[organization1 / workspace1]", false));
+    }
+
+    // Only run this test in json output format, since extra stdout output is printed out to console with --wait flag
+    @ParameterizedTest
+    @EnumSource(value = OutputType.class, names = {"json"})
+    void testAddWithAutoStartAndWait(OutputType format, MockServerClient mock){
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/studios")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("autostart", "true"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datastudios/datastudios_created_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/studios/3e8370e7").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datastudios/datastudios_view_response_studio_starting")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/studios/3e8370e7").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datastudios/datastudios_view_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t" ,"cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot",
+                "-c", "7WgvfmcjAwp3Or75UphCJl", "-a", "--wait", "running");
+
+        assertOutput(format, out, new DataStudiosCreated("3e8370e7",75887156211589L, "[organization1 / workspace1]", true));
+
+        // verify the API has been polled additionally for the status
+        mock.verify(request().withMethod("GET").withPath("/studios/3e8370e7"), VerificationTimes.exactly(2));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testStartAsNew(OutputType format, MockServerClient mock) throws JsonProcessingException {
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(2)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(2)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/studios/3e8370e7").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datastudios/datastudios_view_response_studio_stopped")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/studios/3e8370e7/checkpoints")
+                        .withQueryStringParameter("workspaceId","75887156211589")
+                        .withQueryStringParameter("max","1"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"checkpoints\":[],\"totalSize\":0}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/studios")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("autostart", "false"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datastudios/datastudios_start_as_new_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "start-as-new", "-pid", "3e8370e7", "-n", "child-studio-a66d", "-w", "75887156211589", "--cpu", "4");
+
+        assertOutput(format, out, new DataStudiosCreated("8aebf1b8",75887156211589L, "[organization1 / workspace1]", false));
+
+
+        mock.when(
+                request().withMethod("GET").withPath("/studios/8aebf1b8").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datastudios/datastudios_view_start_as_new_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut outView = exec(format, mock, "studios", "view", "-i", "8aebf1b8", "-w", "75887156211589");
+
+        assertOutput(format, outView, new DataStudiosView(parseJson("""
+                {
+                  "sessionId": "8aebf1b8",
+                  "workspaceId": 75887156211589,
+                  "user": {
+                    "id": 2345,
+                    "userName": "John Doe",
+                    "email": "john@seqera.io",
+                    "avatar": null
+                  },
+                  "name": "studio-a66d",
+                  "description": "Started from studio studio-a66d",
+                  "studioUrl": "https://a8aebf1b8.dev-tower.com",
+                  "computeEnv": {
+                    "id": "3xkkzYH2nbD3nZjrzKm0oR",
+                    "name": "ce1",
+                    "platform": "aws-batch",
+                    "region": "us-east-2"
+                  },
+                  "template": {
+                    "repository": "cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot",
+                    "icon": "vscode"
+                  },
+                  "configuration": {
+                    "gpu": 0,
+                    "cpu": 4,
+                    "memory": 8192,
+                    "mountData": [],
+                    "condaEnvironment":null
+                  },
+                  "dateCreated": "2025-01-28T10:44:44.833455494Z",
+                  "lastUpdated": "2025-01-28T10:44:44.833455494Z",
+                  "statusInfo": {
+                    "status": "stopped",
+                    "message": "",
+                    "lastUpdate": "2025-01-28T10:44:44.650457005Z"
+                  },
+                  "waveBuildUrl": null,
+                  "baseImage": "cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot",
+                  "mountedDataLinks": [],
+                  "progress": []
+                }
+                """, DataStudioDto.class), "[organization1 / workspace1]"));
+    }
+
 }

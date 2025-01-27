@@ -17,22 +17,22 @@
 
 package io.seqera.tower.cli.commands.datastudios;
 
+import java.nio.file.Path;
 import java.util.List;
 
 import picocli.CommandLine;
 
 public class DataStudioConfigurationOptions {
 
-    @CommandLine.Option(names = {"-g", "--gpu"}, description = "Optional configuration override for 'gpu' setting (Integer representing number of cores)")
+    @CommandLine.Option(names = {"--gpu"}, description = "Optional configuration override for 'gpu' setting (Integer representing number of cores)")
     public Integer gpu;
 
-    @CommandLine.Option(names = {"-c", "--cpu"}, description = "Optional configuration override for 'cpu' setting (Integer representing number of cores)")
+    @CommandLine.Option(names = {"--cpu"}, description = "Optional configuration override for 'cpu' setting (Integer representing number of cores)")
     public Integer cpu;
 
-    @CommandLine.Option(names = {"-m", "--memory"}, description = "Optional configuration override for 'memory' setting (Integer representing memory in MBs)")
+    @CommandLine.Option(names = {"--memory"}, description = "Optional configuration override for 'memory' setting (Integer representing memory in MBs)")
     public Integer memory;
 
     @CommandLine.Option(names = {"--mount-data"}, description = "Optional configuration override for 'mountData' setting (comma separate list of datalinkIds)", split = ",")
     public List<String> mountData;
-
 }
