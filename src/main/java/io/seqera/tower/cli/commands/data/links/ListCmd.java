@@ -18,14 +18,11 @@
 package io.seqera.tower.cli.commands.data.links;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.commands.AbstractApiCmd;
-import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.commands.global.PaginationOptions;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.data.DataLinksList;
 import io.seqera.tower.cli.utils.PaginationInfo;
-import io.seqera.tower.cli.utils.ResponseHelper;
 import io.seqera.tower.cli.utils.data.DataLinkProvider;
 import io.seqera.tower.model.DataLinksListResponse;
 import picocli.CommandLine;
@@ -38,7 +35,7 @@ import java.util.List;
         name = "list",
         description = "List data links."
 )
-public class ListCmd extends AbstractApiCmd {
+public class ListCmd extends AbstractDataLinkCmd {
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
@@ -70,32 +67,12 @@ public class ListCmd extends AbstractApiCmd {
         String search = buildSearch(searchOption.startsWith, provider, searchOption.region, searchOption.uri);
         String visibility = visibilityOption == null ? null : visibilityOption.toString();
 
-        DataLinksFetchStatus status = checkDataLinksFetchStatus(wspId, credId);
-        if (wait && status == DataLinksFetchStatus.FETCHING) {
-            waitForDoneStatus(wspId, credId);
-        }
-
-        boolean isResultIncomplete = !wait && status == DataLinksFetchStatus.FETCHING;
+        boolean isResultIncomplete = checkIfResultIncomplete(wspId, credId, wait);
 
         DataLinksListResponse data = api().listDataLinks(wspId, credId, search, max, offset, visibility);
         return new DataLinksList(workspaceRef(wspId), data.getDataLinks(),
                 isResultIncomplete,
                 PaginationInfo.from(offset, max, data.getTotalSize()));
-    }
-
-    private void waitForDoneStatus(Long wspId, String credId) {
-        try {
-            ResponseHelper.waitStatus(
-                    app().getOut(),
-                    app().output != OutputType.json,
-                    DataLinksFetchStatus.DONE,
-                    DataLinksFetchStatus.values(),
-                    () -> checkDataLinksFetchStatus(wspId, credId),
-                    DataLinksFetchStatus.DONE, DataLinksFetchStatus.ERROR
-            );
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     private static String formatProviders(List<DataLinkProvider> providers) {
@@ -144,24 +121,4 @@ public class ListCmd extends AbstractApiCmd {
         hidden, visible, all
     }
 
-    DataLinksFetchStatus checkDataLinksFetchStatus(Long wspId, String credentialsId) {
-        int status = 0;
-        try {
-            status = api().listDataLinksWithHttpInfo(wspId, credentialsId, null, 1, 0, null).getStatusCode();
-        } catch (ApiException e) {
-            return DataLinksFetchStatus.ERROR;
-        }
-        switch (status) {
-            case 200:
-                return DataLinksFetchStatus.DONE;
-            case 202:
-                return DataLinksFetchStatus.FETCHING;
-            default:
-                return DataLinksFetchStatus.ERROR;
-        }
-    }
-
-    public enum DataLinksFetchStatus {
-        FETCHING, DONE, ERROR
-    }
 }

@@ -17,9 +17,6 @@
 
 package io.seqera.tower.cli.commands.datastudios;
 
-import java.nio.file.Path;
-import java.util.List;
-
 import picocli.CommandLine;
 
 public class DataStudioConfigurationOptions {
@@ -33,6 +30,7 @@ public class DataStudioConfigurationOptions {
     @CommandLine.Option(names = {"--memory"}, description = "Optional configuration override for 'memory' setting (Integer representing memory in MBs)")
     public Integer memory;
 
-    @CommandLine.Option(names = {"--mount-data"}, description = "Optional configuration override for 'mountData' setting (comma separate list of datalinkIds)", split = ",")
-    public List<String> mountData;
+    @CommandLine.Mixin
+    public DataLinkRefOptions dataLinkRefOptions;
+
 }

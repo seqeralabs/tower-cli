@@ -77,7 +77,6 @@ public class StartCmd extends AbstractStudiosCmd {
         }
     }
 
-
     @Override
     protected Integer onBeforeExit(int exitCode, Response response) {
 
@@ -96,6 +95,9 @@ public class StartCmd extends AbstractStudiosCmd {
     }
 
     private DataStudioStartRequest getStartRequestWithOverridesApplied(DataStudioDto dataStudioDto) {
+        DataStudioConfiguration dataStudioConfiguration = dataStudioDto.getConfiguration() == null
+                ? new DataStudioConfiguration()
+                : dataStudioDto.getConfiguration();
 
         DataStudioConfiguration newConfig = dataStudioConfigurationFrom(dataStudioDto, dataStudioConfigOptions);
         String appliedDescription = description == null
@@ -109,4 +111,7 @@ public class StartCmd extends AbstractStudiosCmd {
 
         return request;
     }
+
+
+
 }
