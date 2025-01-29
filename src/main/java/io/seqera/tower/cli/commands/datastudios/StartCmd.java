@@ -93,7 +93,7 @@ public class StartCmd extends AbstractStudiosCmd {
         return onBeforeExit(exitCode, submitted.sessionId, submitted.workspaceId, wait);
     }
 
-    private DataStudioStartRequest getStartRequestWithOverridesApplied(DataStudioDto dataStudioDto) {
+    private DataStudioStartRequest getStartRequestWithOverridesApplied(DataStudioDto dataStudioDto) throws ApiException {
         DataStudioConfiguration newConfig = dataStudioConfigurationFrom(dataStudioDto.getWorkspaceId(), dataStudioDto, dataStudioConfigOptions);
         String appliedDescription = description == null
                 ? dataStudioDto.getDescription()

@@ -17,20 +17,14 @@
 
 package io.seqera.tower.cli.commands.datastudios;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.commands.data.links.AbstractDataLinkCmd;
-import io.seqera.tower.cli.exceptions.DataLinkNotFoundException;
+import io.seqera.tower.cli.commands.AbstractApiCmd;
+import io.seqera.tower.cli.commands.data.links.DataLinkService;
 import io.seqera.tower.cli.exceptions.DataStudioNotFoundException;
-import io.seqera.tower.cli.exceptions.MultipleDataLinksFoundException;
-import io.seqera.tower.cli.exceptions.TowerRuntimeException;
-import io.seqera.tower.model.DataLinkDto;
 import io.seqera.tower.model.DataStudioConfiguration;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.model.DataStudioDto;
@@ -42,7 +36,7 @@ import static io.seqera.tower.cli.utils.ResponseHelper.waitStatus;
 import static io.seqera.tower.model.DataStudioProgressStepStatus.ERRORED;
 import static io.seqera.tower.model.DataStudioProgressStepStatus.IN_PROGRESS;
 
-public class AbstractStudiosCmd extends AbstractDataLinkCmd {
+public class AbstractStudiosCmd extends AbstractApiCmd {
 
     protected String getSessionId(DataStudioRefOptions dataStudioRefOptions, Long wspId) throws ApiException {
         return dataStudioRefOptions.dataStudio.sessionId != null
@@ -102,13 +96,13 @@ public class AbstractStudiosCmd extends AbstractDataLinkCmd {
         }
     }
 
-    protected DataStudioConfiguration dataStudioConfigurationFrom(Long wspId, DataStudioConfigurationOptions configurationOptions, String condaEnvOverride) {
+    protected DataStudioConfiguration dataStudioConfigurationFrom(Long wspId, DataStudioConfigurationOptions configurationOptions, String condaEnvOverride) throws ApiException {
         return dataStudioConfigurationFrom(wspId, null, configurationOptions, condaEnvOverride);
     }
-    protected DataStudioConfiguration dataStudioConfigurationFrom(Long wspId, DataStudioDto baseStudio, DataStudioConfigurationOptions configurationOptions) {
+    protected DataStudioConfiguration dataStudioConfigurationFrom(Long wspId, DataStudioDto baseStudio, DataStudioConfigurationOptions configurationOptions) throws ApiException {
         return dataStudioConfigurationFrom(wspId, baseStudio, configurationOptions, null);
     }
-    protected DataStudioConfiguration dataStudioConfigurationFrom(Long wspId, DataStudioDto baseStudio, DataStudioConfigurationOptions configOptions, String condaEnvOverride) {
+    protected DataStudioConfiguration dataStudioConfigurationFrom(Long wspId, DataStudioDto baseStudio, DataStudioConfigurationOptions configOptions, String condaEnvOverride) throws ApiException {
         DataStudioConfiguration dataStudioConfiguration = baseStudio == null || baseStudio.getConfiguration() == null
                 ? new DataStudioConfiguration()
                 : baseStudio.getConfiguration();
@@ -133,75 +127,15 @@ public class AbstractStudiosCmd extends AbstractDataLinkCmd {
         return dataStudioConfiguration;
     }
 
-    List<String> getMountDataIds(DataStudioConfigurationOptions dataStudioConfigOptions, DataStudioConfiguration currentDataStudioConfiguration, Long wspId)  {
+    List<String> getMountDataIds(DataStudioConfigurationOptions dataStudioConfigOptions, DataStudioConfiguration currentDataStudioConfiguration, Long wspId) throws ApiException {
         if (dataStudioConfigOptions.dataLinkRefOptions == null || dataStudioConfigOptions.dataLinkRefOptions.dataLinkRef == null) {
             return currentDataStudioConfiguration.getMountData();
         }
 
-        // if DataLink IDs are supplied - use those in request directly
-        if (dataStudioConfigOptions.dataLinkRefOptions.dataLinkRef.mountDataIds != null) {
-            return dataStudioConfigOptions.dataLinkRefOptions.dataLinkRef.mountDataIds;
-        }
-
-        // Check and wait if DataLinks are still being fetched
-        boolean isResultIncomplete = checkIfResultIncomplete(wspId, null, true);
-        if (isResultIncomplete) {
-            throw new TowerRuntimeException("Failed to fetch datalinks for mountData - please retry.");
-        }
-
-        List<String> dataLinkIds = new ArrayList<>();
-
-        if (dataStudioConfigOptions.dataLinkRefOptions.dataLinkRef.mountDataNames != null) {
-            dataLinkIds = dataStudioConfigOptions.dataLinkRefOptions.dataLinkRef.mountDataNames.stream()
-                    .map(name -> getDataLinkIdByName(wspId, name))
-                    .collect(Collectors.toList());
-        }
-
-        if (dataStudioConfigOptions.dataLinkRefOptions.dataLinkRef.mountDataResourceRefs != null) {
-            dataLinkIds = dataStudioConfigOptions.dataLinkRefOptions.dataLinkRef.mountDataResourceRefs.stream()
-                    .map(resourceRef -> getDataLinkIdByResourceRef(wspId, resourceRef))
-                    .collect(Collectors.toList());
-        }
-
-        return dataLinkIds;
+        DataLinkService dataLinkService = new DataLinkService(api(), app());
+        return dataLinkService.getDataLinkIds(dataStudioConfigOptions.dataLinkRefOptions.dataLinkRef, wspId);
     }
 
-    private String getDataLinkIdByName(Long wspId, String name) {
-        return getDataLinkIdsBySearchAndFindExactMatch(wspId, name, datalink -> name.equals(datalink.getName()));
-    }
-
-    private String getDataLinkIdByResourceRef(Long wspId, String resourceRef) {
-        return getDataLinkIdsBySearchAndFindExactMatch(wspId, getResourceRefKeywordParam(resourceRef), datalink -> resourceRef.equals(datalink.getResourceRef()));
-    }
-
-    private String getDataLinkIdsBySearchAndFindExactMatch(Long wspId, String search, Predicate<DataLinkDto> filter) {
-        var datalinks = getDataLinksBySearchCriteria(wspId, search).stream()
-                .filter(filter)
-                .collect(Collectors.toList());
-
-        if (datalinks.isEmpty()) {
-            throw new DataLinkNotFoundException(search, wspId);
-        }
-
-        if (datalinks.size() > 1) {
-            var dataLinkIds = datalinks.stream().map(DataLinkDto::getId).collect(Collectors.toList());
-            throw new MultipleDataLinksFoundException(search, wspId, dataLinkIds);
-        }
-
-        return datalinks.get(0).getId();
-    }
-
-    private List<DataLinkDto> getDataLinksBySearchCriteria(Long wspId, String search) {
-        try {
-            return api().listDataLinks(wspId, null, search, null, null, null).getDataLinks();
-        } catch (ApiException e) {
-            throw new TowerRuntimeException("Encountered error while retrieving data links for " + search, e);
-        }
-    }
-
-    private String getResourceRefKeywordParam(String resourceRef) {
-        return String.format("resourceRef:%s", resourceRef);
-    }
 
     public class ProgressStepMessageSupplier implements Supplier<String> {
 

@@ -18,6 +18,7 @@
 package io.seqera.tower.cli.commands.data.links;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.commands.global.PaginationOptions;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.responses.Response;
@@ -35,7 +36,7 @@ import java.util.List;
         name = "list",
         description = "List data links."
 )
-public class ListCmd extends AbstractDataLinkCmd {
+public class ListCmd extends AbstractApiCmd {
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
@@ -67,7 +68,8 @@ public class ListCmd extends AbstractDataLinkCmd {
         String search = buildSearch(searchOption.startsWith, provider, searchOption.region, searchOption.uri);
         String visibility = visibilityOption == null ? null : visibilityOption.toString();
 
-        boolean isResultIncomplete = checkIfResultIncomplete(wspId, credId, wait);
+        DataLinkService dataLinkService = new DataLinkService(api(), app());
+        boolean isResultIncomplete = dataLinkService.checkIfResultIncomplete(wspId, credId, wait);
 
         DataLinksListResponse data = api().listDataLinks(wspId, credId, search, max, offset, visibility);
         return new DataLinksList(workspaceRef(wspId), data.getDataLinks(),
