@@ -30,7 +30,6 @@ import io.seqera.tower.model.DataStudioStartResponse;
 import io.seqera.tower.model.DataStudioStatus;
 import picocli.CommandLine;
 
-import static io.seqera.tower.cli.utils.ResponseHelper.waitStatus;
 import static java.lang.Boolean.FALSE;
 
 @CommandLine.Command(
@@ -65,7 +64,7 @@ public class StartCmd extends AbstractStudiosCmd {
 
             DataStudioStartResponse response = api().startDataStudio(dataStudioDto.getSessionId(), request, wspId);
 
-            return new DataStudioStartSubmitted(dataStudioRefOptions.getDataStudioIdentifier(), wspId, workspaceRef(wspId), baseWorkspaceUrl(wspId), response.getJobSubmitted());
+            return new DataStudioStartSubmitted(dataStudioDto.getSessionId(), dataStudioRefOptions.getDataStudioIdentifier(), wspId, workspaceRef(wspId), baseWorkspaceUrl(wspId), response.getJobSubmitted());
         } catch (ApiException e) {
             if (e.getCode() == 404) {
                 throw new DataStudioNotFoundException(dataStudioRefOptions.getDataStudioIdentifier(), workspace.workspace);
@@ -91,15 +90,11 @@ public class StartCmd extends AbstractStudiosCmd {
             return exitCode;
         }
 
-        return onBeforeExit(exitCode, submitted.studioIdentifier, submitted.workspaceId, wait);
+        return onBeforeExit(exitCode, submitted.sessionId, submitted.workspaceId, wait);
     }
 
     private DataStudioStartRequest getStartRequestWithOverridesApplied(DataStudioDto dataStudioDto) {
-        DataStudioConfiguration dataStudioConfiguration = dataStudioDto.getConfiguration() == null
-                ? new DataStudioConfiguration()
-                : dataStudioDto.getConfiguration();
-
-        DataStudioConfiguration newConfig = dataStudioConfigurationFrom(dataStudioDto, dataStudioConfigOptions);
+        DataStudioConfiguration newConfig = dataStudioConfigurationFrom(dataStudioDto.getWorkspaceId(), dataStudioDto, dataStudioConfigOptions);
         String appliedDescription = description == null
                 ? dataStudioDto.getDescription()
                 : description;

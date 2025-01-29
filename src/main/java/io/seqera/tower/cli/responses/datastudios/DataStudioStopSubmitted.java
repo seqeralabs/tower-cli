@@ -21,14 +21,16 @@ import io.seqera.tower.cli.responses.Response;
 
 public class DataStudioStopSubmitted extends Response {
 
-    public final String studioIdentifier;
+    public final String sessionId;
+    public final String userSuppliedStudioIdentifier;
 
     public final Long workspaceId;
     public final String workspaceRef;
     public final Boolean jobSubmitted;
 
-    public DataStudioStopSubmitted(String studioIdentifier, Long workspaceId, String workspaceRef, Boolean jobSubmitted) {
-        this.studioIdentifier = studioIdentifier;
+    public DataStudioStopSubmitted(String sessionId, String userSuppliedStudioIdentifier, Long workspaceId, String workspaceRef, Boolean jobSubmitted) {
+        this.sessionId = sessionId;
+        this.userSuppliedStudioIdentifier = userSuppliedStudioIdentifier;
         this.workspaceId = workspaceId;
         this.workspaceRef = workspaceRef;
         this.jobSubmitted = jobSubmitted;
@@ -37,7 +39,7 @@ public class DataStudioStopSubmitted extends Response {
     @Override
     public String toString() {
         String isSuccess = jobSubmitted ? "successfully submitted" : "failed to submit";
-        return ansi(String.format("%n  @|yellow Data Studio %s STOP %s at %s workspace.|@%n%n    ", studioIdentifier, isSuccess, workspaceRef));
+        return ansi(String.format("%n  @|yellow Data Studio %s STOP %s at %s workspace.|@%n%n    ", userSuppliedStudioIdentifier, isSuccess, workspaceRef));
     }
 
 }

@@ -21,7 +21,8 @@ import io.seqera.tower.cli.responses.Response;
 
 public class DataStudioStartSubmitted extends Response {
 
-    public final String studioIdentifier;
+    public final String sessionId;
+    public final String userSuppliedStudioIdentifier;
 
     public final String studioUrl;
 
@@ -29,18 +30,19 @@ public class DataStudioStartSubmitted extends Response {
     public final String workspaceRef;
     public final Boolean jobSubmitted;
 
-    public DataStudioStartSubmitted(String studioIdentifier, Long workspaceId, String workspaceRef, String baseWorkspaceUrl, Boolean jobSubmitted) {
-        this.studioIdentifier = studioIdentifier;
+    public DataStudioStartSubmitted(String sessionId, String userSuppliedStudioIdentifier, Long workspaceId, String workspaceRef, String baseWorkspaceUrl, Boolean jobSubmitted) {
+        this.sessionId = sessionId;
+        this.userSuppliedStudioIdentifier = userSuppliedStudioIdentifier;
         this.workspaceId = workspaceId;
         this.workspaceRef = workspaceRef;
-        this.studioUrl = String.format("%s/studios/%s/connect", baseWorkspaceUrl, studioIdentifier);
+        this.studioUrl = String.format("%s/studios/%s/connect", baseWorkspaceUrl, sessionId);
         this.jobSubmitted = jobSubmitted;
     }
 
     @Override
     public String toString() {
         String isSuccess = jobSubmitted ? "successfully submitted" : "failed to submit";
-        return ansi(String.format("%n  @|yellow Data Studio %s START %s at %s workspace.|@%n%n    @|bold %s|@%n", studioIdentifier, isSuccess, workspaceRef, studioUrl));
+        return ansi(String.format("%n  @|yellow Data Studio %s START %s at %s workspace.|@%n%n    @|bold %s|@%n", userSuppliedStudioIdentifier, isSuccess, workspaceRef, studioUrl));
     }
 
 }

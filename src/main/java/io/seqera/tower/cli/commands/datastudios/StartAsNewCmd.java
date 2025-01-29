@@ -86,7 +86,7 @@ public class StartAsNewCmd extends AbstractStudiosCmd{
         }
     }
 
-    DataStudioCreateRequest prepareRequest(DataStudioDto parentDataStudio, List<DataStudioCheckpointDto> checkpoints) {
+    DataStudioCreateRequest prepareRequest(DataStudioDto parentDataStudio, List<DataStudioCheckpointDto> checkpoints) throws ApiException {
         DataStudioCreateRequest request = new DataStudioCreateRequest();
         request.setName(name);
         if (description == null || description.isEmpty()) {
@@ -100,7 +100,7 @@ public class StartAsNewCmd extends AbstractStudiosCmd{
         request.setDataStudioToolUrl(Objects.requireNonNull(parentDataStudio.getTemplate()).getRepository());
         request.setComputeEnvId(Objects.requireNonNull(parentDataStudio.getComputeEnv()).getId());
 
-        DataStudioConfiguration newConfig = dataStudioConfigurationFrom(parentDataStudio, dataStudioConfigOptions);
+        DataStudioConfiguration newConfig = dataStudioConfigurationFrom(workspaceId(workspace.workspace), parentDataStudio, dataStudioConfigOptions);
 
         request.setConfiguration(newConfig);
         return request;

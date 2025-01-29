@@ -576,7 +576,7 @@ public class DataStudiosCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "studios", "start", "-w", "75887156211589", "-i" ,"3e8370e7");
 
-        assertOutput(format, out, new DataStudioStartSubmitted("3e8370e7", 75887156211589L,
+        assertOutput(format, out, new DataStudioStartSubmitted("3e8370e7", "3e8370e7",75887156211589L,
                 "[organization1 / workspace1]",  "http://localhost:"+mock.getPort()+"/orgs/organization1/workspaces/workspace1", true));
     }
 
@@ -632,7 +632,7 @@ public class DataStudiosCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "studios", "start", "-w", "organization1/workspace1", "-n" ,"studio-a66d");
 
-        assertOutput(format, out, new DataStudioStartSubmitted("studio-a66d", 75887156211589L,
+        assertOutput(format, out, new DataStudioStartSubmitted("3e8370e7","studio-a66d", 75887156211589L,
                 "[organization1 / workspace1]",  "http://localhost:"+mock.getPort()+"/orgs/organization1/workspaces/workspace1", true));
     }
 
@@ -681,7 +681,7 @@ public class DataStudiosCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "studios", "start", "-w", "75887156211589", "-i" ,"3e8370e7", "--cpu", "4", "--description", "Override description");
 
-        assertOutput(format, out, new DataStudioStartSubmitted("3e8370e7", 75887156211589L,
+        assertOutput(format, out, new DataStudioStartSubmitted("3e8370e7", "3e8370e7",75887156211589L,
                 "[organization1 / workspace1]", "http://localhost:"+mock.getPort()+"/orgs/organization1/workspaces/workspace1", true));
     }
 
@@ -750,7 +750,7 @@ public class DataStudiosCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "studios", "start", "-w", "75887156211589", "-i" ,"3e8370e7", "--mount-data", "a-test-bucket-eend-us-east-1");
 
-        assertOutput(format, out, new DataStudioStartSubmitted("3e8370e7", 75887156211589L,
+        assertOutput(format, out, new DataStudioStartSubmitted("3e8370e7", "3e8370e7",75887156211589L,
                 "[organization1 / workspace1]",  "http://localhost:"+mock.getPort()+"/orgs/organization1/workspaces/workspace1", true));
     }
 
@@ -874,7 +874,7 @@ public class DataStudiosCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "studios", "start", "-w", "75887156211589", "-i" ,"3e8370e7", "--wait", "RUNNING");
 
-        assertOutput(format, out, new DataStudioStartSubmitted("3e8370e7", 75887156211589L,
+        assertOutput(format, out, new DataStudioStartSubmitted("3e8370e7", "3e8370e7",75887156211589L,
                 "[organization1 / workspace1]", "http://localhost:"+mock.getPort()+"/orgs/organization1/workspaces/workspace1", true));
 
         // verify the API has been polled additionally for the status

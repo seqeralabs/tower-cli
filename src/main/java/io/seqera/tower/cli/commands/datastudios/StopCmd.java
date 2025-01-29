@@ -23,8 +23,11 @@ import io.seqera.tower.cli.exceptions.DataStudioNotFoundException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.datastudios.DataStudioStopSubmitted;
+import io.seqera.tower.model.DataStudioStatus;
 import io.seqera.tower.model.DataStudioStopResponse;
 import picocli.CommandLine;
+
+import static java.lang.Boolean.FALSE;
 
 @CommandLine.Command(
         name = "stop",
@@ -38,18 +41,19 @@ public class StopCmd extends AbstractStudiosCmd {
     @CommandLine.Mixin
     public DataStudioRefOptions dataStudioRefOptions;
 
+    @CommandLine.Option(names = {"--wait"}, description = "Wait until given status or fail. Valid options: ${COMPLETION-CANDIDATES}.")
+    public DataStudioStatus wait;
+
     @Override
     protected Response exec() throws ApiException {
         Long wspId = workspaceId(workspace.workspace);
 
         try {
-            String sessionId = dataStudioRefOptions.dataStudio.sessionId != null
-                    ? dataStudioRefOptions.dataStudio.sessionId
-                    : fetchDataStudio(dataStudioRefOptions, wspId).getSessionId();
+            String sessionId = getSessionId(dataStudioRefOptions, wspId);
 
             DataStudioStopResponse response = api().stopDataStudio(sessionId, wspId);
 
-            return new DataStudioStopSubmitted(dataStudioRefOptions.getDataStudioIdentifier(), wspId, workspaceRef(wspId), response.getJobSubmitted());
+            return new DataStudioStopSubmitted(sessionId, dataStudioRefOptions.getDataStudioIdentifier(), wspId, workspaceRef(wspId), response.getJobSubmitted());
         } catch (ApiException e) {
             if (e.getCode() == 404) {
                 throw new DataStudioNotFoundException(dataStudioRefOptions.getDataStudioIdentifier(), workspace.workspace);
@@ -59,5 +63,22 @@ public class StopCmd extends AbstractStudiosCmd {
             }
             throw e;
         }
+    }
+
+    @Override
+    protected Integer onBeforeExit(int exitCode, Response response) {
+
+        if (exitCode != 0 || wait == null || response == null) {
+            return exitCode;
+        }
+
+        DataStudioStopSubmitted submitted = (DataStudioStopSubmitted) response;
+
+        // If response declares job failed to submit, don't wait and exit early.
+        if (FALSE.equals(submitted.jobSubmitted)) {
+            return exitCode;
+        }
+
+        return onBeforeExit(exitCode, submitted.sessionId, submitted.workspaceId, wait);
     }
 }
