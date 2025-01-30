@@ -40,8 +40,8 @@ import java.util.Objects;
 )
 public class StartAsNewCmd extends AbstractStudiosCmd{
 
-    @CommandLine.Option(names = {"-pid", "--parentId"}, description = "Parent DataStudio session ID.", required = true)
-    public String parentStudioSessionId;
+    @CommandLine.Mixin
+    public ParentDataStudioRefOptions parentDataStudioRefOptions;
 
     @CommandLine.Option(names = {"-n", "--name"}, description = "Data Studio name.", required = true)
     public String name;
@@ -66,6 +66,7 @@ public class StartAsNewCmd extends AbstractStudiosCmd{
         Long wspId = workspaceId(workspace.workspace);
 
         try {
+            String parentStudioSessionId = getParentDataStudioSessionId(parentDataStudioRefOptions, wspId);
             DataStudioDto parentDataStudio = api().describeDataStudio(parentStudioSessionId, wspId);
             if (parentDataStudio == null) {
                 throw new TowerException(String.format("Parent DataStudio %s not found at %s workspace", parentStudioSessionId, wspId));

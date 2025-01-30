@@ -173,6 +173,7 @@ public class TarFileHelper {
                     throw new TowerException("Timeout compressing logs");
                 }
             } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
                 throw new RuntimeException(e);
             }
 

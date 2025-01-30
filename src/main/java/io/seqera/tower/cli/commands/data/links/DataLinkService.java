@@ -63,6 +63,7 @@ public class DataLinkService  {
                     DataLinksFetchStatus.DONE, DataLinksFetchStatus.ERROR
             );
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new RuntimeException(e);
         }
     }

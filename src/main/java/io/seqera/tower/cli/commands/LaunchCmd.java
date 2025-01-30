@@ -243,6 +243,7 @@ public class LaunchCmd extends AbstractRootCmd {
                     WorkflowStatus.CANCELLED, WorkflowStatus.FAILED, WorkflowStatus.SUCCEEDED
             );
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             return exitCode;
         }
     }

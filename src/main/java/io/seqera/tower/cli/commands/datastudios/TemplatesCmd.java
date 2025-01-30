@@ -44,9 +44,7 @@ public class TemplatesCmd extends AbstractStudiosCmd {
         Long wspId = workspaceId(workspace.workspace);
 
         try {
-            DataStudioTemplatesListResponse response = api().listDataStudioTemplates(wspId,max,0);
-
-            return new DataStudiosTemplatesList(response.getTemplates());
+            return new DataStudiosTemplatesList(fetchDataStudioTemplates(wspId, max));
         } catch (ApiException e) {
             if (e.getCode() == 403) {
                 throw new TowerException("User not entitled to list studio templates");

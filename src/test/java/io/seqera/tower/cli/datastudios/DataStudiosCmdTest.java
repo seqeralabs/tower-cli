@@ -20,6 +20,7 @@ package io.seqera.tower.cli.datastudios;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
+import io.seqera.tower.cli.exceptions.DataStudiosTemplateNotFoundException;
 import io.seqera.tower.cli.exceptions.MultipleDataLinksFoundException;
 import io.seqera.tower.cli.responses.datastudios.DataStudioDeleted;
 import io.seqera.tower.cli.responses.datastudios.DataStudioStartSubmitted;
@@ -35,6 +36,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -961,6 +963,51 @@ public class DataStudiosCmdTest extends BaseCmdTest {
         assertOutput(format, out, new DataStudiosCreated("3e8370e7",75887156211589L, "[organization1 / workspace1]", false));
     }
 
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAddThrowsDataStudiosTemplateNotFoundException(OutputType format, MockServerClient mock){
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/studios")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("autostart", "false"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datastudios/datastudios_created_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/studios/templates")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("max", "20"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datastudios/datastudios_templates_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t" ,"invalid-template-vs-code", "-c", "7WgvfmcjAwp3Or75UphCJl");
+
+        List<String> availableTemplate = List.of(
+                "cr.seqera.io/public/data-studio-jupyter:4.2.5-snapshot",
+                "cr.seqera.io/public/data-studio-rstudio:4.4.1-u1-snapshot",
+                "cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot",
+                "cr.seqera.io/public/data-studio-xpra:6.2.0-r2-1-snapshot");
+
+        assertEquals(errorMessage(out.app, new DataStudiosTemplateNotFoundException("invalid-template-vs-code", availableTemplate)), out.stdErr);
+        assertEquals("", out.stdOut);
+        assertEquals(1, out.exitCode);
+    }
+
     // Only run this test in json output format, since extra stdout output is printed out to console with --wait flag
     @ParameterizedTest
     @EnumSource(value = OutputType.class, names = {"json"})
@@ -1101,6 +1148,55 @@ public class DataStudiosCmdTest extends BaseCmdTest {
                   "progress": []
                 }
                 """, DataStudioDto.class), "[organization1 / workspace1]"));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testStartAsNewUsingParentName(OutputType format, MockServerClient mock) throws JsonProcessingException {
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(2)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(2)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/studios").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datastudios/datastudios_list_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/studios/3e8370e7").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datastudios/datastudios_view_response_studio_stopped")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/studios/3e8370e7/checkpoints")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("max", "1"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"checkpoints\":[],\"totalSize\":0}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/studios")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("autostart", "false"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datastudios/datastudios_start_as_new_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "start-as-new", "-pn", "studio-a66d", "-n", "child-studio-a66d", "-w", "75887156211589", "--cpu", "4");
+
+        assertOutput(format, out, new DataStudiosCreated("8aebf1b8", 75887156211589L, "[organization1 / workspace1]", false));
     }
 
     @ParameterizedTest

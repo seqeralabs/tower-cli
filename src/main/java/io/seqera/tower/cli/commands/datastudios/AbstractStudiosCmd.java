@@ -31,6 +31,8 @@ import io.seqera.tower.model.DataStudioDto;
 import io.seqera.tower.model.DataStudioProgressStep;
 import io.seqera.tower.model.DataStudioStatus;
 import io.seqera.tower.model.DataStudioStatusInfo;
+import io.seqera.tower.model.DataStudioTemplate;
+import io.seqera.tower.model.DataStudioTemplatesListResponse;
 
 import static io.seqera.tower.cli.utils.ResponseHelper.waitStatus;
 import static io.seqera.tower.model.DataStudioProgressStepStatus.ERRORED;
@@ -38,6 +40,7 @@ import static io.seqera.tower.model.DataStudioProgressStepStatus.IN_PROGRESS;
 
 public class AbstractStudiosCmd extends AbstractApiCmd {
 
+    private static final Integer DEFAULT_MAX_TEMPLATES_TO_QUERY = 20;
     protected String getSessionId(DataStudioRefOptions dataStudioRefOptions, Long wspId) throws ApiException {
         return dataStudioRefOptions.dataStudio.sessionId != null
                 ? dataStudioRefOptions.dataStudio.sessionId
@@ -54,6 +57,24 @@ public class AbstractStudiosCmd extends AbstractApiCmd {
         }
 
         return dataStudio;
+    }
+
+    protected String getParentDataStudioSessionId(ParentDataStudioRefOptions parentDataStudioRefOptions, Long wspId) throws ApiException {
+        if (parentDataStudioRefOptions.studio.sessionId != null) {
+            return parentDataStudioRefOptions.studio.sessionId;
+        } else {
+            DataStudioDto dataStudio = getDataStudioByName(wspId, parentDataStudioRefOptions.studio.name);
+            return dataStudio.getSessionId();
+        }
+    }
+
+    protected List<DataStudioTemplate> fetchDataStudioTemplates(Long workspaceId) throws ApiException {
+        return fetchDataStudioTemplates(workspaceId,DEFAULT_MAX_TEMPLATES_TO_QUERY);
+    }
+
+    protected List<DataStudioTemplate> fetchDataStudioTemplates(Long workspaceId, Integer max) throws ApiException {
+        DataStudioTemplatesListResponse response = api().listDataStudioTemplates(workspaceId,max,0);
+        return response.getTemplates();
     }
 
     private DataStudioDto getDataStudioByName(Long wspId, String dataStudioName) throws ApiException {
@@ -83,6 +104,7 @@ public class AbstractStudiosCmd extends AbstractApiCmd {
                     DataStudioStatus.STOPPED, DataStudioStatus.ERRORED, DataStudioStatus.RUNNING
             );
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             return exitCode;
         }
     }
