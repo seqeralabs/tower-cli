@@ -1210,7 +1210,7 @@ public class DataStudiosCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "studios", "delete", "-w", "75887156211589", "-i" ,"3e8370e7");
 
-        assertOutput(format, out, new DataStudioDeleted("3e8370e7", "3e8370e7",75887156211589L, "[organization1 / workspace1]"));
+        assertOutput(format, out, new DataStudioDeleted("3e8370e7", "[organization1 / workspace1]"));
     }
 
 }

@@ -21,16 +21,12 @@ import io.seqera.tower.cli.responses.Response;
 
 public class DataStudioDeleted extends Response {
 
-    public final String sessionId;
     public final String userSuppliedStudioIdentifier;
 
-    public final Long workspaceId;
     public final String workspaceRef;
 
-    public DataStudioDeleted(String sessionId, String userSuppliedStudioIdentifier, Long workspaceId, String workspaceRef) {
-        this.sessionId = sessionId;
+    public DataStudioDeleted(String userSuppliedStudioIdentifier, String workspaceRef) {
         this.userSuppliedStudioIdentifier = userSuppliedStudioIdentifier;
-        this.workspaceId = workspaceId;
         this.workspaceRef = workspaceRef;
     }
 

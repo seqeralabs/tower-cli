@@ -1926,6 +1926,12 @@
   "queryAllDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.cli.responses.datastudios.DataStudioDeleted",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.cli.responses.labels.DeleteLabelsResponse",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,

@@ -46,7 +46,7 @@ public class DeleteCmd extends AbstractStudiosCmd {
 
             api().deleteDataStudio(sessionId, wspId);
 
-            return new DataStudioDeleted(sessionId, dataStudioRefOptions.getDataStudioIdentifier(), wspId, workspaceRef(wspId));
+            return new DataStudioDeleted(dataStudioRefOptions.getDataStudioIdentifier(), workspaceRef(wspId));
         } catch (ApiException e) {
             if (e.getCode() == 404) {
                 throw new DataStudioNotFoundException(dataStudioRefOptions.getDataStudioIdentifier(), workspace.workspace);
