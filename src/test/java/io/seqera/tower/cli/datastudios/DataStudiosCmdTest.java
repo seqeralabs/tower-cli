@@ -21,6 +21,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.MultipleDataLinksFoundException;
+import io.seqera.tower.cli.responses.datastudios.DataStudioDeleted;
 import io.seqera.tower.cli.responses.datastudios.DataStudioStartSubmitted;
 import io.seqera.tower.cli.responses.datastudios.DataStudiosCreated;
 import io.seqera.tower.cli.responses.datastudios.DataStudioStopSubmitted;
@@ -1100,6 +1101,116 @@ public class DataStudiosCmdTest extends BaseCmdTest {
                   "progress": []
                 }
                 """, DataStudioDto.class), "[organization1 / workspace1]"));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testStop(OutputType format, MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("PUT").withPath("/studios/3e8370e7/stop").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(json("""
+                        {
+                          "jobSubmitted": true,
+                          "sessionId": "3e8370e7",
+                          "statusInfo": {
+                            "status": "stopping",
+                            "message": "",
+                            "lastUpdate": "2025-01-22T15:16:11.508692Z"
+                          }
+                        }
+                        """)).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "stop", "-w", "75887156211589", "-i" ,"3e8370e7");
+
+        assertOutput(format, out, new DataStudioStopSubmitted("3e8370e7", "3e8370e7",75887156211589L,
+                "[organization1 / workspace1]", true));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testStopByName(OutputType format, MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/studios").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datastudios/datastudios_list_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("PUT").withPath("/studios/3e8370e7/stop").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(json("""
+                        {
+                          "jobSubmitted": true,
+                          "sessionId": "3e8370e7",
+                          "statusInfo": {
+                            "status": "stopping",
+                            "message": "",
+                            "lastUpdate": "2025-01-22T15:16:11.508692Z"
+                          }
+                        }
+                        """)).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "stop", "-w", "75887156211589", "-n" ,"studio-a66d");
+
+        assertOutput(format, out, new DataStudioStopSubmitted("3e8370e7", "studio-a66d",75887156211589L,
+                "[organization1 / workspace1]", true));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testDelete(OutputType format, MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("DELETE").withPath("/studios/3e8370e7").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+
+        ExecOut out = exec(format, mock, "studios", "delete", "-w", "75887156211589", "-i" ,"3e8370e7");
+
+        assertOutput(format, out, new DataStudioDeleted("3e8370e7", "3e8370e7",75887156211589L, "[organization1 / workspace1]"));
     }
 
 }
