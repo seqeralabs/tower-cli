@@ -19,8 +19,12 @@ package io.seqera.tower.cli.exceptions;
 
 public class DataStudioNotFoundException extends TowerException {
 
-    public DataStudioNotFoundException( String sessionId, Long workspaceId) {
-        super(String.format("DataStudio '%s' not found at workspace '%s'", sessionId, workspaceId));
+    public DataStudioNotFoundException(String studioIdentifier, Long workspaceId) {
+        super(String.format("DataStudio '%s' not found at workspace '%s'", studioIdentifier, workspaceId));
+    }
+
+    public DataStudioNotFoundException(String studioIdentifier, String workspace) {
+        super(String.format("DataStudio '%s' not found at workspace '%s'", studioIdentifier, workspace));
     }
 
 }

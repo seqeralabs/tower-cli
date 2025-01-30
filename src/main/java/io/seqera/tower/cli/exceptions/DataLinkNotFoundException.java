@@ -17,14 +17,10 @@
 
 package io.seqera.tower.cli.exceptions;
 
-public class TowerRuntimeException extends RuntimeException{
+public class DataLinkNotFoundException extends TowerRuntimeException {
 
-    public TowerRuntimeException(String message) {
-        super(message);
-    }
-
-    public TowerRuntimeException(String message, Throwable cause) {
-        super(message, cause);
+    public DataLinkNotFoundException(String dataLinkIdentifier, Long workspaceId) {
+        super(String.format("DataLink '%s' not found at workspace '%s'", dataLinkIdentifier, workspaceId));
     }
 
 }

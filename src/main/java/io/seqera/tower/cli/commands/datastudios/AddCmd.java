@@ -33,8 +33,6 @@ import picocli.CommandLine;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import static io.seqera.tower.cli.utils.ResponseHelper.waitStatus;
-
 @CommandLine.Command(
         name = "add",
         description = "Add new data studio."
@@ -86,7 +84,7 @@ public class AddCmd extends AbstractStudiosCmd{
         }
     }
 
-    DataStudioCreateRequest prepareRequest() throws TowerException {
+    DataStudioCreateRequest prepareRequest() throws ApiException {
         DataStudioCreateRequest request = new DataStudioCreateRequest();
         request.setName(name);
         if (description != null && !description.isEmpty()) {request.description(description);}
@@ -103,7 +101,7 @@ public class AddCmd extends AbstractStudiosCmd{
         }
 
 
-        DataStudioConfiguration newConfig = dataStudioConfigurationFrom(dataStudioConfigOptions, condaEnvString);
+        DataStudioConfiguration newConfig = dataStudioConfigurationFrom(workspaceId(workspace.workspace), dataStudioConfigOptions, condaEnvString);
         request.setConfiguration(setDefaults(newConfig));
         return request;
     }

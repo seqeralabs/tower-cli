@@ -1131,6 +1131,18 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.datastudios.DataLinkRefOptions",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.datastudios.DataLinkRefOptions$DataLinkRef",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.datastudios.DataStudioConfigurationOptions",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -1168,6 +1180,12 @@
 },
 {
   "name":"io.seqera.tower.cli.commands.datastudios.TemplatesCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.datastudios.StopCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
@@ -1867,6 +1885,12 @@
 },
 {
   "name":"io.seqera.tower.cli.responses.datastudios.DataStudioStartSubmitted",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.datastudios.DataStudioStopSubmitted",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true
@@ -2764,6 +2788,13 @@
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getLastUpdate","parameterTypes":[] }, {"name":"getMessage","parameterTypes":[] }, {"name":"getStatus","parameterTypes":[] }, {"name":"setLastUpdate","parameterTypes":["java.time.OffsetDateTime"] }, {"name":"setMessage","parameterTypes":["java.lang.String"] }, {"name":"setStatus","parameterTypes":["io.seqera.tower.model.DataStudioStatus"] }]
+},
+{
+  "name":"io.seqera.tower.model.DataStudioStopResponse",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setJobSubmitted","parameterTypes":["java.lang.Boolean"] }, {"name":"setSessionId","parameterTypes":["java.lang.String"] }, {"name":"setStatusInfo","parameterTypes":["io.seqera.tower.model.DataStudioStatusInfo"] }]
 },
 {
   "name":"io.seqera.tower.model.DataStudioTemplate",

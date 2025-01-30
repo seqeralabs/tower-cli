@@ -22,21 +22,18 @@ import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.exceptions.DataStudioNotFoundException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.cli.responses.datastudios.DataStudioStartSubmitted;
-import io.seqera.tower.model.DataStudioConfiguration;
-import io.seqera.tower.model.DataStudioDto;
-import io.seqera.tower.model.DataStudioStartRequest;
-import io.seqera.tower.model.DataStudioStartResponse;
+import io.seqera.tower.cli.responses.datastudios.DataStudioStopSubmitted;
 import io.seqera.tower.model.DataStudioStatus;
+import io.seqera.tower.model.DataStudioStopResponse;
 import picocli.CommandLine;
 
 import static java.lang.Boolean.FALSE;
 
 @CommandLine.Command(
-        name = "start",
-        description = "Start a data studio."
+        name = "stop",
+        description = "Stop a data studio."
 )
-public class StartCmd extends AbstractStudiosCmd {
+public class StopCmd extends AbstractStudiosCmd {
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
@@ -44,27 +41,19 @@ public class StartCmd extends AbstractStudiosCmd {
     @CommandLine.Mixin
     public DataStudioRefOptions dataStudioRefOptions;
 
-    @CommandLine.Mixin
-    public DataStudioConfigurationOptions dataStudioConfigOptions;
-
     @CommandLine.Option(names = {"--wait"}, description = "Wait until given status or fail. Valid options: ${COMPLETION-CANDIDATES}.")
     public DataStudioStatus wait;
-
-    @CommandLine.Option(names = {"--description"}, description = "Optional configuration override for 'description'.")
-    public String description;
 
     @Override
     protected Response exec() throws ApiException {
         Long wspId = workspaceId(workspace.workspace);
 
         try {
-            DataStudioDto dataStudioDto = fetchDataStudio(dataStudioRefOptions, wspId);
+            String sessionId = getSessionId(dataStudioRefOptions, wspId);
 
-            DataStudioStartRequest request = getStartRequestWithOverridesApplied(dataStudioDto);
+            DataStudioStopResponse response = api().stopDataStudio(sessionId, wspId);
 
-            DataStudioStartResponse response = api().startDataStudio(dataStudioDto.getSessionId(), request, wspId);
-
-            return new DataStudioStartSubmitted(dataStudioDto.getSessionId(), dataStudioRefOptions.getDataStudioIdentifier(), wspId, workspaceRef(wspId), baseWorkspaceUrl(wspId), response.getJobSubmitted());
+            return new DataStudioStopSubmitted(sessionId, dataStudioRefOptions.getDataStudioIdentifier(), wspId, workspaceRef(wspId), response.getJobSubmitted());
         } catch (ApiException e) {
             if (e.getCode() == 404) {
                 throw new DataStudioNotFoundException(dataStudioRefOptions.getDataStudioIdentifier(), workspace.workspace);
@@ -83,7 +72,7 @@ public class StartCmd extends AbstractStudiosCmd {
             return exitCode;
         }
 
-        DataStudioStartSubmitted submitted = (DataStudioStartSubmitted) response;
+        DataStudioStopSubmitted submitted = (DataStudioStopSubmitted) response;
 
         // If response declares job failed to submit, don't wait and exit early.
         if (FALSE.equals(submitted.jobSubmitted)) {
@@ -92,21 +81,4 @@ public class StartCmd extends AbstractStudiosCmd {
 
         return onBeforeExit(exitCode, submitted.sessionId, submitted.workspaceId, wait);
     }
-
-    private DataStudioStartRequest getStartRequestWithOverridesApplied(DataStudioDto dataStudioDto) throws ApiException {
-        DataStudioConfiguration newConfig = dataStudioConfigurationFrom(dataStudioDto.getWorkspaceId(), dataStudioDto, dataStudioConfigOptions);
-        String appliedDescription = description == null
-                ? dataStudioDto.getDescription()
-                : description;
-
-        DataStudioStartRequest request = new DataStudioStartRequest();
-
-        request.setConfiguration(newConfig);
-        request.setDescription(appliedDescription);
-
-        return request;
-    }
-
-
-
 }

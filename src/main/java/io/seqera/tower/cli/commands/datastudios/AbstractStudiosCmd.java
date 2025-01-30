@@ -17,17 +17,16 @@
 
 package io.seqera.tower.cli.commands.datastudios;
 
-import java.io.IOException;
-import java.nio.file.Path;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
-import io.seqera.tower.cli.commands.enums.OutputType;
-import io.seqera.tower.cli.exceptions.TowerException;
-import io.seqera.tower.cli.utils.FilesHelper;
+import io.seqera.tower.cli.commands.data.links.DataLinkService;
+import io.seqera.tower.cli.exceptions.DataStudioNotFoundException;
 import io.seqera.tower.model.DataStudioConfiguration;
+import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.model.DataStudioDto;
 import io.seqera.tower.model.DataStudioProgressStep;
 import io.seqera.tower.model.DataStudioStatus;
@@ -39,8 +38,35 @@ import static io.seqera.tower.model.DataStudioProgressStepStatus.IN_PROGRESS;
 
 public class AbstractStudiosCmd extends AbstractApiCmd {
 
+    protected String getSessionId(DataStudioRefOptions dataStudioRefOptions, Long wspId) throws ApiException {
+        return dataStudioRefOptions.dataStudio.sessionId != null
+                ? dataStudioRefOptions.dataStudio.sessionId
+                : fetchDataStudio(dataStudioRefOptions, wspId).getSessionId();
+    }
+
     protected DataStudioDto fetchDataStudio(DataStudioRefOptions dataStudioRefOptions, Long wspId) throws ApiException {
-        return api().describeDataStudio(dataStudioRefOptions.dataStudio.sessionId, wspId);
+        DataStudioDto dataStudio;
+
+        if (dataStudioRefOptions.dataStudio.sessionId != null) {
+            dataStudio = getDataStudioById(wspId, dataStudioRefOptions.dataStudio.sessionId);
+        } else {
+            dataStudio = getDataStudioByName(wspId, dataStudioRefOptions.dataStudio.dataStudioName );
+        }
+
+        return dataStudio;
+    }
+
+    private DataStudioDto getDataStudioByName(Long wspId, String dataStudioName) throws ApiException {
+        List<DataStudioDto> studios = api().listDataStudios(wspId, null, null, null).getStudios();
+
+        return studios.stream()
+                .filter(s -> dataStudioName.equals(s.getName()))
+                .findFirst()
+                .orElseThrow(() -> new DataStudioNotFoundException(dataStudioName, wspId));
+    }
+
+    private DataStudioDto getDataStudioById(Long wspId, String sessionId) throws ApiException {
+        return api().describeDataStudio(sessionId, wspId);
     }
 
     protected Integer onBeforeExit(int exitCode, String sessionId, Long workspaceId, DataStudioStatus targetStatus) {
@@ -70,13 +96,13 @@ public class AbstractStudiosCmd extends AbstractApiCmd {
         }
     }
 
-    protected DataStudioConfiguration dataStudioConfigurationFrom(DataStudioConfigurationOptions configurationOptions, String condaEnvOverride) {
-        return dataStudioConfigurationFrom(null, configurationOptions, condaEnvOverride);
+    protected DataStudioConfiguration dataStudioConfigurationFrom(Long wspId, DataStudioConfigurationOptions configurationOptions, String condaEnvOverride) throws ApiException {
+        return dataStudioConfigurationFrom(wspId, null, configurationOptions, condaEnvOverride);
     }
-    protected DataStudioConfiguration dataStudioConfigurationFrom(DataStudioDto baseStudio, DataStudioConfigurationOptions configurationOptions){
-        return dataStudioConfigurationFrom(baseStudio, configurationOptions, null);
+    protected DataStudioConfiguration dataStudioConfigurationFrom(Long wspId, DataStudioDto baseStudio, DataStudioConfigurationOptions configurationOptions) throws ApiException {
+        return dataStudioConfigurationFrom(wspId, baseStudio, configurationOptions, null);
     }
-    protected DataStudioConfiguration dataStudioConfigurationFrom(DataStudioDto baseStudio, DataStudioConfigurationOptions configOptions, String condaEnvOverride) {
+    protected DataStudioConfiguration dataStudioConfigurationFrom(Long wspId, DataStudioDto baseStudio, DataStudioConfigurationOptions configOptions, String condaEnvOverride) throws ApiException {
         DataStudioConfiguration dataStudioConfiguration = baseStudio == null || baseStudio.getConfiguration() == null
                 ? new DataStudioConfiguration()
                 : baseStudio.getConfiguration();
@@ -90,9 +116,9 @@ public class AbstractStudiosCmd extends AbstractApiCmd {
         dataStudioConfiguration.setMemory(configOptions.memory == null
                 ? dataStudioConfiguration.getMemory()
                 : configOptions.memory);
-        dataStudioConfiguration.setMountData(configOptions.mountData == null || configOptions.mountData.isEmpty()
-                ? dataStudioConfiguration.getMountData()
-                : configOptions.mountData);
+
+        dataStudioConfiguration.setMountData(getMountDataIds(configOptions, dataStudioConfiguration, wspId));
+
 
         if (condaEnvOverride != null && !condaEnvOverride.isEmpty()) {
             dataStudioConfiguration.setCondaEnvironment(condaEnvOverride);
@@ -100,6 +126,16 @@ public class AbstractStudiosCmd extends AbstractApiCmd {
 
         return dataStudioConfiguration;
     }
+
+    List<String> getMountDataIds(DataStudioConfigurationOptions dataStudioConfigOptions, DataStudioConfiguration currentDataStudioConfiguration, Long wspId) throws ApiException {
+        if (dataStudioConfigOptions.dataLinkRefOptions == null || dataStudioConfigOptions.dataLinkRefOptions.dataLinkRef == null) {
+            return currentDataStudioConfiguration.getMountData();
+        }
+
+        DataLinkService dataLinkService = new DataLinkService(api(), app());
+        return dataLinkService.getDataLinkIds(dataStudioConfigOptions.dataLinkRefOptions.dataLinkRef, wspId);
+    }
+
 
     public class ProgressStepMessageSupplier implements Supplier<String> {
 

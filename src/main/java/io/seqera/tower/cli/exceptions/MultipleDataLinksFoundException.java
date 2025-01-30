@@ -17,14 +17,13 @@
 
 package io.seqera.tower.cli.exceptions;
 
-public class TowerRuntimeException extends RuntimeException{
+import java.util.List;
 
-    public TowerRuntimeException(String message) {
-        super(message);
-    }
+public class MultipleDataLinksFoundException extends TowerRuntimeException {
 
-    public TowerRuntimeException(String message, Throwable cause) {
-        super(message, cause);
+    public MultipleDataLinksFoundException(String dataLinkIdentifier, Long workspaceId, List<String> dataLinkIds) {
+        super(String.format("Multiple DataLink items found for '%s' found at workspace '%s'. Found DataLink IDs: %s",
+                dataLinkIdentifier, workspaceId, dataLinkIds));
     }
 
 }

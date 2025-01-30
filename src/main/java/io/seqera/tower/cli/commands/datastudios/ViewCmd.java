@@ -48,10 +48,10 @@ public class ViewCmd extends AbstractStudiosCmd {
             return new DataStudiosView(dataStudioDto, workspaceRef(wspId));
         } catch (ApiException e) {
             if (e.getCode() == 404) {
-                throw new DataStudioNotFoundException(dataStudioRefOptions.dataStudio.sessionId, wspId);
+                throw new DataStudioNotFoundException(dataStudioRefOptions.getDataStudioIdentifier(), workspace.workspace);
             }
             if (e.getCode() == 403) {
-                throw new TowerException(String.format("User not entitled to view studio '%s' at %s workspace", dataStudioRefOptions.dataStudio.sessionId, wspId));
+                throw new TowerException(String.format("User not entitled to view studio '%s' at %s workspace", dataStudioRefOptions.getDataStudioIdentifier(), workspace.workspace));
             }
             throw e;
         }
