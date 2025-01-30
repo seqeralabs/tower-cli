@@ -78,7 +78,7 @@ public class StartAsNewCmd extends AbstractStudiosCmd{
             DataStudioCreateResponse response = api().createDataStudio(request, wspId, autoStart);
             DataStudioDto dataStudioDto = response.getStudio();
             assert dataStudioDto != null;
-            return new DataStudiosCreated(dataStudioDto.getSessionId(), wspId, workspaceRef(wspId), autoStart);
+            return new DataStudiosCreated(dataStudioDto.getSessionId(), wspId, workspaceRef(wspId), baseWorkspaceUrl(wspId), autoStart);
         } catch (ApiException e) {
             if (e.getCode() == 403) {
                 throw new TowerException(String.format("User not entitled to create studio at %s workspace", wspId));

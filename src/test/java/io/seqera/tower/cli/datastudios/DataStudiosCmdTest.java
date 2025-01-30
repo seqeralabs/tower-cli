@@ -36,7 +36,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -951,6 +950,14 @@ public class DataStudiosCmdTest extends BaseCmdTest {
         );
 
         mock.when(
+                request().withMethod("GET").withPath("/studios/templates")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("max", "20"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datastudios/datastudios_templates_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
                 request().withMethod("POST").withPath("/studios")
                         .withQueryStringParameter("workspaceId", "75887156211589")
                         .withQueryStringParameter("autostart", "false"), exactly(1)
@@ -960,7 +967,8 @@ public class DataStudiosCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t" ,"cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot", "-c", "7WgvfmcjAwp3Or75UphCJl");
 
-        assertOutput(format, out, new DataStudiosCreated("3e8370e7",75887156211589L, "[organization1 / workspace1]", false));
+        assertOutput(format, out, new DataStudiosCreated("3e8370e7",75887156211589L, "[organization1 / workspace1]",
+                "http://localhost:"+mock.getPort()+"/orgs/organization1/workspaces/workspace1", false));
     }
 
     @ParameterizedTest
@@ -1045,10 +1053,19 @@ public class DataStudiosCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("datastudios/datastudios_view_response")).withContentType(MediaType.APPLICATION_JSON)
         );
 
+        mock.when(
+                request().withMethod("GET").withPath("/studios/templates")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("max", "20"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datastudios/datastudios_templates_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
         ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t" ,"cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot",
                 "-c", "7WgvfmcjAwp3Or75UphCJl", "-a", "--wait", "running");
 
-        assertOutput(format, out, new DataStudiosCreated("3e8370e7",75887156211589L, "[organization1 / workspace1]", true));
+        assertOutput(format, out, new DataStudiosCreated("3e8370e7",75887156211589L, "[organization1 / workspace1]",
+                "http://localhost:"+mock.getPort()+"/orgs/organization1/workspaces/workspace1", true));
 
         // verify the API has been polled additionally for the status
         mock.verify(request().withMethod("GET").withPath("/studios/3e8370e7"), VerificationTimes.exactly(2));
@@ -1094,7 +1111,8 @@ public class DataStudiosCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "studios", "start-as-new", "-pid", "3e8370e7", "-n", "child-studio-a66d", "-w", "75887156211589", "--cpu", "4");
 
-        assertOutput(format, out, new DataStudiosCreated("8aebf1b8",75887156211589L, "[organization1 / workspace1]", false));
+        assertOutput(format, out, new DataStudiosCreated("8aebf1b8",75887156211589L, "[organization1 / workspace1]",
+                "http://localhost:"+mock.getPort()+"/orgs/organization1/workspaces/workspace1", false));
 
 
         mock.when(
@@ -1196,7 +1214,8 @@ public class DataStudiosCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "studios", "start-as-new", "-pn", "studio-a66d", "-n", "child-studio-a66d", "-w", "75887156211589", "--cpu", "4");
 
-        assertOutput(format, out, new DataStudiosCreated("8aebf1b8", 75887156211589L, "[organization1 / workspace1]", false));
+        assertOutput(format, out, new DataStudiosCreated("8aebf1b8", 75887156211589L, "[organization1 / workspace1]",
+                "http://localhost:"+mock.getPort()+"/orgs/organization1/workspaces/workspace1", false));
     }
 
     @ParameterizedTest
