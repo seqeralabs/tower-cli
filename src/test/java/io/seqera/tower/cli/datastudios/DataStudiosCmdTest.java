@@ -23,6 +23,7 @@ import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.DataStudiosCustomTemplateWithCondaException;
 import io.seqera.tower.cli.exceptions.DataStudiosTemplateNotFoundException;
 import io.seqera.tower.cli.exceptions.MultipleDataLinksFoundException;
+import io.seqera.tower.cli.responses.datastudios.DataStudioCheckpointsList;
 import io.seqera.tower.cli.responses.datastudios.DataStudioDeleted;
 import io.seqera.tower.cli.responses.datastudios.DataStudioStartSubmitted;
 import io.seqera.tower.cli.responses.datastudios.DataStudiosCreated;
@@ -31,6 +32,7 @@ import io.seqera.tower.cli.responses.datastudios.DataStudiosList;
 import io.seqera.tower.cli.responses.datastudios.DataStudiosTemplatesList;
 import io.seqera.tower.cli.responses.datastudios.DataStudiosView;
 import io.seqera.tower.cli.utils.PaginationInfo;
+import io.seqera.tower.model.DataStudioCheckpointDto;
 import io.seqera.tower.model.DataStudioDto;
 import io.seqera.tower.model.DataStudioTemplatesListResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -1358,6 +1360,57 @@ public class DataStudiosCmdTest extends BaseCmdTest {
         ExecOut out = exec(format, mock, "studios", "delete", "-w", "75887156211589", "-i" ,"3e8370e7");
 
         assertOutput(format, out, new DataStudioDeleted("3e8370e7", "[organization1 / workspace1]"));
+    }
+
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testCheckpoints(OutputType format, MockServerClient mock) throws JsonProcessingException {
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/studios/3e8370e7/checkpoints").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datastudios/datastudios_checkpoints_list_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "checkpoints", "-w", "75887156211589", "-i", "3e8370e7");
+
+        assertOutput(format, out, new DataStudioCheckpointsList("3e8370e7", "[organization1 / workspace1]", Arrays.asList(parseJson("""
+                            {
+                               "id": 2,
+                               "name": "studio-a66d_2",
+                               "dateSaved": "2025-01-30T09:34:33Z",
+                               "dateCreated": "2025-01-30T09:29:31Z",
+                               "author": {
+                                 "id": 100,
+                                 "userName": "johnny-bravo"
+                               }
+                            }
+                            """, DataStudioCheckpointDto.class),
+                parseJson("""
+                            {
+                              "id": 1,
+                              "name": "studio-a66d_1",
+                              "dateSaved": "2025-01-28T14:05:07Z",
+                              "dateCreated": "2025-01-28T12:49:06Z",
+                              "author": {
+                                "id": 100,
+                                "userName": "johnny-bravo"
+                              }
+                            }
+                            """, DataStudioCheckpointDto.class)
+        ), null));
     }
 
 }
