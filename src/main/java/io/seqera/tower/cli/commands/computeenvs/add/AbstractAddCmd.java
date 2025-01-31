@@ -89,6 +89,7 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
                     ComputeEnvStatus.AVAILABLE, ComputeEnvStatus.ERRORED, ComputeEnvStatus.INVALID
             );
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             return exitCode;
         }
     }

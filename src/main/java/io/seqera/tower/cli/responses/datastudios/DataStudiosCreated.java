@@ -26,18 +26,21 @@ public class DataStudiosCreated extends Response {
     public final String workspaceRef;
     public final Long workspaceId;
     public final boolean autoStart;
+    public final String studioUrl;
 
-    public DataStudiosCreated(String sessionId, Long workspaceId, String workspaceRef, boolean autoStart) {
+
+    public DataStudiosCreated(String sessionId, Long workspaceId, String workspaceRef, String baseWorkspaceUrl, boolean autoStart) {
         this.sessionId = sessionId;
         this.workspaceRef = workspaceRef;
         this.workspaceId = workspaceId;
         this.autoStart = autoStart;
+        this.studioUrl = String.format("%s/studios/%s/connect", baseWorkspaceUrl, sessionId);
     }
 
     @Override
     public String toString() {
         if (autoStart){
-            return ansi(String.format("%n  @|yellow Data Studio %s CREATED at %s workspace and auto started.|@%n", sessionId, workspaceRef));
+            return ansi(String.format("%n  @|yellow Data Studio %s CREATED at %s workspace and auto started.|@%n%n    @|bold %s|@%n", sessionId, workspaceRef, studioUrl));
         } else {
             return ansi(String.format("%n  @|yellow Data Studio %s CREATED at %s workspace.|@%n", sessionId, workspaceRef));
         }

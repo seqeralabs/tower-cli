@@ -19,6 +19,7 @@ package io.seqera.tower.cli.commands.datastudios;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
+import io.seqera.tower.cli.exceptions.DataStudiosTemplateNotFoundException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.datastudios.DataStudiosCreated;
@@ -28,10 +29,13 @@ import io.seqera.tower.model.DataStudioCreateRequest;
 import io.seqera.tower.model.DataStudioCreateResponse;
 import io.seqera.tower.model.DataStudioDto;
 import io.seqera.tower.model.DataStudioStatus;
+import io.seqera.tower.model.DataStudioTemplate;
 import picocli.CommandLine;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @CommandLine.Command(
         name = "add",
@@ -71,16 +75,27 @@ public class AddCmd extends AbstractStudiosCmd{
         Long wspId = workspaceId(workspace.workspace);
 
         try {
+            checkIfTemplateIsAvailable(template, wspId);
             DataStudioCreateRequest request = prepareRequest();
             DataStudioCreateResponse response = api().createDataStudio(request, wspId, autoStart);
             DataStudioDto dataStudioDto = response.getStudio();
             assert dataStudioDto != null;
-            return new DataStudiosCreated(dataStudioDto.getSessionId(), wspId, workspaceRef(wspId), autoStart);
+            return new DataStudiosCreated(dataStudioDto.getSessionId(), wspId, workspaceRef(wspId), baseWorkspaceUrl(wspId), autoStart);
         } catch (ApiException e) {
             if (e.getCode() == 403) {
                 throw new TowerException(String.format("User not entitled to create studio at %s workspace", wspId));
             }
             throw e;
+        }
+    }
+
+    void checkIfTemplateIsAvailable(String template, Long workspaceId) throws ApiException {
+        List<DataStudioTemplate> availableTemplates = fetchDataStudioTemplates(workspaceId);
+        boolean validTemplate = availableTemplates.stream()
+                .anyMatch(t -> t.getRepository() != null && t.getRepository().equals(template));
+
+        if (!validTemplate) {
+            throw new DataStudiosTemplateNotFoundException(template, availableTemplates.stream().map(DataStudioTemplate::getRepository).collect(Collectors.toList()));
         }
     }
 

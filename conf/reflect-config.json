@@ -1173,6 +1173,18 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.datastudios.ParentDataStudioRefOptions",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.datastudios.ParentDataStudioRefOptions$ParentDataStudioRef",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.datastudios.StartAsNewCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -1890,6 +1902,12 @@
   "queryAllDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.cli.responses.datastudios.DataStudioDeleted",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.cli.responses.datastudios.DataStudioStartSubmitted",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -1921,12 +1939,6 @@
 },
 {
   "name":"io.seqera.tower.cli.responses.datastudios.DataStudiosView",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
-},
-{
-  "name":"io.seqera.tower.cli.responses.datastudios.DataStudioDeleted",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true
@@ -3315,7 +3327,7 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getAllowInstanceCredentials","parameterTypes":[] }, {"name":"getAllowLocalRepos","parameterTypes":[] }, {"name":"getAnalytics","parameterTypes":[] }, {"name":"getApiVersion","parameterTypes":[] }, {"name":"getArm64Enabled","parameterTypes":[] }, {"name":"getAuthTypes","parameterTypes":[] }, {"name":"getCommitId","parameterTypes":[] }, {"name":"getContentMaxFileSize","parameterTypes":[] }, {"name":"getContentUrl","parameterTypes":[] }, {"name":"getDataExplorerAllowedWorkspaces","parameterTypes":[] }, {"name":"getEvalWorkspaceIds","parameterTypes":[] }, {"name":"getForgePrefix","parameterTypes":[] }, {"name":"getGroundswellAllowedWorkspaces","parameterTypes":[] }, {"name":"getGroundswellEnabled","parameterTypes":[] }, {"name":"getHeartbeatInterval","parameterTypes":[] }, {"name":"getLandingUrl","parameterTypes":[] }, {"name":"getLoginPath","parameterTypes":[] }, {"name":"getNavbar","parameterTypes":[] }, {"name":"getSeqeraCloud","parameterTypes":[] }, {"name":"getTermsOfUseUrl","parameterTypes":[] }, {"name":"getUserWorkspaceEnabled","parameterTypes":[] }, {"name":"getVersion","parameterTypes":[] }, {"name":"getWaveAllowedWorkspaces","parameterTypes":[] }, {"name":"getWaveEnabled","parameterTypes":[] }, {"name":"setAllowInstanceCredentials","parameterTypes":["java.lang.Boolean"] }, {"name":"setAllowLocalRepos","parameterTypes":["java.lang.Boolean"] }, {"name":"setAllowNextflowCliLogs","parameterTypes":["java.lang.Boolean"] }, {"name":"setAnalytics","parameterTypes":["io.seqera.tower.model.Analytics"] }, {"name":"setApiVersion","parameterTypes":["java.lang.String"] }, {"name":"setArm64Enabled","parameterTypes":["java.lang.Boolean"] }, {"name":"setAuthTypes","parameterTypes":["java.util.List"] }, {"name":"setCommitId","parameterTypes":["java.lang.String"] }, {"name":"setContactEmail","parameterTypes":["java.lang.String"] }, {"name":"setContentMaxFileSize","parameterTypes":["java.lang.Long"] }, {"name":"setContentUrl","parameterTypes":["java.lang.String"] }, {"name":"setDataExplorerAllowedWorkspaces","parameterTypes":["java.util.List"] }, {"name":"setEvalWorkspaceIds","parameterTypes":["java.util.List"] }, {"name":"setForgePrefix","parameterTypes":["java.lang.String"] }, {"name":"setGroundswellAllowedWorkspaces","parameterTypes":["java.util.List"] }, {"name":"setGroundswellEnabled","parameterTypes":["java.lang.Boolean"] }, {"name":"setHeartbeatInterval","parameterTypes":["java.lang.Integer"] }, {"name":"setLandingUrl","parameterTypes":["java.lang.String"] }, {"name":"setLoginPath","parameterTypes":["java.lang.String"] }, {"name":"setNavbar","parameterTypes":["io.seqera.tower.model.NavbarConfig"] }, {"name":"setSeqeraCloud","parameterTypes":["java.lang.Boolean"] }, {"name":"setTermsOfUseUrl","parameterTypes":["java.lang.String"] }, {"name":"setUserWorkspaceEnabled","parameterTypes":["java.lang.Boolean"] }, {"name":"setVersion","parameterTypes":["java.lang.String"] }, {"name":"setWaveAllowedWorkspaces","parameterTypes":["java.util.List"] }, {"name":"setWaveEnabled","parameterTypes":["java.lang.Boolean"] }]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getAllowInstanceCredentials","parameterTypes":[] }, {"name":"getAllowLocalRepos","parameterTypes":[] }, {"name":"getAnalytics","parameterTypes":[] }, {"name":"getApiVersion","parameterTypes":[] }, {"name":"getArm64Enabled","parameterTypes":[] }, {"name":"getAuthTypes","parameterTypes":[] }, {"name":"getCommitId","parameterTypes":[] }, {"name":"getContentMaxFileSize","parameterTypes":[] }, {"name":"getContentUrl","parameterTypes":[] }, {"name":"getDataExplorerAllowedWorkspaces","parameterTypes":[] }, {"name":"getEvalWorkspaceIds","parameterTypes":[] }, {"name":"getForgePrefix","parameterTypes":[] }, {"name":"getGroundswellAllowedWorkspaces","parameterTypes":[] }, {"name":"getGroundswellEnabled","parameterTypes":[] }, {"name":"getHeartbeatInterval","parameterTypes":[] }, {"name":"getLandingUrl","parameterTypes":[] }, {"name":"getLoginPath","parameterTypes":[] }, {"name":"getNavbar","parameterTypes":[] }, {"name":"getSeqeraCloud","parameterTypes":[] }, {"name":"getTermsOfUseUrl","parameterTypes":[] }, {"name":"getUserWorkspaceEnabled","parameterTypes":[] }, {"name":"getVersion","parameterTypes":[] }, {"name":"getWaveAllowedWorkspaces","parameterTypes":[] }, {"name":"getWaveEnabled","parameterTypes":[] }, {"name":"setAllowInstanceCredentials","parameterTypes":["java.lang.Boolean"] }, {"name":"setAllowLocalRepos","parameterTypes":["java.lang.Boolean"] }, {"name":"setAllowNextflowCliLogs","parameterTypes":["java.lang.Boolean"] }, {"name":"setAnalytics","parameterTypes":["io.seqera.tower.model.Analytics"] }, {"name":"setApiVersion","parameterTypes":["java.lang.String"] }, {"name":"setArm64Enabled","parameterTypes":["java.lang.Boolean"] }, {"name":"setAuthTypes","parameterTypes":["java.util.List"] }, {"name":"setCommitId","parameterTypes":["java.lang.String"] }, {"name":"setContactEmail","parameterTypes":["java.lang.String"] }, {"name":"setContentMaxFileSize","parameterTypes":["java.lang.Long"] }, {"name":"setContentUrl","parameterTypes":["java.lang.String"] }, {"name":"setDataExplorerAllowedWorkspaces","parameterTypes":["java.util.List"] }, {"name":"setEvalWorkspaceIds","parameterTypes":["java.util.List"] }, {"name":"setForgePrefix","parameterTypes":["java.lang.String"] }, {"name":"setGroundswellAllowedWorkspaces","parameterTypes":["java.util.List"] }, {"name":"setGroundswellEnabled","parameterTypes":["java.lang.Boolean"] }, {"name":"setHeartbeatInterval","parameterTypes":["java.lang.Integer"] }, {"name":"setLandingUrl","parameterTypes":["java.lang.String"] }, {"name":"setLoginPath","parameterTypes":["java.lang.String"] }, {"name":"setLogoutUrl_JsonNullable","parameterTypes":["org.openapitools.jackson.nullable.JsonNullable"] }, {"name":"setNavbar","parameterTypes":["io.seqera.tower.model.NavbarConfig"] }, {"name":"setSeqeraCloud","parameterTypes":["java.lang.Boolean"] }, {"name":"setTermsOfUseUrl","parameterTypes":["java.lang.String"] }, {"name":"setUserWorkspaceEnabled","parameterTypes":["java.lang.Boolean"] }, {"name":"setVersion","parameterTypes":["java.lang.String"] }, {"name":"setWaveAllowedWorkspaces","parameterTypes":["java.util.List"] }, {"name":"setWaveEnabled","parameterTypes":["java.lang.Boolean"] }]
 },
 {
   "name":"io.seqera.tower.model.ServiceInfoResponse",
