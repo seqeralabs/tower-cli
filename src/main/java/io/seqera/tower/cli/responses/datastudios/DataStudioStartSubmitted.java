@@ -42,7 +42,7 @@ public class DataStudioStartSubmitted extends Response {
     @Override
     public String toString() {
         String isSuccess = jobSubmitted ? "successfully submitted" : "failed to submit";
-        return ansi(String.format("%n  @|yellow Data Studio %s START %s at %s workspace.|@%n%n    @|bold %s|@%n", userSuppliedStudioIdentifier, isSuccess, workspaceRef, studioUrl));
+        return ansi(String.format("%n  @|yellow Data Studio %s START %s at %s workspace.|@%n%n  To connect to this data studio session, copy and paste the following URL in your browser:%n%n    @|bold %s|@%n", userSuppliedStudioIdentifier, isSuccess, workspaceRef, studioUrl));
     }
 
 }
