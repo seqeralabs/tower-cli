@@ -18,6 +18,7 @@
 package io.seqera.tower.cli.commands;
 
 import io.seqera.tower.cli.commands.datastudios.AddCmd;
+import io.seqera.tower.cli.commands.datastudios.CheckpointsCmd;
 import io.seqera.tower.cli.commands.datastudios.DeleteCmd;
 import io.seqera.tower.cli.commands.datastudios.ListCmd;
 import io.seqera.tower.cli.commands.datastudios.StartAsNewCmd;
@@ -36,6 +37,7 @@ import picocli.CommandLine;
                 StartCmd.class,
                 AddCmd.class,
                 TemplatesCmd.class,
+                CheckpointsCmd.class,
                 StartAsNewCmd.class,
                 StopCmd.class,
                 DeleteCmd.class,

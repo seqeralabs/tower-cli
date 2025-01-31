@@ -52,13 +52,13 @@ public class DataStudiosView extends Response {
         table.addRow("SessionID", dataStudio.getSessionId());
         table.addRow("Name", dataStudio.getName());
         table.addRow("Status", formatDataStudioStatus(statusInfo == null ? null : statusInfo.getStatus()));
-        table.addRow("Status Last Update", statusInfo == null ? "NA" : formatTime(statusInfo.getLastUpdate()));
+        table.addRow("Status last update", statusInfo == null ? "NA" : formatTime(statusInfo.getLastUpdate()));
         table.addRow("Studio URL", dataStudio.getStudioUrl());
         table.addRow("Description", dataStudio.getDescription());
         table.addRow("Created on", formatTime(dataStudio.getDateCreated()));
         table.addRow("Created by", studioUser == null ? "NA" : String.format("%s | %s",studioUser.getUserName(), studioUser.getEmail()));
         table.addRow("Template", dataStudio.getTemplate() == null ? "NA" : dataStudio.getTemplate().getRepository());
-        table.addRow("Mounted Data", dataStudio.getMountedDataLinks() == null ? "NA" : dataStudio.getMountedDataLinks()
+        table.addRow("Mounted data", dataStudio.getMountedDataLinks() == null ? "NA" : dataStudio.getMountedDataLinks()
                 .stream().map(DataLinkDto::getResourceRef).collect(java.util.stream.Collectors.joining(", ")));
         table.addRow("Compute environment", dataStudio.getComputeEnv() == null ? "NA" : dataStudio.getComputeEnv().getName());
         table.addRow("Region", dataStudio.getComputeEnv() == null ? "NA" : dataStudio.getComputeEnv().getRegion());
