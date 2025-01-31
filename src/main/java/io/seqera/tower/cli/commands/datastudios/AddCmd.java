@@ -19,6 +19,7 @@ package io.seqera.tower.cli.commands.datastudios;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
+import io.seqera.tower.cli.exceptions.DataStudiosCustomTemplateWithCondaException;
 import io.seqera.tower.cli.exceptions.DataStudiosTemplateNotFoundException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
@@ -52,17 +53,17 @@ public class AddCmd extends AbstractStudiosCmd{
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
-    @CommandLine.Option(names = {"-t", "--template"}, description = "Data studio template container image. Available templates can be listed with 'studios templates' command", required = true)
-    public String template;
+    @CommandLine.Mixin
+    public DataStudioTemplateOptions templateOptions;
+
+    @CommandLine.Option(names = {"--conda-env-yml", "--conda-env-yaml"}, description = "Path to a YAML env file with Conda packages to be installed in the Data Studio environment.")
+    public Path condaEnv;
 
     @CommandLine.Option(names = {"-c", "--compute-env"}, description = "Compute environment name.", required = true)
     public String computeEnv;
 
     @CommandLine.Mixin
     public DataStudioConfigurationOptions dataStudioConfigOptions;
-
-    @CommandLine.Option(names = {"--conda-env-yml", "--conda-env-yaml"}, description = "Path to a YAML env file with Conda packages to be installed in the Data Studio environment.")
-    public Path condaEnv;
 
     @CommandLine.Option(names = {"-a", "--autoStart"}, description = "Create Data Studio and start it immediately, defaults to false", defaultValue = "false")
     public Boolean autoStart;
@@ -75,7 +76,7 @@ public class AddCmd extends AbstractStudiosCmd{
         Long wspId = workspaceId(workspace.workspace);
 
         try {
-            checkIfTemplateIsAvailable(template, wspId);
+            templateValidation(templateOptions, condaEnv, wspId);
             DataStudioCreateRequest request = prepareRequest();
             DataStudioCreateResponse response = api().createDataStudio(request, wspId, autoStart);
             DataStudioDto dataStudioDto = response.getStudio();
@@ -86,6 +87,14 @@ public class AddCmd extends AbstractStudiosCmd{
                 throw new TowerException(String.format("User not entitled to create studio at %s workspace", wspId));
             }
             throw e;
+        }
+    }
+
+    private void templateValidation(DataStudioTemplateOptions templateOptions, Path condaEnv, Long wspId) throws ApiException {
+        if (templateOptions.template.standardTemplate != null) {
+            checkIfTemplateIsAvailable(templateOptions.template.standardTemplate, wspId);
+        } else if (condaEnv != null) {
+            throw new DataStudiosCustomTemplateWithCondaException();
         }
     }
 
@@ -103,7 +112,7 @@ public class AddCmd extends AbstractStudiosCmd{
         DataStudioCreateRequest request = new DataStudioCreateRequest();
         request.setName(name);
         if (description != null && !description.isEmpty()) {request.description(description);}
-        request.setDataStudioToolUrl(template);
+        request.setDataStudioToolUrl(templateOptions.getTemplate());
         request.setComputeEnvId(computeEnv);
 
         String condaEnvString = null;

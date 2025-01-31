@@ -20,6 +20,7 @@ package io.seqera.tower.cli.datastudios;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
+import io.seqera.tower.cli.exceptions.DataStudiosCustomTemplateWithCondaException;
 import io.seqera.tower.cli.exceptions.DataStudiosTemplateNotFoundException;
 import io.seqera.tower.cli.exceptions.MultipleDataLinksFoundException;
 import io.seqera.tower.cli.responses.datastudios.DataStudioDeleted;
@@ -1012,6 +1013,37 @@ public class DataStudiosCmdTest extends BaseCmdTest {
                 "cr.seqera.io/public/data-studio-xpra:6.2.0-r2-1-snapshot");
 
         assertEquals(errorMessage(out.app, new DataStudiosTemplateNotFoundException("invalid-template-vs-code", availableTemplate)), out.stdErr);
+        assertEquals("", out.stdOut);
+        assertEquals(1, out.exitCode);
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAddThrowsDataStudiosCustomTemplateWithCondaException(OutputType format, MockServerClient mock){
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/studios")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("autostart", "false"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datastudios/datastudios_created_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-ct" ,"custom-template", "--conda-env-yml", "path/to/any/yaml/file","-c", "7WgvfmcjAwp3Or75UphCJl");
+
+        assertEquals(errorMessage(out.app, new DataStudiosCustomTemplateWithCondaException()), out.stdErr);
         assertEquals("", out.stdOut);
         assertEquals(1, out.exitCode);
     }
