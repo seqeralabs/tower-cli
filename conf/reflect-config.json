@@ -1149,6 +1149,18 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.datastudios.DataStudioCheckpointRefOptions",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.datastudios.DataStudioCheckpointRefOptions$DataStudioCheckpointRef",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.datastudios.DataStudioConfigurationOptions",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -1920,6 +1932,12 @@
   "queryAllDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.cli.responses.datastudios.DataStudioCheckpointsList",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.cli.responses.datastudios.DataStudioDeleted",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -1945,12 +1963,6 @@
 },
 {
   "name":"io.seqera.tower.cli.responses.datastudios.DataStudiosList",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
-},
-{
-  "name":"io.seqera.tower.cli.responses.datastudios.DataStudioCheckpointsList",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true
@@ -2740,7 +2752,7 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setAuthor","parameterTypes":["io.seqera.tower.model.StudioUser"] }, {"name":"setDateCreated","parameterTypes":["java.time.OffsetDateTime"] }, {"name":"setDateSaved","parameterTypes":["java.time.OffsetDateTime"] }, {"name":"setId","parameterTypes":["java.lang.Long"] }, {"name":"setName","parameterTypes":["java.lang.String"] }, {"name":"getAuthor","parameterTypes":[] }, {"name":"getDateCreated","parameterTypes":[] }, {"name":"getDateSaved","parameterTypes":[] }, {"name":"getId","parameterTypes":[] }, {"name":"getName","parameterTypes":[] }]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getAuthor","parameterTypes":[] }, {"name":"getDateCreated","parameterTypes":[] }, {"name":"getDateSaved","parameterTypes":[] }, {"name":"getId","parameterTypes":[] }, {"name":"getName","parameterTypes":[] }, {"name":"setAuthor","parameterTypes":["io.seqera.tower.model.StudioUser"] }, {"name":"setDateCreated","parameterTypes":["java.time.OffsetDateTime"] }, {"name":"setDateSaved","parameterTypes":["java.time.OffsetDateTime"] }, {"name":"setId","parameterTypes":["java.lang.Long"] }, {"name":"setName","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.model.DataStudioComputeEnvDto",
