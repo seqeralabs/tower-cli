@@ -40,7 +40,7 @@ public class DataStudiosCreated extends Response {
     @Override
     public String toString() {
         if (autoStart){
-            return ansi(String.format("%n  @|yellow Data Studio %s CREATED at %s workspace and auto started.|@%n%n    @|bold %s|@%n", sessionId, workspaceRef, studioUrl));
+            return ansi(String.format("%n  @|yellow Data Studio %s CREATED at %s workspace and auto started.|@%n%n  To connect to this data studio session, copy and paste the following URL in your browser:%n%n    @|bold %s|@%n", sessionId, workspaceRef, studioUrl));
         } else {
             return ansi(String.format("%n  @|yellow Data Studio %s CREATED at %s workspace.|@%n", sessionId, workspaceRef));
         }

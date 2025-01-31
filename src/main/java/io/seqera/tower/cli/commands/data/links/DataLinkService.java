@@ -91,8 +91,8 @@ public class DataLinkService  {
 
     public List<String> getDataLinkIds(DataLinkRefOptions.DataLinkRef dataLinkRef, Long wspId) {
         // if DataLink IDs are supplied - use those directly
-        if (dataLinkRef.mountDataIds != null) {
-            return dataLinkRef.mountDataIds;
+        if (dataLinkRef.getMountDataIds() != null) {
+            return dataLinkRef.getMountDataIds();
         }
 
         // Check and wait if DataLinks are still being fetched
@@ -103,14 +103,14 @@ public class DataLinkService  {
 
         List<String> dataLinkIds = new ArrayList<>();
 
-        if (dataLinkRef.mountDataNames != null) {
-            dataLinkIds = dataLinkRef.mountDataNames.stream()
+        if (dataLinkRef.getMountDataNames() != null) {
+            dataLinkIds = dataLinkRef.getMountDataNames().stream()
                     .map(name -> getDataLinkIdByName(wspId, name))
                     .collect(Collectors.toList());
         }
 
-        if (dataLinkRef.mountDataResourceRefs != null) {
-            dataLinkIds = dataLinkRef.mountDataResourceRefs.stream()
+        if (dataLinkRef.getMountDataResourceRefs() != null) {
+            dataLinkIds = dataLinkRef.getMountDataResourceRefs().stream()
                     .map(resourceRef -> getDataLinkIdByResourceRef(wspId, resourceRef))
                     .collect(Collectors.toList());
         }
