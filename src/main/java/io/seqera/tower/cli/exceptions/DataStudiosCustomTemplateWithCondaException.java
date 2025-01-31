@@ -17,11 +17,9 @@
 
 package io.seqera.tower.cli.exceptions;
 
-import java.util.List;
+public class DataStudiosCustomTemplateWithCondaException extends TowerException {
 
-public class DataStudiosTemplateNotFoundException extends TowerException {
-
-    public DataStudiosTemplateNotFoundException(String template, List<String> templatesAvailable) {
-        super(String.format("DataStudio template provided '%s', is not one of the Platform's available templates '%s'.", template, templatesAvailable));
+    public DataStudiosCustomTemplateWithCondaException() {
+        super(String.format("DataStudio template provided is a custom template and cannot be used together with conda environment option."));
     }
 }
