@@ -19,22 +19,52 @@ package io.seqera.tower.cli.commands.datastudios;
 
 import java.util.List;
 
+import io.seqera.tower.cli.exceptions.TowerRuntimeException;
 import picocli.CommandLine;
 
 public class DataLinkRefOptions {
 
-    @CommandLine.ArgGroup
+    // TODO: The use of the validate option is a work around to an existing Picocli issue. Please refer to https://github.com/seqeralabs/tower-cli/pull/72#issuecomment-952588876
+    @CommandLine.ArgGroup(validate = false, heading = "Option to mount data by passing in one of the below options:\n")
     public DataLinkRef dataLinkRef;
 
     public static class DataLinkRef {
         @CommandLine.Option(names = {"--mount-data"}, description = "Optional configuration override for 'mountData' setting (comma separate list of data-link names)", split = ",")
-        public List<String> mountDataNames;
+        private List<String> mountDataNames;
 
         @CommandLine.Option(names = {"--mount-data-ids"}, description = "Optional configuration override for 'mountData' setting (comma separate list of data-link Ids)", split = ",")
-        public List<String> mountDataIds;
+        private List<String> mountDataIds;
 
         @CommandLine.Option(names = {"--mount-data-resource-refs"}, description = "Optional configuration override for 'mountData' setting (comma separate list of data-link resource refs)", split = ",")
-        public List<String> mountDataResourceRefs;
+        private List<String> mountDataResourceRefs;
+
+        public List<String> getMountDataNames() {
+            validate();
+            return mountDataNames;
+        }
+
+        public List<String> getMountDataIds() {
+            validate();
+            return mountDataIds;
+        }
+
+        public List<String> getMountDataResourceRefs() {
+            validate();
+            return mountDataResourceRefs;
+        }
+
+        private void validate() {
+            boolean namesProvided = mountDataNames != null;
+            boolean resourceRefsProvided = mountDataResourceRefs != null;
+            boolean idsProvided = mountDataIds != null;
+
+            // XOR function + check that not all 3 are provided covers that exactly 1 is provided
+            boolean valid = (namesProvided ^ resourceRefsProvided ^ idsProvided) && !(namesProvided && resourceRefsProvided && idsProvided);
+
+            if (!valid) {
+                throw new TowerRuntimeException("Error: --mount-data=<mountDataNames>, --mount-data-ids=<mountDataIds>, --mount-data-resource-refs=<mountDataResourceRefs> are mutually exclusive (specify only one)");
+            }
+        }
     }
 
 }

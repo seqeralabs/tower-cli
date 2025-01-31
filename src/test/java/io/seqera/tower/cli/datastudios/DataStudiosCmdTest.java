@@ -23,6 +23,7 @@ import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.DataStudiosCustomTemplateWithCondaException;
 import io.seqera.tower.cli.exceptions.DataStudiosTemplateNotFoundException;
 import io.seqera.tower.cli.exceptions.MultipleDataLinksFoundException;
+import io.seqera.tower.cli.exceptions.TowerRuntimeException;
 import io.seqera.tower.cli.responses.datastudios.DataStudioCheckpointsList;
 import io.seqera.tower.cli.responses.datastudios.DataStudioDeleted;
 import io.seqera.tower.cli.responses.datastudios.DataStudioStartSubmitted;
@@ -757,6 +758,41 @@ public class DataStudiosCmdTest extends BaseCmdTest {
 
         assertOutput(format, out, new DataStudioStartSubmitted("3e8370e7", "3e8370e7",75887156211589L,
                 "[organization1 / workspace1]",  "http://localhost:"+mock.getPort()+"/orgs/organization1/workspaces/workspace1", true));
+    }
+
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testStartWithMountDataWithConflictingParams(OutputType format, MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(2)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(2)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/studios/3e8370e7").withQueryStringParameter("workspaceId", "75887156211589"), exactly(2)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datastudios/datastudios_view_response_studio_stopped")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "start", "-w", "75887156211589", "-i" ,"3e8370e7", "--mount-data", "a-test-bucket-eend-us-east-1", "--mount-data-ids", "ids");
+
+        assertEquals(errorMessage(out.app, new TowerRuntimeException("Error: --mount-data=<mountDataNames>, --mount-data-ids=<mountDataIds>, --mount-data-resource-refs=<mountDataResourceRefs> are mutually exclusive (specify only one)")), out.stdErr);
+        assertEquals("", out.stdOut);
+        assertEquals(1, out.exitCode);
+
+        ExecOut out2 = exec(format, mock, "studios", "start", "-w", "75887156211589", "-i" ,"3e8370e7", "--mount-data", "a-test-bucket-eend-us-east-1", "--mount-data-ids", "ids", "--mount-data-resource-refs", "s3//ref");
+
+        assertEquals(errorMessage(out2.app, new TowerRuntimeException("Error: --mount-data=<mountDataNames>, --mount-data-ids=<mountDataIds>, --mount-data-resource-refs=<mountDataResourceRefs> are mutually exclusive (specify only one)")), out2.stdErr);
+        assertEquals("", out2.stdOut);
+        assertEquals(1, out2.exitCode);
     }
 
     @ParameterizedTest
