@@ -58,8 +58,8 @@ public class DataLinkRefOptions {
             boolean resourceRefsProvided = mountDataResourceRefs != null;
             boolean idsProvided = mountDataIds != null;
 
-            // XOR function + check that not all 3 are provided covers that exactly 1 is provided
-            boolean valid = (namesProvided ^ resourceRefsProvided ^ idsProvided) && !(namesProvided && resourceRefsProvided && idsProvided);
+            // check that exactly 1 is provided
+            boolean valid = (namesProvided ? 1 : 0) + (resourceRefsProvided ? 1 : 0) + (idsProvided ? 1 : 0) == 1;
 
             if (!valid) {
                 throw new TowerRuntimeException("Error: --mount-data=<mountDataNames>, --mount-data-ids=<mountDataIds>, --mount-data-resource-refs=<mountDataResourceRefs> are mutually exclusive (specify only one)");
