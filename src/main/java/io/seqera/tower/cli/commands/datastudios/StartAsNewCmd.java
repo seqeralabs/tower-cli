@@ -32,25 +32,24 @@ import io.seqera.tower.model.DataStudioListCheckpointsResponse;
 import io.seqera.tower.model.DataStudioStatus;
 import picocli.CommandLine;
 
-import java.util.List;
 import java.util.Objects;
 
 @CommandLine.Command(
         name = "start-as-new",
-        description = "Start a new data studio from an existing one"
+        description = "Start a new studio from an existing one."
 )
 public class StartAsNewCmd extends AbstractStudiosCmd{
 
     @CommandLine.Mixin
     public ParentDataStudioRefOptions parentDataStudioRefOptions;
 
-    @CommandLine.Option(names = {"--parent-checkpoint-id"}, description = "Parent Data Studio checkpoint id, to be used as staring point for the new Data Studio. If not provided, if will defaults to latest existing checkpoint of parent Data Studio.")
+    @CommandLine.Option(names = {"--parent-checkpoint-id"}, description = "Parent Studio checkpoint id, to be used as the starting point for the new Studio session. If not provided, it defaults to the most recent existing checkpoint of the parent Studio session.")
     public String parentCheckpointId;
 
-    @CommandLine.Option(names = {"-n", "--name"}, description = "Data Studio name.", required = true)
+    @CommandLine.Option(names = {"-n", "--name"}, description = "Studio name.", required = true)
     public String name;
 
-    @CommandLine.Option(names = {"-d", "--description"}, description = "Data studio description.")
+    @CommandLine.Option(names = {"-d", "--description"}, description = "Studio description.")
     public String description;
 
     @CommandLine.Mixin
@@ -59,10 +58,10 @@ public class StartAsNewCmd extends AbstractStudiosCmd{
     @CommandLine.Mixin
     public DataStudioConfigurationOptions dataStudioConfigOptions;
 
-    @CommandLine.Option(names = {"-a", "--autoStart"}, description = "Create Data Studio and start it immediately, defaults to false", defaultValue = "false")
+    @CommandLine.Option(names = {"-a", "--autoStart"}, description = "Create Studio and start it immediately, defaults to false.", defaultValue = "false")
     public Boolean autoStart;
 
-    @CommandLine.Option(names = {"--wait"}, description = "Wait until DataStudio is in RUNNING status. Valid options: ${COMPLETION-CANDIDATES}.")
+    @CommandLine.Option(names = {"--wait"}, description = "Wait until Studio is in RUNNING status. Valid options: ${COMPLETION-CANDIDATES}.")
     public DataStudioStatus wait;
 
     @Override
@@ -73,7 +72,7 @@ public class StartAsNewCmd extends AbstractStudiosCmd{
             String parentStudioSessionId = getParentDataStudioSessionId(parentDataStudioRefOptions, wspId);
             DataStudioDto parentDataStudio = api().describeDataStudio(parentStudioSessionId, wspId);
             if (parentDataStudio == null) {
-                throw new TowerException(String.format("Parent DataStudio %s not found at %s workspace", parentStudioSessionId, wspId));
+                throw new TowerException(String.format("Parent Studio %s not found at %s workspace", parentStudioSessionId, wspId));
             }
 
             DataStudioCreateRequest request = prepareRequest(parentDataStudio, parentCheckpointId, wspId);

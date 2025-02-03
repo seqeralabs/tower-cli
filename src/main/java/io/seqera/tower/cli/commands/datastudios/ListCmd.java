@@ -33,7 +33,7 @@ import java.io.IOException;
 
 @Command(
         name = "list",
-        description = "List workspace data studios."
+        description = "List workspace studios."
 )
 public class ListCmd extends AbstractStudiosCmd {
 

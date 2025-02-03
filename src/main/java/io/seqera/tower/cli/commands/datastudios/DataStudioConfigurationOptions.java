@@ -21,13 +21,13 @@ import picocli.CommandLine;
 
 public class DataStudioConfigurationOptions {
 
-    @CommandLine.Option(names = {"--gpu"}, description = "Optional configuration override for 'gpu' setting (Integer representing number of cores)")
+    @CommandLine.Option(names = {"--gpu"}, description = "Optional configuration override for 'gpu' setting (integer representing number of cores).")
     public Integer gpu;
 
-    @CommandLine.Option(names = {"--cpu"}, description = "Optional configuration override for 'cpu' setting (Integer representing number of cores)")
+    @CommandLine.Option(names = {"--cpu"}, description = "Optional configuration override for 'cpu' setting (integer representing number of cores).")
     public Integer cpu;
 
-    @CommandLine.Option(names = {"--memory"}, description = "Optional configuration override for 'memory' setting (Integer representing memory in MBs)")
+    @CommandLine.Option(names = {"--memory"}, description = "Optional configuration override for 'memory' setting (integer representing memory in MBs).")
     public Integer memory;
 
     @CommandLine.Mixin

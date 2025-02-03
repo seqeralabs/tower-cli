@@ -24,10 +24,8 @@ import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.exceptions.WorkspaceNotFoundException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.datastudios.DataStudioCheckpointsList;
-import io.seqera.tower.cli.responses.datastudios.DataStudiosList;
 import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.model.DataStudioListCheckpointsResponse;
-import io.seqera.tower.model.DataStudioListResponse;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
@@ -35,7 +33,7 @@ import java.io.IOException;
 
 @Command(
         name = "checkpoints",
-        description = "List checkpoints for a data studios."
+        description = "List checkpoints for a studio."
 )
 public class CheckpointsCmd extends AbstractStudiosCmd {
 

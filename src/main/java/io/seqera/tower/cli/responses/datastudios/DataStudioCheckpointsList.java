@@ -51,7 +51,7 @@ public class DataStudioCheckpointsList extends Response {
     @Override
     public void toString(PrintWriter out) {
 
-        out.println(ansi(String.format("%n  @|bold Checkpoints at data studio %s at %s workspace:|@%n", userSuppliedStudioIdentifier, workspaceRef)));
+        out.println(ansi(String.format("%n  @|bold Checkpoints at Studio %s at %s workspace:|@%n", userSuppliedStudioIdentifier, workspaceRef)));
 
         if (checkpoints.isEmpty()) {
             out.println(ansi("    @|yellow No checkpoints found|@"));
@@ -60,7 +60,7 @@ public class DataStudioCheckpointsList extends Response {
 
         List<String> descriptions = new ArrayList<>(List.of("ID", "Name", "Author", "Date Created", "Date Saved"));
 
-        TableList table = new TableList(out, descriptions.size(), descriptions.toArray(new String[descriptions.size()])).sortBy(0);
+        TableList table = new TableList(out, descriptions.size(), descriptions.toArray(new String[descriptions.size()]));
         table.setPrefix("    ");
 
         checkpoints.forEach(checkpoint -> {

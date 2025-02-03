@@ -42,7 +42,7 @@ public class DataStudiosView extends Response {
 
     @Override
     public void toString(PrintWriter out){
-        out.println(ansi(String.format("%n  @|bold DataStudio at workspace '%s'|@%n", workspaceRef)));
+        out.println(ansi(String.format("%n  @|bold Studio at workspace '%s'|@%n", workspaceRef)));
 
         DataStudioStatusInfo statusInfo = dataStudio.getStatusInfo();
         StudioUser studioUser = dataStudio.getUser();

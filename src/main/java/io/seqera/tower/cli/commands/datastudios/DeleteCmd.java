@@ -27,7 +27,7 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "delete",
-        description = "Delete a data studio."
+        description = "Delete a studio."
 )
 public class DeleteCmd extends AbstractStudiosCmd {
 

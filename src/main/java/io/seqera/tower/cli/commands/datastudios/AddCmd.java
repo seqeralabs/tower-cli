@@ -41,14 +41,14 @@ import java.util.stream.Collectors;
 
 @CommandLine.Command(
         name = "add",
-        description = "Add new data studio."
+        description = "Add new studio."
 )
 public class AddCmd extends AbstractStudiosCmd{
 
-    @CommandLine.Option(names = {"-n", "--name"}, description = "Data Studio name.", required = true)
+    @CommandLine.Option(names = {"-n", "--name"}, description = "Studio name.", required = true)
     public String name;
 
-    @CommandLine.Option(names = {"-d", "--description"}, description = "Data studio description.")
+    @CommandLine.Option(names = {"-d", "--description"}, description = "Studio description.")
     public String description;
 
     @CommandLine.Mixin
@@ -57,7 +57,7 @@ public class AddCmd extends AbstractStudiosCmd{
     @CommandLine.Mixin
     public DataStudioTemplateOptions templateOptions;
 
-    @CommandLine.Option(names = {"--conda-env-yml", "--conda-env-yaml"}, description = "Path to a YAML env file with Conda packages to be installed in the Data Studio environment.")
+    @CommandLine.Option(names = {"--conda-env-yml", "--conda-env-yaml"}, description = "Path to a YAML env file with Conda packages to be installed in the Studio environment.")
     public Path condaEnv;
 
     @CommandLine.Option(names = {"-c", "--compute-env"}, description = "Compute environment name.", required = true)
@@ -66,10 +66,10 @@ public class AddCmd extends AbstractStudiosCmd{
     @CommandLine.Mixin
     public DataStudioConfigurationOptions dataStudioConfigOptions;
 
-    @CommandLine.Option(names = {"-a", "--autoStart"}, description = "Create Data Studio and start it immediately, defaults to false", defaultValue = "false")
+    @CommandLine.Option(names = {"-a", "--autoStart"}, description = "Create Studio and start it immediately, defaults to false.", defaultValue = "false")
     public Boolean autoStart;
 
-    @CommandLine.Option(names = {"--wait"}, description = "Wait until DataStudio is in RUNNING status. Valid options: ${COMPLETION-CANDIDATES}.")
+    @CommandLine.Option(names = {"--wait"}, description = "Wait until Studio is in RUNNING status. Valid options: ${COMPLETION-CANDIDATES}.")
     public DataStudioStatus wait;
 
     @Override
