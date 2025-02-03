@@ -31,7 +31,7 @@ import static java.lang.Boolean.FALSE;
 
 @CommandLine.Command(
         name = "stop",
-        description = "Stop a data studio."
+        description = "Stop a studio."
 )
 public class StopCmd extends AbstractStudiosCmd {
 

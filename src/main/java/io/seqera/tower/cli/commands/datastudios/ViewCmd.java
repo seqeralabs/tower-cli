@@ -28,7 +28,7 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "view",
-        description = "View data studio."
+        description = "View studio."
 )
 public class ViewCmd extends AbstractStudiosCmd {
 

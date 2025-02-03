@@ -36,10 +36,10 @@ public class DataStudiosTemplatesList extends Response {
     @Override
     public void toString(PrintWriter out) {
 
-        out.println(ansi(String.format("%n  @|bold Available templates for Data Studios:|@%n")));
+        out.println(ansi(String.format("%n  @|bold Available templates for Studios:|@%n")));
 
         if (templates.isEmpty()) {
-            out.println(ansi("    @|yellow No data studios templates found|@"));
+            out.println(ansi("    @|yellow No studios templates found|@"));
             return;
         }
 

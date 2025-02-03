@@ -50,16 +50,16 @@ public class DataStudiosList extends Response {
     @Override
     public void toString(PrintWriter out) {
 
-        out.println(ansi(String.format("%n  @|bold Data Studios at %s workspace:|@%n", workspaceRef)));
+        out.println(ansi(String.format("%n  @|bold Studios at %s workspace:|@%n", workspaceRef)));
 
         if (studios.isEmpty()) {
-            out.println(ansi("    @|yellow No data studios found|@"));
+            out.println(ansi("    @|yellow No studios found|@"));
             return;
         }
 
         List<String> descriptions = new ArrayList<>(List.of("ID", "Name", "Description", "User", "Status"));
 
-        TableList table = new TableList(out, descriptions.size(), descriptions.toArray(new String[descriptions.size()])).sortBy(0);
+        TableList table = new TableList(out, descriptions.size(), descriptions.toArray(new String[descriptions.size()]));
         table.setPrefix("    ");
 
         studios.forEach(studio -> {

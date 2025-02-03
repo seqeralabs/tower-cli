@@ -39,7 +39,7 @@ public class DataStudioStopSubmitted extends Response {
     @Override
     public String toString() {
         String isSuccess = jobSubmitted ? "successfully submitted" : "failed to submit";
-        return ansi(String.format("%n  @|yellow Data Studio %s STOP %s at %s workspace.|@%n%n    ", userSuppliedStudioIdentifier, isSuccess, workspaceRef));
+        return ansi(String.format("%n  @|yellow Studio %s STOP %s at %s workspace.|@%n%n    ", userSuppliedStudioIdentifier, isSuccess, workspaceRef));
     }
 
 }

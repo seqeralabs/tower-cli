@@ -24,19 +24,18 @@ import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.datastudios.DataStudiosTemplatesList;
-import io.seqera.tower.model.DataStudioTemplatesListResponse;
 import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "templates",
-        description = "List available DataStudio templates"
+        description = "List available Studio templates."
 )
 public class TemplatesCmd extends AbstractStudiosCmd {
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
-    @CommandLine.Option(names = {"--max"}, description = "Maximum number of templates to return, defaults to 20", defaultValue = "20")
+    @CommandLine.Option(names = {"--max"}, description = "Maximum number of templates to return, defaults to 20.", defaultValue = "20")
     public Integer max;
 
     @Override

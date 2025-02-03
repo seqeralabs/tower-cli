@@ -32,7 +32,7 @@ public class DataStudioDeleted extends Response {
 
     @Override
     public String toString() {
-        return ansi(String.format("%n  @|yellow Data Studio %s deleted at %s workspace.|@%n", userSuppliedStudioIdentifier, workspaceRef));
+        return ansi(String.format("%n  @|yellow Studio %s deleted at %s workspace.|@%n", userSuppliedStudioIdentifier, workspaceRef));
     }
 
 }

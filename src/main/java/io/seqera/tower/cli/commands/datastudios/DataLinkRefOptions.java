@@ -29,13 +29,13 @@ public class DataLinkRefOptions {
     public DataLinkRef dataLinkRef;
 
     public static class DataLinkRef {
-        @CommandLine.Option(names = {"--mount-data"}, description = "Optional configuration override for 'mountData' setting (comma separate list of data-link names)", split = ",")
+        @CommandLine.Option(names = {"--mount-data"}, description = "Optional configuration override for 'mountData' setting (comma separate list of data-link names).", split = ",")
         private List<String> mountDataNames;
 
-        @CommandLine.Option(names = {"--mount-data-ids"}, description = "Optional configuration override for 'mountData' setting (comma separate list of data-link Ids)", split = ",")
+        @CommandLine.Option(names = {"--mount-data-ids"}, description = "Optional configuration override for 'mountData' setting (comma separate list of data-link Ids).", split = ",")
         private List<String> mountDataIds;
 
-        @CommandLine.Option(names = {"--mount-data-resource-refs"}, description = "Optional configuration override for 'mountData' setting (comma separate list of data-link resource refs)", split = ",")
+        @CommandLine.Option(names = {"--mount-data-resource-refs"}, description = "Optional configuration override for 'mountData' setting (comma separate list of data-link resource refs).", split = ",")
         private List<String> mountDataResourceRefs;
 
         public List<String> getMountDataNames() {

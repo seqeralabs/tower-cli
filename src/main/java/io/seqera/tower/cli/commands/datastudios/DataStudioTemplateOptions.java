@@ -25,10 +25,10 @@ public class DataStudioTemplateOptions {
     public DataStudioTemplate template;
 
     public static class DataStudioTemplate {
-        @CommandLine.Option(names = {"-t", "--template"}, description = "Container image template to be used for Data Studio. Available templates can be listed with 'studios templates' command")
+        @CommandLine.Option(names = {"-t", "--template"}, description = "Container image template to be used for Studio. Available templates can be listed with 'studios templates' command.")
         public String standardTemplate;
 
-        @CommandLine.Option(names = {"-ct", "--custom-template"}, description = "Custom container image template to be used for Data Studio")
+        @CommandLine.Option(names = {"-ct", "--custom-template"}, description = "Custom container image template to be used for Studio.")
         public String customTemplate;
     }
 

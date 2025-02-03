@@ -25,10 +25,10 @@ public class DataStudioRefOptions {
     public DataStudioRef dataStudio;
 
     public static class DataStudioRef {
-        @CommandLine.Option(names = {"-i", "--id"}, description = "DataStudio session ID.")
+        @CommandLine.Option(names = {"-i", "--id"}, description = "Studio session ID.")
         public String sessionId;
 
-        @CommandLine.Option(names = {"-n", "--name"}, description = "DataStudio name.")
+        @CommandLine.Option(names = {"-n", "--name"}, description = "Studio name.")
         public String dataStudioName;
     }
 
