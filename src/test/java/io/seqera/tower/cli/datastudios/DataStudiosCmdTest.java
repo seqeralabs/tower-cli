@@ -22,6 +22,7 @@ import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.DataStudiosCustomTemplateWithCondaException;
 import io.seqera.tower.cli.exceptions.DataStudiosTemplateNotFoundException;
+import io.seqera.tower.cli.exceptions.InvalidDataStudioParentCheckpointException;
 import io.seqera.tower.cli.exceptions.MultipleDataLinksFoundException;
 import io.seqera.tower.cli.exceptions.TowerRuntimeException;
 import io.seqera.tower.cli.responses.datastudios.DataStudioCheckpointsList;
@@ -997,6 +998,20 @@ public class DataStudiosCmdTest extends BaseCmdTest {
         );
 
         mock.when(
+                request().withMethod("GET").withPath("/compute-envs")
+                        .withQueryStringParameter("status", "AVAILABLE")
+                        .withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
                 request().withMethod("POST").withPath("/studios")
                         .withQueryStringParameter("workspaceId", "75887156211589")
                         .withQueryStringParameter("autostart", "false"), exactly(1)
@@ -1004,7 +1019,7 @@ public class DataStudiosCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("datastudios/datastudios_created_response")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t" ,"cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot", "-c", "7WgvfmcjAwp3Or75UphCJl");
+        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t" ,"cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot", "-c", "demo");
 
         assertOutput(format, out, new DataStudiosCreated("3e8370e7",75887156211589L, "[organization1 / workspace1]",
                 "http://localhost:"+mock.getPort()+"/orgs/organization1/workspaces/workspace1", false));
@@ -1042,7 +1057,21 @@ public class DataStudiosCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("datastudios/datastudios_templates_response")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t" ,"invalid-template-vs-code", "-c", "7WgvfmcjAwp3Or75UphCJl");
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs")
+                        .withQueryStringParameter("status", "AVAILABLE")
+                        .withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t" ,"invalid-template-vs-code", "-c", "demo");
 
         List<String> availableTemplate = List.of(
                 "cr.seqera.io/public/data-studio-jupyter:4.2.5-snapshot",
@@ -1079,7 +1108,21 @@ public class DataStudiosCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("datastudios/datastudios_created_response")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-ct" ,"custom-template", "--conda-env-yml", "path/to/any/yaml/file","-c", "7WgvfmcjAwp3Or75UphCJl");
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs")
+                        .withQueryStringParameter("status", "AVAILABLE")
+                        .withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-ct" ,"custom-template", "--conda-env-yml", "path/to/any/yaml/file","-c", "demo");
 
         assertEquals(errorMessage(out.app, new DataStudiosCustomTemplateWithCondaException()), out.stdErr);
         assertEquals("", out.stdOut);
@@ -1101,6 +1144,20 @@ public class DataStudiosCmdTest extends BaseCmdTest {
                 request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs")
+                        .withQueryStringParameter("status", "AVAILABLE")
+                        .withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
@@ -1132,7 +1189,7 @@ public class DataStudiosCmdTest extends BaseCmdTest {
         );
 
         ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t" ,"cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot",
-                "-c", "7WgvfmcjAwp3Or75UphCJl", "-a", "--wait", "running");
+                "-c", "demo", "-a", "--wait", "running");
 
         assertOutput(format, out, new DataStudiosCreated("3e8370e7",75887156211589L, "[organization1 / workspace1]",
                 "http://localhost:"+mock.getPort()+"/orgs/organization1/workspaces/workspace1", true));
@@ -1240,7 +1297,7 @@ public class DataStudiosCmdTest extends BaseCmdTest {
 
     @ParameterizedTest
     @EnumSource(OutputType.class)
-    void testStartAsNewUsingParentName(OutputType format, MockServerClient mock) throws JsonProcessingException {
+    void testStartAsNewUsingParentName(OutputType format, MockServerClient mock) {
 
         mock.when(
                 request().withMethod("GET").withPath("/user-info"), exactly(2)
@@ -1286,6 +1343,105 @@ public class DataStudiosCmdTest extends BaseCmdTest {
 
         assertOutput(format, out, new DataStudiosCreated("8aebf1b8", 75887156211589L, "[organization1 / workspace1]",
                 "http://localhost:"+mock.getPort()+"/orgs/organization1/workspaces/workspace1", false));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testStartAsNewUsingParentCheckpointId(OutputType format, MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(2)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(2)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/studios").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datastudios/datastudios_list_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/studios/3e8370e7").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datastudios/datastudios_view_response_studio_stopped")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/studios/3e8370e7/checkpoints/1").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datastudios/datastudios_checkpoints_get_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/studios")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("autostart", "false"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datastudios/datastudios_start_as_new_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "start-as-new", "-pn", "studio-a66d", "-n", "child-studio-a66d", "-w", "75887156211589", "--parent-checkpoint-id", "1");
+
+        assertOutput(format, out, new DataStudiosCreated("8aebf1b8", 75887156211589L, "[organization1 / workspace1]",
+                "http://localhost:"+mock.getPort()+"/orgs/organization1/workspaces/workspace1", false));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testStartAsNewThrowsInvalidDataStudioParentCheckpointException(OutputType format, MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(2)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(2)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/studios").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datastudios/datastudios_list_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/studios/3e8370e7").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datastudios/datastudios_view_response_studio_stopped")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/studios/3e8370e7/checkpoints")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("max", "1"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"checkpoints\":[],\"totalSize\":0}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/studios")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("autostart", "false"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datastudios/datastudios_start_as_new_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "start-as-new", "-pn", "studio-a66d", "-n", "child-studio-a66d", "-w", "75887156211589", "--parent-checkpoint-id", "1111");
+
+        assertEquals(errorMessage(out.app, new InvalidDataStudioParentCheckpointException("1111")), out.stdErr);
+        assertEquals("", out.stdOut);
+        assertEquals(1, out.exitCode);
     }
 
     @ParameterizedTest

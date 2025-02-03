@@ -19,6 +19,7 @@ package io.seqera.tower.cli.commands.datastudios;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
+import io.seqera.tower.cli.exceptions.InvalidDataStudioParentCheckpointException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.datastudios.DataStudiosCreated;
@@ -42,6 +43,9 @@ public class StartAsNewCmd extends AbstractStudiosCmd{
 
     @CommandLine.Mixin
     public ParentDataStudioRefOptions parentDataStudioRefOptions;
+
+    @CommandLine.Option(names = {"--parent-checkpoint-id"}, description = "Parent Data Studio checkpoint id, to be used as staring point for the new Data Studio. If not provided, if will defaults to latest existing checkpoint of parent Data Studio.")
+    public String parentCheckpointId;
 
     @CommandLine.Option(names = {"-n", "--name"}, description = "Data Studio name.", required = true)
     public String name;
@@ -72,9 +76,7 @@ public class StartAsNewCmd extends AbstractStudiosCmd{
                 throw new TowerException(String.format("Parent DataStudio %s not found at %s workspace", parentStudioSessionId, wspId));
             }
 
-            DataStudioListCheckpointsResponse checkpoints = api().listDataStudioCheckpoints(parentDataStudio.getSessionId(), parentDataStudio.getWorkspaceId(), null, 1, null);
-
-            DataStudioCreateRequest request = prepareRequest(parentDataStudio, checkpoints.getCheckpoints());
+            DataStudioCreateRequest request = prepareRequest(parentDataStudio, parentCheckpointId, wspId);
             DataStudioCreateResponse response = api().createDataStudio(request, wspId, autoStart);
             DataStudioDto dataStudioDto = response.getStudio();
             assert dataStudioDto != null;
@@ -87,7 +89,7 @@ public class StartAsNewCmd extends AbstractStudiosCmd{
         }
     }
 
-    DataStudioCreateRequest prepareRequest(DataStudioDto parentDataStudio, List<DataStudioCheckpointDto> checkpoints) throws ApiException {
+    DataStudioCreateRequest prepareRequest(DataStudioDto parentDataStudio, String parentCheckpointId, Long wspId) throws ApiException {
         DataStudioCreateRequest request = new DataStudioCreateRequest();
         request.setName(name);
         if (description == null || description.isEmpty()) {
@@ -95,9 +97,22 @@ public class StartAsNewCmd extends AbstractStudiosCmd{
         } else {
             request.description(description);
         }
-        if (checkpoints != null && !checkpoints.isEmpty()) {
-            request.setInitialCheckpointId(checkpoints.get(0).getId());
+
+        if (parentCheckpointId == null) {
+            DataStudioListCheckpointsResponse response = api().listDataStudioCheckpoints(parentDataStudio.getSessionId(), parentDataStudio.getWorkspaceId(), null, 1, null);
+            if (!response.getCheckpoints().isEmpty()) {
+                request.setInitialCheckpointId(response.getCheckpoints().get(0).getId());
+            }
+        } else {
+            try {
+                Long checkpoint = Long.valueOf(parentCheckpointId);
+                DataStudioCheckpointDto response = api().getDataStudioCheckpoint(parentDataStudio.getSessionId(), checkpoint, wspId);
+                request.setInitialCheckpointId(response.getId());
+            } catch (NumberFormatException | ApiException e) {
+                throw new InvalidDataStudioParentCheckpointException(parentCheckpointId);
+            }
         }
+
         request.setDataStudioToolUrl(Objects.requireNonNull(parentDataStudio.getTemplate()).getRepository());
         request.setComputeEnvId(Objects.requireNonNull(parentDataStudio.getComputeEnv()).getId());
 

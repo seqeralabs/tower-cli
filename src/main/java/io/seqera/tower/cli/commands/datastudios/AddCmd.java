@@ -25,6 +25,7 @@ import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.datastudios.DataStudiosCreated;
 import io.seqera.tower.cli.utils.FilesHelper;
+import io.seqera.tower.model.ComputeEnvResponseDto;
 import io.seqera.tower.model.DataStudioConfiguration;
 import io.seqera.tower.model.DataStudioCreateRequest;
 import io.seqera.tower.model.DataStudioCreateResponse;
@@ -77,7 +78,7 @@ public class AddCmd extends AbstractStudiosCmd{
 
         try {
             templateValidation(templateOptions, condaEnv, wspId);
-            DataStudioCreateRequest request = prepareRequest();
+            DataStudioCreateRequest request = prepareRequest(wspId);
             DataStudioCreateResponse response = api().createDataStudio(request, wspId, autoStart);
             DataStudioDto dataStudioDto = response.getStudio();
             assert dataStudioDto != null;
@@ -108,12 +109,13 @@ public class AddCmd extends AbstractStudiosCmd{
         }
     }
 
-    DataStudioCreateRequest prepareRequest() throws ApiException {
+    DataStudioCreateRequest prepareRequest(Long wspId) throws ApiException {
         DataStudioCreateRequest request = new DataStudioCreateRequest();
         request.setName(name);
         if (description != null && !description.isEmpty()) {request.description(description);}
         request.setDataStudioToolUrl(templateOptions.getTemplate());
-        request.setComputeEnvId(computeEnv);
+        ComputeEnvResponseDto ceResponse = computeEnvByRef(wspId, computeEnv);
+        request.setComputeEnvId(ceResponse.getId());
 
         String condaEnvString = null;
         if (condaEnv != null) {
