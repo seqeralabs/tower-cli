@@ -15,14 +15,13 @@
  *
  */
 
-package io.seqera.tower.cli.commands.global;
+package io.seqera.tower.cli.exceptions;
 
-import picocli.CommandLine;
+import java.util.List;
 
-public class WorkspaceOptionalOptions {
-    public static final String DESCRIPTION = "Workspace numeric identifier (TOWER_WORKSPACE_ID as default) or workspace reference as OrganizationName/WorkspaceName.";
-    public static final String DEFAULT_VALUE = "${TOWER_WORKSPACE_ID}";
+public class StudiosTemplateNotFoundException extends TowerException {
 
-    @CommandLine.Option(names = {"-w", "--workspace"}, description = DESCRIPTION, defaultValue = DEFAULT_VALUE)
-    public String workspace = null;
+    public StudiosTemplateNotFoundException(String template, List<String> templatesAvailable) {
+        super(String.format("Studio template provided '%s', is not one of the Platform's available templates '%s'.", template, templatesAvailable));
+    }
 }

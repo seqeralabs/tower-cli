@@ -15,14 +15,16 @@
  *
  */
 
-package io.seqera.tower.cli.commands.global;
+package io.seqera.tower.cli.exceptions;
 
-import picocli.CommandLine;
+public class StudioNotFoundException extends TowerException {
 
-public class WorkspaceOptionalOptions {
-    public static final String DESCRIPTION = "Workspace numeric identifier (TOWER_WORKSPACE_ID as default) or workspace reference as OrganizationName/WorkspaceName.";
-    public static final String DEFAULT_VALUE = "${TOWER_WORKSPACE_ID}";
+    public StudioNotFoundException(String studioIdentifier, Long workspaceId) {
+        super(String.format("Studio '%s' not found at workspace '%s'", studioIdentifier, workspaceId));
+    }
 
-    @CommandLine.Option(names = {"-w", "--workspace"}, description = DESCRIPTION, defaultValue = DEFAULT_VALUE)
-    public String workspace = null;
+    public StudioNotFoundException(String studioIdentifier, String workspace) {
+        super(String.format("Studio '%s' not found at workspace '%s'", studioIdentifier, workspace));
+    }
+
 }

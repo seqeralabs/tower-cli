@@ -15,14 +15,11 @@
  *
  */
 
-package io.seqera.tower.cli.commands.global;
+package io.seqera.tower.cli.exceptions;
 
-import picocli.CommandLine;
+public class StudiosCustomTemplateWithCondaException extends TowerException {
 
-public class WorkspaceOptionalOptions {
-    public static final String DESCRIPTION = "Workspace numeric identifier (TOWER_WORKSPACE_ID as default) or workspace reference as OrganizationName/WorkspaceName.";
-    public static final String DEFAULT_VALUE = "${TOWER_WORKSPACE_ID}";
-
-    @CommandLine.Option(names = {"-w", "--workspace"}, description = DESCRIPTION, defaultValue = DEFAULT_VALUE)
-    public String workspace = null;
+    public StudiosCustomTemplateWithCondaException() {
+        super(String.format("Studio template provided is a custom template and cannot be used together with conda environment option."));
+    }
 }

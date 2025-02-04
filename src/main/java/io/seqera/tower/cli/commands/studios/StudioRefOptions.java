@@ -15,14 +15,24 @@
  *
  */
 
-package io.seqera.tower.cli.commands.global;
+package io.seqera.tower.cli.commands.studios;
 
 import picocli.CommandLine;
 
-public class WorkspaceOptionalOptions {
-    public static final String DESCRIPTION = "Workspace numeric identifier (TOWER_WORKSPACE_ID as default) or workspace reference as OrganizationName/WorkspaceName.";
-    public static final String DEFAULT_VALUE = "${TOWER_WORKSPACE_ID}";
+public class StudioRefOptions {
 
-    @CommandLine.Option(names = {"-w", "--workspace"}, description = DESCRIPTION, defaultValue = DEFAULT_VALUE)
-    public String workspace = null;
+    @CommandLine.ArgGroup(multiplicity = "1")
+    public StudioRef studio;
+
+    public static class StudioRef {
+        @CommandLine.Option(names = {"-i", "--id"}, description = "Studio session ID.")
+        public String sessionId;
+
+        @CommandLine.Option(names = {"-n", "--name"}, description = "Studio name.")
+        public String studioName;
+    }
+
+    public String getStudioIdentifier() {
+        return studio.sessionId != null ? studio.sessionId : studio.studioName;
+    }
 }
