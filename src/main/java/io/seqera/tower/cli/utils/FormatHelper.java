@@ -254,7 +254,7 @@ public class FormatHelper {
         }
     }
 
-    public static String formatDataStudioStatus(DataStudioStatus status) {
+    public static String formatStudioStatus(DataStudioStatus status) {
         if (status == null) {
             return "NA";
         }

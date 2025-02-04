@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.api.DefaultApi;
 import io.seqera.tower.cli.Tower;
-import io.seqera.tower.cli.commands.datastudios.DataLinkRefOptions;
+import io.seqera.tower.cli.commands.studios.DataLinkRefOptions;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.DataLinkNotFoundException;
 import io.seqera.tower.cli.exceptions.MultipleDataLinksFoundException;
