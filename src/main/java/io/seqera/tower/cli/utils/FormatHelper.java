@@ -344,7 +344,7 @@ public class FormatHelper {
         }
 
         // remove line breaks
-        var text = description.replace("\n", " ").replace("\r", " ");
+        var text = description.trim().replace("\n", " ").replace("\r", " ");
         // cap the description length if too long
         return text.length() > maxLength ? text.substring(0, maxLength) + "..." : text;
     }
