@@ -27,6 +27,7 @@ import io.seqera.tower.model.StudioUser;
 
 import java.io.PrintWriter;
 
+import static io.seqera.tower.cli.utils.FormatHelper.formatDescription;
 import static io.seqera.tower.cli.utils.FormatHelper.formatStudioStatus;
 import static io.seqera.tower.cli.utils.FormatHelper.formatTime;
 
@@ -54,7 +55,7 @@ public class StudiosView extends Response {
         table.addRow("Status", formatStudioStatus(statusInfo == null ? null : statusInfo.getStatus()));
         table.addRow("Status last update", statusInfo == null ? "NA" : formatTime(statusInfo.getLastUpdate()));
         table.addRow("Studio URL", studio.getStudioUrl());
-        table.addRow("Description", studio.getDescription());
+        table.addRow("Description", formatDescription(studio.getDescription(), 100));
         table.addRow("Created on", formatTime(studio.getDateCreated()));
         table.addRow("Created by", studioUser == null ? "NA" : String.format("%s | %s",studioUser.getUserName(), studioUser.getEmail()));
         table.addRow("Template", studio.getTemplate() == null ? "NA" : studio.getTemplate().getRepository());
