@@ -334,4 +334,19 @@ public class FormatHelper {
         .collect(Collectors.joining(","));
     }
 
+    public static String formatDescription(String description) {
+        return formatDescription(description, 2048);
+    }
+
+    public static String formatDescription(String description, int maxLength) {
+        if (description == null) {
+            return "NA";
+        }
+
+        // remove line breaks
+        var text = description.trim().replace("\n", " ").replace("\r", " ");
+        // cap the description length if too long
+        return text.length() > maxLength ? text.substring(0, maxLength) + "..." : text;
+    }
+
 }

@@ -30,6 +30,7 @@ import io.seqera.tower.model.DataStudioDto;
 import io.seqera.tower.model.DataStudioStatusInfo;
 import io.seqera.tower.model.StudioUser;
 
+import static io.seqera.tower.cli.utils.FormatHelper.formatDescription;
 import static io.seqera.tower.cli.utils.FormatHelper.formatStudioStatus;
 
 public class StudiosList extends Response {
@@ -67,10 +68,10 @@ public class StudiosList extends Response {
             DataStudioStatusInfo statusInfo = studio.getStatusInfo();
             StudioUser user = studio.getUser();
             List<String> rows = new ArrayList<>(List.of(
-                    studio.getSessionId() == null ? "" : studio.getSessionId(),
-                    studio.getName() == null ? "" : studio.getName(),
-                    studio.getDescription() == null ? "" : studio.getDescription(),
-                    user == null ? "" : user.getUserName(),
+                    studio.getSessionId() == null ? "NA" : studio.getSessionId(),
+                    studio.getName() == null ? "NA" : studio.getName(),
+                    formatDescription(studio.getDescription(), 100),
+                    user == null ? "NA" : user.getUserName(),
                     formatStudioStatus(statusInfo == null ? null : statusInfo.getStatus())
             ));
 
