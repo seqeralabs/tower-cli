@@ -58,7 +58,7 @@ public class StartAsNewCmd extends AbstractStudiosCmd{
     @CommandLine.Mixin
     public StudioConfigurationOptions studioConfigOptions;
 
-    @CommandLine.Option(names = {"-a", "--autoStart"}, description = "Create Studio and start it immediately, defaults to false.", defaultValue = "false")
+    @CommandLine.Option(names = {"-a", "--auto-start"}, description = "Create Studio and start it immediately, defaults to false.", defaultValue = "false")
     public Boolean autoStart;
 
     @CommandLine.Option(names = {"--wait"}, description = "Wait until Studio is in RUNNING status. Valid options: ${COMPLETION-CANDIDATES}.")
