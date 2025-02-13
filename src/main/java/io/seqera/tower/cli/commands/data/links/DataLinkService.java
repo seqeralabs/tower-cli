@@ -109,8 +109,8 @@ public class DataLinkService  {
                     .collect(Collectors.toList());
         }
 
-        if (dataLinkRef.getMountDataResourceRefs() != null) {
-            dataLinkIds = dataLinkRef.getMountDataResourceRefs().stream()
+        if (dataLinkRef.getMountDataUris() != null) {
+            dataLinkIds = dataLinkRef.getMountDataUris().stream()
                     .map(resourceRef -> getDataLinkIdByResourceRef(wspId, resourceRef))
                     .collect(Collectors.toList());
         }
