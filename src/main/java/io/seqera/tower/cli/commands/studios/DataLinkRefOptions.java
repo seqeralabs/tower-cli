@@ -61,7 +61,7 @@ public class DataLinkRefOptions {
             boolean valid = (namesProvided ? 1 : 0) + (resourceRefsProvided ? 1 : 0) + (idsProvided ? 1 : 0) == 1;
 
             if (!valid) {
-                throw new TowerRuntimeException("Error: --mount-data=<mountDataNames>, --mount-data-ids=<mountDataIds>, --mount-data-resource-refs=<mountDataResourceRefs> are mutually exclusive (specify only one)");
+                throw new TowerRuntimeException("Error: --mount-data=<mountDataNames>, --mount-data-ids=<mountDataIds>, --mount-data-uris=<mountDataUris> are mutually exclusive (specify only one)");
             }
         }
     }
