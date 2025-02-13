@@ -785,13 +785,13 @@ public class StudiosCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "studios", "start", "-w", "75887156211589", "-i" ,"3e8370e7", "--mount-data", "a-test-bucket-eend-us-east-1", "--mount-data-ids", "ids");
 
-        assertEquals(errorMessage(out.app, new TowerRuntimeException("Error: --mount-data=<mountDataNames>, --mount-data-ids=<mountDataIds>, --mount-data-resource-refs=<mountDataResourceRefs> are mutually exclusive (specify only one)")), out.stdErr);
+        assertEquals(errorMessage(out.app, new TowerRuntimeException("Error: --mount-data=<mountDataNames>, --mount-data-ids=<mountDataIds>, --mount-data-uris=<mountDataUris> are mutually exclusive (specify only one)")), out.stdErr);
         assertEquals("", out.stdOut);
         assertEquals(1, out.exitCode);
 
-        ExecOut out2 = exec(format, mock, "studios", "start", "-w", "75887156211589", "-i" ,"3e8370e7", "--mount-data", "a-test-bucket-eend-us-east-1", "--mount-data-ids", "ids", "--mount-data-resource-refs", "s3//ref");
+        ExecOut out2 = exec(format, mock, "studios", "start", "-w", "75887156211589", "-i" ,"3e8370e7", "--mount-data", "a-test-bucket-eend-us-east-1", "--mount-data-ids", "ids", "--mount-data-uris", "s3//ref");
 
-        assertEquals(errorMessage(out2.app, new TowerRuntimeException("Error: --mount-data=<mountDataNames>, --mount-data-ids=<mountDataIds>, --mount-data-resource-refs=<mountDataResourceRefs> are mutually exclusive (specify only one)")), out2.stdErr);
+        assertEquals(errorMessage(out2.app, new TowerRuntimeException("Error: --mount-data=<mountDataNames>, --mount-data-ids=<mountDataIds>, --mount-data-uris=<mountDataUris> are mutually exclusive (specify only one)")), out2.stdErr);
         assertEquals("", out2.stdOut);
         assertEquals(1, out2.exitCode);
     }
@@ -852,7 +852,7 @@ public class StudiosCmdTest extends BaseCmdTest {
             """)).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(format, mock, "studios", "start", "-w", "75887156211589", "-i" ,"3e8370e7", "--mount-data-resource-refs", "s3://a-test-bucket");
+        ExecOut out = exec(format, mock, "studios", "start", "-w", "75887156211589", "-i" ,"3e8370e7", "--mount-data-uris", "s3://a-test-bucket");
 
         assertEquals(errorMessage(out.app, new MultipleDataLinksFoundException("resourceRef:s3://a-test-bucket", 75887156211589L, List.of("v1-cloud-id-aaa", "v1-cloud-id-bbb"))), out.stdErr);
         assertEquals("", out.stdOut);

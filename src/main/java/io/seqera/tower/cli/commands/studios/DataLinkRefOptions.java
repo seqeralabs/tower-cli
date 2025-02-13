@@ -29,14 +29,13 @@ public class DataLinkRefOptions {
     public DataLinkRef dataLinkRef;
 
     public static class DataLinkRef {
-        @CommandLine.Option(names = {"--mount-data"}, description = "Optional configuration override for 'mountData' setting (comma separate list of data-link names).", split = ",")
+
+        @CommandLine.Option(names = {"--mount-data-uris"}, description = "Comma separate list of data-link URIs: s3://nextflow-bucket,s3://another-bucket", split = ",")
+        private List<String> mountDataUris;
+        @CommandLine.Option(names = {"--mount-data"}, description = "Comma separate list of data-link names: nextflow-bucket,my-custom-data-link-name", split = ",")
         private List<String> mountDataNames;
-
-        @CommandLine.Option(names = {"--mount-data-ids"}, description = "Optional configuration override for 'mountData' setting (comma separate list of data-link Ids).", split = ",")
+        @CommandLine.Option(names = {"--mount-data-ids"}, description = "Comma separate list of data-link ids: v1-cloud-YjI3MjMwOTMyNjUwNzk5tbG9yZQ=,v1-user-d2c505e70901d2bf6516d", split = ",")
         private List<String> mountDataIds;
-
-        @CommandLine.Option(names = {"--mount-data-resource-refs"}, description = "Optional configuration override for 'mountData' setting (comma separate list of data-link resource refs).", split = ",")
-        private List<String> mountDataResourceRefs;
 
         public List<String> getMountDataNames() {
             validate();
@@ -48,21 +47,21 @@ public class DataLinkRefOptions {
             return mountDataIds;
         }
 
-        public List<String> getMountDataResourceRefs() {
+        public List<String> getMountDataUris() {
             validate();
-            return mountDataResourceRefs;
+            return mountDataUris;
         }
 
         private void validate() {
             boolean namesProvided = mountDataNames != null;
-            boolean resourceRefsProvided = mountDataResourceRefs != null;
+            boolean resourceRefsProvided = mountDataUris != null;
             boolean idsProvided = mountDataIds != null;
 
             // check that exactly 1 is provided
             boolean valid = (namesProvided ? 1 : 0) + (resourceRefsProvided ? 1 : 0) + (idsProvided ? 1 : 0) == 1;
 
             if (!valid) {
-                throw new TowerRuntimeException("Error: --mount-data=<mountDataNames>, --mount-data-ids=<mountDataIds>, --mount-data-resource-refs=<mountDataResourceRefs> are mutually exclusive (specify only one)");
+                throw new TowerRuntimeException("Error: --mount-data=<mountDataNames>, --mount-data-ids=<mountDataIds>, --mount-data-uris=<mountDataUris> are mutually exclusive (specify only one)");
             }
         }
     }
