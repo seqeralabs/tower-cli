@@ -78,7 +78,7 @@ public class AbstractStudiosCmd extends AbstractApiCmd {
     }
 
     private DataStudioDto getStudioByName(Long wspId, String studioName) throws ApiException {
-        List<DataStudioDto> studios = api().listDataStudios(wspId, null, null, null).getStudios();
+        List<DataStudioDto> studios = api().listDataStudios(wspId, null, null, null, null).getStudios();
 
         return studios.stream()
                 .filter(s -> studioName.equals(s.getName()))
@@ -138,6 +138,9 @@ public class AbstractStudiosCmd extends AbstractApiCmd {
         studioConfiguration.setMemory(configOptions.memory == null
                 ? studioConfiguration.getMemory()
                 : configOptions.memory);
+        studioConfiguration.setLifespanHours(configOptions.lifespan == null
+                ? studioConfiguration.getLifespanHours()
+                : configOptions.lifespan);
 
         studioConfiguration.setMountData(getMountDataIds(configOptions, studioConfiguration, wspId));
 

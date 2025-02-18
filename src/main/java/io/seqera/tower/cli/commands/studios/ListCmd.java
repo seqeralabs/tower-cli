@@ -26,10 +26,12 @@ import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.studios.StudiosList;
 import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.model.DataStudioListResponse;
+import io.seqera.tower.model.DataStudioQueryAttribute;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
 import java.io.IOException;
+import java.util.List;
 
 @Command(
         name = "list",
@@ -55,8 +57,11 @@ public class ListCmd extends AbstractStudiosCmd {
 
         DataStudioListResponse response = new DataStudioListResponse();
 
+        // implement attributes when needed for labels - for time being set to null as they were before
+        List<DataStudioQueryAttribute> attributes = null;
+
         try {
-           response = api().listDataStudios(wspId, filter, max, offset);
+           response = api().listDataStudios(wspId, filter, max, offset, attributes);
         } catch (ApiException e) {
             if (e.getCode() == 404){
                 throw new WorkspaceNotFoundException(wspId);
