@@ -35,10 +35,10 @@ import picocli.CommandLine;
 import java.util.Objects;
 
 @CommandLine.Command(
-        name = "start-as-new",
-        description = "Start a new studio from an existing one."
+        name = "add-as-new",
+        description = "Add a new studio from an existing one."
 )
-public class StartAsNewCmd extends AbstractStudiosCmd{
+public class AddAsNewCmd extends AbstractStudiosCmd{
 
     @CommandLine.Mixin
     public ParentStudioRefOptions parentStudioRefOptions;

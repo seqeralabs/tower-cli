@@ -1200,7 +1200,7 @@ public class StudiosCmdTest extends BaseCmdTest {
 
     @ParameterizedTest
     @EnumSource(OutputType.class)
-    void testStartAsNew(OutputType format, MockServerClient mock) throws JsonProcessingException {
+    void testAddAsNew(OutputType format, MockServerClient mock) throws JsonProcessingException {
 
         mock.when(
                 request().withMethod("GET").withPath("/user-info"), exactly(2)
@@ -1236,7 +1236,7 @@ public class StudiosCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("studios/studios_start_as_new_response")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(format, mock, "studios", "start-as-new", "-pid", "3e8370e7", "-n", "child-studio-a66d", "-w", "75887156211589", "--cpu", "4");
+        ExecOut out = exec(format, mock, "studios", "add-as-new", "-pid", "3e8370e7", "-n", "child-studio-a66d", "-w", "75887156211589", "--cpu", "4");
 
         assertOutput(format, out, new StudiosCreated("8aebf1b8",75887156211589L, "[organization1 / workspace1]",
                 "http://localhost:"+mock.getPort()+"/orgs/organization1/workspaces/workspace1", false));
@@ -1297,7 +1297,7 @@ public class StudiosCmdTest extends BaseCmdTest {
 
     @ParameterizedTest
     @EnumSource(OutputType.class)
-    void testStartAsNewUsingParentName(OutputType format, MockServerClient mock) {
+    void testAddAsNewUsingParentName(OutputType format, MockServerClient mock) {
 
         mock.when(
                 request().withMethod("GET").withPath("/user-info"), exactly(2)
@@ -1339,7 +1339,7 @@ public class StudiosCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("studios/studios_start_as_new_response")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(format, mock, "studios", "start-as-new", "-pn", "studio-a66d", "-n", "child-studio-a66d", "-w", "75887156211589", "--cpu", "4");
+        ExecOut out = exec(format, mock, "studios", "add-as-new", "-pn", "studio-a66d", "-n", "child-studio-a66d", "-w", "75887156211589", "--cpu", "4");
 
         assertOutput(format, out, new StudiosCreated("8aebf1b8", 75887156211589L, "[organization1 / workspace1]",
                 "http://localhost:"+mock.getPort()+"/orgs/organization1/workspaces/workspace1", false));
@@ -1347,7 +1347,7 @@ public class StudiosCmdTest extends BaseCmdTest {
 
     @ParameterizedTest
     @EnumSource(OutputType.class)
-    void testStartAsNewUsingParentCheckpointId(OutputType format, MockServerClient mock) {
+    void testAddAsNewUsingParentCheckpointId(OutputType format, MockServerClient mock) {
 
         mock.when(
                 request().withMethod("GET").withPath("/user-info"), exactly(2)
@@ -1387,7 +1387,7 @@ public class StudiosCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("studios/studios_start_as_new_response")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(format, mock, "studios", "start-as-new", "-pn", "studio-a66d", "-n", "child-studio-a66d", "-w", "75887156211589", "--parent-checkpoint-id", "1");
+        ExecOut out = exec(format, mock, "studios", "add-as-new", "-pn", "studio-a66d", "-n", "child-studio-a66d", "-w", "75887156211589", "--parent-checkpoint-id", "1");
 
         assertOutput(format, out, new StudiosCreated("8aebf1b8", 75887156211589L, "[organization1 / workspace1]",
                 "http://localhost:"+mock.getPort()+"/orgs/organization1/workspaces/workspace1", false));
@@ -1395,7 +1395,7 @@ public class StudiosCmdTest extends BaseCmdTest {
 
     @ParameterizedTest
     @EnumSource(OutputType.class)
-    void testStartAsNewThrowsInvalidDataStudioParentCheckpointException(OutputType format, MockServerClient mock) {
+    void testAddAsNewThrowsInvalidDataStudioParentCheckpointException(OutputType format, MockServerClient mock) {
 
         mock.when(
                 request().withMethod("GET").withPath("/user-info"), exactly(2)
@@ -1437,7 +1437,7 @@ public class StudiosCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("studios/studios_start_as_new_response")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(format, mock, "studios", "start-as-new", "-pn", "studio-a66d", "-n", "child-studio-a66d", "-w", "75887156211589", "--parent-checkpoint-id", "1111");
+        ExecOut out = exec(format, mock, "studios", "add-as-new", "--parent-name", "studio-a66d", "-n", "child-studio-a66d", "-w", "75887156211589", "--parent-checkpoint-id", "1111");
 
         assertEquals(errorMessage(out.app, new InvalidDataStudioParentCheckpointException("1111")), out.stdErr);
         assertEquals("", out.stdOut);

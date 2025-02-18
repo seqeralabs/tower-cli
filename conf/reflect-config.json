@@ -1544,6 +1544,12 @@
   "queryAllDeclaredMethods":true
 },
 {
+  "name":"io.seqera.tower.cli.commands.studios.AddAsNewCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.studios.AddCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -1587,12 +1593,6 @@
 },
 {
   "name":"io.seqera.tower.cli.commands.studios.ParentStudioRefOptions$ParentStudioRef",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.studios.StartAsNewCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
