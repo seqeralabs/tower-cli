@@ -676,6 +676,7 @@ public class StudiosCmdTest extends BaseCmdTest {
                                ],
                                "lifespanHours" : 24
                              },
+                             "labelIds": [1234,5678],
                              "description": "Override description"
                            }
                            """
@@ -687,7 +688,7 @@ public class StudiosCmdTest extends BaseCmdTest {
         );
 
 
-        ExecOut out = exec(format, mock, "studios", "start", "-w", "75887156211589", "-i" ,"3e8370e7", "--cpu", "4", "--description", "Override description", "--lifespan", "24");
+        ExecOut out = exec(format, mock, "studios", "start", "-w", "75887156211589", "-i" ,"3e8370e7", "--cpu", "4", "--description", "Override description", "--lifespan", "24", "--label-ids", "1234,5678");
 
         assertOutput(format, out, new StudioStartSubmitted("3e8370e7", "3e8370e7",75887156211589L,
                 "[organization1 / workspace1]", "http://localhost:"+mock.getPort()+"/orgs/organization1/workspaces/workspace1", true));
@@ -1079,6 +1080,7 @@ public class StudiosCmdTest extends BaseCmdTest {
                                "lifespanHours" : 24
                              },
                              "isPrivate": true,
+                             "labelIds": [1234, 5678],
                              "description": "Some description"
                            }
                            """))
@@ -1088,7 +1090,7 @@ public class StudiosCmdTest extends BaseCmdTest {
         );
 
         ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t" ,"cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot", "-c", "demo",
-        "--cpu", "3","--memory", "100", "--lifespan", "24", "--description", "Some description", "--private");
+        "--cpu", "3","--memory", "100", "--lifespan", "24", "--description", "Some description", "--private", "--label-ids", "1234,5678");
 
         assertOutput(format, out, new StudiosCreated("3e8370e7",75887156211589L, "[organization1 / workspace1]",
                 "http://localhost:"+mock.getPort()+"/orgs/organization1/workspaces/workspace1", false));
