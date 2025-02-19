@@ -19,6 +19,7 @@ package io.seqera.tower.cli.commands.studios;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
+import io.seqera.tower.cli.commands.labels.LabelsOptionalOptions;
 import io.seqera.tower.cli.exceptions.StudioNotFoundException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
@@ -49,6 +50,9 @@ public class StartCmd extends AbstractStudiosCmd {
 
     @CommandLine.Option(names = {"--wait"}, description = "Wait until given status or fail. Valid options: ${COMPLETION-CANDIDATES}.")
     public DataStudioStatus wait;
+
+    @CommandLine.Mixin
+    public LabelsOptionalOptions labels;
 
     @CommandLine.Option(names = {"--description"}, description = "Optional configuration override for 'description'.")
     public String description;
@@ -103,6 +107,7 @@ public class StartCmd extends AbstractStudiosCmd {
 
         request.setConfiguration(newConfig);
         request.setDescription(appliedDescription);
+        request.setLabelIds(getLabelIds(labels, studioDto.getWorkspaceId()));
 
         return request;
     }

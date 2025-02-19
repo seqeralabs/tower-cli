@@ -24,6 +24,7 @@ import java.util.function.Supplier;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.commands.data.links.DataLinkService;
+import io.seqera.tower.cli.commands.labels.LabelsOptionalOptions;
 import io.seqera.tower.cli.exceptions.StudioNotFoundException;
 import io.seqera.tower.model.DataStudioConfiguration;
 import io.seqera.tower.cli.commands.enums.OutputType;
@@ -161,6 +162,12 @@ public class AbstractStudiosCmd extends AbstractApiCmd {
         return dataLinkService.getDataLinkIds(studioConfigOptions.dataLinkRefOptions.dataLinkRef, wspId);
     }
 
+    protected List<Long> getLabelIds(LabelsOptionalOptions labels, Long wspId) throws ApiException {
+        if (labels == null || labels.labels == null || labels.labels.isEmpty()) {
+            return null;
+        }
+        return findOrCreateLabels(wspId, labels.labels);
+    }
 
     public class ProgressStepMessageSupplier implements Supplier<String> {
 
