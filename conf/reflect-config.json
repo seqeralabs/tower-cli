@@ -2773,7 +2773,7 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[{"name":"getComputeEnvId","parameterTypes":[] }, {"name":"getConfiguration","parameterTypes":[] }, {"name":"getDataStudioToolUrl","parameterTypes":[] }, {"name":"getDescription","parameterTypes":[] }, {"name":"getInitialCheckpointId","parameterTypes":[] }, {"name":"getName","parameterTypes":[] }, {"name":"getIsPrivate","parameterTypes":[] }]
+  "methods":[{"name":"getComputeEnvId","parameterTypes":[] }, {"name":"getConfiguration","parameterTypes":[] }, {"name":"getDataStudioToolUrl","parameterTypes":[] }, {"name":"getDescription","parameterTypes":[] }, {"name":"getInitialCheckpointId","parameterTypes":[] }, {"name":"getIsPrivate","parameterTypes":[] },  {"name":"getLabelIds_JsonNullable","parameterTypes":[] }, {"name":"getName","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.DataStudioCreateResponse",
