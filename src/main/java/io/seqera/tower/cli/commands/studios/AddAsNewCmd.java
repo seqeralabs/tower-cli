@@ -30,9 +30,12 @@ import io.seqera.tower.model.DataStudioCreateResponse;
 import io.seqera.tower.model.DataStudioDto;
 import io.seqera.tower.model.DataStudioListCheckpointsResponse;
 import io.seqera.tower.model.DataStudioStatus;
+import io.seqera.tower.model.LabelDbDto;
 import picocli.CommandLine;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @CommandLine.Command(
         name = "add-as-new",
@@ -60,6 +63,9 @@ public class AddAsNewCmd extends AbstractStudiosCmd{
 
     @CommandLine.Option(names = {"-a", "--auto-start"}, description = "Create Studio and start it immediately, defaults to false.", defaultValue = "false")
     public Boolean autoStart;
+
+    @CommandLine.Option(names = {"--label-ids"}, description = "Comma-separated list of label IDs. If not provided defaults parent studio labels.", split = ",")
+    public List<Long> labelIds;
 
     @CommandLine.Option(names = {"--wait"}, description = "Wait until Studio is in RUNNING status. Valid options: ${COMPLETION-CANDIDATES}.")
     public DataStudioStatus wait;
@@ -95,6 +101,12 @@ public class AddAsNewCmd extends AbstractStudiosCmd{
             request.description(String.format("Started from studio %s", parentDataStudio.getName()));
         } else {
             request.description(description);
+        }
+        if (labelIds == null && parentDataStudio.getLabels() != null) {
+            var parentStudioLabelIds = parentDataStudio.getLabels().stream().map(LabelDbDto::getId).collect(Collectors.toList());
+            request.labelIds(parentStudioLabelIds);
+        } else {
+            request.labelIds(labelIds);
         }
 
         if (parentCheckpointId == null) {

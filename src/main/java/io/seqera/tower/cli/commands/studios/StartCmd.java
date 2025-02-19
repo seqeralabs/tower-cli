@@ -17,6 +17,9 @@
 
 package io.seqera.tower.cli.commands.studios;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.exceptions.StudioNotFoundException;
@@ -28,6 +31,7 @@ import io.seqera.tower.model.DataStudioDto;
 import io.seqera.tower.model.DataStudioStartRequest;
 import io.seqera.tower.model.DataStudioStartResponse;
 import io.seqera.tower.model.DataStudioStatus;
+import io.seqera.tower.model.LabelDbDto;
 import picocli.CommandLine;
 
 import static java.lang.Boolean.FALSE;
@@ -49,6 +53,9 @@ public class StartCmd extends AbstractStudiosCmd {
 
     @CommandLine.Option(names = {"--wait"}, description = "Wait until given status or fail. Valid options: ${COMPLETION-CANDIDATES}.")
     public DataStudioStatus wait;
+
+    @CommandLine.Option(names = {"--label-ids"}, description = "Comma-separated list of label IDs. If not provided defaults to Compute Environment labels.", split = ",")
+    public List<Long> labelIds;
 
     @CommandLine.Option(names = {"--description"}, description = "Optional configuration override for 'description'.")
     public String description;
@@ -98,11 +105,15 @@ public class StartCmd extends AbstractStudiosCmd {
         String appliedDescription = description == null
                 ? studioDto.getDescription()
                 : description;
+        List<Long> appliedLabelIds = labelIds == null && studioDto.getLabels() != null
+                ? studioDto.getLabels().stream().map(LabelDbDto::getId).collect(Collectors.toList())
+                : labelIds;
 
         DataStudioStartRequest request = new DataStudioStartRequest();
 
         request.setConfiguration(newConfig);
         request.setDescription(appliedDescription);
+        request.setLabelIds(appliedLabelIds);
 
         return request;
     }

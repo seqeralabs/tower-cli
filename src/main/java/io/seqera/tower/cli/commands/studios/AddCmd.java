@@ -69,6 +69,12 @@ public class AddCmd extends AbstractStudiosCmd{
     @CommandLine.Option(names = {"-a", "--auto-start"}, description = "Create Studio and start it immediately, defaults to false.", defaultValue = "false")
     public Boolean autoStart;
 
+    @CommandLine.Option(names = {"--private"}, description = "Create a private studio that only you can access/manage.", defaultValue = "false")
+    public Boolean isPrivate;
+
+    @CommandLine.Option(names = {"--label-ids"}, description = "Comma-separated list of label IDs. If not provided defaults to Compute Environment labels.", split = ",")
+    public List<Long> labelIds;
+
     @CommandLine.Option(names = {"--wait"}, description = "Wait until Studio is in RUNNING status. Valid options: ${COMPLETION-CANDIDATES}.")
     public DataStudioStatus wait;
 
@@ -113,6 +119,8 @@ public class AddCmd extends AbstractStudiosCmd{
         DataStudioCreateRequest request = new DataStudioCreateRequest();
         request.setName(name);
         if (description != null && !description.isEmpty()) {request.description(description);}
+        if (labelIds != null && !labelIds.isEmpty()) { request.labelIds(labelIds); }
+        request.setIsPrivate(isPrivate);
         request.setDataStudioToolUrl(templateOptions.getTemplate());
         ComputeEnvResponseDto ceResponse = computeEnvByRef(wspId, computeEnv);
         request.setComputeEnvId(ceResponse.getId());

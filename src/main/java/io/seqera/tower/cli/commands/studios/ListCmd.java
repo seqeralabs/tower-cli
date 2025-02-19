@@ -56,7 +56,7 @@ public class ListCmd extends AbstractStudiosCmd {
         DataStudioListResponse response = new DataStudioListResponse();
 
         try {
-           response = api().listDataStudios(wspId, filter, max, offset);
+           response = api().listDataStudios(wspId, filter, max, offset, null);
         } catch (ApiException e) {
             if (e.getCode() == 404){
                 throw new WorkspaceNotFoundException(wspId);
