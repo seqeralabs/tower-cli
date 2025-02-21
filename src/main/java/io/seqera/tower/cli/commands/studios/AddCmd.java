@@ -168,9 +168,4 @@ public class AddCmd extends AbstractStudiosCmd{
         StudiosCreated createdResponse = ((StudiosCreated) response);
         return onBeforeExit(exitCode, createdResponse.sessionId, createdResponse.workspaceId, wait);
     }
-
-//    private void attachLabels(Long wspId, String sessionId) throws ApiException{
-//        PipelinesLabelsManager creator = new PipelinesLabelsManager(api());
-//        creator.execute(wspId, sessionId, labels.labels);
-//    }
 }
