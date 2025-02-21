@@ -19,6 +19,8 @@ package io.seqera.tower.cli.commands.studios;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
+import io.seqera.tower.cli.commands.labels.Label;
+import io.seqera.tower.cli.commands.labels.LabelsOptionalOptions;
 import io.seqera.tower.cli.exceptions.StudiosCustomTemplateWithCondaException;
 import io.seqera.tower.cli.exceptions.StudiosTemplateNotFoundException;
 import io.seqera.tower.cli.exceptions.TowerException;
@@ -69,6 +71,12 @@ public class AddCmd extends AbstractStudiosCmd{
     @CommandLine.Option(names = {"-a", "--auto-start"}, description = "Create Studio and start it immediately, defaults to false.", defaultValue = "false")
     public Boolean autoStart;
 
+    @CommandLine.Option(names = {"--private"}, description = "Create a private studio that only you can access/manage.", defaultValue = "false")
+    public Boolean isPrivate;
+
+    @CommandLine.Option(names = {"--labels"}, description = "Comma-separated list of labels.", split = ",", converter = Label.StudioResourceLabelsConverter.class)
+    public List<Label> labels;
+
     @CommandLine.Option(names = {"--wait"}, description = "Wait until Studio is in RUNNING status. Valid options: ${COMPLETION-CANDIDATES}.")
     public DataStudioStatus wait;
 
@@ -113,6 +121,8 @@ public class AddCmd extends AbstractStudiosCmd{
         DataStudioCreateRequest request = new DataStudioCreateRequest();
         request.setName(name);
         if (description != null && !description.isEmpty()) {request.description(description);}
+        request.setLabelIds(getLabelIds(labels, wspId));
+        request.setIsPrivate(isPrivate);
         request.setDataStudioToolUrl(templateOptions.getTemplate());
         ComputeEnvResponseDto ceResponse = computeEnvByRef(wspId, computeEnv);
         request.setComputeEnvId(ceResponse.getId());

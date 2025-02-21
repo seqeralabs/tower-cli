@@ -30,6 +30,9 @@ public class StudioConfigurationOptions {
     @CommandLine.Option(names = {"--memory"}, description = "Optional configuration override for 'memory' setting (integer representing memory in MBs).")
     public Integer memory;
 
+    @CommandLine.Option(names = {"--lifespan"}, description = "Optional configuration override for 'lifespan' setting (integer representing hours). Defaults to workspace lifespan setting.")
+    public Integer lifespan;
+
     @CommandLine.Mixin
     public DataLinkRefOptions dataLinkRefOptions;
 

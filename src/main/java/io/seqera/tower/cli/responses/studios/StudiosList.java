@@ -31,6 +31,7 @@ import io.seqera.tower.model.DataStudioStatusInfo;
 import io.seqera.tower.model.StudioUser;
 
 import static io.seqera.tower.cli.utils.FormatHelper.formatDescription;
+import static io.seqera.tower.cli.utils.FormatHelper.formatLabels;
 import static io.seqera.tower.cli.utils.FormatHelper.formatStudioStatus;
 
 public class StudiosList extends Response {
@@ -38,13 +39,15 @@ public class StudiosList extends Response {
     public final String workspaceRef;
     public final List<DataStudioDto> studios;
 
+    public boolean showLabels;
     @JsonIgnore
     @Nullable
     private final PaginationInfo paginationInfo;
 
-    public StudiosList(String workspaceRef, List<DataStudioDto> studios, @Nullable PaginationInfo paginationInfo) {
+    public StudiosList(String workspaceRef, List<DataStudioDto> studios, boolean showLabels, @Nullable PaginationInfo paginationInfo) {
         this.workspaceRef = workspaceRef;
         this.studios = studios;
+        this.showLabels = showLabels;
         this.paginationInfo = paginationInfo;
     }
 
@@ -59,6 +62,7 @@ public class StudiosList extends Response {
         }
 
         List<String> descriptions = new ArrayList<>(List.of("ID", "Name", "Description", "User", "Status"));
+        if (showLabels) descriptions.add("Labels");
 
         TableList table = new TableList(out, descriptions.size(), descriptions.toArray(new String[descriptions.size()]));
         table.setPrefix("    ");
@@ -74,6 +78,7 @@ public class StudiosList extends Response {
                     user == null ? "NA" : user.getUserName(),
                     formatStudioStatus(statusInfo == null ? null : statusInfo.getStatus())
             ));
+            if (showLabels) rows.add(formatLabels(studio.getLabels()));
 
             table.addRow(rows.toArray(new String[rows.size()]));
         });

@@ -23,7 +23,6 @@ import io.seqera.tower.cli.commands.computeenvs.platforms.Platform;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.commands.labels.Label;
-import io.seqera.tower.cli.commands.labels.LabelsFinder;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.computeenvs.ComputeEnvAdded;
@@ -41,7 +40,6 @@ import picocli.CommandLine.Option;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 import static io.seqera.tower.cli.utils.ResponseHelper.waitStatus;
 
@@ -110,7 +108,7 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
 
         Long wspId = workspaceId(workspace.workspace);
 
-        List<Long> labelIds = findLabels(wspId, labels);
+        List<Long> labelIds = findOrCreateLabels(wspId, labels);
 
         String credsId = credentialsRef == null ? findWorkspaceCredentials(platform, wspId) : credentialsByRef(platform, wspId, credentialsRef);
 
@@ -127,15 +125,6 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
         CreateComputeEnvResponse resp = api().createComputeEnv(request, wspId);
 
         return new ComputeEnvAdded(platform.getValue(), resp.getComputeEnvId(), name, wspId, workspaceRef(wspId));
-    }
-
-    private List<Long> findLabels(Long wspId, List<Label> labels) throws ApiException {
-        if (labels != null && !labels.isEmpty()) {
-            LabelsFinder finder = new LabelsFinder(api());
-            return finder.findLabelsIds(wspId,labels, LabelsFinder.NotFoundLabelBehavior.CREATE);
-        } else {
-            return null;
-        }
     }
 
     private String findWorkspaceCredentials(PlatformEnum type, Long wspId) throws ApiException {

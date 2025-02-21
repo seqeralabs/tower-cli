@@ -19,17 +19,21 @@ package io.seqera.tower.cli.commands.studios;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.PaginationOptions;
+import io.seqera.tower.cli.commands.global.ShowLabelsOption;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.exceptions.WorkspaceNotFoundException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.studios.StudiosList;
 import io.seqera.tower.cli.utils.PaginationInfo;
+import io.seqera.tower.model.ActionQueryAttribute;
 import io.seqera.tower.model.DataStudioListResponse;
+import io.seqera.tower.model.DataStudioQueryAttribute;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
 import java.io.IOException;
+import java.util.List;
 
 @Command(
         name = "list",
@@ -45,6 +49,9 @@ public class ListCmd extends AbstractStudiosCmd {
     public String filter;
 
     @CommandLine.Mixin
+    public ShowLabelsOption showLabelsOption;
+
+    @CommandLine.Mixin
     PaginationOptions paginationOptions;
 
     @Override
@@ -55,8 +62,10 @@ public class ListCmd extends AbstractStudiosCmd {
 
         DataStudioListResponse response = new DataStudioListResponse();
 
+        List<DataStudioQueryAttribute> actionQueryAttributes = showLabelsOption.showLabels ? List.of(DataStudioQueryAttribute.LABELS) : NO_STUDIO_ATTRIBUTES;
+
         try {
-           response = api().listDataStudios(wspId, filter, max, offset);
+           response = api().listDataStudios(wspId, filter, max, offset, actionQueryAttributes);
         } catch (ApiException e) {
             if (e.getCode() == 404){
                 throw new WorkspaceNotFoundException(wspId);
@@ -67,6 +76,6 @@ public class ListCmd extends AbstractStudiosCmd {
             throw e;
         }
 
-        return new StudiosList(workspaceRef(wspId), response.getStudios(), PaginationInfo.from(paginationOptions, response.getTotalSize()));
+        return new StudiosList(workspaceRef(wspId), response.getStudios(), showLabelsOption.showLabels, PaginationInfo.from(paginationOptions, response.getTotalSize()));
     }
 }

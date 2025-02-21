@@ -21,6 +21,8 @@ import io.seqera.tower.ApiClient;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.api.DefaultApi;
 import io.seqera.tower.cli.Tower;
+import io.seqera.tower.cli.commands.labels.Label;
+import io.seqera.tower.cli.commands.labels.LabelsFinder;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
 import io.seqera.tower.cli.exceptions.InvalidWorkspaceParameterException;
 import io.seqera.tower.cli.exceptions.MissingTowerAccessTokenException;
@@ -35,6 +37,7 @@ import io.seqera.tower.model.ComputeEnvComputeConfig;
 import io.seqera.tower.model.ComputeEnvQueryAttribute;
 import io.seqera.tower.model.ComputeEnvResponseDto;
 import io.seqera.tower.model.Credentials;
+import io.seqera.tower.model.DataStudioQueryAttribute;
 import io.seqera.tower.model.ListComputeEnvsResponseEntry;
 import io.seqera.tower.model.ListWorkspacesAndOrgResponse;
 import io.seqera.tower.model.OrgAndWorkspaceDto;
@@ -74,6 +77,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     public static final List<WorkflowQueryAttribute> NO_WORKFLOW_ATTRIBUTES = Collections.EMPTY_LIST;
     public static final List<ActionQueryAttribute> NO_ACTION_ATTRIBUTES = Collections.EMPTY_LIST;
     public static final List<PipelineQueryAttribute> NO_PIPELINE_ATTRIBUTES = Collections.EMPTY_LIST;
+    public static final List<DataStudioQueryAttribute> NO_STUDIO_ATTRIBUTES = Collections.EMPTY_LIST;
 
 
     private DefaultApi api;
@@ -357,6 +361,15 @@ public abstract class AbstractApiCmd extends AbstractCmd {
                 .collect(Collectors.toList());
 
         return orgAndWorkspaceDbDtoList.stream().findFirst().orElseThrow(() -> new OrganizationNotFoundException(organizationRef));
+    }
+
+    protected List<Long> findOrCreateLabels(Long wspId, List<Label> labels) throws ApiException {
+        if (labels != null && !labels.isEmpty()) {
+            LabelsFinder finder = new LabelsFinder(api());
+            return finder.findLabelsIds(wspId,labels, LabelsFinder.NotFoundLabelBehavior.CREATE);
+        } else {
+            return null;
+        }
     }
 
     private void loadUser() throws ApiException {
