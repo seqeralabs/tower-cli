@@ -19,6 +19,7 @@ package io.seqera.tower.cli.commands.studios;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
+import io.seqera.tower.cli.commands.labels.Label;
 import io.seqera.tower.cli.commands.labels.LabelsOptionalOptions;
 import io.seqera.tower.cli.exceptions.StudiosCustomTemplateWithCondaException;
 import io.seqera.tower.cli.exceptions.StudiosTemplateNotFoundException;
@@ -73,8 +74,8 @@ public class AddCmd extends AbstractStudiosCmd{
     @CommandLine.Option(names = {"--private"}, description = "Create a private studio that only you can access/manage.", defaultValue = "false")
     public Boolean isPrivate;
 
-    @CommandLine.Mixin
-    public LabelsOptionalOptions labels;
+    @CommandLine.Option(names = {"--labels"}, description = "Comma-separated list of labels.", split = ",", converter = Label.StudioResourceLabelsConverter.class)
+    public List<Label> labels;
 
     @CommandLine.Option(names = {"--wait"}, description = "Wait until Studio is in RUNNING status. Valid options: ${COMPLETION-CANDIDATES}.")
     public DataStudioStatus wait;

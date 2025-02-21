@@ -19,6 +19,7 @@ package io.seqera.tower.cli.commands.studios;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
+import io.seqera.tower.cli.commands.labels.Label;
 import io.seqera.tower.cli.commands.labels.LabelsOptionalOptions;
 import io.seqera.tower.cli.exceptions.InvalidDataStudioParentCheckpointException;
 import io.seqera.tower.cli.exceptions.TowerException;
@@ -33,6 +34,7 @@ import io.seqera.tower.model.DataStudioListCheckpointsResponse;
 import io.seqera.tower.model.DataStudioStatus;
 import picocli.CommandLine;
 
+import java.util.List;
 import java.util.Objects;
 
 @CommandLine.Command(
@@ -65,8 +67,8 @@ public class AddAsNewCmd extends AbstractStudiosCmd{
     @CommandLine.Option(names = {"--private"}, description = "Create a private studio that only you can access/manage.", defaultValue = "false")
     public Boolean isPrivate;
 
-    @CommandLine.Mixin
-    public LabelsOptionalOptions labels;
+    @CommandLine.Option(names = {"--labels"}, description = "Comma-separated list of labels.", split = ",", converter = Label.StudioResourceLabelsConverter.class)
+    public List<Label> labels;
 
     @CommandLine.Option(names = {"--wait"}, description = "Wait until Studio is in RUNNING status. Valid options: ${COMPLETION-CANDIDATES}.")
     public DataStudioStatus wait;

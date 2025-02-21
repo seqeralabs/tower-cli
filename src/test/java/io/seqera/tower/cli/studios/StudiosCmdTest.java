@@ -1236,6 +1236,70 @@ public class StudiosCmdTest extends BaseCmdTest {
 
     @ParameterizedTest
     @EnumSource(OutputType.class)
+    void testAddWithEmptyLabelList(OutputType format, MockServerClient mock){
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/studios/templates")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("max", "20"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_templates_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs")
+                        .withQueryStringParameter("status", "AVAILABLE")
+                        .withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(request().withMethod("POST").withPath("/studios")
+                .withQueryStringParameter("workspaceId", "75887156211589")
+                .withQueryStringParameter("autostart", "false")
+                .withBody(json("""
+                           {
+                             "name": "studio-a66d",
+                             "dataStudioToolUrl" : "cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot",
+                             "computeEnvId" : "vYOK4vn7spw7bHHWBDXZ2",
+                             "configuration": {
+                               "gpu": 0,
+                               "cpu": 2,
+                               "memory":8192
+                             },
+                             "isPrivate": false,
+                             "labelIds": []
+                           }
+                           """)), exactly(1)).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_created_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t" ,"cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot", "-c", "demo",
+                "--labels=");
+
+        assertOutput(format, out, new StudiosCreated("3e8370e7",75887156211589L, "[organization1 / workspace1]",
+                "http://localhost:"+mock.getPort()+"/orgs/organization1/workspaces/workspace1", false));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
     void testAddThrowsDataStudiosTemplateNotFoundException(OutputType format, MockServerClient mock){
 
         mock.when(
