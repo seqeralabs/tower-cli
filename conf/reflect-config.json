@@ -1181,6 +1181,10 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.labels.Label$StudioResourceLabelsConverter",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.labels.LabelsCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,

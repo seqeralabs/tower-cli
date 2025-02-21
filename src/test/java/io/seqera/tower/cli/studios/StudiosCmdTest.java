@@ -266,7 +266,7 @@ public class StudiosCmdTest extends BaseCmdTest {
                                     "customImage": false,
                                     "progress": null
                                 }""", DataStudioDto.class)
-        ), null));
+        ), false, null));
     }
 
     @ParameterizedTest
@@ -386,7 +386,7 @@ public class StudiosCmdTest extends BaseCmdTest {
                                     "customImage": false,
                                     "progress": null
                                 }""", DataStudioDto.class)
-        ), PaginationInfo.from(1, 2, null, 2L)));
+        ), false, PaginationInfo.from(1, 2, null, 2L)));
     }
 
 
@@ -461,7 +461,7 @@ public class StudiosCmdTest extends BaseCmdTest {
                             "progress": null
                         }\
                 """, DataStudioDto.class)
-        ), PaginationInfo.from(null, 1, 1, 2L)));
+        ), false, PaginationInfo.from(null, 1, 1, 2L)));
     }
 
     @ParameterizedTest
@@ -534,8 +534,148 @@ public class StudiosCmdTest extends BaseCmdTest {
                             "progress": null
                         }\
                 """, DataStudioDto.class)
-        ), null));
+        ), false, null));
     }
+
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testListWithLabelsShown(OutputType format, MockServerClient mock) throws JsonProcessingException {
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/studios")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("attributes", "labels")
+                , exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_list_with_labels_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "list", "-w", "75887156211589", "--labels");
+
+        assertOutput(format, out, new StudiosList("[organization1 / workspace1]", Arrays.asList(parseJson("""
+                         {
+                                    "sessionId": "ddfd5e14",
+                                    "workspaceId": 75887156211589,
+                                    "parentCheckpoint": null,
+                                    "user": {
+                                        "id": 1,
+                                        "userName": "samurai-jack",
+                                        "email": "jack@seqera.io",
+                                        "avatar": null
+                                    },
+                                    "name": "studio-7728",
+                                    "description": "Local studio",
+                                    "studioUrl": "http://addfd5e14.studio.localhost:9191",
+                                    "computeEnv": {
+                                        "id": "16esMgELkyQ3QPcHGNTiXQ",
+                                        "name": "my-other-local-ce",
+                                        "platform": "local-platform",
+                                        "region": null
+                                    },
+                                    "template": {
+                                        "repository": "cr.seqera.io/public/data-studio-jupyter:4.2.5-snapshot",
+                                        "icon": "jupyter"
+                                    },
+                                    "configuration": {
+                                        "gpu": 0,
+                                        "cpu": 2,
+                                        "memory": 8192,
+                                        "mountData": [],
+                                        "condaEnvironment": null
+                                    },
+                                    "dateCreated": "2025-01-14T11:51:05.393498Z",
+                                    "lastUpdated": "2025-01-15T09:10:30.016752Z",
+                                    "activeConnections": [],
+                                    "statusInfo": {
+                                        "status": "running",
+                                        "message": "",
+                                        "lastUpdate": "2025-01-15T09:10:30.016588Z"
+                                    },
+                                    "labels": [
+                                      {
+                                        "id": 101350997114076,
+                                        "name": "owner",
+                                        "value": "jack",
+                                        "resource": true,
+                                        "isDefault": false
+                                      }
+                                    ],
+                                    "waveBuildUrl": null,
+                                    "baseImage": null,
+                                    "customImage": false,
+                                    "progress": null
+                                }\
+                        """, DataStudioDto.class),
+                parseJson("""
+                        {
+                                    "sessionId": "3e8370e7",
+                                    "workspaceId": 75887156211589,
+                                    "parentCheckpoint": null,
+                                    "user": {
+                                        "id": 1,
+                                        "userName": "johnny-bravo",
+                                        "email": "johnny@seqera.io",
+                                        "avatar": null
+                                    },
+                                    "name": "studio-a66d",
+                                    "description": "my first studio",
+                                    "studioUrl": "http://a3e8370e7.studio.localhost:9191",
+                                    "computeEnv": {
+                                        "id": "61DYXYj3XQAYbJIHrI1XSg",
+                                        "name": "my-local-ce",
+                                        "platform": "local-platform",
+                                        "region": null
+                                    },
+                                    "template": {
+                                        "repository": "cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot",
+                                        "icon": "vscode"
+                                    },
+                                    "configuration": {
+                                        "gpu": 0,
+                                        "cpu": 2,
+                                        "memory": 8192,
+                                        "mountData": [
+                                             "v1-user-1ccf131810375d303bf0402dd8423433"
+                                           ],
+                                        "condaEnvironment": null
+                                    },
+                                    "dateCreated": "2025-01-10T17:26:36.83703Z",
+                                    "lastUpdated": "2025-01-12T03:00:30.014415Z",
+                                    "activeConnections": [],
+                                    "statusInfo": {
+                                        "status": "errored",
+                                        "message": "",
+                                        "lastUpdate": "2025-01-12T03:00:30.010738Z"
+                                    },
+                                    "labels": [
+                                      {
+                                        "id": 101350997114076,
+                                        "name": "owner",
+                                        "value": "jack",
+                                        "resource": true,
+                                        "isDefault": false
+                                      }
+                                    ],
+                                    "waveBuildUrl": null,
+                                    "baseImage": null,
+                                    "customImage": false,
+                                    "progress": null
+                                }""", DataStudioDto.class)
+        ), true, null));
+    }
+
 
     @ParameterizedTest
     @EnumSource(OutputType.class)
