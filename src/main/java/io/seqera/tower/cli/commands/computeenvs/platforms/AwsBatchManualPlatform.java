@@ -81,6 +81,7 @@ public class AwsBatchManualPlatform extends AbstractPlatform<AwsBatchConfig> {
 
                 // Advanced
                 .cliPath(adv().cliPath)
+                .executionRole(adv().batchExecutionRole)
                 .computeJobRole(adv().computeJobRole)
                 .headJobCpus(adv().headJobCpus)
                 .headJobMemoryMb(adv().headJobMemoryMb)
@@ -112,6 +113,9 @@ public class AwsBatchManualPlatform extends AbstractPlatform<AwsBatchConfig> {
 
         @Option(names = {"--compute-job-role"}, description = "IAM role to fine-grained control permissions for jobs submitted by Nextflow.")
         public String computeJobRole;
+
+        @Option(names = {"--batch-execution-role"}, description = "The execution role grants the Amazon ECS container used by Batch the permission to make API calls on your behalf.")
+        public String batchExecutionRole;
 
         @Option(names = {"--cli-path"}, description = "Nextflow requires the AWS CLI installed in the Ec2 instances. Use this field to specify the path.")
         public String cliPath;
