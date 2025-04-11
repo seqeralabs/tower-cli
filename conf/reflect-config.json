@@ -2866,7 +2866,7 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getTool","parameterTypes":[] }, {"name":"getStatus","parameterTypes":[] }, {"name":"getIcon","parameterTypes":[] }, {"name":"getRepository","parameterTypes":[] }, {"name":"setIcon","parameterTypes":["java.lang.String"] }, {"name":"setRepository","parameterTypes":["java.lang.String"] }]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getIcon","parameterTypes":[] }, {"name":"getRepository","parameterTypes":[] }, {"name":"getStatus","parameterTypes":[] }, {"name":"getTool","parameterTypes":[] }, {"name":"setIcon","parameterTypes":["java.lang.String"] }, {"name":"setRepository","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.model.DataStudioTemplatesListResponse",
@@ -3367,6 +3367,13 @@
 {
   "name":"io.seqera.tower.model.SecurityKeys",
   "allDeclaredMethods":true
+},
+{
+  "name":"io.seqera.tower.model.SeqeraComputeConfig",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.ServiceInfo",
