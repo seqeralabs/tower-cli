@@ -68,6 +68,7 @@ public class AwsBatchManualPlatform extends AbstractPlatform<AwsBatchConfig> {
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
+                .nextflowConfig(nextflowConfigString())
                 .environment(environmentVariables())
                 .fusion2Enabled(isFusionV2Enabled())
                 .waveEnabled(wave)

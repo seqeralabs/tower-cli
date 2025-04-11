@@ -98,6 +98,7 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
+                .nextflowConfig(nextflowConfigString())
                 .environment(environmentVariables())
                 .region(region)
                 .fusion2Enabled(isFusionV2Enabled())
