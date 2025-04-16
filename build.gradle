@@ -56,7 +56,7 @@ license {
 task buildInfo {
     doLast {
         def version = rootProject.file('VERSION').text.trim()
-        def versionApi = rootProject.file('VERSION-API').text.trim()
+        def versionApi = rootProject.file('VERSION-API').readLines().get(0).trim()
         def commitId = System.env.getOrDefault("GITHUB_SHA", "unknown").substring(0,7)
         def platform = System.env.getOrDefault("PLATFORM", "java")
         def info = """\
