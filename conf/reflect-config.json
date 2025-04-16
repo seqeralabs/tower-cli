@@ -3284,7 +3284,7 @@
   "name":"io.seqera.tower.model.OrgType",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"fromValue","parameterTypes":["java.lang.String"] }]
+  "methods":[{"name":"fromValue","parameterTypes":["java.lang.String"] }, {"name":"getValue","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.Organization",
