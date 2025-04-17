@@ -62,6 +62,7 @@ public class LsfPlatform extends AbstractPlatform<LsfComputeConfig> {
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
+                .nextflowConfig(nextflowConfigString())
 
                 // Main
                 .launchDir(launchDir)

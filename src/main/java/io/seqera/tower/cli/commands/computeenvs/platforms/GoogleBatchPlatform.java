@@ -55,6 +55,7 @@ public class GoogleBatchPlatform extends AbstractPlatform<GoogleBatchConfig> {
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
+                .nextflowConfig(nextflowConfigString())
                 .environment(environmentVariables())
                 .fusion2Enabled(fusionV2)
                 .waveEnabled(wave)

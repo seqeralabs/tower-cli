@@ -58,6 +58,7 @@ public class GoogleLifeSciencesPlatform extends AbstractPlatform<GoogleLifeScien
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
+                .nextflowConfig(nextflowConfigString())
                 .environment(environmentVariables())
 
                 // Main
