@@ -2866,7 +2866,7 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getIcon","parameterTypes":[] }, {"name":"getRepository","parameterTypes":[] }, {"name":"getStatus","parameterTypes":[] }, {"name":"getTool","parameterTypes":[] }, {"name":"setIcon","parameterTypes":["java.lang.String"] }, {"name":"setRepository","parameterTypes":["java.lang.String"] }]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getIcon","parameterTypes":[] }, {"name":"getRepository","parameterTypes":[] }, {"name":"getStatus","parameterTypes":[] }, {"name":"getTool","parameterTypes":[] }, {"name":"setIcon","parameterTypes":["java.lang.String"] }, {"name":"setRepository","parameterTypes":["java.lang.String"] }, {"name":"setStatus","parameterTypes":["io.seqera.tower.model.DataStudioVersionStatus"] }, {"name":"setTool","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.model.DataStudioTemplatesListResponse",
@@ -2874,6 +2874,12 @@
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setTemplates","parameterTypes":["java.util.List"] }, {"name":"setTotalSize","parameterTypes":["java.lang.Long"] }]
+},
+{
+  "name":"io.seqera.tower.model.DataStudioVersionStatus",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"fromValue","parameterTypes":["java.lang.String"] }, {"name":"getValue","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.Dataset",
