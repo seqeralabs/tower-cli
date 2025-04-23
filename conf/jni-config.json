@@ -1,7 +1,34 @@
 [
 {
+  "name":"[B"
+},
+{
+  "name":"[Ljava.net.InetAddress;"
+},
+{
+  "name":"[Ljava.net.InterfaceAddress;"
+},
+{
+  "name":"[Ljava.net.NetworkInterface;"
+},
+{
+  "name":"[[B"
+},
+{
   "name":"io.seqera.tower.cli.Tower",
   "methods":[{"name":"main","parameterTypes":["java.lang.String[]"] }]
+},
+{
+  "name":"java.io.FileDescriptor",
+  "fields":[{"name":"fd"}]
+},
+{
+  "name":"java.io.FileNotFoundException",
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String"] }]
+},
+{
+  "name":"java.io.RandomAccessFile",
+  "fields":[{"name":"fd"}]
 },
 {
   "name":"java.lang.Boolean",
@@ -12,12 +39,64 @@
   "methods":[{"name":"getPlatformClassLoader","parameterTypes":[] }, {"name":"loadClass","parameterTypes":["java.lang.String"] }]
 },
 {
+  "name":"java.lang.InternalError",
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"java.lang.NullPointerException",
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String"] }]
+},
+{
   "name":"java.lang.String",
   "methods":[{"name":"lastIndexOf","parameterTypes":["int"] }, {"name":"substring","parameterTypes":["int"] }]
 },
 {
   "name":"java.lang.System",
+  "fields":[{"name":"err"}, {"name":"out"}],
   "methods":[{"name":"getProperty","parameterTypes":["java.lang.String"] }, {"name":"setProperty","parameterTypes":["java.lang.String","java.lang.String"] }]
+},
+{
+  "name":"java.net.ConnectException",
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"java.net.Inet4Address",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"java.net.Inet6Address",
+  "fields":[{"name":"holder6"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"java.net.Inet6Address$Inet6AddressHolder",
+  "fields":[{"name":"ipaddress"}, {"name":"scope_id"}, {"name":"scope_id_set"}, {"name":"scope_ifname"}]
+},
+{
+  "name":"java.net.InetAddress",
+  "fields":[{"name":"holder"}]
+},
+{
+  "name":"java.net.InetAddress$InetAddressHolder",
+  "fields":[{"name":"address"}, {"name":"family"}, {"name":"hostName"}, {"name":"originalHostName"}]
+},
+{
+  "name":"java.net.InetSocketAddress",
+  "methods":[{"name":"<init>","parameterTypes":["java.net.InetAddress","int"] }]
+},
+{
+  "name":"java.net.InterfaceAddress",
+  "fields":[{"name":"address"}, {"name":"broadcast"}, {"name":"maskLength"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"java.net.NetworkInterface",
+  "fields":[{"name":"addrs"}, {"name":"bindings"}, {"name":"childs"}, {"name":"displayName"}, {"name":"index"}, {"name":"name"}, {"name":"parent"}, {"name":"virtual"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"java.util.zip.Inflater",
+  "fields":[{"name":"inputConsumed"}, {"name":"outputConsumed"}]
 },
 {
   "name":"jdk.internal.loader.ClassLoaders$PlatformClassLoader"
@@ -29,5 +108,29 @@
 {
   "name":"org.graalvm.nativebridge.jni.JNIExceptionWrapperEntryPoints",
   "methods":[{"name":"getClassName","parameterTypes":["java.lang.Class"] }]
+},
+{
+  "name":"org.gradle.api.internal.tasks.testing.worker.TestWorker",
+  "methods":[{"name":"<clinit>","parameterTypes":[] }]
+},
+{
+  "name":"sun.instrument.InstrumentationImpl",
+  "methods":[{"name":"<init>","parameterTypes":["long","boolean","boolean","boolean"] }, {"name":"loadClassAndCallAgentmain","parameterTypes":["java.lang.String","java.lang.String"] }, {"name":"loadClassAndCallPremain","parameterTypes":["java.lang.String","java.lang.String"] }, {"name":"transform","parameterTypes":["java.lang.Module","java.lang.ClassLoader","java.lang.String","java.lang.Class","java.security.ProtectionDomain","byte[]","boolean"] }]
+},
+{
+  "name":"sun.management.VMManagementImpl",
+  "fields":[{"name":"compTimeMonitoringSupport"}, {"name":"currentThreadCpuTimeSupport"}, {"name":"objectMonitorUsageSupport"}, {"name":"otherThreadCpuTimeSupport"}, {"name":"remoteDiagnosticCommandsSupport"}, {"name":"synchronizerUsageSupport"}, {"name":"threadAllocatedMemorySupport"}, {"name":"threadContentionMonitoringSupport"}]
+},
+{
+  "name":"sun.nio.ch.FileKey",
+  "fields":[{"name":"st_dev"}, {"name":"st_ino"}]
+},
+{
+  "name":"sun.nio.fs.UnixException",
+  "methods":[{"name":"<init>","parameterTypes":["int"] }]
+},
+{
+  "name":"worker.org.gradle.process.internal.worker.GradleWorkerMain",
+  "methods":[{"name":"main","parameterTypes":["java.lang.String[]"] }]
 }
 ]

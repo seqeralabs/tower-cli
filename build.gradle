@@ -100,6 +100,10 @@ test {
     // Use junit platform for unit tests
     useJUnitPlatform()
     dependsOn checkLicenses
+
+    // Run the tracing agent as part of tests to generate the reflect-config.json as part of the build
+    // To debug tests, comment out the below line
+    jvmArgs '-agentlib:native-image-agent=caller-filter-file=conf/caller-filter-file.json,config-merge-dir=conf/'
 }
 
 graalvmNative {

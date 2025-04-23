@@ -1,0 +1,10 @@
+{ "rules": [
+  {"includeClasses": ".**"},
+  {"excludeClasses": "org.gradle.api.internal.tasks.testing.**"},
+  {"excludeClasses": "org.junit.platform.**"}
+],
+  "regexRules": [
+    {"includeClasses": ".*"},
+    {"excludeClasses": ".*Test$"}
+  ]
+}
