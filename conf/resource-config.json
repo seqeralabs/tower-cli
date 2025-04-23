@@ -9,6 +9,8 @@
   }, {
     "pattern":"\\QMETA-INF/services/java.net.spi.URLStreamHandlerProvider\\E"
   }, {
+    "pattern":"\\QMETA-INF/services/java.nio.channels.spi.SelectorProvider\\E"
+  }, {
     "pattern":"\\QMETA-INF/services/java.time.zone.ZoneRulesProvider\\E"
   }, {
     "pattern":"\\QMETA-INF/services/java.util.spi.ResourceBundleControlProvider\\E"
@@ -16,6 +18,8 @@
     "pattern":"\\QMETA-INF/services/javax.ws.rs.client.ClientBuilder\\E"
   }, {
     "pattern":"\\QMETA-INF/services/javax.ws.rs.ext.RuntimeDelegate\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/javax.xml.parsers.SAXParserFactory\\E"
   }, {
     "pattern":"\\QMETA-INF/services/org.glassfish.hk2.extension.ServiceLocatorGenerator\\E"
   }, {
@@ -31,9 +35,245 @@
   }, {
     "pattern":"\\QMETA-INF/services/org.glassfish.jersey.spi.HeaderDelegateProvider\\E"
   }, {
+    "pattern":"\\QMETA-INF/services/org.junit.platform.engine.TestEngine\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/org.junit.platform.launcher.LauncherDiscoveryListener\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/org.junit.platform.launcher.LauncherSessionListener\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/org.junit.platform.launcher.PostDiscoveryFilter\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/org.junit.platform.launcher.TestExecutionListener\\E"
+  }, {
     "pattern":"\\Qjersey-multipart-config.properties\\E"
   }, {
     "pattern":"\\Qjndi.properties\\E"
+  }, {
+    "pattern":"\\Qjunit-platform.properties\\E"
+  }, {
+    "pattern":"\\Qlogback-test.xml\\E"
+  }, {
+    "pattern":"\\Qlogback.xml\\E"
+  }, {
+    "pattern":"\\Qmockserver.properties\\E"
+  }, {
+    "pattern":"\\Qorg/jacoco/agent/rt/internal_aeaf9ab/core/runtime/InjectedClassRuntime$Lookup.class\\E"
+  }, {
+    "pattern":"\\Qorg/jacoco/agent/rt/internal_aeaf9ab/core/runtime/InjectedClassRuntime.class\\E"
+  }, {
+    "pattern":"\\Qorg/mockserver/model/schema/body.json\\E"
+  }, {
+    "pattern":"\\Qorg/mockserver/model/schema/bodyWithContentType.json\\E"
+  }, {
+    "pattern":"\\Qorg/mockserver/model/schema/connectionOptions.json\\E"
+  }, {
+    "pattern":"\\Qorg/mockserver/model/schema/delay.json\\E"
+  }, {
+    "pattern":"\\Qorg/mockserver/model/schema/expectation.json\\E"
+  }, {
+    "pattern":"\\Qorg/mockserver/model/schema/expectationId.json\\E"
+  }, {
+    "pattern":"\\Qorg/mockserver/model/schema/httpClassCallback.json\\E"
+  }, {
+    "pattern":"\\Qorg/mockserver/model/schema/httpError.json\\E"
+  }, {
+    "pattern":"\\Qorg/mockserver/model/schema/httpForward.json\\E"
+  }, {
+    "pattern":"\\Qorg/mockserver/model/schema/httpObjectCallback.json\\E"
+  }, {
+    "pattern":"\\Qorg/mockserver/model/schema/httpOverrideForwardedRequest.json\\E"
+  }, {
+    "pattern":"\\Qorg/mockserver/model/schema/httpRequest.json\\E"
+  }, {
+    "pattern":"\\Qorg/mockserver/model/schema/httpResponse.json\\E"
+  }, {
+    "pattern":"\\Qorg/mockserver/model/schema/httpTemplate.json\\E"
+  }, {
+    "pattern":"\\Qorg/mockserver/model/schema/keyToMultiValue.json\\E"
+  }, {
+    "pattern":"\\Qorg/mockserver/model/schema/keyToValue.json\\E"
+  }, {
+    "pattern":"\\Qorg/mockserver/model/schema/openAPIDefinition.json\\E"
+  }, {
+    "pattern":"\\Qorg/mockserver/model/schema/requestDefinition.json\\E"
+  }, {
+    "pattern":"\\Qorg/mockserver/model/schema/socketAddress.json\\E"
+  }, {
+    "pattern":"\\Qorg/mockserver/model/schema/stringOrJsonSchema.json\\E"
+  }, {
+    "pattern":"\\Qorg/mockserver/model/schema/timeToLive.json\\E"
+  }, {
+    "pattern":"\\Qorg/mockserver/model/schema/times.json\\E"
+  }, {
+    "pattern":"\\Qorg/mockserver/model/schema/verification.json\\E"
+  }, {
+    "pattern":"\\Qorg/mockserver/model/schema/verificationTimes.json\\E"
+  }, {
+    "pattern":"\\Qorg/slf4j/impl/StaticLoggerBinder.class\\E"
+  }, {
+    "pattern":"\\Qruncmd//actions/action_add.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/actions/action_view.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/actions/actions_list.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/cejson.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/collaborators/collaborators_list.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/compute_env_demo.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/compute_env_view.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/compute_env_view_aws_manual.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/compute_envs_list.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/credentials_list.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/data/links/datalinks_list.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/datasets/dataset_created_response.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/datasets/dataset_data.csv\\E"
+  }, {
+    "pattern":"\\Qruncmd/datasets/dataset_download.txt\\E"
+  }, {
+    "pattern":"\\Qruncmd/datasets/dataset_metadata.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/datasets/dataset_upload_response.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/datasets/dataset_versions.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/datasets/datasets_list.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/info/service-info-obsolete.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/info/service-info.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/labels_user.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/launch.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/launch_view.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/members/member_add.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/members/members_list.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/members/members_list_filter.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/members/members_list_filtered.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/organizations/organizations_add_response.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/organizations/organizations_view.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/participants/participant_add.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/participants/participants_list.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/participants/participants_list_filter.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/pipeline_launch_describe.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/pipelines_add.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/pipelines_add_no_workdir.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/pipelines_add_response.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/pipelines_list.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/pipelines_multiple.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/pipelines_none.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/pipelines_sarek.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/pipelines_sleep.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/pipelines_update.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/runs/cpu.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/runs/download-task.txt\\E"
+  }, {
+    "pattern":"\\Qruncmd/runs/download.txt\\E"
+  }, {
+    "pattern":"\\Qruncmd/runs/io.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/runs/mem.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/runs/runs_metrics.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/runs/task_detail.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/runs/task_detail_null_values.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/runs/task_object.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/runs/task_object_null_values.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/runs/tasks_list_response.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/runs/time.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/runs/workflow_launch.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/studios/studios_checkpoints_get_response.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/studios/studios_checkpoints_list_response.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/studios/studios_created_response.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/studios/studios_list_filtered_response.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/studios/studios_list_response.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/studios/studios_list_with_labels_response.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/studios/studios_start_as_new_response.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/studios/studios_start_response.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/studios/studios_templates_response.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/studios/studios_view_response.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/studios/studios_view_response_studio_starting.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/studios/studios_view_response_studio_stopped.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/studios/studios_view_start_as_new_response.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/teams/members/member_add.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/teams/members/members_list.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/teams/teams_add.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/teams/teams_list.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/teams/teams_list_redux.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/user.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/workflow_launch.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/workflow_list.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/workflow_progress.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/workflow_view.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/workspaces/workspaces_add_response.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/workspaces/workspaces_list.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/workspaces/workspaces_update_response.json\\E"
+  }, {
+    "pattern":"\\Qruncmd/workspaces/workspaces_view.json\\E"
   }, {
     "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt67b/nfc.nrm\\E"
   }, {
@@ -52,6 +292,9 @@
     "pattern":"java.base:\\Qsun/text/resources/LineBreakIteratorData\\E"
   }]},
   "bundles":[{
+    "name":"jsv-messages",
+    "locales":[""]
+  }, {
     "name":"org.glassfish.jersey.client.internal.localization",
     "locales":["", "und"]
   }, {
