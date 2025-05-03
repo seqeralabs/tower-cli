@@ -1,0 +1,54 @@
+strong {
+  font-weight: 600;
+}
+
+.md-typeset h1, .md-typeset h2 {
+  font-weight: 600;
+  color: #000;
+}
+
+.md-typeset p {
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 32px;
+}
+
+.md-typeset li {
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 32px;
+}
+
+.md-nav__title {
+  color: #676767;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.md-nav__link {
+  font-size: 16px;
+  font-weight: 300;
+  margin-top: 15px;
+}
+
+.md-nav__item .md-nav__link--active {
+  font-weight: 600;
+}
+
+.md-header__topic {
+  font-weight: 600;
+}
+
+.md-search,
+.md-search__input {
+  font-weight: 300;
+}
+
+.md-typeset .admonition-title,
+.md-typeset summary {
+  align-items: center;
+  display: flex;
+  flex-wrap: nowrap;
+  font-size: 16px;
+  font-weight: 600;
+}
