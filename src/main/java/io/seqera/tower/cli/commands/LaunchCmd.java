@@ -200,6 +200,8 @@ public class LaunchCmd extends AbstractRootCmd {
             ComputeEnvResponseDto ce = computeEnvByRef(wspId, computeEnv);
             launchRequest.computeEnvId(ce.getId());
             launchRequest.workDir(ce.getConfig().getWorkDir());
+            launchRequest.preRunScript( coalesce(launchRequest.getPreRunScript(), ce.getConfig().getPreRunScript()) );
+            launchRequest.postRunScript( coalesce(launchRequest.getPostRunScript(), ce.getConfig().getPostRunScript()) );
         }
 
         if (launchRequest.getComputeEnvId() == null) {
