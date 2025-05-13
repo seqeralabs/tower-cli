@@ -21,6 +21,7 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.credentials.add.AddAgentCmd;
 import io.seqera.tower.cli.commands.credentials.add.AddAwsCmd;
 import io.seqera.tower.cli.commands.credentials.add.AddAzureCmd;
+import io.seqera.tower.cli.commands.credentials.add.AddAzureReposCmd;
 import io.seqera.tower.cli.commands.credentials.add.AddBitbucketCmd;
 import io.seqera.tower.cli.commands.credentials.add.AddCodeCommitCmd;
 import io.seqera.tower.cli.commands.credentials.add.AddContainerRegistryCmd;
@@ -36,24 +37,21 @@ import picocli.CommandLine.Command;
 
 import java.io.IOException;
 
-@Command(
-        name = "add",
-        description = "Add new workspace credentials.",
-        subcommands = {
-                AddAwsCmd.class,
-                AddCodeCommitCmd.class,
-                AddGoogleCmd.class,
-                AddGithubCmd.class,
-                AddGitlabCmd.class,
-                AddGiteaCmd.class,
-                AddBitbucketCmd.class,
-                AddSshCmd.class,
-                AddK8sCmd.class,
-                AddAzureCmd.class,
-                AddAgentCmd.class,
-                AddContainerRegistryCmd.class
-        }
-)
+@Command(name = "add", description = "Add new workspace credentials.", subcommands = {
+        AddAwsCmd.class,
+        AddCodeCommitCmd.class,
+        AddGoogleCmd.class,
+        AddGithubCmd.class,
+        AddGitlabCmd.class,
+        AddGiteaCmd.class,
+        AddBitbucketCmd.class,
+        AddAzureReposCmd.class,
+        AddSshCmd.class,
+        AddK8sCmd.class,
+        AddAzureCmd.class,
+        AddAgentCmd.class,
+        AddContainerRegistryCmd.class
+})
 public class AddCmd extends AbstractCredentialsCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
