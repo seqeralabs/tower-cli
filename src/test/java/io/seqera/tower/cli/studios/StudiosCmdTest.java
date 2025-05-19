@@ -1113,19 +1113,27 @@ public class StudiosCmdTest extends BaseCmdTest {
                   "templates": [
                     {
                       "repository": "cr.seqera.io/public/data-studio-jupyter:4.2.5-snapshot",
-                      "icon": "jupyter"
+                      "icon": "jupyter",
+                      "status": "recommended",
+                      "tool": "jupyter"
                     },
                     {
                       "repository": "cr.seqera.io/public/data-studio-rstudio:4.4.1-u1-snapshot",
-                      "icon": "rstudio"
+                      "icon": "rstudio",
+                      "status": "recommended",
+                      "tool": "rstudio"
                     },
                     {
                       "repository": "cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot",
-                      "icon": "vscode"
+                      "icon": "vscode",
+                      "status": "recommended",
+                      "tool": "vscode"
                     },
                     {
                       "repository": "cr.seqera.io/public/data-studio-xpra:6.2.0-r2-1-snapshot",
-                      "icon": "xpra"
+                      "icon": "xpra",
+                      "status": "recommended",
+                      "tool": "xpra"
                     }
                   ],
                   "totalSize": 4
