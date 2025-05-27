@@ -51,7 +51,7 @@ public class StopCmd extends AbstractStudiosCmd {
         try {
             String sessionId = getSessionId(studioRefOptions, wspId);
 
-            DataStudioStopResponse response = api().stopDataStudio(sessionId, wspId);
+            DataStudioStopResponse response = studiosApi().stopDataStudio(sessionId, wspId);
 
             return new StudioStopSubmitted(sessionId, studioRefOptions.getStudioIdentifier(), wspId, workspaceRef(wspId), response.getJobSubmitted());
         } catch (ApiException e) {

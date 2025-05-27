@@ -123,7 +123,7 @@ public class DumpCmd extends AbstractRunsCmd {
     private String collectTowerInfo() throws IOException, ApiException {
         progress.println(ansi("- Tower info"));
 
-        ServiceInfo serviceInfo = api().info().getServiceInfo();
+        ServiceInfo serviceInfo = serviceInfoApi().info().getServiceInfo();
         return JsonHelper.prettyJson(serviceInfo);
     }
 
@@ -204,7 +204,7 @@ public class DumpCmd extends AbstractRunsCmd {
             throw new TowerException("Unknown workflow");
         }
 
-        List<WorkflowMetrics> metrics = api().describeWorkflowMetrics(workflow.getId(), workspaceId).getMetrics();
+        List<WorkflowMetrics> metrics = workflowsApi().describeWorkflowMetrics(workflow.getId(), workspaceId).getMetrics();
 
         return JsonHelper.prettyJson(metrics);
     }
@@ -265,7 +265,7 @@ public class DumpCmd extends AbstractRunsCmd {
             throw new TowerException("Unknown workflow");
         }
 
-        File nextflowLog = api().downloadWorkflowLog(workflow.getId(), String.format("nf-%s.log", workflow.getId()), workspaceId);
+        File nextflowLog = workflowsApi().downloadWorkflowLog(workflow.getId(), String.format("nf-%s.log", workflow.getId()), workspaceId);
 
         return nextflowLog;
     }
@@ -273,7 +273,7 @@ public class DumpCmd extends AbstractRunsCmd {
     private void addTaskLog(TarFileHelper.TarFileAppender tar, Long taskId, String logName, Long workspaceId, String workflowId) throws ApiException, IOException {
         try {
 
-            File file = api().downloadWorkflowTaskLog(workflowId, taskId, logName, workspaceId);
+            File file = workflowsApi().downloadWorkflowTaskLog(workflowId, taskId, logName, workspaceId);
             String fileName = String.format("tasks/%d/%s", taskId, logName);
             tar.add(fileName, file);
 
@@ -319,7 +319,7 @@ public class DumpCmd extends AbstractRunsCmd {
         while (added == max) {
 
             added = 0;
-            ListTasksResponse response = api().listWorkflowTasks(workflowId, wspId, max, offset, null, null, null);
+            ListTasksResponse response = workflowsApi().listWorkflowTasks(workflowId, wspId, max, offset, null, null, null);
 
             if (response.getTasks() == null) {
                 throw new TowerException("No tasks found for workflow");

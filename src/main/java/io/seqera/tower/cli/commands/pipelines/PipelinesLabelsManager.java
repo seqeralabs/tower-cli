@@ -20,12 +20,12 @@ package io.seqera.tower.cli.commands.pipelines;
 import java.util.List;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.api.DefaultApi;
+import io.seqera.tower.api.LabelsApi;
 import io.seqera.tower.cli.commands.labels.BaseLabelsManager;
 import io.seqera.tower.model.AssociatePipelineLabelsRequest;
 
 public class PipelinesLabelsManager extends BaseLabelsManager<AssociatePipelineLabelsRequest, Long> {
-    public PipelinesLabelsManager(DefaultApi api) {
+    public PipelinesLabelsManager(LabelsApi api) {
         super(api, "pipeline");
     }
 

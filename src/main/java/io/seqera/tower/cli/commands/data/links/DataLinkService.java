@@ -23,7 +23,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.api.DefaultApi;
+import io.seqera.tower.api.DataLinksApi;
 import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.commands.studios.DataLinkRefOptions;
 import io.seqera.tower.cli.commands.enums.OutputType;
@@ -35,10 +35,10 @@ import io.seqera.tower.model.DataLinkDto;
 
 public class DataLinkService  {
 
-    protected final DefaultApi api;
+    protected final DataLinksApi api;
     protected final Tower app;
 
-    public DataLinkService(DefaultApi api, Tower app) {
+    public DataLinkService(DataLinksApi api, Tower app) {
         this.api = api;
         this.app = app;
     }

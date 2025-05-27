@@ -42,7 +42,7 @@ public class ListCmd extends AbstractWorkspaceCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        ListWorkspacesAndOrgResponse response = api().listWorkspacesUser(userId());
+        ListWorkspacesAndOrgResponse response = workspacesApi().listWorkspacesUser(userId());
 
         if (response.getOrgsAndWorkspaces() == null) {
             return new WorkspaceList(userName(), Collections.emptyList(), serverUrl());

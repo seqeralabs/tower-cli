@@ -45,7 +45,7 @@ public class ListCmd extends AbstractPipelinesCmd {
         ListPipelineSecretsResponse response = new ListPipelineSecretsResponse();
 
         try {
-            response = api().listPipelineSecrets(wspId);
+            response = pipelineSecretsApi().listPipelineSecrets(wspId);
         } catch (ApiException apiException) {
             if (apiException.getCode() == 404) {
                 throw new WorkspaceNotFoundException(wspId);

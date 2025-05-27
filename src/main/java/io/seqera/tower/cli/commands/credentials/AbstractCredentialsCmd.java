@@ -30,7 +30,7 @@ import java.util.Objects;
 public abstract class AbstractCredentialsCmd extends AbstractApiCmd {
 
     protected Credentials findCredentialsByName(Long workspaceId, String name) throws ApiException {
-        ListCredentialsResponse listCredentialsResponse = api().listCredentials(workspaceId, null);
+        ListCredentialsResponse listCredentialsResponse = credentialsApi().listCredentials(workspaceId, null);
 
         if (listCredentialsResponse == null || listCredentialsResponse.getCredentials() == null) {
             throw new CredentialsNotFoundException(name, workspaceId);
@@ -52,7 +52,7 @@ public abstract class AbstractCredentialsCmd extends AbstractApiCmd {
         Credentials credentials;
 
         if (credentialsRefOptions.credentialsRef.credentialsId != null) {
-            credentials = api().describeCredentials(credentialsRefOptions.credentialsRef.credentialsId, wspId).getCredentials();
+            credentials = credentialsApi().describeCredentials(credentialsRefOptions.credentialsRef.credentialsId, wspId).getCredentials();
         } else {
             credentials = findCredentialsByName(wspId, credentialsRefOptions.credentialsRef.credentialsName);
         }
@@ -66,7 +66,7 @@ public abstract class AbstractCredentialsCmd extends AbstractApiCmd {
     }
 
     protected void deleteCredentialsById(String id, Long wspId) throws CredentialsNotFoundException, ApiException {
-        api().deleteCredentials(id, wspId, false);
+        credentialsApi().deleteCredentials(id, wspId, false);
     }
 
 }

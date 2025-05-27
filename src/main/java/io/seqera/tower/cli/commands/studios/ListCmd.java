@@ -65,7 +65,7 @@ public class ListCmd extends AbstractStudiosCmd {
         List<DataStudioQueryAttribute> actionQueryAttributes = showLabelsOption.showLabels ? List.of(DataStudioQueryAttribute.LABELS) : NO_STUDIO_ATTRIBUTES;
 
         try {
-           response = api().listDataStudios(wspId, filter, max, offset, actionQueryAttributes);
+           response = studiosApi().listDataStudios(wspId, filter, max, offset, actionQueryAttributes);
         } catch (ApiException e) {
             if (e.getCode() == 404){
                 throw new WorkspaceNotFoundException(wspId);

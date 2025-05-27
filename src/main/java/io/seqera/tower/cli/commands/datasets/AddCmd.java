@@ -73,9 +73,9 @@ public class AddCmd extends AbstractDatasetsCmd {
 
         if (overwrite) tryDeleteDataset(name, wspId);
 
-        CreateDatasetResponse response = api().createDataset(wspId, request);
+        CreateDatasetResponse response = datasetsApi().createDataset(wspId, request);
 
-        api().uploadDataset(wspId, response.getDataset().getId(), header, fileName.toFile());
+        datasetsApi().uploadDataset(wspId, response.getDataset().getId(), header, fileName.toFile());
 
         return new DatasetCreate(response.getDataset().getName(), workspace.workspace, response.getDataset().getId());
     }

@@ -74,8 +74,8 @@ public class AddCmd extends AbstractWorkspaceCmd {
 
         CreateWorkspaceRequest request = new CreateWorkspaceRequest().workspace(workspace);
 
-        api().workspaceValidate(orgWspDto.getOrgId(), workspaceName);
-        CreateWorkspaceResponse response = api().createWorkspace(orgWspDto.getOrgId(), request);
+        workspacesApi().workspaceValidate(orgWspDto.getOrgId(), workspaceName);
+        CreateWorkspaceResponse response = workspacesApi().createWorkspace(orgWspDto.getOrgId(), request);
 
         return new WorkspaceAdded(response.getWorkspace().getName(), organizationName, response.getWorkspace().getVisibility());
     }

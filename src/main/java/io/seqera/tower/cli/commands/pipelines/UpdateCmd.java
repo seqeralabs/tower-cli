@@ -73,7 +73,7 @@ public class UpdateCmd extends AbstractPipelinesCmd {
 
         if (pipelineRefOptions.pipeline.pipelineId != null) {
             id = pipelineRefOptions.pipeline.pipelineId;
-            pipe = api().describePipeline(id, Collections.emptyList(), wspId, null).getPipeline();
+            pipe = pipelinesApi().describePipeline(id, Collections.emptyList(), wspId, null).getPipeline();
         } else {
             pipe = pipelineByName(wspId, pipelineRefOptions.pipeline.pipelineName);
             id = pipe.getPipelineId();
@@ -81,14 +81,14 @@ public class UpdateCmd extends AbstractPipelinesCmd {
 
         if (newName != null) {
             try {
-                api().validatePipelineName(wspId, orgId, newName);
+                pipelinesApi().validatePipelineName(wspId, orgId, newName);
             } catch (ApiException ex) {
                 throw new InvalidResponseException(String.format("Pipeline name '%s' is not valid", newName));
             }
         }
 
         Long sourceWorkspaceId = sourceWorkspaceId(wspId, pipe);
-        Launch launch = api().describePipelineLaunch(id, wspId, sourceWorkspaceId).getLaunch();
+        Launch launch = pipelinesApi().describePipelineLaunch(id, wspId, sourceWorkspaceId).getLaunch();
 
         // Retrieve the provided computeEnv or use the primary if not provided
         String ceId = null;
@@ -125,7 +125,7 @@ public class UpdateCmd extends AbstractPipelinesCmd {
                         .workspaceSecrets(coalesce(removeEmptyValues(opts.workspaceSecrets), launch.getWorkspaceSecrets()))
                 );
 
-        api().updatePipeline(pipe.getPipelineId(), updateReq, wspId);
+        pipelinesApi().updatePipeline(pipe.getPipelineId(), updateReq, wspId);
 
         return new PipelinesUpdated(workspaceRef(wspId), pipe.getName());
     }

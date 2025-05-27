@@ -37,7 +37,7 @@ public class LeaveCmd extends AbstractWorkspaceCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
         OrgAndWorkspaceDto ws = fetchOrgAndWorkspaceDbDto(workspaceRefOptions);
-        api().leaveWorkspaceParticipant(ws.getOrgId(), ws.getWorkspaceId());
+        workspacesApi().leaveWorkspaceParticipant(ws.getOrgId(), ws.getWorkspaceId());
 
         return new ParticipantLeft(ws.getWorkspaceName());
     }

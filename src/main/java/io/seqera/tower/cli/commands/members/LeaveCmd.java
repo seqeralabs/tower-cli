@@ -38,7 +38,7 @@ public class LeaveCmd extends AbstractMembersClass {
     protected Response exec() throws ApiException, IOException {
         OrgAndWorkspaceDto orgAndWorkspaceDbDto = findOrganizationByRef(organizationRef);
 
-        api().leaveOrganization(orgAndWorkspaceDbDto.getOrgId());
+        orgsApi().leaveOrganization(orgAndWorkspaceDbDto.getOrgId());
 
         return new MembersLeave(organizationRef);
     }

@@ -60,7 +60,7 @@ public class AddCmd extends AbstractTeamsCmd {
 
         if(overwrite) tryDeleteTeam(orgAndWorkspaceDbDto.getOrgId(), teamName);
 
-        api().createOrganizationTeam(orgAndWorkspaceDbDto.getOrgId(), request);
+        teamsApi().createOrganizationTeam(orgAndWorkspaceDbDto.getOrgId(), request);
 
         return new TeamAdded(organizationRef, teamName);
     }

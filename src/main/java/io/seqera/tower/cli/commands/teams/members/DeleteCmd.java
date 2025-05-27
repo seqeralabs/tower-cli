@@ -49,7 +49,7 @@ public class DeleteCmd extends AbstractApiCmd {
 
         MemberDbDto member = parent.findMemberByUsername(orgAndWorkspaceDbDto.getOrgId(), team.getTeamId(), username);
 
-        api().deleteOrganizationTeamMember(orgAndWorkspaceDbDto.getOrgId(), team.getTeamId(), member.getMemberId());
+        teamsApi().deleteOrganizationTeamMember(orgAndWorkspaceDbDto.getOrgId(), team.getTeamId(), member.getMemberId());
 
         return new TeamMemberDeleted(team.getName(), username);
     }

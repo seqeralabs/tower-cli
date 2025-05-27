@@ -85,7 +85,7 @@ public class AddCmd extends AbstractApiCmd {
             req.credentialsId(credsId);
         }
 
-        return api().createCustomDataLink(req, wspId);
+        return dataLinksApi().createCustomDataLink(req, wspId);
     }
 
 

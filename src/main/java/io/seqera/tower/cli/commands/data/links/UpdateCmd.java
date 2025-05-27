@@ -73,6 +73,6 @@ public class UpdateCmd extends AbstractApiCmd {
         if (credsId != null)
             req.credentialsId(credsId);
 
-        return api().updateCustomDataLink(id, req, wspId);
+        return dataLinksApi().updateCustomDataLink(id, req, wspId);
     }
 }

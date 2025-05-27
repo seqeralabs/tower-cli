@@ -53,7 +53,7 @@ public class AddCmd extends AbstractSecretsCmd {
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
         if (overwrite) tryDeleteSecret(name, wspId);
-        CreatePipelineSecretResponse response = api().createPipelineSecret(new CreatePipelineSecretRequest().name(name).value(value), wspId);
+        CreatePipelineSecretResponse response = pipelineSecretsApi().createPipelineSecret(new CreatePipelineSecretRequest().name(name).value(value), wspId);
         return new SecretAdded(workspaceRef(wspId), response.getSecretId(), name);
     }
 

@@ -62,7 +62,7 @@ public class DownloadCmd extends AbstractRunsCmd {
                 throw new TowerException("Error file is not available for pipeline's runs");
             }
 
-            file = api().downloadWorkflowLog(parentCommand.id, fileName, wspId);
+            file = workflowsApi().downloadWorkflowLog(parentCommand.id, fileName, wspId);
 
         } else {
             fileName = ".command.out";
@@ -75,7 +75,7 @@ public class DownloadCmd extends AbstractRunsCmd {
                 throw new TowerException("Timeline file is not available for tasks");
             }
 
-            file = api().downloadWorkflowTaskLog(parentCommand.id, task, fileName, wspId);
+            file = workflowsApi().downloadWorkflowTaskLog(parentCommand.id, task, fileName, wspId);
         }
 
         return new RunFileDownloaded(file, type);

@@ -56,7 +56,7 @@ public class UpdateCmd extends AbstractParticipantsCmd {
         UpdateParticipantRoleRequest request = new UpdateParticipantRoleRequest();
         request.setRole(role);
 
-        api().updateWorkspaceParticipantRole(orgId(wspId), wspId, participant.getParticipantId(), request);
+        workspacesApi().updateWorkspaceParticipantRole(orgId(wspId), wspId, participant.getParticipantId(), request);
 
         return new ParticipantUpdated(workspaceName(wspId), name, role.getValue());
     }

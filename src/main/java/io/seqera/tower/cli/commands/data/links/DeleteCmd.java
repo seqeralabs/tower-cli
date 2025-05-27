@@ -42,7 +42,7 @@ public class DeleteCmd extends AbstractApiCmd {
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
 
-        api().deleteCustomDataLink(id, wspId);
+        dataLinksApi().deleteCustomDataLink(id, wspId);
         return new DataLinkDeleted(id, wspId);
     }
 }

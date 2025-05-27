@@ -18,7 +18,7 @@
 package io.seqera.tower.cli.commands.computeenvs.platforms;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.api.DefaultApi;
+import io.seqera.tower.api.CredentialsApi;
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.ComputeConfig;
 import io.seqera.tower.model.ComputeEnvComputeConfig.PlatformEnum;
@@ -94,7 +94,7 @@ public abstract class AbstractPlatform<T extends ComputeConfig> implements Platf
         return type;
     }
 
-    public T computeConfig(Long workspaceId, DefaultApi api) throws ApiException, IOException {
+    public T computeConfig(Long workspaceId, CredentialsApi api) throws ApiException, IOException {
         return computeConfig();
     }
 
