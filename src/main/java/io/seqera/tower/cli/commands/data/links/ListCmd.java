@@ -36,7 +36,7 @@ import java.util.List;
         name = "list",
         description = "List data links."
 )
-public class ListCmd extends AbstractApiCmd {
+public class ListCmd extends AbstractDataLinksCmd {
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;

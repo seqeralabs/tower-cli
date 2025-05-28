@@ -1008,7 +1008,25 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.data.links.DataLinkRefOptions",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.data.links.DataLinkRefOptions$DataLinkRef",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.data.links.DeleteCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.data.links.DownloadCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
@@ -1882,6 +1900,12 @@
   "queryAllDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.cli.responses.data.DataLinkFileDownloadResult",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.cli.responses.data.DataLinkView",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -2694,6 +2718,13 @@
   "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"fromValue","parameterTypes":["java.lang.String"] }, {"name":"setId","parameterTypes":["java.lang.String"] }, {"name":"setName","parameterTypes":["java.lang.String"] }, {"name":"setProvider","parameterTypes":["io.seqera.tower.model.DataLinkProvider"] }]
 },
 {
+  "name":"io.seqera.tower.model.DataLinkDownloadUrlResponse",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"setUrl","parameterTypes":["java.lang.String"] }]
+},
+{
   "name":"io.seqera.tower.model.DataLinkDto",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -3382,6 +3413,13 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.model.SeqeraComputeSecurityKeys",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.model.ServiceInfo",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -3956,6 +3994,10 @@
   "name":"java.util.Locale[]"
 },
 {
+  "name":"java.util.concurrent.ForkJoinTask",
+  "fields":[{"name":"aux"}, {"name":"status"}]
+},
+{
   "name":"java.util.concurrent.LinkedTransferQueue",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -4012,6 +4054,9 @@
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true,
   "methods":[{"name":"getEncoding","parameterTypes":[] }, {"name":"getLanguage","parameterTypes":[] }, {"name":"getLanguageString","parameterTypes":[] }, {"name":"getMediaType","parameterTypes":[] }]
+},
+{
+  "name":"jdk.internal.misc.Unsafe"
 },
 {
   "name":"long[]"

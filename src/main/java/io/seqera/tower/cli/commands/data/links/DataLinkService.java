@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.api.DataLinksApi;
 import io.seqera.tower.cli.Tower;
-import io.seqera.tower.cli.commands.studios.DataLinkRefOptions;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.DataLinkNotFoundException;
 import io.seqera.tower.cli.exceptions.MultipleDataLinksFoundException;
@@ -46,17 +45,21 @@ public class DataLinkService  {
     public boolean checkIfResultIncomplete(Long wspId, String credId, boolean wait) {
         DataLinksFetchStatus status = checkDataLinksFetchStatus(wspId, credId);
         if (wait && status == DataLinksFetchStatus.FETCHING) {
-            waitForDoneStatus(wspId, credId);
+            boolean showProgress = app.output != OutputType.json;
+            if (showProgress) {
+                app.getOut().println("Fetching data links for credentials: " + credId);
+            }
+            waitForDoneStatus(wspId, credId, showProgress);
         }
 
         return !wait && status == DataLinksFetchStatus.FETCHING;
     }
 
-    void waitForDoneStatus(Long wspId, String credId) {
+    void waitForDoneStatus(Long wspId, String credId, boolean showProgress) {
         try {
             ResponseHelper.waitStatus(
                     app.getOut(),
-                    app.output != OutputType.json,
+                    showProgress,
                     DataLinksFetchStatus.DONE,
                     DataLinksFetchStatus.values(),
                     () -> checkDataLinksFetchStatus(wspId, credId),
@@ -89,7 +92,30 @@ public class DataLinkService  {
         FETCHING, DONE, ERROR
     }
 
-    public List<String> getDataLinkIds(DataLinkRefOptions.DataLinkRef dataLinkRef, Long wspId) {
+    public String getDataLinkId(io.seqera.tower.cli.commands.data.links.DataLinkRefOptions.DataLinkRef dataLinkRef, Long wspId) {
+        // if DataLink IDs are supplied - use those directly
+        if (dataLinkRef.dataLinkId != null) {
+            return dataLinkRef.dataLinkId;
+        }
+
+        // Check and wait if DataLinks are still being fetched
+        boolean isResultIncomplete = checkIfResultIncomplete(wspId, null, true);
+        if (isResultIncomplete) {
+            throw new TowerRuntimeException("Failed to fetch datalinks for datalink - please retry.");
+        }
+
+        if (dataLinkRef.dataLinkName != null) {
+            return getDataLinkIdByName(wspId, dataLinkRef.dataLinkName);
+        }
+
+        if (dataLinkRef.dataLinkUri != null) {
+            return getDataLinkIdByResourceRef(wspId, dataLinkRef.dataLinkUri);
+        }
+
+        return null;
+    }
+
+    public List<String> getDataLinkIds(io.seqera.tower.cli.commands.studios.DataLinkRefOptions.DataLinkRef dataLinkRef, Long wspId) {
         // if DataLink IDs are supplied - use those directly
         if (dataLinkRef.getMountDataIds() != null) {
             return dataLinkRef.getMountDataIds();

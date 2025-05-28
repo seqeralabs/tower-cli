@@ -19,6 +19,7 @@ package io.seqera.tower.cli.commands;
 
 import io.seqera.tower.cli.commands.data.links.AddCmd;
 import io.seqera.tower.cli.commands.data.links.DeleteCmd;
+import io.seqera.tower.cli.commands.data.links.DownloadCmd;
 import io.seqera.tower.cli.commands.data.links.ListCmd;
 import io.seqera.tower.cli.commands.data.links.UpdateCmd;
 import io.seqera.tower.cli.commands.data.links.BrowseCmd;
@@ -32,7 +33,8 @@ import picocli.CommandLine;
                 AddCmd.class,
                 DeleteCmd.class,
                 UpdateCmd.class,
-                BrowseCmd.class
+                BrowseCmd.class,
+                DownloadCmd.class
         }
 )
 public class DataLinksCmd extends AbstractRootCmd {
