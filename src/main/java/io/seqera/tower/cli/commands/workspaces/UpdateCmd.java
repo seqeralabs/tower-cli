@@ -65,7 +65,7 @@ public class UpdateCmd extends AbstractWorkspaceCmd {
 
         OrgAndWorkspaceDto ws = workspaceById(workspaceId);
 
-        DescribeWorkspaceResponse response = api().describeWorkspace(ws.getOrgId(), ws.getWorkspaceId());
+        DescribeWorkspaceResponse response = workspacesApi().describeWorkspace(ws.getOrgId(), ws.getWorkspaceId());
         UpdateWorkspaceRequest request = new UpdateWorkspaceRequest()
                 .fullName(response.getWorkspace().getFullName())
                 .description(response.getWorkspace().getDescription());
@@ -83,7 +83,7 @@ public class UpdateCmd extends AbstractWorkspaceCmd {
         }
 
         request.setVisibility(Visibility.PRIVATE);
-        api().updateWorkspace(ws.getOrgId(), ws.getWorkspaceId(), request);
+        workspacesApi().updateWorkspace(ws.getOrgId(), ws.getWorkspaceId(), request);
 
         return new WorkspaceUpdated(response.getWorkspace().getName(), ws.getOrgName(), response.getWorkspace().getVisibility());
     }

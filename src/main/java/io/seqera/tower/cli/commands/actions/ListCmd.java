@@ -49,7 +49,7 @@ public class ListCmd extends AbstractActionsCmd {
 
         List<ActionQueryAttribute> actionQueryAttributes = showLabelsOption.showLabels ? List.of(ActionQueryAttribute.LABELS) : NO_ACTION_ATTRIBUTES;
 
-        ListActionsResponse response = api().listActions(wspId, actionQueryAttributes);
+        ListActionsResponse response = actionsApi().listActions(wspId, actionQueryAttributes);
 
         return new ActionsList(response.getActions(), userName(), baseWorkspaceUrl(wspId), showLabelsOption.showLabels);
     }

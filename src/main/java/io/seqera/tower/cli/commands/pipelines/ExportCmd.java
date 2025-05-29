@@ -51,7 +51,7 @@ public class ExportCmd extends AbstractPipelinesCmd {
         Long wspId = workspaceId(workspace.workspace);
         PipelineDbDto pipeline = fetchPipeline(pipelineRefOptions, wspId);
         Long sourceWorkspaceId = sourceWorkspaceId(wspId, pipeline);
-        Launch launch = api().describePipelineLaunch(pipeline.getPipelineId(), wspId, sourceWorkspaceId).getLaunch();
+        Launch launch = pipelinesApi().describePipelineLaunch(pipeline.getPipelineId(), wspId, sourceWorkspaceId).getLaunch();
 
         WorkflowLaunchRequest workflowLaunchRequest = ModelHelper.createLaunchRequest(launch);
 

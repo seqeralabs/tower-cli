@@ -64,7 +64,7 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
-        return addComputeEnv(getPlatform().type(), getPlatform().computeConfig(wspId, api()));
+        return addComputeEnv(getPlatform().type(), getPlatform().computeConfig(wspId, credentialsApi()));
     }
 
     @Override
@@ -94,7 +94,7 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
 
     private ComputeEnvStatus checkComputeEnvStatus(String computeEnvId, Long workspaceId) {
         try {
-            return api().describeComputeEnv(computeEnvId, workspaceId, Collections.emptyList()).getComputeEnv().getStatus();
+            return computeEnvsApi().describeComputeEnv(computeEnvId, workspaceId, Collections.emptyList()).getComputeEnv().getStatus();
         } catch (ApiException | NullPointerException e) {
             return null;
         }
@@ -122,13 +122,13 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
                 )
                 .labelIds(labelIds);
 
-        CreateComputeEnvResponse resp = api().createComputeEnv(request, wspId);
+        CreateComputeEnvResponse resp = computeEnvsApi().createComputeEnv(request, wspId);
 
         return new ComputeEnvAdded(platform.getValue(), resp.getComputeEnvId(), name, wspId, workspaceRef(wspId));
     }
 
     private String findWorkspaceCredentials(PlatformEnum type, Long wspId) throws ApiException {
-        List<Credentials> credentials = api().listCredentials(wspId, type.getValue()).getCredentials();
+        List<Credentials> credentials = credentialsApi().listCredentials(wspId, type.getValue()).getCredentials();
         if (credentials.isEmpty()) {
             throw new TowerException("No valid credentials found at the workspace");
         }

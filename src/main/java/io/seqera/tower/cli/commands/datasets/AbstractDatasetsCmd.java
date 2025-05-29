@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 public abstract class AbstractDatasetsCmd extends AbstractApiCmd {
 
     protected Dataset datasetByName(Long workspaceId, String datasetName) throws ApiException {
-        ListDatasetsResponse listDatasetsResponse = api().listDatasets(workspaceId);
+        ListDatasetsResponse listDatasetsResponse = datasetsApi().listDatasets(workspaceId);
 
         if (listDatasetsResponse == null || listDatasetsResponse.getDatasets() == null) {
             throw new DatasetNotFoundException(workspaceRef(workspaceId));
@@ -54,7 +54,7 @@ public abstract class AbstractDatasetsCmd extends AbstractApiCmd {
     }
 
     protected List<Dataset> searchByName(Long workspaceId, String datasetName) throws ApiException {
-        ListDatasetsResponse listDatasetsResponse = api().listDatasets(workspaceId);
+        ListDatasetsResponse listDatasetsResponse = datasetsApi().listDatasets(workspaceId);
 
         if (datasetName == null) {
             return listDatasetsResponse.getDatasets();
@@ -79,7 +79,7 @@ public abstract class AbstractDatasetsCmd extends AbstractApiCmd {
         Dataset response;
 
         if (datasetRefOptions.dataset.datasetId != null) {
-            response = api().describeDataset(wspId, datasetRefOptions.dataset.datasetId).getDataset();
+            response = datasetsApi().describeDataset(wspId, datasetRefOptions.dataset.datasetId).getDataset();
         } else {
             response = datasetByName(wspId, datasetRefOptions.dataset.datasetName);
         }
@@ -90,7 +90,7 @@ public abstract class AbstractDatasetsCmd extends AbstractApiCmd {
     protected DatasetVersionDbDto fetchDatasetVersion(Long wspId, String datasetId, String datasetMediaType, Long version) throws ApiException {
         DatasetVersionDbDto datasetVersion;
 
-        ListDatasetVersionsResponse listDatasetVersionsResponse = api().listDatasetVersions(wspId, datasetId, datasetMediaType);
+        ListDatasetVersionsResponse listDatasetVersionsResponse = datasetsApi().listDatasetVersions(wspId, datasetId, datasetMediaType);
 
         if (listDatasetVersionsResponse == null || listDatasetVersionsResponse.getVersions() == null) {
             throw new TowerException(String.format("No versions were found for dataset %s", datasetId));
@@ -136,7 +136,7 @@ public abstract class AbstractDatasetsCmd extends AbstractApiCmd {
     }
 
     protected void deleteDatasetById(String datasetId, Long wspId) throws DatasetNotFoundException, ApiException {
-        api().deleteDataset(wspId, datasetId);
+        datasetsApi().deleteDataset(wspId, datasetId);
     }
 
 

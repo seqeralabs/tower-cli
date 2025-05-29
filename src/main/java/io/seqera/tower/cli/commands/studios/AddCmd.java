@@ -87,7 +87,7 @@ public class AddCmd extends AbstractStudiosCmd{
         try {
             templateValidation(templateOptions, condaEnv, wspId);
             DataStudioCreateRequest request = prepareRequest(wspId);
-            DataStudioCreateResponse response = api().createDataStudio(request, wspId, autoStart);
+            DataStudioCreateResponse response = studiosApi().createDataStudio(request, wspId, autoStart);
             DataStudioDto studioDto = response.getStudio();
             assert studioDto != null;
             return new StudiosCreated(studioDto.getSessionId(), wspId, workspaceRef(wspId), baseWorkspaceUrl(wspId), autoStart);

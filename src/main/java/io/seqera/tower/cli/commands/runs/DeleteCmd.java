@@ -46,7 +46,7 @@ public class DeleteCmd extends AbstractRunsCmd {
         Long wspId = workspaceId(workspace.workspace);
         
         try {
-            api().deleteWorkflow(id, wspId, force);
+            workflowsApi().deleteWorkflow(id, wspId, force);
 
             return new RunDeleted(id, workspaceRef(wspId));
         } catch (ApiException e) {

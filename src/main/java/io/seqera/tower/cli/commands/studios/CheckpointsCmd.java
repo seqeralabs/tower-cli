@@ -65,7 +65,7 @@ public class CheckpointsCmd extends AbstractStudiosCmd {
         DataStudioListCheckpointsResponse response;
 
         try {
-           response = api().listDataStudioCheckpoints(sessionId, wspId, filter, max, offset);
+           response = studiosApi().listDataStudioCheckpoints(sessionId, wspId, filter, max, offset);
         } catch (ApiException e) {
             if (e.getCode() == 404){
                 throw new WorkspaceNotFoundException(wspId);

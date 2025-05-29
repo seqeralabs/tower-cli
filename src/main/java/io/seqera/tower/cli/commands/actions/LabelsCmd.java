@@ -18,7 +18,7 @@
 package io.seqera.tower.cli.commands.actions;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.api.DefaultApi;
+import io.seqera.tower.api.LabelsApi;
 import io.seqera.tower.cli.commands.labels.LabelsSubcmdOptions;
 import io.seqera.tower.cli.responses.Response;
 import picocli.CommandLine;
@@ -38,7 +38,7 @@ public class LabelsCmd extends AbstractActionsCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(labelsSubcmdOptions.workspace.workspace);
-        DefaultApi api = api();
+        LabelsApi api = labelsApi();
         String actionId = fetchDescribeActionResponse(actionRefOptions, wspId).getAction().getId();
         ActionsLabelsManager creator = new ActionsLabelsManager(api);
         return creator.execute(wspId, actionId, labelsSubcmdOptions);

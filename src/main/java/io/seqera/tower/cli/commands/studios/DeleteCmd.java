@@ -44,7 +44,7 @@ public class DeleteCmd extends AbstractStudiosCmd {
         try {
             String sessionId = getSessionId(studioRefOptions, wspId);
 
-            api().deleteDataStudio(sessionId, wspId);
+            studiosApi().deleteDataStudio(sessionId, wspId);
 
             return new StudioDeleted(studioRefOptions.getStudioIdentifier(), workspaceRef(wspId));
         } catch (ApiException e) {

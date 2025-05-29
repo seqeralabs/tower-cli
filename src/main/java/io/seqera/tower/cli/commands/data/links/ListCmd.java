@@ -68,10 +68,10 @@ public class ListCmd extends AbstractApiCmd {
         String search = buildSearch(searchOption.startsWith, provider, searchOption.region, searchOption.uri);
         String visibility = visibilityOption == null ? null : visibilityOption.toString();
 
-        DataLinkService dataLinkService = new DataLinkService(api(), app());
+        DataLinkService dataLinkService = new DataLinkService(dataLinksApi(), app());
         boolean isResultIncomplete = dataLinkService.checkIfResultIncomplete(wspId, credId, wait);
 
-        DataLinksListResponse data = api().listDataLinks(wspId, credId, search, max, offset, visibility);
+        DataLinksListResponse data = dataLinksApi().listDataLinks(wspId, credId, search, max, offset, visibility);
         return new DataLinksList(workspaceRef(wspId), data.getDataLinks(),
                 isResultIncomplete,
                 PaginationInfo.from(offset, max, data.getTotalSize()));

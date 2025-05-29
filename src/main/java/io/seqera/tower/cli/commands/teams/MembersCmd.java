@@ -53,7 +53,7 @@ public class MembersCmd extends AbstractTeamsCmd {
         TeamDbDto team = findTeamByName(orgAndWorkspaceDbDto.getOrgId(), teamName);
 
         //TODO use pagination to get all the members
-        ListMembersResponse response = api().listOrganizationTeamMembers(orgAndWorkspaceDbDto.getOrgId(), team.getTeamId(), 100, 0, null);
+        ListMembersResponse response = teamsApi().listOrganizationTeamMembers(orgAndWorkspaceDbDto.getOrgId(), team.getTeamId(), 100, 0, null);
 
         if (response == null) {
             throw new TowerException(String.format("Team '%s' has no members", teamName));

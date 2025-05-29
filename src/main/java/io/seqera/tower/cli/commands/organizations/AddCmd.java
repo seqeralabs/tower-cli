@@ -62,7 +62,7 @@ public class AddCmd extends AbstractOrganizationsCmd {
 
         if (overwrite) tryDeleteOrg(name);
 
-        response = api().createOrganization(request);
+        response = orgsApi().createOrganization(request);
 
         return new OrganizationsAdded(response.getOrganization());
     }

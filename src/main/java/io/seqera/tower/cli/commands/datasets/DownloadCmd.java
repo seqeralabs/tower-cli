@@ -49,7 +49,7 @@ public class DownloadCmd extends AbstractDatasetsCmd {
         Dataset dataset = fetchDescribeDatasetResponse(datasetRefOptions, wspId);
         DatasetVersionDbDto datasetVersion = fetchDatasetVersion(wspId, dataset.getId(), dataset.getMediaType(), version);
 
-        File file = api().downloadDataset(wspId, dataset.getId(), datasetVersion.getVersion().toString(), datasetVersion.getFileName());
+        File file = datasetsApi().downloadDataset(wspId, dataset.getId(), datasetVersion.getVersion().toString(), datasetVersion.getFileName());
 
         return new DatasetDownload(file, datasetVersion.getFileName());
     }

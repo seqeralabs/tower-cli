@@ -52,7 +52,7 @@ public class UpdateCmd extends AbstractMembersClass {
         UpdateMemberRoleRequest request = new UpdateMemberRoleRequest();
         request.setRole(role);
 
-        api().updateOrganizationMemberRole(orgAndWorkspaceDbDto.getOrgId(), member.getMemberId(), request);
+        orgsApi().updateOrganizationMemberRole(orgAndWorkspaceDbDto.getOrgId(), member.getMemberId(), request);
 
 
         return new MembersUpdate(user, organizationRef, role.toString());

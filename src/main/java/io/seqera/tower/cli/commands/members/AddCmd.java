@@ -46,7 +46,7 @@ public class AddCmd extends AbstractMembersClass {
         AddMemberRequest request = new AddMemberRequest();
         request.setUser(user);
 
-        AddMemberResponse response = api().createOrganizationMember(orgAndWorkspaceDbDto.getOrgId(), request);
+        AddMemberResponse response = orgsApi().createOrganizationMember(orgAndWorkspaceDbDto.getOrgId(), request);
 
         return new MembersAdded(organizationRef, response.getMember());
     }

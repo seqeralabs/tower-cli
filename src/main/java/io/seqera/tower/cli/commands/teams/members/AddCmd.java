@@ -51,7 +51,7 @@ public class AddCmd extends AbstractApiCmd {
         CreateTeamMemberRequest request = new CreateTeamMemberRequest();
         request.setUserNameOrEmail(userNameOrEmail);
 
-        AddTeamMemberResponse response = api().createOrganizationTeamMember(orgAndWorkspaceDbDto.getOrgId(), team.getTeamId(), request);
+        AddTeamMemberResponse response = teamsApi().createOrganizationTeamMember(orgAndWorkspaceDbDto.getOrgId(), team.getTeamId(), request);
 
         return new TeamMembersAdd(parent.teamName, response.getMember());
     }

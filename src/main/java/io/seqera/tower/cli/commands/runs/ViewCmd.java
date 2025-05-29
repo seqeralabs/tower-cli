@@ -70,7 +70,7 @@ public class ViewCmd extends AbstractRunsCmd {
 
         try {
             String workspaceRef = workspaceRef(wspId);
-            DescribeWorkflowResponse workflowResponse = api().describeWorkflow(id, wspId, List.of(WorkflowQueryAttribute.LABELS));
+            DescribeWorkflowResponse workflowResponse = workflowsApi().describeWorkflow(id, wspId, List.of(WorkflowQueryAttribute.LABELS));
             
             if (workflowResponse == null) {
                 throw new RunNotFoundException(id, workspaceRef(wspId));
@@ -79,12 +79,12 @@ public class ViewCmd extends AbstractRunsCmd {
             Workflow workflow = workflowResponse.getWorkflow();
             WorkflowLoad workflowLoad = workflowLoadByWorkflowId(wspId, id);
 
-            DescribeWorkflowLaunchResponse wfLaunch = api().describeWorkflowLaunch(workflow.getId(), wspId);
+            DescribeWorkflowLaunchResponse wfLaunch = workflowsApi().describeWorkflowLaunch(workflow.getId(), wspId);
             ComputeEnvComputeConfig computeEnv = wfLaunch.getLaunch() != null ? wfLaunch.getLaunch().getComputeEnv() : null;
 
             ProgressData progress = null;
             if (opts.processes || opts.stats || opts.load || opts.utilization) {
-                progress = api().describeWorkflowProgress(id, wspId).getProgress();
+                progress = workflowsApi().describeWorkflowProgress(id, wspId).getProgress();
             }
 
             Map<String, Object> general = new LinkedHashMap<>();
