@@ -586,7 +586,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         return exitCode;
     }
 
-    protected Response exec() throws ApiException, IOException {
+    protected Response exec() throws ApiException, IOException, InterruptedException {
         throw new ShowUsageException(getSpec());
     }
 

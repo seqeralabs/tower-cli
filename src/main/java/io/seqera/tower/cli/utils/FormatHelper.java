@@ -20,6 +20,7 @@ package io.seqera.tower.cli.utils;
 import io.seqera.tower.model.*;
 import picocli.CommandLine;
 
+import java.io.PrintWriter;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
@@ -349,4 +350,11 @@ public class FormatHelper {
         return text.length() > maxLength ? text.substring(0, maxLength) + "..." : text;
     }
 
+    public static void printProgressBar(PrintWriter out, int percent) {
+        int width = 50; // total width of progress bar
+        int filled = percent * width / 100;
+        String bar = "[" + "=".repeat(filled) + " ".repeat(width - filled) + "] " + percent + "%";
+        out.print("\r" + bar);
+        out.flush();
+    }
 }

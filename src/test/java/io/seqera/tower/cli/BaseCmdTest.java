@@ -78,6 +78,10 @@ public abstract class BaseCmdTest {
         return file.toAbsolutePath().toString();
     }
 
+    protected Path tempDir() {
+        return tempDir;
+    }
+
     protected String url(MockServerClient mock) {
         return String.format("http://localhost:%d", mock.getPort());
     }

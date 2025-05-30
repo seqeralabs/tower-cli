@@ -30,17 +30,18 @@ import java.io.IOException;
         name = "delete",
         description = "Delete custom data link."
 )
-public class DeleteCmd extends AbstractApiCmd {
+public class DeleteCmd extends AbstractDataLinksCmd {
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
-    @CommandLine.Option(names = {"-i", "--id"}, description = "Data link id.", required = true)
-    public String id;
+    @CommandLine.Mixin
+    public DataLinkRefOptions dataLinkRefOptions;
 
     @Override
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
+        String id = getDataLinkId(dataLinkRefOptions, wspId);
 
         dataLinksApi().deleteCustomDataLink(id, wspId);
         return new DataLinkDeleted(id, wspId);
