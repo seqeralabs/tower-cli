@@ -70,9 +70,10 @@ public class GkePlatform extends AbstractPlatform<GkeComputeConfig> {
                 // Common
                 .workDir(workDir)
 
-                // Stagging
+                // Staging
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
+                .nextflowConfig(nextflowConfigString())
                 .environment(environmentVariables());
 
         return config;

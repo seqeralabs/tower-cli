@@ -63,6 +63,13 @@ public abstract class AbstractPlatform<T extends ComputeConfig> implements Platf
         return FilesHelper.readString(staging.postRunScript);
     }
 
+    protected String nextflowConfigString() throws IOException {
+        if (staging == null || staging.nextflowConfig == null) {
+            return null;
+        }
+        return FilesHelper.readString(staging.nextflowConfig);
+    }
+
     protected List<ConfigEnvVariable> environmentVariables() {
         if (environment == null || environment.variables == null || environment.variables.size() == 0) {
             return null;
@@ -108,6 +115,9 @@ public abstract class AbstractPlatform<T extends ComputeConfig> implements Platf
 
         @Option(names = {"--post-run"}, description = "Post-run script.")
         public Path postRunScript;
+
+        @Option(names = {"--nextflow-config"}, description = "Nextflow config")
+        public Path nextflowConfig;
     }
 
     public static class Environment {
