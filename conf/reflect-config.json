@@ -3379,7 +3379,7 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getPropagateHeadJobOptions","parameterTypes":[] }, {"name":"getHeadJobOptions","parameterTypes":[] }, {"name":"getMaxQueueSize","parameterTypes":[] }, {"name":"getPort","parameterTypes":[] }, {"name":"getHostName","parameterTypes":[] }, {"name":"getUserName","parameterTypes":[] }, {"name":"getLaunchDir","parameterTypes":[] }, {"name":"getCliPath","parameterTypes":[] }, {"name":"getComputeJobRole","parameterTypes":[] }, {"name":"getComputeQueue","parameterTypes":[] }, {"name":"getDiscriminator","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.ServiceInfo",
