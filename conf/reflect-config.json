@@ -1906,6 +1906,12 @@
   "queryAllDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.cli.responses.data.DataLinkFileDownloadResult$SimplePathInfo",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.cli.responses.data.DataLinkView",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -2701,7 +2707,14 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"addObjectsItem","parameterTypes":["io.seqera.tower.model.DataLinkItem"] }, {"name":"getObjects","parameterTypes":[] }, {"name":"getOriginalPath","parameterTypes":[] }, {"name":"nextPageToken","parameterTypes":["java.lang.String"] }, {"name":"objects","parameterTypes":["java.util.List"] }, {"name":"originalPath","parameterTypes":["java.lang.String"] }, {"name":"setNextPageToken","parameterTypes":["java.lang.String"] }, {"name":"setObjects","parameterTypes":["java.util.List"] }, {"name":"setOriginalPath","parameterTypes":["java.lang.String"] }]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"addObjectsItem","parameterTypes":["io.seqera.tower.model.DataLinkItem"] }, {"name":"equals","parameterTypes":["java.lang.Object"] }, {"name":"getNextPageToken","parameterTypes":[] }, {"name":"getObjects","parameterTypes":[] }, {"name":"getOriginalPath","parameterTypes":[] }, {"name":"hashCode","parameterTypes":[] }, {"name":"nextPageToken","parameterTypes":["java.lang.String"] }, {"name":"objects","parameterTypes":["java.util.List"] }, {"name":"originalPath","parameterTypes":["java.lang.String"] }, {"name":"setNextPageToken","parameterTypes":["java.lang.String"] }, {"name":"setObjects","parameterTypes":["java.util.List"] }, {"name":"setOriginalPath","parameterTypes":["java.lang.String"] }, {"name":"toIndentedString","parameterTypes":["java.lang.Object"] }, {"name":"toString","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.model.DataLinkContentTreeListResponse",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"addItemsItem","parameterTypes":["io.seqera.tower.model.DataLinkSimpleItem"] }, {"name":"equals","parameterTypes":["java.lang.Object"] }, {"name":"getItems","parameterTypes":[] }, {"name":"hashCode","parameterTypes":[] }, {"name":"items","parameterTypes":["java.util.List"] }, {"name":"setItems","parameterTypes":["java.util.List"] }, {"name":"toIndentedString","parameterTypes":["java.lang.Object"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.DataLinkCreateRequest",
@@ -2755,7 +2768,14 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"fromValue","parameterTypes":["java.lang.String"] }, {"name":"setDataLink","parameterTypes":["io.seqera.tower.model.DataLinkDto"] }]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"dataLink","parameterTypes":["io.seqera.tower.model.DataLinkDto"] }, {"name":"equals","parameterTypes":["java.lang.Object"] }, {"name":"fromValue","parameterTypes":["java.lang.String"] }, {"name":"getDataLink","parameterTypes":[] }, {"name":"hashCode","parameterTypes":[] }, {"name":"setDataLink","parameterTypes":["io.seqera.tower.model.DataLinkDto"] }, {"name":"toIndentedString","parameterTypes":["java.lang.Object"] }, {"name":"toString","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.model.DataLinkSimpleItem",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"equals","parameterTypes":["java.lang.Object"] }, {"name":"getPath","parameterTypes":[] }, {"name":"getSize","parameterTypes":[] }, {"name":"hashCode","parameterTypes":[] }, {"name":"path","parameterTypes":["java.lang.String"] }, {"name":"setPath","parameterTypes":["java.lang.String"] }, {"name":"setSize","parameterTypes":["java.lang.Long"] }, {"name":"size","parameterTypes":["java.lang.Long"] }, {"name":"toIndentedString","parameterTypes":["java.lang.Object"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.DataLinkStatus",

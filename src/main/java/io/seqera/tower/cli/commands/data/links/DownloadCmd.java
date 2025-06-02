@@ -22,8 +22,12 @@ import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.data.DataLinkFileDownloadResult;
-import io.seqera.tower.cli.utils.FilesHelper;
+import io.seqera.tower.cli.utils.progress.ProgressInputStream;
+import io.seqera.tower.cli.utils.progress.ProgressTracker;
+import io.seqera.tower.model.DataLinkContentTreeListResponse;
 import io.seqera.tower.model.DataLinkDownloadUrlResponse;
+import io.seqera.tower.model.DataLinkItemType;
+import io.seqera.tower.model.DataLinkSimpleItem;
 import picocli.CommandLine;
 
 import java.io.IOException;
@@ -37,9 +41,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
-
-import static io.seqera.tower.cli.utils.FormatHelper.printProgressBar;
 
 @CommandLine.Command(
         name = "download",
@@ -67,73 +70,82 @@ public class DownloadCmd extends AbstractDataLinksCmd {
         Long wspId = workspaceId(workspace.workspace);
         String credId = credentialsRef != null ? credentialsByRef(null, wspId, credentialsRef) : null;
 
-        String id = getDataLinkId(dataLinkRefOptions, wspId);
+        String id = getDataLinkId(dataLinkRefOptions, wspId, credId);
 
+        List<DataLinkFileDownloadResult.SimplePathInfo> pathInfo = new ArrayList<>();
         for (String path : paths) {
-            String filename = FilesHelper.extractFilenameFromPath(path);
+            DataLinkContentTreeListResponse browseTreeResponse = dataLinksApi().exploreDataLinkTree(id, wspId, credId, List.of(path));
 
-            DataLinkDownloadUrlResponse urlResponse = dataLinksApi().generateDownloadUrlDataLink(id, path, credId, wspId, false);
+            if (browseTreeResponse.getItems().isEmpty()) {
+                // If the browse-tree response is empty, assume this is a filepath and not a prefix
 
-            Path targetPath = outputDir == null ?
-                    Paths.get(filename)
-                    : Paths.get(outputDir, filename);
+                String filename = Paths.get(path).getFileName().toString();
+                Path targetPath = outputDir == null
+                        ? Paths.get(filename)
+                        : Paths.get(outputDir, filename);
 
-            boolean showProgress = app().output != OutputType.json;
+                downloadFile(path, id, credId, wspId, targetPath);
 
-            if (showProgress) {
-                app().getOut().println("Downloading file: " + path);
+                pathInfo.add(new DataLinkFileDownloadResult.SimplePathInfo(DataLinkItemType.FILE, path, 1));
             }
+            else {
+                // Download each file for that prefix
+                for (DataLinkSimpleItem item : browseTreeResponse.getItems()) {
 
-            HttpClient client = HttpClient.newBuilder()
-                    .connectTimeout(Duration.ofSeconds(10))
-                    .build();
+                    Path targetPath = outputDir == null
+                            ? Paths.get(item.getPath())
+                            : Paths.get(outputDir, item.getPath());
+                    Files.createDirectories(targetPath.getParent());
 
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(urlResponse.getUrl()))
-                    .timeout(Duration.ofSeconds(30))
-                    .GET()
-                    .build();
-
-            HttpResponse<InputStream> response = client.send(request, HttpResponse.BodyHandlers.ofInputStream());
-
-            if (response.statusCode() != 200) {
-                throw new IOException("Failed to download file: HTTP " + response.statusCode());
-            }
-
-            long contentLength = response.headers()
-                    .firstValueAsLong("Content-Length")
-                    .orElse(-1);
-
-
-            try (InputStream in = response.body();
-                 OutputStream output = Files.newOutputStream(targetPath)) {
-
-                byte[] buffer = new byte[8192];
-                long totalBytesRead = 0;
-                int bytesRead;
-                int lastProgress = 0;
-
-                while ((bytesRead = in.read(buffer)) != -1) {
-                    output.write(buffer, 0, bytesRead);
-                    totalBytesRead += bytesRead;
-
-                    if (contentLength > 0 && showProgress) {
-                        int progress = (int) (100 * totalBytesRead / contentLength);
-                        if (progress != lastProgress) {
-                            printProgressBar(app().getOut(), progress);
-                            lastProgress = progress;
-                        }
-                    }
+                    downloadFile(item.getPath(), id, credId, wspId, targetPath);
                 }
-
-                if (contentLength > 0 && showProgress) {
-                    printProgressBar(app().getOut(), 100);
-                    app().getOut().println();
-                }
+                pathInfo.add(new DataLinkFileDownloadResult.SimplePathInfo(DataLinkItemType.FOLDER, path, browseTreeResponse.getItems().size()));
             }
+
         }
 
-        return new DataLinkFileDownloadResult(paths);
+        return new DataLinkFileDownloadResult(pathInfo);
     }
 
+    private void downloadFile(String path, String id, String credId, Long wspId, Path targetPath) throws ApiException, IOException, InterruptedException {
+        DataLinkDownloadUrlResponse urlResponse = dataLinksApi().generateDownloadUrlDataLink(id, path, credId, wspId, false);
+
+        boolean showProgress = app().output != OutputType.json;
+
+        if (showProgress) {
+            app().getOut().println("  Downloading file: " + path);
+        }
+
+        HttpClient client = HttpClient.newBuilder()
+                .connectTimeout(Duration.ofSeconds(10))
+                .build();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(urlResponse.getUrl()))
+                .timeout(Duration.ofSeconds(30))
+                .GET()
+                .build();
+
+        HttpResponse<InputStream> response = client.send(request, HttpResponse.BodyHandlers.ofInputStream());
+
+        if (response.statusCode() != 200) {
+            throw new IOException("Failed to download file: HTTP " + response.statusCode());
+        }
+
+        long contentLength = response.headers()
+                .firstValueAsLong("Content-Length")
+                .orElse(-1);
+
+        ProgressTracker tracker = new ProgressTracker(app().getOut(), showProgress, contentLength);
+        try (InputStream in = new ProgressInputStream(response.body(), tracker);
+             OutputStream output = Files.newOutputStream(targetPath)) {
+
+            byte[] buffer = new byte[8192];
+            int bytesRead;
+            while ((bytesRead = in.read(buffer)) != -1) {
+                output.write(buffer, 0, bytesRead);
+            }
+
+        }
+    }
 }

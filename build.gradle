@@ -27,7 +27,7 @@ dependencies {
     implementation 'org.slf4j:slf4j-api:1.7.36'
     implementation 'ch.qos.logback:logback-core:1.2.11'
     implementation 'ch.qos.logback:logback-classic:1.2.11'
-    implementation 'io.seqera.tower:tower-java-sdk:1.43.0'
+    implementation 'io.seqera.tower:tower-java-sdk:1.43.1'
     implementation 'info.picocli:picocli:4.6.3'
     implementation 'org.apache.commons:commons-compress:1.22'
     implementation 'org.tukaani:xz:1.9'

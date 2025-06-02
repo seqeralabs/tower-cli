@@ -23,12 +23,13 @@ import java.util.List;
 
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.TableList;
+import io.seqera.tower.model.DataLinkItemType;
 
 public class DataLinkFileDownloadResult extends Response {
 
-    public final List<String> paths;
+    public final List<SimplePathInfo> paths;
 
-    public DataLinkFileDownloadResult(List<String> paths) {
+    public DataLinkFileDownloadResult(List<SimplePathInfo> paths) {
         this.paths = paths;
     }
 
@@ -37,17 +38,38 @@ public class DataLinkFileDownloadResult extends Response {
         out.println(ansi(String.format("%n  @|bold Successfully downloaded files |@%n")));
         out.println("");
 
-        List<String> descriptions = new ArrayList<>(List.of("Files downloaded"));
+        List<String> descriptions = new ArrayList<>(List.of( "Type", "File count","Path"));
         TableList table = new TableList(out, descriptions.size(), descriptions.toArray(new String[descriptions.size()])).sortBy(0);
         table.setPrefix("    ");
 
-        paths.forEach(path -> {
+        paths.forEach(pathInfo -> {
             List<String> rows = new ArrayList<>(List.of(
-                    path == null ? "" : path
+                    pathInfo.type == null ? "" : pathInfo.type.toString(),
+                    Integer.valueOf(pathInfo.fileCount).toString(),
+                    pathInfo.path == null ? "" : pathInfo.path
             ));
             table.addRow(rows.toArray(new String[rows.size()]));
         });
         table.print();
         out.println("");
     }
+
+    public static class SimplePathInfo extends Response {
+
+        public DataLinkItemType type;
+        public String path;
+        public int fileCount;
+
+        public SimplePathInfo() {
+        }
+
+        public SimplePathInfo(DataLinkItemType type, String path, int fileCount) {
+            this.type = type;
+            this.path = path;
+            this.fileCount = fileCount;
+        }
+
+
+    }
+
 }

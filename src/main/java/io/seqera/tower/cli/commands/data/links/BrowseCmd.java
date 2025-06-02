@@ -18,8 +18,6 @@
 package io.seqera.tower.cli.commands.data.links;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.StringUtil;
-import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.data.DataLinkContentList;
@@ -60,7 +58,7 @@ public class BrowseCmd extends AbstractDataLinksCmd {
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
         String credId = credentialsRef != null ? credentialsByRef(null, wspId, credentialsRef) : null;
-        String id = getDataLinkId(dataLinkRefOptions, wspId);
+        String id = getDataLinkId(dataLinkRefOptions, wspId, credId);
 
         DataLinkDto dataLink = dataLinksApi().describeDataLink(id, wspId, credId).getDataLink();
         DataLinkContentResponse response;

@@ -350,11 +350,4 @@ public class FormatHelper {
         return text.length() > maxLength ? text.substring(0, maxLength) + "..." : text;
     }
 
-    public static void printProgressBar(PrintWriter out, int percent) {
-        int width = 50; // total width of progress bar
-        int filled = percent * width / 100;
-        String bar = "[" + "=".repeat(filled) + " ".repeat(width - filled) + "] " + percent + "%";
-        out.print("\r" + bar);
-        out.flush();
-    }
 }

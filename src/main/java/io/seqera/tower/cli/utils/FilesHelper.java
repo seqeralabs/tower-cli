@@ -63,8 +63,4 @@ public class FilesHelper {
         return outcome;
     }
 
-    public static String extractFilenameFromPath(String inputPath) {
-        Path path = Paths.get(inputPath);
-        return path.getFileName().toString();
-    }
 }

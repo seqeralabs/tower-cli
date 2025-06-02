@@ -23,7 +23,11 @@ import io.seqera.tower.cli.commands.AbstractApiCmd;
 public class AbstractDataLinksCmd extends AbstractApiCmd {
 
     protected String getDataLinkId(DataLinkRefOptions dataLinkRefOptions, Long wspId) throws ApiException {
+        return getDataLinkId(dataLinkRefOptions, wspId, null);
+    }
+
+    protected String getDataLinkId(DataLinkRefOptions dataLinkRefOptions, Long wspId, String credId) throws ApiException {
         DataLinkService dataLinkService = new DataLinkService(dataLinksApi(), app());
-        return dataLinkService.getDataLinkId(dataLinkRefOptions.dataLinkRef, wspId);
+        return dataLinkService.getDataLinkId(dataLinkRefOptions.dataLinkRef, wspId, credId);
     }
 }
