@@ -193,7 +193,7 @@ public class DumpCmd extends AbstractRunsCmd {
         String launchId = workflow.getLaunchId();
         Launch launch = (launchId == null) ? null : launchById(workspaceId, launchId);
 
-        return JsonHelper.prettyJson(launch);
+        return (launch == null) ? "" : JsonHelper.prettyJson(launch);
     }
 
     private String collectWorkflowMetrics(Long workspaceId) throws ApiException, JsonProcessingException {
@@ -265,9 +265,12 @@ public class DumpCmd extends AbstractRunsCmd {
             throw new TowerException("Unknown workflow");
         }
 
-        File nextflowLog = workflowsApi().downloadWorkflowLog(workflow.getId(), String.format("nf-%s.log", workflow.getId()), workspaceId);
-
-        return nextflowLog;
+        try {
+            File nextflowLog = workflowsApi().downloadWorkflowLog(workflow.getId(), String.format("nf-%s.log", workflow.getId()), workspaceId);
+            return nextflowLog;
+        } catch(Exception e) {
+            return null;
+        }
     }
 
     private void addTaskLog(TarFileHelper.TarFileAppender tar, Long taskId, String logName, Long workspaceId, String workflowId) throws ApiException, IOException {
