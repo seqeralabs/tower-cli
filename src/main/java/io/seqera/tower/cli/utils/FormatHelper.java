@@ -20,7 +20,6 @@ package io.seqera.tower.cli.utils;
 import io.seqera.tower.model.*;
 import picocli.CommandLine;
 
-import java.io.PrintWriter;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
