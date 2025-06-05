@@ -144,6 +144,19 @@ tw CLI is a platform binary executable created by a native compilation from Java
     export GITHUB_TOKEN=...
     ```
 
+1. Update reflection metadata config for new Tower SDK version (optional)
+
+    This step is only needed if you are updating to a newer version of Tower SDK (io.seqera.tower:tower-java-sdk).
+
+    ```bash
+    ./gradlew runReflectionConfigGenerator
+    ```
+
+    The GraalVM reflection metadata generation relies on code paths being executed with [a tracing agent](https://www.graalvm.org/jdk21/reference-manual/native-image/metadata/AutomaticMetadataCollection/#tracing-agent) to dynamically capture various execution paths and update the reflect-config.json.
+
+    This is a utility task that uses reflection to make calls to all classes in the Tower SDK package,
+    in order to capture and generate methods reflection metadata of any new fields/classes in Tower SDK and update resource-config.json
+
 1. Create the native client:
 
     ```bash
