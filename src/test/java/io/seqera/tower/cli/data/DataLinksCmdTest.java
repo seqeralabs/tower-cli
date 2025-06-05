@@ -24,8 +24,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.data.links.ListCmd;
 import io.seqera.tower.cli.commands.enums.OutputType;
+import io.seqera.tower.cli.exceptions.TowerRuntimeException;
 import io.seqera.tower.cli.responses.data.DataLinkDeleted;
-import io.seqera.tower.cli.responses.data.DataLinkFileDownloadResult;
+import io.seqera.tower.cli.responses.data.DataLinkFileTransferResult;
 import io.seqera.tower.cli.responses.data.DataLinksList;
 import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.model.DataLinkDto;
@@ -489,7 +490,7 @@ public class DataLinksCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("data/links/datalinks_list")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        // mock fetching the
+        // mock fetching the path tree
         mock.when(
                 request().withMethod("GET").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/browse-tree")
                         .withQueryStringParameter("workspaceId", "75887156211589")
@@ -535,7 +536,7 @@ public class DataLinksCmdTest extends BaseCmdTest {
         ExecOut out = exec(format, mock, "data-links", "download", "-w", "75887156211589", "-n", "a-test-bucket-eend-us-east-1", "-c", "57Ic6reczFn78H1DTaaXkp",
                 "--output-dir", tempDir().toString(), "directory/filename.txt");
 
-        assertOutput(format, out, new DataLinkFileDownloadResult(List.of(new DataLinkFileDownloadResult.SimplePathInfo(DataLinkItemType.FILE,  "directory/filename.txt", 1))));
+        assertOutput(format, out, DataLinkFileTransferResult.donwloaded(List.of(new DataLinkFileTransferResult.SimplePathInfo(DataLinkItemType.FILE,  "directory/filename.txt", 1))));
 
         // verify the API has been polled additionally for the status
         mock.verify(request().withMethod("GET").withPath("/download/directory/filename.txt"), VerificationTimes.exactly(1));
@@ -670,7 +671,7 @@ public class DataLinksCmdTest extends BaseCmdTest {
         ExecOut out = exec(format, mock, "data-links", "download", "-w", "75887156211589", "-n", "a-test-bucket-eend-us-east-1", "-c", "57Ic6reczFn78H1DTaaXkp",
                 "--output-dir", tempDir().toString(), "directory/");
 
-        assertOutput(format, out, new DataLinkFileDownloadResult(List.of(new DataLinkFileDownloadResult.SimplePathInfo(DataLinkItemType.FOLDER, "directory/", 2))));
+        assertOutput(format, out, DataLinkFileTransferResult.donwloaded(List.of(new DataLinkFileTransferResult.SimplePathInfo(DataLinkItemType.FOLDER, "directory/", 2))));
 
         // verify the API has been polled additionally for the status
         mock.verify(request().withMethod("GET").withPath("/download/directory/"+filename1), VerificationTimes.exactly(1));
@@ -691,5 +692,281 @@ public class DataLinksCmdTest extends BaseCmdTest {
         // No errors thrown
         assertEquals("", out.stdErr);
         assertEquals(0, out.exitCode);
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = OutputType.class, names = {"json"})
+    void testUploadSingleFile(OutputType format, MockServerClient mock) throws IOException {
+        // credentials fetch
+        mock.when(
+                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"57Ic6reczFn78H1DTaaXkp\",\"name\":\"aws\",\"description\":null,\"discriminator\":\"aws\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-09T07:20:53Z\",\"dateCreated\":\"2021-09-08T05:48:51Z\",\"lastUpdated\":\"2021-09-08T05:48:51Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // status check
+        mock.when(
+                request()
+                        .withMethod("GET").withPath("/data-links")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("offset", "0")
+                        .withQueryStringParameter("max", "1"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("data/links/datalinks_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        // mock fetch data links list
+        mock.when(
+                request().withMethod("GET").withPath("/data-links")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("search", "a-test-bucket-eend-us-east-1"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("data/links/datalinks_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // Create a test file
+        Path testFile = tempDir().resolve("test.txt");
+        String content = "test content";
+        Files.write(testFile, content.getBytes());
+
+        // Mock multipart upload request
+        mock.when(
+                request()
+                        .withMethod("POST").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/upload")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("credentialsId", "57Ic6reczFn78H1DTaaXkp"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\n" +
+                        "    \"uploadId\": \"upload-123\",\n" +
+                        "    \"uploadUrls\": [\"http://localhost:" + mock.getPort() + "/upload\"]\n" +
+                        "}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // Mock the actual upload
+        mock.when(
+                request()
+                        .withMethod("PUT").withPath("/upload"),
+                exactly(1)
+        ).respond(
+                response()
+                        .withStatusCode(200)
+                        .withHeader(new Header("Etag", "etag-123"))
+        );
+
+        // Mock finish upload request
+        mock.when(request()
+                .withMethod("POST").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/upload/finish")
+                .withQueryStringParameter("workspaceId", "75887156211589")
+                .withQueryStringParameter("credentialsId", "57Ic6reczFn78H1DTaaXkp")
+                .withBody(json("" +
+                               "{\n" +
+                               "        \"uploadId\":\"upload-123\",\n" +
+                               "        \"fileName\":\"test.txt\",\n" +
+                               "        \"tags\":[{\"partNumber\":1,\"eTag\":\"etag-123\"}],\n" +
+                               "        \"withError\":false\n" +
+                               "}\n")),exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+        );
+
+        ExecOut out = exec(format, mock, "data-links", "upload", "-w", "75887156211589", "-n", "a-test-bucket-eend-us-east-1",
+                "-c", "57Ic6reczFn78H1DTaaXkp", testFile.toString());
+
+        assertOutput(format, out, DataLinkFileTransferResult.uploaded(List.of(
+                new DataLinkFileTransferResult.SimplePathInfo(DataLinkItemType.FILE, testFile.toString(), 1)
+        )));
+
+        // No errors thrown
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+
+        Files.deleteIfExists(testFile);
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = OutputType.class, names = {"json"})
+    void testUploadSingleFileFailsButStillFinalizesUpload(OutputType format, MockServerClient mock) throws IOException {
+        // credentials fetch
+        mock.when(
+                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"57Ic6reczFn78H1DTaaXkp\",\"name\":\"aws\",\"description\":null,\"discriminator\":\"aws\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-09T07:20:53Z\",\"dateCreated\":\"2021-09-08T05:48:51Z\",\"lastUpdated\":\"2021-09-08T05:48:51Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // status check
+        mock.when(
+                request()
+                        .withMethod("GET").withPath("/data-links")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("offset", "0")
+                        .withQueryStringParameter("max", "1"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("data/links/datalinks_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        // mock fetch data links list
+        mock.when(
+                request().withMethod("GET").withPath("/data-links")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("search", "a-test-bucket-eend-us-east-1"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("data/links/datalinks_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // Create a test file
+        Path testFile = tempDir().resolve("test.txt");
+        String content = "test content";
+        Files.write(testFile, content.getBytes());
+
+        // Mock multipart upload request
+        mock.when(
+                request()
+                        .withMethod("POST").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/upload")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("credentialsId", "57Ic6reczFn78H1DTaaXkp"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\n" +
+                                                        "    \"uploadId\": \"upload-123\",\n" +
+                                                        "    \"uploadUrls\": [\"http://localhost:" + mock.getPort() + "/upload\"]\n" +
+                                                        "}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // Mock the actual upload - returns a 404
+        mock.when(
+                request()
+                        .withMethod("PUT").withPath("/upload"),
+                exactly(1)
+        ).respond(
+                response()
+                        .withStatusCode(404)
+        );
+
+        // Mock finish upload request
+        mock.when(request()
+                .withMethod("POST").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/upload/finish")
+                .withQueryStringParameter("workspaceId", "75887156211589")
+                .withQueryStringParameter("credentialsId", "57Ic6reczFn78H1DTaaXkp")
+                .withBody(json("" +
+                               "{\n" +
+                               "        \"uploadId\":\"upload-123\",\n" +
+                               "        \"fileName\":\"test.txt\",\n" +
+                               "        \"tags\":[],\n" +
+                               "        \"withError\":true\n" +
+                               "}\n")),exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+        );
+
+        ExecOut out = exec(format, mock, "data-links", "upload", "-w", "75887156211589", "-n", "a-test-bucket-eend-us-east-1",
+                "-c", "57Ic6reczFn78H1DTaaXkp", testFile.toString());
+
+        // verify the upload/finish endpoint has been called with "withError"=true in case of Exception occurring
+        mock.verify(request().withMethod("POST").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/upload/finish")
+                .withBody(json("" +
+                               "{\n" +
+                               "        \"uploadId\":\"upload-123\",\n" +
+                               "        \"fileName\":\"test.txt\",\n" +
+                               "        \"tags\":[],\n" +
+                               "        \"withError\":true\n" +
+                               "}\n"))
+                , VerificationTimes.exactly(1));
+
+        assertEquals(errorMessage(out.app, new TowerRuntimeException("Failed to upload file: Failed to upload file: HTTP 404")), out.stdErr);
+        assertEquals("", out.stdOut);
+        assertEquals(1, out.exitCode);
+
+        Files.deleteIfExists(testFile);
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = OutputType.class, names = {"json"})
+    void testUploadSingleFileWithOutputDir(OutputType format, MockServerClient mock) throws IOException {
+        // credentials fetch
+        mock.when(
+                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"57Ic6reczFn78H1DTaaXkp\",\"name\":\"aws\",\"description\":null,\"discriminator\":\"aws\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-09T07:20:53Z\",\"dateCreated\":\"2021-09-08T05:48:51Z\",\"lastUpdated\":\"2021-09-08T05:48:51Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // status check
+        mock.when(
+                request()
+                        .withMethod("GET").withPath("/data-links")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("offset", "0")
+                        .withQueryStringParameter("max", "1"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("data/links/datalinks_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        // mock fetch data links list
+        mock.when(
+                request().withMethod("GET").withPath("/data-links")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("search", "a-test-bucket-eend-us-east-1"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("data/links/datalinks_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // Create a test file
+        Path testFile = tempDir().resolve("test.txt");
+        String content = "test content";
+        Files.write(testFile, content.getBytes());
+
+        // Mock multipart upload request - note the use of upload/{dirPath} endpoint
+        mock.when(
+                request()
+                        .withMethod("POST").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/upload/some-dir")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("credentialsId", "57Ic6reczFn78H1DTaaXkp"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\n" +
+                        "    \"uploadId\": \"upload-123\",\n" +
+                        "    \"uploadUrls\": [\"http://localhost:" + mock.getPort() + "/upload/some-dir\"]\n" +
+                        "}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // Mock the actual upload
+        mock.when(
+                request()
+                        .withMethod("PUT").withPath("/upload/some-dir"),
+                exactly(1)
+        ).respond(
+                response()
+                        .withStatusCode(200)
+                        .withHeader(new Header("Etag", "etag-123"))
+        );
+
+        // Mock finish upload request - verify the output directory is included in the fileName
+        mock.when(request()
+                .withMethod("POST").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/upload/finish/some-dir")
+                .withQueryStringParameter("workspaceId", "75887156211589")
+                .withQueryStringParameter("credentialsId", "57Ic6reczFn78H1DTaaXkp")
+                .withBody(json("" +
+                                "{\n" +
+                                "        \"uploadId\":\"upload-123\",\n" +
+                                "        \"fileName\":\"test.txt\",\n" +
+                                "        \"tags\":[{\"partNumber\":1,\"eTag\":\"etag-123\"}],\n" +
+                                "        \"withError\":false\n" +
+                                "}\n")),exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+        );
+
+        ExecOut out = exec(format, mock, "data-links", "upload", "-w", "75887156211589", "-n", "a-test-bucket-eend-us-east-1",
+                "-c", "57Ic6reczFn78H1DTaaXkp", "-o", "some-dir", testFile.toString());
+
+        assertOutput(format, out, DataLinkFileTransferResult.uploaded(List.of(
+                new DataLinkFileTransferResult.SimplePathInfo(DataLinkItemType.FILE, testFile.toString(), 1)
+        )));
+
+        // No errors thrown
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+
+        Files.deleteIfExists(testFile);
     }
 }

@@ -21,7 +21,7 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.cli.responses.data.DataLinkFileDownloadResult;
+import io.seqera.tower.cli.responses.data.DataLinkFileTransferResult;
 import io.seqera.tower.cli.utils.progress.ProgressInputStream;
 import io.seqera.tower.cli.utils.progress.ProgressTracker;
 import io.seqera.tower.model.DataLinkContentTreeListResponse;
@@ -72,7 +72,7 @@ public class DownloadCmd extends AbstractDataLinksCmd {
 
         String id = getDataLinkId(dataLinkRefOptions, wspId, credId);
 
-        List<DataLinkFileDownloadResult.SimplePathInfo> pathInfo = new ArrayList<>();
+        List<DataLinkFileTransferResult.SimplePathInfo> pathInfo = new ArrayList<>();
         for (String path : paths) {
             DataLinkContentTreeListResponse browseTreeResponse = dataLinksApi().exploreDataLinkTree(id, wspId, credId, List.of(path));
 
@@ -86,7 +86,7 @@ public class DownloadCmd extends AbstractDataLinksCmd {
 
                 downloadFile(path, id, credId, wspId, targetPath);
 
-                pathInfo.add(new DataLinkFileDownloadResult.SimplePathInfo(DataLinkItemType.FILE, path, 1));
+                pathInfo.add(new DataLinkFileTransferResult.SimplePathInfo(DataLinkItemType.FILE, path, 1));
             }
             else {
                 // Download each file for that prefix
@@ -99,12 +99,12 @@ public class DownloadCmd extends AbstractDataLinksCmd {
 
                     downloadFile(item.getPath(), id, credId, wspId, targetPath);
                 }
-                pathInfo.add(new DataLinkFileDownloadResult.SimplePathInfo(DataLinkItemType.FOLDER, path, browseTreeResponse.getItems().size()));
+                pathInfo.add(new DataLinkFileTransferResult.SimplePathInfo(DataLinkItemType.FOLDER, path, browseTreeResponse.getItems().size()));
             }
 
         }
 
-        return new DataLinkFileDownloadResult(pathInfo);
+        return DataLinkFileTransferResult.donwloaded(pathInfo);
     }
 
     private void downloadFile(String path, String id, String credId, Long wspId, Path targetPath) throws ApiException, IOException, InterruptedException {

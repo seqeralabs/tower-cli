@@ -1050,6 +1050,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.data.links.UploadCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.data.studios.AbstractStudiosCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true
@@ -1900,13 +1906,13 @@
   "queryAllDeclaredConstructors":true
 },
 {
-  "name":"io.seqera.tower.cli.responses.data.DataLinkFileDownloadResult",
+  "name":"io.seqera.tower.cli.responses.data.DataLinkFileTransferResult",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true
 },
 {
-  "name":"io.seqera.tower.cli.responses.data.DataLinkFileDownloadResult$SimplePathInfo",
+  "name":"io.seqera.tower.cli.responses.data.DataLinkFileTransferResult$SimplePathInfo",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true
