@@ -25,20 +25,30 @@ import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.data.links.ListCmd;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.responses.data.DataLinkDeleted;
+import io.seqera.tower.cli.responses.data.DataLinkFileDownloadResult;
 import io.seqera.tower.cli.responses.data.DataLinksList;
 import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.model.DataLinkDto;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EnumSource;
+import io.seqera.tower.model.DataLinkItemType;
 import org.mockserver.client.MockServerClient;
+import org.mockserver.model.Header;
 import org.mockserver.model.MediaType;
+import org.mockserver.verify.VerificationTimes;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
@@ -442,6 +452,241 @@ public class DataLinksCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "data-links", "browse", "-w", "75887156211589", "-i", "v1-somedatalinkid", "-f", "name", "-p", "path",
                 "-c", "57Ic6reczFn78H1DTaaXkp", "-t", "sometoken", "--page", "1");
+
+        // No errors thrown
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+    }
+
+    // Only run this test in json output format, since extra stdout output is printed out to console for download progress bar
+    @ParameterizedTest
+    @EnumSource(value = OutputType.class, names = {"json"})
+    void testDownloadSingleFile(OutputType format, MockServerClient mock) throws IOException {
+        // credentials fetch
+        mock.when(
+                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"57Ic6reczFn78H1DTaaXkp\",\"name\":\"aws\",\"description\":null,\"discriminator\":\"aws\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-09T07:20:53Z\",\"dateCreated\":\"2021-09-08T05:48:51Z\",\"lastUpdated\":\"2021-09-08T05:48:51Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // status check
+        mock.when(
+                request()
+                        .withMethod("GET").withPath("/data-links")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("offset", "0")
+                        .withQueryStringParameter("max", "1"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("data/links/datalinks_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        // mock fetch data links list
+        mock.when(
+                request().withMethod("GET").withPath("/data-links")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("search", "a-test-bucket-eend-us-east-1"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("data/links/datalinks_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // mock fetching the
+        mock.when(
+                request().withMethod("GET").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/browse-tree")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("credentialsId", "57Ic6reczFn78H1DTaaXkp")
+                        .withQueryStringParameter("paths", "directory/filename.txt"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(json("""
+                            {
+                                 "items": []
+                             }"""
+                )).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request()
+                        .withMethod("GET").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/generate-download-url")
+                        .withQueryStringParameter("filePath", "directory/filename.txt")
+                        .withQueryStringParameter("preview", "false")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("credentialsId", "57Ic6reczFn78H1DTaaXkp"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\n" +
+                        "    \"url\": \"http://localhost:"+mock.getPort()+"/download/directory/filename.txt\"\n" +
+                        "}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        byte[] fileContent = "Mock file content".getBytes();
+        String filename = "filename.txt";
+        mock.when(
+                request()
+                        .withMethod("GET").withPath("/download/directory/filename.txt"),
+                exactly(1)
+        ).respond(
+                response()
+                        .withStatusCode(200)
+                        .withHeader(new Header("Content-Type", "application/octet-stream"))
+                        .withHeader(new Header("Content-Disposition", "attachment; filename=\"" + filename + "\""))
+                        .withHeader(new Header("Content-Length", String.valueOf(fileContent.length)))
+                        .withBody(fileContent)
+        );
+
+        ExecOut out = exec(format, mock, "data-links", "download", "-w", "75887156211589", "-n", "a-test-bucket-eend-us-east-1", "-c", "57Ic6reczFn78H1DTaaXkp",
+                "--output-dir", tempDir().toString(), "directory/filename.txt");
+
+        assertOutput(format, out, new DataLinkFileDownloadResult(List.of(new DataLinkFileDownloadResult.SimplePathInfo(DataLinkItemType.FILE,  "directory/filename.txt", 1))));
+
+        // verify the API has been polled additionally for the status
+        mock.verify(request().withMethod("GET").withPath("/download/directory/filename.txt"), VerificationTimes.exactly(1));
+
+        Path outputPath = tempDir().resolve(filename);
+
+        assertTrue(Files.exists(outputPath));
+        byte[] actualBytes = Files.readAllBytes(outputPath);
+        assertArrayEquals(fileContent, actualBytes);
+        Files.deleteIfExists(outputPath);
+
+        // No errors thrown
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+    }
+
+
+    // Only run this test in json output format, since extra stdout output is printed out to console for download progress bar
+    @ParameterizedTest
+    @EnumSource(value = OutputType.class, names = {"json"})
+    void testDownloadDirectory(OutputType format, MockServerClient mock) throws IOException {
+        // credentials fetch
+        mock.when(
+                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"57Ic6reczFn78H1DTaaXkp\",\"name\":\"aws\",\"description\":null,\"discriminator\":\"aws\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-09T07:20:53Z\",\"dateCreated\":\"2021-09-08T05:48:51Z\",\"lastUpdated\":\"2021-09-08T05:48:51Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // status check
+        mock.when(
+                request()
+                        .withMethod("GET").withPath("/data-links")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("offset", "0")
+                        .withQueryStringParameter("max", "1"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("data/links/datalinks_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        // mock fetch data links list
+        mock.when(
+                request().withMethod("GET").withPath("/data-links")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("search", "a-test-bucket-eend-us-east-1"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("data/links/datalinks_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        byte[] fileContent1 = "Mock file content 1".getBytes();
+        byte[] fileContent2 = "Mock file content 2".getBytes();
+        String filename1 = "filename1.txt";
+        String filename2 = "filename2.txt";
+
+        mock.when(
+                request().withMethod("GET").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/browse-tree")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("credentialsId", "57Ic6reczFn78H1DTaaXkp")
+                        .withQueryStringParameter("paths", "directory/"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(json("""
+                            {
+                                 "items": [
+                                         {
+                                             "path": "directory/filename1.txt",
+                                             "size": 106421
+                                         },
+                                         {
+                                             "path": "directory/subdirectory/filename2.txt",
+                                             "size": 106421
+                                         }
+                                 ]
+                             }"""
+                )).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // request to download file 1
+        mock.when(
+                request()
+                        .withMethod("GET").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/generate-download-url")
+                        .withQueryStringParameter("filePath", "directory/" + filename1)
+                        .withQueryStringParameter("preview", "false")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("credentialsId", "57Ic6reczFn78H1DTaaXkp"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\n" +
+                        "    \"url\": \"http://localhost:"+mock.getPort()+"/download/directory/"+filename1+"\"\n" +
+                        "}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request()
+                        .withMethod("GET").withPath("/download/directory/"+filename1),
+                exactly(1)
+        ).respond(
+                response()
+                        .withStatusCode(200)
+                        .withHeader(new Header("Content-Type", "application/octet-stream"))
+                        .withHeader(new Header("Content-Disposition", "attachment; filename=\"" + filename1 + "\""))
+                        .withHeader(new Header("Content-Length", String.valueOf(fileContent1.length)))
+                        .withBody(fileContent1)
+        );
+
+        // request to download file 2
+        mock.when(
+                request()
+                        .withMethod("GET").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/generate-download-url")
+                        .withQueryStringParameter("filePath", "directory/subdirectory/" + filename2)
+                        .withQueryStringParameter("preview", "false")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("credentialsId", "57Ic6reczFn78H1DTaaXkp"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\n" +
+                        "    \"url\": \"http://localhost:"+mock.getPort()+"/download/directory/subdirectory/"+filename2+"\"\n" +
+                        "}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request()
+                        .withMethod("GET").withPath("/download/directory/subdirectory/"+filename2),
+                exactly(1)
+        ).respond(
+                response()
+                        .withStatusCode(200)
+                        .withHeader(new Header("Content-Type", "application/octet-stream"))
+                        .withHeader(new Header("Content-Disposition", "attachment; filename=\"" + filename2 + "\""))
+                        .withHeader(new Header("Content-Length", String.valueOf(fileContent2.length)))
+                        .withBody(fileContent2)
+        );
+
+        ExecOut out = exec(format, mock, "data-links", "download", "-w", "75887156211589", "-n", "a-test-bucket-eend-us-east-1", "-c", "57Ic6reczFn78H1DTaaXkp",
+                "--output-dir", tempDir().toString(), "directory/");
+
+        assertOutput(format, out, new DataLinkFileDownloadResult(List.of(new DataLinkFileDownloadResult.SimplePathInfo(DataLinkItemType.FOLDER, "directory/", 2))));
+
+        // verify the API has been polled additionally for the status
+        mock.verify(request().withMethod("GET").withPath("/download/directory/"+filename1), VerificationTimes.exactly(1));
+        mock.verify(request().withMethod("GET").withPath("/download/directory/subdirectory/"+filename2), VerificationTimes.exactly(1));
+
+        Path outputPath1 = tempDir().resolve("directory/"+filename1);
+        Path outputPath2 = tempDir().resolve("directory/subdirectory/"+filename2);
+
+        assertTrue(Files.exists(outputPath1));
+        assertTrue(Files.exists(outputPath2));
+        byte[] actualBytes1 = Files.readAllBytes(outputPath1);
+        byte[] actualBytes2 = Files.readAllBytes(outputPath2);
+        assertArrayEquals(fileContent1, actualBytes1);
+        assertArrayEquals(fileContent2, actualBytes2);
+        Files.deleteIfExists(outputPath1);
+        Files.deleteIfExists(outputPath2);
 
         // No errors thrown
         assertEquals("", out.stdErr);
