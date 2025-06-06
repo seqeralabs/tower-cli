@@ -112,7 +112,10 @@ public class DumpCmd extends AbstractRunsCmd {
             tar.add("workflow-launch.json", collectWorkflowLaunch(wspId));
             tar.add("workflow-metrics.json", collectWorkflowMetrics(wspId));
             tar.add("workflow-tasks.json", collectWorkflowTasks(wspId));
-            tar.add("nextflow.log", collectNfLog(wspId));
+            var nfLog = collectNfLog(wspId);
+            if (nfLog != null) {
+                tar.add("nextflow.log", nfLog);
+            }
             collectWorkflowTaskLogs(tar, wspId); // tasks/{taskId}/.command.[out,err,log], .fusion.log
 
         } // blocks until data is written to tar file, or timeout
