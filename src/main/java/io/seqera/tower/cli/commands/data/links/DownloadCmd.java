@@ -62,7 +62,7 @@ public class DownloadCmd extends AbstractDataLinksCmd {
     @CommandLine.Option(names = {"-o", "--output-dir"}, description = "Output directory.")
     public String outputDir;
 
-    @CommandLine.Parameters(arity = "1..*", description = "Paths to files to download")
+    @CommandLine.Parameters(arity = "1..*", description = "Paths to files or directories to download.")
     private List<String> paths;
 
     @Override

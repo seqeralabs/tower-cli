@@ -63,7 +63,7 @@ public class UploadCmd extends AbstractDataLinksCmd {
     @CommandLine.Option(names = {"-o", "--output-dir"}, description = "Output directory.")
     public String outputDir;
 
-    @CommandLine.Parameters(arity = "1..*", description = "Paths to files or directories to upload")
+    @CommandLine.Parameters(arity = "1..*", description = "Paths to files or directories to upload.")
     private List<String> paths;
 
     @Override
