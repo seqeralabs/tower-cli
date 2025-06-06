@@ -109,21 +109,24 @@ public class DumpCmd extends AbstractRunsCmd {
             tar.add("workflow.json", collectWorkflowInfo(wspId));
             tar.add("workflow-metadata.json", collectWorkflowMetadata(wspId));
             tar.add("workflow-load.json", collectWorkflowLoad(wspId));
-            var aa = collectWorkflowLaunch(wspId);
-            if (aa != null) {
-                tar.add("workflow-launch.json", collectWorkflowLaunch(wspId));
+
+            var wfLaunch = collectWorkflowLaunch(wspId);
+            if (wfLaunch != null) {
+                tar.add("workflow-launch.json", wfLaunch);
             } else {
                 progress.println(ansi("\t- No data collected, skipping")); // nextflow-run workflows doesn't upload launch
             }
+
             tar.add("workflow-metrics.json", collectWorkflowMetrics(wspId));
             tar.add("workflow-tasks.json", collectWorkflowTasks(wspId));
+
             var nfLog = collectNfLog(wspId);
             if (nfLog != null) {
                 tar.add("nextflow.log", nfLog);
             } else {
                 progress.println(ansi("\t- No data collected, skipping")); // nextflow-run workflows doesn't upload log
-
             }
+
             collectWorkflowTaskLogs(tar, wspId); // tasks/{taskId}/.command.[out,err,log], .fusion.log
 
         } // blocks until data is written to tar file, or timeout
