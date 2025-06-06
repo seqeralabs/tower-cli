@@ -109,10 +109,24 @@ public class DumpCmd extends AbstractRunsCmd {
             tar.add("workflow.json", collectWorkflowInfo(wspId));
             tar.add("workflow-metadata.json", collectWorkflowMetadata(wspId));
             tar.add("workflow-load.json", collectWorkflowLoad(wspId));
-            tar.add("workflow-launch.json", collectWorkflowLaunch(wspId));
+
+            var wfLaunch = collectWorkflowLaunch(wspId);
+            if (wfLaunch != null) {
+                tar.add("workflow-launch.json", wfLaunch);
+            } else {
+                progress.println(ansi("\t- No data collected, skipping")); // nextflow-run workflows doesn't upload launch
+            }
+
             tar.add("workflow-metrics.json", collectWorkflowMetrics(wspId));
             tar.add("workflow-tasks.json", collectWorkflowTasks(wspId));
-            tar.add("nextflow.log", collectNfLog(wspId));
+
+            var nfLog = collectNfLog(wspId);
+            if (nfLog != null) {
+                tar.add("nextflow.log", nfLog);
+            } else {
+                progress.println(ansi("\t- No data collected, skipping")); // nextflow-run workflows doesn't upload log
+            }
+
             collectWorkflowTaskLogs(tar, wspId); // tasks/{taskId}/.command.[out,err,log], .fusion.log
 
         } // blocks until data is written to tar file, or timeout
@@ -191,8 +205,10 @@ public class DumpCmd extends AbstractRunsCmd {
         }
 
         String launchId = workflow.getLaunchId();
-        Launch launch = (launchId == null) ? null : launchById(workspaceId, launchId);
-
+        if (launchId == null) { // nextflow-run workflow, no launch entity available
+            return null;
+        }
+        Launch launch = launchById(workspaceId, launchId);
         return JsonHelper.prettyJson(launch);
     }
 
@@ -265,8 +281,10 @@ public class DumpCmd extends AbstractRunsCmd {
             throw new TowerException("Unknown workflow");
         }
 
+        if (workflow.getLaunchId() == null) { // nextflow-run workflow, no log available
+            return null;
+        }
         File nextflowLog = workflowsApi().downloadWorkflowLog(workflow.getId(), String.format("nf-%s.log", workflow.getId()), workspaceId);
-
         return nextflowLog;
     }
 
