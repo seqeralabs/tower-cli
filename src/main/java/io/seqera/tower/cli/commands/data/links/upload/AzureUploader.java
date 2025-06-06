@@ -37,7 +37,8 @@ public class AzureUploader extends AbstractProviderUploader {
     public void uploadFile(File file, DataLinkMultiPartUploadResponse urlResponse, ProgressTracker tracker) {
         List<String> urls = urlResponse.getUploadUrls();
 
-        try (HttpClient client = HttpClient.newHttpClient()) {
+        HttpClient client = HttpClient.newHttpClient();
+        try {
             // Upload chunks
             for (int i = 0; i < urls.size(); i++) {
                 String url = urls.get(i);
@@ -51,19 +52,42 @@ public class AzureUploader extends AbstractProviderUploader {
                 HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
                 if (response.statusCode() != 201) {
+                    // Abort the upload before throwing the exception
                     throw new IOException("Failed to upload chunk: HTTP " + response.statusCode());
                 }
             }
 
             // Finalize the upload by sending list of block IDs
-            finalizeAzureUpload(urls, client);
+            finalizeUpload(urls, client);
 
         } catch (Exception e) {
+            abortUpload(urlResponse);
             throw new TowerRuntimeException("Failed to upload file: " + e.getMessage(), e);
         }
     }
 
-    private void finalizeAzureUpload(List<String> urls, HttpClient client) throws IOException, InterruptedException {
+    @Override
+    public void abortUpload(DataLinkMultiPartUploadResponse urlResponse) {
+        try {
+            HttpClient client = HttpClient.newHttpClient();
+            String initialUrl = getFinalizeUrl(urlResponse.getUploadUrls().get(0));
+            String abortUrl = getFinalizeUrl(initialUrl);
+            // Send an empty block list to abort the upload
+            // Per Azure documentation, any Uncommitted blocks not part of the final BlockList are garbage collected
+            String emptyBlockList = "<?xml version=\"1.0\" encoding=\"utf-8\"?><BlockList></BlockList>";
+            
+            HttpRequest abortRequest = HttpRequest.newBuilder()
+                    .uri(URI.create(abortUrl))
+                    .PUT(HttpRequest.BodyPublishers.ofString(emptyBlockList))
+                    .build();
+
+            client.send(abortRequest, HttpResponse.BodyHandlers.discarding());
+        } catch (Exception e) {
+            throw new TowerRuntimeException("Failed to upload file and encountered error while attempting to cancel upload " + e.getMessage(), e);
+        }
+    }
+
+    private void finalizeUpload(List<String> urls, HttpClient client) throws IOException, InterruptedException {
         String finalizeUrl = getFinalizeUrl(urls.get(0));
         List<String> blockIds = urls.stream()
                 .map(this::extractBlockId)

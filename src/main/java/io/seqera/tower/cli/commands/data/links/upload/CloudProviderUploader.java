@@ -28,9 +28,17 @@ public interface CloudProviderUploader {
      * Upload a file using the provider-specific strategy
      *
      * @param file The file to upload
-     * @param urlResponse The upload URLs and metadata from the server
+     * @param urlResponse The upload URLs and metadata from Platform
      * @param tracker Progress tracker for upload status
      * @throws ApiException If there's an error communicating with the API
      */
     void uploadFile(File file, DataLinkMultiPartUploadResponse urlResponse, ProgressTracker tracker) throws ApiException;
-} 
+
+    /**
+     * Abort upload of a file using the provider-specific strategy
+     *
+     * @param urlResponse The upload URLs and metadata from Platform
+     * @throws ApiException If there's an error communicating with the API
+     */
+    void abortUpload(DataLinkMultiPartUploadResponse urlResponse) throws ApiException;
+}

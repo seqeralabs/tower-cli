@@ -33,6 +33,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -93,18 +94,27 @@ public class AwsUploader extends AbstractProviderUploader {
             withError = true;
             throw new TowerRuntimeException("Failed to upload file: " + e.getMessage(), e);
         } finally {
-            // Finalize the upload
-            DataLinkFinishMultiPartUploadRequest finishMultiPartUploadRequest = new DataLinkFinishMultiPartUploadRequest();
-            finishMultiPartUploadRequest.setFileName(relativeKey);
-            finishMultiPartUploadRequest.setUploadId(urlResponse.getUploadId());
-            finishMultiPartUploadRequest.setWithError(withError);
-            finishMultiPartUploadRequest.setTags(tags);
-
-            if (outputDir != null) {
-                dataLinksApi.finishDataLinkUpload1(id, outputDir, finishMultiPartUploadRequest, credId, wspId);
-            } else {
-                dataLinksApi.finishDataLinkUpload(id, finishMultiPartUploadRequest, credId, wspId);
-            }
+            finalizeUpload(urlResponse, withError, tags);
         }
+    }
+
+    private void finalizeUpload(DataLinkMultiPartUploadResponse urlResponse, boolean withError, List<UploadEtag> tags) throws ApiException {
+        // Finalize the upload
+        DataLinkFinishMultiPartUploadRequest finishMultiPartUploadRequest = new DataLinkFinishMultiPartUploadRequest();
+        finishMultiPartUploadRequest.setFileName(relativeKey);
+        finishMultiPartUploadRequest.setUploadId(urlResponse.getUploadId());
+        finishMultiPartUploadRequest.setWithError(withError);
+        finishMultiPartUploadRequest.setTags(tags);
+
+        if (outputDir != null) {
+            dataLinksApi.finishDataLinkUpload1(id, outputDir, finishMultiPartUploadRequest, credId, wspId);
+        } else {
+            dataLinksApi.finishDataLinkUpload(id, finishMultiPartUploadRequest, credId, wspId);
+        }
+    }
+
+    @Override
+    public void abortUpload(DataLinkMultiPartUploadResponse urlResponse) throws ApiException {
+        finalizeUpload(urlResponse,  true, Collections.emptyList());
     }
 }

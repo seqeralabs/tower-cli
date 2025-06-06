@@ -67,18 +67,26 @@ public class GoogleUploader extends AbstractProviderUploader {
                 }
             }
         } catch (Exception e) {
-            try {
-                // Cancel the upload by sending a DELETE request
-                HttpRequest deleteRequest = HttpRequest.newBuilder()
-                        .uri(URI.create(url))
-                        .DELETE()
-                        .build();
-                client.send(deleteRequest, HttpResponse.BodyHandlers.discarding());
-            } catch (Exception deleteError) {
-                throw new TowerRuntimeException("Failed to upload file and encountered error while attempting to cancel upload " + e.getMessage(), e);
-            }
+            abortUpload(urlResponse);
             throw new TowerRuntimeException("Failed to upload file: " + e.getMessage(), e);
         }
     }
 
-} 
+    @Override
+    public void abortUpload(DataLinkMultiPartUploadResponse urlResponse) {
+        try {
+            HttpClient client = HttpClient.newHttpClient();
+            String url = urlResponse.getUploadUrls().get(0);
+
+            // Cancel the upload by sending a DELETE request
+            HttpRequest deleteRequest = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .DELETE()
+                    .build();
+
+            client.send(deleteRequest, HttpResponse.BodyHandlers.discarding());
+        } catch (Exception e) {
+            throw new TowerRuntimeException("Failed to upload file and encountered error while attempting to cancel upload " + e.getMessage(), e);
+        }
+    }
+}
