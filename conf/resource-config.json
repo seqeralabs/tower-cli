@@ -11,6 +11,8 @@
   }, {
     "pattern":"\\QMETA-INF/services/java.nio.channels.spi.SelectorProvider\\E"
   }, {
+    "pattern":"\\QMETA-INF/services/java.nio.file.spi.FileTypeDetector\\E"
+  }, {
     "pattern":"\\QMETA-INF/services/java.time.zone.ZoneRulesProvider\\E"
   }, {
     "pattern":"\\QMETA-INF/services/java.util.spi.ResourceBundleControlProvider\\E"
@@ -51,14 +53,16 @@
   }, {
     "pattern":"java.base:\\Qsun/net/idn/uidna.spp\\E"
   }, {
+    "pattern":"java.base:\\Qsun/net/www/content-types.properties\\E"
+  }, {
     "pattern":"java.base:\\Qsun/text/resources/LineBreakIteratorData\\E"
   }]},
   "bundles":[{
     "name":"org.glassfish.jersey.client.internal.localization",
-    "locales":["und"]
+    "locales":["", "und"]
   }, {
     "name":"org.glassfish.jersey.internal.localization",
-    "locales":["und"]
+    "locales":["", "und"]
   }, {
     "name":"org.glassfish.jersey.media.multipart.internal.localization"
   }]

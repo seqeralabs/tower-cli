@@ -18,7 +18,6 @@
 package io.seqera.tower.cli.commands.data.links;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.commands.global.PaginationOptions;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.responses.Response;
@@ -34,7 +33,7 @@ import java.util.List;
 
 @Command(
         name = "list",
-        description = "List data links."
+        description = "List data-links."
 )
 public class ListCmd extends AbstractDataLinksCmd {
 

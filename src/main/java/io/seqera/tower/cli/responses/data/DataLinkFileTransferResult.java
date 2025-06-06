@@ -25,17 +25,28 @@ import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.DataLinkItemType;
 
-public class DataLinkFileDownloadResult extends Response {
+public class DataLinkFileTransferResult extends Response {
 
+    public final FileTransferDirection transferDirection;
     public final List<SimplePathInfo> paths;
 
-    public DataLinkFileDownloadResult(List<SimplePathInfo> paths) {
+    public static DataLinkFileTransferResult donwloaded(List<SimplePathInfo> paths) {
+        return new DataLinkFileTransferResult(paths, FileTransferDirection.DOWNLOAD);
+    }
+
+    public static DataLinkFileTransferResult uploaded(List<SimplePathInfo> paths) {
+        return new DataLinkFileTransferResult(paths, FileTransferDirection.UPLOAD);
+    }
+
+    public DataLinkFileTransferResult(List<SimplePathInfo> paths, FileTransferDirection transferDirection) {
         this.paths = paths;
+        this.transferDirection = transferDirection;
     }
 
     @Override
     public void toString(PrintWriter out) {
-        out.println(ansi(String.format("%n  @|bold Successfully downloaded files |@%n")));
+        String transferDirectionLabel = transferDirection == FileTransferDirection.DOWNLOAD ? "downloaded" : "uploaded";
+        out.println(ansi(String.format("%n  @|bold Successfully %s files |@%n", transferDirectionLabel)));
         out.println("");
 
         List<String> descriptions = new ArrayList<>(List.of( "Type", "File count","Path"));
@@ -68,8 +79,10 @@ public class DataLinkFileDownloadResult extends Response {
             this.path = path;
             this.fileCount = fileCount;
         }
-
-
     }
+    public static enum FileTransferDirection  {
+        DOWNLOAD, UPLOAD
+    }
+
 
 }

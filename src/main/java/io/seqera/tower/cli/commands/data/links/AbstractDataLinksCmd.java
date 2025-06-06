@@ -19,6 +19,7 @@ package io.seqera.tower.cli.commands.data.links;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
+import io.seqera.tower.model.DataLinkDto;
 
 public class AbstractDataLinksCmd extends AbstractApiCmd {
 
@@ -27,7 +28,15 @@ public class AbstractDataLinksCmd extends AbstractApiCmd {
     }
 
     protected String getDataLinkId(DataLinkRefOptions dataLinkRefOptions, Long wspId, String credId) throws ApiException {
+        // if DataLink ID is supplied - use that directly
+        if (dataLinkRefOptions.dataLinkRef.dataLinkId != null) {
+            return dataLinkRefOptions.dataLinkRef.dataLinkId;
+        }
+        return getDataLink(dataLinkRefOptions, wspId, credId).getId();
+    }
+
+    protected DataLinkDto getDataLink(DataLinkRefOptions dataLinkRefOptions, Long wspId, String credId) throws ApiException  {
         DataLinkService dataLinkService = new DataLinkService(dataLinksApi(), app());
-        return dataLinkService.getDataLinkId(dataLinkRefOptions.dataLinkRef, wspId, credId);
+        return dataLinkService.getDataLink(dataLinkRefOptions.dataLinkRef, wspId, credId);
     }
 }

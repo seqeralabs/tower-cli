@@ -92,10 +92,10 @@ public class DataLinkService  {
         FETCHING, DONE, ERROR
     }
 
-    public String getDataLinkId(io.seqera.tower.cli.commands.data.links.DataLinkRefOptions.DataLinkRef dataLinkRef, Long wspId, String credId) {
+    public DataLinkDto getDataLink(DataLinkRefOptions.DataLinkRef dataLinkRef, Long wspId, String credId) {
         // if DataLink IDs are supplied - use those directly
         if (dataLinkRef.dataLinkId != null) {
-            return dataLinkRef.dataLinkId;
+            return getDataLinkById(dataLinkRef.dataLinkId, wspId, credId);
         }
 
         // Check and wait if DataLinks are still being fetched
@@ -105,11 +105,11 @@ public class DataLinkService  {
         }
 
         if (dataLinkRef.dataLinkName != null) {
-            return getDataLinkIdByName(wspId, credId, dataLinkRef.dataLinkName);
+            return getDataLinkByName(wspId, credId, dataLinkRef.dataLinkName);
         }
 
         if (dataLinkRef.dataLinkUri != null) {
-            return getDataLinkIdByResourceRef(wspId, credId, dataLinkRef.dataLinkUri);
+            return getDataLinkByResourceRef(wspId, credId, dataLinkRef.dataLinkUri);
         }
 
         return null;
@@ -131,28 +131,28 @@ public class DataLinkService  {
 
         if (dataLinkRef.getMountDataNames() != null) {
             dataLinkIds = dataLinkRef.getMountDataNames().stream()
-                    .map(name -> getDataLinkIdByName(wspId, null, name))
+                    .map(name -> getDataLinkByName(wspId, null, name).getId())
                     .collect(Collectors.toList());
         }
 
         if (dataLinkRef.getMountDataUris() != null) {
             dataLinkIds = dataLinkRef.getMountDataUris().stream()
-                    .map(resourceRef -> getDataLinkIdByResourceRef(wspId, null, resourceRef))
+                    .map(resourceRef -> getDataLinkByResourceRef(wspId, null, resourceRef).getId())
                     .collect(Collectors.toList());
         }
 
         return dataLinkIds;
     }
 
-    private String getDataLinkIdByName(Long wspId, String credId, String name) {
-        return getDataLinkIdsBySearchAndFindExactMatch(wspId, name, credId, datalink -> name.equals(datalink.getName()));
+    private DataLinkDto getDataLinkByName(Long wspId, String credId, String name) {
+        return getDataLinkBySearchAndFindExactMatch(wspId, name, credId, datalink -> name.equals(datalink.getName()));
     }
 
-    private String getDataLinkIdByResourceRef(Long wspId,  String credId, String resourceRef) {
-        return getDataLinkIdsBySearchAndFindExactMatch(wspId, getResourceRefKeywordParam(resourceRef), credId, datalink -> resourceRef.equals(datalink.getResourceRef()));
+    private DataLinkDto getDataLinkByResourceRef(Long wspId, String credId, String resourceRef) {
+        return getDataLinkBySearchAndFindExactMatch(wspId, getResourceRefKeywordParam(resourceRef), credId, datalink -> resourceRef.equals(datalink.getResourceRef()));
     }
 
-    private String getDataLinkIdsBySearchAndFindExactMatch(Long wspId, String search, String credId, Predicate<DataLinkDto> filter) {
+    private DataLinkDto getDataLinkBySearchAndFindExactMatch(Long wspId, String search, String credId, Predicate<DataLinkDto> filter) {
         var datalinks = getDataLinksBySearchCriteria(wspId, search, credId).stream()
                 .filter(filter)
                 .collect(Collectors.toList());
@@ -166,7 +166,15 @@ public class DataLinkService  {
             throw new MultipleDataLinksFoundException(search, wspId, dataLinkIds);
         }
 
-        return datalinks.get(0).getId();
+        return datalinks.get(0);
+    }
+
+    private DataLinkDto getDataLinkById(String dataLinkId, Long wspId, String credId) {
+        try {
+            return api.describeDataLink(dataLinkId, wspId, credId).getDataLink();
+        } catch (ApiException e) {
+            throw new TowerRuntimeException("Encountered error while retrieving data link for id " + dataLinkId, e);
+        }
     }
 
     private List<DataLinkDto> getDataLinksBySearchCriteria(Long wspId, String search, String credId) {

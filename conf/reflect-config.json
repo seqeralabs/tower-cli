@@ -111,6 +111,10 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"com.sun.crypto.provider.HmacCore$HmacSHA384",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"com.sun.crypto.provider.TlsKeyMaterialGenerator",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -1050,6 +1054,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.data.links.UploadCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.data.studios.AbstractStudiosCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true
@@ -1900,13 +1910,13 @@
   "queryAllDeclaredConstructors":true
 },
 {
-  "name":"io.seqera.tower.cli.responses.data.DataLinkFileDownloadResult",
+  "name":"io.seqera.tower.cli.responses.data.DataLinkFileTransferResult",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true
 },
 {
-  "name":"io.seqera.tower.cli.responses.data.DataLinkFileDownloadResult$SimplePathInfo",
+  "name":"io.seqera.tower.cli.responses.data.DataLinkFileTransferResult$SimplePathInfo",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true
@@ -2515,6 +2525,7 @@
 },
 {
   "name":"io.seqera.tower.model.AzureEntraKeys",
+  "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"clientId","parameterTypes":["java.lang.String"] }, {"name":"clientSecret","parameterTypes":["java.lang.String"] }, {"name":"equals","parameterTypes":["java.lang.Object"] }, {"name":"getClientId","parameterTypes":[] }, {"name":"getClientSecret","parameterTypes":[] }, {"name":"getDiscriminator","parameterTypes":[] }, {"name":"getTenantId","parameterTypes":[] }, {"name":"hashCode","parameterTypes":[] }, {"name":"setClientId","parameterTypes":["java.lang.String"] }, {"name":"setClientSecret","parameterTypes":["java.lang.String"] }, {"name":"setTenantId","parameterTypes":["java.lang.String"] }, {"name":"tenantId","parameterTypes":["java.lang.String"] }, {"name":"toIndentedString","parameterTypes":["java.lang.Object"] }, {"name":"toString","parameterTypes":[] }]
@@ -2845,6 +2856,7 @@
 },
 {
   "name":"io.seqera.tower.model.DataLinkContentTreeListResponse",
+  "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"addItemsItem","parameterTypes":["io.seqera.tower.model.DataLinkSimpleItem"] }, {"name":"equals","parameterTypes":["java.lang.Object"] }, {"name":"getItems","parameterTypes":[] }, {"name":"hashCode","parameterTypes":[] }, {"name":"items","parameterTypes":["java.util.List"] }, {"name":"setItems","parameterTypes":["java.util.List"] }, {"name":"toIndentedString","parameterTypes":["java.lang.Object"] }, {"name":"toString","parameterTypes":[] }]
@@ -2897,6 +2909,7 @@
 },
 {
   "name":"io.seqera.tower.model.DataLinkFinishMultiPartUploadRequest",
+  "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"addTagsItem","parameterTypes":["io.seqera.tower.model.UploadEtag"] }, {"name":"equals","parameterTypes":["java.lang.Object"] }, {"name":"fileName","parameterTypes":["java.lang.String"] }, {"name":"getFileName","parameterTypes":[] }, {"name":"getTags","parameterTypes":[] }, {"name":"getUploadId","parameterTypes":[] }, {"name":"getWithError","parameterTypes":[] }, {"name":"hashCode","parameterTypes":[] }, {"name":"setFileName","parameterTypes":["java.lang.String"] }, {"name":"setTags","parameterTypes":["java.util.List"] }, {"name":"setUploadId","parameterTypes":["java.lang.String"] }, {"name":"setWithError","parameterTypes":["java.lang.Boolean"] }, {"name":"tags","parameterTypes":["java.util.List"] }, {"name":"toIndentedString","parameterTypes":["java.lang.Object"] }, {"name":"toString","parameterTypes":[] }, {"name":"uploadId","parameterTypes":["java.lang.String"] }, {"name":"withError","parameterTypes":["java.lang.Boolean"] }]
@@ -2923,12 +2936,14 @@
 },
 {
   "name":"io.seqera.tower.model.DataLinkMultiPartUploadRequest",
+  "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"contentLength","parameterTypes":["java.lang.Long"] }, {"name":"contentType","parameterTypes":["java.lang.String"] }, {"name":"equals","parameterTypes":["java.lang.Object"] }, {"name":"fileName","parameterTypes":["java.lang.String"] }, {"name":"getContentLength","parameterTypes":[] }, {"name":"getContentType","parameterTypes":[] }, {"name":"getFileName","parameterTypes":[] }, {"name":"hashCode","parameterTypes":[] }, {"name":"setContentLength","parameterTypes":["java.lang.Long"] }, {"name":"setContentType","parameterTypes":["java.lang.String"] }, {"name":"setFileName","parameterTypes":["java.lang.String"] }, {"name":"toIndentedString","parameterTypes":["java.lang.Object"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.DataLinkMultiPartUploadResponse",
+  "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"addUploadUrlsItem","parameterTypes":["java.lang.String"] }, {"name":"equals","parameterTypes":["java.lang.Object"] }, {"name":"getUploadId","parameterTypes":[] }, {"name":"getUploadUrls","parameterTypes":[] }, {"name":"hashCode","parameterTypes":[] }, {"name":"setUploadId","parameterTypes":["java.lang.String"] }, {"name":"setUploadUrls","parameterTypes":["java.util.List"] }, {"name":"toIndentedString","parameterTypes":["java.lang.Object"] }, {"name":"toString","parameterTypes":[] }, {"name":"uploadId","parameterTypes":["java.lang.String"] }, {"name":"uploadUrls","parameterTypes":["java.util.List"] }]
@@ -2949,6 +2964,7 @@
 },
 {
   "name":"io.seqera.tower.model.DataLinkSimpleItem",
+  "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"equals","parameterTypes":["java.lang.Object"] }, {"name":"getPath","parameterTypes":[] }, {"name":"getSize","parameterTypes":[] }, {"name":"hashCode","parameterTypes":[] }, {"name":"path","parameterTypes":["java.lang.String"] }, {"name":"setPath","parameterTypes":["java.lang.String"] }, {"name":"setSize","parameterTypes":["java.lang.Long"] }, {"name":"size","parameterTypes":["java.lang.Long"] }, {"name":"toIndentedString","parameterTypes":["java.lang.Object"] }, {"name":"toString","parameterTypes":[] }]
@@ -4242,6 +4258,7 @@
 },
 {
   "name":"io.seqera.tower.model.UploadEtag",
+  "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"eTag","parameterTypes":["java.lang.String"] }, {"name":"equals","parameterTypes":["java.lang.Object"] }, {"name":"getPartNumber","parameterTypes":[] }, {"name":"geteTag","parameterTypes":[] }, {"name":"hashCode","parameterTypes":[] }, {"name":"partNumber","parameterTypes":["java.lang.Integer"] }, {"name":"setPartNumber","parameterTypes":["java.lang.Integer"] }, {"name":"seteTag","parameterTypes":["java.lang.String"] }, {"name":"toIndentedString","parameterTypes":["java.lang.Object"] }, {"name":"toString","parameterTypes":[] }]
@@ -4753,6 +4770,9 @@
   "methods":[{"name":"getEncoding","parameterTypes":[] }, {"name":"getLanguage","parameterTypes":[] }, {"name":"getLanguageString","parameterTypes":[] }, {"name":"getMediaType","parameterTypes":[] }]
 },
 {
+  "name":"jdk.internal.misc.Unsafe"
+},
+{
   "name":"long[]"
 },
 {
@@ -5151,6 +5171,10 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"sun.security.rsa.RSASignature$SHA384withRSA",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"sun.security.rsa.RSASignature$SHA512withRSA",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -5210,6 +5234,10 @@
 },
 {
   "name":"sun.security.x509.NetscapeCertTypeExtension",
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.Boolean","java.lang.Object"] }]
+},
+{
+  "name":"sun.security.x509.OCSPNoCheckExtension",
   "methods":[{"name":"<init>","parameterTypes":["java.lang.Boolean","java.lang.Object"] }]
 },
 {

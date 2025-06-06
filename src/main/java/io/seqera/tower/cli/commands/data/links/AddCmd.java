@@ -33,7 +33,7 @@ import java.util.Objects;
 
 @CommandLine.Command(
         name = "add",
-        description = "Add custom data link."
+        description = "Add custom data-link."
 )
 public class AddCmd extends AbstractApiCmd {
 
