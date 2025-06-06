@@ -38,7 +38,8 @@ public class GoogleUploader extends AbstractProviderUploader {
         long fileSize = file.length();
         long nextByteToRead = 0;
 
-        try (HttpClient client = HttpClient.newHttpClient()) {
+        HttpClient client = HttpClient.newHttpClient();
+        try {
             while (nextByteToRead < fileSize) {
                 int partNumber = (int)(nextByteToRead / MULTI_UPLOAD_PART_SIZE_IN_BYTES);
                 byte[] chunk = getChunk(file, partNumber);
@@ -60,18 +61,22 @@ public class GoogleUploader extends AbstractProviderUploader {
                         nextByteToRead = lastByte + 1;
                     }
                 } else if (response.statusCode() != 200) {
-                    // Cancel the upload by sending a DELETE request
-                    HttpRequest deleteRequest = HttpRequest.newBuilder()
-                            .uri(URI.create(url))
-                            .DELETE()
-                            .build();
-                    client.send(deleteRequest, HttpResponse.BodyHandlers.discarding());
                     throw new IOException("Failed to upload file: HTTP " + response.statusCode());
                 } else {
                     break; // Upload completed successfully
                 }
             }
         } catch (Exception e) {
+            try {
+                // Cancel the upload by sending a DELETE request
+                HttpRequest deleteRequest = HttpRequest.newBuilder()
+                        .uri(URI.create(url))
+                        .DELETE()
+                        .build();
+                client.send(deleteRequest, HttpResponse.BodyHandlers.discarding());
+            } catch (Exception deleteError) {
+                throw new TowerRuntimeException("Failed to upload file and encountered error while attempting to cancel upload " + e.getMessage(), e);
+            }
             throw new TowerRuntimeException("Failed to upload file: " + e.getMessage(), e);
         }
     }
