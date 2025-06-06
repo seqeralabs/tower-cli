@@ -29,7 +29,7 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "browse",
-        description = "Browse content of data link."
+        description = "Browse content of data-link."
 )
 public class BrowseCmd extends AbstractDataLinksCmd {
 

@@ -46,7 +46,7 @@ import java.util.List;
 
 @CommandLine.Command(
         name = "download",
-        description = "Download content of data link."
+        description = "Download content of data-link."
 )
 public class DownloadCmd extends AbstractDataLinksCmd {
 

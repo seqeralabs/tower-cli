@@ -2909,6 +2909,7 @@
 },
 {
   "name":"io.seqera.tower.model.DataLinkFinishMultiPartUploadRequest",
+  "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"addTagsItem","parameterTypes":["io.seqera.tower.model.UploadEtag"] }, {"name":"equals","parameterTypes":["java.lang.Object"] }, {"name":"fileName","parameterTypes":["java.lang.String"] }, {"name":"getFileName","parameterTypes":[] }, {"name":"getTags","parameterTypes":[] }, {"name":"getUploadId","parameterTypes":[] }, {"name":"getWithError","parameterTypes":[] }, {"name":"hashCode","parameterTypes":[] }, {"name":"setFileName","parameterTypes":["java.lang.String"] }, {"name":"setTags","parameterTypes":["java.util.List"] }, {"name":"setUploadId","parameterTypes":["java.lang.String"] }, {"name":"setWithError","parameterTypes":["java.lang.Boolean"] }, {"name":"tags","parameterTypes":["java.util.List"] }, {"name":"toIndentedString","parameterTypes":["java.lang.Object"] }, {"name":"toString","parameterTypes":[] }, {"name":"uploadId","parameterTypes":["java.lang.String"] }, {"name":"withError","parameterTypes":["java.lang.Boolean"] }]
@@ -4257,6 +4258,7 @@
 },
 {
   "name":"io.seqera.tower.model.UploadEtag",
+  "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"eTag","parameterTypes":["java.lang.String"] }, {"name":"equals","parameterTypes":["java.lang.Object"] }, {"name":"getPartNumber","parameterTypes":[] }, {"name":"geteTag","parameterTypes":[] }, {"name":"hashCode","parameterTypes":[] }, {"name":"partNumber","parameterTypes":["java.lang.Integer"] }, {"name":"setPartNumber","parameterTypes":["java.lang.Integer"] }, {"name":"seteTag","parameterTypes":["java.lang.String"] }, {"name":"toIndentedString","parameterTypes":["java.lang.Object"] }, {"name":"toString","parameterTypes":[] }]

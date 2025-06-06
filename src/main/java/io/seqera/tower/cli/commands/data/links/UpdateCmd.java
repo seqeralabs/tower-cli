@@ -31,7 +31,7 @@ import java.util.Objects;
 
 @CommandLine.Command(
         name = "update",
-        description = "Update custom data link."
+        description = "Update custom data-link."
 )
 public class UpdateCmd extends AbstractApiCmd {
     @CommandLine.Mixin
