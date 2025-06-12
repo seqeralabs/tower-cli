@@ -77,12 +77,12 @@ public class AbstractStudiosCmd extends AbstractApiCmd {
     }
 
     protected List<DataStudioTemplate> fetchStudioTemplates(Long workspaceId, Integer max) throws ApiException {
-        DataStudioTemplatesListResponse response = api().listDataStudioTemplates(workspaceId,max,0);
+        DataStudioTemplatesListResponse response = studiosApi().listDataStudioTemplates(workspaceId,max,0);
         return response.getTemplates();
     }
 
     private DataStudioDto getStudioByName(Long wspId, String studioName) throws ApiException {
-        List<DataStudioDto> studios = api().listDataStudios(wspId, null, null, null, null).getStudios();
+        List<DataStudioDto> studios = studiosApi().listDataStudios(wspId, null, null, null, null).getStudios();
 
         return studios.stream()
                 .filter(s -> studioName.equals(s.getName()))
@@ -91,7 +91,7 @@ public class AbstractStudiosCmd extends AbstractApiCmd {
     }
 
     private DataStudioDto getStudioById(Long wspId, String sessionId) throws ApiException {
-        return api().describeDataStudio(sessionId, wspId);
+        return studiosApi().describeDataStudio(sessionId, wspId);
     }
 
     protected Integer onBeforeExit(int exitCode, String sessionId, Long workspaceId, DataStudioStatus targetStatus) {
@@ -115,7 +115,7 @@ public class AbstractStudiosCmd extends AbstractApiCmd {
 
     protected DataStudioStatus checkStudioStatus(String sessionId, Long workspaceId) {
         try {
-            DataStudioStatusInfo statusInfo = api().describeDataStudio(sessionId, workspaceId).getStatusInfo();
+            DataStudioStatusInfo statusInfo = studiosApi().describeDataStudio(sessionId, workspaceId).getStatusInfo();
             return statusInfo == null ? null : statusInfo.getStatus();
         } catch (ApiException e) {
             return null;
@@ -161,7 +161,7 @@ public class AbstractStudiosCmd extends AbstractApiCmd {
             return currentStudioConfiguration.getMountData();
         }
 
-        DataLinkService dataLinkService = new DataLinkService(api(), app());
+        DataLinkService dataLinkService = new DataLinkService(dataLinksApi(), app());
         return dataLinkService.getDataLinkIds(studioConfigOptions.dataLinkRefOptions.dataLinkRef, wspId);
     }
 
@@ -190,7 +190,7 @@ public class AbstractStudiosCmd extends AbstractApiCmd {
         @Override
         public String get() {
             try {
-                DataStudioDto studioDto = api().describeDataStudio(sessionId, workspaceId);
+                DataStudioDto studioDto = studiosApi().describeDataStudio(sessionId, workspaceId);
 
                 Optional<DataStudioProgressStep> inProgressStep = studioDto.getProgress().stream()
                         .filter(step -> step.getStatus() == IN_PROGRESS || step.getStatus() == ERRORED)

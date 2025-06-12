@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 public abstract class AbstractActionsCmd extends AbstractApiCmd {
 
     protected ListActionsResponseActionInfo actionByName(Long workspaceId, String actionName) throws ApiException {
-        ListActionsResponse listActionResponse = api().listActions(workspaceId, NO_ACTION_ATTRIBUTES);
+        ListActionsResponse listActionResponse = actionsApi().listActions(workspaceId, NO_ACTION_ATTRIBUTES);
 
         if (listActionResponse == null || listActionResponse.getActions() == null) {
             throw new ActionNotFoundException(workspaceRef(workspaceId));
@@ -56,10 +56,10 @@ public abstract class AbstractActionsCmd extends AbstractApiCmd {
         DescribeActionResponse response;
 
         if (actionRefOptions.action.actionId != null) {
-            response = api().describeAction(actionRefOptions.action.actionId, wspId, List.of(attributes));
+            response = actionsApi().describeAction(actionRefOptions.action.actionId, wspId, List.of(attributes));
         } else {
             ListActionsResponseActionInfo listActionsResponseActionInfo = actionByName(wspId, actionRefOptions.action.actionName);
-            response = api().describeAction(listActionsResponseActionInfo.getId(), wspId, List.of(attributes));
+            response = actionsApi().describeAction(listActionsResponseActionInfo.getId(), wspId, List.of(attributes));
         }
 
         return response;
@@ -71,7 +71,7 @@ public abstract class AbstractActionsCmd extends AbstractApiCmd {
     }
 
     protected void deleteActionById(String actionId, Long wspId) throws ActionNotFoundException, ApiException {
-        api().deleteAction(actionId, wspId);
+        actionsApi().deleteAction(actionId, wspId);
     }
 
 }

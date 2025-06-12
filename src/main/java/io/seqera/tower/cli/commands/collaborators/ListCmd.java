@@ -50,7 +50,7 @@ public class ListCmd extends AbstractCollaboratorsCmd {
 
         OrgAndWorkspaceDto orgAndWorkspaceDbDto = findOrganizationByRef(organizationRef);
 
-        ListMembersResponse response = api().listOrganizationCollaborators(orgAndWorkspaceDbDto.getOrgId(), max, offset, startsWith);
+        ListMembersResponse response = orgsApi().listOrganizationCollaborators(orgAndWorkspaceDbDto.getOrgId(), max, offset, startsWith);
 
         return new CollaboratorsList(orgAndWorkspaceDbDto.getOrgId(), response.getMembers(), PaginationInfo.from(paginationOptions, response.getTotalSize()));
     }

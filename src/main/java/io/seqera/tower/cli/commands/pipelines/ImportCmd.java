@@ -86,7 +86,7 @@ public class ImportCmd extends AbstractPipelinesCmd {
 
         if (overwrite) deletePipeline(name, wspId);
 
-        api().createPipeline(request, wspId);
+        pipelinesApi().createPipeline(request, wspId);
 
         return new PipelinesAdded(workspaceRef(wspId), name);
     }
@@ -94,7 +94,7 @@ public class ImportCmd extends AbstractPipelinesCmd {
     private void deletePipeline(String name, Long wspId) throws ApiException {
         try {
             PipelineDbDto pipe = pipelineByName(wspId, name);
-            api().deletePipeline(pipe.getPipelineId(), wspId);
+            pipelinesApi().deletePipeline(pipe.getPipelineId(), wspId);
         } catch (PipelineNotFoundException ignored) {}
     }
 }

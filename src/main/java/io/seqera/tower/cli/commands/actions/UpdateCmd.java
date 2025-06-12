@@ -63,7 +63,7 @@ public class UpdateCmd extends AbstractActionsCmd {
         // Validate new action name if any
         if (newName != null) {
             try {
-                api().validateActionName(wspId, newName);
+                actionsApi().validateActionName(wspId, newName);
             } catch (ApiException ex) {
                 throw new InvalidResponseException(String.format("Action name '%s' is not valid", newName));
             }
@@ -101,7 +101,7 @@ public class UpdateCmd extends AbstractActionsCmd {
         request.setLaunch(workflowLaunchRequest);
 
         try {
-            api().updateAction(action.getId(), request, wspId);
+            actionsApi().updateAction(action.getId(), request, wspId);
         } catch (Exception e) {
             throw new TowerException(String.format("Unable to update action '%s' for workspace '%s'", actionName, workspaceRef(wspId)));
         }
@@ -112,7 +112,7 @@ public class UpdateCmd extends AbstractActionsCmd {
             }
 
             try {
-                api().pauseAction(action.getId(), wspId, null);
+                actionsApi().pauseAction(action.getId(), wspId, null);
             } catch (Exception e) {
                 throw new TowerException(String.format("An error has occur while setting the action '%s' to '%s'", actionName, status.toUpperCase()));
             }

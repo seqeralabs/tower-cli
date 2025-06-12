@@ -38,7 +38,7 @@ public class LeaveCmd extends AbstractParticipantsCmd {
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
 
-        api().leaveWorkspaceParticipant(orgId(wspId), wspId);
+        workspacesApi().leaveWorkspaceParticipant(orgId(wspId), wspId);
         return new ParticipantLeft(workspaceName(wspId));
     }
 }

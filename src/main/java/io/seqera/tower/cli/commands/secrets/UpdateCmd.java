@@ -46,7 +46,7 @@ public class UpdateCmd extends AbstractSecretsCmd {
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
         PipelineSecret secret = fetchSecret(ref, wspId);
-        api().updatePipelineSecret(secret.getId(), new UpdatePipelineSecretRequest().value(value), wspId);
+        pipelineSecretsApi().updatePipelineSecret(secret.getId(), new UpdatePipelineSecretRequest().value(value), wspId);
         return new SecretUpdated(workspaceRef(wspId), secret.getName());
     }
 }

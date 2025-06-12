@@ -43,7 +43,7 @@ public class CancelCmd extends AbstractRunsCmd {
         Long wspId = workspaceId(workspace.workspace);
         
         try {
-            api().cancelWorkflow(id, wspId, null);
+            workflowsApi().cancelWorkflow(id, wspId, null);
 
             return new RunCanceled(id, workspaceRef(wspId));
         } catch (ApiException e) {

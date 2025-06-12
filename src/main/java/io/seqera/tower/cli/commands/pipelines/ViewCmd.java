@@ -49,7 +49,7 @@ public class ViewCmd extends AbstractPipelinesCmd {
         Long wspId = workspaceId(workspace.workspace);
         PipelineDbDto pipeline = fetchPipeline(pipelineRefOptions, wspId, PipelineQueryAttribute.LABELS);
         Long sourceWorkspaceId = sourceWorkspaceId(wspId, pipeline);
-        Launch launch = api().describePipelineLaunch(pipeline.getPipelineId(), wspId, sourceWorkspaceId).getLaunch();
+        Launch launch = pipelinesApi().describePipelineLaunch(pipeline.getPipelineId(), wspId, sourceWorkspaceId).getLaunch();
         return new PipelinesView(workspaceRef(wspId), pipeline, launch, baseWorkspaceUrl(wspId));
     }
 }

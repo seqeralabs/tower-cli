@@ -23,9 +23,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.api.DefaultApi;
+import io.seqera.tower.api.DataLinksApi;
 import io.seqera.tower.cli.Tower;
-import io.seqera.tower.cli.commands.studios.DataLinkRefOptions;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.DataLinkNotFoundException;
 import io.seqera.tower.cli.exceptions.MultipleDataLinksFoundException;
@@ -35,10 +34,10 @@ import io.seqera.tower.model.DataLinkDto;
 
 public class DataLinkService  {
 
-    protected final DefaultApi api;
+    protected final DataLinksApi api;
     protected final Tower app;
 
-    public DataLinkService(DefaultApi api, Tower app) {
+    public DataLinkService(DataLinksApi api, Tower app) {
         this.api = api;
         this.app = app;
     }
@@ -46,17 +45,21 @@ public class DataLinkService  {
     public boolean checkIfResultIncomplete(Long wspId, String credId, boolean wait) {
         DataLinksFetchStatus status = checkDataLinksFetchStatus(wspId, credId);
         if (wait && status == DataLinksFetchStatus.FETCHING) {
-            waitForDoneStatus(wspId, credId);
+            boolean showProgress = app.output != OutputType.json;
+            if (showProgress) {
+                app.getOut().println(" Fetching data-links.");
+            }
+            waitForDoneStatus(wspId, credId, showProgress);
         }
 
         return !wait && status == DataLinksFetchStatus.FETCHING;
     }
 
-    void waitForDoneStatus(Long wspId, String credId) {
+    void waitForDoneStatus(Long wspId, String credId, boolean showProgress) {
         try {
             ResponseHelper.waitStatus(
                     app.getOut(),
-                    app.output != OutputType.json,
+                    showProgress,
                     DataLinksFetchStatus.DONE,
                     DataLinksFetchStatus.values(),
                     () -> checkDataLinksFetchStatus(wspId, credId),
@@ -89,7 +92,30 @@ public class DataLinkService  {
         FETCHING, DONE, ERROR
     }
 
-    public List<String> getDataLinkIds(DataLinkRefOptions.DataLinkRef dataLinkRef, Long wspId) {
+    public DataLinkDto getDataLink(DataLinkRefOptions.DataLinkRef dataLinkRef, Long wspId, String credId) {
+        // if DataLink IDs are supplied - use those directly
+        if (dataLinkRef.dataLinkId != null) {
+            return getDataLinkById(dataLinkRef.dataLinkId, wspId, credId);
+        }
+
+        // Check and wait if DataLinks are still being fetched
+        boolean isResultIncomplete = checkIfResultIncomplete(wspId, credId, true);
+        if (isResultIncomplete) {
+            throw new TowerRuntimeException("Failed to fetch datalinks for datalink - please retry.");
+        }
+
+        if (dataLinkRef.dataLinkName != null) {
+            return getDataLinkByName(wspId, credId, dataLinkRef.dataLinkName);
+        }
+
+        if (dataLinkRef.dataLinkUri != null) {
+            return getDataLinkByResourceRef(wspId, credId, dataLinkRef.dataLinkUri);
+        }
+
+        return null;
+    }
+
+    public List<String> getDataLinkIds(io.seqera.tower.cli.commands.studios.DataLinkRefOptions.DataLinkRef dataLinkRef, Long wspId) {
         // if DataLink IDs are supplied - use those directly
         if (dataLinkRef.getMountDataIds() != null) {
             return dataLinkRef.getMountDataIds();
@@ -105,29 +131,29 @@ public class DataLinkService  {
 
         if (dataLinkRef.getMountDataNames() != null) {
             dataLinkIds = dataLinkRef.getMountDataNames().stream()
-                    .map(name -> getDataLinkIdByName(wspId, name))
+                    .map(name -> getDataLinkByName(wspId, null, name).getId())
                     .collect(Collectors.toList());
         }
 
         if (dataLinkRef.getMountDataUris() != null) {
             dataLinkIds = dataLinkRef.getMountDataUris().stream()
-                    .map(resourceRef -> getDataLinkIdByResourceRef(wspId, resourceRef))
+                    .map(resourceRef -> getDataLinkByResourceRef(wspId, null, resourceRef).getId())
                     .collect(Collectors.toList());
         }
 
         return dataLinkIds;
     }
 
-    private String getDataLinkIdByName(Long wspId, String name) {
-        return getDataLinkIdsBySearchAndFindExactMatch(wspId, name, datalink -> name.equals(datalink.getName()));
+    private DataLinkDto getDataLinkByName(Long wspId, String credId, String name) {
+        return getDataLinkBySearchAndFindExactMatch(wspId, name, credId, datalink -> name.equals(datalink.getName()));
     }
 
-    private String getDataLinkIdByResourceRef(Long wspId, String resourceRef) {
-        return getDataLinkIdsBySearchAndFindExactMatch(wspId, getResourceRefKeywordParam(resourceRef), datalink -> resourceRef.equals(datalink.getResourceRef()));
+    private DataLinkDto getDataLinkByResourceRef(Long wspId, String credId, String resourceRef) {
+        return getDataLinkBySearchAndFindExactMatch(wspId, getResourceRefKeywordParam(resourceRef), credId, datalink -> resourceRef.equals(datalink.getResourceRef()));
     }
 
-    private String getDataLinkIdsBySearchAndFindExactMatch(Long wspId, String search, Predicate<DataLinkDto> filter) {
-        var datalinks = getDataLinksBySearchCriteria(wspId, search).stream()
+    private DataLinkDto getDataLinkBySearchAndFindExactMatch(Long wspId, String search, String credId, Predicate<DataLinkDto> filter) {
+        var datalinks = getDataLinksBySearchCriteria(wspId, search, credId).stream()
                 .filter(filter)
                 .collect(Collectors.toList());
 
@@ -140,12 +166,20 @@ public class DataLinkService  {
             throw new MultipleDataLinksFoundException(search, wspId, dataLinkIds);
         }
 
-        return datalinks.get(0).getId();
+        return datalinks.get(0);
     }
 
-    private List<DataLinkDto> getDataLinksBySearchCriteria(Long wspId, String search) {
+    private DataLinkDto getDataLinkById(String dataLinkId, Long wspId, String credId) {
         try {
-            return api.listDataLinks(wspId, null, search, null, null, null).getDataLinks();
+            return api.describeDataLink(dataLinkId, wspId, credId).getDataLink();
+        } catch (ApiException e) {
+            throw new TowerRuntimeException("Encountered error while retrieving data link for id " + dataLinkId, e);
+        }
+    }
+
+    private List<DataLinkDto> getDataLinksBySearchCriteria(Long wspId, String search, String credId) {
+        try {
+            return api.listDataLinks(wspId, credId, search, null, null, null).getDataLinks();
         } catch (ApiException e) {
             throw new TowerRuntimeException("Encountered error while retrieving data links for " + search, e);
         }

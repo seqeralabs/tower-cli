@@ -21,7 +21,6 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceRequiredOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.participants.ParticipantDeleted;
-import io.seqera.tower.model.ParticipantDbDto;
 import io.seqera.tower.model.ParticipantType;
 import picocli.CommandLine;
 

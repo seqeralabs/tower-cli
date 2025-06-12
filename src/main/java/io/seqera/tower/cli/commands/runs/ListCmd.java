@@ -62,7 +62,7 @@ public class ListCmd extends AbstractRunsCmd {
              queryAttribute = List.of(WorkflowQueryAttribute.LABELS);
         }
 
-        ListWorkflowsResponse response = api().listWorkflows(queryAttribute, wspId, max, offset, filter);
+        ListWorkflowsResponse response = workflowsApi().listWorkflows(queryAttribute, wspId, max, offset, filter);
         return new RunList(workspaceRef(wspId), response.getWorkflows(), baseWorkspaceUrl(wspId), showLabelsOption.showLabels, PaginationInfo.from(paginationOptions, response.getTotalSize()));
     }
 

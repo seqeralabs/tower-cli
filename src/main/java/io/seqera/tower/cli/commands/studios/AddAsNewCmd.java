@@ -79,13 +79,13 @@ public class AddAsNewCmd extends AbstractStudiosCmd{
 
         try {
             String parentStudioSessionId = getParentStudioSessionId(parentStudioRefOptions, wspId);
-            DataStudioDto parentStudio = api().describeDataStudio(parentStudioSessionId, wspId);
+            DataStudioDto parentStudio = studiosApi().describeDataStudio(parentStudioSessionId, wspId);
             if (parentStudio == null) {
                 throw new TowerException(String.format("Parent Studio %s not found at %s workspace", parentStudioSessionId, wspId));
             }
 
             DataStudioCreateRequest request = prepareRequest(parentStudio, parentCheckpointId, wspId);
-            DataStudioCreateResponse response = api().createDataStudio(request, wspId, autoStart);
+            DataStudioCreateResponse response = studiosApi().createDataStudio(request, wspId, autoStart);
             DataStudioDto studioDto = response.getStudio();
             assert studioDto != null;
             return new StudiosCreated(studioDto.getSessionId(), wspId, workspaceRef(wspId), baseWorkspaceUrl(wspId), autoStart);
@@ -108,14 +108,14 @@ public class AddAsNewCmd extends AbstractStudiosCmd{
         request.setLabelIds(getLabelIds(labels, wspId));
         request.setIsPrivate(isPrivate);
         if (parentCheckpointId == null) {
-            DataStudioListCheckpointsResponse response = api().listDataStudioCheckpoints(parentDataStudio.getSessionId(), parentDataStudio.getWorkspaceId(), null, 1, null);
+            DataStudioListCheckpointsResponse response = studiosApi().listDataStudioCheckpoints(parentDataStudio.getSessionId(), parentDataStudio.getWorkspaceId(), null, 1, null);
             if (!response.getCheckpoints().isEmpty()) {
                 request.setInitialCheckpointId(response.getCheckpoints().get(0).getId());
             }
         } else {
             try {
                 Long checkpoint = Long.valueOf(parentCheckpointId);
-                DataStudioCheckpointDto response = api().getDataStudioCheckpoint(parentDataStudio.getSessionId(), checkpoint, wspId);
+                DataStudioCheckpointDto response = studiosApi().getDataStudioCheckpoint(parentDataStudio.getSessionId(), checkpoint, wspId);
                 request.setInitialCheckpointId(response.getId());
             } catch (NumberFormatException | ApiException e) {
                 throw new InvalidDataStudioParentCheckpointException(parentCheckpointId);

@@ -56,7 +56,7 @@ public class ListCmd extends AbstractParticipantsCmd {
 
         Long wspId = workspaceId(workspace.workspace);
 
-        List<ParticipantDbDto> response = api().listWorkspaceParticipants(orgId(wspId), wspId, max, offset, startsWith).getParticipants();
+        List<ParticipantDbDto> response = workspacesApi().listWorkspaceParticipants(orgId(wspId), wspId, max, offset, startsWith).getParticipants();
 
         if (response != null && type != null) {
             response = response.stream().filter(it -> it.getType() == type).collect(Collectors.toList());

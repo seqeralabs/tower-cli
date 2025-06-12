@@ -62,6 +62,7 @@ public class AltairPlatform extends AbstractPlatform<AltairPbsComputeConfig> {
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
+                .nextflowConfig(nextflowConfigString())
 
                 // Main
                 .launchDir(launchDir)

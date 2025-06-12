@@ -18,7 +18,7 @@
 package io.seqera.tower.cli.commands.computeenvs.platforms;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.api.DefaultApi;
+import io.seqera.tower.api.CredentialsApi;
 import io.seqera.tower.cli.exceptions.CredentialsNotFoundException;
 import io.seqera.tower.model.AzBatchConfig;
 import io.seqera.tower.model.AzBatchForgeConfig;
@@ -67,7 +67,7 @@ public class AzBatchForgePlatform extends AbstractPlatform<AzBatchConfig> {
     }
 
     @Override
-    public AzBatchConfig computeConfig(Long workspaceId, DefaultApi api) throws ApiException, IOException {
+    public AzBatchConfig computeConfig(Long workspaceId, CredentialsApi credentialsApi) throws ApiException, IOException {
         AzBatchConfig config = new AzBatchConfig();
 
         config
@@ -75,6 +75,7 @@ public class AzBatchForgePlatform extends AbstractPlatform<AzBatchConfig> {
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
+                .nextflowConfig(nextflowConfigString())
                 .environment(environmentVariables())
                 .fusion2Enabled(fusionV2)
                 .waveEnabled(wave)
@@ -96,7 +97,7 @@ public class AzBatchForgePlatform extends AbstractPlatform<AzBatchConfig> {
         if (registryCredentials != null && registryCredentials.size() > 0) {
 
             Map<String, String> credentialsNameToId = new HashMap<>();
-            List<Credentials> credentials = api.listCredentials(workspaceId, null).getCredentials();
+            List<Credentials> credentials = credentialsApi.listCredentials(workspaceId, null).getCredentials();
             if (credentials != null) {
                 for (Credentials c : credentials) {
                     if (c.getProvider() == Credentials.ProviderEnum.CONTAINER_REG) {

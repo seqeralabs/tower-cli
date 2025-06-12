@@ -43,7 +43,7 @@ abstract public class AbstractRunsCmd extends AbstractApiCmd {
 
         List<WorkflowQueryAttribute> wfQueryAttrs = (extraQueryAttributes == null) ? NO_WORKFLOW_ATTRIBUTES : extraQueryAttributes;
 
-        DescribeWorkflowResponse workflowResponse = api().describeWorkflow(id, workspaceId, wfQueryAttrs);
+        DescribeWorkflowResponse workflowResponse = workflowsApi().describeWorkflow(id, workspaceId, wfQueryAttrs);
 
         if (workflowResponse == null) {
             throw new RunNotFoundException(id, workspaceRef(workspaceId));
@@ -53,7 +53,7 @@ abstract public class AbstractRunsCmd extends AbstractApiCmd {
     }
 
     protected DescribeWorkflowLaunchResponse workflowLaunchById(Long workspaceId, String workflowId) throws ApiException {
-        DescribeWorkflowLaunchResponse wfLaunchResponse = api().describeWorkflowLaunch(workflowId, workspaceId);
+        DescribeWorkflowLaunchResponse wfLaunchResponse = workflowsApi().describeWorkflowLaunch(workflowId, workspaceId);
 
         if (wfLaunchResponse == null) {
             throw new ApiException(String.format("Workflow '%s' launch not found at %d workspace", workflowId, workspaceId));
@@ -63,7 +63,7 @@ abstract public class AbstractRunsCmd extends AbstractApiCmd {
     }
 
     protected Launch launchById(Long workspaceId, String id) throws ApiException {
-        DescribeLaunchResponse launchResponse = api().describeLaunch(id, workspaceId);
+        DescribeLaunchResponse launchResponse = launchApi().describeLaunch(id, workspaceId);
 
         if (launchResponse == null) {
             throw new LaunchNotFoundException(id, workspaceRef(workspaceId));
@@ -73,7 +73,7 @@ abstract public class AbstractRunsCmd extends AbstractApiCmd {
     }
 
     protected WorkflowLoad workflowLoadByWorkflowId(Long workspaceId, String id) throws ApiException {
-        GetProgressResponse getProgressResponse = api().describeWorkflowProgress(id, workspaceId);
+        GetProgressResponse getProgressResponse = workflowsApi().describeWorkflowProgress(id, workspaceId);
 
         if (getProgressResponse == null) {
             throw new WorkflowProgressNotFoundException(id, workspaceRef(workspaceId));

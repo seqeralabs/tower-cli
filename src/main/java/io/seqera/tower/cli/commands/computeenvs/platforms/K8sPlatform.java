@@ -57,6 +57,7 @@ public class K8sPlatform extends AbstractPlatform<K8sComputeConfig> {
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
+                .nextflowConfig(nextflowConfigString())
                 .environment(environmentVariables())
                 .computeServiceAccount(adv().computeAccount)
                 .headPodSpec(FilesHelper.readString(adv().headPodSpec))

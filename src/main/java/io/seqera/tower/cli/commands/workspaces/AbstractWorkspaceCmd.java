@@ -49,7 +49,7 @@ public abstract class AbstractWorkspaceCmd extends AbstractApiCmd {
     }
 
     private Optional<OrgAndWorkspaceDto> findOrgAndWorkspaceById(Long workspaceId) throws ApiException {
-        ListWorkspacesAndOrgResponse workspacesAndOrgResponse = api().listWorkspacesUser(userId());
+        ListWorkspacesAndOrgResponse workspacesAndOrgResponse = workspacesApi().listWorkspacesUser(userId());
 
         if (workspacesAndOrgResponse == null || workspacesAndOrgResponse.getOrgsAndWorkspaces() == null) {
             throw new WorkspaceNotFoundException(workspaceId);
@@ -88,7 +88,7 @@ public abstract class AbstractWorkspaceCmd extends AbstractApiCmd {
     }
 
     protected void deleteWorkspaceById(Long wspId, Long orgId) throws WorkspaceNotFoundException, ApiException {
-        api().deleteWorkspace(orgId, wspId);
+        workspacesApi().deleteWorkspace(orgId, wspId);
     }
 }
 
