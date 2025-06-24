@@ -32,6 +32,9 @@ import java.util.List;
 
 public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
 
+    @Option(names = {"--work-dir"}, description = "Work directory.", required = true)
+    public String workDir;
+
     @Option(names = {"-r", "--region"}, description = "AWS region.", required = true)
     public String region;
 

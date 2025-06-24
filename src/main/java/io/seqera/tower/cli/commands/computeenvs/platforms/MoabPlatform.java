@@ -27,6 +27,9 @@ import java.io.IOException;
 
 public class MoabPlatform extends AbstractPlatform<MoabComputeConfig> {
 
+    @Option(names = {"--work-dir"}, description = "Work directory.", required = true)
+    public String workDir;
+
     @Option(names = {"-u", "--user-name"}, description = "The username on the cluster used to launch the pipeline execution.")
     public String userName;
 

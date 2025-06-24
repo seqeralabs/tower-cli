@@ -28,6 +28,9 @@ import java.util.List;
 
 public class GoogleLifeSciencesPlatform extends AbstractPlatform<GoogleLifeSciencesConfig> {
 
+    @Option(names = {"--work-dir"}, description = "Work directory.", required = true)
+    public String workDir;
+
     @Option(names = {"-r", "--region"}, description = "The region where the workload will be executed.", required = true)
     public String region;
 
