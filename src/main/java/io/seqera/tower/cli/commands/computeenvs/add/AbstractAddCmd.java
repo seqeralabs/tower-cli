@@ -128,6 +128,11 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
     }
 
     private String findWorkspaceCredentials(PlatformEnum type, Long wspId) throws ApiException {
+        if (type == PlatformEnum.SEQERACOMPUTE_PLATFORM) {
+            // seqera-compute handles credentials automatically
+            return null;
+        }
+
         List<Credentials> credentials = credentialsApi().listCredentials(wspId, type.getValue()).getCredentials();
         if (credentials.isEmpty()) {
             throw new TowerException("No valid credentials found at the workspace");
