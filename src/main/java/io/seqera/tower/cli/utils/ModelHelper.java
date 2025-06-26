@@ -64,6 +64,13 @@ public class ModelHelper {
         return value;
     }
 
+    public static String coalesce(String value, String defaultValue) {
+        if (value == null || value.isEmpty()) {
+            return defaultValue;
+        }
+        return value;
+    }
+
     public static List<String> removeEmptyValues(List<String> values) {
         if (values == null) {
             return null;
