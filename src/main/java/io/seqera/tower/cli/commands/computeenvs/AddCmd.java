@@ -29,6 +29,7 @@ import io.seqera.tower.cli.commands.computeenvs.add.AddGoogleLifeSciencesCmd;
 import io.seqera.tower.cli.commands.computeenvs.add.AddK8sCmd;
 import io.seqera.tower.cli.commands.computeenvs.add.AddLsfCmd;
 import io.seqera.tower.cli.commands.computeenvs.add.AddMoabCmd;
+import io.seqera.tower.cli.commands.computeenvs.add.AddSeqeraComputeCmd;
 import io.seqera.tower.cli.commands.computeenvs.add.AddSlurmCmd;
 import io.seqera.tower.cli.commands.computeenvs.add.AddUgeCmd;
 import io.seqera.tower.cli.exceptions.ShowUsageException;
@@ -53,6 +54,7 @@ import java.io.IOException;
                 AddGoogleLifeSciencesCmd.class,
                 AddGoogleBatchCmd.class,
                 AddAzureCmd.class,
+                AddSeqeraComputeCmd.class
         }
 )
 public class AddCmd extends AbstractComputeEnvCmd {

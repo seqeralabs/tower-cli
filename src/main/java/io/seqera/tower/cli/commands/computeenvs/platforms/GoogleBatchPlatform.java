@@ -27,6 +27,9 @@ import java.io.IOException;
 
 public class GoogleBatchPlatform extends AbstractPlatform<GoogleBatchConfig> {
 
+    @Option(names = {"--work-dir"}, description = "Work directory.", required = true)
+    public String workDir;
+
     @Option(names = {"-l", "--location"}, description = "The location where the job executions are deployed to Google Batch API.", required = true)
     public String location;
 

@@ -34,9 +34,6 @@ import java.util.Map;
 
 public abstract class AbstractPlatform<T extends ComputeConfig> implements Platform {
 
-    @Option(names = {"--work-dir"}, description = "Work directory.", required = true)
-    public String workDir;
-
     @ArgGroup(heading = "%nStaging options:%n", validate = false)
     public StagingOptions staging;
 

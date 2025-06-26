@@ -472,6 +472,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.computeenvs.add.AddSeqeraComputeCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.computeenvs.add.AddSlurmCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -665,6 +671,12 @@
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.MoabPlatform$AdvancedOptions",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true
+},
+{
+  "name":"io.seqera.tower.cli.commands.computeenvs.platforms.SeqeraComputePlatform",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.SlurmPlatform",
