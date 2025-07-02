@@ -28,6 +28,9 @@ import java.io.IOException;
 
 public class GkePlatform extends AbstractPlatform<GkeComputeConfig> {
 
+    @Option(names = {"--work-dir"}, description = "Work directory.", required = true)
+    public String workDir;
+
     @Option(names = {"-r", "--region"}, description = "AWS region.", required = true)
     public String region;
 

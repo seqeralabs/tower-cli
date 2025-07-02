@@ -35,6 +35,9 @@ import java.util.Map;
 
 public class AzBatchForgePlatform extends AbstractPlatform<AzBatchConfig> {
 
+    @Option(names = {"--work-dir"}, description = "Work directory.", required = true)
+    public String workDir;
+
     @Option(names = {"-l", "--location"}, description = "The Azure location where the workload will be deployed.", required = true)
     public String location;
 
