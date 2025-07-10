@@ -74,7 +74,7 @@ public class AwsUploader extends AbstractProviderUploader {
 
                 if (response.statusCode() != 200) {
                     withError = true;
-                    throw new IOException("Failed to upload file: HTTP " + response.statusCode());
+                    throw new IOException("Failed to upload file: HTTP " + response.statusCode() +"Message: " + response.body());
                 }
 
                 Optional<String> etag = response.headers().firstValue("ETag");
