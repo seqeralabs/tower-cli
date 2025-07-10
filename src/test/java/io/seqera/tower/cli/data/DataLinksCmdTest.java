@@ -848,6 +848,7 @@ public class DataLinksCmdTest extends BaseCmdTest {
         ).respond(
                 response()
                         .withStatusCode(404)
+                        .withBody("not found".getBytes())
         );
 
         // Mock finish upload request
@@ -880,7 +881,7 @@ public class DataLinksCmdTest extends BaseCmdTest {
                                "}\n"))
                 , VerificationTimes.exactly(1));
 
-        assertEquals(errorMessage(out.app, new TowerRuntimeException("Failed to upload file: Failed to upload file: HTTP 404")), out.stdErr);
+        assertEquals(errorMessage(out.app, new TowerRuntimeException("Failed to upload file: Failed to upload file: HTTP 404, Message: not found")), out.stdErr);
         assertEquals("", out.stdOut);
         assertEquals(1, out.exitCode);
 
