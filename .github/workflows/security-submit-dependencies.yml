@@ -1,6 +1,5 @@
 name: Generate dependency graph for tower-cli
 on:
-  pull_request:
   push:
     branches: ['master']
 
