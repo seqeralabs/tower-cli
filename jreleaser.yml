@@ -4,7 +4,7 @@ project:
   longDescription: Tower CLI tool to manage Tower from the command line
   website: https://github.com/seqeralabs/tower-cli
   authors:
-    - Seqera Labs
+    - Seqera
   license: MPL-2.0
   extraProperties:
     inceptionYear: 2021
@@ -106,3 +106,14 @@ distributions:
     artifacts:
       - path: "tw-jar/tw.jar"
         transform: "{{distributionName}}.jar"
+
+packagers:
+  brew:
+    active: ALWAYS
+    continueOnError: false
+    multiPlatform: true
+    repository:
+      active: RELEASE
+      tagName: '{{distributionName}}-{{tagName}}'
+      branch: HEAD
+      commitMessage: '{{distributionName}} {{tagName}}'

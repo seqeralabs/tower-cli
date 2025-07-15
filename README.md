@@ -45,6 +45,14 @@ This guide covers the installation and configuration of the CLI, cloud infrastru
     sudo mv tw /usr/local/bin/
     ```
 
+## Alternative: Homebrew (Linux and macOS)
+
+tw-cli is published to the Seqera [Homebrew](https://brew.sh/) tap and can be installed like this:
+
+```bash
+brew install seqeralabs/tap/tw
+```
+
 ### 2. Configuration
 
 You need an access token for the CLI to interact with your Seqera instance. Select **User tokens** from the user menu in the [Seqera UI](https://cloud.seqera.io), then select **Add token** to create a new token.
