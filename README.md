@@ -44,9 +44,9 @@ This guide covers the installation and configuration of the CLI, cloud infrastru
     ```bash
     sudo mv tw /usr/local/bin/
     ```
-4. Homebrew (Linux and macOS)
 
-    If you use [Homebrew](https://brew.sh/), you can install like this:
+4. Homebrew (Linux and macOS): If you use [Homebrew](https://brew.sh/), you can install like this:
+
     ```bash
     brew install seqeralabs/tap/tw
     ```
