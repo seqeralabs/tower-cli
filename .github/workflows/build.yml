@@ -359,6 +359,7 @@ jobs:
         uses: jreleaser/release-action@v2
         env:
           JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JRELEASER_HOMEBREW_GITHUB_TOKEN: ${{secrets.GH_JRELEASER_TOKEN}}
           JRELEASER_PROJECT_VERSION: ${{ steps.version.outputs.VERSION }}
 
       - name: JReleaser release output
