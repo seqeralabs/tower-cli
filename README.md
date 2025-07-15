@@ -45,7 +45,9 @@ This guide covers the installation and configuration of the CLI, cloud infrastru
     sudo mv tw /usr/local/bin/
     ```
 
-4. Homebrew (Linux and macOS): If you use [Homebrew](https://brew.sh/), you can install like this:
+## Alternative: Homebrew (Linux and macOS)
+
+    tw-cli is published to the Seqera [Homebrew](https://brew.sh/) tap and can be installed like this: 
 
     ```bash
     brew install seqeralabs/tap/tw
