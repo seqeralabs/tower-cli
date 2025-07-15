@@ -18,7 +18,7 @@
 package io.seqera.tower.cli.commands.computeenvs.platforms;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.api.DefaultApi;
+import io.seqera.tower.api.CredentialsApi;
 import io.seqera.tower.cli.exceptions.CredentialsNotFoundException;
 import io.seqera.tower.model.AzBatchConfig;
 import io.seqera.tower.model.AzBatchForgeConfig;
@@ -34,6 +34,9 @@ import java.util.List;
 import java.util.Map;
 
 public class AzBatchForgePlatform extends AbstractPlatform<AzBatchConfig> {
+
+    @Option(names = {"--work-dir"}, description = "Work directory.", required = true)
+    public String workDir;
 
     @Option(names = {"-l", "--location"}, description = "The Azure location where the workload will be deployed.", required = true)
     public String location;
@@ -67,7 +70,7 @@ public class AzBatchForgePlatform extends AbstractPlatform<AzBatchConfig> {
     }
 
     @Override
-    public AzBatchConfig computeConfig(Long workspaceId, DefaultApi api) throws ApiException, IOException {
+    public AzBatchConfig computeConfig(Long workspaceId, CredentialsApi credentialsApi) throws ApiException, IOException {
         AzBatchConfig config = new AzBatchConfig();
 
         config
@@ -75,6 +78,7 @@ public class AzBatchForgePlatform extends AbstractPlatform<AzBatchConfig> {
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
+                .nextflowConfig(nextflowConfigString())
                 .environment(environmentVariables())
                 .fusion2Enabled(fusionV2)
                 .waveEnabled(wave)
@@ -96,7 +100,7 @@ public class AzBatchForgePlatform extends AbstractPlatform<AzBatchConfig> {
         if (registryCredentials != null && registryCredentials.size() > 0) {
 
             Map<String, String> credentialsNameToId = new HashMap<>();
-            List<Credentials> credentials = api.listCredentials(workspaceId, null).getCredentials();
+            List<Credentials> credentials = credentialsApi.listCredentials(workspaceId, null).getCredentials();
             if (credentials != null) {
                 for (Credentials c : credentials) {
                     if (c.getProvider() == Credentials.ProviderEnum.CONTAINER_REG) {

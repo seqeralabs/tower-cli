@@ -32,6 +32,9 @@ import java.util.List;
 
 public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
 
+    @Option(names = {"--work-dir"}, description = "Work directory.", required = true)
+    public String workDir;
+
     @Option(names = {"-r", "--region"}, description = "AWS region.", required = true)
     public String region;
 
@@ -55,6 +58,9 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
 
     @Option(names = {"--fast-storage"}, description = "Allow the use of NVMe instance storage to speed up I/O and disk access operations (requires Fusion v2).")
     public boolean fastStorage;
+
+    @Option(names = {"--snapshots"}, description = "Allows Fusion to automatically restore a job when it is interrupted by a spot reclamation")
+    public boolean snapshots;
 
     @Option(names = {"--fargate"}, description = "Run the Nextflow head job using the Fargate container service (requires Fusion v2 and Spot provisioning model).")
     public boolean fargate;
@@ -98,11 +104,13 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
+                .nextflowConfig(nextflowConfigString())
                 .environment(environmentVariables())
                 .region(region)
                 .fusion2Enabled(isFusionV2Enabled())
                 .waveEnabled(wave)
                 .nvnmeStorageEnabled(fastStorage)
+                .fusionSnapshots(snapshots)
 
                 // Forge
                 .forge(buildForge())

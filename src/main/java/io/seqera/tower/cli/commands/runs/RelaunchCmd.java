@@ -123,7 +123,7 @@ public class RelaunchCmd extends AbstractRunsCmd {
         SubmitWorkflowLaunchRequest submitWorkflowLaunchRequest = new SubmitWorkflowLaunchRequest()
                 .launch(workflowLaunchRequest);
 
-        SubmitWorkflowLaunchResponse response = api().createWorkflowLaunch(submitWorkflowLaunchRequest, wspId, null);
+        SubmitWorkflowLaunchResponse response = workflowsApi().createWorkflowLaunch(submitWorkflowLaunchRequest, wspId, null);
 
         return new RunSubmited(response.getWorkflowId(), wspId, workflowWatchUrl(response.getWorkflowId(), wspId), workspaceRef(wspId));
     }
@@ -139,7 +139,7 @@ public class RelaunchCmd extends AbstractRunsCmd {
     }
 
     private WorkflowLaunchResponse workflowLaunchResponse(String workflowId, Long workspaceId) throws ApiException {
-        DescribeWorkflowLaunchResponse launchResponse = api().describeWorkflowLaunch(workflowId, workspaceId);
+        DescribeWorkflowLaunchResponse launchResponse = workflowsApi().describeWorkflowLaunch(workflowId, workspaceId);
         if (launchResponse == null) {
             throw new LaunchNotFoundException(id, workspaceRef(workspaceId));
         }

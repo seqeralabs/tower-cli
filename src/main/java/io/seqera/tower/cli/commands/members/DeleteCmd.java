@@ -44,7 +44,7 @@ public class DeleteCmd extends AbstractMembersClass{
 
         MemberDbDto member = findMemberByUser(orgAndWorkspaceDbDto.getOrgId(), user);
 
-        api().deleteOrganizationMember(orgAndWorkspaceDbDto.getOrgId(), member.getMemberId());
+        orgsApi().deleteOrganizationMember(orgAndWorkspaceDbDto.getOrgId(), member.getMemberId());
 
         return new MembersDeleted(user, organizationRef);
     }

@@ -28,6 +28,9 @@ import java.io.IOException;
 
 public class EksPlatform extends AbstractPlatform<EksComputeConfig> {
 
+    @Option(names = {"--work-dir"}, description = "Work directory.", required = true)
+    public String workDir;
+
     @Option(names = {"-r", "--region"}, description = "AWS region.", required = true)
     public String region;
 
@@ -70,9 +73,10 @@ public class EksPlatform extends AbstractPlatform<EksComputeConfig> {
                 // Common
                 .workDir(workDir)
 
-                // Stagging
+                // Staging
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
+                .nextflowConfig(nextflowConfigString())
                 .environment(environmentVariables());
 
         return config;

@@ -76,7 +76,7 @@ public class AddCmd extends AbstractParticipantsCmd {
 
         if (overwrite) tryDeleteParticipant(wspId, name, type);
 
-        AddParticipantResponse response = api().createWorkspaceParticipant(orgId(wspId), wspId, request);
+        AddParticipantResponse response = workspacesApi().createWorkspaceParticipant(orgId(wspId), wspId, request);
 
         return new ParticipantAdded(response.getParticipant(), workspaceName(wspId));
     }

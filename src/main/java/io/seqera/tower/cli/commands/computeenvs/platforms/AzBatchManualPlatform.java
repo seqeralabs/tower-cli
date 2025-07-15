@@ -28,6 +28,9 @@ import java.io.IOException;
 
 public class AzBatchManualPlatform extends AbstractPlatform<AzBatchConfig> {
 
+    @Option(names = {"--work-dir"}, description = "Work directory.", required = true)
+    public String workDir;
+
     @Option(names = {"-l", "--location"}, description = "The Azure location where the workload will be deployed.", required = true)
     public String location;
 
@@ -56,6 +59,7 @@ public class AzBatchManualPlatform extends AbstractPlatform<AzBatchConfig> {
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
+                .nextflowConfig(nextflowConfigString())
                 .environment(environmentVariables())
                 .fusion2Enabled(fusionV2)
                 .waveEnabled(wave)

@@ -20,14 +20,14 @@ package io.seqera.tower.cli.commands.actions;
 import java.util.List;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.api.DefaultApi;
+import io.seqera.tower.api.LabelsApi;
 import io.seqera.tower.cli.commands.labels.BaseLabelsManager;
 import io.seqera.tower.model.AssociateActionLabelsRequest;
 
 public class ActionsLabelsManager extends BaseLabelsManager<AssociateActionLabelsRequest, String> {
 
 
-    public ActionsLabelsManager(DefaultApi api) {
+    public ActionsLabelsManager(LabelsApi api) {
         super(api, "action");
     }
 

@@ -27,6 +27,9 @@ import java.io.IOException;
 
 public class UnivaPlatform extends AbstractPlatform<UnivaComputeConfig> {
 
+    @Option(names = {"--work-dir"}, description = "Work directory.", required = true)
+    public String workDir;
+
     @Option(names = {"-u", "--user-name"}, description = "The username on the cluster used to launch the pipeline execution.")
     public String userName;
 
@@ -62,6 +65,7 @@ public class UnivaPlatform extends AbstractPlatform<UnivaComputeConfig> {
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
+                .nextflowConfig(nextflowConfigString())
 
                 // Main
                 .launchDir(launchDir)

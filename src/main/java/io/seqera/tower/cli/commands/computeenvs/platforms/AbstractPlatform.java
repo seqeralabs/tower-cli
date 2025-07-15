@@ -18,7 +18,7 @@
 package io.seqera.tower.cli.commands.computeenvs.platforms;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.api.DefaultApi;
+import io.seqera.tower.api.CredentialsApi;
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.ComputeConfig;
 import io.seqera.tower.model.ComputeEnvComputeConfig.PlatformEnum;
@@ -33,9 +33,6 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class AbstractPlatform<T extends ComputeConfig> implements Platform {
-
-    @Option(names = {"--work-dir"}, description = "Work directory.", required = true)
-    public String workDir;
 
     @ArgGroup(heading = "%nStaging options:%n", validate = false)
     public StagingOptions staging;
@@ -61,6 +58,13 @@ public abstract class AbstractPlatform<T extends ComputeConfig> implements Platf
             return null;
         }
         return FilesHelper.readString(staging.postRunScript);
+    }
+
+    protected String nextflowConfigString() throws IOException {
+        if (staging == null || staging.nextflowConfig == null) {
+            return null;
+        }
+        return FilesHelper.readString(staging.nextflowConfig);
     }
 
     protected List<ConfigEnvVariable> environmentVariables() {
@@ -94,7 +98,7 @@ public abstract class AbstractPlatform<T extends ComputeConfig> implements Platf
         return type;
     }
 
-    public T computeConfig(Long workspaceId, DefaultApi api) throws ApiException, IOException {
+    public T computeConfig(Long workspaceId, CredentialsApi api) throws ApiException, IOException {
         return computeConfig();
     }
 
@@ -108,6 +112,9 @@ public abstract class AbstractPlatform<T extends ComputeConfig> implements Platf
 
         @Option(names = {"--post-run"}, description = "Post-run script.")
         public Path postRunScript;
+
+        @Option(names = {"--nextflow-config"}, description = "Nextflow config")
+        public Path nextflowConfig;
     }
 
     public static class Environment {

@@ -33,7 +33,7 @@ import java.util.Objects;
 
 @CommandLine.Command(
         name = "add",
-        description = "Add custom data link."
+        description = "Add custom data-link."
 )
 public class AddCmd extends AbstractApiCmd {
 
@@ -85,7 +85,7 @@ public class AddCmd extends AbstractApiCmd {
             req.credentialsId(credsId);
         }
 
-        return api().createCustomDataLink(req, wspId);
+        return dataLinksApi().createCustomDataLink(req, wspId);
     }
 
 

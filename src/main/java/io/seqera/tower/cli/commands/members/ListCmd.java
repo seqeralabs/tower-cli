@@ -49,7 +49,7 @@ public class ListCmd extends AbstractMembersClass {
 
         OrgAndWorkspaceDto orgAndWorkspaceDbDto = findOrganizationByRef(organizationRef);
 
-        ListMembersResponse response = api().listOrganizationMembers(orgAndWorkspaceDbDto.getOrgId(), max, offset, startsWith);
+        ListMembersResponse response = orgsApi().listOrganizationMembers(orgAndWorkspaceDbDto.getOrgId(), max, offset, startsWith);
 
         return new MembersList(organizationRef, response.getMembers());
     }

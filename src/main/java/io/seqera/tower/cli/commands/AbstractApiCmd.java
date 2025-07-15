@@ -19,8 +19,30 @@ package io.seqera.tower.cli.commands;
 
 import io.seqera.tower.ApiClient;
 import io.seqera.tower.ApiException;
-import io.seqera.tower.api.DefaultApi;
+import io.seqera.tower.api.ActionsApi;
+import io.seqera.tower.api.AvatarsApi;
+import io.seqera.tower.api.ComputeEnvsApi;
+import io.seqera.tower.api.CredentialsApi;
+import io.seqera.tower.api.DataLinksApi;
+import io.seqera.tower.api.DatasetsApi;
+import io.seqera.tower.api.Ga4ghApi;
+import io.seqera.tower.api.LabelsApi;
+import io.seqera.tower.api.LaunchApi;
+import io.seqera.tower.api.OrgsApi;
+import io.seqera.tower.api.PipelineSecretsApi;
+import io.seqera.tower.api.PipelinesApi;
+import io.seqera.tower.api.PlatformsApi;
+import io.seqera.tower.api.ServiceInfoApi;
+import io.seqera.tower.api.StudiosApi;
+import io.seqera.tower.api.TeamsApi;
+import io.seqera.tower.api.TokensApi;
+import io.seqera.tower.api.TraceApi;
+import io.seqera.tower.api.UsersApi;
+import io.seqera.tower.api.WorkflowsApi;
+import io.seqera.tower.api.WorkspacesApi;
 import io.seqera.tower.cli.Tower;
+import io.seqera.tower.cli.commands.labels.Label;
+import io.seqera.tower.cli.commands.labels.LabelsFinder;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
 import io.seqera.tower.cli.exceptions.InvalidWorkspaceParameterException;
 import io.seqera.tower.cli.exceptions.MissingTowerAccessTokenException;
@@ -35,6 +57,7 @@ import io.seqera.tower.model.ComputeEnvComputeConfig;
 import io.seqera.tower.model.ComputeEnvQueryAttribute;
 import io.seqera.tower.model.ComputeEnvResponseDto;
 import io.seqera.tower.model.Credentials;
+import io.seqera.tower.model.DataStudioQueryAttribute;
 import io.seqera.tower.model.ListComputeEnvsResponseEntry;
 import io.seqera.tower.model.ListWorkspacesAndOrgResponse;
 import io.seqera.tower.model.OrgAndWorkspaceDto;
@@ -74,9 +97,31 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     public static final List<WorkflowQueryAttribute> NO_WORKFLOW_ATTRIBUTES = Collections.EMPTY_LIST;
     public static final List<ActionQueryAttribute> NO_ACTION_ATTRIBUTES = Collections.EMPTY_LIST;
     public static final List<PipelineQueryAttribute> NO_PIPELINE_ATTRIBUTES = Collections.EMPTY_LIST;
+    public static final List<DataStudioQueryAttribute> NO_STUDIO_ATTRIBUTES = Collections.EMPTY_LIST;
 
+    private ApiClient apiClient;
 
-    private DefaultApi api;
+    private ActionsApi actionsApi;
+    private AvatarsApi avatarsApi;
+    private ComputeEnvsApi computeEnvsApi;
+    private CredentialsApi credentialsApi;
+    private DataLinksApi dataLinksApi;
+    private DatasetsApi datasetsApi;
+    private Ga4ghApi ga4ghApi;
+    private LabelsApi labelsApi;
+    private LaunchApi launchApi;
+    private OrgsApi orgsApi;
+    private PipelinesApi pipelinesApi;
+    private PipelineSecretsApi pipelineSecretsApi;
+    private PlatformsApi platformsApi;
+    private ServiceInfoApi serviceInfoApi;
+    private StudiosApi studiosApi;
+    private TeamsApi teamsApi;
+    private TokensApi tokensApi;
+    private TraceApi traceApi;
+    private UsersApi usersApi;
+    private WorkflowsApi workflowsApi;
+    private WorkspacesApi workspacesApi;
 
     private Long userId;
     private String userName;
@@ -101,14 +146,14 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         return (Tower) getSpec().root().userObject();
     }
 
-    protected DefaultApi api() throws ApiException {
+    private ApiClient apiClient() throws ApiException {
 
         // Check we are using HTTPS (unless 'insecure' option is enabled)
         if (!app().insecure && !app().url.startsWith("https")) {
             throw new TowerException(String.format("You are trying to connect to an insecure server: %s%n        if you want to force the connection use '--insecure'. NOT RECOMMENDED!", app().url));
         }
 
-        if (api == null) {
+        if (apiClient == null) {
 
             if (app().token == null) {
                 throw new MissingTowerAccessTokenException();
@@ -123,11 +168,97 @@ public abstract class AbstractApiCmd extends AbstractCmd {
             Properties props = getCliProperties();
             client.setUserAgent(String.format("tw/%s (%s)", props.get("version"), props.get("platform")));
 
-            api = new DefaultApi(client);
+            apiClient = client;
         }
 
-        return api;
+        return apiClient;
     }
+
+    protected ActionsApi actionsApi() throws ApiException {
+        return actionsApi == null ? new ActionsApi(apiClient()) : actionsApi;
+    }
+
+    protected AvatarsApi avatarsApi() throws ApiException {
+        return avatarsApi == null ? new AvatarsApi(apiClient()) : avatarsApi;
+    }
+
+    protected ComputeEnvsApi computeEnvsApi() throws ApiException {
+        return computeEnvsApi == null ? new ComputeEnvsApi(apiClient()) : computeEnvsApi;
+    }
+
+    protected CredentialsApi credentialsApi() throws ApiException {
+        return credentialsApi == null ? new CredentialsApi(apiClient()) : credentialsApi;
+    }
+
+    protected DataLinksApi dataLinksApi() throws ApiException {
+        return dataLinksApi == null ? new DataLinksApi(apiClient()) : dataLinksApi;
+    }
+
+    protected DatasetsApi datasetsApi() throws ApiException {
+        return datasetsApi == null ? new DatasetsApi(apiClient()) : datasetsApi;
+    }
+
+    protected Ga4ghApi ga4ghApi() throws ApiException {
+        return ga4ghApi == null ? new Ga4ghApi(apiClient()) : ga4ghApi;
+    }
+
+    protected LabelsApi labelsApi() throws ApiException {
+        return labelsApi == null ? new LabelsApi(apiClient()) : labelsApi;
+    }
+
+    protected LaunchApi launchApi() throws ApiException {
+        return launchApi == null ? new LaunchApi(apiClient()) : launchApi;
+    }
+
+    protected OrgsApi orgsApi() throws ApiException {
+        return orgsApi == null ? new OrgsApi(apiClient()) : orgsApi;
+    }
+
+    protected PipelineSecretsApi pipelineSecretsApi() throws ApiException {
+        return pipelineSecretsApi == null ? new PipelineSecretsApi(apiClient()) : pipelineSecretsApi;
+    }
+
+    protected PipelinesApi pipelinesApi() throws ApiException {
+        return pipelinesApi == null ? new PipelinesApi(apiClient()) : pipelinesApi;
+    }
+
+    protected PlatformsApi platformsApi() throws ApiException {
+        return platformsApi == null ? new PlatformsApi(apiClient()) : platformsApi;
+    }
+
+    protected ServiceInfoApi serviceInfoApi() throws ApiException {
+        return serviceInfoApi == null ? new ServiceInfoApi(apiClient()) : serviceInfoApi;
+    }
+
+    protected StudiosApi studiosApi() throws ApiException {
+        return studiosApi == null ? new StudiosApi(apiClient()) : studiosApi;
+    }
+
+    protected TeamsApi teamsApi() throws ApiException {
+        return teamsApi == null ? new TeamsApi(apiClient()) : teamsApi;
+    }
+
+    protected TokensApi tokensApi() throws ApiException {
+        return tokensApi == null ? new TokensApi(apiClient()) : tokensApi;
+    }
+
+    protected TraceApi traceApi() throws ApiException {
+        return traceApi == null ? new TraceApi(apiClient()) : traceApi;
+    }
+
+    protected UsersApi usersApi() throws ApiException {
+        return usersApi == null ? new UsersApi(apiClient()) : usersApi;
+    }
+
+    protected WorkflowsApi workflowsApi() throws ApiException {
+        return workflowsApi == null ? new WorkflowsApi(apiClient()) : workflowsApi;
+    }
+
+    protected WorkspacesApi workspacesApi() throws ApiException {
+        return workspacesApi == null ? new WorkspacesApi(apiClient()) : workspacesApi;
+    }
+    
+
 
     protected Properties getCliProperties() throws ApiException {
         Properties properties = new Properties();
@@ -260,7 +391,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
             throw new ComputeEnvNotFoundException(ref, workspaceId);
         }
 
-        return api.describeComputeEnv(ceId, workspaceId, NO_CE_ATTRIBUTES).getComputeEnv();
+        return computeEnvsApi().describeComputeEnv(ceId, workspaceId, NO_CE_ATTRIBUTES).getComputeEnv();
     }
 
     protected ComputeEnvResponseDto primaryComputeEnv(Long workspaceId) throws ApiException {
@@ -272,11 +403,11 @@ public abstract class AbstractApiCmd extends AbstractCmd {
             throw new NoComputeEnvironmentException(workspaceRef(workspaceId));
         }
 
-        return api().describeComputeEnv(primaryComputeEnvId, workspaceId, NO_CE_ATTRIBUTES).getComputeEnv();
+        return computeEnvsApi().describeComputeEnv(primaryComputeEnvId, workspaceId, NO_CE_ATTRIBUTES).getComputeEnv();
     }
 
     protected String credentialsByRef(ComputeEnvComputeConfig.PlatformEnum type, Long wspId, String credentialsRef) throws ApiException {
-        List<Credentials> credentials = api().listCredentials(wspId, type == null ? null : type.getValue()).getCredentials();
+        List<Credentials> credentials = credentialsApi().listCredentials(wspId, type == null ? null : type.getValue()).getCredentials();
 
         if (credentials.isEmpty()) {
             throw new TowerException("No valid credentials found at the workspace");
@@ -312,7 +443,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     }
 
     protected OrgAndWorkspaceDto findOrgAndWorkspaceByName(String organizationName, String workspaceName) throws ApiException {
-        ListWorkspacesAndOrgResponse workspacesAndOrgResponse = api().listWorkspacesUser(userId());
+        ListWorkspacesAndOrgResponse workspacesAndOrgResponse = workspacesApi().listWorkspacesUser(userId());
 
         if (workspacesAndOrgResponse == null || workspacesAndOrgResponse.getOrgsAndWorkspaces() == null) {
             if (workspaceName == null) {
@@ -342,7 +473,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     }
 
     protected OrgAndWorkspaceDto findOrganizationByRef(String organizationRef) throws ApiException {
-        ListWorkspacesAndOrgResponse workspacesAndOrgResponse = api().listWorkspacesUser(userId());
+        ListWorkspacesAndOrgResponse workspacesAndOrgResponse = workspacesApi().listWorkspacesUser(userId());
 
         if (workspacesAndOrgResponse.getOrgsAndWorkspaces() == null) {
             throw new OrganizationNotFoundException(organizationRef);
@@ -359,14 +490,23 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         return orgAndWorkspaceDbDtoList.stream().findFirst().orElseThrow(() -> new OrganizationNotFoundException(organizationRef));
     }
 
+    protected List<Long> findOrCreateLabels(Long wspId, List<Label> labels) throws ApiException {
+        if (labels != null && !labels.isEmpty()) {
+            LabelsFinder finder = new LabelsFinder(labelsApi());
+            return finder.findLabelsIds(wspId,labels, LabelsFinder.NotFoundLabelBehavior.CREATE);
+        } else {
+            return null;
+        }
+    }
+
     private void loadUser() throws ApiException {
-        UserDbDto user = api().userInfo().getUser();
+        UserDbDto user = usersApi().userInfo().getUser();
         userName = user.getUserName();
         userId = user.getId();
     }
 
     private void loadOrgAndWorkspaceFromIds(Long workspaceId) throws ApiException {
-        for (OrgAndWorkspaceDto ow : api().listWorkspacesUser(userId()).getOrgsAndWorkspaces()) {
+        for (OrgAndWorkspaceDto ow : workspacesApi().listWorkspacesUser(userId()).getOrgsAndWorkspaces()) {
             if ((workspaceId == null && ow.getWorkspaceId() == null) || (workspaceId != null && workspaceId.equals(ow.getWorkspaceId()))) {
                 workspaceName = ow.getWorkspaceName();
                 orgId = ow.getOrgId();
@@ -381,7 +521,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     private void loadOrgAndWorkspaceFromNames(Long workspaceId) throws ApiException {
         String wName = workspaceName(workspaceId);
         String oName = orgName(workspaceId);
-        for (OrgAndWorkspaceDto ow : api().listWorkspacesUser(userId()).getOrgsAndWorkspaces()) {
+        for (OrgAndWorkspaceDto ow : workspacesApi().listWorkspacesUser(userId()).getOrgsAndWorkspaces()) {
             if (wName.equalsIgnoreCase(ow.getWorkspaceName()) && oName.equalsIgnoreCase(ow.getOrgName())) {
                 workspaceName = ow.getWorkspaceName();
                 orgName = ow.getOrgName();
@@ -398,7 +538,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         if (availableComputeEnvsNameToId == null) {
             availableComputeEnvsNameToId = new HashMap<>();
             availableComputeEnvsIdToName = new HashMap<>();
-            for (ListComputeEnvsResponseEntry ce : api().listComputeEnvs("AVAILABLE", workspaceId).getComputeEnvs()) {
+            for (ListComputeEnvsResponseEntry ce : computeEnvsApi().listComputeEnvs("AVAILABLE", workspaceId).getComputeEnvs()) {
 
                 if (ce.getPrimary() != null && ce.getPrimary()) {
                     primaryComputeEnvId = ce.getId();
@@ -446,7 +586,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         return exitCode;
     }
 
-    protected Response exec() throws ApiException, IOException {
+    protected Response exec() throws ApiException, IOException, InterruptedException {
         throw new ShowUsageException(getSpec());
     }
 

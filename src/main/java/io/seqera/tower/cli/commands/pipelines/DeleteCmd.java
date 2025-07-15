@@ -54,7 +54,7 @@ public class DeleteCmd extends AbstractPipelinesCmd {
             pipelineRef = pipe.getName();
         }
 
-        api().deletePipeline(id, wspId);
+        pipelinesApi().deletePipeline(id, wspId);
 
         return new PipelinesDeleted(pipelineRef, workspaceRef(wspId));
     }

@@ -29,6 +29,9 @@ import java.nio.file.Path;
 
 public class K8sPlatform extends AbstractPlatform<K8sComputeConfig> {
 
+    @Option(names = {"--work-dir"}, description = "Work directory.", required = true)
+    public String workDir;
+
     @Option(names = {"-s", "--server"}, description = "Master server.", required = true)
     public String server;
 
@@ -57,6 +60,7 @@ public class K8sPlatform extends AbstractPlatform<K8sComputeConfig> {
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
+                .nextflowConfig(nextflowConfigString())
                 .environment(environmentVariables())
                 .computeServiceAccount(adv().computeAccount)
                 .headPodSpec(FilesHelper.readString(adv().headPodSpec))

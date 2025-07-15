@@ -54,7 +54,7 @@ public class InfoCmd extends AbstractRootCmd {
         cliVersion = String.format("%s (%s)", props.get("version"), props.get("commitId"));
 
         try {
-            ServiceInfoResponse infoResponse = api().info();
+            ServiceInfoResponse infoResponse = serviceInfoApi().info();
 
             if (infoResponse.getServiceInfo() != null && infoResponse.getServiceInfo().getApiVersion() != null) {
                 towerApiVersion = ModuleDescriptor.Version.parse(infoResponse.getServiceInfo().getApiVersion());
@@ -70,7 +70,7 @@ public class InfoCmd extends AbstractRootCmd {
 
         if (connectionCheck == 1) {
             try {
-                DescribeUserResponse resp = api().userInfo();
+                DescribeUserResponse resp = usersApi().userInfo();
                 userName = resp.getUser().getUserName();
                 credentialsCheck = 1;
             } catch (ApiException apiException) {

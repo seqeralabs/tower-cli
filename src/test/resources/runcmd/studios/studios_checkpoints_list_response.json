@@ -1,0 +1,25 @@
+{
+  "checkpoints": [
+    {
+      "id": 2,
+      "name": "studio-a66d_2",
+      "dateSaved": "2025-01-30T09:34:33Z",
+      "dateCreated": "2025-01-30T09:29:31Z",
+      "author": {
+        "id": 100,
+        "userName": "johnny-bravo"
+      }
+    },
+    {
+      "id": 1,
+      "name": "studio-a66d_1",
+      "dateSaved": "2025-01-28T14:05:07Z",
+      "dateCreated": "2025-01-28T12:49:06Z",
+      "author": {
+        "id": 100,
+        "userName": "johnny-bravo"
+      }
+    }
+  ],
+  "totalSize": 2
+}

@@ -27,6 +27,9 @@ import java.io.IOException;
 
 public class AltairPlatform extends AbstractPlatform<AltairPbsComputeConfig> {
 
+    @Option(names = {"--work-dir"}, description = "Work directory.", required = true)
+    public String workDir;
+
     @Option(names = {"-u", "--user-name"}, description = "The username on the cluster used to launch the pipeline execution.")
     public String userName;
 
@@ -62,6 +65,7 @@ public class AltairPlatform extends AbstractPlatform<AltairPbsComputeConfig> {
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
+                .nextflowConfig(nextflowConfigString())
 
                 // Main
                 .launchDir(launchDir)

@@ -109,10 +109,24 @@ public class DumpCmd extends AbstractRunsCmd {
             tar.add("workflow.json", collectWorkflowInfo(wspId));
             tar.add("workflow-metadata.json", collectWorkflowMetadata(wspId));
             tar.add("workflow-load.json", collectWorkflowLoad(wspId));
-            tar.add("workflow-launch.json", collectWorkflowLaunch(wspId));
+
+            var wfLaunch = collectWorkflowLaunch(wspId);
+            if (wfLaunch != null) {
+                tar.add("workflow-launch.json", wfLaunch);
+            } else {
+                progress.println(ansi("\t- No data collected, skipping")); // nextflow-run workflows doesn't upload launch
+            }
+
             tar.add("workflow-metrics.json", collectWorkflowMetrics(wspId));
             tar.add("workflow-tasks.json", collectWorkflowTasks(wspId));
-            tar.add("nextflow.log", collectNfLog(wspId));
+
+            var nfLog = collectNfLog(wspId);
+            if (nfLog != null) {
+                tar.add("nextflow.log", nfLog);
+            } else {
+                progress.println(ansi("\t- No data collected, skipping")); // nextflow-run workflows doesn't upload log
+            }
+
             collectWorkflowTaskLogs(tar, wspId); // tasks/{taskId}/.command.[out,err,log], .fusion.log
 
         } // blocks until data is written to tar file, or timeout
@@ -123,7 +137,7 @@ public class DumpCmd extends AbstractRunsCmd {
     private String collectTowerInfo() throws IOException, ApiException {
         progress.println(ansi("- Tower info"));
 
-        ServiceInfo serviceInfo = api().info().getServiceInfo();
+        ServiceInfo serviceInfo = serviceInfoApi().info().getServiceInfo();
         return JsonHelper.prettyJson(serviceInfo);
     }
 
@@ -191,8 +205,10 @@ public class DumpCmd extends AbstractRunsCmd {
         }
 
         String launchId = workflow.getLaunchId();
-        Launch launch = (launchId == null) ? null : launchById(workspaceId, launchId);
-
+        if (launchId == null) { // nextflow-run workflow, no launch entity available
+            return null;
+        }
+        Launch launch = launchById(workspaceId, launchId);
         return JsonHelper.prettyJson(launch);
     }
 
@@ -204,7 +220,7 @@ public class DumpCmd extends AbstractRunsCmd {
             throw new TowerException("Unknown workflow");
         }
 
-        List<WorkflowMetrics> metrics = api().describeWorkflowMetrics(workflow.getId(), workspaceId).getMetrics();
+        List<WorkflowMetrics> metrics = workflowsApi().describeWorkflowMetrics(workflow.getId(), workspaceId).getMetrics();
 
         return JsonHelper.prettyJson(metrics);
     }
@@ -265,15 +281,17 @@ public class DumpCmd extends AbstractRunsCmd {
             throw new TowerException("Unknown workflow");
         }
 
-        File nextflowLog = api().downloadWorkflowLog(workflow.getId(), String.format("nf-%s.log", workflow.getId()), workspaceId);
-
+        if (workflow.getLaunchId() == null) { // nextflow-run workflow, no log available
+            return null;
+        }
+        File nextflowLog = workflowsApi().downloadWorkflowLog(workflow.getId(), String.format("nf-%s.log", workflow.getId()), workspaceId);
         return nextflowLog;
     }
 
     private void addTaskLog(TarFileHelper.TarFileAppender tar, Long taskId, String logName, Long workspaceId, String workflowId) throws ApiException, IOException {
         try {
 
-            File file = api().downloadWorkflowTaskLog(workflowId, taskId, logName, workspaceId);
+            File file = workflowsApi().downloadWorkflowTaskLog(workflowId, taskId, logName, workspaceId);
             String fileName = String.format("tasks/%d/%s", taskId, logName);
             tar.add(fileName, file);
 
@@ -319,7 +337,7 @@ public class DumpCmd extends AbstractRunsCmd {
         while (added == max) {
 
             added = 0;
-            ListTasksResponse response = api().listWorkflowTasks(workflowId, wspId, max, offset, null, null, null);
+            ListTasksResponse response = workflowsApi().listWorkflowTasks(workflowId, wspId, max, offset, null, null, null);
 
             if (response.getTasks() == null) {
                 throw new TowerException("No tasks found for workflow");

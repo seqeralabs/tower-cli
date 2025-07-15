@@ -61,7 +61,7 @@ public class UpdateLabelsCmd extends AbstractLabelsCmd {
                 .value(updateOptions.labelValue);
         Long wsp = workspaceId(workspaceRef.workspace);
         try {
-            UpdateLabelResponse res = api().updateLabel(labelId, req, wsp);
+            UpdateLabelResponse res = labelsApi().updateLabel(labelId, req, wsp);
             return new LabelUpdated(res.getId(),res.getName(),res.getValue(),workspaceRef.workspace);
         } catch (Exception e) {
             throw new TowerException(String.format("Unable to update label '%d' for workspace '%d'",labelId, wsp));

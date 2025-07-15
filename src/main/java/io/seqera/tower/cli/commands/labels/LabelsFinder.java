@@ -18,7 +18,7 @@
 package io.seqera.tower.cli.commands.labels;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.api.DefaultApi;
+import io.seqera.tower.api.LabelsApi;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.exceptions.TowerRuntimeException;
 import io.seqera.tower.model.CreateLabelRequest;
@@ -38,10 +38,10 @@ public class LabelsFinder {
         FILTER
     }
 
-    private final DefaultApi api;
+    private final LabelsApi api;
 
 
-    public LabelsFinder(DefaultApi api) {
+    public LabelsFinder(LabelsApi api) {
         this.api = api;
     }
 

@@ -21,10 +21,14 @@ import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.responses.computeenvs.ComputeEnvAdded;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
+
+import java.io.IOException;
+import java.nio.file.Path;
 
 import static io.seqera.tower.cli.commands.AbstractApiCmd.USER_WORKSPACE_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -80,7 +84,7 @@ class AltairPlatformTest extends BaseCmdTest {
     @Test
     void testAddWithEnvVars(MockServerClient mock) {
         mock.when(
-                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "altair-platform"), exactly(1)
+                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "altair-platform"),exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"2ba2oekqeTEBzwSDgXg7xf\",\"name\":\"jdeu\",\"description\":null,\"discriminator\":\"ssh\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-06T08:53:51Z\",\"dateCreated\":\"2021-09-06T06:54:53Z\",\"lastUpdated\":\"2021-09-06T06:54:53Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -98,5 +102,26 @@ class AltairPlatformTest extends BaseCmdTest {
         assertEquals(0, out.exitCode);
     }
 
+    @Test
+    void testAddWithNextflowConfigFile(MockServerClient mock) throws IOException {
+        mock.when(
+                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "altair-platform"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"2ba2oekqeTEBzwSDgXg7xf\",\"name\":\"jdeu\",\"description\":null,\"discriminator\":\"ssh\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-06T08:53:51Z\",\"dateCreated\":\"2021-09-06T06:54:53Z\",\"lastUpdated\":\"2021-09-06T06:54:53Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
 
+        mock.when(
+                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"credentialsId\":\"2ba2oekqeTEBzwSDgXg7xf\",\"name\":\"altair\",\"platform\":\"altair-platform\",\"config\":{\"userName\":\"jordi\",\"hostName\":\"ssh.mydomain.net\",\"workDir\":\"/home/jordeu/nf\",\"nextflowConfig\":\"nextflow_config\",\"headQueue\":\"normal\"}}}"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "compute-envs", "add", "altair", "-n", "altair", "--work-dir", "/home/jordeu/nf", "-u", "jordi", "-H", "ssh.mydomain.net", "-q", "normal", "--nextflow-config", tempFile("nextflow_config", "nextflow", "config"));
+
+        assertEquals("", out.stdErr);
+        assertEquals(new ComputeEnvAdded("altair-platform", "isnEDBLvHDAIteOEF44ow", "altair", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
 }

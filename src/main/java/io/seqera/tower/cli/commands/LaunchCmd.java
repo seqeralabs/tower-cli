@@ -174,7 +174,7 @@ public class LaunchCmd extends AbstractRootCmd {
 
     protected Response runTowerPipeline(Long wspId) throws ApiException, IOException {
 
-        ListPipelinesResponse pipelines = api().listPipelines(Collections.emptyList(), wspId, 50, 0, pipeline, "all");
+        ListPipelinesResponse pipelines = pipelinesApi().listPipelines(Collections.emptyList(), wspId, 50, 0, pipeline, "all");
         if (pipelines.getTotalSize() == 0) {
             throw new InvalidResponseException(String.format("Pipeline '%s' not found on this workspace.", pipeline));
         }
@@ -193,13 +193,16 @@ public class LaunchCmd extends AbstractRootCmd {
 
         Long sourceWorkspaceId = sourceWorkspaceId(wspId, pipe);
 
-        Launch launch = api().describePipelineLaunch(pipe.getPipelineId(), wspId, sourceWorkspaceId).getLaunch();
+        Launch launch = pipelinesApi().describePipelineLaunch(pipe.getPipelineId(), wspId, sourceWorkspaceId).getLaunch();
 
         WorkflowLaunchRequest launchRequest = createLaunchRequest(launch);
         if (computeEnv != null) {
             ComputeEnvResponseDto ce = computeEnvByRef(wspId, computeEnv);
             launchRequest.computeEnvId(ce.getId());
             launchRequest.workDir(ce.getConfig().getWorkDir());
+            launchRequest.preRunScript( coalesce(launchRequest.getPreRunScript(), ce.getConfig().getPreRunScript()) );
+            launchRequest.postRunScript( coalesce(launchRequest.getPostRunScript(), ce.getConfig().getPostRunScript()) );
+            launchRequest.configText( coalesce(launchRequest.getConfigText(), ce.getConfig().getNextflowConfig()) );
         }
 
         if (launchRequest.getComputeEnvId() == null) {
@@ -207,7 +210,7 @@ public class LaunchCmd extends AbstractRootCmd {
         }
 
         if (launchRequest.getWorkDir() == null) {
-            ComputeEnvResponseDto ce = api().describeComputeEnv(launchRequest.getComputeEnvId(), wspId, NO_CE_ATTRIBUTES).getComputeEnv();
+            ComputeEnvResponseDto ce = computeEnvsApi().describeComputeEnv(launchRequest.getComputeEnvId(), wspId, NO_CE_ATTRIBUTES).getComputeEnv();
             launchRequest.workDir(ce.getConfig().getWorkDir());
         }
 
@@ -218,7 +221,7 @@ public class LaunchCmd extends AbstractRootCmd {
     }
 
     protected Response submitWorkflow(WorkflowLaunchRequest launch, Long wspId, Long sourceWorkspaceId) throws ApiException {
-        SubmitWorkflowLaunchResponse response = api().createWorkflowLaunch(new SubmitWorkflowLaunchRequest().launch(launch), wspId, sourceWorkspaceId);
+        SubmitWorkflowLaunchResponse response = workflowsApi().createWorkflowLaunch(new SubmitWorkflowLaunchRequest().launch(launch), wspId, sourceWorkspaceId);
         String workflowId = response.getWorkflowId();
         return new RunSubmited(workflowId, wspId, baseWorkspaceUrl(wspId), workspaceRef(wspId));
     }
@@ -243,13 +246,14 @@ public class LaunchCmd extends AbstractRootCmd {
                     WorkflowStatus.CANCELLED, WorkflowStatus.FAILED, WorkflowStatus.SUCCEEDED
             );
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             return exitCode;
         }
     }
 
     private WorkflowStatus checkWorkflowStatus(String workflowId, Long workspaceId) {
         try {
-            return api().describeWorkflow(workflowId, workspaceId, NO_WORKFLOW_ATTRIBUTES).getWorkflow().getStatus();
+            return workflowsApi().describeWorkflow(workflowId, workspaceId, NO_WORKFLOW_ATTRIBUTES).getWorkflow().getStatus();
         } catch (ApiException | NullPointerException e) {
             return null;
         }
@@ -264,7 +268,7 @@ public class LaunchCmd extends AbstractRootCmd {
         // retrieve labels for the workspace and check if we need to create new ones
         List<LabelDbDto> wspLabels = new ArrayList<>();
 
-        ListLabelsResponse res = api().listLabels(workspaceId, null, null, null, LabelType.SIMPLE, null);
+        ListLabelsResponse res = labelsApi().listLabels(workspaceId, null, null, null, LabelType.SIMPLE, null);
         if (res.getLabels() != null) {
             wspLabels.addAll(res.getLabels());
         }
@@ -285,7 +289,7 @@ public class LaunchCmd extends AbstractRootCmd {
 
         // create the new ones via POST /labels
         for (String labelName: newLabels) {
-            CreateLabelResponse created = api().createLabel(
+            CreateLabelResponse created = labelsApi().createLabel(
                 new CreateLabelRequest()
                     .name(labelName)
                     .resource(false)

@@ -31,7 +31,7 @@ import java.util.Objects;
 
 @CommandLine.Command(
         name = "update",
-        description = "Update custom data link."
+        description = "Update custom data-link."
 )
 public class UpdateCmd extends AbstractApiCmd {
     @CommandLine.Mixin
@@ -73,6 +73,6 @@ public class UpdateCmd extends AbstractApiCmd {
         if (credsId != null)
             req.credentialsId(credsId);
 
-        return api().updateCustomDataLink(id, req, wspId);
+        return dataLinksApi().updateCustomDataLink(id, req, wspId);
     }
 }

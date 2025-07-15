@@ -254,7 +254,7 @@ public class FormatHelper {
         }
     }
 
-    public static String formatDataStudioStatus(DataStudioStatus status) {
+    public static String formatStudioStatus(DataStudioStatus status) {
         if (status == null) {
             return "NA";
         }
@@ -332,6 +332,21 @@ public class FormatHelper {
             return str;
         })
         .collect(Collectors.joining(","));
+    }
+
+    public static String formatDescription(String description) {
+        return formatDescription(description, 2048);
+    }
+
+    public static String formatDescription(String description, int maxLength) {
+        if (description == null) {
+            return "NA";
+        }
+
+        // remove line breaks
+        var text = description.trim().replace("\n", " ").replace("\r", " ");
+        // cap the description length if too long
+        return text.length() > maxLength ? text.substring(0, maxLength) + "..." : text;
     }
 
 }

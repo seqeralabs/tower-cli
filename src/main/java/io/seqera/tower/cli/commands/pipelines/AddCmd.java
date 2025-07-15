@@ -69,7 +69,7 @@ public class AddCmd extends AbstractPipelinesCmd {
         // Check workspace visibility
         Visibility visibility = Visibility.PRIVATE;
         if (wspId != null) {
-            visibility = api().describeWorkspace(orgId(wspId), wspId).getWorkspace().getVisibility();
+            visibility = workspacesApi().describeWorkspace(orgId(wspId), wspId).getWorkspace().getVisibility();
         }
 
         // Retrieve the provided computeEnv or use the primary if not provided
@@ -88,7 +88,7 @@ public class AddCmd extends AbstractPipelinesCmd {
         String preRunScriptValue = opts.preRunScript == null && ce != null ? ce.getConfig().getPreRunScript() : FilesHelper.readString(opts.preRunScript);
         String postRunScriptValue = opts.postRunScript == null && ce != null ? ce.getConfig().getPostRunScript() : FilesHelper.readString(opts.postRunScript);
 
-        CreatePipelineResponse response = api().createPipeline(
+        CreatePipelineResponse response = pipelinesApi().createPipeline(
                 new CreatePipelineRequest()
                         .name(name)
                         .description(description)
@@ -121,7 +121,7 @@ public class AddCmd extends AbstractPipelinesCmd {
     }
 
     private void attachLabels(Long wspId,Long pipelineId) throws ApiException{
-        PipelinesLabelsManager creator = new PipelinesLabelsManager(api());
+        PipelinesLabelsManager creator = new PipelinesLabelsManager(labelsApi());
         creator.execute(wspId, pipelineId, labels.labels);
     }
 }
