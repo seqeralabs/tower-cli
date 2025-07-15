@@ -9,6 +9,11 @@ on:
   pull_request:
     types: [opened, reopened, synchronize]
 
+permissions:
+  contents: read
+  packages: read
+  actions: read
+
 jobs:
 
   linux-image:
@@ -119,7 +124,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PLATFORM: osx-x86_64
       - name: Codesign binary
-        if: "contains(github.event.head_commit.message, '[release]') && github.event.ref=='refs/heads/master'"
+        if: contains(github.event.head_commit.message, '[release]') && github.event.ref == 'refs/heads/master'
         env:
           MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
           MACOS_CERTIFICATE_PWD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
@@ -135,7 +140,7 @@ jobs:
           /usr/bin/codesign --force -s "$MACOS_CERTIFICATE_NAME" --options runtime build/native/nativeCompile/tw -v
 
       - name: Notarize binary
-        if: "contains(github.event.head_commit.message, '[release]') && github.event.ref=='refs/heads/master'"
+        if: contains(github.event.head_commit.message, '[release]') && github.event.ref == 'refs/heads/master'
         env:
           MACOS_AC_API_CERT: ${{ secrets.MACOS_AC_API_CERT }}
           MACOS_AC_API_ISSUER_ID: ${{ secrets.MACOS_AC_API_ISSUER_ID }}
@@ -213,7 +218,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PLATFORM: osx-arm64
       - name: Codesign binary
-        if: "contains(github.event.head_commit.message, '[release]') && github.event.ref=='refs/heads/master'"
+        if: contains(github.event.head_commit.message, '[release]') && github.event.ref == 'refs/heads/master'
         env:
           MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
           MACOS_CERTIFICATE_PWD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
@@ -229,7 +234,7 @@ jobs:
           /usr/bin/codesign --force -s "$MACOS_CERTIFICATE_NAME" --options runtime build/native/nativeCompile/tw -v
 
       - name: Notarize binary
-        if: "contains(github.event.head_commit.message, '[release]') && github.event.ref=='refs/heads/master'"
+        if: contains(github.event.head_commit.message, '[release]') && github.event.ref == 'refs/heads/master'
         env:
           MACOS_AC_API_CERT: ${{ secrets.MACOS_AC_API_CERT }}
           MACOS_AC_API_ISSUER_ID: ${{ secrets.MACOS_AC_API_ISSUER_ID }}
@@ -321,9 +326,13 @@ jobs:
 
   release:
     name: Release
-    if: "contains(github.event.head_commit.message, '[release]')"
+    if: contains(github.event.head_commit.message, '[release]')
     needs: [ linux-image, mac-image, mac-arm64-image, windows-image ]
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+      actions: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -349,7 +358,7 @@ jobs:
       - name: Run JReleaser
         uses: jreleaser/release-action@v2
         env:
-          JRELEASER_GITHUB_TOKEN: ${{ secrets.GH_JRELEASER_TOKEN }}
+          JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           JRELEASER_PROJECT_VERSION: ${{ steps.version.outputs.VERSION }}
 
       - name: JReleaser release output
