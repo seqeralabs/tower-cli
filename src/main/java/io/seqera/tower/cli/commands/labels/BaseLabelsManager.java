@@ -18,18 +18,18 @@
 package io.seqera.tower.cli.commands.labels;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.api.DefaultApi;
+import io.seqera.tower.api.LabelsApi;
 import io.seqera.tower.cli.responses.labels.ManageLabels;
 
 import java.util.List;
 
 public abstract class BaseLabelsManager<Request, EntityId> {
 
-    protected final DefaultApi api;
+    protected final LabelsApi api;
     private final LabelsFinder finder;
     private final String type;
 
-    public BaseLabelsManager(DefaultApi api, String type) {
+    public BaseLabelsManager(LabelsApi api, String type) {
         this.api = api;
         this.finder = new LabelsFinder(api);
         this.type = type;

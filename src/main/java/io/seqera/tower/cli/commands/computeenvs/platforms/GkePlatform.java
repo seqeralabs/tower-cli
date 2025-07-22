@@ -19,7 +19,7 @@ package io.seqera.tower.cli.commands.computeenvs.platforms;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.utils.FilesHelper;
-import io.seqera.tower.model.ComputeEnv.PlatformEnum;
+import io.seqera.tower.model.ComputeEnvComputeConfig.PlatformEnum;
 import io.seqera.tower.model.GkeComputeConfig;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Option;
@@ -27,6 +27,9 @@ import picocli.CommandLine.Option;
 import java.io.IOException;
 
 public class GkePlatform extends AbstractPlatform<GkeComputeConfig> {
+
+    @Option(names = {"--work-dir"}, description = "Work directory.", required = true)
+    public String workDir;
 
     @Option(names = {"-r", "--region"}, description = "AWS region.", required = true)
     public String region;
@@ -70,9 +73,10 @@ public class GkePlatform extends AbstractPlatform<GkeComputeConfig> {
                 // Common
                 .workDir(workDir)
 
-                // Stagging
+                // Staging
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
+                .nextflowConfig(nextflowConfigString())
                 .environment(environmentVariables());
 
         return config;

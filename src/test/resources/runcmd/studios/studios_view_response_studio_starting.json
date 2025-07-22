@@ -1,0 +1,63 @@
+{
+  "sessionId": "3e8370e7",
+  "workspaceId": 75887156211589,
+  "user": {
+    "id": 2345,
+    "userName": "John Doe",
+    "email": "john@seqera.io",
+    "avatar": null
+  },
+  "name": "studio-a66d",
+  "description": "my first studio",
+  "studioUrl": "https://a3e8370e7.dev-tower.com",
+  "computeEnv": {
+    "id": "3xkkzYH2nbD3nZjrzKm0oR",
+    "name": "ce1",
+    "platform": "aws-batch",
+    "region": "us-east-2"
+  },
+  "template": {
+    "repository": "cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot",
+    "icon": "vscode"
+  },
+  "configuration": {
+    "gpu": 0,
+    "cpu": 2,
+    "memory": 8192,
+    "mountData": [
+      "v1-user-1ccf131810375d303bf0402dd8423433"
+    ],
+    "condaEnvironment":null
+  },
+  "dateCreated": "2024-12-19T06:49:24.893122+01:00",
+  "lastUpdated": "2024-12-19T06:52:50.686822+01:00",
+  "statusInfo": {
+    "status": "starting",
+    "message": "",
+    "lastUpdate": "2024-12-19T05:52:41.823Z"
+  },
+  "waveBuildUrl": null,
+  "baseImage": "cr.seqera.io/public/data-studio-jupyter:4.2.5-snapshot",
+  "mountedDataLinks": [
+    {
+      "id": "v1-user-1ccf131810375d303bf0402dd8423433",
+      "name": "aaa-my-bucket",
+      "resourceRef": "s3://aaa-my-bucket",
+      "type": "bucket",
+      "provider": "aws",
+      "region": "us-east-2"
+    }
+  ],
+  "progress": [
+    {
+      "status": "in-progress",
+      "message": "Provisioning compute resources",
+      "warnings": null
+    },
+    {
+      "status": "pending",
+      "message": "Mounting checkpoints",
+      "warnings": null
+    }
+  ]
+}

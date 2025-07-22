@@ -18,7 +18,7 @@
 package io.seqera.tower.cli.commands.computeenvs.platforms;
 
 import io.seqera.tower.cli.utils.FilesHelper;
-import io.seqera.tower.model.ComputeEnv.PlatformEnum;
+import io.seqera.tower.model.ComputeEnvComputeConfig.PlatformEnum;
 import io.seqera.tower.model.K8sComputeConfig;
 import io.seqera.tower.model.PodCleanupPolicy;
 import picocli.CommandLine.ArgGroup;
@@ -28,6 +28,9 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 public class K8sPlatform extends AbstractPlatform<K8sComputeConfig> {
+
+    @Option(names = {"--work-dir"}, description = "Work directory.", required = true)
+    public String workDir;
 
     @Option(names = {"-s", "--server"}, description = "Master server.", required = true)
     public String server;
@@ -57,6 +60,7 @@ public class K8sPlatform extends AbstractPlatform<K8sComputeConfig> {
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
+                .nextflowConfig(nextflowConfigString())
                 .environment(environmentVariables())
                 .computeServiceAccount(adv().computeAccount)
                 .headPodSpec(FilesHelper.readString(adv().headPodSpec))

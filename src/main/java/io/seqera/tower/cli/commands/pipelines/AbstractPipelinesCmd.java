@@ -26,7 +26,6 @@ import io.seqera.tower.model.PipelineDbDto;
 import io.seqera.tower.model.PipelineQueryAttribute;
 import picocli.CommandLine.Command;
 
-import java.util.Collections;
 import java.util.List;
 
 @Command
@@ -35,19 +34,25 @@ public abstract class AbstractPipelinesCmd extends AbstractApiCmd {
     public AbstractPipelinesCmd() {
     }
 
-    protected PipelineDbDto pipelineByName(Long workspaceId, String name) throws ApiException {
+    protected PipelineDbDto pipelineByName(Long workspaceId, String pipelineName, List<PipelineQueryAttribute> pipelineQueryAttributes) throws ApiException {
 
-        ListPipelinesResponse list = api().listPipelines(Collections.emptyList(), workspaceId, null, null, name, "all");
+        String exactName = quotePipelineName(pipelineName);
+
+        ListPipelinesResponse list = pipelinesApi().listPipelines(pipelineQueryAttributes, workspaceId, null, null, exactName, "all");
 
         if (list.getPipelines().isEmpty()) {
-            throw new PipelineNotFoundException(name, workspaceRef(workspaceId));
+            throw new PipelineNotFoundException(exactName, workspaceRef(workspaceId));
         }
 
         if (list.getPipelines().size() > 1) {
-            throw new MultiplePipelinesFoundException(name, workspaceRef(workspaceId));
+            throw new MultiplePipelinesFoundException(exactName, workspaceRef(workspaceId));
         }
 
         return list.getPipelines().get(0);
+    }
+
+    protected PipelineDbDto pipelineByName(Long workspaceId, String pipelineName) throws ApiException {
+        return pipelineByName(workspaceId, pipelineName, NO_PIPELINE_ATTRIBUTES);
     }
 
     protected PipelineDbDto fetchPipeline(PipelineRefOptions pipelineRefOptions, Long wspId, PipelineQueryAttribute... attributes) throws ApiException {
@@ -55,7 +60,22 @@ public abstract class AbstractPipelinesCmd extends AbstractApiCmd {
         if (pipelineId == null) {
             pipelineId = pipelineByName(wspId, pipelineRefOptions.pipeline.pipelineName).getPipelineId();
         }
-        return api().describePipeline(pipelineId, List.of(attributes), wspId, null).getPipeline();
+        return pipelinesApi().describePipeline(pipelineId, List.of(attributes), wspId, null).getPipeline();
+    }
+
+    private static String quotePipelineName(String pipelineName) {
+
+        if (pipelineName == null) return null;
+        if (pipelineName.isEmpty()) return "\"\"";
+
+        // replace '"' with '\"'
+        String escaped = pipelineName.replace("\"", "\\\"");
+
+        if (escaped.startsWith("\\\"") && escaped.endsWith("\\\"")) {
+            return escaped;
+        }
+
+        return "\"" + escaped + "\"";
     }
 
 }

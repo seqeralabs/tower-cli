@@ -64,6 +64,9 @@ public class RelaunchCmd extends AbstractRunsCmd {
     @Option(names = {"-n", "--name"}, description = "Custom workflow run name")
     public String name;
 
+    @Option(names = {"--launch-container"}, description = "Container to be used to run the nextflow head job (BETA).")
+    public String launchContainer;
+
     @Mixin
     public LaunchOptions opts;
 
@@ -75,7 +78,7 @@ public class RelaunchCmd extends AbstractRunsCmd {
             throw new TowerException("Not allowed to change '--work-dir' option when resuming. Use '--no-resume' if you want to relaunch into a different working directory without resuming.");
         }
 
-        Workflow workflow = workflowById(wspId, id).getWorkflow();
+        Workflow workflow = workflowById(wspId, id, NO_WORKFLOW_ATTRIBUTES).getWorkflow();
         WorkflowLaunchResponse launch = workflowLaunchResponse(workflow.getId(), wspId);
 
         ComputeEnvResponseDto ce = null;
@@ -109,7 +112,9 @@ public class RelaunchCmd extends AbstractRunsCmd {
                 .pullLatest(coalesce(opts.pullLatest, launch.getPullLatest()))
                 .stubRun(coalesce(opts.stubRun, launch.getStubRun()))
                 .dateCreated(OffsetDateTime.now())
-                .runName(name);
+                .runName(name)
+                .launchContainer(launchContainer)
+                ;
 
         if (!noResume) {
             workflowLaunchRequest.sessionId(workflow.getSessionId());
@@ -118,7 +123,7 @@ public class RelaunchCmd extends AbstractRunsCmd {
         SubmitWorkflowLaunchRequest submitWorkflowLaunchRequest = new SubmitWorkflowLaunchRequest()
                 .launch(workflowLaunchRequest);
 
-        SubmitWorkflowLaunchResponse response = api().createWorkflowLaunch(submitWorkflowLaunchRequest, wspId, null);
+        SubmitWorkflowLaunchResponse response = workflowsApi().createWorkflowLaunch(submitWorkflowLaunchRequest, wspId, null);
 
         return new RunSubmited(response.getWorkflowId(), wspId, workflowWatchUrl(response.getWorkflowId(), wspId), workspaceRef(wspId));
     }
@@ -134,7 +139,7 @@ public class RelaunchCmd extends AbstractRunsCmd {
     }
 
     private WorkflowLaunchResponse workflowLaunchResponse(String workflowId, Long workspaceId) throws ApiException {
-        DescribeWorkflowLaunchResponse launchResponse = api().describeWorkflowLaunch(workflowId, workspaceId);
+        DescribeWorkflowLaunchResponse launchResponse = workflowsApi().describeWorkflowLaunch(workflowId, workspaceId);
         if (launchResponse == null) {
             throw new LaunchNotFoundException(id, workspaceRef(workspaceId));
         }

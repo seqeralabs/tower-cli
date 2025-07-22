@@ -82,4 +82,15 @@ public class Label {
             return label;
         }
     }
+
+    public static class StudioResourceLabelsConverter extends ResourceLabelsConverter {
+        @Override
+        public Label convert(String rawValue) throws Exception {
+            // allow for a blank/null value to be able to send empty list of labels instead of null
+            if (rawValue == null || rawValue.isBlank()) {
+                return null;
+            }
+            return super.convert(rawValue);
+        }
+    }
 }

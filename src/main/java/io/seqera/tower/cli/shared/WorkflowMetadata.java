@@ -29,6 +29,10 @@ public final class WorkflowMetadata {
 
     private final Long pipelineId;
 
+    private final Long organizationId;
+
+    private final String organizationName;
+
     private final Long workspaceId;
 
     private final String workspaceName;
@@ -39,8 +43,21 @@ public final class WorkflowMetadata {
 
     private final List<LabelDbDto> labels;
 
+    public WorkflowMetadata() {
+        pipelineId = null;
+        organizationId = null;
+        organizationName = null;
+        workspaceId = null;
+        workspaceName = null;
+        userId = null;
+        runUrl = null;
+        labels = null;
+    }
+
     public WorkflowMetadata(
             final Long pipelineId,
+            final Long organizationId,
+            final String organizationName,
             final Long workspaceId,
             final String workspaceName,
             final Long userId,
@@ -48,6 +65,8 @@ public final class WorkflowMetadata {
             final List<LabelDbDto> labels
     ) {
         this.pipelineId = pipelineId;
+        this.organizationId = organizationId;
+        this.organizationName = organizationName;
         this.workspaceId = workspaceId;
         this.workspaceName = workspaceName;
         this.userId = userId;
@@ -57,6 +76,14 @@ public final class WorkflowMetadata {
 
     public Long getPipelineId() {
         return pipelineId;
+    }
+
+    public Long getOrganizationId() {
+        return organizationId;
+    }
+
+    public String getOrganizationName() {
+        return organizationName;
     }
 
     public Long getWorkspaceId() {

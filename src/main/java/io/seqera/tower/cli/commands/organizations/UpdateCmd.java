@@ -58,7 +58,7 @@ public class UpdateCmd extends AbstractOrganizationsCmd {
         request.setLocation(opts.location != null ? opts.location : organization.getLocation());
         request.setWebsite(opts.website != null ? opts.website : organization.getWebsite());
 
-        api().updateOrganization(organization.getOrgId(), request);
+        orgsApi().updateOrganization(organization.getOrgId(), request);
 
         return new OrganizationsUpdated(organization.getOrgId(), organization.getName());
     }

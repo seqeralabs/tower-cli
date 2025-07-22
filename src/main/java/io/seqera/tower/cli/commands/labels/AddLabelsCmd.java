@@ -66,7 +66,7 @@ public class AddLabelsCmd extends AbstractLabelsCmd {
         Long wspId = workspaceId(workspaceOptionalOptions.workspace);
 
         try {
-            CreateLabelResponse res = api().createLabel(req, wspId);
+            CreateLabelResponse res = labelsApi().createLabel(req, wspId);
             return new LabelAdded(res.getId(), res.getName(), res.getResource(),res.getValue(),workspaceOptionalOptions.workspace);
         } catch (Exception e) {
             throw new TowerException(String.format("Unable to create label for workspace '%d'", wspId));

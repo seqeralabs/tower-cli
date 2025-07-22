@@ -25,7 +25,7 @@ import io.seqera.tower.cli.exceptions.TeamNotFoundException;
 import io.seqera.tower.model.ListMembersResponse;
 import io.seqera.tower.model.ListParticipantsResponse;
 import io.seqera.tower.model.ListTeamResponse;
-import io.seqera.tower.model.MemberDbDto;
+import io.seqera.tower.model.MemberDbDto;   
 import io.seqera.tower.model.ParticipantDbDto;
 import io.seqera.tower.model.ParticipantType;
 import io.seqera.tower.model.TeamDbDto;
@@ -40,7 +40,7 @@ public class AbstractParticipantsCmd extends AbstractApiCmd {
     }
 
     protected MemberDbDto findOrganizationMemberByName(Long orgId, String name) throws ApiException {
-        ListMembersResponse listMembersResponse = api().listOrganizationMembers(orgId, null, null, name);
+        ListMembersResponse listMembersResponse = orgsApi().listOrganizationMembers(orgId, null, null, name);
 
         MemberDbDto member;
 
@@ -56,7 +56,7 @@ public class AbstractParticipantsCmd extends AbstractApiCmd {
     }
 
     protected MemberDbDto findOrganizationCollaboratorByName(Long orgId, String name) throws ApiException {
-        ListMembersResponse listCollaboratorsResponse = api().listOrganizationCollaborators(orgId, null, null, name);
+        ListMembersResponse listCollaboratorsResponse = orgsApi().listOrganizationCollaborators(orgId, null, null, name);
 
         MemberDbDto member;
 
@@ -72,7 +72,7 @@ public class AbstractParticipantsCmd extends AbstractApiCmd {
     }
 
     protected TeamDbDto findOrganizationTeamByName(Long orgId, String name) throws ApiException {
-        ListTeamResponse listTeamResponse = api().listOrganizationTeams(orgId, null, null, null);
+        ListTeamResponse listTeamResponse = teamsApi().listOrganizationTeams(orgId, null, null, null);
 
         if (listTeamResponse.getTeams() != null) {
             TeamDbDto team = listTeamResponse.getTeams().stream().filter(it -> Objects.equals(it.getName(), name)).findFirst().orElse(null);
@@ -86,7 +86,7 @@ public class AbstractParticipantsCmd extends AbstractApiCmd {
     }
 
     protected ParticipantDbDto findWorkspaceParticipant(Long organizationId, Long workspaceId, String name, ParticipantType type) throws ApiException {
-        ListParticipantsResponse listParticipantsResponse = api().listWorkspaceParticipants(organizationId, workspaceId, null, null, name);
+        ListParticipantsResponse listParticipantsResponse = workspacesApi().listWorkspaceParticipants(organizationId, workspaceId, null, null, name);
 
         if (listParticipantsResponse.getParticipants() != null) {
             ParticipantDbDto participant = listParticipantsResponse.getParticipants().stream().filter(it -> it.getType() == type).findFirst().orElse(null);
@@ -101,6 +101,6 @@ public class AbstractParticipantsCmd extends AbstractApiCmd {
 
     protected void deleteParticipantByNameAndType(Long wspId, String participantName, ParticipantType type) throws ParticipantNotFoundException, ApiException {
         ParticipantDbDto participant = findWorkspaceParticipant(orgId(wspId), wspId, participantName, type);
-        api().deleteWorkspaceParticipant(orgId(wspId), wspId, participant.getParticipantId());
+        workspacesApi().deleteWorkspaceParticipant(orgId(wspId), wspId, participant.getParticipantId());
     }
 }

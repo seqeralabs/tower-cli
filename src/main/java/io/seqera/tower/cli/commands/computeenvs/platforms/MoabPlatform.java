@@ -18,7 +18,7 @@
 package io.seqera.tower.cli.commands.computeenvs.platforms;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.model.ComputeEnv.PlatformEnum;
+import io.seqera.tower.model.ComputeEnvComputeConfig.PlatformEnum;
 import io.seqera.tower.model.MoabComputeConfig;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Option;
@@ -26,6 +26,9 @@ import picocli.CommandLine.Option;
 import java.io.IOException;
 
 public class MoabPlatform extends AbstractPlatform<MoabComputeConfig> {
+
+    @Option(names = {"--work-dir"}, description = "Work directory.", required = true)
+    public String workDir;
 
     @Option(names = {"-u", "--user-name"}, description = "The username on the cluster used to launch the pipeline execution.")
     public String userName;
@@ -58,10 +61,11 @@ public class MoabPlatform extends AbstractPlatform<MoabComputeConfig> {
 
         config
                 // Common
+                .environment(environmentVariables())
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
-                .environment(environmentVariables())
+                .nextflowConfig(nextflowConfigString())
 
                 // Main
                 .launchDir(launchDir)

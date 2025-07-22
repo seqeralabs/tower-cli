@@ -47,18 +47,18 @@ public abstract class AbstractComputeEnvCmd extends AbstractApiCmd {
 
     protected ComputeEnvResponseDto computeEnvByName(Long workspaceId, String name) throws ApiException {
 
-        List<ListComputeEnvsResponseEntry> computeEnvs = api().listComputeEnvs(null, workspaceId).getComputeEnvs();
+        List<ListComputeEnvsResponseEntry> computeEnvs = computeEnvsApi().listComputeEnvs(null, workspaceId).getComputeEnvs();
         ListComputeEnvsResponseEntry entry = computeEnvs
                 .stream()
                 .filter(ce -> name.equals(ce.getName()))
                 .findFirst()
                 .orElseThrow(() -> new ComputeEnvNotFoundException(name, workspaceId));
 
-        return api().describeComputeEnv(entry.getId(), workspaceId, List.of(ComputeEnvQueryAttribute.LABELS)).getComputeEnv();
+        return computeEnvsApi().describeComputeEnv(entry.getId(), workspaceId, List.of(ComputeEnvQueryAttribute.LABELS)).getComputeEnv();
     }
 
     private ComputeEnvResponseDto computeEnvById(Long workspaceId, String id) throws ApiException {
-        return api().describeComputeEnv(id, workspaceId, List.of(ComputeEnvQueryAttribute.LABELS)).getComputeEnv();
+        return computeEnvsApi().describeComputeEnv(id, workspaceId, List.of(ComputeEnvQueryAttribute.LABELS)).getComputeEnv();
     }
 }
 

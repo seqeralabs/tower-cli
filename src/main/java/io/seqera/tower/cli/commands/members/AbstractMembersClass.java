@@ -32,7 +32,7 @@ abstract public class AbstractMembersClass extends AbstractApiCmd {
     }
 
     protected MemberDbDto findMemberByUser(Long orgId, String user) throws ApiException {
-        ListMembersResponse response = api().listOrganizationMembers(orgId, null, null, user);
+        ListMembersResponse response = orgsApi().listOrganizationMembers(orgId, null, null, user);
 
         if(response.getMembers() == null || response.getMembers().size() == 0){
             throw new MembersNotFoundException(user, orgId);

@@ -40,7 +40,7 @@ public class DeleteLabelsCmd extends AbstractLabelsCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspaceOptionalOptions.workspace);
-        api().deleteLabel(labelId, wspId);
+        labelsApi().deleteLabel(labelId, wspId);
         return new DeleteLabelsResponse(labelId, workspaceId(workspaceOptionalOptions.workspace));
     }
 }

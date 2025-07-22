@@ -31,7 +31,7 @@ public abstract class AbstractSecretsCmd extends AbstractApiCmd {
     }
 
     protected PipelineSecret secretByName(Long workspaceId, String name) throws ApiException {
-        ListPipelineSecretsResponse list = api().listPipelineSecrets(workspaceId);
+        ListPipelineSecretsResponse list = pipelineSecretsApi().listPipelineSecrets(workspaceId);
         for (PipelineSecret secret : list.getPipelineSecrets()) {
             if (name.equals(secret.getName())) {
                 return secret;
@@ -41,7 +41,7 @@ public abstract class AbstractSecretsCmd extends AbstractApiCmd {
     }
 
     protected PipelineSecret fetchSecret(SecretRefOptions ref, Long wspId) throws ApiException {
-        return ref.secret.id != null ? api().describePipelineSecret(ref.secret.id, wspId).getPipelineSecret() : secretByName(wspId, ref.secret.name);
+        return ref.secret.id != null ? pipelineSecretsApi().describePipelineSecret(ref.secret.id, wspId).getPipelineSecret() : secretByName(wspId, ref.secret.name);
     }
 
     protected void deleteSecretByName(String name, Long wspId) throws SecretNotFoundException, ApiException {
@@ -50,7 +50,7 @@ public abstract class AbstractSecretsCmd extends AbstractApiCmd {
     }
 
     protected void deleteSecretById(Long id, Long wspId) throws SecretNotFoundException, ApiException {
-        api().deletePipelineSecret(id, wspId);
+        pipelineSecretsApi().deletePipelineSecret(id, wspId);
     }
 
 }

@@ -23,4 +23,8 @@ public class TowerRuntimeException extends RuntimeException{
         super(message);
     }
 
+    public TowerRuntimeException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
 }

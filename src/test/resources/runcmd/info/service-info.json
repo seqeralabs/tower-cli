@@ -1,7 +1,7 @@
 {
   "serviceInfo": {
     "version": "22.3.0-torricelli",
-    "apiVersion": "1.15.0",
+    "apiVersion": "1.38.0",
     "commitId": "3f04bfd4",
     "authTypes": [
       "github",
@@ -12,26 +12,26 @@
       "menus": [
         {
           "label": "Docs",
-          "url": "https://help.tower.nf"
+          "url": "https://docs.seqera.io/platform"
         },
         {
           "label": "Community",
-          "url": "https://cloud.tower.nf/community/"
+          "url": "https://community.seqera.io"
         },
         {
           "label": "Feedback",
-          "url": "https://github.com/seqeralabs/nf-tower/issues"
+          "url": "https://feedback.seqera.io"
         }
       ]
     },
     "heartbeatInterval": 3240,
     "userWorkspaceEnabled": true,
     "allowInstanceCredentials": false,
-    "landingUrl": "https://cloud.tower.nf",
-    "termsOfUseUrl": "https://cloud.tower.nf/legal",
-    "contentUrl": "https://user-data.tower.nf",
+    "landingUrl": "https://seqera.io",
+    "termsOfUseUrl": "https://seqera.io/legal/terms-of-use",
+    "contentUrl": "https://user-data.cloud.seqera.io",
     "analytics": {
-      "url": "https://analytics.tower.nf",
+      "url": "https://analytics.cloud.seqera.io",
       "siteId": 2
     },
     "allowLocalRepos": true,

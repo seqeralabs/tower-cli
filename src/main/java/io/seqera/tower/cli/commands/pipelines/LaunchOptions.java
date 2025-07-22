@@ -39,7 +39,7 @@ public class LaunchOptions {
     @Option(names = {"--revision"}, description = "A valid repository commit Id, tag or branch name.")
     public String revision;
 
-    @Option(names = {"--config"}, description = "Additional Nextflow config file.")
+    @Option(names = {"--config"}, description = "Path to a Nextflow config file. Values defined here override the same values in the pipeline repository config file, and all configuration values specified in Platform pipeline or compute environment Nextflow config fields are ignored.")
     public Path config;
 
     @Option(names = {"--pre-run"}, description = "Bash script that is executed in the same environment where Nextflow runs just before the pipeline is launched.")

@@ -9,6 +9,11 @@ on:
   pull_request:
     types: [opened, reopened, synchronize]
 
+permissions:
+  contents: read
+  packages: read
+  actions: read
+
 jobs:
 
   linux-image:
@@ -21,14 +26,13 @@ jobs:
         run: env | sort
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Setup Graalvm
         uses: graalvm/setup-graalvm@v1
         with:
-          java-version: '17.0.8'
+          java-version: '21'
           distribution: 'graalvm'
-          components: 'native-image'
           native-image-musl: 'true'
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -36,10 +40,10 @@ jobs:
         run: ./gradlew cleanTest test
         env:
           GITHUB_USERNAME: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Tests reports
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: linux-test-reports
@@ -49,22 +53,22 @@ jobs:
         run: ./gradlew shadowJar
 
       - name: Upload fat JAR artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
-          name: tw_jar
+          name: tw-jar
           path: build/libs/tw.jar
 
       - name: Build Native Image
         run: ./gradlew nativeCompile
         env:
           GITHUB_USERNAME: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PLATFORM: linux-x86_64
 
       - name: Upload linux native image artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
-          name: tw_linux
+          name: tw-linux
           path: build/native/nativeCompile/tw
 
       - name: Binary tests
@@ -72,10 +76,10 @@ jobs:
         env:
           TOWER_CLI: build/native/nativeCompile/tw
           GITHUB_USERNAME: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Binary tests reports
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: linux-binary-test-reports
@@ -83,7 +87,7 @@ jobs:
 
   mac-image:
     name: MAC
-    runs-on: macos-latest
+    runs-on: macos-latest-large
     timeout-minutes: 90
 
     steps:
@@ -91,24 +95,23 @@ jobs:
         run: env | sort
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Setup Graalvm
         uses: graalvm/setup-graalvm@v1
         with:
-          java-version: '17.0.8'
+          java-version: '21'
           distribution: 'graalvm'
-          components: 'native-image'
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Tests
         run: ./gradlew cleanTest test
         env:
           GITHUB_USERNAME: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Tests reports
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: mac-test-reports
@@ -118,10 +121,10 @@ jobs:
         run: ./gradlew nativeCompile
         env:
           GITHUB_USERNAME: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PLATFORM: osx-x86_64
       - name: Codesign binary
-        if: "contains(github.event.head_commit.message, '[release]') && github.event.ref=='refs/heads/master'"
+        if: contains(github.event.head_commit.message, '[release]') && github.event.ref == 'refs/heads/master'
         env:
           MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
           MACOS_CERTIFICATE_PWD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
@@ -137,7 +140,7 @@ jobs:
           /usr/bin/codesign --force -s "$MACOS_CERTIFICATE_NAME" --options runtime build/native/nativeCompile/tw -v
 
       - name: Notarize binary
-        if: "contains(github.event.head_commit.message, '[release]') && github.event.ref=='refs/heads/master'"
+        if: contains(github.event.head_commit.message, '[release]') && github.event.ref == 'refs/heads/master'
         env:
           MACOS_AC_API_CERT: ${{ secrets.MACOS_AC_API_CERT }}
           MACOS_AC_API_ISSUER_ID: ${{ secrets.MACOS_AC_API_ISSUER_ID }}
@@ -149,9 +152,9 @@ jobs:
           xcrun notarytool submit "notarization.zip" --keychain-profile "notarytool-profile" --wait
 
       - name: Upload Mac native image artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
-          name: tw_mac
+          name: tw-mac
           path: build/native/nativeCompile/tw
 
       - name: Binary tests
@@ -159,10 +162,10 @@ jobs:
         env:
           TOWER_CLI: build/native/nativeCompile/tw
           GITHUB_USERNAME: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Binary tests reports
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: mac-binary-test-reports
@@ -178,15 +181,14 @@ jobs:
         run: env | sort
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Setup Graalvm
         uses: graalvm/setup-graalvm@v1
         with:
           version: 'latest'
-          java-version: '17.0.8'
+          java-version: '21'
           distribution: 'graalvm'
-          components: 'native-image'
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Show GraalVM info
@@ -200,10 +202,10 @@ jobs:
         run: ./gradlew cleanTest test
         env:
           GITHUB_USERNAME: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Tests reports
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: mac-arm64-test-reports
@@ -213,10 +215,10 @@ jobs:
         run: ./gradlew nativeCompile
         env:
           GITHUB_USERNAME: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PLATFORM: osx-arm64
       - name: Codesign binary
-        if: "contains(github.event.head_commit.message, '[release]') && github.event.ref=='refs/heads/master'"
+        if: contains(github.event.head_commit.message, '[release]') && github.event.ref == 'refs/heads/master'
         env:
           MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
           MACOS_CERTIFICATE_PWD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
@@ -232,7 +234,7 @@ jobs:
           /usr/bin/codesign --force -s "$MACOS_CERTIFICATE_NAME" --options runtime build/native/nativeCompile/tw -v
 
       - name: Notarize binary
-        if: "contains(github.event.head_commit.message, '[release]') && github.event.ref=='refs/heads/master'"
+        if: contains(github.event.head_commit.message, '[release]') && github.event.ref == 'refs/heads/master'
         env:
           MACOS_AC_API_CERT: ${{ secrets.MACOS_AC_API_CERT }}
           MACOS_AC_API_ISSUER_ID: ${{ secrets.MACOS_AC_API_ISSUER_ID }}
@@ -244,9 +246,9 @@ jobs:
           xcrun notarytool submit "notarization.zip" --keychain-profile "notarytool-profile" --wait
 
       - name: Upload Mac arm64 native image artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
-          name: tw_mac_arm64
+          name: tw-mac-arm64
           path: build/native/nativeCompile/tw
 
       - name: Binary tests
@@ -254,10 +256,10 @@ jobs:
         env:
           TOWER_CLI: build/native/nativeCompile/tw
           GITHUB_USERNAME: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Binary tests reports
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: mac-arm64-binary-test-reports
@@ -273,24 +275,23 @@ jobs:
         run: env | sort
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Setup Graalvm
         uses: graalvm/setup-graalvm@v1
         with:
-          java-version: '17.0.8'
+          java-version: '21'
           distribution: 'graalvm'
-          components: 'native-image'
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Tests
         run: ./gradlew cleanTest test
         env:
           GITHUB_USERNAME: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Tests reports
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: windows-test-reports
@@ -300,13 +301,13 @@ jobs:
         run: ./gradlew nativeCompile
         env:
           GITHUB_USERNAME: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PLATFORM: windows-x86_64
 
       - name: Upload Windows native image artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
-          name: tw_windows
+          name: tw-windows
           path: build/native/nativeCompile/tw.exe
 
       - name: Binary tests
@@ -314,10 +315,10 @@ jobs:
         env:
           TOWER_CLI: build/native/nativeCompile/tw.exe
           GITHUB_USERNAME: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GH_SEQERA_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Binary tests reports
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: windows-binary-test-reports
@@ -325,30 +326,51 @@ jobs:
 
   release:
     name: Release
-    if: "contains(github.event.head_commit.message, '[release]') && github.event.ref=='refs/heads/master'"
+    if: contains(github.event.head_commit.message, '[release]') && github.event.ref=='refs/heads/master'
     needs: [ linux-image, mac-image, mac-arm64-image, windows-image ]
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+      actions: read
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Download all build artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
 
       - name: Setup Java for JReleaser
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v4
         with:
-          java-version: 17.0.8
+          java-version: '21'
+          distribution: 'adopt'
 
       - name: Version
         id: version
         run: |
-          VERSION=$(cat ./VERSION)
-          echo "VERSION = $VERSION"
-          echo "::set-output name=VERSION::$VERSION"
+            VERSION=$(cat ./VERSION)
+            echo "VERSION=$VERSION"
+            echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+            
+      - name: Run JReleaser
+        uses: jreleaser/release-action@v2
+        env:
+          JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JRELEASER_HOMEBREW_GITHUB_TOKEN: ${{secrets.GH_JRELEASER_TOKEN}}
+          JRELEASER_PROJECT_VERSION: ${{ steps.version.outputs.VERSION }}
 
+      - name: JReleaser release output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jreleaser-release
+          path: |
+            out/jreleaser/trace.log
+            out/jreleaser/output.properties
+            
       - name: Send message to slack
         uses: archive/github-actions-slack@v2.6.0
         id: send-message

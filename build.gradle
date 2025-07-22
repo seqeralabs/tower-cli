@@ -3,17 +3,21 @@ plugins {
     id 'application'
     id 'jacoco'
     id 'org.cadixdev.licenser' version '0.6.1'
-    id 'org.graalvm.buildtools.native'
+    id 'org.graalvm.buildtools.native' version '0.10.2'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
+
+// define these in the `gradle.properties` file
+ext.githubUser = project.findProperty('github.packages.user')
+ext.githubToken = project.findProperty('github.packages.token')
 
 repositories {
     mavenCentral()
     maven {
         url = uri("https://maven.pkg.github.com/seqeralabs/tower-java-sdk")
         credentials {
-            username = System.getenv("GITHUB_USERNAME")
-            password = System.getenv("GITHUB_TOKEN")
+            username = githubUser ?: System.getenv("GITHUB_USERNAME")
+            password = githubToken ?: System.getenv("GITHUB_TOKEN")
         }
     }
 }
@@ -23,10 +27,11 @@ dependencies {
     implementation 'org.slf4j:slf4j-api:1.7.36'
     implementation 'ch.qos.logback:logback-core:1.2.11'
     implementation 'ch.qos.logback:logback-classic:1.2.11'
-    implementation 'io.seqera.tower:tower-java-sdk:1.9.5'
+    implementation 'io.seqera.tower:tower-java-sdk:1.43.1'
     implementation 'info.picocli:picocli:4.6.3'
     implementation 'org.apache.commons:commons-compress:1.22'
     implementation 'org.tukaani:xz:1.9'
+    implementation 'io.github.classgraph:classgraph:4.8.165'
     annotationProcessor 'info.picocli:picocli-codegen:4.6.3'
 
     testImplementation 'org.mock-server:mockserver-client-java:5.13.0'
@@ -52,7 +57,7 @@ license {
 task buildInfo {
     doLast {
         def version = rootProject.file('VERSION').text.trim()
-        def versionApi = rootProject.file('VERSION-API').text.trim()
+        def versionApi = rootProject.file('VERSION-API').readLines().get(0).trim()
         def commitId = System.env.getOrDefault("GITHUB_SHA", "unknown").substring(0,7)
         def platform = System.env.getOrDefault("PLATFORM", "java")
         def info = """\
@@ -64,6 +69,12 @@ task buildInfo {
         def f = file("src/main/resources/META-INF/build-info.properties")
         f.parentFile.mkdirs()
         f.text = info
+    }
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
@@ -80,6 +91,14 @@ application {
     applicationDefaultJvmArgs = ["-agentlib:native-image-agent=config-merge-dir=conf/"]
 }
 
+task runReflectionConfigGenerator(type: JavaExec) {
+    group = 'build'
+    description = 'Run ReflectionConfigGenerator for Tower SDK with native-image-agent'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'io.seqera.tower.cli.utils.config.ReflectionConfigGenerator'
+    jvmArgs = ["-agentlib:native-image-agent=access-filter-file=conf/access-filter-file.json,config-merge-dir=conf/"]
+}
+
 shadowJar {
     archiveBaseName.set('tw')
     archiveClassifier.set('')
@@ -93,6 +112,7 @@ test {
 }
 
 graalvmNative {
+    toolchainDetection = true
     binaries {
         main {
             imageName = 'tw'
@@ -100,7 +120,7 @@ graalvmNative {
             configurationFileDirectories.from(file('conf'))
 
             if (System.env.getOrDefault("PLATFORM", "") == "linux-x86_64") {
-                buildArgs(['--static', '--libc=musl'])
+                buildArgs(['--static', '--libc=musl', '--gc=G1', '-march=compatibility'])
             }
             buildArgs.add('--allow-incomplete-classpath')
             buildArgs.add('--report-unsupported-elements-at-runtime')
@@ -109,14 +129,14 @@ graalvmNative {
             buildArgs.add('-H:+ReportExceptionStackTraces')
 
             javaLauncher = javaToolchains.launcherFor {
-                languageVersion = JavaLanguageVersion.of(17)
+                languageVersion = JavaLanguageVersion.of(21)
+                vendor = JvmVendorSpec.matching("Oracle Corporation")
             }
 
         }
 
         test {
             verbose = true
-            agent = false
         }
     }
 }

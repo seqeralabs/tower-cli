@@ -18,7 +18,7 @@
 package io.seqera.tower.cli.commands.runs;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.api.DefaultApi;
+import io.seqera.tower.api.LabelsApi;
 import io.seqera.tower.cli.commands.labels.BaseLabelsManager;
 import io.seqera.tower.model.AssociateWorkflowLabelsRequest;
 
@@ -26,7 +26,7 @@ import java.util.List;
 
 public class RunsLabelsManager extends BaseLabelsManager<AssociateWorkflowLabelsRequest, String> {
 
-    public RunsLabelsManager(DefaultApi api) {
+    public RunsLabelsManager(LabelsApi api) {
         super(api, "run");
     }
 

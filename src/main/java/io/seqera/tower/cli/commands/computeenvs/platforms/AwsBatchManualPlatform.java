@@ -20,13 +20,16 @@ package io.seqera.tower.cli.commands.computeenvs.platforms;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.model.AwsBatchConfig;
-import io.seqera.tower.model.ComputeEnv.PlatformEnum;
+import io.seqera.tower.model.ComputeEnvComputeConfig.PlatformEnum;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Option;
 
 import java.io.IOException;
 
 public class AwsBatchManualPlatform extends AbstractPlatform<AwsBatchConfig> {
+
+    @Option(names = {"--work-dir"}, description = "Work directory.", required = true)
+    public String workDir;
 
     @Option(names = {"-r", "--region"}, description = "AWS region.", required = true)
     public String region;
@@ -68,6 +71,7 @@ public class AwsBatchManualPlatform extends AbstractPlatform<AwsBatchConfig> {
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
+                .nextflowConfig(nextflowConfigString())
                 .environment(environmentVariables())
                 .fusion2Enabled(isFusionV2Enabled())
                 .waveEnabled(wave)
@@ -81,6 +85,7 @@ public class AwsBatchManualPlatform extends AbstractPlatform<AwsBatchConfig> {
 
                 // Advanced
                 .cliPath(adv().cliPath)
+                .executionRole(adv().batchExecutionRole)
                 .computeJobRole(adv().computeJobRole)
                 .headJobCpus(adv().headJobCpus)
                 .headJobMemoryMb(adv().headJobMemoryMb)
@@ -112,6 +117,9 @@ public class AwsBatchManualPlatform extends AbstractPlatform<AwsBatchConfig> {
 
         @Option(names = {"--compute-job-role"}, description = "IAM role to fine-grained control permissions for jobs submitted by Nextflow.")
         public String computeJobRole;
+
+        @Option(names = {"--batch-execution-role"}, description = "The execution role grants the Amazon ECS container used by Batch the permission to make API calls on your behalf.")
+        public String batchExecutionRole;
 
         @Option(names = {"--cli-path"}, description = "Nextflow requires the AWS CLI installed in the Ec2 instances. Use this field to specify the path.")
         public String cliPath;

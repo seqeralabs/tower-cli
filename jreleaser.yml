@@ -4,7 +4,7 @@ project:
   longDescription: Tower CLI tool to manage Tower from the command line
   website: https://github.com/seqeralabs/tower-cli
   authors:
-    - Seqera Labs
+    - Seqera
   license: MPL-2.0
   extraProperties:
     inceptionYear: 2021
@@ -15,7 +15,7 @@ project:
 release:
   github:
     overwrite: true
-    draft: true
+    draft: false
     prerelease:
       pattern: .*-beta
     changelog:
@@ -77,21 +77,43 @@ release:
 
 distributions:
   tw:
-    type: NATIVE_IMAGE
+    type: FLAT_BINARY
+    executable:
+      name: tw
     artifacts:
-      - path: "tw_linux/tw"
+      - path: "tw-linux/tw"
         transform: "{{distributionName}}-linux-x86_64"
         platform: linux-x86_64
-      - path: "tw_mac/tw"
+        extraProperties:
+          graalVMNativeImage: true
+      - path: "tw-mac/tw"
         transform: "{{distributionName}}-osx-x86_64"
         platform: osx-x86_64
-      - path: "tw_mac_arm64/tw"
+        extraProperties:
+          graalVMNativeImage: true
+      - path: "tw-mac-arm64/tw"
         transform: "{{distributionName}}-osx-arm64"
-        platform: osx-arm64
-      - path: "tw_windows/tw.exe"
+        platform: osx-aarch_64
+        extraProperties:
+          graalVMNativeImage: true
+      - path: "tw-windows/tw.exe"
         transform: "{{distributionName}}-windows-x86_64.exe"
         platform: windows-x86_64
+        extraProperties:
+          graalVMNativeImage: true
   tw-jar:
     type: SINGLE_JAR
     artifacts:
-      - path: "tw_jar/tw.jar"
+      - path: "tw-jar/tw.jar"
+        transform: "{{distributionName}}.jar"
+
+packagers:
+  brew:
+    active: ALWAYS
+    continueOnError: false
+    multiPlatform: true
+    repository:
+      active: RELEASE
+      tagName: '{{distributionName}}-{{tagName}}'
+      branch: HEAD
+      commitMessage: '{{distributionName}} {{tagName}}'

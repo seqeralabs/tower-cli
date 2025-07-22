@@ -98,7 +98,7 @@ public abstract class AbstractAddCmd extends AbstractActionsCmd {
 
         CreateActionResponse response;
         try {
-            response = api().createAction(request, wspId);
+            response = actionsApi().createAction(request, wspId);
             attachLabels(labels.labels,wspId,response.getActionId());
         } catch (Exception e) {
             throw new TowerException(String.format("Unable to add action for workspace '%s'", workspaceRef(wspId)));
@@ -108,7 +108,7 @@ public abstract class AbstractAddCmd extends AbstractActionsCmd {
     }
 
     private void attachLabels(List<Label> labels,Long wspId, String actionId) throws ApiException {
-        ActionsLabelsManager creator = new ActionsLabelsManager(api());
+        ActionsLabelsManager creator = new ActionsLabelsManager(labelsApi());
         creator.execute(wspId,actionId, labels);
     }
 

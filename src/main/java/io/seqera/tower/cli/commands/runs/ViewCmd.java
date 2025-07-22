@@ -18,7 +18,6 @@
 package io.seqera.tower.cli.commands.runs;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.commands.global.ShowLabelsOption;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.commands.runs.download.DownloadCmd;
 import io.seqera.tower.cli.commands.runs.metrics.MetricsCmd;
@@ -27,9 +26,9 @@ import io.seqera.tower.cli.commands.runs.tasks.TasksCmd;
 import io.seqera.tower.cli.exceptions.RunNotFoundException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.runs.RunView;
-import io.seqera.tower.model.ComputeEnv;
+import io.seqera.tower.model.ComputeEnvComputeConfig;
+import io.seqera.tower.model.DescribeWorkflowLaunchResponse;
 import io.seqera.tower.model.DescribeWorkflowResponse;
-import io.seqera.tower.model.ListLabelsResponse;
 import io.seqera.tower.model.ProgressData;
 import io.seqera.tower.model.Workflow;
 import io.seqera.tower.model.WorkflowLoad;
@@ -42,7 +41,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import static io.seqera.tower.cli.utils.FormatHelper.formatLabels;
 
@@ -72,7 +70,7 @@ public class ViewCmd extends AbstractRunsCmd {
 
         try {
             String workspaceRef = workspaceRef(wspId);
-            DescribeWorkflowResponse workflowResponse = api().describeWorkflow(id, wspId, List.of(WorkflowQueryAttribute.LABELS));
+            DescribeWorkflowResponse workflowResponse = workflowsApi().describeWorkflow(id, wspId, List.of(WorkflowQueryAttribute.LABELS));
             
             if (workflowResponse == null) {
                 throw new RunNotFoundException(id, workspaceRef(wspId));
@@ -81,11 +79,12 @@ public class ViewCmd extends AbstractRunsCmd {
             Workflow workflow = workflowResponse.getWorkflow();
             WorkflowLoad workflowLoad = workflowLoadByWorkflowId(wspId, id);
 
-            ComputeEnv computeEnv = workflow.getLaunchId() != null ? launchById(wspId, workflow.getLaunchId()).getComputeEnv() : null;
+            DescribeWorkflowLaunchResponse wfLaunch = workflowsApi().describeWorkflowLaunch(workflow.getId(), wspId);
+            ComputeEnvComputeConfig computeEnv = wfLaunch.getLaunch() != null ? wfLaunch.getLaunch().getComputeEnv() : null;
 
             ProgressData progress = null;
             if (opts.processes || opts.stats || opts.load || opts.utilization) {
-                progress = api().describeWorkflowProgress(id, wspId).getProgress();
+                progress = workflowsApi().describeWorkflowProgress(id, wspId).getProgress();
             }
 
             Map<String, Object> general = new LinkedHashMap<>();
@@ -145,16 +144,19 @@ public class ViewCmd extends AbstractRunsCmd {
 
             Map<String, Object> stats = new HashMap<>();
             if (opts.stats) {
-                stats.put("wallTime", TimeUnit.MILLISECONDS.toSeconds(workflow.getDuration()) / 60D);
-                stats.put("cpuTime", TimeUnit.MILLISECONDS.toMinutes(progress.getWorkflowProgress().getCpuTime()) / 60D);
-                stats.put("totalMemory", progress.getWorkflowProgress().getMemoryRss() / 1024 / 1024 / 1024D);
-                stats.put("read", progress.getWorkflowProgress().getReadBytes() / 1024 / 1024 / 1024D);
-                stats.put("write", progress.getWorkflowProgress().getWriteBytes() / 1024 / 1024 / 1024D);
-                stats.put("cost", progress.getWorkflowProgress().getCost());
+                if( workflow.getDuration() != null )
+                    stats.put("wallTime", TimeUnit.MILLISECONDS.toSeconds(workflow.getDuration()) / 60D);
+                if(progress.getWorkflowProgress() != null) {
+                    stats.put("cpuTime", TimeUnit.MILLISECONDS.toMinutes(progress.getWorkflowProgress().getCpuTime()) / 60D);
+                    stats.put("totalMemory", progress.getWorkflowProgress().getMemoryRss() / 1024 / 1024 / 1024D);
+                    stats.put("read", progress.getWorkflowProgress().getReadBytes() / 1024 / 1024 / 1024D);
+                    stats.put("write", progress.getWorkflowProgress().getWriteBytes() / 1024 / 1024 / 1024D);
+                    stats.put("cost", progress.getWorkflowProgress().getCost());
+                }
             }
 
             Map<String, Object> load = new HashMap<>();
-            if (opts.load) {
+            if (opts.load && progress.getWorkflowProgress() != null) {
                 load.put("peakCpus", progress.getWorkflowProgress().getPeakCpus());
                 load.put("loadCpus", progress.getWorkflowProgress().getLoadCpus());
                 load.put("peakTasks", progress.getWorkflowProgress().getPeakTasks());
@@ -162,7 +164,7 @@ public class ViewCmd extends AbstractRunsCmd {
             }
 
             Map<String, Object> utilization = new HashMap<>();
-            if (opts.utilization) {
+            if (opts.utilization && progress.getWorkflowProgress() != null) {
                 utilization.put("memoryEfficiency", progress.getWorkflowProgress().getMemoryEfficiency());
                 utilization.put("cpuEfficiency", progress.getWorkflowProgress().getCpuEfficiency());
             }

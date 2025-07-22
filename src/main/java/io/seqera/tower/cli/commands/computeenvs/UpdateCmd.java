@@ -52,7 +52,7 @@ public class UpdateCmd extends AbstractComputeEnvCmd {
 
         if (newName != null) {
             try {
-                api().validateComputeEnvName(wspId, newName);
+                computeEnvsApi().validateComputeEnvName(wspId, newName);
             } catch (ApiException ex) {
                 throw new InvalidResponseException(String.format("Compute environment name '%s' is not valid", newName));
             }
@@ -63,7 +63,7 @@ public class UpdateCmd extends AbstractComputeEnvCmd {
         UpdateComputeEnvRequest req = new UpdateComputeEnvRequest()
                 .name(newName != null ? newName : ce.getName());
 
-        api().updateComputeEnv(ce.getId(), req, wspId);
+        computeEnvsApi().updateComputeEnv(ce.getId(), req, wspId);
 
 
         return new ComputeEnvUpdated(workspaceRef(wspId), ce.getName());

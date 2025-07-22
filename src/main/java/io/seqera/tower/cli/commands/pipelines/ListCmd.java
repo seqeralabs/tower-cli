@@ -66,7 +66,7 @@ public class ListCmd extends AbstractPipelinesCmd {
 
         try {
 
-           response = api().listPipelines(pipelineQueryAttributes, wspId, max, offset, filter, visibility.toString());
+           response = pipelinesApi().listPipelines(pipelineQueryAttributes, wspId, max, offset, filter, visibility.toString());
 
         } catch (ApiException apiException) {
             if (apiException.getCode() == 404){

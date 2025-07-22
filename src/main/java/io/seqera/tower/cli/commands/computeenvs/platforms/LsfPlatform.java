@@ -18,7 +18,7 @@
 package io.seqera.tower.cli.commands.computeenvs.platforms;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.model.ComputeEnv.PlatformEnum;
+import io.seqera.tower.model.ComputeEnvComputeConfig.PlatformEnum;
 import io.seqera.tower.model.LsfComputeConfig;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Option;
@@ -26,6 +26,9 @@ import picocli.CommandLine.Option;
 import java.io.IOException;
 
 public class LsfPlatform extends AbstractPlatform<LsfComputeConfig> {
+
+    @Option(names = {"--work-dir"}, description = "Work directory.", required = true)
+    public String workDir;
 
     @Option(names = {"-u", "--user-name"}, description = "The username on the cluster used to launch the pipeline execution.")
     public String userName;
@@ -62,6 +65,7 @@ public class LsfPlatform extends AbstractPlatform<LsfComputeConfig> {
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
+                .nextflowConfig(nextflowConfigString())
 
                 // Main
                 .launchDir(launchDir)

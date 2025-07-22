@@ -254,6 +254,32 @@ public class FormatHelper {
         }
     }
 
+    public static String formatStudioStatus(DataStudioStatus status) {
+        if (status == null) {
+            return "NA";
+        }
+
+        switch (status) {
+            case STARTING:
+                return ansi("@|fg(214) STARTING|@");
+            case RUNNING:
+                return ansi("@|fg(green) RUNNING|@");
+            case STOPPING:
+                return ansi("@|fg(214) STOPPING|@");
+            case STOPPED:
+                return ansi("@|fg(214) STOPPED|@");
+            case ERRORED:
+                return ansi("@|fg(red) ERRORED|@");
+            case BUILDING:
+                return ansi("@|fg(214) BUILDING|@");
+            case BUILDFAILED:
+                return ansi("@|fg(red) BUILDFAILED|@");
+            default:
+                return status.toString();
+        }
+    }
+
+
     public static String formatParticipantType(ParticipantType participantType) {
         if (participantType == null) {
             return "NA";
@@ -306,6 +332,21 @@ public class FormatHelper {
             return str;
         })
         .collect(Collectors.joining(","));
+    }
+
+    public static String formatDescription(String description) {
+        return formatDescription(description, 2048);
+    }
+
+    public static String formatDescription(String description, int maxLength) {
+        if (description == null) {
+            return "NA";
+        }
+
+        // remove line breaks
+        var text = description.trim().replace("\n", " ").replace("\r", " ");
+        // cap the description length if too long
+        return text.length() > maxLength ? text.substring(0, maxLength) + "..." : text;
     }
 
 }

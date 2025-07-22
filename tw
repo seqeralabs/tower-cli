@@ -4,10 +4,10 @@ current_shell=$(basename -- "$SHELL")
 
 if [ "$current_shell" = "bash" ]; then
     echo "Running in Bash"
-    ./gradlew run -q --args="${*@Q}"
+    ./gradlew clean run --args="${*@Q}"
 elif [[ "$current_shell" = *"zsh"* ]]; then
     echo "Running in Zsh"
-    ./gradlew run -q --args="$@"
+    ./gradlew clean run --args="$*"
 else
     echo "Unknown shell: $current_shell"
     exit 1

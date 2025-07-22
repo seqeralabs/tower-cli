@@ -41,8 +41,8 @@ public class ListCmd extends AbstractRunsCmd {
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
-    @CommandLine.Option(names = {"-f", "--filter"}, description = "Show only pipeline runs with names that start with the given word.")
-    public String startsWith;
+    @CommandLine.Option(names = {"-f", "--filter"}, description = "Show only pipeline runs that match the defined filter(s).")
+    public String filter;
 
     @CommandLine.Mixin
     ShowLabelsOption showLabelsOption;
@@ -62,7 +62,7 @@ public class ListCmd extends AbstractRunsCmd {
              queryAttribute = List.of(WorkflowQueryAttribute.LABELS);
         }
 
-        ListWorkflowsResponse response = api().listWorkflows(queryAttribute, wspId, max, offset, startsWith);
+        ListWorkflowsResponse response = workflowsApi().listWorkflows(queryAttribute, wspId, max, offset, filter);
         return new RunList(workspaceRef(wspId), response.getWorkflows(), baseWorkspaceUrl(wspId), showLabelsOption.showLabels, PaginationInfo.from(paginationOptions, response.getTotalSize()));
     }
 

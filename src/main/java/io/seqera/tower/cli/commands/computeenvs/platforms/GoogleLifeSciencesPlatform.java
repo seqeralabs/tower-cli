@@ -18,7 +18,7 @@
 package io.seqera.tower.cli.commands.computeenvs.platforms;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.model.ComputeEnv.PlatformEnum;
+import io.seqera.tower.model.ComputeEnvComputeConfig.PlatformEnum;
 import io.seqera.tower.model.GoogleLifeSciencesConfig;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Option;
@@ -27,6 +27,9 @@ import java.io.IOException;
 import java.util.List;
 
 public class GoogleLifeSciencesPlatform extends AbstractPlatform<GoogleLifeSciencesConfig> {
+
+    @Option(names = {"--work-dir"}, description = "Work directory.", required = true)
+    public String workDir;
 
     @Option(names = {"-r", "--region"}, description = "The region where the workload will be executed.", required = true)
     public String region;
@@ -58,6 +61,7 @@ public class GoogleLifeSciencesPlatform extends AbstractPlatform<GoogleLifeScien
                 .workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
+                .nextflowConfig(nextflowConfigString())
                 .environment(environmentVariables())
 
                 // Main

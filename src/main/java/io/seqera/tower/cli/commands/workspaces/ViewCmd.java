@@ -40,7 +40,7 @@ public class ViewCmd extends AbstractWorkspaceCmd {
     protected Response exec() throws ApiException, IOException {
         OrgAndWorkspaceDto ws = fetchOrgAndWorkspaceDbDto(workspaceRefOptions);
 
-        DescribeWorkspaceResponse response = api().describeWorkspace(ws.getOrgId(), ws.getWorkspaceId());
+        DescribeWorkspaceResponse response = workspacesApi().describeWorkspace(ws.getOrgId(), ws.getWorkspaceId());
 
         return new WorkspaceView(response.getWorkspace());
     }
