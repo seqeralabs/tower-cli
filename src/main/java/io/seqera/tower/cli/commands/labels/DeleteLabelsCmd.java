@@ -46,9 +46,10 @@ public class DeleteLabelsCmd extends AbstractLabelsCmd {
             labelsApi().deleteLabel(labelId, wspId);
             return new DeleteLabelsResponse(labelId, workspaceId(workspaceOptionalOptions.workspace));
         } catch (ApiException e) {
-            throw new TowerException(
-                    String.format("Unable to delete label '%d' for workspace '%d': %s", labelId, wspId, ResponseHelper.decodeMessage(e))
-            );
+            String reason = e.getResponseBody() == null && e.getCode() >= 400 && e.getCode() < 500
+                    ? "Cannot find label with the provided ID"
+                    : ResponseHelper.decodeMessage(e);
+            throw new TowerException(String.format("Unable to delete label '%d' for workspace '%d': %s", labelId, wspId, reason));
         }
     }
 }
