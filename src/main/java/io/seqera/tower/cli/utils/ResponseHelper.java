@@ -118,7 +118,7 @@ public class ResponseHelper {
         err.println(CommandLine.Help.Ansi.AUTO.string((String.format("%n @|bold,red ERROR:|@ @|red %s|@%n", line))));
     }
 
-    private static String decodeMessage(ApiException ex) {
+    public static String decodeMessage(ApiException ex) {
         if (ex.getResponseBody() == null) {
             return ex.getMessage();
         }
