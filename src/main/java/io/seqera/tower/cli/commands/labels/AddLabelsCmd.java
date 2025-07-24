@@ -18,19 +18,17 @@
 package io.seqera.tower.cli.commands.labels;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.commands.computeenvs.AbstractComputeEnvCmd;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
-import io.seqera.tower.cli.exceptions.ShowUsageException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.labels.LabelAdded;
+import io.seqera.tower.cli.utils.ResponseHelper;
 import io.seqera.tower.model.CreateLabelRequest;
 import io.seqera.tower.model.CreateLabelResponse;
 import picocli.CommandLine;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 @CommandLine.Command(
         name = "add",
@@ -67,9 +65,15 @@ public class AddLabelsCmd extends AbstractLabelsCmd {
 
         try {
             CreateLabelResponse res = labelsApi().createLabel(req, wspId);
-            return new LabelAdded(res.getId(), res.getName(), res.getResource(),res.getValue(),workspaceOptionalOptions.workspace);
+            return new LabelAdded(res.getId(), res.getName(), res.getResource(), res.getValue(), workspaceOptionalOptions.workspace);
+        } catch (ApiException apiException) {
+            throw new TowerException(
+                String.format("Unable to create label for workspace '%d': %s", wspId, ResponseHelper.decodeMessage(apiException))
+            );
         } catch (Exception e) {
-            throw new TowerException(String.format("Unable to create label for workspace '%d'", wspId));
+            throw new TowerException(
+                    String.format("Unable to create label for workspace '%d': %s", wspId, e.getMessage())
+            );
         }
     }
 

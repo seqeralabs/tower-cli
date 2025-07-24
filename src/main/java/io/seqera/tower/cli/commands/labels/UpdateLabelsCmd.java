@@ -18,13 +18,11 @@
 package io.seqera.tower.cli.commands.labels;
 
 import io.seqera.tower.ApiException;
-import io.seqera.tower.cli.commands.computeenvs.AbstractComputeEnvCmd;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
-import io.seqera.tower.cli.exceptions.ShowUsageException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.cli.responses.labels.LabelAdded;
 import io.seqera.tower.cli.responses.labels.LabelUpdated;
+import io.seqera.tower.cli.utils.ResponseHelper;
 import io.seqera.tower.model.UpdateLabelRequest;
 import io.seqera.tower.model.UpdateLabelResponse;
 import picocli.CommandLine;
@@ -62,9 +60,15 @@ public class UpdateLabelsCmd extends AbstractLabelsCmd {
         Long wsp = workspaceId(workspaceRef.workspace);
         try {
             UpdateLabelResponse res = labelsApi().updateLabel(labelId, req, wsp);
-            return new LabelUpdated(res.getId(),res.getName(),res.getValue(),workspaceRef.workspace);
+            return new LabelUpdated(res.getId(), res.getName(), res.getValue(), workspaceRef.workspace);
+        } catch (ApiException e) {
+            throw new TowerException(
+                    String.format("Unable to update label '%d' for workspace '%d': %s", labelId, wsp, ResponseHelper.decodeMessage(e))
+            );
         } catch (Exception e) {
-            throw new TowerException(String.format("Unable to update label '%d' for workspace '%d'",labelId, wsp));
+            throw new TowerException(
+                    String.format("Unable to update label '%d' for workspace '%d': %s", labelId, wsp, e.getMessage())
+            );
         }
     }
 }

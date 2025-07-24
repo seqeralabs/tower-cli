@@ -19,8 +19,10 @@ package io.seqera.tower.cli.commands.labels;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
+import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.labels.DeleteLabelsResponse;
+import io.seqera.tower.cli.utils.ResponseHelper;
 import picocli.CommandLine;
 
 import java.io.IOException;
@@ -38,9 +40,15 @@ public class DeleteLabelsCmd extends AbstractLabelsCmd {
     public WorkspaceOptionalOptions workspaceOptionalOptions;
 
     @Override
-    protected Response exec() throws ApiException, IOException {
+    protected Response exec() throws ApiException, TowerException, IOException {
         Long wspId = workspaceId(workspaceOptionalOptions.workspace);
-        labelsApi().deleteLabel(labelId, wspId);
-        return new DeleteLabelsResponse(labelId, workspaceId(workspaceOptionalOptions.workspace));
+        try {
+            labelsApi().deleteLabel(labelId, wspId);
+            return new DeleteLabelsResponse(labelId, workspaceId(workspaceOptionalOptions.workspace));
+        } catch (ApiException e) {
+            throw new TowerException(
+                    String.format("Unable to delete label '%d' for workspace '%d': %s", labelId, wspId, ResponseHelper.decodeMessage(e))
+            );
+        }
     }
 }
