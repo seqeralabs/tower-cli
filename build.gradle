@@ -27,9 +27,9 @@ dependencies {
     implementation 'org.slf4j:slf4j-api:1.7.36'
     implementation 'ch.qos.logback:logback-core:1.5.18'
     implementation 'ch.qos.logback:logback-classic:1.5.18'
-    implementation 'io.seqera.tower:tower-java-sdk:1.43.1'
 
-    // Upgrade Jersey client dependencies to non-vulnerable 2.x version
+    implementation 'io.seqera.tower:tower-java-sdk:1.43.1'
+    // Upgrade transitive Jersey client dependencies to non-vulnerable 2.x version
     implementation "org.glassfish.jersey.core:jersey-client:2.47"
     implementation "org.glassfish.jersey.media:jersey-media-multipart:2.47"
     implementation "org.glassfish.jersey.media:jersey-media-json-jackson:2.47"
@@ -44,6 +44,9 @@ dependencies {
     testImplementation 'org.mock-server:mockserver-client-java:5.13.0'
     testImplementation 'org.mock-server:mockserver-netty:5.13.0'
     testImplementation 'org.mock-server:mockserver-junit-jupiter:5.13.0'
+    // Upgrade transitive mock-server dependencies to non-vulnerable 2.x version
+    testImplementation 'commons-io:commons-io:2.20.0'
+
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
