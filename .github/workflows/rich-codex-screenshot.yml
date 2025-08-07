@@ -2,6 +2,9 @@ name: rich-codex-screenshot
 on: workflow_dispatch
 jobs:
   rich_codex:
+    permissions:
+      contents: write
+      actions: read
     runs-on: ubuntu-latest
     steps:
 
