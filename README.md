@@ -139,12 +139,6 @@ tw CLI is a platform binary executable created by a native compilation from Java
 
     This ensures that SDKMan uses the tower-cli project-specific `.sdkmanrc` configuration.
 
-1. Install `native-image`:
-
-    ```bash
-    gu install native-image
-    ```
-
 1. Export your Github credentials. Github requires authentication for public packages (the token only requires the `read:packages` scope):
 
     ```bash
