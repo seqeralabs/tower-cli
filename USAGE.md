@@ -375,6 +375,8 @@ $ tw runs list --filter="*man/rnaseq-*"
 
 Run `tw runs relaunch -h` to view all the required and optional fields for relaunching a run in a workspace.
 
+**TL;DR:** This is how you relaunch a run: `tw runs relaunch -i <RUN_ID> --workspace <WORKSPACE_NAME>`.
+
 ### Cancel a run
 
 Run `tw runs cancel -h` to view all the required and optional fields for canceling a run in a workspace.
