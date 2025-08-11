@@ -7,16 +7,6 @@
  * in the user manual at https://docs.gradle.org/6.5.1/userguide/multi_project_builds.html
  */
 
-pluginManagement {
-    plugins {
-        id 'org.graalvm.buildtools.native' version getProperty('native.gradle.plugin.version')
-    }
-    repositories {
-        mavenCentral()
-        gradlePluginPortal()
-    }
-}
-
 plugins {
     // required to download the toolchain (jdk) from a remote repository
     // https://github.com/gradle/foojay-toolchains
