@@ -4,7 +4,7 @@ plugins {
     id 'jacoco'
     id 'org.cadixdev.licenser' version '0.6.1'
     id 'org.graalvm.buildtools.native' version '0.10.6'
-    id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id 'com.gradleup.shadow' version '8.3.9'
 }
 
 // define these in the `gradle.properties` file
