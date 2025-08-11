@@ -3,8 +3,8 @@ plugins {
     id 'application'
     id 'jacoco'
     id 'org.cadixdev.licenser' version '0.6.1'
-    id 'org.graalvm.buildtools.native' version '0.10.2'
-    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'org.graalvm.buildtools.native' version '0.10.6'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 // define these in the `gradle.properties` file
