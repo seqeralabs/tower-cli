@@ -155,6 +155,9 @@ public class UploadCmd extends AbstractDataLinksCmd {
                 return new GoogleUploader();
             case AZURE:
                 return new AzureUploader();
+            case SEQERACOMPUTE:
+                // Seqera Compute uses S3-compatible uploads, same as AWS
+                return new AwsUploader(id, credId, wspId, outputDir, relativeKey, dataLinksApi());
             default:
                 throw new TowerRuntimeException("Unsupported data-link provider: " + provider);
         }
