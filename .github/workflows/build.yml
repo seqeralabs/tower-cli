@@ -87,7 +87,7 @@ jobs:
 
   mac-image:
     name: MAC
-    runs-on: macos-latest-large
+    runs-on: macos-15-intel
     timeout-minutes: 90
 
     steps:
@@ -173,7 +173,7 @@ jobs:
 
   mac-arm64-image:
     name: MAC-arm64
-    runs-on: macos-latest-xlarge
+    runs-on: macos-latest
     timeout-minutes: 90
 
     steps:
