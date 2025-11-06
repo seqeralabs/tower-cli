@@ -124,6 +124,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PLATFORM: osx-x86_64
       - name: Codesign binary
+        if: contains(github.event.head_commit.message, '[release]') && github.event.ref == 'refs/heads/master'
         env:
           MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
           MACOS_CERTIFICATE_PWD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
@@ -139,6 +140,7 @@ jobs:
           /usr/bin/codesign --force -s "$MACOS_CERTIFICATE_NAME" --options runtime build/native/nativeCompile/tw -v
 
       - name: Notarize binary
+        if: contains(github.event.head_commit.message, '[release]') && github.event.ref == 'refs/heads/master'
         env:
           MACOS_AC_API_CERT: ${{ secrets.MACOS_AC_API_CERT }}
           MACOS_AC_API_ISSUER_ID: ${{ secrets.MACOS_AC_API_ISSUER_ID }}
@@ -216,6 +218,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PLATFORM: osx-arm64
       - name: Codesign binary
+        if: contains(github.event.head_commit.message, '[release]') && github.event.ref == 'refs/heads/master'
         env:
           MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
           MACOS_CERTIFICATE_PWD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
@@ -231,6 +234,7 @@ jobs:
           /usr/bin/codesign --force -s "$MACOS_CERTIFICATE_NAME" --options runtime build/native/nativeCompile/tw -v
 
       - name: Notarize binary
+        if: contains(github.event.head_commit.message, '[release]') && github.event.ref == 'refs/heads/master'
         env:
           MACOS_AC_API_CERT: ${{ secrets.MACOS_AC_API_CERT }}
           MACOS_AC_API_ISSUER_ID: ${{ secrets.MACOS_AC_API_ISSUER_ID }}
