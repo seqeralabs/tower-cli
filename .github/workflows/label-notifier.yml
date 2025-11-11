@@ -1,4 +1,6 @@
 name: Notify users based on issue labels
+permissions:
+  issues: read
 
 on:
   issues:
