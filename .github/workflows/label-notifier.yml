@@ -1,0 +1,18 @@
+name: Notify users based on issue labels
+
+on:
+  issues:
+      types: [labeled]
+
+jobs:
+  notify:
+    runs-on: tower-cli
+    steps:
+        - uses: jenschelkopf/issue-label-notification-action@1.3
+          with:
+            recipients:
+              squad-core=@andrew-dawson-seqera @tcrespog
+              squad-pipelines=atsyganov @swingingsimian     
+              squad-data=@robnewman @t0randr
+              squad-unifiedcompute=@MichaelTansiniSeqera @cristianrcv
+              documentation=@justinegeffen @llewellyn-sl
