@@ -44,7 +44,7 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 
-import static io.seqera.tower.cli.utils.FilesHelper.readString;
+import static io.seqera.tower.cli.utils.FilesHelper.readStringOrStdin;
 import static io.seqera.tower.cli.utils.ModelHelper.coalesce;
 import static io.seqera.tower.cli.utils.ModelHelper.createLaunchRequest;
 import static io.seqera.tower.cli.utils.ModelHelper.removeEmptyValues;
@@ -62,7 +62,7 @@ public class LaunchCmd extends AbstractRootCmd {
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
-    @Option(names = {"--params-file"}, description = "Pipeline parameters in JSON or YAML format. Provide the path to a file containing the content.")
+    @Option(names = {"--params-file"}, description = "Pipeline parameters in JSON or YAML format. Provide the path to a file containing the content. Use '-' to read from stdin.")
     Path paramsFile;
 
     @Option(names = {"-c", "--compute-env"}, description = "Compute environment identifier where the pipeline will run. Defaults to workspace primary compute environment if omitted. Provide the name or identifier.")
@@ -144,11 +144,11 @@ public class LaunchCmd extends AbstractRootCmd {
                 .configProfiles(coalesce(profile, base.getConfigProfiles()))
                 .userSecrets(coalesce(removeEmptyValues(adv().userSecrets), base.getUserSecrets()))
                 .workspaceSecrets(coalesce(removeEmptyValues(adv().workspaceSecrets), base.getWorkspaceSecrets()))
-                .configText(coalesce(readString(adv().config), base.getConfigText()))
+                .configText(coalesce(readStringOrStdin(adv().config), base.getConfigText()))
                 .towerConfig(base.getTowerConfig())
-                .paramsText(coalesce(readString(paramsFile), base.getParamsText()))
-                .preRunScript(coalesce(readString(adv().preRunScript), base.getPreRunScript()))
-                .postRunScript(coalesce(readString(adv().postRunScript), base.getPostRunScript()))
+                .paramsText(coalesce(readStringOrStdin(paramsFile), base.getParamsText()))
+                .preRunScript(coalesce(readStringOrStdin(adv().preRunScript), base.getPreRunScript()))
+                .postRunScript(coalesce(readStringOrStdin(adv().postRunScript), base.getPostRunScript()))
                 .mainScript(coalesce(adv().mainScript, base.getMainScript()))
                 .entryName(coalesce(adv().entryName, base.getEntryName()))
                 .schemaName(coalesce(adv().schemaName, base.getSchemaName()))
@@ -267,13 +267,13 @@ public class LaunchCmd extends AbstractRootCmd {
 
     public static class AdvancedOptions {
 
-        @Option(names = {"--config"}, description = "Nextflow configuration as text (overrides config files). Provide the path to a file containing the content.")
+        @Option(names = {"--config"}, description = "Nextflow configuration as text (overrides config files). Provide the path to a file containing the content. Use '-' to read from stdin.")
         public Path config;
 
-        @Option(names = {"--pre-run"}, description = "Add a script that executes in the nf-launch script prior to invoking Nextflow processes. See: https://docs.seqera.io/platform-cloud/launch/advanced#pre-and-post-run-scripts. Provide the path to a file containing the content.")
+        @Option(names = {"--pre-run"}, description = "Add a script that executes in the nf-launch script prior to invoking Nextflow processes. See: https://docs.seqera.io/platform-cloud/launch/advanced#pre-and-post-run-scripts. Provide the path to a file containing the content. Use '-' to read from stdin.")
         public Path preRunScript;
 
-        @Option(names = {"--post-run"}, description = "Add a script that executes after all Nextflow processes have completed. See: https://docs.seqera.io/platform-cloud/launch/advanced#pre-and-post-run-scripts. Provide the path to a file containing the content.")
+        @Option(names = {"--post-run"}, description = "Add a script that executes after all Nextflow processes have completed. See: https://docs.seqera.io/platform-cloud/launch/advanced#pre-and-post-run-scripts. Provide the path to a file containing the content. Use '-' to read from stdin.")
         public Path postRunScript;
 
         @Option(names = {"--pull-latest"}, description = "Pull the latest version of the pipeline from the repository.")
