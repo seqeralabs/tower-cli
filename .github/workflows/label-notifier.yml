@@ -13,8 +13,8 @@ jobs:
         - uses: jenschelkopf/issue-label-notification-action@1.3
           with:
             recipients:
-              squad-core=@andrew-dawson-seqera @tcrespog
-              squad-pipelines=atsyganov @swingingsimian     
-              squad-data=@robnewman @t0randr
-              squad-unifiedcompute=@MichaelTansiniSeqera @cristianrcv
+              squad-core=@andrew-dawson-seqera @tcrespog @swampie
+              squad-pipelines=@atsyganov @swingingsimian @swampie
+              squad-data=@robnewman @t0randr @swampie
+              squad-unifiedcompute=@MichaelTansiniSeqera @cristianrcv @swampie
               documentation=@justinegeffen @llewellyn-sl
