@@ -17,8 +17,6 @@
 
 package io.seqera.tower.cli.commands;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
@@ -45,21 +43,12 @@ import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
 import javax.annotation.Nullable;
-import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.nio.file.Path;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import static io.seqera.tower.cli.utils.FilesHelper.readString;
@@ -283,10 +272,6 @@ public class LaunchCmd extends AbstractRootCmd {
             .filter(labelName -> !nameToID.containsKey(labelName))
             .collect(Collectors.toList());
 
-        if (!newLabels.isEmpty() && !labelPermission(workspaceId)) {
-            throw new ApiException("User does not have permission to modify pipeline labels");
-        }
-
         // create the new ones via POST /labels
         for (String labelName: newLabels) {
             CreateLabelResponse created = labelsApi().createLabel(
@@ -304,42 +289,6 @@ public class LaunchCmd extends AbstractRootCmd {
             .stream()
             .map(nameToID::get)
             .collect(Collectors.toList());
-    }
-
-    private boolean labelPermission(@Nullable Long wspId) throws ApiException {
-
-        // personal workspace
-        if (wspId == null) return true;
-
-        var client = HttpClient.newBuilder()
-            .connectTimeout(Duration.ofSeconds(10))
-            .build();
-
-        var uri = UriBuilder
-            .fromUri(URI.create(apiUrl() + "/permissions"))
-            .queryParam("workspaceId", wspId.toString())
-            .build();
-
-        var req = HttpRequest.newBuilder()
-            .GET()
-            .uri(uri)
-            .header("Authorization", String.format("Bearer %s", token()))
-            .build();
-
-        try {
-            HttpResponse<String> response = client.send(req, HttpResponse.BodyHandlers.ofString()); // sync
-
-            JsonNode json = new ObjectMapper().readTree(response.body());
-
-            var roleSet = new HashSet<String>();
-
-            json.get("workspace").get("roles").forEach(role -> roleSet.add(role.textValue()));
-
-            return roleSet.contains("owner") || roleSet.contains("admin") || roleSet.contains("maintain");
-
-        } catch (Throwable exception) {
-            throw new ApiException("Unable to reach API");
-        }
     }
 
     private AdvancedOptions adv() {
