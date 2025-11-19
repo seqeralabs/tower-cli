@@ -286,8 +286,6 @@ class LaunchCmdTest extends BaseCmdTest {
                 request()
                     .withMethod("GET")
                     .withPath("/labels")
-                    .withQueryStringParameter("type", "simple"),
-                exactly(1)
         ).respond(
                 response()
                     .withStatusCode(200)
@@ -297,27 +295,41 @@ class LaunchCmdTest extends BaseCmdTest {
         mock.when(
                 request()
                     .withMethod("POST")
-                    .withPath("/labels")
-                    .withBody(json("""
-                        {
-                            "name": "LabelThree",
-                            "resource": false,
-                            "isDefault": false
-                        }
-                    """)),
-                exactly(1)
+                    .withPath("/labels"),
+                exactly(2)
         ).respond(
-                response()
-                    .withStatusCode(200)
-                    .withBody(json("""
-                        {
-                            "id": 3,
-                            "name": "LabelThree",
-                            "resource": false,
-                            "isDefault": false
-                        }
-                    """))
-                    .withContentType(MediaType.APPLICATION_JSON)
+                request -> {
+                    // Parse the request body to determine which label is being created
+                    String bodyStr = request.getBodyAsString();
+                    if (bodyStr.contains("\"name\":\"LabelThree\"") && !bodyStr.contains("\"value\"")) {
+                        // Creating simple label "LabelThree"
+                        return response()
+                            .withStatusCode(200)
+                            .withBody(json("""
+                                {
+                                    "id": 3,
+                                    "name": "LabelThree",
+                                    "resource": false,
+                                    "isDefault": false
+                                }
+                            """))
+                            .withContentType(MediaType.APPLICATION_JSON);
+                    } else if (bodyStr.contains("\"name\":\"ResourceLabelThree\"") && bodyStr.contains("\"value\":\"ValueThree\"")) {
+                        // Creating resource label "ResourceLabelThree=ValueThree"
+                        return response()
+                            .withStatusCode(200)
+                            .withBody(json("""
+                                {
+                                    "id": 13,
+                                    "name": "ResourceLabelThree",
+                                    "value": "ValueThree",
+                                    "resource": true
+                                }
+                            """))
+                            .withContentType(MediaType.APPLICATION_JSON);
+                    }
+                    return response().withStatusCode(400);
+                }
         );
 
         // pipelines endpoint mock
@@ -347,7 +359,7 @@ class LaunchCmdTest extends BaseCmdTest {
                                 "workDir":"/efs",
                                 "pullLatest":false,
                                 "stubRun":false,
-                                "labelIds": [2, 3]
+                                "labelIds": [2, 3, 12, 13]
                             }
                         }
                     """)),
@@ -363,7 +375,7 @@ class LaunchCmdTest extends BaseCmdTest {
         );
 
         // Run the command
-        ExecOut out = exec(format, mock, "launch", "sarek", "-l", "LabelTwo,LabelThree");
+        ExecOut out = exec(format, mock, "launch", "sarek", "-l", "LabelTwo,LabelThree,ResourceLabelTwo=ValueTwo,ResourceLabelThree=ValueThree");
 
         // Assert results
         assertOutput(format, out, new RunSubmited("35aLiS0bIM5efd", null, baseUserUrl(mock, "jordi"), USER_WORKSPACE_NAME));
