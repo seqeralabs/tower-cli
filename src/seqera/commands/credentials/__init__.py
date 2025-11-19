@@ -787,3 +787,89 @@ def add_ssh(
 
     except Exception as e:
         handle_credentials_error(e)
+
+
+# Kubernetes Credentials Commands
+
+@add_app.command("k8s")
+def add_k8s(
+    name: Annotated[
+        str,
+        typer.Option("-n", "--name", help="Credentials name"),
+    ],
+    token: Annotated[
+        Optional[str],
+        typer.Option("-t", "--token", help="Service account token"),
+    ] = None,
+    certificate: Annotated[
+        Optional[str],
+        typer.Option("-c", "--certificate", help="Client certificate file"),
+    ] = None,
+    private_key: Annotated[
+        Optional[str],
+        typer.Option("-k", "--private-key", help="Client key file"),
+    ] = None,
+    workspace: Annotated[
+        Optional[str],
+        typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
+    ] = None,
+    overwrite: Annotated[
+        bool,
+        typer.Option("--overwrite", help="Overwrite if credentials already exist"),
+    ] = False,
+) -> None:
+    """Add new Kubernetes workspace credentials."""
+    try:
+        client = get_client()
+        output_format = get_output_format()
+
+        # Validate input - either token OR certificate+private_key
+        if token:
+            # Token mode
+            keys = {"token": token}
+        elif certificate and private_key:
+            # Certificate mode
+            from pathlib import Path
+
+            cert_path = Path(certificate)
+            if not cert_path.exists():
+                raise FileNotFoundError(f"Certificate file not found: {certificate}")
+
+            key_path = Path(private_key)
+            if not key_path.exists():
+                raise FileNotFoundError(f"Private key file not found: {private_key}")
+
+            cert_content = cert_path.read_text()
+            key_content = key_path.read_text()
+
+            keys = {
+                "certificate": cert_content,
+                "privateKey": key_content,
+            }
+        else:
+            raise ValueError("Must provide either --token OR both --certificate and --private-key")
+
+        # Build credentials payload
+        payload = {
+            "credentials": {
+                "name": name,
+                "provider": "k8s",
+                "keys": keys,
+            }
+        }
+
+        # Create credentials
+        response = client.post("/credentials", json=payload)
+
+        # Output response
+        result = CredentialsAdded(
+            provider="K8S",
+            credentials_id=response.get("credentialsId", ""),
+            name=name,
+            workspace=USER_WORKSPACE_NAME,
+        )
+
+        output_response(result, output_format)
+
+    except Exception as e:
+        handle_credentials_error(e)
