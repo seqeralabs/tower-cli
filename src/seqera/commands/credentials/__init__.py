@@ -716,3 +716,74 @@ def add_container_registry(
 
     except Exception as e:
         handle_credentials_error(e)
+
+
+# SSH Credentials Commands
+
+@add_app.command("ssh")
+def add_ssh(
+    name: Annotated[
+        str,
+        typer.Option("-n", "--name", help="Credentials name"),
+    ],
+    key: Annotated[
+        str,
+        typer.Option("-k", "--key", help="SSH private key file"),
+    ],
+    passphrase: Annotated[
+        Optional[str],
+        typer.Option("-p", "--passphrase", help="Passphrase associated with the private key"),
+    ] = None,
+    workspace: Annotated[
+        Optional[str],
+        typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
+    ] = None,
+    overwrite: Annotated[
+        bool,
+        typer.Option("--overwrite", help="Overwrite if credentials already exist"),
+    ] = False,
+) -> None:
+    """Add new SSH workspace credentials."""
+    try:
+        client = get_client()
+        output_format = get_output_format()
+
+        # Read the private key file
+        from pathlib import Path
+
+        key_path = Path(key)
+        if not key_path.exists():
+            raise FileNotFoundError(f"SSH private key file not found: {key}")
+
+        key_content = key_path.read_text()
+
+        # Build credentials payload
+        payload = {
+            "credentials": {
+                "name": name,
+                "provider": "ssh",
+                "keys": {
+                    "privateKey": key_content,
+                },
+            }
+        }
+
+        # Add passphrase if provided
+        if passphrase:
+            payload["credentials"]["keys"]["passphrase"] = passphrase
+
+        # Create credentials
+        response = client.post("/credentials", json=payload)
+
+        # Output response
+        result = CredentialsAdded(
+            provider="SSH",
+            credentials_id=response.get("credentialsId", ""),
+            name=name,
+            workspace=USER_WORKSPACE_NAME,
+        )
+
+        output_response(result, output_format)
+
+    except Exception as e:
+        handle_credentials_error(e)
