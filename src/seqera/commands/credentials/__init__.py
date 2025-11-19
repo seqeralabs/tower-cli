@@ -652,3 +652,67 @@ def add_codecommit(
 
     except Exception as e:
         handle_credentials_error(e)
+
+
+# Container Registry Credentials Commands
+
+@add_app.command("container-reg")
+def add_container_registry(
+    name: Annotated[
+        str,
+        typer.Option("-n", "--name", help="Credentials name"),
+    ],
+    username: Annotated[
+        str,
+        typer.Option("-u", "--username", help="The user name to grant you access to the container registry"),
+    ],
+    password: Annotated[
+        str,
+        typer.Option("-p", "--password", help="The password to grant you access to the container registry"),
+    ],
+    registry: Annotated[
+        str,
+        typer.Option("-r", "--registry", help="The container registry server name"),
+    ] = "docker.io",
+    workspace: Annotated[
+        Optional[str],
+        typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
+    ] = None,
+    overwrite: Annotated[
+        bool,
+        typer.Option("--overwrite", help="Overwrite if credentials already exist"),
+    ] = False,
+) -> None:
+    """Add new Container Registry workspace credentials."""
+    try:
+        client = get_client()
+        output_format = get_output_format()
+
+        # Build credentials payload
+        payload = {
+            "credentials": {
+                "name": name,
+                "provider": "container-reg",
+                "keys": {
+                    "userName": username,  # Note: camelCase with capital N
+                    "password": password,
+                    "registry": registry,
+                },
+            }
+        }
+
+        # Create credentials
+        response = client.post("/credentials", json=payload)
+
+        # Output response
+        result = CredentialsAdded(
+            provider="CONTAINER_REG",
+            credentials_id=response.get("credentialsId", ""),
+            name=name,
+            workspace=USER_WORKSPACE_NAME,
+        )
+
+        output_response(result, output_format)
+
+    except Exception as e:
+        handle_credentials_error(e)
