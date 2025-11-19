@@ -403,3 +403,67 @@ def add_github(
 
     except Exception as e:
         handle_credentials_error(e)
+
+
+# GitLab Credentials Commands
+
+@add_app.command("gitlab")
+def add_gitlab(
+    name: Annotated[
+        str,
+        typer.Option("-n", "--name", help="Credentials name"),
+    ],
+    username: Annotated[
+        str,
+        typer.Option("-u", "--username", help="GitLab username"),
+    ],
+    password: Annotated[
+        str,
+        typer.Option("-p", "--password", help="GitLab account password or access token (recommended)"),
+    ],
+    token: Annotated[
+        str,
+        typer.Option("-t", "--token", help="GitLab account access token"),
+    ],
+    workspace: Annotated[
+        Optional[str],
+        typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
+    ] = None,
+    overwrite: Annotated[
+        bool,
+        typer.Option("--overwrite", help="Overwrite if credentials already exist"),
+    ] = False,
+) -> None:
+    """Add new GitLab workspace credentials."""
+    try:
+        client = get_client()
+        output_format = get_output_format()
+
+        # Build credentials payload
+        payload = {
+            "credentials": {
+                "name": name,
+                "provider": "gitlab",
+                "keys": {
+                    "username": username,
+                    "password": password,
+                    "token": token,
+                },
+            }
+        }
+
+        # Create credentials
+        response = client.post("/credentials", json=payload)
+
+        # Output response
+        result = CredentialsAdded(
+            provider="GITLAB",
+            credentials_id=response.get("credentialsId", ""),
+            name=name,
+            workspace=USER_WORKSPACE_NAME,
+        )
+
+        output_response(result, output_format)
+
+    except Exception as e:
+        handle_credentials_error(e)
