@@ -873,3 +873,62 @@ def add_k8s(
 
     except Exception as e:
         handle_credentials_error(e)
+
+
+# TW Agent Credentials Commands
+
+@add_app.command("agent")
+def add_agent(
+    name: Annotated[
+        str,
+        typer.Option("-n", "--name", help="Credentials name"),
+    ],
+    connection_id: Annotated[
+        str,
+        typer.Option("--connection-id", help="Connection identifier"),
+    ],
+    work_dir: Annotated[
+        str,
+        typer.Option("--work-dir", help="Default work directory"),
+    ] = "$TW_AGENT_WORK",
+    workspace: Annotated[
+        Optional[str],
+        typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
+    ] = None,
+    overwrite: Annotated[
+        bool,
+        typer.Option("--overwrite", help="Overwrite if credentials already exist"),
+    ] = False,
+) -> None:
+    """Add new TW Agent workspace credentials."""
+    try:
+        client = get_client()
+        output_format = get_output_format()
+
+        # Build credentials payload
+        payload = {
+            "credentials": {
+                "name": name,
+                "provider": "tw-agent",
+                "keys": {
+                    "connectionId": connection_id,
+                    "workDir": work_dir,
+                },
+            }
+        }
+
+        # Create credentials
+        response = client.post("/credentials", json=payload)
+
+        # Output response
+        result = CredentialsAdded(
+            provider="TW_AGENT",
+            credentials_id=response.get("credentialsId", ""),
+            name=name,
+            workspace=USER_WORKSPACE_NAME,
+        )
+
+        output_response(result, output_format)
+
+    except Exception as e:
+        handle_credentials_error(e)
