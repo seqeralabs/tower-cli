@@ -344,3 +344,62 @@ def add_google(
 
     except Exception as e:
         handle_credentials_error(e)
+
+
+# GitHub Credentials Commands
+
+@add_app.command("github")
+def add_github(
+    name: Annotated[
+        str,
+        typer.Option("-n", "--name", help="Credentials name"),
+    ],
+    username: Annotated[
+        str,
+        typer.Option("-u", "--username", help="GitHub username"),
+    ],
+    password: Annotated[
+        str,
+        typer.Option("-p", "--password", help="GitHub account password or access token (recommended)"),
+    ],
+    workspace: Annotated[
+        Optional[str],
+        typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
+    ] = None,
+    overwrite: Annotated[
+        bool,
+        typer.Option("--overwrite", help="Overwrite if credentials already exist"),
+    ] = False,
+) -> None:
+    """Add new GitHub workspace credentials."""
+    try:
+        client = get_client()
+        output_format = get_output_format()
+
+        # Build credentials payload
+        payload = {
+            "credentials": {
+                "name": name,
+                "provider": "github",
+                "keys": {
+                    "username": username,
+                    "password": password,
+                },
+            }
+        }
+
+        # Create credentials
+        response = client.post("/credentials", json=payload)
+
+        # Output response
+        result = CredentialsAdded(
+            provider="GITHUB",
+            credentials_id=response.get("credentialsId", ""),
+            name=name,
+            workspace=USER_WORKSPACE_NAME,
+        )
+
+        output_response(result, output_format)
+
+    except Exception as e:
+        handle_credentials_error(e)
