@@ -14,7 +14,21 @@
       "value": null,
       "resource": false,
       "isDefault": false
+    },
+    {
+      "id": 11,
+      "name": "ResourceLabelOne",
+      "value": "ValueOne",
+      "resource": true,
+      "isDefault": false
+    },
+    {
+      "id": 12,
+      "name": "ResourceLabelTwo",
+      "value": "ValueTwo",
+      "resource": true,
+      "isDefault": false
     }
   ],
-  "totalsize": 2
+  "totalSize": 4
 }

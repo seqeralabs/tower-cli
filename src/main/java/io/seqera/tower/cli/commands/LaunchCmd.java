@@ -20,16 +20,12 @@ package io.seqera.tower.cli.commands;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
+import io.seqera.tower.cli.commands.labels.Label;
 import io.seqera.tower.cli.exceptions.InvalidResponseException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.runs.RunSubmited;
 import io.seqera.tower.model.ComputeEnvResponseDto;
-import io.seqera.tower.model.CreateLabelRequest;
-import io.seqera.tower.model.CreateLabelResponse;
-import io.seqera.tower.model.LabelDbDto;
-import io.seqera.tower.model.LabelType;
 import io.seqera.tower.model.Launch;
-import io.seqera.tower.model.ListLabelsResponse;
 import io.seqera.tower.model.ListPipelinesResponse;
 import io.seqera.tower.model.PipelineDbDto;
 import io.seqera.tower.model.SubmitWorkflowLaunchRequest;
@@ -45,11 +41,8 @@ import picocli.CommandLine.Parameters;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import static io.seqera.tower.cli.utils.FilesHelper.readString;
 import static io.seqera.tower.cli.utils.ModelHelper.coalesce;
@@ -90,8 +83,8 @@ public class LaunchCmd extends AbstractRootCmd {
     @Option(names = {"--wait"}, description = "Wait until given status or fail. Valid options: ${COMPLETION-CANDIDATES}.")
     public WorkflowStatus wait;
 
-    @Option(names = {"-l", "--labels"}, split = ",", description = "Comma-separated list of labels for the pipeline.")
-    List<String> labels;
+    @Option(names = {"-l", "--labels"}, split = ",", description = "Comma-separated list of labels for the pipeline. Use 'key=value' format for resource labels.", converter = Label.LabelConverter.class)
+    List<Label> labels;
 
     @Option(names = {"--launch-container"}, description = "Container to be used to run the nextflow head job (BETA).")
     String launchContainer;
@@ -253,42 +246,7 @@ public class LaunchCmd extends AbstractRootCmd {
         if (labels == null || labels.isEmpty()) {
             return Collections.emptyList();
         }
-
-        // retrieve labels for the workspace and check if we need to create new ones
-        List<LabelDbDto> wspLabels = new ArrayList<>();
-
-        ListLabelsResponse res = labelsApi().listLabels(workspaceId, null, null, null, LabelType.SIMPLE, null);
-        if (res.getLabels() != null) {
-            wspLabels.addAll(res.getLabels());
-        }
-
-        Map<String, Long> nameToID = wspLabels
-            .stream()
-            .collect(Collectors.toMap(LabelDbDto::getName, LabelDbDto::getId));
-
-        // get label names not registered in workspace (names are unique per wspID)
-        List<String> newLabels = labels
-            .stream()
-            .filter(labelName -> !nameToID.containsKey(labelName))
-            .collect(Collectors.toList());
-
-        // create the new ones via POST /labels
-        for (String labelName: newLabels) {
-            CreateLabelResponse created = labelsApi().createLabel(
-                new CreateLabelRequest()
-                    .name(labelName)
-                    .resource(false)
-                    .isDefault(false),
-                workspaceId
-            );
-            nameToID.put(created.getName(), created.getId());
-        }
-
-        // map requested label names to label IDs
-        return labels
-            .stream()
-            .map(nameToID::get)
-            .collect(Collectors.toList());
+        return findOrCreateLabels(workspaceId, labels);
     }
 
     private AdvancedOptions adv() {
