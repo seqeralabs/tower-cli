@@ -1,0 +1,214 @@
+"""
+Credentials commands for Seqera CLI.
+
+Manage workspace credentials for various cloud providers and services.
+"""
+
+import sys
+from typing import Optional
+
+import typer
+from typing_extensions import Annotated
+
+from seqera.api.client import TowerClient
+from seqera.exceptions import (
+    AuthenticationError,
+    CredentialsNotFoundException,
+    NotFoundError,
+    SeqeraError,
+)
+from seqera.main import get_client, get_output_format
+from seqera.responses import CredentialsAdded, CredentialsUpdated
+from seqera.utils.output import OutputFormat, output_console, output_error, output_json, output_yaml
+
+# Create credentials app
+app = typer.Typer(
+    name="credentials",
+    help="Manage workspace credentials",
+    no_args_is_help=True,
+)
+
+# Create add and update subcommands
+add_app = typer.Typer(
+    name="add",
+    help="Add new workspace credentials",
+    no_args_is_help=True,
+)
+
+update_app = typer.Typer(
+    name="update",
+    help="Update existing workspace credentials",
+    no_args_is_help=True,
+)
+
+# Register subcommands
+app.add_typer(add_app, name="add")
+app.add_typer(update_app, name="update")
+
+# Default workspace name
+USER_WORKSPACE_NAME = "user"
+
+
+def handle_credentials_error(e: Exception) -> None:
+    """Handle credentials command errors."""
+    if isinstance(e, AuthenticationError):
+        output_error("Unauthorized")
+        sys.exit(1)
+    elif isinstance(e, CredentialsNotFoundException):
+        output_error(str(e))
+        sys.exit(1)
+    elif isinstance(e, NotFoundError):
+        output_error(str(e))
+        sys.exit(1)
+    elif isinstance(e, SeqeraError):
+        output_error(str(e))
+        sys.exit(1)
+    else:
+        output_error(f"Unexpected error: {e}")
+        sys.exit(1)
+
+
+def output_response(response: object, output_format: OutputFormat) -> None:
+    """Output a response in the specified format."""
+    if output_format == OutputFormat.JSON:
+        output_json(response.to_dict())
+    elif output_format == OutputFormat.YAML:
+        output_yaml(response.to_dict())
+    else:  # console
+        output_console(response.to_console())
+
+
+# AWS Credentials Commands
+
+@add_app.command("aws")
+def add_aws(
+    name: Annotated[
+        str,
+        typer.Option("-n", "--name", help="Credentials name"),
+    ],
+    access_key: Annotated[
+        Optional[str],
+        typer.Option("-a", "--access-key", help="AWS access key"),
+    ] = None,
+    secret_key: Annotated[
+        Optional[str],
+        typer.Option("-s", "--secret-key", help="AWS secret key"),
+    ] = None,
+    assume_role_arn: Annotated[
+        Optional[str],
+        typer.Option("-r", "--assume-role-arn", help="IAM role ARN to assume"),
+    ] = None,
+    workspace: Annotated[
+        Optional[str],
+        typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
+    ] = None,
+    overwrite: Annotated[
+        bool,
+        typer.Option("--overwrite", help="Overwrite if credentials already exist"),
+    ] = False,
+) -> None:
+    """Add new AWS workspace credentials."""
+    try:
+        client = get_client()
+        output_format = get_output_format()
+
+        # Build credentials payload
+        keys = {}
+        if access_key and secret_key:
+            keys["accessKey"] = access_key
+            keys["secretKey"] = secret_key
+        if assume_role_arn:
+            keys["assumeRoleArn"] = assume_role_arn
+
+        payload = {
+            "credentials": {
+                "name": name,
+                "provider": "aws",
+                "keys": keys,
+            }
+        }
+
+        # Create credentials
+        response = client.post("/credentials", json=payload)
+
+        # Output response
+        result = CredentialsAdded(
+            provider="AWS",
+            credentials_id=response.get("credentialsId", ""),
+            name=name,
+            workspace=USER_WORKSPACE_NAME,
+        )
+
+        output_response(result, output_format)
+
+    except Exception as e:
+        handle_credentials_error(e)
+
+
+@update_app.command("aws")
+def update_aws(
+    credentials_id: Annotated[
+        str,
+        typer.Option("-i", "--id", help="Credentials ID"),
+    ],
+    assume_role_arn: Annotated[
+        Optional[str],
+        typer.Option("-r", "--assume-role-arn", help="IAM role ARN to assume"),
+    ] = None,
+    access_key: Annotated[
+        Optional[str],
+        typer.Option("-a", "--access-key", help="AWS access key"),
+    ] = None,
+    secret_key: Annotated[
+        Optional[str],
+        typer.Option("-s", "--secret-key", help="AWS secret key"),
+    ] = None,
+    workspace: Annotated[
+        Optional[str],
+        typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
+    ] = None,
+) -> None:
+    """Update existing AWS workspace credentials."""
+    try:
+        client = get_client()
+        output_format = get_output_format()
+
+        # First, fetch existing credentials
+        try:
+            existing_response = client.get(f"/credentials/{credentials_id}")
+        except NotFoundError:
+            raise CredentialsNotFoundException(credentials_id, USER_WORKSPACE_NAME)
+
+        existing = existing_response.get("credentials", {})
+
+        # Build updated credentials payload
+        keys = {}
+        if access_key and secret_key:
+            keys["accessKey"] = access_key
+            keys["secretKey"] = secret_key
+        if assume_role_arn:
+            keys["assumeRoleArn"] = assume_role_arn
+
+        payload = {
+            "credentials": {
+                "id": credentials_id,
+                "name": existing.get("name", ""),
+                "provider": "aws",
+                "keys": keys,
+            }
+        }
+
+        # Update credentials
+        client.put(f"/credentials/{credentials_id}", json=payload)
+
+        # Output response
+        result = CredentialsUpdated(
+            provider="AWS",
+            name=existing.get("name", ""),
+            workspace=USER_WORKSPACE_NAME,
+        )
+
+        output_response(result, output_format)
+
+    except Exception as e:
+        handle_credentials_error(e)

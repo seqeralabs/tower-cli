@@ -1,0 +1,170 @@
+"""
+Seqera Platform CLI
+
+Main entry point for the Seqera CLI application.
+"""
+
+import os
+import sys
+from typing import Optional
+
+import typer
+from typing_extensions import Annotated
+
+from seqera.api.client import TowerClient
+from seqera.utils.output import OutputFormat
+
+# Create main app
+app = typer.Typer(
+    name="tw",
+    help="Seqera Platform CLI - Command line interface for Seqera Platform",
+    no_args_is_help=True,
+    add_completion=False,
+)
+
+# Global state for API client and options
+class GlobalState:
+    """Global state for CLI application."""
+
+    def __init__(self) -> None:
+        self.client: Optional[TowerClient] = None
+        self.output_format: OutputFormat = OutputFormat.CONSOLE
+        self.workspace_id: Optional[str] = None
+        self.workspace_ref: Optional[str] = None
+
+
+# Global state instance
+state = GlobalState()
+
+
+def get_client() -> TowerClient:
+    """Get the global API client instance."""
+    if state.client is None:
+        raise RuntimeError("API client not initialized. This is a bug.")
+    return state.client
+
+
+def set_client(client: TowerClient) -> None:
+    """Set the global API client instance."""
+    state.client = client
+
+
+def set_output_format(format: OutputFormat) -> None:
+    """Set the global output format."""
+    state.output_format = format
+
+
+def get_output_format() -> OutputFormat:
+    """Get the global output format."""
+    return state.output_format
+
+
+# Global options callback
+@app.callback()
+def main_callback(
+    ctx: typer.Context,
+    access_token: Annotated[
+        Optional[str],
+        typer.Option(
+            "-t",
+            "--access-token",
+            envvar="TOWER_ACCESS_TOKEN",
+            help="Tower personal access token (TOWER_ACCESS_TOKEN).",
+        ),
+    ] = None,
+    url: Annotated[
+        str,
+        typer.Option(
+            "-u",
+            "--url",
+            envvar="TOWER_API_ENDPOINT",
+            help="Tower server API endpoint URL (TOWER_API_ENDPOINT).",
+        ),
+    ] = "https://api.cloud.seqera.io",
+    output: Annotated[
+        str,
+        typer.Option(
+            "-o",
+            "--output",
+            envvar="TOWER_CLI_OUTPUT_FORMAT",
+            help="Output format: console, json, or yaml.",
+        ),
+    ] = "console",
+    verbose: Annotated[
+        bool,
+        typer.Option(
+            "-v",
+            "--verbose",
+            help="Show HTTP request/response logs at stderr.",
+        ),
+    ] = False,
+    insecure: Annotated[
+        bool,
+        typer.Option(
+            "--insecure",
+            help="Explicitly allow connecting to non-SSL secured Tower server (not recommended).",
+        ),
+    ] = False,
+) -> None:
+    """
+    Seqera Platform CLI.
+
+    Interact with Seqera Platform from the command line.
+    """
+    # Set output format
+    try:
+        output_format = OutputFormat(output.lower())
+        set_output_format(output_format)
+    except ValueError:
+        typer.echo(
+            f"Error: Invalid output format '{output}'. Must be one of: console, json, yaml.",
+            err=True,
+        )
+        raise typer.Exit(1)
+
+    # Skip client initialization for help commands
+    if ctx.invoked_subcommand is None or ctx.resilient_parsing:
+        return
+
+    # Check for access token
+    if not access_token:
+        typer.echo(
+            "Error: Missing Tower access token. "
+            "Set TOWER_ACCESS_TOKEN environment variable or use --access-token option.",
+            err=True,
+        )
+        raise typer.Exit(1)
+
+    # Initialize API client
+    client = TowerClient(
+        base_url=url,
+        token=access_token,
+        insecure=insecure,
+        verbose=verbose,
+    )
+    set_client(client)
+
+
+# Import and register subcommands
+from seqera.commands import credentials
+
+app.add_typer(credentials.app, name="credentials")
+
+
+def main() -> None:
+    """Main entry point for the CLI."""
+    try:
+        app()
+    except KeyboardInterrupt:
+        typer.echo("\nAborted!", err=True)
+        sys.exit(130)
+    except Exception as e:
+        # This should rarely happen as we handle exceptions in commands
+        typer.echo(f"Unexpected error: {e}", err=True)
+        if os.getenv("DEBUG"):
+            raise
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
