@@ -17,7 +17,7 @@ from seqera.exceptions import (
 )
 
 
-class TowerClient:
+class SeqeraClient:
     """
     HTTP client for Seqera Platform API.
 
@@ -37,7 +37,7 @@ class TowerClient:
         timeout: float = 30.0,
     ) -> None:
         """
-        Initialize the Tower API client.
+        Initialize the Seqera API client.
 
         Args:
             base_url: Base URL of the Seqera Platform API
@@ -208,7 +208,7 @@ class TowerClient:
         """Close the HTTP client."""
         self.client.close()
 
-    def __enter__(self) -> "TowerClient":
+    def __enter__(self) -> "SeqeraClient":
         """Context manager entry."""
         return self
 

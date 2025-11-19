@@ -11,12 +11,12 @@ from typing import Optional
 import typer
 from typing_extensions import Annotated
 
-from seqera.api.client import TowerClient
+from seqera.api.client import SeqeraClient
 from seqera.utils.output import OutputFormat
 
 # Create main app
 app = typer.Typer(
-    name="tw",
+    name="seqera",
     help="Seqera Platform CLI - Command line interface for Seqera Platform",
     no_args_is_help=True,
     add_completion=False,
@@ -27,7 +27,7 @@ class GlobalState:
     """Global state for CLI application."""
 
     def __init__(self) -> None:
-        self.client: Optional[TowerClient] = None
+        self.client: Optional[SeqeraClient] = None
         self.output_format: OutputFormat = OutputFormat.CONSOLE
         self.workspace_id: Optional[str] = None
         self.workspace_ref: Optional[str] = None
@@ -37,14 +37,14 @@ class GlobalState:
 state = GlobalState()
 
 
-def get_client() -> TowerClient:
+def get_client() -> SeqeraClient:
     """Get the global API client instance."""
     if state.client is None:
         raise RuntimeError("API client not initialized. This is a bug.")
     return state.client
 
 
-def set_client(client: TowerClient) -> None:
+def set_client(client: SeqeraClient) -> None:
     """Set the global API client instance."""
     state.client = client
 
@@ -68,8 +68,8 @@ def main_callback(
         typer.Option(
             "-t",
             "--access-token",
-            envvar="TOWER_ACCESS_TOKEN",
-            help="Tower personal access token (TOWER_ACCESS_TOKEN).",
+            envvar=["SEQERA_ACCESS_TOKEN", "TOWER_ACCESS_TOKEN"],
+            help="Seqera Platform access token (SEQERA_ACCESS_TOKEN or TOWER_ACCESS_TOKEN).",
         ),
     ] = None,
     url: Annotated[
@@ -77,8 +77,8 @@ def main_callback(
         typer.Option(
             "-u",
             "--url",
-            envvar="TOWER_API_ENDPOINT",
-            help="Tower server API endpoint URL (TOWER_API_ENDPOINT).",
+            envvar=["SEQERA_API_ENDPOINT", "TOWER_API_ENDPOINT"],
+            help="Seqera Platform API endpoint URL (SEQERA_API_ENDPOINT or TOWER_API_ENDPOINT).",
         ),
     ] = "https://api.cloud.seqera.io",
     output: Annotated[
@@ -86,7 +86,7 @@ def main_callback(
         typer.Option(
             "-o",
             "--output",
-            envvar="TOWER_CLI_OUTPUT_FORMAT",
+            envvar=["SEQERA_OUTPUT_FORMAT", "TOWER_CLI_OUTPUT_FORMAT"],
             help="Output format: console, json, or yaml.",
         ),
     ] = "console",
@@ -102,7 +102,7 @@ def main_callback(
         bool,
         typer.Option(
             "--insecure",
-            help="Explicitly allow connecting to non-SSL secured Tower server (not recommended).",
+            help="Explicitly allow connecting to non-SSL secured server (not recommended).",
         ),
     ] = False,
 ) -> None:
@@ -129,14 +129,14 @@ def main_callback(
     # Check for access token
     if not access_token:
         typer.echo(
-            "Error: Missing Tower access token. "
-            "Set TOWER_ACCESS_TOKEN environment variable or use --access-token option.",
+            "Error: Missing Seqera Platform access token. "
+            "Set SEQERA_ACCESS_TOKEN environment variable or use --access-token option.",
             err=True,
         )
         raise typer.Exit(1)
 
     # Initialize API client
-    client = TowerClient(
+    client = SeqeraClient(
         base_url=url,
         token=access_token,
         insecure=insecure,

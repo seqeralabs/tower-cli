@@ -10,7 +10,7 @@ from typing import Optional
 import typer
 from typing_extensions import Annotated
 
-from seqera.api.client import TowerClient
+from seqera.api.client import SeqeraClient
 from seqera.exceptions import (
     AuthenticationError,
     CredentialsNotFoundException,

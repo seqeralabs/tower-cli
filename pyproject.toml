@@ -47,7 +47,7 @@ dev = [
 ]
 
 [project.scripts]
-tw = "seqera.main:main"
+seqera = "seqera.main:main"
 
 [project.urls]
 Homepage = "https://seqera.io"

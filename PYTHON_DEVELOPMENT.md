@@ -34,10 +34,10 @@ pytest --cov=seqera --cov-report=html
 python -m seqera.main --help
 
 # Or if installed
-tw --help
+seqera --help
 
 # Example: Add AWS credentials (with mock server in tests)
-tw --url http://localhost:8080 --access-token fake_token credentials add aws --name test -a key -s secret
+seqera --url http://localhost:8080 --access-token fake_token credentials add aws --name test -a key -s secret
 ```
 
 ## Project Structure
@@ -307,7 +307,7 @@ else:
 
 ```bash
 # See HTTP requests/responses
-tw --verbose credentials add aws --name test ...
+seqera --verbose credentials add aws --name test ...
 ```
 
 ### Debug in Tests
@@ -325,7 +325,7 @@ pytest --pdb tests/credentials/test_aws_provider.py
 In the API client, set `verbose=True` to see all HTTP traffic:
 
 ```python
-client = TowerClient(
+client = SeqeraClient(
     base_url="http://localhost:8080",
     token="fake",
     verbose=True,  # Enables HTTP logging

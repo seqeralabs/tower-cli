@@ -27,7 +27,7 @@
 #### 2. Core Architecture ✅
 
 **API Client** (`src/seqera/api/client.py`):
-- `TowerClient` class with httpx-based HTTP client
+- `SeqeraClient` class with httpx-based HTTP client
 - Authentication via Bearer token
 - Error handling with custom exceptions:
   - `AuthenticationError` (401)
