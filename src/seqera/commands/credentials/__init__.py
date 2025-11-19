@@ -467,3 +467,62 @@ def add_gitlab(
 
     except Exception as e:
         handle_credentials_error(e)
+
+
+# Gitea Credentials Commands
+
+@add_app.command("gitea")
+def add_gitea(
+    name: Annotated[
+        str,
+        typer.Option("-n", "--name", help="Credentials name"),
+    ],
+    username: Annotated[
+        str,
+        typer.Option("-u", "--username", help="Gitea username"),
+    ],
+    password: Annotated[
+        str,
+        typer.Option("-p", "--password", help="Gitea account password"),
+    ],
+    workspace: Annotated[
+        Optional[str],
+        typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
+    ] = None,
+    overwrite: Annotated[
+        bool,
+        typer.Option("--overwrite", help="Overwrite if credentials already exist"),
+    ] = False,
+) -> None:
+    """Add new Gitea workspace credentials."""
+    try:
+        client = get_client()
+        output_format = get_output_format()
+
+        # Build credentials payload
+        payload = {
+            "credentials": {
+                "name": name,
+                "provider": "gitea",
+                "keys": {
+                    "username": username,
+                    "password": password,
+                },
+            }
+        }
+
+        # Create credentials
+        response = client.post("/credentials", json=payload)
+
+        # Output response
+        result = CredentialsAdded(
+            provider="GITEA",
+            credentials_id=response.get("credentialsId", ""),
+            name=name,
+            workspace=USER_WORKSPACE_NAME,
+        )
+
+        output_response(result, output_format)
+
+    except Exception as e:
+        handle_credentials_error(e)
