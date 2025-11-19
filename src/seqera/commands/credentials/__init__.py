@@ -585,3 +585,70 @@ def add_bitbucket(
 
     except Exception as e:
         handle_credentials_error(e)
+
+
+# CodeCommit Credentials Commands
+
+@add_app.command("codecommit")
+def add_codecommit(
+    name: Annotated[
+        str,
+        typer.Option("-n", "--name", help="Credentials name"),
+    ],
+    access_key: Annotated[
+        str,
+        typer.Option("--access-key", help="CodeCommit AWS access key"),
+    ],
+    secret_key: Annotated[
+        str,
+        typer.Option("--secret-key", help="CodeCommit AWS secret key"),
+    ],
+    base_url: Annotated[
+        Optional[str],
+        typer.Option("--base-url", help="Repository base URL"),
+    ] = None,
+    workspace: Annotated[
+        Optional[str],
+        typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
+    ] = None,
+    overwrite: Annotated[
+        bool,
+        typer.Option("--overwrite", help="Overwrite if credentials already exist"),
+    ] = False,
+) -> None:
+    """Add new CodeCommit workspace credentials."""
+    try:
+        client = get_client()
+        output_format = get_output_format()
+
+        # Build credentials payload
+        payload = {
+            "credentials": {
+                "name": name,
+                "provider": "codecommit",
+                "keys": {
+                    "username": access_key,
+                    "password": secret_key,
+                },
+            }
+        }
+
+        # Add base URL if provided
+        if base_url:
+            payload["credentials"]["baseUrl"] = base_url
+
+        # Create credentials
+        response = client.post("/credentials", json=payload)
+
+        # Output response
+        result = CredentialsAdded(
+            provider="CODECOMMIT",
+            credentials_id=response.get("credentialsId", ""),
+            name=name,
+            workspace=USER_WORKSPACE_NAME,
+        )
+
+        output_response(result, output_format)
+
+    except Exception as e:
+        handle_credentials_error(e)
