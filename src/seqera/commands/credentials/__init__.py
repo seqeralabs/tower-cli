@@ -212,3 +212,72 @@ def update_aws(
 
     except Exception as e:
         handle_credentials_error(e)
+
+
+# Azure Credentials Commands
+
+@add_app.command("azure")
+def add_azure(
+    name: Annotated[
+        str,
+        typer.Option("-n", "--name", help="Credentials name"),
+    ],
+    batch_name: Annotated[
+        str,
+        typer.Option("--batch-name", help="Azure batch account name"),
+    ],
+    batch_key: Annotated[
+        str,
+        typer.Option("--batch-key", help="Azure batch account key"),
+    ],
+    storage_name: Annotated[
+        str,
+        typer.Option("--storage-name", help="Azure blob storage account name"),
+    ],
+    storage_key: Annotated[
+        str,
+        typer.Option("--storage-key", help="Azure blob storage account key"),
+    ],
+    workspace: Annotated[
+        Optional[str],
+        typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
+    ] = None,
+    overwrite: Annotated[
+        bool,
+        typer.Option("--overwrite", help="Overwrite if credentials already exist"),
+    ] = False,
+) -> None:
+    """Add new Azure workspace credentials."""
+    try:
+        client = get_client()
+        output_format = get_output_format()
+
+        # Build credentials payload
+        payload = {
+            "credentials": {
+                "name": name,
+                "provider": "azure",
+                "keys": {
+                    "batchName": batch_name,
+                    "batchKey": batch_key,
+                    "storageName": storage_name,
+                    "storageKey": storage_key,
+                },
+            }
+        }
+
+        # Create credentials
+        response = client.post("/credentials", json=payload)
+
+        # Output response
+        result = CredentialsAdded(
+            provider="AZURE",
+            credentials_id=response.get("credentialsId", ""),
+            name=name,
+            workspace=USER_WORKSPACE_NAME,
+        )
+
+        output_response(result, output_format)
+
+    except Exception as e:
+        handle_credentials_error(e)
