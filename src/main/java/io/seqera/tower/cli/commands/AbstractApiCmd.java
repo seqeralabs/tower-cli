@@ -63,7 +63,7 @@ import io.seqera.tower.model.ListWorkspacesAndOrgResponse;
 import io.seqera.tower.model.OrgAndWorkspaceDto;
 import io.seqera.tower.model.PipelineDbDto;
 import io.seqera.tower.model.PipelineQueryAttribute;
-import io.seqera.tower.model.UserDbDto;
+import io.seqera.tower.model.UserResponseDto;
 import io.seqera.tower.model.WorkflowQueryAttribute;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.logging.LoggingFeature;
@@ -272,48 +272,51 @@ public abstract class AbstractApiCmd extends AbstractCmd {
 
     private ApiClient buildApiClient() {
         return new ApiClient() {
-            @Override
-            protected void performAdditionalClientConfiguration(ClientConfig clientConfig) {
-                if (app().verbose) {
-                    clientConfig.register(new LoggingFeature(Logger.getLogger(LoggingFeature.DEFAULT_LOGGER_NAME), java.util.logging.Level.INFO, LoggingFeature.Verbosity.PAYLOAD_ANY, 1024 * 50 /* Log payloads up to 50K */));
-                    clientConfig.property(LoggingFeature.LOGGING_FEATURE_VERBOSITY, LoggingFeature.Verbosity.PAYLOAD_ANY);
-                }
-            }
-
-            @Override
-            public Entity<?> serialize(Object obj, Map<String, Object> formParams, String contentType) throws ApiException {
-                Entity<?> entity = super.serialize(obj, formParams, contentType);
-
-                // Current SDK sends all multipart files as 'application/octet-stream'
-                // this is a workaround to try to automatically detect the correct
-                // content-type depending on the file name.
-                if (entity.getEntity() instanceof MultiPart) {
-                    for (BodyPart bodyPart : ((MultiPart) entity.getEntity()).getBodyParts()) {
-                        String fileName = bodyPart.getContentDisposition().getFileName();
-                        bodyPart.setMediaType(guessMediaType(fileName));
-                    }
-                }
-                return entity;
-            }
-
-            private MediaType guessMediaType(String fileName) {
-                if (fileName.endsWith(".csv")) {
-                    return MediaType.valueOf("text/csv");
-                }
-
-                if (fileName.endsWith(".tsv")) {
-                    return MediaType.valueOf("text/tab-separated-values");
-                }
-
-                String mediaType = URLConnection.guessContentTypeFromName(fileName);
-                if (mediaType != null) {
-                    return MediaType.valueOf(mediaType);
-                }
-
-                return MediaType.APPLICATION_OCTET_STREAM_TYPE;
-            }
 
         };
+//        return new ApiClient() {
+//            @Override
+//            protected void performAdditionalClientConfiguration(ClientConfig clientConfig) {
+//                if (app().verbose) {
+//                    clientConfig.register(new LoggingFeature(Logger.getLogger(LoggingFeature.DEFAULT_LOGGER_NAME), java.util.logging.Level.INFO, LoggingFeature.Verbosity.PAYLOAD_ANY, 1024 * 50 /* Log payloads up to 50K */));
+//                    clientConfig.property(LoggingFeature.LOGGING_FEATURE_VERBOSITY, LoggingFeature.Verbosity.PAYLOAD_ANY);
+//                }
+//            }
+//
+//            @Override
+//            public Entity<?> serialize(Object obj, Map<String, Object> formParams, String contentType) throws ApiException {
+//                Entity<?> entity = super.serialize(obj, formParams, contentType, true); // TODO: check if isBodyNullable can be true
+//
+//                // Current SDK sends all multipart files as 'application/octet-stream'
+//                // this is a workaround to try to automatically detect the correct
+//                // content-type depending on the file name.
+//                if (entity.getEntity() instanceof MultiPart) {
+//                    for (BodyPart bodyPart : ((MultiPart) entity.getEntity()).getBodyParts()) {
+//                        String fileName = bodyPart.getContentDisposition().getFileName();
+//                        bodyPart.setMediaType(guessMediaType(fileName));
+//                    }
+//                }
+//                return entity;
+//            }
+//
+//            private MediaType guessMediaType(String fileName) {
+//                if (fileName.endsWith(".csv")) {
+//                    return MediaType.valueOf("text/csv");
+//                }
+//
+//                if (fileName.endsWith(".tsv")) {
+//                    return MediaType.valueOf("text/tab-separated-values");
+//                }
+//
+//                String mediaType = URLConnection.guessContentTypeFromName(fileName);
+//                if (mediaType != null) {
+//                    return MediaType.valueOf(mediaType);
+//                }
+//
+//                return MediaType.APPLICATION_OCTET_STREAM_TYPE;
+//            }
+//
+//        };
     }
 
     protected Long orgId(Long workspaceId) throws ApiException {
@@ -500,7 +503,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     }
 
     private void loadUser() throws ApiException {
-        UserDbDto user = usersApi().userInfo().getUser();
+        UserResponseDto user = usersApi().userInfo().getUser();
         userName = user.getUserName();
         userId = user.getId();
     }
@@ -538,7 +541,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         if (availableComputeEnvsNameToId == null) {
             availableComputeEnvsNameToId = new HashMap<>();
             availableComputeEnvsIdToName = new HashMap<>();
-            for (ListComputeEnvsResponseEntry ce : computeEnvsApi().listComputeEnvs("AVAILABLE", workspaceId).getComputeEnvs()) {
+            for (ListComputeEnvsResponseEntry ce : computeEnvsApi().listComputeEnvs("AVAILABLE", workspaceId, List.of()).getComputeEnvs()) {
 
                 if (ce.getPrimary() != null && ce.getPrimary()) {
                     primaryComputeEnvId = ce.getId();

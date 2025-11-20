@@ -54,11 +54,11 @@ public abstract class AbstractComputeEnvCmd extends AbstractApiCmd {
                 .findFirst()
                 .orElseThrow(() -> new ComputeEnvNotFoundException(name, workspaceId));
 
-        return computeEnvsApi().describeComputeEnv(entry.getId(), workspaceId, List.of(ComputeEnvQueryAttribute.LABELS)).getComputeEnv();
+        return computeEnvsApi().describeComputeEnv(entry.getId(), workspaceId, List.of(ComputeEnvQueryAttribute.labels)).getComputeEnv();
     }
 
     private ComputeEnvResponseDto computeEnvById(Long workspaceId, String id) throws ApiException {
-        return computeEnvsApi().describeComputeEnv(id, workspaceId, List.of(ComputeEnvQueryAttribute.LABELS)).getComputeEnv();
+        return computeEnvsApi().describeComputeEnv(id, workspaceId, List.of(ComputeEnvQueryAttribute.labels)).getComputeEnv();
     }
 }
 

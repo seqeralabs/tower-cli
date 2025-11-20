@@ -13,6 +13,7 @@ ext.githubToken = project.findProperty('github.packages.token')
 
 repositories {
     mavenCentral()
+    mavenLocal()
     maven {
         url = uri("https://maven.pkg.github.com/seqeralabs/tower-java-sdk")
         credentials {
@@ -27,8 +28,9 @@ dependencies {
     implementation 'org.slf4j:slf4j-api:1.7.36'
     implementation 'ch.qos.logback:logback-core:1.5.19'
     implementation 'ch.qos.logback:logback-classic:1.5.19'
+    implementation 'jakarta.annotation:jakarta.annotation-api:3.0.0'
 
-    implementation 'io.seqera.tower:tower-java-sdk:1.43.1'
+    implementation 'io.seqera.tower:tower-java-sdk:1.93.0'
     // Upgrade transitive Jersey client dependencies to non-vulnerable 2.x version
     implementation "org.glassfish.jersey.core:jersey-client:2.47"
     implementation "org.glassfish.jersey.media:jersey-media-multipart:2.47"

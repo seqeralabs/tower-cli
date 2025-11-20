@@ -22,7 +22,7 @@ import io.seqera.tower.cli.commands.global.WorkspaceRequiredOptions;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.datasets.DatasetUpdate;
-import io.seqera.tower.model.Dataset;
+import io.seqera.tower.model.DatasetDto;
 import io.seqera.tower.model.UpdateDatasetRequest;
 import picocli.CommandLine;
 
@@ -60,7 +60,7 @@ public class UpdateCmd extends AbstractDatasetsCmd {
         }
 
         Long wspId = workspaceId(workspace.workspace);
-        Dataset dataset = fetchDescribeDatasetResponse(datasetRefOptions, wspId);
+        DatasetDto dataset = fetchDescribeDatasetResponse(datasetRefOptions, wspId);
         UpdateDatasetRequest request = new UpdateDatasetRequest();
         request.setName(newName != null ? newName : dataset.getName());
         request.setDescription(description != null ? description : dataset.getDescription());

@@ -21,10 +21,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.cli.utils.TableList;
-import io.seqera.tower.model.ParticipantDbDto;
+import io.seqera.tower.model.ParticipantResponseDto;
 import io.seqera.tower.model.ParticipantType;
+import jakarta.annotation.Nullable;
 
-import javax.annotation.Nullable;
 import java.io.PrintWriter;
 import java.util.List;
 
@@ -34,13 +34,13 @@ public class ParticipantsList extends Response {
 
     public final String organizationName;
     public final String workspaceName;
-    public final List<ParticipantDbDto> participants;
+    public final List<ParticipantResponseDto> participants;
 
     @JsonIgnore
     @Nullable
     private PaginationInfo paginationInfo;
 
-    public ParticipantsList(String organizationName, String workspaceName, List<ParticipantDbDto> participants, @Nullable PaginationInfo paginationInfo) {
+    public ParticipantsList(String organizationName, String workspaceName, List<ParticipantResponseDto> participants, @Nullable PaginationInfo paginationInfo) {
         this.organizationName = organizationName;
         this.workspaceName = workspaceName;
         this.participants = participants;

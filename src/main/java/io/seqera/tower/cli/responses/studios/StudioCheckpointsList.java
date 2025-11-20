@@ -20,14 +20,15 @@ package io.seqera.tower.cli.responses.studios;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Nullable;
+
+import jakarta.annotation.Nullable;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.DataStudioCheckpointDto;
-import io.seqera.tower.model.StudioUser;
+import io.seqera.tower.model.UserInfo;
 
 import static io.seqera.tower.cli.utils.FormatHelper.formatTime;
 
@@ -64,7 +65,7 @@ public class StudioCheckpointsList extends Response {
         table.setPrefix("    ");
 
         checkpoints.forEach(checkpoint -> {
-            StudioUser user = checkpoint.getAuthor();
+            UserInfo user = checkpoint.getAuthor();
 
             List<String> rows = new ArrayList<>(List.of(
                     checkpoint.getId() == null ? "" : checkpoint.getId().toString(),

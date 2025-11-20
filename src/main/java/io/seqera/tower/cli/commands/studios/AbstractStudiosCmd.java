@@ -105,7 +105,7 @@ public class AbstractStudiosCmd extends AbstractApiCmd {
                     targetStatus,
                     DataStudioStatus.values(),
                     () -> checkStudioStatus(sessionId, workspaceId),
-                    DataStudioStatus.STOPPED, DataStudioStatus.ERRORED, DataStudioStatus.RUNNING
+                    DataStudioStatus.stopped, DataStudioStatus.errored, DataStudioStatus.running
             );
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();

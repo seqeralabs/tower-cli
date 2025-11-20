@@ -21,8 +21,8 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.exceptions.DatasetNotFoundException;
 import io.seqera.tower.cli.exceptions.TowerException;
-import io.seqera.tower.model.Dataset;
-import io.seqera.tower.model.DatasetVersionDbDto;
+import io.seqera.tower.model.DatasetDto;
+import io.seqera.tower.model.DatasetVersionDto;
 import io.seqera.tower.model.ListDatasetVersionsResponse;
 import io.seqera.tower.model.ListDatasetsResponse;
 import picocli.CommandLine;
@@ -35,14 +35,14 @@ import java.util.stream.Collectors;
 @CommandLine.Command
 public abstract class AbstractDatasetsCmd extends AbstractApiCmd {
 
-    protected Dataset datasetByName(Long workspaceId, String datasetName) throws ApiException {
+    protected DatasetDto datasetByName(Long workspaceId, String datasetName) throws ApiException {
         ListDatasetsResponse listDatasetsResponse = datasetsApi().listDatasets(workspaceId);
 
         if (listDatasetsResponse == null || listDatasetsResponse.getDatasets() == null) {
             throw new DatasetNotFoundException(workspaceRef(workspaceId));
         }
 
-        List<Dataset> datasetList = listDatasetsResponse.getDatasets().stream()
+        List<DatasetDto> datasetList = listDatasetsResponse.getDatasets().stream()
                 .filter(it -> Objects.equals(it.getName(), datasetName))
                 .collect(Collectors.toList());
 
@@ -53,7 +53,7 @@ public abstract class AbstractDatasetsCmd extends AbstractApiCmd {
         return datasetList.stream().findFirst().orElse(null);
     }
 
-    protected List<Dataset> searchByName(Long workspaceId, String datasetName) throws ApiException {
+    protected List<DatasetDto> searchByName(Long workspaceId, String datasetName) throws ApiException {
         ListDatasetsResponse listDatasetsResponse = datasetsApi().listDatasets(workspaceId);
 
         if (datasetName == null) {
@@ -64,7 +64,7 @@ public abstract class AbstractDatasetsCmd extends AbstractApiCmd {
             throw new DatasetNotFoundException(workspaceRef(workspaceId));
         }
 
-        List<Dataset> datasetList = listDatasetsResponse.getDatasets().stream()
+        List<DatasetDto> datasetList = listDatasetsResponse.getDatasets().stream()
                 .filter(it -> it.getName().startsWith(datasetName))
                 .collect(Collectors.toList());
 
@@ -75,11 +75,11 @@ public abstract class AbstractDatasetsCmd extends AbstractApiCmd {
         return datasetList;
     }
 
-    protected Dataset fetchDescribeDatasetResponse(DatasetRefOptions datasetRefOptions, Long wspId) throws ApiException {
-        Dataset response;
+    protected DatasetDto fetchDescribeDatasetResponse(DatasetRefOptions datasetRefOptions, Long wspId) throws ApiException {
+        DatasetDto response;
 
         if (datasetRefOptions.dataset.datasetId != null) {
-            response = datasetsApi().describeDataset(wspId, datasetRefOptions.dataset.datasetId).getDataset();
+            response = datasetsApi().describeDataset(wspId, datasetRefOptions.dataset.datasetId, List.of()).getDataset(); // TODO: CHECK if empty attributes is fine
         } else {
             response = datasetByName(wspId, datasetRefOptions.dataset.datasetName);
         }
@@ -87,8 +87,8 @@ public abstract class AbstractDatasetsCmd extends AbstractApiCmd {
         return response;
     }
 
-    protected DatasetVersionDbDto fetchDatasetVersion(Long wspId, String datasetId, String datasetMediaType, Long version) throws ApiException {
-        DatasetVersionDbDto datasetVersion;
+    protected DatasetVersionDto fetchDatasetVersion(Long wspId, String datasetId, String datasetMediaType, Long version) throws ApiException {
+        DatasetVersionDto datasetVersion;
 
         ListDatasetVersionsResponse listDatasetVersionsResponse = datasetsApi().listDatasetVersions(wspId, datasetId, datasetMediaType);
 
@@ -109,8 +109,8 @@ public abstract class AbstractDatasetsCmd extends AbstractApiCmd {
         return datasetVersion;
     }
 
-    protected DatasetVersionDbDto getLatestVersion(ListDatasetVersionsResponse listDatasetVersionsResponse) {
-        Comparator<DatasetVersionDbDto> versionComparator = Comparator.comparing(DatasetVersionDbDto::getVersion);
+    protected DatasetVersionDto getLatestVersion(ListDatasetVersionsResponse listDatasetVersionsResponse) {
+        Comparator<DatasetVersionDto> versionComparator = Comparator.comparing(DatasetVersionDto::getVersion);
 
         return listDatasetVersionsResponse.getVersions()
                 .stream()
@@ -118,7 +118,7 @@ public abstract class AbstractDatasetsCmd extends AbstractApiCmd {
                 .orElse(null);
     }
 
-    protected DatasetVersionDbDto getFromVersion(ListDatasetVersionsResponse listDatasetVersionsResponse, Long version) {
+    protected DatasetVersionDto getFromVersion(ListDatasetVersionsResponse listDatasetVersionsResponse, Long version) {
         return listDatasetVersionsResponse.getVersions()
                 .stream()
                 .filter(it -> Objects.equals(it.getVersion(), version))
@@ -131,7 +131,7 @@ public abstract class AbstractDatasetsCmd extends AbstractApiCmd {
     }
 
     protected void deleteDatasetByName(String datasetName, Long wspId) throws DatasetNotFoundException, ApiException {
-        Dataset response = datasetByName(wspId, datasetName);
+        DatasetDto response = datasetByName(wspId, datasetName);
         deleteDatasetById(response.getId(), wspId);
     }
 

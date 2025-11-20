@@ -44,7 +44,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.net.URI;

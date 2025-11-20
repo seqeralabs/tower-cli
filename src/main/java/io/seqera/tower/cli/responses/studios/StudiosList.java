@@ -20,7 +20,7 @@ package io.seqera.tower.cli.responses.studios;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.seqera.tower.cli.responses.Response;
@@ -28,7 +28,7 @@ import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.DataStudioDto;
 import io.seqera.tower.model.DataStudioStatusInfo;
-import io.seqera.tower.model.StudioUser;
+import io.seqera.tower.model.UserInfo;
 
 import static io.seqera.tower.cli.utils.FormatHelper.formatDescription;
 import static io.seqera.tower.cli.utils.FormatHelper.formatLabels;
@@ -70,7 +70,7 @@ public class StudiosList extends Response {
         studios.forEach(studio -> {
 
             DataStudioStatusInfo statusInfo = studio.getStatusInfo();
-            StudioUser user = studio.getUser();
+            UserInfo user = studio.getUser();
             List<String> rows = new ArrayList<>(List.of(
                     studio.getSessionId() == null ? "NA" : studio.getSessionId(),
                     studio.getName() == null ? "NA" : studio.getName(),

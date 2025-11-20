@@ -19,7 +19,7 @@ package io.seqera.tower.cli.commands.global;
 
 import picocli.CommandLine;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public class ShowLabelsOption {
 

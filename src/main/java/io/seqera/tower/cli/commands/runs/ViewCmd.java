@@ -70,7 +70,7 @@ public class ViewCmd extends AbstractRunsCmd {
 
         try {
             String workspaceRef = workspaceRef(wspId);
-            DescribeWorkflowResponse workflowResponse = workflowsApi().describeWorkflow(id, wspId, List.of(WorkflowQueryAttribute.LABELS));
+            DescribeWorkflowResponse workflowResponse = workflowsApi().describeWorkflow(id, wspId, List.of(WorkflowQueryAttribute.labels));
             
             if (workflowResponse == null) {
                 throw new RunNotFoundException(id, workspaceRef(wspId));

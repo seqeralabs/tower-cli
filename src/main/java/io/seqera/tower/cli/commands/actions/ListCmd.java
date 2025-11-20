@@ -47,7 +47,7 @@ public class ListCmd extends AbstractActionsCmd {
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
 
-        List<ActionQueryAttribute> actionQueryAttributes = showLabelsOption.showLabels ? List.of(ActionQueryAttribute.LABELS) : NO_ACTION_ATTRIBUTES;
+        List<ActionQueryAttribute> actionQueryAttributes = showLabelsOption.showLabels ? List.of(ActionQueryAttribute.labels) : NO_ACTION_ATTRIBUTES;
 
         ListActionsResponse response = actionsApi().listActions(wspId, actionQueryAttributes);
 

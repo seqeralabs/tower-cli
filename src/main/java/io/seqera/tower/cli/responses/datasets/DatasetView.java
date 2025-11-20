@@ -20,16 +20,16 @@ package io.seqera.tower.cli.responses.datasets;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.FormatHelper;
 import io.seqera.tower.cli.utils.TableList;
-import io.seqera.tower.model.Dataset;
+import io.seqera.tower.model.DatasetDto;
 
 import java.io.PrintWriter;
 
 public class DatasetView extends Response {
 
-    public final Dataset dataset;
+    public final DatasetDto dataset;
     public final String workspace;
 
-    public DatasetView(Dataset dataset, String workspace) {
+    public DatasetView(DatasetDto dataset, String workspace) {
         this.dataset = dataset;
         this.workspace = workspace;
     }

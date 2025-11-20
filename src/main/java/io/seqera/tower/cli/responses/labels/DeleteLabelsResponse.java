@@ -19,7 +19,7 @@ package io.seqera.tower.cli.responses.labels;
 
 import io.seqera.tower.cli.responses.Response;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 public class DeleteLabelsResponse extends Response {
 
