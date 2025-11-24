@@ -146,9 +146,10 @@ def main_callback(
 
 
 # Import and register subcommands
-from seqera.commands import credentials
+from seqera.commands import credentials, computeenvs
 
 app.add_typer(credentials.app, name="credentials")
+app.add_typer(computeenvs.app, name="compute-envs")
 
 
 def main() -> None:
