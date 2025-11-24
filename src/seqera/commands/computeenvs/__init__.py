@@ -194,3 +194,96 @@ def view_compute_env(
                 ComputeEnvNotFoundException(ref, USER_WORKSPACE_NAME)
             )
         handle_compute_env_error(e)
+
+
+@primary_app.command("get")
+def primary_get() -> None:
+    """Get the primary compute environment."""
+    try:
+        client = get_client()
+        output_format = get_output_format()
+
+        # Get compute environments list to find primary
+        response = client.get("/compute-envs")
+        compute_envs = response.get("computeEnvs", [])
+
+        # Find the primary compute environment
+        primary_ce = None
+        for ce in compute_envs:
+            if ce.get("primary"):
+                primary_ce = ce
+                break
+
+        if not primary_ce:
+            # No primary set
+            result = ComputeEnvsPrimaryGet(
+                compute_env_id=None,
+                name=None,
+                workspace=USER_WORKSPACE_NAME,
+            )
+        else:
+            # Get full details of primary compute environment
+            ce_id = primary_ce.get("id")
+            ce_details = client.get(f"/compute-envs/{ce_id}")
+            result = ComputeEnvsPrimaryGet(
+                compute_env_id=ce_id,
+                name=ce_details.get("name"),
+                workspace=USER_WORKSPACE_NAME,
+            )
+
+        output_response(result, output_format)
+
+    except Exception as e:
+        handle_compute_env_error(e)
+
+
+@primary_app.command("set")
+def primary_set(
+    compute_env_id: Annotated[
+        Optional[str],
+        typer.Option("-i", "--id", help="Compute environment ID to set as primary"),
+    ] = None,
+    compute_env_name: Annotated[
+        Optional[str],
+        typer.Option("-n", "--name", help="Compute environment name to set as primary"),
+    ] = None,
+) -> None:
+    """Set a compute environment as primary."""
+    try:
+        client = get_client()
+        output_format = get_output_format()
+
+        # Resolve compute environment ID if name is provided
+        if compute_env_name and not compute_env_id:
+            # Get list and find by name
+            response = client.get("/compute-envs")
+            compute_envs = response.get("computeEnvs", [])
+            for ce in compute_envs:
+                if ce.get("name") == compute_env_name:
+                    compute_env_id = ce.get("id")
+                    break
+            if not compute_env_id:
+                raise ComputeEnvNotFoundException(compute_env_name, USER_WORKSPACE_NAME)
+
+        if not compute_env_id:
+            output_error("Either --id or --name must be provided")
+            sys.exit(1)
+
+        # Get compute environment details first
+        ce_details = client.get(f"/compute-envs/{compute_env_id}")
+
+        # Set as primary
+        client.post(f"/compute-envs/{compute_env_id}/primary", json={})
+
+        # Output response
+        result = ComputeEnvsPrimarySet(
+            compute_env_id=compute_env_id,
+            name=ce_details.get("name"),
+            workspace=USER_WORKSPACE_NAME,
+        )
+
+        output_response(result, output_format)
+
+    except Exception as e:
+        handle_compute_env_error(e)
+

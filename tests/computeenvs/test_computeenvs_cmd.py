@@ -220,3 +220,134 @@ class TestComputeEnvsCmd:
         assert out.stderr == ""
         assert user_workspace_name in out.stdout
         assert "No compute environment found" in out.stdout
+
+    @pytest.mark.parametrize("output_format", ["console", "json", "yaml"])
+    def test_primary_get(
+        self,
+        httpserver: HTTPServer,
+        exec_cmd: callable,
+        user_workspace_name: str,
+        output_format: str,
+    ) -> None:
+        """
+        Test getting primary compute environment.
+
+        Ported from testPrimaryGet() in ComputeEnvsCmdTest.java
+        """
+        # Setup mock HTTP expectations
+        compute_envs_response = {
+            "computeEnvs": [
+                {
+                    "id": "isnEDBLvHDAIteOEF44ow",
+                    "name": "demo",
+                    "platform": "aws-batch",
+                    "status": "AVAILABLE",
+                    "primary": True,
+                    "lastUsed": None,
+                }
+            ]
+        }
+
+        httpserver.expect_request("/compute-envs", method="GET").respond_with_json(
+            compute_envs_response, status=200
+        )
+
+        httpserver.expect_request(
+            "/compute-envs/isnEDBLvHDAIteOEF44ow", method="GET"
+        ).respond_with_json(
+            {
+                "id": "isnEDBLvHDAIteOEF44ow",
+                "name": "demo",
+                "platform": "aws-batch",
+                "status": "AVAILABLE",
+            },
+            status=200,
+        )
+
+        # Run the command
+        out = exec_cmd(
+            "compute-envs",
+            "primary",
+            "get",
+            output_format=output_format,
+        )
+
+        # Assertions
+        assert out.exit_code == 0
+        assert out.stderr == ""
+
+        if output_format == "json":
+            data = json.loads(out.stdout)
+            assert data["id"] == "isnEDBLvHDAIteOEF44ow"
+            assert data["name"] == "demo"
+            assert data["workspaceRef"] == user_workspace_name
+        elif output_format == "yaml":
+            import yaml
+
+            data = yaml.safe_load(out.stdout)
+            assert data["id"] == "isnEDBLvHDAIteOEF44ow"
+            assert data["name"] == "demo"
+            assert data["workspaceRef"] == user_workspace_name
+        else:  # console
+            assert "isnEDBLvHDAIteOEF44ow" in out.stdout
+            assert "demo" in out.stdout
+
+    @pytest.mark.parametrize("output_format", ["console", "json", "yaml"])
+    def test_primary_set(
+        self,
+        httpserver: HTTPServer,
+        exec_cmd: callable,
+        user_workspace_name: str,
+        output_format: str,
+    ) -> None:
+        """
+        Test setting primary compute environment.
+
+        Ported from testPrimarySet() in ComputeEnvsCmdTest.java
+        """
+        # Setup mock HTTP expectations
+        httpserver.expect_request(
+            "/compute-envs/isnEDBLvHDAIteOEF44ow", method="GET"
+        ).respond_with_json(
+            {
+                "id": "isnEDBLvHDAIteOEF44ow",
+                "name": "demo",
+                "platform": "aws-batch",
+                "status": "AVAILABLE",
+            },
+            status=200,
+        )
+
+        httpserver.expect_request(
+            "/compute-envs/isnEDBLvHDAIteOEF44ow/primary", method="POST"
+        ).respond_with_data("", status=204)
+
+        # Run the command
+        out = exec_cmd(
+            "compute-envs",
+            "primary",
+            "set",
+            "-i",
+            "isnEDBLvHDAIteOEF44ow",
+            output_format=output_format,
+        )
+
+        # Assertions
+        assert out.exit_code == 0
+        assert out.stderr == ""
+
+        if output_format == "json":
+            data = json.loads(out.stdout)
+            assert data["id"] == "isnEDBLvHDAIteOEF44ow"
+            assert data["name"] == "demo"
+            assert data["workspaceRef"] == user_workspace_name
+        elif output_format == "yaml":
+            import yaml
+
+            data = yaml.safe_load(out.stdout)
+            assert data["id"] == "isnEDBLvHDAIteOEF44ow"
+            assert data["name"] == "demo"
+            assert data["workspaceRef"] == user_workspace_name
+        else:  # console
+            assert "demo" in out.stdout
+            assert user_workspace_name in out.stdout
