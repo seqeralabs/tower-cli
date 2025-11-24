@@ -287,3 +287,57 @@ def primary_set(
     except Exception as e:
         handle_compute_env_error(e)
 
+
+
+@app.command("export")
+def export_compute_env(
+    compute_env_name: Annotated[
+        str,
+        typer.Option("-n", "--name", help="Compute environment name to export"),
+    ],
+    filename: Annotated[
+        Optional[str],
+        typer.Argument(help="Output filename (optional, defaults to stdout)"),
+    ] = None,
+) -> None:
+    """Export compute environment configuration to JSON."""
+    try:
+        client = get_client()
+        output_format = get_output_format()
+
+        # Get list and find by name
+        response = client.get("/compute-envs")
+        compute_envs = response.get("computeEnvs", [])
+
+        compute_env_id = None
+        for ce in compute_envs:
+            if ce.get("name") == compute_env_name:
+                compute_env_id = ce.get("id")
+                break
+
+        if not compute_env_id:
+            raise ComputeEnvNotFoundException(compute_env_name, USER_WORKSPACE_NAME)
+
+        # Get full compute environment details
+        ce_details = client.get(f"/compute-envs/{compute_env_id}")
+
+        # Extract config for export
+        config = ce_details.get("config", {})
+
+        # Create export format (config only for simplified version)
+        export_data = {
+            "config": config,
+        }
+
+        # Save to file if specified
+        if filename and filename != "-":
+            import json
+            with open(filename, "w") as f:
+                json.dump(export_data, f, indent=2)
+
+        # Output response
+        result = ComputeEnvExport(config=export_data)
+        output_response(result, output_format)
+
+    except Exception as e:
+        handle_compute_env_error(e)
