@@ -18,7 +18,12 @@ from seqera.exceptions import (
     SeqeraError,
 )
 from seqera.main import get_client, get_output_format
-from seqera.responses import CredentialsAdded, CredentialsUpdated
+from seqera.responses import (
+    CredentialsAdded,
+    CredentialsDeleted,
+    CredentialsList,
+    CredentialsUpdated,
+)
 from seqera.utils.output import OutputFormat, output_console, output_error, output_json, output_yaml
 
 # Create credentials app
@@ -925,6 +930,60 @@ def add_agent(
             provider="TW_AGENT",
             credentials_id=response.get("credentialsId", ""),
             name=name,
+            workspace=USER_WORKSPACE_NAME,
+        )
+
+        output_response(result, output_format)
+
+    except Exception as e:
+        handle_credentials_error(e)
+
+
+@app.command("list")
+def list_credentials() -> None:
+    """List all credentials in the workspace."""
+    try:
+        client = get_client()
+        output_format = get_output_format()
+
+        # Get credentials list
+        response = client.get("/credentials")
+        credentials = response.get("credentials", [])
+
+        # Get user info for workspace URL
+        user_info = client.get("/user-info")
+
+        # Output response
+        result = CredentialsList(
+            workspace=USER_WORKSPACE_NAME,
+            credentials=credentials,
+            base_workspace_url=None,  # TODO: Extract from user_info if needed
+        )
+
+        output_response(result, output_format)
+
+    except Exception as e:
+        handle_credentials_error(e)
+
+
+@app.command("delete")
+def delete_credentials(
+    credentials_id: Annotated[
+        str,
+        typer.Option("-i", "--id", help="Credentials ID to delete"),
+    ],
+) -> None:
+    """Delete credentials by ID."""
+    try:
+        client = get_client()
+        output_format = get_output_format()
+
+        # Delete credentials
+        client.delete(f"/credentials/{credentials_id}")
+
+        # Output response
+        result = CredentialsDeleted(
+            credentials_id=credentials_id,
             workspace=USER_WORKSPACE_NAME,
         )
 
