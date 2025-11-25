@@ -119,7 +119,7 @@ public class LabelsCmdTest extends BaseCmdTest {
         ExecOut out = exec(format, mock, "labels", "list", "-w","5662512677752");
         assertOutput(format, out, new ListLabelsCmdResponse(
                 5662512677752L,
-                LabelType.ALL,
+                LabelType.all,
                 List.of(makeLabelDbDto(97027588903667L,"awesome-label",null, false),
                         makeLabelDbDto(250670995082875L, "new-label", null, false),
                         makeLabelDbDto(55286297817389L, "newx-label",null, false),
@@ -151,7 +151,7 @@ public class LabelsCmdTest extends BaseCmdTest {
         ExecOut out = exec(format, mock, "labels", "list", "-w","5662512677752","-t", "simple");
         assertOutput(format, out, new ListLabelsCmdResponse(
                 5662512677752L,
-                LabelType.SIMPLE,
+                LabelType.simple,
                 List.of(makeLabelDbDto(97027588903667L,"awesome-label",null, false),
                         makeLabelDbDto(250670995082875L, "new-label", null, false),
                         makeLabelDbDto(55286297817389L, "newx-label",null, false)),
@@ -182,7 +182,7 @@ public class LabelsCmdTest extends BaseCmdTest {
         ExecOut out = exec(format, mock, "labels", "list", "-w","5662512677752","-t", "resource");
         assertOutput(format, out, new ListLabelsCmdResponse(
                 5662512677752L,
-                LabelType.RESOURCE,
+                LabelType.resource,
                 List.of(makeLabelDbDto(97027588903667L,"awesome-label","aaa", true),
                         makeLabelDbDto(250670995082875L, "new-label", "bbb", true),
                         makeLabelDbDto(55286297817389L, "newx-label","ccc", true)),
@@ -213,7 +213,7 @@ public class LabelsCmdTest extends BaseCmdTest {
         ExecOut out = exec(format, mock, "labels", "list", "-w","5662512677752","-f", "find");
         assertOutput(format, out, new ListLabelsCmdResponse(
                 5662512677752L,
-                LabelType.ALL,
+                LabelType.all,
                 List.of(makeLabelDbDto(97027588903667L,"res-find-label","aaa", true),
                         makeLabelDbDto(250670995082875L, "label-to-find", null, false),
                         makeLabelDbDto(55286297817389L, "find-label","ccc", true)),

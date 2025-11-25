@@ -23,7 +23,7 @@ import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.TeamDbDto;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.io.PrintWriter;
 import java.util.List;
 

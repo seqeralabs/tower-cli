@@ -306,7 +306,7 @@ public class DumpCmd extends AbstractRunsCmd {
 
     private DescribeWorkflowResponse getWorkflowDescription(Long workspaceId) throws ApiException {
         if (this.workflowDescription == null) {
-            this.workflowDescription = workflowById(workspaceId, id, List.of(WorkflowQueryAttribute.LABELS, WorkflowQueryAttribute.OPTIMIZED));
+            this.workflowDescription = workflowById(workspaceId, id, List.of(WorkflowQueryAttribute.labels, WorkflowQueryAttribute.optimized));
         }
         return this.workflowDescription;
     }

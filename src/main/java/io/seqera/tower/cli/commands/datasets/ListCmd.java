@@ -21,7 +21,7 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceRequiredOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.datasets.DatasetList;
-import io.seqera.tower.model.Dataset;
+import io.seqera.tower.model.DatasetDto;
 import picocli.CommandLine;
 
 import java.io.IOException;
@@ -42,7 +42,7 @@ public class ListCmd extends AbstractDatasetsCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
-        List<Dataset> response = searchByName(wspId, filter);
+        List<DatasetDto> response = searchByName(wspId, filter);
 
         return new DatasetList(response, workspace.workspace);
     }

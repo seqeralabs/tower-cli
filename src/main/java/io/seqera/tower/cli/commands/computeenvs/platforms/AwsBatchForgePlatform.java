@@ -100,21 +100,14 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
 
     @Override
     public AwsBatchConfig computeConfig() throws ApiException, IOException {
-        return new AwsBatchConfig()
-                .workDir(workDir)
-                .preRunScript(preRunScriptString())
-                .postRunScript(postRunScriptString())
-                .nextflowConfig(nextflowConfigString())
-                .environment(environmentVariables())
+        AwsBatchConfig config = new AwsBatchConfig()
                 .region(region)
                 .fusion2Enabled(isFusionV2Enabled())
                 .waveEnabled(wave)
                 .nvnmeStorageEnabled(fastStorage)
                 .fusionSnapshots(snapshots)
-
                 // Forge
                 .forge(buildForge())
-
                 // Advanced
                 .cliPath(adv().cliPath)
                 .executionRole(adv().batchExecutionRole)
@@ -122,6 +115,15 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
                 .headJobCpus(adv().headJobCpus)
                 .headJobMemoryMb(adv().headJobMemoryMb)
                 .headJobRole(adv().headJobRole);
+
+                // Common
+                config.workDir(workDir)
+                .preRunScript(preRunScriptString())
+                .postRunScript(postRunScriptString())
+                .nextflowConfig(nextflowConfigString())
+                .environment(environmentVariables());
+
+                return config;
     }
 
     private Boolean isFusionV2Enabled() throws TowerException {

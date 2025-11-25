@@ -24,11 +24,9 @@ import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.actions.ActionsList;
 import io.seqera.tower.model.ActionQueryAttribute;
 import io.seqera.tower.model.ListActionsResponse;
-import io.seqera.tower.model.ListLabelsResponse;
 import picocli.CommandLine;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 @CommandLine.Command(
@@ -47,7 +45,7 @@ public class ListCmd extends AbstractActionsCmd {
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
 
-        List<ActionQueryAttribute> actionQueryAttributes = showLabelsOption.showLabels ? List.of(ActionQueryAttribute.LABELS) : NO_ACTION_ATTRIBUTES;
+        List<ActionQueryAttribute> actionQueryAttributes = showLabelsOption.showLabels ? List.of(ActionQueryAttribute.labels) : NO_ACTION_ATTRIBUTES;
 
         ListActionsResponse response = actionsApi().listActions(wspId, actionQueryAttributes);
 

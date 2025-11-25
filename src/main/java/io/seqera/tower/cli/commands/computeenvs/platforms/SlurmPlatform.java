@@ -60,13 +60,6 @@ public class SlurmPlatform extends AbstractPlatform<SlurmComputeConfig> {
         SlurmComputeConfig config = new SlurmComputeConfig();
 
         config
-                // Common
-                .environment(environmentVariables())
-                .workDir(workDir)
-                .preRunScript(preRunScriptString())
-                .postRunScript(postRunScriptString())
-                .nextflowConfig(nextflowConfigString())
-
                 // Main
                 .launchDir(launchDir)
                 .userName(userName)
@@ -78,6 +71,13 @@ public class SlurmPlatform extends AbstractPlatform<SlurmComputeConfig> {
                 // Advanced
                 .maxQueueSize(adv().maxQueueSize)
                 .headJobOptions(adv().headJobOptions);
+
+        // Common
+        config.workDir(workDir)
+                .preRunScript(preRunScriptString())
+                .postRunScript(postRunScriptString())
+                .nextflowConfig(nextflowConfigString())
+                .environment(environmentVariables());
 
         return config;
     }

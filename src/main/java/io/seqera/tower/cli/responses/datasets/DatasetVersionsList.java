@@ -19,18 +19,18 @@ package io.seqera.tower.cli.responses.datasets;
 
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.TableList;
-import io.seqera.tower.model.DatasetVersionDbDto;
+import io.seqera.tower.model.DatasetVersionDto;
 
 import java.io.PrintWriter;
 import java.util.List;
 
 public class DatasetVersionsList extends Response {
 
-    public final List<DatasetVersionDbDto> versions;
+    public final List<DatasetVersionDto> versions;
     public final String dataset;
     public final String workspace;
 
-    public DatasetVersionsList(List<DatasetVersionDbDto> versions, String dataset, String workspace) {
+    public DatasetVersionsList(List<DatasetVersionDto> versions, String dataset, String workspace) {
         this.versions = versions;
         this.dataset = dataset;
         this.workspace = workspace;

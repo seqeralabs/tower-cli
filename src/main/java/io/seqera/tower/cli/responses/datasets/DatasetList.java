@@ -20,17 +20,17 @@ package io.seqera.tower.cli.responses.datasets;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.FormatHelper;
 import io.seqera.tower.cli.utils.TableList;
-import io.seqera.tower.model.Dataset;
+import io.seqera.tower.model.DatasetDto;
 
 import java.io.PrintWriter;
 import java.util.List;
 
 public class DatasetList extends Response {
 
-    public final List<Dataset> datasetList;
+    public final List<DatasetDto> datasetList;
     public final String workspace;
 
-    public DatasetList(List<Dataset> datasetList, String workspace) {
+    public DatasetList(List<DatasetDto> datasetList, String workspace) {
         this.datasetList = datasetList;
         this.workspace = workspace;
     }

@@ -27,8 +27,8 @@ import io.seqera.tower.cli.responses.participants.ParticipantLeft;
 import io.seqera.tower.cli.responses.participants.ParticipantUpdated;
 import io.seqera.tower.cli.responses.participants.ParticipantsList;
 import io.seqera.tower.cli.utils.PaginationInfo;
-import io.seqera.tower.model.ParticipantDbDto;
-import io.seqera.tower.model.WspRole;
+import io.seqera.tower.model.ParticipantResponseDto;
+import io.seqera.tower.cli.commands.enums.WspRole;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -86,7 +86,7 @@ class ParticipantsCmdTest extends BaseCmdTest {
                                 "      \"type\": \"MEMBER\",\n" +
                                 "      \"teamAvatarUrl\": null,\n" +
                                 "      \"userAvatarUrl\": \"https://www.gravatar.com/avatar/7d3c1ee212a3465233e161b451fb4d05?d=404\"\n" +
-                                "    }", ParticipantDbDto.class),
+                                "    }", ParticipantResponseDto.class),
                         parseJson(" {\n" +
                                 "      \"participantId\": 36791779798370,\n" +
                                 "      \"memberId\": 255080245994226,\n" +
@@ -101,7 +101,7 @@ class ParticipantsCmdTest extends BaseCmdTest {
                                 "      \"type\": \"MEMBER\",\n" +
                                 "      \"teamAvatarUrl\": null,\n" +
                                 "      \"userAvatarUrl\": \"https://www.gravatar.com/avatar/72918a9f674eaa696729917bec58760b?d=404\"\n" +
-                                "    }", ParticipantDbDto.class),
+                                "    }", ParticipantResponseDto.class),
                         parseJson("{\n" +
                                 "      \"participantId\": 110330443206779,\n" +
                                 "      \"memberId\": 80726606082762,\n" +
@@ -116,7 +116,7 @@ class ParticipantsCmdTest extends BaseCmdTest {
                                 "      \"type\": \"MEMBER\",\n" +
                                 "      \"teamAvatarUrl\": null,\n" +
                                 "      \"userAvatarUrl\": null\n" +
-                                "    }", ParticipantDbDto.class),
+                                "    }", ParticipantResponseDto.class),
                         parseJson("{\n" +
                                 "      \"participantId\": 110330443206780,\n" +
                                 "      \"memberId\": 80726606082770,\n" +
@@ -131,7 +131,7 @@ class ParticipantsCmdTest extends BaseCmdTest {
                                 "      \"type\": \"MEMBER\",\n" +
                                 "      \"teamAvatarUrl\": null,\n" +
                                 "      \"userAvatarUrl\": null\n" +
-                                "    }", ParticipantDbDto.class),
+                                "    }", ParticipantResponseDto.class),
                         parseJson("{\n" +
                                 "      \"participantId\": 179548688376545,\n" +
                                 "      \"memberId\": null,\n" +
@@ -146,7 +146,7 @@ class ParticipantsCmdTest extends BaseCmdTest {
                                 "      \"type\": \"TEAM\",\n" +
                                 "      \"teamAvatarUrl\": null,\n" +
                                 "      \"userAvatarUrl\": null\n" +
-                                "    }", ParticipantDbDto.class)), null));
+                                "    }", ParticipantResponseDto.class)), null));
     }
 
     @Test
@@ -190,7 +190,7 @@ class ParticipantsCmdTest extends BaseCmdTest {
                                 "      \"type\": \"MEMBER\",\n" +
                                 "      \"teamAvatarUrl\": null,\n" +
                                 "      \"userAvatarUrl\": \"https://www.gravatar.com/avatar/7d3c1ee212a3465233e161b451fb4d05?d=404\"\n" +
-                                "    }", ParticipantDbDto.class),
+                                "    }", ParticipantResponseDto.class),
                         parseJson(" {\n" +
                                 "      \"participantId\": 36791779798370,\n" +
                                 "      \"memberId\": 255080245994226,\n" +
@@ -205,7 +205,7 @@ class ParticipantsCmdTest extends BaseCmdTest {
                                 "      \"type\": \"MEMBER\",\n" +
                                 "      \"teamAvatarUrl\": null,\n" +
                                 "      \"userAvatarUrl\": \"https://www.gravatar.com/avatar/72918a9f674eaa696729917bec58760b?d=404\"\n" +
-                                "    }", ParticipantDbDto.class),
+                                "    }", ParticipantResponseDto.class),
                         parseJson("{\n" +
                                 "      \"participantId\": 110330443206779,\n" +
                                 "      \"memberId\": 80726606082762,\n" +
@@ -220,7 +220,7 @@ class ParticipantsCmdTest extends BaseCmdTest {
                                 "      \"type\": \"MEMBER\",\n" +
                                 "      \"teamAvatarUrl\": null,\n" +
                                 "      \"userAvatarUrl\": null\n" +
-                                "    }", ParticipantDbDto.class),
+                                "    }", ParticipantResponseDto.class),
                         parseJson("{\n" +
                                 "      \"participantId\": 110330443206780,\n" +
                                 "      \"memberId\": 80726606082770,\n" +
@@ -235,7 +235,7 @@ class ParticipantsCmdTest extends BaseCmdTest {
                                 "      \"type\": \"MEMBER\",\n" +
                                 "      \"teamAvatarUrl\": null,\n" +
                                 "      \"userAvatarUrl\": null\n" +
-                                "    }", ParticipantDbDto.class),
+                                "    }", ParticipantResponseDto.class),
                         parseJson("{\n" +
                                 "      \"participantId\": 179548688376545,\n" +
                                 "      \"memberId\": null,\n" +
@@ -250,7 +250,7 @@ class ParticipantsCmdTest extends BaseCmdTest {
                                 "      \"type\": \"TEAM\",\n" +
                                 "      \"teamAvatarUrl\": null,\n" +
                                 "      \"userAvatarUrl\": null\n" +
-                                "    }", ParticipantDbDto.class)), PaginationInfo.from(1, 2, null, null)).toString()), out.stdOut);
+                                "    }", ParticipantResponseDto.class)), PaginationInfo.from(1, 2, null, null)).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -295,7 +295,7 @@ class ParticipantsCmdTest extends BaseCmdTest {
                                 "      \"type\": \"MEMBER\",\n" +
                                 "      \"teamAvatarUrl\": null,\n" +
                                 "      \"userAvatarUrl\": \"https://www.gravatar.com/avatar/7d3c1ee212a3465233e161b451fb4d05?d=404\"\n" +
-                                "    }", ParticipantDbDto.class),
+                                "    }", ParticipantResponseDto.class),
                         parseJson(" {\n" +
                                 "      \"participantId\": 36791779798370,\n" +
                                 "      \"memberId\": 255080245994226,\n" +
@@ -310,7 +310,7 @@ class ParticipantsCmdTest extends BaseCmdTest {
                                 "      \"type\": \"MEMBER\",\n" +
                                 "      \"teamAvatarUrl\": null,\n" +
                                 "      \"userAvatarUrl\": \"https://www.gravatar.com/avatar/72918a9f674eaa696729917bec58760b?d=404\"\n" +
-                                "    }", ParticipantDbDto.class),
+                                "    }", ParticipantResponseDto.class),
                         parseJson("{\n" +
                                 "      \"participantId\": 110330443206779,\n" +
                                 "      \"memberId\": 80726606082762,\n" +
@@ -325,7 +325,7 @@ class ParticipantsCmdTest extends BaseCmdTest {
                                 "      \"type\": \"MEMBER\",\n" +
                                 "      \"teamAvatarUrl\": null,\n" +
                                 "      \"userAvatarUrl\": null\n" +
-                                "    }", ParticipantDbDto.class),
+                                "    }", ParticipantResponseDto.class),
                         parseJson("{\n" +
                                 "      \"participantId\": 110330443206780,\n" +
                                 "      \"memberId\": 80726606082770,\n" +
@@ -340,7 +340,7 @@ class ParticipantsCmdTest extends BaseCmdTest {
                                 "      \"type\": \"MEMBER\",\n" +
                                 "      \"teamAvatarUrl\": null,\n" +
                                 "      \"userAvatarUrl\": null\n" +
-                                "    }", ParticipantDbDto.class),
+                                "    }", ParticipantResponseDto.class),
                         parseJson("{\n" +
                                 "      \"participantId\": 179548688376545,\n" +
                                 "      \"memberId\": null,\n" +
@@ -355,7 +355,7 @@ class ParticipantsCmdTest extends BaseCmdTest {
                                 "      \"type\": \"TEAM\",\n" +
                                 "      \"teamAvatarUrl\": null,\n" +
                                 "      \"userAvatarUrl\": null\n" +
-                                "    }", ParticipantDbDto.class)), PaginationInfo.from(null, 2, 1, null)).toString()), out.stdOut);
+                                "    }", ParticipantResponseDto.class)), PaginationInfo.from(null, 2, 1, null)).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -427,7 +427,7 @@ class ParticipantsCmdTest extends BaseCmdTest {
                                 "      \"type\": \"TEAM\",\n" +
                                 "      \"teamAvatarUrl\": null,\n" +
                                 "      \"userAvatarUrl\": null\n" +
-                                "    }", ParticipantDbDto.class)), null).toString()), out.stdOut);
+                                "    }", ParticipantResponseDto.class)), null).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -548,7 +548,7 @@ class ParticipantsCmdTest extends BaseCmdTest {
         );
 
         ExecOut out = exec(format, mock, "participants", "update", "-w", "75887156211589", "-n", "julio", "-r", "OWNER", "-t", "MEMBER");
-        assertOutput(format, out, new ParticipantUpdated("workspace1", "julio", WspRole.OWNER.toString()));
+        assertOutput(format, out, new ParticipantUpdated("workspace1", "julio", WspRole.owner.toString()));
     }
 
     @Test
@@ -580,7 +580,7 @@ class ParticipantsCmdTest extends BaseCmdTest {
         ExecOut out = exec(mock, "participants", "update", "-w", "75887156211589", "-n", "julio", "-r", "OWNER", "-t", "TEAM");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ParticipantUpdated("workspace1", "julio", WspRole.OWNER.toString()).toString(), out.stdOut);
+        assertEquals(new ParticipantUpdated("workspace1", "julio", WspRole.owner.toString()).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -627,7 +627,7 @@ class ParticipantsCmdTest extends BaseCmdTest {
                 "    \"type\": \"MEMBER\",\n" +
                 "    \"teamAvatarUrl\": null,\n" +
                 "    \"userAvatarUrl\": null\n" +
-                "  }", ParticipantDbDto.class), "workspace1"));
+                "  }", ParticipantResponseDto.class), "workspace1"));
     }
 
     @ParameterizedTest
@@ -686,6 +686,6 @@ class ParticipantsCmdTest extends BaseCmdTest {
                 "    \"type\": \"MEMBER\",\n" +
                 "    \"teamAvatarUrl\": null,\n" +
                 "    \"userAvatarUrl\": null\n" +
-                "  }", ParticipantDbDto.class), "workspace1"));
+                "  }", ParticipantResponseDto.class), "workspace1"));
     }
 }

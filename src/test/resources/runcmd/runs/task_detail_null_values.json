@@ -47,7 +47,7 @@
     "script": "\ncheck_samplesheet.py \\\n    samplesheet_test.csv \\\n    samplesheet.valid.csv\n\ncat <<-END_VERSIONS > versions.yml\nSAMPLESHEET_CHECK:\n    python: $(python --version | sed 's/Python //g')\nEND_VERSIONS\n",
     "module": [],
     "hash": "38/2d0f03",
-    "exit": "0",
+    "exit": 0,
     "name": "NFCORE_RNASEQ:RNASEQ:INPUT_CHECK:SAMPLESHEET_CHECK (samplesheet_test.csv)"
   }
 }

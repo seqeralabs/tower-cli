@@ -21,7 +21,7 @@ import io.seqera.tower.cli.commands.global.PaginationOptions;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.io.PrintWriter;
 
 public class PaginationInfo extends Response {

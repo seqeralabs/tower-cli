@@ -29,8 +29,8 @@ import io.seqera.tower.cli.responses.datasets.DatasetUpdate;
 import io.seqera.tower.cli.responses.datasets.DatasetUrl;
 import io.seqera.tower.cli.responses.datasets.DatasetVersionsList;
 import io.seqera.tower.cli.responses.datasets.DatasetView;
-import io.seqera.tower.model.Dataset;
-import io.seqera.tower.model.DatasetVersionDbDto;
+import io.seqera.tower.model.DatasetDto;
+import io.seqera.tower.model.DatasetVersionDto;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
@@ -72,7 +72,7 @@ public class DatasetsCmdTest extends BaseCmdTest {
                         "      \"deleted\": false,\n" +
                         "      \"dateCreated\": \"2021-11-26T14:51:20+01:00\",\n" +
                         "      \"lastUpdated\": \"2021-11-26T14:51:20+01:00\"\n" +
-                        "    }", Dataset.class),
+                        "    }", DatasetDto.class),
                 parseJson("{\n" +
                         "      \"id\": \"1W2FqBiI6WoNokQTkPkEzo\",\n" +
                         "      \"name\": \"dataset2\",\n" +
@@ -81,7 +81,7 @@ public class DatasetsCmdTest extends BaseCmdTest {
                         "      \"deleted\": false,\n" +
                         "      \"dateCreated\": \"2021-11-29T08:05:44+01:00\",\n" +
                         "      \"lastUpdated\": \"2021-11-29T08:05:44+01:00\"\n" +
-                        "    }", Dataset.class)
+                        "    }", DatasetDto.class)
         ), "249664655368293"));
         assertEquals("", out.stdErr);
         assertEquals(0, out.exitCode);
@@ -106,7 +106,7 @@ public class DatasetsCmdTest extends BaseCmdTest {
                 "    \"deleted\": false,\n" +
                 "    \"dateCreated\": \"2021-11-26T14:51:20+01:00\",\n" +
                 "    \"lastUpdated\": \"2021-11-26T14:51:20+01:00\"\n" +
-                "  }", Dataset.class), "249664655368293"));
+                "  }", DatasetDto.class), "249664655368293"));
         assertEquals("", out.stdErr);
         assertEquals(0, out.exitCode);
     }
@@ -138,7 +138,7 @@ public class DatasetsCmdTest extends BaseCmdTest {
                         "      \"fileName\": \"transaciones_2021-11-26_filter-advanced.csv\",\n" +
                         "      \"mediaType\": \"text/csv\",\n" +
                         "      \"url\": \"https://73ab-46-26-157-135.ngrok.io/api/workspaces/249664655368293/datasets/4D9TP0w2pM0qmwqVHgrgBK/v/1/n/transaciones_2021-11-26_filter-advanced.csv\"\n" +
-                        "    }", DatasetVersionDbDto.class),
+                        "    }", DatasetVersionDto.class),
                 parseJson("{\n" +
                         "      \"datasetId\": \"4D9TP0w2pM0qmwqVHgrgBK\",\n" +
                         "      \"datasetName\": \"dataset1\",\n" +
@@ -148,7 +148,7 @@ public class DatasetsCmdTest extends BaseCmdTest {
                         "      \"fileName\": \"transaciones_2021-11-26_filter-advanced.csv\",\n" +
                         "      \"mediaType\": \"text/csv\",\n" +
                         "      \"url\": \"https://73ab-46-26-157-135.ngrok.io/api/workspaces/249664655368293/datasets/4D9TP0w2pM0qmwqVHgrgBK/v/2/n/transaciones_2021-11-26_filter-advanced.csv\"\n" +
-                        "    }", DatasetVersionDbDto.class)
+                        "    }", DatasetVersionDto.class)
         ), "4D9TP0w2pM0qmwqVHgrgBK", "249664655368293"));
         assertEquals("", out.stdErr);
         assertEquals(0, out.exitCode);

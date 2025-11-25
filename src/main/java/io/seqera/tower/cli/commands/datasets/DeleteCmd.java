@@ -22,7 +22,7 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceRequiredOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.datasets.DatasetDelete;
-import io.seqera.tower.model.Dataset;
+import io.seqera.tower.model.DatasetDto;
 import picocli.CommandLine;
 
 import java.io.IOException;
@@ -42,7 +42,7 @@ public class DeleteCmd extends AbstractDatasetsCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
-        Dataset dataset = fetchDescribeDatasetResponse(datasetRefOptions, wspId);
+        DatasetDto dataset = fetchDescribeDatasetResponse(datasetRefOptions, wspId);
 
         deleteDatasetById(dataset.getId(), wspId);
 

@@ -22,7 +22,7 @@ import io.seqera.tower.cli.commands.datasets.AbstractDatasetsCmd;
 import io.seqera.tower.cli.commands.datasets.ViewCmd;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.datasets.DatasetVersionsList;
-import io.seqera.tower.model.Dataset;
+import io.seqera.tower.model.DatasetDto;
 import io.seqera.tower.model.ListDatasetVersionsResponse;
 import picocli.CommandLine;
 
@@ -40,7 +40,7 @@ public class VersionsCmd extends AbstractDatasetsCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(parentCommand.workspace.workspace);
-        Dataset dataset = fetchDescribeDatasetResponse(parentCommand.datasetRefOptions, wspId);
+        DatasetDto dataset = fetchDescribeDatasetResponse(parentCommand.datasetRefOptions, wspId);
         String datasetRef = parentCommand.datasetRefOptions.dataset.datasetName != null ? parentCommand.datasetRefOptions.dataset.datasetName : parentCommand.datasetRefOptions.dataset.datasetId;
 
         ListDatasetVersionsResponse response = datasetsApi().listDatasetVersions(wspId, dataset.getId(), dataset.getMediaType());

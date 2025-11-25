@@ -24,7 +24,7 @@ import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.LabelDbDto;
 import io.seqera.tower.model.LabelType;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.io.PrintWriter;
 import java.util.List;
 

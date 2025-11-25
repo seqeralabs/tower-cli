@@ -44,9 +44,10 @@ public class SeqeraComputePlatform extends AbstractPlatform<SeqeraComputeConfig>
         // settings will automatically be configured by seqera compute and can't
         // be overridden.
 
-        config
-                .region(region)
-                .preRunScript(preRunScriptString())
+        config.region(region);
+
+        // Common
+        config.preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
                 .nextflowConfig(nextflowConfigString())
                 .environment(environmentVariables());

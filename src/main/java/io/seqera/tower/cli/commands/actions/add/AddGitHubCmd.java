@@ -27,6 +27,6 @@ import picocli.CommandLine;
 public class AddGitHubCmd extends AbstractAddCmd {
     @Override
     protected ActionSource getSource() {
-        return ActionSource.GITHUB;
+        return ActionSource.github;
     }
 }

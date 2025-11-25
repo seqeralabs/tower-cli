@@ -57,13 +57,6 @@ public class GoogleLifeSciencesPlatform extends AbstractPlatform<GoogleLifeScien
         GoogleLifeSciencesConfig config = new GoogleLifeSciencesConfig();
 
         config
-                // Common
-                .workDir(workDir)
-                .preRunScript(preRunScriptString())
-                .postRunScript(postRunScriptString())
-                .nextflowConfig(nextflowConfigString())
-                .environment(environmentVariables())
-
                 // Main
                 .region(region)
                 .zones(zones)
@@ -85,6 +78,13 @@ public class GoogleLifeSciencesPlatform extends AbstractPlatform<GoogleLifeScien
                     .nfsTarget(filestore.nfsTarget);
 
         }
+
+        // Common
+        config.workDir(workDir)
+                .preRunScript(preRunScriptString())
+                .postRunScript(postRunScriptString())
+                .nextflowConfig(nextflowConfigString())
+                .environment(environmentVariables());
 
         return config;
     }

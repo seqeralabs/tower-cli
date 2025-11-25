@@ -55,12 +55,6 @@ public class AzBatchManualPlatform extends AbstractPlatform<AzBatchConfig> {
         AzBatchConfig config = new AzBatchConfig();
 
         config
-                // Common
-                .workDir(workDir)
-                .preRunScript(preRunScriptString())
-                .postRunScript(postRunScriptString())
-                .nextflowConfig(nextflowConfigString())
-                .environment(environmentVariables())
                 .fusion2Enabled(fusionV2)
                 .waveEnabled(wave)
                 .region(location)
@@ -71,6 +65,13 @@ public class AzBatchManualPlatform extends AbstractPlatform<AzBatchConfig> {
                     .deleteJobsOnCompletion(adv.jobsCleanup)
                     .tokenDuration(adv.tokenDuration);
         }
+
+        // Common
+        config.workDir(workDir)
+                .preRunScript(preRunScriptString())
+                .postRunScript(postRunScriptString())
+                .nextflowConfig(nextflowConfigString())
+                .environment(environmentVariables());
 
         return config;
     }
