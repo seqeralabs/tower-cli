@@ -27,6 +27,6 @@ import picocli.CommandLine;
 public class AddTowerCmd extends AbstractAddCmd {
     @Override
     protected ActionSource getSource() {
-        return ActionSource.TOWER;
+        return ActionSource.tower;
     }
 }

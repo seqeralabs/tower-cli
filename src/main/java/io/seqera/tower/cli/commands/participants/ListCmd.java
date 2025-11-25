@@ -23,7 +23,7 @@ import io.seqera.tower.cli.commands.global.WorkspaceRequiredOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.participants.ParticipantsList;
 import io.seqera.tower.cli.utils.PaginationInfo;
-import io.seqera.tower.model.ParticipantDbDto;
+import io.seqera.tower.model.ParticipantResponseDto;
 import io.seqera.tower.model.ParticipantType;
 import picocli.CommandLine;
 
@@ -56,7 +56,7 @@ public class ListCmd extends AbstractParticipantsCmd {
 
         Long wspId = workspaceId(workspace.workspace);
 
-        List<ParticipantDbDto> response = workspacesApi().listWorkspaceParticipants(orgId(wspId), wspId, max, offset, startsWith).getParticipants();
+        List<ParticipantResponseDto> response = workspacesApi().listWorkspaceParticipants(orgId(wspId), wspId, max, offset, startsWith).getParticipants();
 
         if (response != null && type != null) {
             response = response.stream().filter(it -> it.getType() == type).collect(Collectors.toList());

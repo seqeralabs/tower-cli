@@ -7,6 +7,7 @@
       "description": null,
       "platform": "aws-batch",
       "config": {
+        "discriminator": "aws-batch",
         "region": "eu-west-1",
         "computeQueue": "TowerForge-3xkkzYH2nbD3nZjrzKm0oR-work",
         "computeJobRole": null,

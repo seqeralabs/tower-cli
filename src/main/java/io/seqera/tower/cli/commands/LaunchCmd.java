@@ -42,7 +42,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -163,7 +163,7 @@ public class LaunchCmd extends AbstractRootCmd {
 
     protected Response runTowerPipeline(Long wspId) throws ApiException, IOException {
 
-        ListPipelinesResponse pipelines = pipelinesApi().listPipelines(Collections.emptyList(), wspId, 50, 0, pipeline, "all");
+        ListPipelinesResponse pipelines = pipelinesApi().listPipelines(Collections.emptyList(), wspId, 50, 0, null, null, pipeline, "all");
         if (pipelines.getTotalSize() == 0) {
             throw new InvalidResponseException(String.format("Pipeline '%s' not found on this workspace.", pipeline));
         }
@@ -257,7 +257,7 @@ public class LaunchCmd extends AbstractRootCmd {
         // retrieve labels for the workspace and check if we need to create new ones
         List<LabelDbDto> wspLabels = new ArrayList<>();
 
-        ListLabelsResponse res = labelsApi().listLabels(workspaceId, null, null, null, LabelType.SIMPLE, null);
+        ListLabelsResponse res = labelsApi().listLabels(workspaceId, null, null, null, LabelType.simple, null);
         if (res.getLabels() != null) {
             wspLabels.addAll(res.getLabels());
         }

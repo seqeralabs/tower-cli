@@ -75,10 +75,10 @@ class ComputeEnvExportFormatTest {
     @Test
     void testFormatSerialization() throws JsonProcessingException {
 
-        AwsBatchConfig cfg = parseJson(" {\"discriminator\": \"aws-batch\"}", AwsBatchConfig.class)
-                .region("eu-west-2")
+        AwsBatchConfig cfg = parseJson(" {\"discriminator\": \"aws-batch\"}", AwsBatchConfig.class);
+        cfg.workDir("s3://jaime-testing");
+        cfg.region("eu-west-2")
                 .cliPath("/home/ec2-user/miniconda/bin/aws")
-                .workDir("s3://jaime-testing")
                 .volumes(Collections.emptyList())
                 .computeQueue("TowerForge-<redacted>-work")
                 .headQueue("TowerForge-<redacted>-head")

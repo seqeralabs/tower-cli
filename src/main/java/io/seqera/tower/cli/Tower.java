@@ -107,6 +107,7 @@ public class Tower extends AbstractCmd {
         Tower app = new Tower();
         CommandLine cmd = new CommandLine(app);
         cmd.setUsageHelpLongOptionsMaxWidth(40);
+        cmd.setCaseInsensitiveEnumValuesAllowed(true);
         return cmd;
     }
 

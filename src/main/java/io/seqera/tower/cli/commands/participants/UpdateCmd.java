@@ -21,10 +21,10 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceRequiredOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.participants.ParticipantUpdated;
-import io.seqera.tower.model.ParticipantDbDto;
+import io.seqera.tower.model.ParticipantResponseDto;
 import io.seqera.tower.model.ParticipantType;
 import io.seqera.tower.model.UpdateParticipantRoleRequest;
-import io.seqera.tower.model.WspRole;
+import io.seqera.tower.cli.commands.enums.WspRole;
 import picocli.CommandLine;
 
 import java.io.IOException;
@@ -41,7 +41,7 @@ public class UpdateCmd extends AbstractParticipantsCmd {
     @CommandLine.Option(names = {"-t", "--type"}, description = "Type of participant (MEMBER, COLLABORATOR or TEAM).", required = true)
     public ParticipantType type;
 
-    @CommandLine.Option(names = {"-r", "--role"}, description = "Workspace participant role (OWNER, ADMIN, MAINTAIN, LAUNCH or VIEW).", required = true)
+    @CommandLine.Option(names = {"-r", "--role"}, description = "Workspace participant role (OWNER, ADMIN, MAINTAIN, LAUNCH, CONNECT or VIEW).", required = true)
     public WspRole role;
 
     @CommandLine.Mixin
@@ -51,13 +51,13 @@ public class UpdateCmd extends AbstractParticipantsCmd {
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
 
-        ParticipantDbDto participant = findWorkspaceParticipant(orgId(wspId), wspId, name, type);
+        ParticipantResponseDto participant = findWorkspaceParticipant(orgId(wspId), wspId, name, type);
 
         UpdateParticipantRoleRequest request = new UpdateParticipantRoleRequest();
-        request.setRole(role);
+        request.setRole(role.toString());
 
         workspacesApi().updateWorkspaceParticipantRole(orgId(wspId), wspId, participant.getParticipantId(), request);
 
-        return new ParticipantUpdated(workspaceName(wspId), name, role.getValue());
+        return new ParticipantUpdated(workspaceName(wspId), name, role.toString());
     }
 }

@@ -176,37 +176,39 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
         );
 
         ExecOut out = exec(format, mock, "compute-envs", "view", "-i", "isnEDBLvHDAIteOEF44ow");
-        assertOutput(format, out, new ComputeEnvView("isnEDBLvHDAIteOEF44ow", USER_WORKSPACE_NAME,
-                parseJson("{\"id\": \"isnEDBLvHDAIteOEF44ow\", \"dateCreated\": \"2021-09-08T11:19:24Z\", \"lastUpdated\": \"2021-09-08T11:20:08Z\"}", ComputeEnvResponseDto.class)
-                        .name("demo")
-                        .platform(ComputeEnvResponseDto.PlatformEnum.AWS_BATCH)
-                        .status(ComputeEnvStatus.AVAILABLE)
-                        .credentialsId("6g0ER59L4ZoE5zpOmUP48D")
-                        .config(
-                                parseJson(" {\"discriminator\": \"aws-batch\"}", AwsBatchConfig.class)
-                                        .region("eu-west-1")
-                                        .cliPath("/home/ec2-user/miniconda/bin/aws")
-                                        .workDir("s3://nextflow-ci/jordeu")
-                                        .volumes(Collections.emptyList())
-                                        .computeQueue("TowerForge-isnEDBLvHDAIteOEF44ow-work")
-                                        .headQueue("TowerForge-isnEDBLvHDAIteOEF44ow-head")
-                                        .forge(
-                                                new ForgeConfig()
-                                                        .type(ForgeConfig.TypeEnum.SPOT)
-                                                        .minCpus(0)
-                                                        .maxCpus(123)
-                                                        .gpuEnabled(false)
-                                                        .ebsAutoScale(true)
-                                                        .disposeOnDeletion(true)
-                                                        .fusionEnabled(true)
-                                        ).forgedResources(
-                                                List.of(
-                                                        Map.of("IamRole", "arn:aws:iam::195996028523:role/TowerForge-isnEDBLvHDAIteOEF44ow-ServiceRole"),
-                                                        Map.of("IamRole", "arn:aws:iam::195996028523:role/TowerForge-isnEDBLvHDAIteOEF44ow-FleetRole")
-                                                )
-                                        )
 
-                        ),
+        AwsBatchConfig config = parseJson(" {\"discriminator\": \"aws-batch\"}", AwsBatchConfig.class);
+        config.workDir("s3://nextflow-ci/jordeu");
+        config.region("eu-west-1")
+                .cliPath("/home/ec2-user/miniconda/bin/aws")
+                .volumes(Collections.emptyList())
+                .computeQueue("TowerForge-isnEDBLvHDAIteOEF44ow-work")
+                .headQueue("TowerForge-isnEDBLvHDAIteOEF44ow-head")
+                .forge(
+                        new ForgeConfig()
+                                .type(ForgeConfig.TypeEnum.SPOT)
+                                .minCpus(0)
+                                .maxCpus(123)
+                                .gpuEnabled(false)
+                                .ebsAutoScale(true)
+                                .disposeOnDeletion(true)
+                                .fusionEnabled(true)
+                ).forgedResources(
+                        List.of(
+                                Map.of("IamRole", "arn:aws:iam::195996028523:role/TowerForge-isnEDBLvHDAIteOEF44ow-ServiceRole"),
+                                Map.of("IamRole", "arn:aws:iam::195996028523:role/TowerForge-isnEDBLvHDAIteOEF44ow-FleetRole")
+                        )
+                );
+
+        ComputeEnvResponseDto computeEnv = parseJson("{\"id\": \"isnEDBLvHDAIteOEF44ow\", \"dateCreated\": \"2021-09-08T11:19:24Z\", \"lastUpdated\": \"2021-09-08T11:20:08Z\"}", ComputeEnvResponseDto.class)
+                .name("demo")
+                .platform(ComputeEnvResponseDto.PlatformEnum.AWS_BATCH)
+                .status(ComputeEnvStatus.AVAILABLE)
+                .credentialsId("6g0ER59L4ZoE5zpOmUP48D")
+                .config(config);
+
+        assertOutput(format, out, new ComputeEnvView("isnEDBLvHDAIteOEF44ow", USER_WORKSPACE_NAME,
+                computeEnv,
                 baseUserUrl(mock, USER_WORKSPACE_NAME)
         ));
     }
@@ -228,21 +230,24 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
         );
 
         ExecOut out = exec(format, mock, "compute-envs", "view", "-i", "53aWhB2qJroy0i51FOrFAC");
+
+        AwsBatchConfig config = parseJson(" {\"discriminator\": \"aws-batch\"}", AwsBatchConfig.class);
+        config.workDir("s3://nextflow-ci/jordeu");
+        config.region("eu-west-1")
+                .computeQueue("TowerForge-isnEDBLvHDAIteOEF44ow-work")
+                .headQueue("TowerForge-isnEDBLvHDAIteOEF44ow-head")
+                .cliPath("/home/ec2-user/miniconda/bin/aws")
+                .volumes(Collections.emptyList());
+
+        ComputeEnvResponseDto computeEnv = parseJson("{\"id\": \"53aWhB2qJroy0i51FOrFAC\", \"dateCreated\": \"2021-09-08T15:19:08Z\", \"lastUpdated\": \"2021-09-08T15:19:08Z\"}", ComputeEnvResponseDto.class)
+                .name("manual")
+                .platform(ComputeEnvResponseDto.PlatformEnum.AWS_BATCH)
+                .status(ComputeEnvStatus.ERRORED)
+                .credentialsId("6g0ER59L4ZoE5zpOmUP48D")
+                .config(config);
+
         assertOutput(format, out, new ComputeEnvView("53aWhB2qJroy0i51FOrFAC", USER_WORKSPACE_NAME,
-                parseJson("{\"id\": \"53aWhB2qJroy0i51FOrFAC\", \"dateCreated\": \"2021-09-08T15:19:08Z\", \"lastUpdated\": \"2021-09-08T15:19:08Z\"}", ComputeEnvResponseDto.class)
-                        .name("manual")
-                        .platform(ComputeEnvResponseDto.PlatformEnum.AWS_BATCH)
-                        .status(ComputeEnvStatus.ERRORED)
-                        .credentialsId("6g0ER59L4ZoE5zpOmUP48D")
-                        .config(
-                                parseJson(" {\"discriminator\": \"aws-batch\"}", AwsBatchConfig.class)
-                                        .region("eu-west-1")
-                                        .computeQueue("TowerForge-isnEDBLvHDAIteOEF44ow-work")
-                                        .headQueue("TowerForge-isnEDBLvHDAIteOEF44ow-head")
-                                        .cliPath("/home/ec2-user/miniconda/bin/aws")
-                                        .workDir("s3://nextflow-ci/jordeu")
-                                        .volumes(Collections.emptyList())
-                        ),
+                computeEnv,
                 baseUserUrl(mock, USER_WORKSPACE_NAME)
         ));
     }

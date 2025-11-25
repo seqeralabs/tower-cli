@@ -15,16 +15,18 @@
  *
  */
 
-package io.seqera.tower.cli.commands.global;
+package io.seqera.tower.cli.commands.enums;
 
-import picocli.CommandLine;
+/**
+ * Predefined workspace roles.
+ */
+public enum WspRole {
 
-import jakarta.annotation.Nullable;
-
-public class ShowLabelsOption {
-
-    @CommandLine.Option(names = {"-l", "--labels"}, description = "Show labels.", defaultValue = "false")
-    @Nullable
-    public Boolean showLabels;
+    owner,
+    admin,
+    maintain,
+    launch,
+    connect,
+    view
 
 }

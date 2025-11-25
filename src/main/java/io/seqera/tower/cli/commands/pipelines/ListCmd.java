@@ -62,11 +62,11 @@ public class ListCmd extends AbstractPipelinesCmd {
 
         ListPipelinesResponse response = new ListPipelinesResponse();
 
-        List<PipelineQueryAttribute> pipelineQueryAttributes = showLabelsOption.showLabels ? List.of(PipelineQueryAttribute.LABELS) : NO_PIPELINE_ATTRIBUTES;
+        List<PipelineQueryAttribute> pipelineQueryAttributes = showLabelsOption.showLabels ? List.of(PipelineQueryAttribute.labels) : NO_PIPELINE_ATTRIBUTES;
 
         try {
 
-           response = pipelinesApi().listPipelines(pipelineQueryAttributes, wspId, max, offset, filter, visibility.toString());
+           response = pipelinesApi().listPipelines(pipelineQueryAttributes, wspId, max, offset, null, null, filter, visibility.toString());
 
         } catch (ApiException apiException) {
             if (apiException.getCode() == 404){

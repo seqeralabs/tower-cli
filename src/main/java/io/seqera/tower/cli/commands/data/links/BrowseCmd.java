@@ -65,8 +65,12 @@ public class BrowseCmd extends AbstractDataLinksCmd {
 
         if (path != null)
             response = dataLinksApi().exploreDataLink1(id, path, wspId, credId, startsWith, nextPageToken, page);
-        else
-            response = dataLinksApi().exploreDataLink(id, wspId, credId, startsWith, nextPageToken, page);
+        else {
+            // TODO: fix
+            response = null;
+//            response = dataLinksApi().exploreDataLinkTree(id, wspId, credId, null);
+        }
+//
 
         return new DataLinkContentList(dataLink, path, response.getObjects(), response.getNextPageToken());
     }

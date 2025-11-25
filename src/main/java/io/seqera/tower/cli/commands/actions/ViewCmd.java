@@ -50,7 +50,7 @@ public class ViewCmd extends AbstractActionsCmd {
         DescribeActionResponse response = fetchDescribeActionResponse(
                 actionRefOptions,
                 wspId,
-                ActionQueryAttribute.LABELS
+                ActionQueryAttribute.labels
         );
 
         return new ActionsView(response.getAction(), baseWorkspaceUrl(wspId));
