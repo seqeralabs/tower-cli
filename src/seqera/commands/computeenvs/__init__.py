@@ -31,29 +31,6 @@ from seqera.responses.computeenvs import (
 )
 from seqera.utils.output import OutputFormat, output_console, output_error, output_json, output_yaml
 
-# Create compute-envs app
-app = typer.Typer(
-    name="compute-envs",
-    help="Manage workspace compute environments",
-    no_args_is_help=True,
-)
-
-# Create add subcommand app
-add_app = typer.Typer(
-    name="add",
-    help="Add new compute environment",
-    no_args_is_help=True,
-)
-app.add_typer(add_app)
-
-# Create primary subcommand app
-primary_app = typer.Typer(
-    name="primary",
-    help="Manage primary compute environment",
-    no_args_is_help=True,
-)
-app.add_typer(primary_app)
-
 # Constants
 USER_WORKSPACE_NAME = "user"
 
@@ -85,6 +62,82 @@ def handle_compute_env_error(error: Exception) -> None:
     else:
         output_error(str(error))
         sys.exit(1)
+
+
+# Create compute-envs app
+app = typer.Typer(
+    name="compute-envs",
+    help="Manage workspace compute environments",
+    no_args_is_help=True,
+)
+
+# Create add subcommand app
+add_app = typer.Typer(
+    name="add",
+    help="Add new compute environment",
+    no_args_is_help=True,
+)
+app.add_typer(add_app)
+
+# Create aws-batch subcommand app (nested under add)
+aws_batch_app = typer.Typer(
+    name="aws-batch",
+    help="Add new AWS Batch compute environment",
+    no_args_is_help=True,
+)
+add_app.add_typer(aws_batch_app)
+
+# Create azure-batch subcommand app (nested under add)
+azure_batch_app = typer.Typer(
+    name="azure-batch",
+    help="Add new Azure Batch compute environment",
+    no_args_is_help=True,
+)
+add_app.add_typer(azure_batch_app)
+
+# Create primary subcommand app
+primary_app = typer.Typer(
+    name="primary",
+    help="Manage primary compute environment",
+    no_args_is_help=True,
+)
+app.add_typer(primary_app)
+
+# Import and register platform commands (after add_app and helper functions are defined)
+from seqera.commands.computeenvs.platforms.altair import add_altair
+from seqera.commands.computeenvs.platforms.aws_forge import add_aws_forge
+from seqera.commands.computeenvs.platforms.aws_manual import add_aws_manual
+from seqera.commands.computeenvs.platforms.azure_forge import add_azure_forge
+from seqera.commands.computeenvs.platforms.azure_manual import add_azure_manual
+from seqera.commands.computeenvs.platforms.eks import add_eks
+from seqera.commands.computeenvs.platforms.gke import add_gke
+from seqera.commands.computeenvs.platforms.google_batch import add_google_batch
+from seqera.commands.computeenvs.platforms.google_life_sciences import add_google_life_sciences
+from seqera.commands.computeenvs.platforms.k8s import add_k8s
+from seqera.commands.computeenvs.platforms.lsf import add_lsf
+from seqera.commands.computeenvs.platforms.moab import add_moab
+from seqera.commands.computeenvs.platforms.uge import add_uge
+
+add_app.command("altair", help="Add new Altair PBS Pro compute environment")(add_altair)
+add_app.command("eks", help="Add new Amazon EKS compute environment")(add_eks)
+add_app.command("gke", help="Add new Google GKE compute environment")(add_gke)
+add_app.command("google-batch", help="Add new Google Batch compute environment")(add_google_batch)
+add_app.command("google-ls", help="Add new Google Life Sciences compute environment")(add_google_life_sciences)
+add_app.command("k8s", help="Add new Kubernetes compute environment")(add_k8s)
+add_app.command("uge", help="Add new UNIVA grid engine compute environment")(add_uge)
+add_app.command("lsf", help="Add new IBM LSF compute environment")(add_lsf)
+add_app.command("moab", help="Add new MOAB compute environment")(add_moab)
+
+# Register AWS Batch subcommands
+aws_batch_app.command("manual", help="Add AWS Batch compute environment using existing resources")(add_aws_manual)
+aws_batch_app.command("forge", help="Add AWS Batch compute environment with automatic provisioning")(add_aws_forge)
+
+# Register Azure Batch subcommands
+azure_batch_app.command("manual", help="Add new Azure Batch compute environment using an existing environment")(add_azure_manual)
+azure_batch_app.command("forge", help="Add new Azure Batch compute environment with automatic provisioning of compute resources")(add_azure_forge)
+
+# Import slurm and seqera_compute modules to register their commands (use decorator)
+from seqera.commands.computeenvs.platforms import seqera_compute, slurm  # noqa: F401
 
 
 @app.command("delete")
