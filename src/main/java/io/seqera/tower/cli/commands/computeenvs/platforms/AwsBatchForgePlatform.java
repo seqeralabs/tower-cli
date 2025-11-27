@@ -153,6 +153,7 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
                 .ec2KeyPair(adv().keyPair)
                 .minCpus(adv().minCpus == null ? 0 : adv().minCpus)
                 .ebsBlockSize(adv().ebsBlockSize)
+                .ebsBootSize(adv().bootDiskSizeGb)
                 .bidPercentage(adv().bidPercentage)
                 .fargateHeadEnabled(fargate);
 
@@ -231,6 +232,9 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
 
         @Option(names = {"--min-cpus"}, description = "The minimum number of CPUs provisioned in this environment that will remain active and you will be billed regardless of whether you are running any workloads.")
         public Integer minCpus;
+
+        @Option(names = {"--boot-disk-size"}, description = "Enter the boot disk size as GB.")
+        public Integer bootDiskSizeGb;
 
         @Option(names = {"--head-job-cpus"}, description = "The number of CPUs to be allocated for the Nextflow runner job.")
         public Integer headJobCpus;
