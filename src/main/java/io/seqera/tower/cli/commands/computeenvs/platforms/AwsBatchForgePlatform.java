@@ -19,6 +19,7 @@ package io.seqera.tower.cli.commands.computeenvs.platforms;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.exceptions.TowerException;
+import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.AwsBatchConfig;
 import io.seqera.tower.model.ComputeEnvComputeConfig.PlatformEnum;
 import io.seqera.tower.model.ForgeConfig;
@@ -28,6 +29,7 @@ import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Option;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
@@ -73,6 +75,9 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
 
     @Option(names = "--preserve-resources", description = "Enable this if you want to preserve the Batch compute resources created by Tower independently from the lifecycle of this compute environment.")
     public boolean preserveResources;
+
+    @Option(names = {"--ecs-config"}, description = "Path to ECS agent configuration file - custom configuration for the ECS agent parameters used by AWS Batch. This is appended to the /etc/ecs/ecs.config file in each cluster node.")
+    public Path ecsConfig;
 
     @ArgGroup(heading = "%nEFS filesystem options:%n", validate = false)
     public EfsFileSystem efs;
@@ -130,7 +135,7 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
         return fusionV2;
     }
 
-    private ForgeConfig buildForge() throws TowerException {
+    private ForgeConfig buildForge() throws TowerException, IOException {
 
         // TODO: delete this once fusion v1 is completely removed
         if (fusion) {
@@ -154,7 +159,8 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
                 .minCpus(adv().minCpus == null ? 0 : adv().minCpus)
                 .ebsBlockSize(adv().ebsBlockSize)
                 .bidPercentage(adv().bidPercentage)
-                .fargateHeadEnabled(fargate);
+                .fargateHeadEnabled(fargate)
+                .ecsConfig(FilesHelper.readString(ecsConfig));
 
 
         if (efs != null) {
