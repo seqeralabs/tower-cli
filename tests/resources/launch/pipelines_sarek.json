@@ -1,0 +1,22 @@
+{
+  "pipelines": [
+    {
+      "pipelineId": 250911634275687,
+      "name": "sarek",
+      "description": null,
+      "icon": null,
+      "repository": "https://github.com/nf-core/sarek",
+      "userName": "jordi",
+      "userFirstName": null,
+      "userLastName": null,
+      "organizationName": null,
+      "workspaceName": null,
+      "visibility": null,
+      "optimizationId": "rOYdwTnmTaRCJjUq",
+      "optimizationTargets": "cpus, memory",
+      "optimizationStatus": "OPTIMIZED",
+      "newUnknownAttribute": "check that in the future to add a new attribute doesn't affect old versions"
+    }
+  ],
+  "totalSize": 1
+}

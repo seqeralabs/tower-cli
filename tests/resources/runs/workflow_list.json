@@ -1,0 +1,28 @@
+{
+  "workflows": [
+    {
+      "starred": false,
+      "workflow": {
+        "id": "5mDfiUtqyptDib",
+        "commandLine": "nextflow run https://github.com/grananda/nextflow-hello -name spontaneous_easley -with-tower https://scratch.staging-tower.xyz/api -r main",
+        "ownerId": 9,
+        "submit": "2021-09-22T05:45:44Z",
+        "dateCreated": "2021-09-22T05:45:44Z",
+        "lastUpdated": "2021-09-22T05:45:44Z",
+        "runName": "spontaneous_easley"
+      }
+    },
+    {
+      "starred": false,
+      "workflow": {
+        "id": "6mDfiUtqyptDib",
+        "commandLine": "nextflow run https://github.com/grananda/nextflow-hello -name spontaneous_easley -with-tower https://scratch.staging-tower.xyz/api -r main",
+        "ownerId": 9,
+        "submit": "2021-09-22T05:45:44Z",
+        "dateCreated": "2021-09-22T05:45:44Z",
+        "lastUpdated": "2021-09-22T05:45:44Z",
+        "runName": "spontaneous_easley"
+      }
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "needConsent": false,
+  "user": {
+    "avatar": "https://www.gravatar.com/avatar/KDFSAJDKFJDSKFJK?d=404",
+    "dateCreated": "2020-12-01T10:43:51Z",
+    "deleted": false,
+    "description": null,
+    "email": "jordi@seqera.io",
+    "firstName": null,
+    "id": 1264,
+    "lastAccess": "2021-07-21T10:30:25Z",
+    "lastName": null,
+    "lastUpdated": "2021-07-21T10:30:25Z",
+    "marketingConsent": true,
+    "notification": null,
+    "options": {
+      "githubToken": "gho_UtDGKFASDFDSHQRevdRDQ548gnmB",
+      "maxRuns": null
+    },
+    "organization": null,
+    "termsOfUseConsent": true,
+    "trusted": true,
+    "userName": "jordi"
+  }
+}

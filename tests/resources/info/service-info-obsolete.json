@@ -1,0 +1,32 @@
+{
+  "serviceInfo": {
+    "version": "21.10.0",
+    "apiVersion": "0.1",
+    "commitId": "b101b372",
+    "authTypes": [
+      "github",
+      "google",
+      "oidc"
+    ],
+    "loginPath": "/login",
+    "navbar": {
+      "menus": [
+        {
+          "label": "Docs",
+          "url": "https://help.tower.nf"
+        },
+        {
+          "label": "Community",
+          "url": "https://gitter.im/nf-tower/community"
+        },
+        {
+          "label": "Feedback",
+          "url": "https://github.com/seqeralabs/nf-tower/issues"
+        }
+      ]
+    },
+    "heartbeatInterval": 3240,
+    "allowInstanceCredentials": false,
+    "landingUrl": null
+  }
+}

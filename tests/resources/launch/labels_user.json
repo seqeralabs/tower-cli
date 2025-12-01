@@ -1,0 +1,20 @@
+{
+  "labels": [
+
+    {
+      "id": 1,
+      "name": "LabelOne",
+      "value": null,
+      "resource": false,
+      "isDefault": false
+    },
+    {
+      "id": 2,
+      "name": "LabelTwo",
+      "value": null,
+      "resource": false,
+      "isDefault": false
+    }
+  ],
+  "totalsize": 2
+}

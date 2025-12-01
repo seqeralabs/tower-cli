@@ -89,6 +89,28 @@ class PipelineNotFoundException(NotFoundError):
         )
 
 
+class RunNotFoundException(NotFoundError):
+    """Exception raised when a workflow run is not found."""
+
+    def __init__(self, run_id: str, workspace: str) -> None:
+        self.run_id = run_id
+        self.workspace = workspace
+        super().__init__(
+            f"Run '{run_id}' not found in workspace '{workspace}'"
+        )
+
+
+class ActionNotFoundException(NotFoundError):
+    """Exception raised when an action is not found."""
+
+    def __init__(self, action_name: str, workspace: str) -> None:
+        self.action_name = action_name
+        self.workspace = workspace
+        super().__init__(
+            f"Action '{action_name}' not found in workspace '{workspace}'"
+        )
+
+
 class MissingRequiredOptionError(SeqeraError):
     """Exception raised when a required option is missing."""
 
@@ -106,3 +128,34 @@ class InvalidWorkspaceParameterError(ValidationError):
             f"Invalid workspace parameter: {workspace}. "
             f"Expected format: 'organization/workspace'"
         )
+
+
+class MultiplePipelinesFoundException(SeqeraError):
+    """Exception raised when multiple pipelines match a search."""
+
+    def __init__(self, pipeline_name: str, workspace: str) -> None:
+        self.pipeline_name = pipeline_name
+        self.workspace = workspace
+        super().__init__(
+            f"Multiple pipelines found matching '{pipeline_name}' in workspace '{workspace}'. "
+            f"Please specify the pipeline ID with --id instead."
+        )
+
+
+class NoComputeEnvironmentException(SeqeraError):
+    """Exception raised when no compute environment is available."""
+
+    def __init__(self, workspace: str) -> None:
+        self.workspace = workspace
+        super().__init__(
+            f"No compute environment available in workspace '{workspace}'. "
+            f"Please create a compute environment first or specify one with --compute-env."
+        )
+
+
+class InvalidResponseException(SeqeraError):
+    """Exception raised when API response is invalid."""
+
+    def __init__(self, message: str) -> None:
+        self.message = message
+        super().__init__(message)

@@ -1,0 +1,116 @@
+{
+  "launch": {
+    "id": "3r9NghqwymK6xymExVnmdB",
+    "computeEnv": {
+      "id": "2lu3NFms1qRvwTVnrs1yhg",
+      "name": "aws_batch",
+      "description": null,
+      "platform": "aws-batch",
+      "config": {
+        "region": "eu-west-1",
+        "computeQueue": "TowerForge-2lu3NFms1qRvwTVnrs1yhg-work",
+        "dragenQueue": null,
+        "computeJobRole": null,
+        "executionRole": "arn:aws:iam::128997144437:role/TowerForge-2lu3NFms1qRvwTVnrs1yhg-ExecutionRole",
+        "headQueue": "TowerForge-2lu3NFms1qRvwTVnrs1yhg-head",
+        "headJobRole": null,
+        "cliPath": "/home/ec2-user/miniconda/bin/aws",
+        "volumes": [],
+        "workDir": "s3://fusionfs",
+        "preRunScript": null,
+        "postRunScript": null,
+        "headJobCpus": null,
+        "headJobMemoryMb": null,
+        "environment": [],
+        "forge": {
+          "type": "SPOT",
+          "minCpus": 0,
+          "maxCpus": 123,
+          "gpuEnabled": false,
+          "ebsAutoScale": true,
+          "instanceTypes": [],
+          "allocStrategy": null,
+          "imageId": null,
+          "vpcId": null,
+          "subnets": [],
+          "securityGroups": [],
+          "fsxMount": null,
+          "fsxName": null,
+          "fsxSize": null,
+          "disposeOnDeletion": true,
+          "ec2KeyPair": null,
+          "allowBuckets": [],
+          "ebsBlockSize": null,
+          "fusionEnabled": false,
+          "bidPercentage": null,
+          "efsCreate": false,
+          "efsId": null,
+          "efsMount": null,
+          "dragenEnabled": false,
+          "dragenAmiId": null
+        },
+        "forgedResources": [
+          {
+            "IamRole": "arn:aws:iam::128997144437:role/TowerForge-2lu3NFms1qRvwTVnrs1yhg-ServiceRole"
+          },
+          {
+            "IamRole": "arn:aws:iam::128997144437:role/TowerForge-2lu3NFms1qRvwTVnrs1yhg-ExecutionRole"
+          },
+          {
+            "IamInstanceProfile": "arn:aws:iam::128997144437:instance-profile/TowerForge-2lu3NFms1qRvwTVnrs1yhg-InstanceRole"
+          },
+          {
+            "Ec2LaunchTemplate": "TowerForge-2lu3NFms1qRvwTVnrs1yhg"
+          },
+          {
+            "BatchEnv": "arn:aws:batch:eu-west-1:128997144437:compute-environment/TowerForge-2lu3NFms1qRvwTVnrs1yhg-head"
+          },
+          {
+            "BatchQueue": "arn:aws:batch:eu-west-1:128997144437:job-queue/TowerForge-2lu3NFms1qRvwTVnrs1yhg-head"
+          },
+          {
+            "BatchEnv": "arn:aws:batch:eu-west-1:128997144437:compute-environment/TowerForge-2lu3NFms1qRvwTVnrs1yhg-work"
+          },
+          {
+            "BatchQueue": "arn:aws:batch:eu-west-1:128997144437:job-queue/TowerForge-2lu3NFms1qRvwTVnrs1yhg-work"
+          }
+        ],
+        "discriminator": "aws-batch"
+      },
+      "dateCreated": "2022-07-25T08:44:49Z",
+      "lastUpdated": "2022-07-25T08:45:42Z",
+      "lastUsed": "2022-08-18T16:11:31Z",
+      "deleted": null,
+      "status": "AVAILABLE",
+      "message": null,
+      "primary": true,
+      "credentialsId": "1MP19bmEJIwj44b9fBnQ1y",
+      "orgId": null,
+      "workspaceId": null
+    },
+    "pipeline": "https://github.com/nf-core/rnaseq",
+    "workDir": "s3://fusionfs",
+    "revision": null,
+    "sessionId": "d77a5ac4-1a25-45d6-bab0-358605abc332",
+    "configProfiles": [
+      "test_full",
+      "docker"
+    ],
+    "userSecrets": null,
+    "workspaceSecrets": null,
+    "configText": null,
+    "towerConfig": null,
+    "paramsText": "outdir: s3://fusionfs/results",
+    "preRunScript": null,
+    "postRunScript": null,
+    "mainScript": null,
+    "entryName": null,
+    "schemaName": null,
+    "resume": false,
+    "pullLatest": false,
+    "stubRun": false,
+    "resumeDir": "s3://fusionfs/scratch/5qRNYT6iAJfRbJ",
+    "resumeCommitId": "89bf536ce4faa98b4d50a8ec0a0343780bc62e0a",
+    "dateCreated": "2022-08-01T15:58:08Z"
+  }
+}

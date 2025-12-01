@@ -146,10 +146,25 @@ def main_callback(
 
 
 # Import and register subcommands
-from seqera.commands import credentials, computeenvs
+from seqera.commands import actions, collaborators, computeenvs, credentials, datasets, info, labels, launch, members, organizations, participants, pipelines, runs, secrets, studios, teams, workspaces
 
+app.add_typer(actions.app, name="actions")
+app.add_typer(collaborators.app, name="collaborators")
 app.add_typer(credentials.app, name="credentials")
 app.add_typer(computeenvs.app, name="compute-envs")
+app.add_typer(datasets.app, name="datasets")
+app.command(name="info", help="System info and health status")(info.info)
+app.add_typer(labels.app, name="labels")
+app.command(name="launch", help="Launch a pipeline")(launch.launch)
+app.add_typer(members.app, name="members")
+app.add_typer(organizations.app, name="organizations")
+app.add_typer(participants.app, name="participants")
+app.add_typer(pipelines.app, name="pipelines")
+app.add_typer(runs.app, name="runs")
+app.add_typer(secrets.app, name="secrets")
+app.add_typer(studios.app, name="studios")
+app.add_typer(teams.app, name="teams")
+app.add_typer(workspaces.app, name="workspaces")
 
 
 def main() -> None:
