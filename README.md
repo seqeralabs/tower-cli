@@ -103,7 +103,7 @@ See [Usage](./USAGE.md) for detailed instructions to use the CLI.
 
 ### Available Commands
 
-```
+```text
 seqera actions        Manage pipeline actions
 seqera collaborators  List organization collaborators
 seqera compute-envs   Manage compute environments

@@ -267,6 +267,7 @@ pip install -e .
 ### Test Discovery Issues
 
 Ensure test files and functions follow naming conventions:
+
 - Files: `test_*.py`
 - Functions: `test_*`
 - Classes: `Test*`
