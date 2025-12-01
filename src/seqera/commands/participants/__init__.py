@@ -5,10 +5,9 @@ Manage workspace participants (members and teams).
 """
 
 import sys
-from typing import Optional
+from typing import Annotated, Optional
 
 import typer
-from typing_extensions import Annotated
 
 from seqera.api.client import SeqeraClient
 from seqera.exceptions import (
@@ -23,8 +22,8 @@ from seqera.responses import (
     ParticipantAdded,
     ParticipantDeleted,
     ParticipantLeft,
-    ParticipantUpdated,
     ParticipantsList,
+    ParticipantUpdated,
 )
 from seqera.utils.output import OutputFormat, output_console, output_error, output_json, output_yaml
 
@@ -87,7 +86,7 @@ def get_user_workspaces(client: SeqeraClient) -> tuple:
     return user_name, orgs_and_workspaces
 
 
-def find_workspace_by_id(orgs_and_workspaces: list, workspace_id: str) -> Optional[dict]:
+def find_workspace_by_id(orgs_and_workspaces: list, workspace_id: str) -> dict | None:
     """Find workspace by ID in orgs and workspaces list."""
     workspace_id_int = int(workspace_id)
     for entry in orgs_and_workspaces:
@@ -96,9 +95,7 @@ def find_workspace_by_id(orgs_and_workspaces: list, workspace_id: str) -> Option
     return None
 
 
-def find_participant_by_name(
-    participants: list, name: str, participant_type: str
-) -> Optional[dict]:
+def find_participant_by_name(participants: list, name: str, participant_type: str) -> dict | None:
     """Find participant by name and type."""
     for participant in participants:
         if participant_type == "MEMBER":
@@ -110,7 +107,7 @@ def find_participant_by_name(
     return None
 
 
-def find_member_by_username(members: list, username: str) -> Optional[dict]:
+def find_member_by_username(members: list, username: str) -> dict | None:
     """Find member by username in members list."""
     for member in members:
         if member.get("userName") == username:
@@ -125,19 +122,19 @@ def list_participants(
         typer.Option("-w", "--workspace", help="Workspace ID"),
     ],
     participant_type: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-t", "--type", help="Filter by type: MEMBER or TEAM"),
     ] = None,
     offset: Annotated[
-        Optional[int],
+        int | None,
         typer.Option("--offset", help="Pagination offset"),
     ] = None,
     max_items: Annotated[
-        Optional[int],
+        int | None,
         typer.Option("--max", help="Maximum number of items to return"),
     ] = None,
     page: Annotated[
-        Optional[int],
+        int | None,
         typer.Option("--page", help="Page number (alternative to offset)"),
     ] = None,
 ) -> None:
@@ -214,8 +211,10 @@ def add_participant(
         typer.Option("-t", "--type", help="Participant type: MEMBER or TEAM"),
     ],
     role: Annotated[
-        Optional[str],
-        typer.Option("-r", "--role", help="Workspace role (OWNER, ADMIN, MAINTAIN, LAUNCH, CONNECT, VIEW)"),
+        str | None,
+        typer.Option(
+            "-r", "--role", help="Workspace role (OWNER, ADMIN, MAINTAIN, LAUNCH, CONNECT, VIEW)"
+        ),
     ] = None,
     overwrite: Annotated[
         bool,
@@ -238,23 +237,19 @@ def add_participant(
         org_id = workspace_entry.get("orgId")
         ws_id = workspace_entry.get("workspaceId")
         ws_name = workspace_entry.get("workspaceName")
-        org_name = workspace_entry.get("orgName")
+        workspace_entry.get("orgName")
 
         # If overwrite is True, check for existing participants and delete them
         if overwrite:
             # Get all participants
-            participants_response = client.get(
-                f"/orgs/{org_id}/workspaces/{ws_id}/participants"
-            )
+            participants_response = client.get(f"/orgs/{org_id}/workspaces/{ws_id}/participants")
             existing_participants = participants_response.get("participants", [])
 
             # Check if participant already exists
             existing = find_participant_by_name(existing_participants, name, participant_type)
             if existing:
                 participant_id = existing.get("participantId")
-                client.delete(
-                    f"/orgs/{org_id}/workspaces/{ws_id}/participants/{participant_id}"
-                )
+                client.delete(f"/orgs/{org_id}/workspaces/{ws_id}/participants/{participant_id}")
 
         # Find member or team ID
         if participant_type == "MEMBER":
@@ -265,7 +260,6 @@ def add_participant(
             if not member:
                 raise NotFoundError(f"Member '{name}' not found in organization")
             member_id = member.get("memberId")
-            user_id = None
             team_id = None
         elif participant_type == "TEAM":
             # For teams, we need the team ID
@@ -287,9 +281,7 @@ def add_participant(
             payload["wspRole"] = role
 
         # Add participant
-        response = client.put(
-            f"/orgs/{org_id}/workspaces/{ws_id}/participants/add", json=payload
-        )
+        response = client.put(f"/orgs/{org_id}/workspaces/{ws_id}/participants/add", json=payload)
         participant = response.get("participant", {})
 
         # Output response
@@ -335,7 +327,7 @@ def delete_participant(
         org_id = workspace_entry.get("orgId")
         ws_id = workspace_entry.get("workspaceId")
         ws_name = workspace_entry.get("workspaceName")
-        org_name = workspace_entry.get("orgName")
+        workspace_entry.get("orgName")
 
         # Get participants with search filter
         participants_response = client.get(
@@ -379,7 +371,11 @@ def update_participant(
     ],
     role: Annotated[
         str,
-        typer.Option("-r", "--role", help="New workspace role (OWNER, ADMIN, MAINTAIN, LAUNCH, CONNECT, VIEW)"),
+        typer.Option(
+            "-r",
+            "--role",
+            help="New workspace role (OWNER, ADMIN, MAINTAIN, LAUNCH, CONNECT, VIEW)",
+        ),
     ],
     participant_type: Annotated[
         str,
@@ -402,7 +398,7 @@ def update_participant(
         org_id = workspace_entry.get("orgId")
         ws_id = workspace_entry.get("workspaceId")
         ws_name = workspace_entry.get("workspaceName")
-        org_name = workspace_entry.get("orgName")
+        workspace_entry.get("orgName")
 
         # Get participants with search filter
         participants_response = client.get(

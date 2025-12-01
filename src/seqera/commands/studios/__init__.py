@@ -5,10 +5,9 @@ Manage data studios in workspaces.
 """
 
 import sys
-from typing import Optional
+from typing import Annotated, Optional
 
 import typer
-from typing_extensions import Annotated
 
 from seqera.api.client import SeqeraClient
 from seqera.exceptions import (
@@ -22,9 +21,9 @@ from seqera.main import get_client, get_output_format
 from seqera.responses import (
     StudioCheckpoints,
     StudioDeleted,
+    StudiosList,
     StudioStarted,
     StudioStopped,
-    StudiosList,
     StudioView,
 )
 from seqera.utils.output import OutputFormat, output_console, output_error, output_json, output_yaml
@@ -66,7 +65,7 @@ def output_response(response: object, output_format: OutputFormat) -> None:
         output_console(response.to_console())
 
 
-def get_workspace_info(client: SeqeraClient, workspace_id: Optional[str] = None) -> tuple:
+def get_workspace_info(client: SeqeraClient, workspace_id: str | None = None) -> tuple:
     """Get workspace reference and workspace ID.
 
     Args:
@@ -110,9 +109,9 @@ def get_workspace_info(client: SeqeraClient, workspace_id: Optional[str] = None)
 
 def find_studio(
     client: SeqeraClient,
-    studio_name: Optional[str] = None,
-    studio_id: Optional[str] = None,
-    workspace_id: Optional[str] = None,
+    studio_name: str | None = None,
+    studio_id: str | None = None,
+    workspace_id: str | None = None,
 ) -> tuple:
     """Find a studio by name or ID.
 
@@ -155,7 +154,9 @@ def find_studio(
             raise NotFoundError(f"Studio '{studio_name}' not found in {workspace_ref}")
 
         if len(matching_studios) > 1:
-            raise SeqeraError(f"Multiple studios found with name '{studio_name}' in {workspace_ref}")
+            raise SeqeraError(
+                f"Multiple studios found with name '{studio_name}' in {workspace_ref}"
+            )
 
         return matching_studios[0], workspace_ref
 
@@ -166,23 +167,23 @@ def find_studio(
 @app.command("list")
 def list_studios(
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace ID (numeric)"),
     ] = None,
     offset: Annotated[
-        Optional[int],
+        int | None,
         typer.Option("--offset", help="Pagination offset"),
     ] = None,
     max_items: Annotated[
-        Optional[int],
+        int | None,
         typer.Option("--max", help="Maximum number of items to return"),
     ] = None,
     page: Annotated[
-        Optional[int],
+        int | None,
         typer.Option("--page", help="Page number (1-indexed)"),
     ] = None,
     filter: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--filter", help="Filter studios by search criteria"),
     ] = None,
     labels: Annotated[
@@ -256,15 +257,15 @@ def list_studios(
 @app.command("view")
 def view_studio(
     studio_name: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-n", "--name", help="Studio name"),
     ] = None,
     studio_id: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-i", "--id", help="Studio ID"),
     ] = None,
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace ID (numeric)"),
     ] = None,
 ) -> None:
@@ -295,31 +296,31 @@ def view_studio(
 @app.command("start")
 def start_studio(
     studio_name: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-n", "--name", help="Studio name"),
     ] = None,
     studio_id: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-i", "--id", help="Studio ID"),
     ] = None,
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace ID (numeric)"),
     ] = None,
     cpu: Annotated[
-        Optional[int],
+        int | None,
         typer.Option("--cpu", help="Number of CPUs"),
     ] = None,
     memory: Annotated[
-        Optional[int],
+        int | None,
         typer.Option("--memory", help="Memory in MB"),
     ] = None,
     gpu: Annotated[
-        Optional[int],
+        int | None,
         typer.Option("--gpu", help="Number of GPUs"),
     ] = None,
     description: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--description", help="Studio description"),
     ] = None,
 ) -> None:
@@ -388,15 +389,15 @@ def start_studio(
 @app.command("stop")
 def stop_studio(
     studio_name: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-n", "--name", help="Studio name"),
     ] = None,
     studio_id: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-i", "--id", help="Studio ID"),
     ] = None,
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace ID (numeric)"),
     ] = None,
 ) -> None:
@@ -445,15 +446,15 @@ def stop_studio(
 @app.command("delete")
 def delete_studio(
     studio_name: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-n", "--name", help="Studio name"),
     ] = None,
     studio_id: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-i", "--id", help="Studio ID"),
     ] = None,
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace ID (numeric)"),
     ] = None,
 ) -> None:
@@ -500,15 +501,15 @@ def list_checkpoints(
         typer.Option("-i", "--id", help="Studio ID"),
     ],
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace ID (numeric)"),
     ] = None,
     offset: Annotated[
-        Optional[int],
+        int | None,
         typer.Option("--offset", help="Pagination offset"),
     ] = None,
     max_items: Annotated[
-        Optional[int],
+        int | None,
         typer.Option("--max", help="Maximum number of items to return"),
     ] = None,
 ) -> None:

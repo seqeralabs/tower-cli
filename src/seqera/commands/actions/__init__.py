@@ -5,10 +5,9 @@ Manage pipeline actions in workspaces (webhooks and triggers).
 """
 
 import sys
-from typing import Optional
+from typing import Annotated, Optional
 
 import typer
-from typing_extensions import Annotated
 
 from seqera.api.client import SeqeraClient
 from seqera.exceptions import (
@@ -64,7 +63,7 @@ def output_response(response: object, output_format: OutputFormat) -> None:
         output_console(response.to_console())
 
 
-def get_workspace_info(client: SeqeraClient, workspace_id: Optional[str] = None) -> tuple:
+def get_workspace_info(client: SeqeraClient, workspace_id: str | None = None) -> tuple:
     """Get workspace reference and workspace ID.
 
     Args:
@@ -108,9 +107,9 @@ def get_workspace_info(client: SeqeraClient, workspace_id: Optional[str] = None)
 
 def find_action(
     client: SeqeraClient,
-    action_name: Optional[str] = None,
-    action_id: Optional[str] = None,
-    workspace_id: Optional[str] = None,
+    action_name: str | None = None,
+    action_id: str | None = None,
+    workspace_id: str | None = None,
 ) -> tuple:
     """Find an action by name or ID.
 
@@ -173,10 +172,10 @@ def find_action(
 
 def get_compute_env(
     client: SeqeraClient,
-    compute_env_name: Optional[str] = None,
-    workspace_id: Optional[str] = None,
+    compute_env_name: str | None = None,
+    workspace_id: str | None = None,
     use_primary: bool = True,
-) -> Optional[dict]:
+) -> dict | None:
     """Get compute environment by name or get primary.
 
     Args:
@@ -235,7 +234,7 @@ def get_compute_env(
 @app.command("list")
 def list_actions(
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace ID (numeric)"),
     ] = None,
 ) -> None:
@@ -271,15 +270,15 @@ def list_actions(
 @app.command("view")
 def view_action(
     action_name: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-n", "--name", help="Action name"),
     ] = None,
     action_id: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-i", "--id", help="Action ID"),
     ] = None,
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace ID (numeric)"),
     ] = None,
 ) -> None:
@@ -310,15 +309,15 @@ def view_action(
 @app.command("delete")
 def delete_action(
     action_name: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-n", "--name", help="Action name"),
     ] = None,
     action_id: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-i", "--id", help="Action ID"),
     ] = None,
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace ID (numeric)"),
     ] = None,
 ) -> None:
@@ -344,7 +343,7 @@ def delete_action(
 
         try:
             client.delete(f"/actions/{action_id_to_delete}", params=params)
-        except Exception as e:
+        except Exception:
             raise SeqeraError(f"Unable to delete action '{name}' for workspace '{workspace_ref}'")
 
         # Output response
@@ -378,11 +377,11 @@ def add_github_action(
         typer.Option("--pipeline", help="Pipeline repository URL"),
     ],
     compute_env: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-c", "--compute-env", help="Compute environment name"),
     ] = None,
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace ID (numeric)"),
     ] = None,
     overwrite: Annotated[
@@ -444,7 +443,7 @@ def add_github_action(
         try:
             response = client.post("/actions", json=payload, params=params)
             action_id = response.get("actionId")
-        except Exception as e:
+        except Exception:
             raise SeqeraError(f"Unable to add action for workspace '{workspace_ref}'")
 
         # Output response
@@ -471,11 +470,11 @@ def add_tower_action(
         typer.Option("--pipeline", help="Pipeline repository URL"),
     ],
     compute_env: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-c", "--compute-env", help="Compute environment name"),
     ] = None,
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace ID (numeric)"),
     ] = None,
     overwrite: Annotated[
@@ -537,7 +536,7 @@ def add_tower_action(
         try:
             response = client.post("/actions", json=payload, params=params)
             action_id = response.get("actionId")
-        except Exception as e:
+        except Exception:
             raise SeqeraError(f"Unable to add action for workspace '{workspace_ref}'")
 
         # Output response
@@ -560,23 +559,23 @@ app.add_typer(add_app, name="add")
 @app.command("update")
 def update_action(
     action_name: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-n", "--name", help="Action name"),
     ] = None,
     action_id: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-i", "--id", help="Action ID"),
     ] = None,
     new_name: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--new-name", help="New action name"),
     ] = None,
     status: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-s", "--status", help="Action status (pause/active)"),
     ] = None,
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace ID (numeric)"),
     ] = None,
 ) -> None:
@@ -631,14 +630,18 @@ def update_action(
             try:
                 client.put(f"/actions/{aid}", json=payload, params=params)
             except Exception:
-                raise SeqeraError(f"Unable to update action '{current_name}' for workspace '{workspace_ref}'")
+                raise SeqeraError(
+                    f"Unable to update action '{current_name}' for workspace '{workspace_ref}'"
+                )
 
             # Now pause/unpause if needed
             if status_upper == "PAUSE":
                 try:
                     client.post(f"/actions/{aid}/pause", params=params)
                 except Exception:
-                    raise SeqeraError(f"An error has occur while setting the action '{current_name}' to 'PAUSE'")
+                    raise SeqeraError(
+                        f"An error has occur while setting the action '{current_name}' to 'PAUSE'"
+                    )
         else:
             # Regular update without status change
             payload = {}
@@ -668,7 +671,9 @@ def update_action(
             try:
                 client.put(f"/actions/{aid}", json=payload, params=params)
             except Exception:
-                raise SeqeraError(f"Unable to update action '{current_name}' for workspace '{workspace_ref}'")
+                raise SeqeraError(
+                    f"Unable to update action '{current_name}' for workspace '{workspace_ref}'"
+                )
 
         # Output response
         result = ActionUpdated(

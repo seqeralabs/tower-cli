@@ -5,13 +5,11 @@ Tests the 'launch' command that launches pipelines in workspaces.
 """
 
 import json
+from collections.abc import Callable
 from pathlib import Path
-from typing import Callable
 
 import pytest
 from pytest_httpserver import HTTPServer
-
-from tests.conftest import ExecOut
 
 
 def load_test_resource(name: str) -> dict:
@@ -80,7 +78,9 @@ class TestLaunchCmd:
         httpserver.expect_request("/pipelines/250911634275687/launch").respond_with_json(
             pipeline_launch_describe
         )
-        httpserver.expect_request("/workflow/launch", method="POST").respond_with_json(workflow_launch)
+        httpserver.expect_request("/workflow/launch", method="POST").respond_with_json(
+            workflow_launch
+        )
         httpserver.expect_request("/user-info").respond_with_json(user_info)
 
         # Execute command
@@ -145,11 +145,15 @@ class TestLaunchCmd:
         httpserver.expect_request("/compute-envs/1uJweHHZTo7gydE6pyDt7x").respond_with_json(
             compute_env_details
         )
-        httpserver.expect_request("/workflow/launch", method="POST").respond_with_json(workflow_launch)
+        httpserver.expect_request("/workflow/launch", method="POST").respond_with_json(
+            workflow_launch
+        )
         httpserver.expect_request("/user-info").respond_with_json(user_info)
 
         # Execute command
-        result = exec_cmd("launch", "https://github.com/nextflow-io/hello", output_format=output_format)
+        result = exec_cmd(
+            "launch", "https://github.com/nextflow-io/hello", output_format=output_format
+        )
 
         # Assert success
         assert result.exit_code == 0, f"Command failed: {result.stderr}"
@@ -185,7 +189,9 @@ class TestLaunchCmd:
         httpserver.expect_request("/pipelines/250911634275687/launch").respond_with_json(
             pipeline_launch_describe
         )
-        httpserver.expect_request("/workflow/launch", method="POST").respond_with_json(workflow_launch)
+        httpserver.expect_request("/workflow/launch", method="POST").respond_with_json(
+            workflow_launch
+        )
         httpserver.expect_request("/user-info").respond_with_json(user_info)
 
         # Create temp files
@@ -242,11 +248,15 @@ class TestLaunchCmd:
         httpserver.expect_request("/pipelines/250911634275687/launch").respond_with_json(
             pipeline_launch_describe
         )
-        httpserver.expect_request("/workflow/launch", method="POST").respond_with_json(workflow_launch)
+        httpserver.expect_request("/workflow/launch", method="POST").respond_with_json(
+            workflow_launch
+        )
         httpserver.expect_request("/user-info").respond_with_json(user_info)
 
         # Execute command
-        result = exec_cmd("launch", "sarek", "--name", "custom_run_name", output_format=output_format)
+        result = exec_cmd(
+            "launch", "sarek", "--name", "custom_run_name", output_format=output_format
+        )
 
         # Assert success
         assert result.exit_code == 0, f"Command failed: {result.stderr}"
@@ -291,11 +301,15 @@ class TestLaunchCmd:
         httpserver.expect_request("/pipelines/250911634275687/launch").respond_with_json(
             pipeline_launch_describe
         )
-        httpserver.expect_request("/workflow/launch", method="POST").respond_with_json(workflow_launch)
+        httpserver.expect_request("/workflow/launch", method="POST").respond_with_json(
+            workflow_launch
+        )
         httpserver.expect_request("/user-info").respond_with_json(user_info)
 
         # Execute command
-        result = exec_cmd("launch", "sarek", "--label", "LabelTwo,LabelThree", output_format=output_format)
+        result = exec_cmd(
+            "launch", "sarek", "--label", "LabelTwo,LabelThree", output_format=output_format
+        )
 
         # Assert success
         assert result.exit_code == 0, f"Command failed: {result.stderr}"
@@ -371,7 +385,9 @@ class TestLaunchCmd:
         httpserver.expect_request("/compute-envs/4iqCDE6C2Stq0jzBsHJvHn").respond_with_json(
             compute_env_details
         )
-        httpserver.expect_request("/workflow/launch", method="POST").respond_with_json(workflow_launch)
+        httpserver.expect_request("/workflow/launch", method="POST").respond_with_json(
+            workflow_launch
+        )
         httpserver.expect_request("/user-info").respond_with_json(user_info)
         httpserver.expect_request("/user/1264/workspaces").respond_with_json(workspaces_response)
 
@@ -406,7 +422,9 @@ class TestLaunchCmd:
         httpserver.expect_request("/pipelines/250911634275687/launch").respond_with_json(
             pipeline_launch_describe
         )
-        httpserver.expect_request("/workflow/launch", method="POST").respond_with_json(workflow_launch)
+        httpserver.expect_request("/workflow/launch", method="POST").respond_with_json(
+            workflow_launch
+        )
         httpserver.expect_request("/user-info").respond_with_json(user_info)
 
         # Execute command

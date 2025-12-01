@@ -7,11 +7,10 @@ Launch pipelines in workspaces.
 import json
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Annotated
 
 import typer
 import yaml
-from typing_extensions import Annotated
 
 from seqera.api.client import SeqeraClient
 from seqera.exceptions import (
@@ -57,7 +56,7 @@ def output_response(response: object, output_format: OutputFormat) -> None:
         output_console(response.to_console())
 
 
-def get_workspace_info(client: SeqeraClient, workspace_id: Optional[str] = None) -> Dict:
+def get_workspace_info(client: SeqeraClient, workspace_id: str | None = None) -> dict:
     """Get workspace information."""
     user_response = client.get("/user-info")
     user_name = user_response.get("user", {}).get("userName", USER_WORKSPACE_NAME)
@@ -93,7 +92,9 @@ def get_workspace_info(client: SeqeraClient, workspace_id: Optional[str] = None)
     }
 
 
-def find_pipeline_by_name(client: SeqeraClient, pipeline_name: str, workspace_id: Optional[str] = None) -> Optional[Dict]:
+def find_pipeline_by_name(
+    client: SeqeraClient, pipeline_name: str, workspace_id: str | None = None
+) -> dict | None:
     """Find pipeline by name in workspace."""
     params = {}
     if workspace_id:
@@ -109,7 +110,9 @@ def find_pipeline_by_name(client: SeqeraClient, pipeline_name: str, workspace_id
     return None
 
 
-def get_pipeline_launch_config(client: SeqeraClient, pipeline_id: int, workspace_id: Optional[str] = None) -> Dict:
+def get_pipeline_launch_config(
+    client: SeqeraClient, pipeline_id: int, workspace_id: str | None = None
+) -> dict:
     """Get pipeline launch configuration."""
     params = {}
     if workspace_id:
@@ -119,7 +122,7 @@ def get_pipeline_launch_config(client: SeqeraClient, pipeline_id: int, workspace
     return response.get("launch", {})
 
 
-def get_primary_compute_env(client: SeqeraClient, workspace_id: Optional[str] = None) -> Dict:
+def get_primary_compute_env(client: SeqeraClient, workspace_id: str | None = None) -> dict:
     """Get primary compute environment."""
     params = {"status": "AVAILABLE"}
     if workspace_id:
@@ -140,7 +143,9 @@ def get_primary_compute_env(client: SeqeraClient, workspace_id: Optional[str] = 
     raise InvalidResponseException("No compute environment available")
 
 
-def get_compute_env_details(client: SeqeraClient, compute_env_id: str, workspace_id: Optional[str] = None) -> Dict:
+def get_compute_env_details(
+    client: SeqeraClient, compute_env_id: str, workspace_id: str | None = None
+) -> dict:
     """Get compute environment details."""
     params = {}
     if workspace_id:
@@ -180,7 +185,9 @@ def read_file_content(file_path: str) -> str:
     return path.read_text()
 
 
-def resolve_labels(client: SeqeraClient, label_names: List[str], workspace_id: Optional[str] = None) -> List[int]:
+def resolve_labels(
+    client: SeqeraClient, label_names: list[str], workspace_id: str | None = None
+) -> list[int]:
     """Resolve label names to label IDs, creating missing labels."""
     params = {"type": "simple"}
     if workspace_id:
@@ -226,55 +233,55 @@ def launch(
         typer.Argument(help="Pipeline name or repository URL"),
     ],
     name: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-n", "--name", help="Workflow run name"),
     ] = None,
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace ID or reference"),
     ] = None,
     compute_env: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-c", "--compute-env", help="Compute environment name or ID"),
     ] = None,
     work_dir: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--work-dir", help="Work directory"),
     ] = None,
     params_file: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-p", "--params-file", help="Parameters file (JSON/YAML)"),
     ] = None,
     revision: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-r", "--revision", help="Pipeline revision/branch"),
     ] = None,
     config: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--config", help="Nextflow config file"),
     ] = None,
     pre_run: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--pre-run", help="Pre-run script file"),
     ] = None,
     post_run: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--post-run", help="Post-run script file"),
     ] = None,
     profile: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--profile", help="Nextflow profile(s) (comma-separated)"),
     ] = None,
     main_script: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--main-script", help="Main script"),
     ] = None,
     entry_name: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--entry-name", help="Entry name"),
     ] = None,
     schema_name: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--schema-name", help="Schema name"),
     ] = None,
     pull_latest: Annotated[
@@ -290,7 +297,7 @@ def launch(
         typer.Option("--resume", help="Resume previous run"),
     ] = False,
     label: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-l", "--label", help="Resource labels (comma-separated)"),
     ] = None,
     disable_optimization: Annotated[
@@ -298,7 +305,7 @@ def launch(
         typer.Option("--disable-optimization", help="Disable optimization"),
     ] = False,
     wait: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--wait", help="Wait for completion (optional)"),
     ] = None,
 ) -> None:
@@ -313,7 +320,7 @@ def launch(
         workspace_ref = workspace_info["workspace_ref"]
 
         # Build launch payload
-        launch_payload: Dict = {}
+        launch_payload: dict = {}
 
         # Determine if launching from pipeline name or repository URL
         if is_repository_url(pipeline):
@@ -341,10 +348,14 @@ def launch(
             # Find pipeline
             pipeline_obj = find_pipeline_by_name(client, pipeline, workspace_id)
             if not pipeline_obj:
-                raise InvalidResponseException(f"Pipeline '{pipeline}' not found on this workspace.")
+                raise InvalidResponseException(
+                    f"Pipeline '{pipeline}' not found on this workspace."
+                )
 
             # Get launch configuration
-            launch_config = get_pipeline_launch_config(client, pipeline_obj["pipelineId"], workspace_id)
+            launch_config = get_pipeline_launch_config(
+                client, pipeline_obj["pipelineId"], workspace_id
+            )
 
             # Start with launch config
             launch_payload["id"] = launch_config.get("id")

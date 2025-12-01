@@ -11,7 +11,7 @@ from typing import Any, Dict, Optional
 class Response:
     """Base response class."""
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert response to dictionary for JSON/YAML output."""
         return {}
 
@@ -35,7 +35,7 @@ class CredentialsAdded(Response):
         self.name = name
         self.workspace = workspace
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "provider": self.provider,
             "id": self.credentials_id,
@@ -64,7 +64,7 @@ class CredentialsUpdated(Response):
         self.name = name
         self.workspace = workspace
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "provider": self.provider,
             "name": self.name,
@@ -75,27 +75,6 @@ class CredentialsUpdated(Response):
         return f"  {self.provider} credentials '{self.name}' updated at {self.workspace} workspace"
 
 
-class CredentialsDeleted(Response):
-    """Response for credentials deleted command."""
-
-    def __init__(
-        self,
-        name: str,
-        workspace: str,
-    ) -> None:
-        self.name = name
-        self.workspace = workspace
-
-    def to_dict(self) -> Dict[str, Any]:
-        return {
-            "name": self.name,
-            "workspace": self.workspace,
-        }
-
-    def to_console(self) -> str:
-        return f"  Credentials '{self.name}' deleted at {self.workspace} workspace"
-
-
 class CredentialsList(Response):
     """Response for credentials list command."""
 
@@ -103,13 +82,13 @@ class CredentialsList(Response):
         self,
         workspace: str,
         credentials: list,
-        base_workspace_url: Optional[str] = None,
+        base_workspace_url: str | None = None,
     ) -> None:
         self.workspace = workspace
         self.credentials = credentials
         self.base_workspace_url = base_workspace_url
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "workspaceRef": self.workspace,
             "credentials": self.credentials,
@@ -117,11 +96,12 @@ class CredentialsList(Response):
 
     def to_console(self) -> str:
         """Format credentials as a table."""
-        from rich.console import Console
-        from rich.table import Table
         from datetime import datetime
 
-        console = Console()
+        from rich.console import Console
+        from rich.table import Table
+
+        Console()
 
         # Header
         output = f"\n  Credentials at {self.workspace} workspace:\n\n"
@@ -157,6 +137,7 @@ class CredentialsList(Response):
 
         # Render table to string
         from io import StringIO
+
         string_io = StringIO()
         temp_console = Console(file=string_io, force_terminal=False)
         temp_console.print(table)
@@ -179,7 +160,7 @@ class CredentialsDeleted(Response):
         self.credentials_id = credentials_id
         self.workspace = workspace
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "id": self.credentials_id,
             "workspace": self.workspace,
@@ -203,7 +184,7 @@ class SecretsList(Response):
         self.workspace = workspace
         self.secrets = secrets
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "workspaceRef": self.workspace,
             "secrets": self.secrets,
@@ -211,9 +192,10 @@ class SecretsList(Response):
 
     def to_console(self) -> str:
         """Format secrets as a table."""
+        from datetime import datetime
+
         from rich.console import Console
         from rich.table import Table
-        from datetime import datetime
 
         # Header
         output = f"\n  Secrets at {self.workspace} workspace:\n\n"
@@ -247,6 +229,7 @@ class SecretsList(Response):
 
         # Render table to string
         from io import StringIO
+
         string_io = StringIO()
         temp_console = Console(file=string_io, force_terminal=False)
         temp_console.print(table)
@@ -271,7 +254,7 @@ class SecretAdded(Response):
         self.secret_id = secret_id
         self.name = name
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "id": str(self.secret_id),
             "name": self.name,
@@ -298,7 +281,7 @@ class SecretDeleted(Response):
         self.workspace = workspace
         self.name = secret.get("name", "")
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "name": self.name,
             "workspace": self.workspace,
@@ -320,7 +303,7 @@ class SecretView(Response):
         self.secret = secret
         self.name = secret.get("name", "")
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "name": self.name,
             "workspace": self.workspace,
@@ -380,7 +363,7 @@ class SecretUpdated(Response):
         self.workspace = workspace
         self.name = name
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "name": self.name,
             "workspace": self.workspace,
@@ -401,7 +384,7 @@ class LabelAdded(Response):
         label_id: int,
         name: str,
         resource: bool,
-        value: Optional[str],
+        value: str | None,
         workspace_id: str,
     ) -> None:
         self.label_id = label_id
@@ -410,7 +393,7 @@ class LabelAdded(Response):
         self.value = value
         self.workspace_id = workspace_id
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "id": self.label_id,
             "name": self.name,
@@ -441,7 +424,7 @@ class LabelDeleted(Response):
         self.label_id = label_id
         self.workspace_id = workspace_id
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "id": self.label_id,
             "workspaceId": self.workspace_id,
@@ -459,14 +442,14 @@ class LabelsList(Response):
         workspace_id: int,
         label_type: str,
         labels: list,
-        filter_text: Optional[str] = None,
+        filter_text: str | None = None,
     ) -> None:
         self.workspace_id = workspace_id
         self.label_type = label_type
         self.labels = labels
         self.filter_text = filter_text
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "workspaceId": self.workspace_id,
             "type": self.label_type,
@@ -478,7 +461,7 @@ class LabelsList(Response):
         from rich.console import Console
         from rich.table import Table
 
-        console = Console()
+        Console()
 
         # Header
         output = f"\n  Labels at workspace {self.workspace_id}:\n\n"
@@ -507,6 +490,7 @@ class LabelsList(Response):
 
         # Render table to string
         from io import StringIO
+
         string_io = StringIO()
         temp_console = Console(file=string_io, force_terminal=False)
         temp_console.print(table)
@@ -528,13 +512,13 @@ class OrganizationsList(Response):
         self,
         user_name: str,
         organizations: list,
-        base_workspace_url: Optional[str] = None,
+        base_workspace_url: str | None = None,
     ) -> None:
         self.user_name = user_name
         self.organizations = organizations
         self.base_workspace_url = base_workspace_url
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "userName": self.user_name,
             "organizations": self.organizations,
@@ -545,7 +529,7 @@ class OrganizationsList(Response):
         from rich.console import Console
         from rich.table import Table
 
-        console = Console()
+        Console()
 
         # Header
         output = f"\n  Organizations for user '{self.user_name}':\n\n"
@@ -583,19 +567,19 @@ class OrganizationView(Response):
 
     def __init__(
         self,
-        organization: Dict[str, Any],
-        base_workspace_url: Optional[str] = None,
+        organization: dict[str, Any],
+        base_workspace_url: str | None = None,
     ) -> None:
         self.organization = organization
         self.base_workspace_url = base_workspace_url
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return self.organization
 
     def to_console(self) -> str:
         """Format organization details."""
         org = self.organization
-        output = f"\n  Organization Details:\n\n"
+        output = "\n  Organization Details:\n\n"
         output += f"    ID:          {org.get('orgId', 'N/A')}\n"
         output += f"    Name:        {org.get('name', 'N/A')}\n"
         output += f"    Full Name:   {org.get('fullName', 'N/A')}\n"
@@ -617,11 +601,11 @@ class OrganizationAdded(Response):
 
     def __init__(
         self,
-        organization: Dict[str, Any],
+        organization: dict[str, Any],
     ) -> None:
         self.organization = organization
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return self.organization
 
     def to_console(self) -> str:
@@ -643,7 +627,7 @@ class OrganizationDeleted(Response):
     ) -> None:
         self.organization_name = organization_name
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "organizationName": self.organization_name,
         }
@@ -663,7 +647,7 @@ class OrganizationUpdated(Response):
         self.org_id = org_id
         self.organization_name = organization_name
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "orgId": self.org_id,
             "organizationName": self.organization_name,
@@ -681,14 +665,14 @@ class InfoResponse(Response):
         connection_check: int,
         version_check: int,
         credentials_check: int,
-        opts: Dict[str, Optional[str]],
+        opts: dict[str, str | None],
     ) -> None:
         self.connection_check = connection_check
         self.version_check = version_check
         self.credentials_check = credentials_check
         self.opts = opts
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for JSON/YAML output."""
         return {
             "details": {
@@ -822,9 +806,7 @@ class InfoResponse(Response):
         """Get exit code based on check results."""
         # Exit code 0 if all checks pass, 1 otherwise
         return (
-            0
-            if (self.connection_check + self.version_check + self.credentials_check == 3)
-            else 1
+            0 if (self.connection_check + self.version_check + self.credentials_check == 3) else 1
         )
 
 
@@ -838,13 +820,13 @@ class WorkspacesList(Response):
         self,
         user_name: str,
         workspaces: list,
-        base_url: Optional[str] = None,
+        base_url: str | None = None,
     ) -> None:
         self.user_name = user_name
         self.workspaces = workspaces
         self.base_url = base_url
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "userName": self.user_name,
             "workspaces": self.workspaces,
@@ -879,6 +861,7 @@ class WorkspacesList(Response):
 
         # Render table to string
         from io import StringIO
+
         string_io = StringIO()
         temp_console = Console(file=string_io, force_terminal=False)
         temp_console.print(table)
@@ -893,16 +876,16 @@ class WorkspacesList(Response):
 class WorkspaceView(Response):
     """Response for workspace view command."""
 
-    def __init__(self, workspace: Dict[str, Any]) -> None:
+    def __init__(self, workspace: dict[str, Any]) -> None:
         self.workspace = workspace
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {"workspace": self.workspace}
 
     def to_console(self) -> str:
         """Format workspace details for console output."""
         ws = self.workspace
-        output = f"\n  Workspace Details:\n\n"
+        output = "\n  Workspace Details:\n\n"
         output += f"    ID:          {ws.get('id', '')}\n"
         output += f"    Name:        {ws.get('name', '')}\n"
         output += f"    Full Name:   {ws.get('fullName', '')}\n"
@@ -926,7 +909,7 @@ class WorkspaceAdded(Response):
         self.org_name = org_name
         self.visibility = visibility
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "workspaceName": self.workspace_name,
             "orgName": self.org_name,
@@ -952,7 +935,7 @@ class WorkspaceDeleted(Response):
         self.workspace_name = workspace_name
         self.org_name = org_name
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "workspaceName": self.workspace_name,
             "orgName": self.org_name,
@@ -975,7 +958,7 @@ class WorkspaceUpdated(Response):
         self.org_name = org_name
         self.visibility = visibility
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "workspaceName": self.workspace_name,
             "orgName": self.org_name,
@@ -996,7 +979,7 @@ class ParticipantLeft(Response):
     def __init__(self, workspace_name: str) -> None:
         self.workspace_name = workspace_name
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {"workspaceName": self.workspace_name}
 
     def to_console(self) -> str:
@@ -1016,7 +999,7 @@ class ParticipantsList(Response):
         self.workspace_name = workspace_name
         self.participants = participants
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "orgName": self.org_name,
             "workspaceName": self.workspace_name,
@@ -1062,6 +1045,7 @@ class ParticipantsList(Response):
 
         # Render table to string
         from io import StringIO
+
         string_io = StringIO()
         temp_console = Console(file=string_io, force_terminal=False)
         temp_console.print(table)
@@ -1078,13 +1062,13 @@ class ParticipantAdded(Response):
 
     def __init__(
         self,
-        participant: Dict[str, Any],
+        participant: dict[str, Any],
         workspace_name: str,
     ) -> None:
         self.participant = participant
         self.workspace_name = workspace_name
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "participant": self.participant,
             "workspaceName": self.workspace_name,
@@ -1120,7 +1104,7 @@ class ParticipantDeleted(Response):
         self.name = name
         self.workspace_name = workspace_name
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "name": self.name,
             "workspaceName": self.workspace_name,
@@ -1143,7 +1127,7 @@ class ParticipantUpdated(Response):
         self.name = name
         self.role = role
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "workspaceName": self.workspace_name,
             "name": self.name,
@@ -1164,9 +1148,9 @@ class PipelinesList(Response):
         self,
         workspace: str,
         pipelines: list,
-        base_workspace_url: Optional[str] = None,
+        base_workspace_url: str | None = None,
         show_labels: bool = False,
-        pagination_info: Optional[Dict[str, Any]] = None,
+        pagination_info: dict[str, Any] | None = None,
     ) -> None:
         self.workspace = workspace
         self.pipelines = pipelines
@@ -1174,7 +1158,7 @@ class PipelinesList(Response):
         self.show_labels = show_labels
         self.pagination_info = pagination_info
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "workspaceRef": self.workspace,
             "pipelines": self.pipelines,
@@ -1209,6 +1193,7 @@ class PipelinesList(Response):
             if last_updated:
                 try:
                     from datetime import datetime
+
                     dt = datetime.fromisoformat(last_updated.replace("Z", "+00:00"))
                     last_updated_str = dt.strftime("%Y-%m-%d %H:%M:%S")
                 except:
@@ -1220,6 +1205,7 @@ class PipelinesList(Response):
 
         # Render table to string
         from io import StringIO
+
         string_io = StringIO()
         temp_console = Console(file=string_io, force_terminal=False)
         temp_console.print(table)
@@ -1252,16 +1238,16 @@ class PipelineView(Response):
     def __init__(
         self,
         workspace: str,
-        pipeline: Dict[str, Any],
-        launch: Optional[Dict[str, Any]] = None,
-        base_workspace_url: Optional[str] = None,
+        pipeline: dict[str, Any],
+        launch: dict[str, Any] | None = None,
+        base_workspace_url: str | None = None,
     ) -> None:
         self.workspace = workspace
         self.pipeline = pipeline
         self.launch = launch
         self.base_workspace_url = base_workspace_url
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         result = {
             "workspaceRef": self.workspace,
             "pipeline": self.pipeline,
@@ -1274,7 +1260,9 @@ class PipelineView(Response):
         """Format pipeline details."""
         from datetime import datetime
 
-        output = f"\n  Pipeline '{self.pipeline.get('name', '')}' at {self.workspace} workspace:\n\n"
+        output = (
+            f"\n  Pipeline '{self.pipeline.get('name', '')}' at {self.workspace} workspace:\n\n"
+        )
 
         # Display pipeline details
         output += f"    ID:          {self.pipeline.get('pipelineId', '')}\n"
@@ -1286,7 +1274,7 @@ class PipelineView(Response):
         output += f"    Repository:  {self.pipeline.get('repository', '')}\n"
 
         if self.launch:
-            output += f"\n    Launch Configuration:\n"
+            output += "\n    Launch Configuration:\n"
             compute_env = self.launch.get("computeEnv")
             if compute_env:
                 output += f"      Compute Env: {compute_env.get('name', '')} ({compute_env.get('id', '')})\n"
@@ -1305,11 +1293,19 @@ class PipelineView(Response):
 
             pre_run = self.launch.get("preRunScript")
             if pre_run:
-                output += f"      Pre-run:     {pre_run[:50]}...\n" if len(pre_run) > 50 else f"      Pre-run:     {pre_run}\n"
+                output += (
+                    f"      Pre-run:     {pre_run[:50]}...\n"
+                    if len(pre_run) > 50
+                    else f"      Pre-run:     {pre_run}\n"
+                )
 
             post_run = self.launch.get("postRunScript")
             if post_run:
-                output += f"      Post-run:    {post_run[:50]}...\n" if len(post_run) > 50 else f"      Post-run:    {post_run}\n"
+                output += (
+                    f"      Post-run:    {post_run[:50]}...\n"
+                    if len(post_run) > 50
+                    else f"      Post-run:    {post_run}\n"
+                )
 
             config_profiles = self.launch.get("configProfiles")
             if config_profiles:
@@ -1325,13 +1321,13 @@ class PipelineAdded(Response):
         self,
         workspace: str,
         pipeline_name: str,
-        pipeline_id: Optional[int] = None,
+        pipeline_id: int | None = None,
     ) -> None:
         self.workspace = workspace
         self.pipeline_name = pipeline_name
         self.pipeline_id = pipeline_id
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         result = {
             "pipelineName": self.pipeline_name,
             "workspace": self.workspace,
@@ -1358,7 +1354,7 @@ class PipelineDeleted(Response):
         self.pipeline_name = pipeline_name
         self.workspace = workspace
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "pipelineName": self.pipeline_name,
             "workspace": self.workspace,
@@ -1379,7 +1375,7 @@ class PipelineUpdated(Response):
         self.workspace = workspace
         self.pipeline_name = pipeline_name
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "pipelineName": self.pipeline_name,
             "workspace": self.workspace,
@@ -1395,13 +1391,14 @@ class PipelineExport(Response):
     def __init__(
         self,
         config: str,
-        file_path: Optional[str] = None,
+        file_path: str | None = None,
     ) -> None:
         self.config = config
         self.file_path = file_path
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         import json
+
         return json.loads(self.config)
 
     def to_console(self) -> str:
@@ -1424,7 +1421,7 @@ class DatasetsList(Response):
         self.workspace_id = workspace_id
         self.datasets = datasets
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "workspaceId": self.workspace_id,
             "datasets": self.datasets,
@@ -1432,9 +1429,10 @@ class DatasetsList(Response):
 
     def to_console(self) -> str:
         """Format datasets as a table."""
+        from datetime import datetime
+
         from rich.console import Console
         from rich.table import Table
-        from datetime import datetime
 
         # Header
         output = f"\n  Datasets at workspace {self.workspace_id}:\n\n"
@@ -1470,6 +1468,7 @@ class DatasetsList(Response):
 
         # Render table to string
         from io import StringIO
+
         string_io = StringIO()
         temp_console = Console(file=string_io, force_terminal=False)
         temp_console.print(table)
@@ -1486,14 +1485,14 @@ class DatasetView(Response):
 
     def __init__(
         self,
-        dataset: Dict[str, Any],
+        dataset: dict[str, Any],
         workspace_id: str,
     ) -> None:
         self.dataset = dataset
         self.workspace_id = workspace_id
         self.name = dataset.get("name", "")
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "workspaceId": self.workspace_id,
             "dataset": self.dataset,
@@ -1551,7 +1550,7 @@ class DatasetVersionsList(Response):
         self.workspace_id = workspace_id
         self.versions = versions
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "datasetId": self.dataset_id,
             "workspaceId": self.workspace_id,
@@ -1560,9 +1559,10 @@ class DatasetVersionsList(Response):
 
     def to_console(self) -> str:
         """Format versions as a table."""
+        from datetime import datetime
+
         from rich.console import Console
         from rich.table import Table
-        from datetime import datetime
 
         # Header
         output = f"\n  Versions for dataset {self.dataset_id}:\n\n"
@@ -1598,6 +1598,7 @@ class DatasetVersionsList(Response):
 
         # Render table to string
         from io import StringIO
+
         string_io = StringIO()
         temp_console = Console(file=string_io, force_terminal=False)
         temp_console.print(table)
@@ -1622,7 +1623,7 @@ class DatasetAdded(Response):
         self.name = name
         self.workspace_id = workspace_id
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "id": self.dataset_id,
             "name": self.name,
@@ -1648,7 +1649,7 @@ class DatasetDeleted(Response):
         self.dataset_id = dataset_id
         self.workspace_id = workspace_id
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "id": self.dataset_id,
             "workspaceId": self.workspace_id,
@@ -1671,7 +1672,7 @@ class DatasetUpdated(Response):
         self.workspace_id = workspace_id
         self.dataset_id = dataset_id
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "name": self.name,
             "workspaceId": self.workspace_id,
@@ -1695,7 +1696,7 @@ class DatasetUrl(Response):
         self.dataset_id = dataset_id
         self.workspace_id = workspace_id
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "url": self.url,
             "datasetId": self.dataset_id,
@@ -1717,7 +1718,7 @@ class DatasetDownload(Response):
         self.file_path = file_path
         self.file_name = file_name
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "filePath": self.file_path,
             "fileName": self.file_name,
@@ -1737,13 +1738,13 @@ class RunsList(Response):
         self,
         workspace: str,
         runs: list,
-        base_workspace_url: Optional[str] = None,
+        base_workspace_url: str | None = None,
     ) -> None:
         self.workspace = workspace
         self.runs = runs
         self.base_workspace_url = base_workspace_url
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "workspaceRef": self.workspace,
             "runs": self.runs,
@@ -1751,9 +1752,10 @@ class RunsList(Response):
 
     def to_console(self) -> str:
         """Format runs as a table."""
+        from datetime import datetime
+
         from rich.console import Console
         from rich.table import Table
-        from datetime import datetime
 
         # Header
         output = f"\n  Runs at {self.workspace} workspace:\n\n"
@@ -1792,6 +1794,7 @@ class RunsList(Response):
 
         # Render table to string
         from io import StringIO
+
         string_io = StringIO()
         temp_console = Console(file=string_io, force_terminal=False)
         temp_console.print(table)
@@ -1809,17 +1812,17 @@ class RunView(Response):
     def __init__(
         self,
         workspace: str,
-        general: Dict[str, Any],
+        general: dict[str, Any],
         config_files: list = None,
         config_text: str = None,
-        params: Dict[str, Any] = None,
+        params: dict[str, Any] = None,
         command: str = None,
-        status: Dict[str, Any] = None,
+        status: dict[str, Any] = None,
         processes: list = None,
-        stats: Dict[str, Any] = None,
-        load: Dict[str, Any] = None,
-        utilization: Dict[str, Any] = None,
-        base_workspace_url: Optional[str] = None,
+        stats: dict[str, Any] = None,
+        load: dict[str, Any] = None,
+        utilization: dict[str, Any] = None,
+        base_workspace_url: str | None = None,
     ) -> None:
         self.workspace = workspace
         self.general = general
@@ -1834,7 +1837,7 @@ class RunView(Response):
         self.utilization = utilization or {}
         self.base_workspace_url = base_workspace_url
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "workspaceRef": self.workspace,
             "general": self.general,
@@ -1873,7 +1876,7 @@ class RunDeleted(Response):
         self.run_id = run_id
         self.workspace = workspace
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "id": self.run_id,
             "workspace": self.workspace,
@@ -1894,7 +1897,7 @@ class RunCancelled(Response):
         self.run_id = run_id
         self.workspace = workspace
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "id": self.run_id,
             "workspace": self.workspace,
@@ -1915,7 +1918,7 @@ class TasksList(Response):
         self.run_id = run_id
         self.tasks = tasks
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "runId": self.run_id,
             "tasks": self.tasks,
@@ -1950,6 +1953,7 @@ class TasksList(Response):
 
         # Render table to string
         from io import StringIO
+
         string_io = StringIO()
         temp_console = Console(file=string_io, force_terminal=False)
         temp_console.print(table)
@@ -1972,7 +1976,7 @@ class MetricsList(Response):
         self.run_id = run_id
         self.metrics = metrics
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "runId": self.run_id,
             "metrics": self.metrics,
@@ -2013,6 +2017,7 @@ class MetricsList(Response):
 
         # Render table to string
         from io import StringIO
+
         string_io = StringIO()
         temp_console = Console(file=string_io, force_terminal=False)
         temp_console.print(table)
@@ -2022,6 +2027,7 @@ class MetricsList(Response):
         indented_table = "\n".join("    " + line for line in table_str.split("\n") if line)
 
         return output + indented_table + "\n"
+
 
 # Teams Response Classes
 
@@ -2033,15 +2039,15 @@ class TeamsList(Response):
         self,
         organization: str,
         teams: list,
-        base_workspace_url: Optional[str] = None,
-        pagination_info: Optional[Dict[str, Any]] = None,
+        base_workspace_url: str | None = None,
+        pagination_info: dict[str, Any] | None = None,
     ) -> None:
         self.organization = organization
         self.teams = teams
         self.base_workspace_url = base_workspace_url
         self.pagination_info = pagination_info
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         result = {
             "organization": self.organization,
             "teams": self.teams,
@@ -2052,9 +2058,10 @@ class TeamsList(Response):
 
     def to_console(self) -> str:
         """Format teams as a table."""
+        from io import StringIO
+
         from rich.console import Console
         from rich.table import Table
-        from io import StringIO
 
         # Header
         output = f"\n  Teams at {self.organization} organization:\n\n"
@@ -2097,7 +2104,9 @@ class TeamsList(Response):
             if page is not None:
                 output += f"\n    Showing page {page} (max results: {max_results})\n"
             elif offset is not None:
-                output += f"\n    Showing results from offset {offset} (max results: {max_results})\n"
+                output += (
+                    f"\n    Showing results from offset {offset} (max results: {max_results})\n"
+                )
 
         return output
 
@@ -2108,12 +2117,12 @@ class TeamView(Response):
     def __init__(
         self,
         organization: str,
-        team: Dict[str, Any],
+        team: dict[str, Any],
     ) -> None:
         self.organization = organization
         self.team = team
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "organization": self.organization,
             "team": self.team,
@@ -2121,7 +2130,7 @@ class TeamView(Response):
 
     def to_console(self) -> str:
         """Format team details."""
-        output = f"\n  Team Details:\n\n"
+        output = "\n  Team Details:\n\n"
         output += f"    Team ID:     {self.team.get('teamId', '')}\n"
         output += f"    Name:        {self.team.get('name', '')}\n"
         output += f"    Description: {self.team.get('description', '')}\n"
@@ -2140,7 +2149,7 @@ class TeamAdded(Response):
         self.organization = organization
         self.team_name = team_name
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "organization": self.organization,
             "teamName": self.team_name,
@@ -2161,7 +2170,7 @@ class TeamDeleted(Response):
         self.organization = organization
         self.team_ref = team_ref
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "organization": self.organization,
             "teamRef": self.team_ref,
@@ -2185,7 +2194,7 @@ class TeamMembersList(Response):
         self.team_name = team_name
         self.members = members
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "teamName": self.team_name,
             "members": self.members,
@@ -2193,9 +2202,10 @@ class TeamMembersList(Response):
 
     def to_console(self) -> str:
         """Format team members as a table."""
+        from io import StringIO
+
         from rich.console import Console
         from rich.table import Table
-        from io import StringIO
 
         # Header
         output = f"\n  Members of team '{self.team_name}':\n\n"
@@ -2237,12 +2247,12 @@ class TeamMemberAdded(Response):
     def __init__(
         self,
         team_name: str,
-        member: Dict[str, Any],
+        member: dict[str, Any],
     ) -> None:
         self.team_name = team_name
         self.member = member
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "teamName": self.team_name,
             "member": self.member,
@@ -2265,7 +2275,7 @@ class TeamMemberDeleted(Response):
         self.team_name = team_name
         self.member_ref = member_ref
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "teamName": self.team_name,
             "memberRef": self.member_ref,
@@ -2286,14 +2296,14 @@ class StudiosList(Response):
         workspace: str,
         studios: list,
         show_labels: bool = False,
-        pagination_info: Optional[Dict[str, Any]] = None,
+        pagination_info: dict[str, Any] | None = None,
     ) -> None:
         self.workspace = workspace
         self.studios = studios
         self.show_labels = show_labels
         self.pagination_info = pagination_info
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "workspaceRef": self.workspace,
             "studios": self.studios,
@@ -2301,10 +2311,11 @@ class StudiosList(Response):
 
     def to_console(self) -> str:
         """Format studios as a table."""
-        from rich.console import Console
-        from rich.table import Table
         from datetime import datetime
         from io import StringIO
+
+        from rich.console import Console
+        from rich.table import Table
 
         # Header
         output = f"\n  Studios at {self.workspace} workspace:\n\n"
@@ -2340,7 +2351,11 @@ class StudiosList(Response):
 
             if self.show_labels:
                 labels = studio.get("labels", [])
-                labels_str = ", ".join([f"{l.get('name')}={l.get('value', '')}" for l in labels]) if labels else "-"
+                labels_str = (
+                    ", ".join([f"{l.get('name')}={l.get('value', '')}" for l in labels])
+                    if labels
+                    else "-"
+                )
                 row_data.append(labels_str)
 
             table.add_row(*row_data)
@@ -2378,12 +2393,12 @@ class StudioView(Response):
     def __init__(
         self,
         workspace: str,
-        studio: Dict[str, Any],
+        studio: dict[str, Any],
     ) -> None:
         self.workspace = workspace
         self.studio = studio
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "workspaceRef": self.workspace,
             "studio": self.studio,
@@ -2408,7 +2423,7 @@ class StudioView(Response):
 
         compute_env = self.studio.get("computeEnv", {})
         if compute_env:
-            output += f"\n    Compute Environment:\n"
+            output += "\n    Compute Environment:\n"
             output += f"      Name:     {compute_env.get('name', '')}\n"
             output += f"      Platform: {compute_env.get('platform', '')}\n"
             if compute_env.get("region"):
@@ -2416,13 +2431,13 @@ class StudioView(Response):
 
         template = self.studio.get("template", {})
         if template:
-            output += f"\n    Template:\n"
+            output += "\n    Template:\n"
             output += f"      Repository: {template.get('repository', '')}\n"
             output += f"      Icon:       {template.get('icon', '')}\n"
 
         configuration = self.studio.get("configuration", {})
         if configuration:
-            output += f"\n    Configuration:\n"
+            output += "\n    Configuration:\n"
             output += f"      CPU:    {configuration.get('cpu', 0)}\n"
             output += f"      Memory: {configuration.get('memory', 0)} MB\n"
             output += f"      GPU:    {configuration.get('gpu', 0)}\n"
@@ -2441,7 +2456,7 @@ class StudioStarted(Response):
         session_id: str,
         studio_name: str,
         workspace: str,
-        workspace_id: Optional[int] = None,
+        workspace_id: int | None = None,
         job_submitted: bool = False,
     ) -> None:
         self.session_id = session_id
@@ -2450,7 +2465,7 @@ class StudioStarted(Response):
         self.workspace_id = workspace_id
         self.job_submitted = job_submitted
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         result = {
             "sessionId": self.session_id,
             "studioName": self.studio_name,
@@ -2474,7 +2489,7 @@ class StudioStopped(Response):
         session_id: str,
         studio_name: str,
         workspace: str,
-        workspace_id: Optional[int] = None,
+        workspace_id: int | None = None,
         job_submitted: bool = False,
     ) -> None:
         self.session_id = session_id
@@ -2483,7 +2498,7 @@ class StudioStopped(Response):
         self.workspace_id = workspace_id
         self.job_submitted = job_submitted
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         result = {
             "sessionId": self.session_id,
             "studioName": self.studio_name,
@@ -2510,7 +2525,7 @@ class StudioDeleted(Response):
         self.session_id = session_id
         self.workspace = workspace
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "sessionId": self.session_id,
             "workspaceRef": self.workspace,
@@ -2528,14 +2543,14 @@ class StudioCheckpoints(Response):
         session_id: str,
         workspace: str,
         checkpoints: list,
-        pagination_info: Optional[Dict[str, Any]] = None,
+        pagination_info: dict[str, Any] | None = None,
     ) -> None:
         self.session_id = session_id
         self.workspace = workspace
         self.checkpoints = checkpoints
         self.pagination_info = pagination_info
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "sessionId": self.session_id,
             "workspaceRef": self.workspace,
@@ -2544,10 +2559,11 @@ class StudioCheckpoints(Response):
 
     def to_console(self) -> str:
         """Format checkpoints as a table."""
-        from rich.console import Console
-        from rich.table import Table
         from datetime import datetime
         from io import StringIO
+
+        from rich.console import Console
+        from rich.table import Table
 
         # Header
         output = f"\n  Checkpoints for studio {self.session_id}:\n\n"
@@ -2618,13 +2634,13 @@ class MembersList(Response):
         self,
         organization: str,
         members: list,
-        pagination_info: Optional[Dict[str, Any]] = None,
+        pagination_info: dict[str, Any] | None = None,
     ) -> None:
         self.organization = organization
         self.members = members
         self.pagination_info = pagination_info
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         result = {
             "organization": self.organization,
             "members": self.members,
@@ -2635,9 +2651,10 @@ class MembersList(Response):
 
     def to_console(self) -> str:
         """Format organization members as a table."""
+        from io import StringIO
+
         from rich.console import Console
         from rich.table import Table
-        from io import StringIO
 
         # Header
         output = f"\n  Members at {self.organization} organization:\n\n"
@@ -2680,7 +2697,9 @@ class MembersList(Response):
             if page is not None:
                 output += f"\n    Showing page {page} (max results: {max_results})\n"
             elif offset is not None:
-                output += f"\n    Showing results from offset {offset} (max results: {max_results})\n"
+                output += (
+                    f"\n    Showing results from offset {offset} (max results: {max_results})\n"
+                )
 
         return output
 
@@ -2691,12 +2710,12 @@ class MemberAdded(Response):
     def __init__(
         self,
         organization: str,
-        member: Dict[str, Any],
+        member: dict[str, Any],
     ) -> None:
         self.organization = organization
         self.member = member
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "organization": self.organization,
             "member": self.member,
@@ -2719,7 +2738,7 @@ class MemberDeleted(Response):
         self.user_ref = user_ref
         self.organization = organization
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "userRef": self.user_ref,
             "organization": self.organization,
@@ -2742,7 +2761,7 @@ class MemberUpdated(Response):
         self.organization = organization
         self.role = role
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "userRef": self.user_ref,
             "organization": self.organization,
@@ -2762,7 +2781,7 @@ class MemberLeft(Response):
     ) -> None:
         self.organization = organization
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "organization": self.organization,
         }
@@ -2781,13 +2800,13 @@ class ActionsList(Response):
         self,
         workspace: str,
         actions: list,
-        base_workspace_url: Optional[str] = None,
+        base_workspace_url: str | None = None,
     ) -> None:
         self.workspace = workspace
         self.actions = actions
         self.base_workspace_url = base_workspace_url
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "workspaceRef": self.workspace,
             "actions": self.actions,
@@ -2795,10 +2814,11 @@ class ActionsList(Response):
 
     def to_console(self) -> str:
         """Format actions as a table."""
-        from rich.console import Console
-        from rich.table import Table
         from datetime import datetime
         from io import StringIO
+
+        from rich.console import Console
+        from rich.table import Table
 
         # Header
         output = f"\n  Actions at {self.workspace} workspace:\n\n"
@@ -2853,14 +2873,14 @@ class ActionView(Response):
 
     def __init__(
         self,
-        action: Dict[str, Any],
+        action: dict[str, Any],
         workspace: str,
     ) -> None:
         self.action = action
         self.workspace = workspace
         self.name = action.get("name", "")
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "workspaceRef": self.workspace,
             "action": self.action,
@@ -2876,7 +2896,9 @@ class ActionView(Response):
         action_id = self.action.get("id", "")
         source = self.action.get("source", "")
         status = self.action.get("status", "")
-        pipeline = self.action.get("pipeline", "") or self.action.get("launch", {}).get("pipeline", "")
+        pipeline = self.action.get("pipeline", "") or self.action.get("launch", {}).get(
+            "pipeline", ""
+        )
         hook_url = self.action.get("hookUrl", "")
         date_created = self.action.get("dateCreated", "")
         last_updated = self.action.get("lastUpdated", "")
@@ -2918,7 +2940,7 @@ class ActionView(Response):
         # Display launch configuration if available
         launch = self.action.get("launch")
         if launch:
-            output += f"\n    Launch Configuration:\n"
+            output += "\n    Launch Configuration:\n"
             compute_env = launch.get("computeEnv")
             if compute_env:
                 output += f"      Compute Env: {compute_env.get('name', '')} ({compute_env.get('id', '')})\n"
@@ -2934,7 +2956,7 @@ class ActionView(Response):
         # Display event information if available
         event = self.action.get("event")
         if event:
-            output += f"\n    Last Event:\n"
+            output += "\n    Last Event:\n"
             ref = event.get("ref")
             if ref:
                 output += f"      Ref:         {ref}\n"
@@ -2955,13 +2977,13 @@ class ActionAdded(Response):
         self,
         action_name: str,
         workspace: str,
-        action_id: Optional[str] = None,
+        action_id: str | None = None,
     ) -> None:
         self.action_name = action_name
         self.workspace = workspace
         self.action_id = action_id
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         result = {
             "actionName": self.action_name,
             "workspace": self.workspace,
@@ -2988,7 +3010,7 @@ class ActionDeleted(Response):
         self.action_name = action_name
         self.workspace = workspace
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "actionName": self.action_name,
             "workspace": self.workspace,
@@ -3005,13 +3027,13 @@ class ActionUpdated(Response):
         self,
         action_name: str,
         workspace: str,
-        action_id: Optional[str] = None,
+        action_id: str | None = None,
     ) -> None:
         self.action_name = action_name
         self.workspace = workspace
         self.action_id = action_id
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         result = {
             "actionName": self.action_name,
             "workspace": self.workspace,
@@ -3034,13 +3056,13 @@ class CollaboratorsList(Response):
         self,
         org_id: int,
         collaborators: list,
-        pagination_info: Optional[Dict[str, Any]] = None,
+        pagination_info: dict[str, Any] | None = None,
     ) -> None:
         self.org_id = org_id
         self.collaborators = collaborators
         self.pagination_info = pagination_info
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         result = {
             "orgId": self.org_id,
             "collaborators": self.collaborators,
@@ -3051,9 +3073,10 @@ class CollaboratorsList(Response):
 
     def to_console(self) -> str:
         """Format collaborators as a table."""
+        from io import StringIO
+
         from rich.console import Console
         from rich.table import Table
-        from io import StringIO
 
         # Header
         output = f"\n  Collaborators in organization {self.org_id}:\n\n"
@@ -3110,13 +3133,13 @@ class CollaboratorAdded(Response):
         self,
         org_id: int,
         user_name: str,
-        email: Optional[str] = None,
+        email: str | None = None,
     ) -> None:
         self.org_id = org_id
         self.user_name = user_name
         self.email = email
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         result = {
             "orgId": self.org_id,
             "userName": self.user_name,
@@ -3141,7 +3164,7 @@ class CollaboratorDeleted(Response):
         self.org_id = org_id
         self.user_name = user_name
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "orgId": self.org_id,
             "userName": self.user_name,
@@ -3160,16 +3183,16 @@ class LaunchSubmitted(Response):
     def __init__(
         self,
         workflow_id: str,
-        workspace_id: Optional[int] = None,
-        base_url: Optional[str] = None,
-        workspace_ref: Optional[str] = None,
+        workspace_id: int | None = None,
+        base_url: str | None = None,
+        workspace_ref: str | None = None,
     ) -> None:
         self.workflow_id = workflow_id
         self.workspace_id = workspace_id
         self.base_url = base_url
         self.workspace_ref = workspace_ref or "user"
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         result = {
             "workflowId": self.workflow_id,
             "workspaceRef": self.workspace_ref,

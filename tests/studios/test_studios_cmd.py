@@ -315,7 +315,9 @@ class TestStudiosViewCmd:
         )
 
         # Run the command
-        out = exec_cmd("studios", "view", "-w", "75887156211589", "-i", "3e8370e7", output_format=output_format)
+        out = exec_cmd(
+            "studios", "view", "-w", "75887156211589", "-i", "3e8370e7", output_format=output_format
+        )
 
         # Assertions
         assert out.exit_code == 0
@@ -416,7 +418,15 @@ class TestStudiosStartCmd:
         )
 
         # Run the command
-        out = exec_cmd("studios", "start", "-w", "75887156211589", "-i", "3e8370e7", output_format=output_format)
+        out = exec_cmd(
+            "studios",
+            "start",
+            "-w",
+            "75887156211589",
+            "-i",
+            "3e8370e7",
+            output_format=output_format,
+        )
 
         # Assertions
         assert out.exit_code == 0
@@ -495,7 +505,9 @@ class TestStudiosStopCmd:
         )
 
         # Run the command
-        out = exec_cmd("studios", "stop", "-w", "75887156211589", "-i", "3e8370e7", output_format=output_format)
+        out = exec_cmd(
+            "studios", "stop", "-w", "75887156211589", "-i", "3e8370e7", output_format=output_format
+        )
 
         # Assertions
         assert out.exit_code == 0
@@ -565,7 +577,15 @@ class TestStudiosDeleteCmd:
         ).respond_with_data("", status=200)
 
         # Run the command
-        out = exec_cmd("studios", "delete", "-w", "75887156211589", "-i", "3e8370e7", output_format=output_format)
+        out = exec_cmd(
+            "studios",
+            "delete",
+            "-w",
+            "75887156211589",
+            "-i",
+            "3e8370e7",
+            output_format=output_format,
+        )
 
         # Assertions
         assert out.exit_code == 0
@@ -662,7 +682,15 @@ class TestStudiosCheckpointsCmd:
         )
 
         # Run the command
-        out = exec_cmd("studios", "checkpoints", "-w", "75887156211589", "-i", "3e8370e7", output_format=output_format)
+        out = exec_cmd(
+            "studios",
+            "checkpoints",
+            "-w",
+            "75887156211589",
+            "-i",
+            "3e8370e7",
+            output_format=output_format,
+        )
 
         # Assertions
         assert out.exit_code == 0

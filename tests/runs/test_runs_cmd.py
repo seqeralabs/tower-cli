@@ -282,9 +282,9 @@ class TestRunsCmd:
         # Setup mock HTTP expectations
         workflow_view = load_resource("workflow_view")
 
-        httpserver.expect_request(
-            "/workflow/5mDfiUtqyptDib", method="GET"
-        ).respond_with_data(workflow_view, status=200, content_type="application/json")
+        httpserver.expect_request("/workflow/5mDfiUtqyptDib", method="GET").respond_with_data(
+            workflow_view, status=200, content_type="application/json"
+        )
 
         user_response = {
             "needConsent": False,
@@ -381,4 +381,8 @@ class TestRunsCmd:
         # Assertions - should fail
         assert out.exit_code == 1
         assert out.stdout == ""
-        assert "401" in out.stderr or "Unauthorized" in out.stderr or "authentication" in out.stderr.lower()
+        assert (
+            "401" in out.stderr
+            or "Unauthorized" in out.stderr
+            or "authentication" in out.stderr.lower()
+        )

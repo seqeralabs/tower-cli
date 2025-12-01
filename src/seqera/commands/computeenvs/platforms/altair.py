@@ -2,12 +2,10 @@
 Altair PBS Pro platform implementation for compute environments.
 """
 
-import sys
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Annotated
 
 import typer
-from typing_extensions import Annotated
 
 from seqera.commands.computeenvs import (
     USER_WORKSPACE_NAME,
@@ -19,7 +17,7 @@ from seqera.main import get_client, get_output_format
 from seqera.responses.computeenvs import ComputeEnvAdded
 
 
-def read_file_content(file_path: Optional[Path]) -> Optional[str]:
+def read_file_content(file_path: Path | None) -> str | None:
     """Read content from a file if provided."""
     if file_path is None:
         return None
@@ -29,7 +27,7 @@ def read_file_content(file_path: Optional[Path]) -> Optional[str]:
         raise SeqeraError(f"Failed to read file {file_path}: {e}")
 
 
-def parse_environment_variables(env_vars: Optional[List[str]]) -> Optional[List[Dict[str, any]]]:
+def parse_environment_variables(env_vars: list[str] | None) -> list[dict[str, any]] | None:
     """
     Parse environment variables from key=value format.
 
@@ -63,17 +61,19 @@ def parse_environment_variables(env_vars: Optional[List[str]]) -> Optional[List[
             var_name = key[5:]
             compute = True
 
-        result.append({
-            "name": var_name,
-            "value": value,
-            "head": head,
-            "compute": compute,
-        })
+        result.append(
+            {
+                "name": var_name,
+                "value": value,
+                "head": head,
+                "compute": compute,
+            }
+        )
 
     return result
 
 
-def find_credentials(client, platform_id: str, credentials_ref: Optional[str]) -> Optional[str]:
+def find_credentials(client, platform_id: str, credentials_ref: str | None) -> str | None:
     """
     Find credentials for the platform.
 
@@ -89,9 +89,7 @@ def find_credentials(client, platform_id: str, credentials_ref: Optional[str]) -
             if cred.get("id") == credentials_ref or cred.get("name") == credentials_ref:
                 return cred.get("id")
 
-        raise SeqeraError(
-            f"Credentials '{credentials_ref}' not found for platform '{platform_id}'"
-        )
+        raise SeqeraError(f"Credentials '{credentials_ref}' not found for platform '{platform_id}'")
     else:
         # Auto-detect credentials
         response = client.get("/credentials", params={"platformId": platform_id})
@@ -111,19 +109,80 @@ def find_credentials(client, platform_id: str, credentials_ref: Optional[str]) -
 def add_altair(
     name: Annotated[str, typer.Option("-n", "--name", help="Compute environment name")],
     work_dir: Annotated[str, typer.Option("--work-dir", help="Work directory")],
-    head_queue: Annotated[str, typer.Option("-q", "--head-queue", help="The name of the queue on the cluster used to launch the execution of the Nextflow pipeline")],
-    user_name: Annotated[Optional[str], typer.Option("-u", "--user-name", help="The username on the cluster used to launch the pipeline execution.")] = None,
-    host_name: Annotated[Optional[str], typer.Option("-H", "--host-name", help="The pipeline execution is launched by connecting via SSH to the hostname specified. This usually is the cluster login node. Local IP addresses e.g. 127.*, 172.*, 192.*, etc. are not allowed, use a fully qualified hostname instead.")] = None,
-    port: Annotated[Optional[int], typer.Option("-p", "--port", help="Port number for the login connection.")] = None,
-    compute_queue: Annotated[Optional[str], typer.Option("--compute-queue", help="The name of queue on the cluster to which pipeline jobs are submitted. This queue can be overridden by the pipeline configuration.")] = None,
-    launch_dir: Annotated[Optional[str], typer.Option("--launch-dir", help="The directory where Nextflow runs. It must be an absolute directory and the user should have read-write access permissions to it [default: pipeline work directory].")] = None,
-    max_queue_size: Annotated[Optional[int], typer.Option("--max-queue-size", help="This option limits the number of jobs Nextflow can submit to the Altair PBS queue at the same time [default: 100].")] = None,
-    head_job_options: Annotated[Optional[str], typer.Option("--head-job-options", help="Altair PBS submit options for the Nextflow head job. These options are added to the 'qsub' command run by Tower to launch the pipeline execution.")] = None,
-    pre_run: Annotated[Optional[Path], typer.Option("--pre-run", help="Pre-run script.")] = None,
-    post_run: Annotated[Optional[Path], typer.Option("--post-run", help="Post-run script.")] = None,
-    nextflow_config: Annotated[Optional[Path], typer.Option("--nextflow-config", help="Nextflow config")] = None,
-    env: Annotated[Optional[List[str]], typer.Option("-e", "--env", help="Add environment variables. By default are only added to the Nextflow head job process, if you want to add them to the process task prefix the name with 'compute:' or 'both:' if you want to make it available to both locations.")] = None,
-    credentials: Annotated[Optional[str], typer.Option("-c", "--credentials", help="Credentials identifier [default: workspace credentials].")] = None,
+    head_queue: Annotated[
+        str,
+        typer.Option(
+            "-q",
+            "--head-queue",
+            help="The name of the queue on the cluster used to launch the execution of the Nextflow pipeline",
+        ),
+    ],
+    user_name: Annotated[
+        str | None,
+        typer.Option(
+            "-u",
+            "--user-name",
+            help="The username on the cluster used to launch the pipeline execution.",
+        ),
+    ] = None,
+    host_name: Annotated[
+        str | None,
+        typer.Option(
+            "-H",
+            "--host-name",
+            help="The pipeline execution is launched by connecting via SSH to the hostname specified. This usually is the cluster login node. Local IP addresses e.g. 127.*, 172.*, 192.*, etc. are not allowed, use a fully qualified hostname instead.",
+        ),
+    ] = None,
+    port: Annotated[
+        int | None, typer.Option("-p", "--port", help="Port number for the login connection.")
+    ] = None,
+    compute_queue: Annotated[
+        str | None,
+        typer.Option(
+            "--compute-queue",
+            help="The name of queue on the cluster to which pipeline jobs are submitted. This queue can be overridden by the pipeline configuration.",
+        ),
+    ] = None,
+    launch_dir: Annotated[
+        str | None,
+        typer.Option(
+            "--launch-dir",
+            help="The directory where Nextflow runs. It must be an absolute directory and the user should have read-write access permissions to it [default: pipeline work directory].",
+        ),
+    ] = None,
+    max_queue_size: Annotated[
+        int | None,
+        typer.Option(
+            "--max-queue-size",
+            help="This option limits the number of jobs Nextflow can submit to the Altair PBS queue at the same time [default: 100].",
+        ),
+    ] = None,
+    head_job_options: Annotated[
+        str | None,
+        typer.Option(
+            "--head-job-options",
+            help="Altair PBS submit options for the Nextflow head job. These options are added to the 'qsub' command run by Tower to launch the pipeline execution.",
+        ),
+    ] = None,
+    pre_run: Annotated[Path | None, typer.Option("--pre-run", help="Pre-run script.")] = None,
+    post_run: Annotated[Path | None, typer.Option("--post-run", help="Post-run script.")] = None,
+    nextflow_config: Annotated[
+        Path | None, typer.Option("--nextflow-config", help="Nextflow config")
+    ] = None,
+    env: Annotated[
+        list[str] | None,
+        typer.Option(
+            "-e",
+            "--env",
+            help="Add environment variables. By default are only added to the Nextflow head job process, if you want to add them to the process task prefix the name with 'compute:' or 'both:' if you want to make it available to both locations.",
+        ),
+    ] = None,
+    credentials: Annotated[
+        str | None,
+        typer.Option(
+            "-c", "--credentials", help="Credentials identifier [default: workspace credentials]."
+        ),
+    ] = None,
 ) -> None:
     """Add new Altair PBS Pro compute environment."""
     try:

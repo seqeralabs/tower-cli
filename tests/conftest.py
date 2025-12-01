@@ -8,15 +8,15 @@ This module provides test infrastructure similar to BaseCmdTest.java:
 """
 
 import json
+from collections.abc import Callable
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any
 
 import pytest
 from pytest_httpserver import HTTPServer
 from typer.testing import CliRunner
 
 from seqera.main import app
-from seqera.utils.output import OutputFormat
 
 
 @pytest.fixture
@@ -50,7 +50,7 @@ def auth_token() -> str:
 
 
 @pytest.fixture
-def base_args(api_url: str, auth_token: str) -> List[str]:
+def base_args(api_url: str, auth_token: str) -> list[str]:
     """
     Provide base CLI arguments for API URL and authentication.
 
@@ -83,8 +83,8 @@ class ExecOut:
 
 def exec_command(
     cli_runner: CliRunner,
-    base_args: List[str],
-    command_args: List[str],
+    base_args: list[str],
+    command_args: list[str],
     output_format: str = "console",
 ) -> ExecOut:
     """
@@ -125,7 +125,7 @@ def exec_command(
 
 
 @pytest.fixture
-def exec_cmd(cli_runner: CliRunner, base_args: List[str]) -> Callable:
+def exec_cmd(cli_runner: CliRunner, base_args: list[str]) -> Callable:
     """
     Provide a function to execute CLI commands with base args pre-applied.
 
@@ -193,7 +193,7 @@ def load_test_resource(name: str, ext: str = "json") -> bytes:
 
 def assert_output_format(
     exec_out: ExecOut,
-    expected_data: Dict[str, Any],
+    expected_data: dict[str, Any],
     output_format: str,
 ) -> None:
     """
@@ -207,7 +207,9 @@ def assert_output_format(
         output_format: Output format used
     """
     # Check exit code
-    assert exec_out.exit_code == 0, f"Command failed with exit code {exec_out.exit_code}: {exec_out.stderr}"
+    assert (
+        exec_out.exit_code == 0
+    ), f"Command failed with exit code {exec_out.exit_code}: {exec_out.stderr}"
 
     # Check stderr is empty on success
     assert exec_out.stderr == "", f"Unexpected stderr output: {exec_out.stderr}"

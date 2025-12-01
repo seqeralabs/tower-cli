@@ -5,13 +5,11 @@ Tests the 'info' command that displays system information and health status.
 """
 
 import json
+from collections.abc import Callable
 from pathlib import Path
-from typing import Callable
 
 import pytest
 from pytest_httpserver import HTTPServer
-
-from tests.conftest import ExecOut, exec_command
 
 
 def load_test_resource(name: str) -> dict:

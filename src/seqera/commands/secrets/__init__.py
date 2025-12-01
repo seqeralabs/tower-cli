@@ -5,10 +5,9 @@ Manage pipeline secrets in the workspace.
 """
 
 import sys
-from typing import Optional
+from typing import Annotated, Optional
 
 import typer
-from typing_extensions import Annotated
 
 from seqera.api.client import SeqeraClient
 from seqera.exceptions import (
@@ -63,7 +62,7 @@ def output_response(response: object, output_format: OutputFormat) -> None:
         output_console(response.to_console())
 
 
-def get_secret_by_name(client: SeqeraClient, name: str) -> Optional[dict]:
+def get_secret_by_name(client: SeqeraClient, name: str) -> dict | None:
     """
     Find a secret by name.
 

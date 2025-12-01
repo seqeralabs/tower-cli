@@ -4,14 +4,14 @@ Seqera Platform API Client
 This module provides the HTTP client for interacting with the Seqera Platform API.
 """
 
-from typing import Any, Dict, Optional
+from typing import Any
 from urllib.parse import urljoin
 
 import httpx
 
 from seqera.exceptions import (
-    AuthenticationError,
     ApiError,
+    AuthenticationError,
     NotFoundError,
     ValidationError,
 )
@@ -68,7 +68,7 @@ class SeqeraClient:
             verify=not insecure,
         )
 
-    def _handle_response(self, response: httpx.Response) -> Dict[str, Any]:
+    def _handle_response(self, response: httpx.Response) -> dict[str, Any]:
         """
         Handle HTTP response and convert errors to exceptions.
 
@@ -85,12 +85,15 @@ class SeqeraClient:
             ApiError: For other HTTP errors
         """
         if self.verbose:
-            print(f"[HTTP] {response.request.method} {response.url}", file=__import__('sys').stderr)
-            print(f"[HTTP] Status: {response.status_code}", file=__import__('sys').stderr)
+            print(f"[HTTP] {response.request.method} {response.url}", file=__import__("sys").stderr)
+            print(f"[HTTP] Status: {response.status_code}", file=__import__("sys").stderr)
             if response.request.content:
-                print(f"[HTTP] Request: {response.request.content.decode()}", file=__import__('sys').stderr)
+                print(
+                    f"[HTTP] Request: {response.request.content.decode()}",
+                    file=__import__("sys").stderr,
+                )
             if response.content:
-                print(f"[HTTP] Response: {response.text}", file=__import__('sys').stderr)
+                print(f"[HTTP] Response: {response.text}", file=__import__("sys").stderr)
 
         # Handle success responses
         if 200 <= response.status_code < 300:
@@ -127,8 +130,8 @@ class SeqeraClient:
     def get(
         self,
         endpoint: str,
-        params: Optional[Dict[str, Any]] = None,
-    ) -> Dict[str, Any]:
+        params: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
         """
         Perform a GET request.
 
@@ -139,16 +142,20 @@ class SeqeraClient:
         Returns:
             Parsed JSON response
         """
-        url = endpoint if endpoint.startswith("http") else urljoin(self.base_url + "/", endpoint.lstrip("/"))
+        url = (
+            endpoint
+            if endpoint.startswith("http")
+            else urljoin(self.base_url + "/", endpoint.lstrip("/"))
+        )
         response = self.client.get(url, params=params)
         return self._handle_response(response)
 
     def post(
         self,
         endpoint: str,
-        json: Optional[Dict[str, Any]] = None,
-        params: Optional[Dict[str, Any]] = None,
-    ) -> Dict[str, Any]:
+        json: dict[str, Any] | None = None,
+        params: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
         """
         Perform a POST request.
 
@@ -160,16 +167,20 @@ class SeqeraClient:
         Returns:
             Parsed JSON response
         """
-        url = endpoint if endpoint.startswith("http") else urljoin(self.base_url + "/", endpoint.lstrip("/"))
+        url = (
+            endpoint
+            if endpoint.startswith("http")
+            else urljoin(self.base_url + "/", endpoint.lstrip("/"))
+        )
         response = self.client.post(url, json=json, params=params)
         return self._handle_response(response)
 
     def put(
         self,
         endpoint: str,
-        json: Optional[Dict[str, Any]] = None,
-        params: Optional[Dict[str, Any]] = None,
-    ) -> Dict[str, Any]:
+        json: dict[str, Any] | None = None,
+        params: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
         """
         Perform a PUT request.
 
@@ -181,15 +192,19 @@ class SeqeraClient:
         Returns:
             Parsed JSON response
         """
-        url = endpoint if endpoint.startswith("http") else urljoin(self.base_url + "/", endpoint.lstrip("/"))
+        url = (
+            endpoint
+            if endpoint.startswith("http")
+            else urljoin(self.base_url + "/", endpoint.lstrip("/"))
+        )
         response = self.client.put(url, json=json, params=params)
         return self._handle_response(response)
 
     def delete(
         self,
         endpoint: str,
-        params: Optional[Dict[str, Any]] = None,
-    ) -> Dict[str, Any]:
+        params: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
         """
         Perform a DELETE request.
 
@@ -200,7 +215,11 @@ class SeqeraClient:
         Returns:
             Parsed JSON response
         """
-        url = endpoint if endpoint.startswith("http") else urljoin(self.base_url + "/", endpoint.lstrip("/"))
+        url = (
+            endpoint
+            if endpoint.startswith("http")
+            else urljoin(self.base_url + "/", endpoint.lstrip("/"))
+        )
         response = self.client.delete(url, params=params)
         return self._handle_response(response)
 

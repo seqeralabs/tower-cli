@@ -6,46 +6,46 @@ Forge mode: Seqera creates Azure resources automatically.
 
 import sys
 from pathlib import Path
-from typing import List, Optional
+from typing import Annotated
 
 import typer
-from typing_extensions import Annotated
 
 from seqera.main import get_client, get_output_format
 from seqera.responses.computeenvs import ComputeEnvAdded
-from seqera.exceptions import SeqeraError
 from seqera.utils.output import output_error
 
 
-def read_file_content(file_path: Optional[Path]) -> Optional[str]:
+def read_file_content(file_path: Path | None) -> str | None:
     """Read and return the content of a file."""
     if file_path is None:
         return None
     try:
-        with open(file_path, 'r') as f:
+        with open(file_path) as f:
             return f.read()
     except Exception as e:
         output_error(f"Failed to read file {file_path}: {e}")
         sys.exit(1)
 
 
-def parse_environment_variables(env_vars: Optional[List[str]]) -> Optional[List[dict]]:
+def parse_environment_variables(env_vars: list[str] | None) -> list[dict] | None:
     """Parse environment variables from key=value format."""
     if not env_vars:
         return None
 
     result = []
     for env in env_vars:
-        if '=' not in env:
+        if "=" not in env:
             output_error(f"Invalid environment variable format: {env}. Expected key=value")
             sys.exit(1)
-        key, value = env.split('=', 1)
-        result.append({
-            "name": key,
-            "value": value,
-            "head": False,
-            "compute": True,
-        })
+        key, value = env.split("=", 1)
+        result.append(
+            {
+                "name": key,
+                "value": value,
+                "head": False,
+                "compute": True,
+            }
+        )
     return result
 
 
@@ -60,70 +60,103 @@ def add_azure_forge(
     ],
     location: Annotated[
         str,
-        typer.Option("-l", "--location", help="The Azure location where the workload will be deployed"),
+        typer.Option(
+            "-l", "--location", help="The Azure location where the workload will be deployed"
+        ),
     ],
     vm_count: Annotated[
         int,
-        typer.Option("--vm-count", help="The number of virtual machines in this pool. When autoscaling feature is enabled, this option represents the maximum number of virtual machines to which the pool can grow and automatically scales to zero when unused"),
+        typer.Option(
+            "--vm-count",
+            help="The number of virtual machines in this pool. When autoscaling feature is enabled, this option represents the maximum number of virtual machines to which the pool can grow and automatically scales to zero when unused",
+        ),
     ],
     vm_type: Annotated[
-        Optional[str],
-        typer.Option("--vm-type", help="Specify the virtual machine type used by this pool. It must be a valid Azure Batch VM type [default: Standard_D4_v3]"),
+        str | None,
+        typer.Option(
+            "--vm-type",
+            help="Specify the virtual machine type used by this pool. It must be a valid Azure Batch VM type [default: Standard_D4_v3]",
+        ),
     ] = None,
     no_auto_scale: Annotated[
         bool,
-        typer.Option("--no-auto-scale", help="Disable pool autoscaling which automatically adjust the pool size depending the number submitted jobs and scale to zero when the pool is unused"),
+        typer.Option(
+            "--no-auto-scale",
+            help="Disable pool autoscaling which automatically adjust the pool size depending the number submitted jobs and scale to zero when the pool is unused",
+        ),
     ] = False,
     preserve_resources: Annotated[
         bool,
-        typer.Option("--preserve-resources", help="Enable this if you want to preserve the Batch compute pool created by Tower independently from the lifecycle of this compute environment"),
+        typer.Option(
+            "--preserve-resources",
+            help="Enable this if you want to preserve the Batch compute pool created by Tower independently from the lifecycle of this compute environment",
+        ),
     ] = False,
     registry_credentials: Annotated[
-        Optional[List[str]],
-        typer.Option("--registry-credentials", help="Container registry credentials name (can be specified multiple times)"),
+        list[str] | None,
+        typer.Option(
+            "--registry-credentials",
+            help="Container registry credentials name (can be specified multiple times)",
+        ),
     ] = None,
     fusion_v2: Annotated[
         bool,
-        typer.Option("--fusion-v2", help="With Fusion v2 enabled, Azure blob containers specified in the pipeline work directory and blob containers within the Azure storage account will be accessible in the compute nodes storage (requires Wave containers service)"),
+        typer.Option(
+            "--fusion-v2",
+            help="With Fusion v2 enabled, Azure blob containers specified in the pipeline work directory and blob containers within the Azure storage account will be accessible in the compute nodes storage (requires Wave containers service)",
+        ),
     ] = False,
     wave: Annotated[
         bool,
-        typer.Option("--wave", help="Allow access to private container repositories and the provisioning of containers in your Nextflow pipelines via the Wave containers service"),
+        typer.Option(
+            "--wave",
+            help="Allow access to private container repositories and the provisioning of containers in your Nextflow pipelines via the Wave containers service",
+        ),
     ] = False,
     # Advanced options
     jobs_cleanup: Annotated[
-        Optional[str],
-        typer.Option("--jobs-cleanup", help="Enable the automatic deletion of Batch jobs created by the pipeline execution (ON_SUCCESS, ALWAYS, NEVER)"),
+        str | None,
+        typer.Option(
+            "--jobs-cleanup",
+            help="Enable the automatic deletion of Batch jobs created by the pipeline execution (ON_SUCCESS, ALWAYS, NEVER)",
+        ),
     ] = None,
     token_duration: Annotated[
-        Optional[str],
-        typer.Option("--token-duration", help="The duration of the shared access signature token created by Nextflow when the 'sasToken' option is not specified [default: 12h]"),
+        str | None,
+        typer.Option(
+            "--token-duration",
+            help="The duration of the shared access signature token created by Nextflow when the 'sasToken' option is not specified [default: 12h]",
+        ),
     ] = None,
     # Common platform options
     pre_run: Annotated[
-        Optional[Path],
+        Path | None,
         typer.Option("--pre-run", help="Pre-run script file"),
     ] = None,
     post_run: Annotated[
-        Optional[Path],
+        Path | None,
         typer.Option("--post-run", help="Post-run script file"),
     ] = None,
     environment: Annotated[
-        Optional[List[str]],
-        typer.Option("--environment", "-e", help="Environment variables (key=value format, can be specified multiple times)"),
+        list[str] | None,
+        typer.Option(
+            "--environment",
+            "-e",
+            help="Environment variables (key=value format, can be specified multiple times)",
+        ),
     ] = None,
     nextflow_config: Annotated[
-        Optional[Path],
+        Path | None,
         typer.Option("--nextflow-config", help="Nextflow config file"),
     ] = None,
     # Credentials option
     credentials_id: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-c", "--credentials", help="Credentials identifier"),
     ] = None,
     # Workspace option
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
     ] = None,
 ) -> None:
@@ -146,7 +179,9 @@ def add_azure_forge(
             credentials = creds_response.get("credentials", [])
 
             if not credentials:
-                output_error("No Azure Batch credentials found. Please create Azure Batch credentials first.")
+                output_error(
+                    "No Azure Batch credentials found. Please create Azure Batch credentials first."
+                )
                 sys.exit(1)
 
             # Use the first matching credential with the same name as compute env

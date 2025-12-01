@@ -4,46 +4,46 @@ Google Kubernetes Engine (GKE) platform implementation for compute environments.
 
 import sys
 from pathlib import Path
-from typing import List, Optional
+from typing import Annotated
 
 import typer
-from typing_extensions import Annotated
 
 from seqera.main import get_client, get_output_format
 from seqera.responses.computeenvs import ComputeEnvAdded
-from seqera.exceptions import SeqeraError
 from seqera.utils.output import output_error
 
 
-def read_file_content(file_path: Optional[Path]) -> Optional[str]:
+def read_file_content(file_path: Path | None) -> str | None:
     """Read and return the content of a file."""
     if file_path is None:
         return None
     try:
-        with open(file_path, 'r') as f:
+        with open(file_path) as f:
             return f.read()
     except Exception as e:
         output_error(f"Failed to read file {file_path}: {e}")
         sys.exit(1)
 
 
-def parse_environment_variables(env_vars: Optional[List[str]]) -> Optional[List[dict]]:
+def parse_environment_variables(env_vars: list[str] | None) -> list[dict] | None:
     """Parse environment variables from key=value format."""
     if not env_vars:
         return None
 
     result = []
     for env in env_vars:
-        if '=' not in env:
+        if "=" not in env:
             output_error(f"Invalid environment variable format: {env}. Expected key=value")
             sys.exit(1)
-        key, value = env.split('=', 1)
-        result.append({
-            "name": key,
-            "value": value,
-            "head": False,
-            "compute": True,
-        })
+        key, value = env.split("=", 1)
+        result.append(
+            {
+                "name": key,
+                "value": value,
+                "head": False,
+                "compute": True,
+            }
+        )
     return result
 
 
@@ -73,55 +73,59 @@ def add_gke(
         typer.Option("--head-account", help="Head service account"),
     ],
     storage_claim: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--storage-claim", help="Storage claim name"),
     ] = None,
     # Advanced options
     storage_mount: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--storage-mount", help="Storage mount path"),
     ] = None,
     compute_account: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--compute-account", help="Compute service account"),
     ] = None,
     pod_cleanup: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--pod-cleanup", help="Pod cleanup policy (ON_SUCCESS, ALWAYS, NEVER)"),
     ] = None,
     head_pod_spec: Annotated[
-        Optional[Path],
+        Path | None,
         typer.Option("--head-pod-spec", help="Custom head pod specs file"),
     ] = None,
     service_pod_spec: Annotated[
-        Optional[Path],
+        Path | None,
         typer.Option("--service-pod-spec", help="Custom service pod specs file"),
     ] = None,
     # Common platform options
     pre_run: Annotated[
-        Optional[Path],
+        Path | None,
         typer.Option("--pre-run", help="Pre-run script file"),
     ] = None,
     post_run: Annotated[
-        Optional[Path],
+        Path | None,
         typer.Option("--post-run", help="Post-run script file"),
     ] = None,
     environment: Annotated[
-        Optional[List[str]],
-        typer.Option("--environment", "-e", help="Environment variables (key=value format, can be specified multiple times)"),
+        list[str] | None,
+        typer.Option(
+            "--environment",
+            "-e",
+            help="Environment variables (key=value format, can be specified multiple times)",
+        ),
     ] = None,
     nextflow_config: Annotated[
-        Optional[Path],
+        Path | None,
         typer.Option("--nextflow-config", help="Nextflow config file"),
     ] = None,
     # Credentials option
     credentials_id: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-c", "--credentials", help="Credentials identifier"),
     ] = None,
     # Workspace option
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
     ] = None,
 ) -> None:

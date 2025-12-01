@@ -83,13 +83,13 @@ class TestTeamsCmd:
             user_response, status=200
         )
 
-        httpserver.expect_request(
-            "/user/1264/workspaces", method="GET"
-        ).respond_with_json(workspaces_response, status=200)
+        httpserver.expect_request("/user/1264/workspaces", method="GET").respond_with_json(
+            workspaces_response, status=200
+        )
 
-        httpserver.expect_request(
-            "/orgs/27736513644467/teams", method="GET"
-        ).respond_with_json(teams_response, status=200)
+        httpserver.expect_request("/orgs/27736513644467/teams", method="GET").respond_with_json(
+            teams_response, status=200
+        )
 
         # Run the command
         out = exec_cmd(
@@ -174,9 +174,9 @@ class TestTeamsCmd:
             user_response, status=200
         )
 
-        httpserver.expect_request(
-            "/user/1264/workspaces", method="GET"
-        ).respond_with_json(workspaces_response, status=200)
+        httpserver.expect_request("/user/1264/workspaces", method="GET").respond_with_json(
+            workspaces_response, status=200
+        )
 
         httpserver.expect_request(
             "/orgs/27736513644467/teams", method="GET", query_string="offset=1&max=2"
@@ -254,9 +254,9 @@ class TestTeamsCmd:
             user_response, status=200
         )
 
-        httpserver.expect_request(
-            "/user/1264/workspaces", method="GET"
-        ).respond_with_json(workspaces_response, status=200)
+        httpserver.expect_request("/user/1264/workspaces", method="GET").respond_with_json(
+            workspaces_response, status=200
+        )
 
         httpserver.expect_request(
             "/orgs/27736513644467/teams", method="GET", query_string="offset=0&max=2"
@@ -315,9 +315,9 @@ class TestTeamsCmd:
             user_response, status=200
         )
 
-        httpserver.expect_request(
-            "/user/1264/workspaces", method="GET"
-        ).respond_with_json(workspaces_response, status=200)
+        httpserver.expect_request("/user/1264/workspaces", method="GET").respond_with_json(
+            workspaces_response, status=200
+        )
 
         # Run the command (should fail with conflicting params)
         out = exec_cmd(
@@ -374,13 +374,13 @@ class TestTeamsCmd:
             user_response, status=200
         )
 
-        httpserver.expect_request(
-            "/user/1264/workspaces", method="GET"
-        ).respond_with_json(workspaces_response, status=200)
+        httpserver.expect_request("/user/1264/workspaces", method="GET").respond_with_json(
+            workspaces_response, status=200
+        )
 
-        httpserver.expect_request(
-            "/orgs/27736513644467/teams", method="GET"
-        ).respond_with_json(teams_response, status=200)
+        httpserver.expect_request("/orgs/27736513644467/teams", method="GET").respond_with_json(
+            teams_response, status=200
+        )
 
         # Run the command
         out = exec_cmd(
@@ -442,13 +442,13 @@ class TestTeamsCmd:
             user_response, status=200
         )
 
-        httpserver.expect_request(
-            "/user/1264/workspaces", method="GET"
-        ).respond_with_json(workspaces_response, status=200)
+        httpserver.expect_request("/user/1264/workspaces", method="GET").respond_with_json(
+            workspaces_response, status=200
+        )
 
-        httpserver.expect_request(
-            "/orgs/27736513644467/teams", method="POST"
-        ).respond_with_json(team_add_response, status=200)
+        httpserver.expect_request("/orgs/27736513644467/teams", method="POST").respond_with_json(
+            team_add_response, status=200
+        )
 
         # Run the command
         out = exec_cmd(
@@ -513,9 +513,9 @@ class TestTeamsCmd:
             user_response, status=200
         )
 
-        httpserver.expect_request(
-            "/user/1264/workspaces", method="GET"
-        ).respond_with_json(workspaces_response, status=200)
+        httpserver.expect_request("/user/1264/workspaces", method="GET").respond_with_json(
+            workspaces_response, status=200
+        )
 
         # Run the command
         out = exec_cmd(
@@ -590,21 +590,21 @@ class TestTeamsCmd:
             user_response, status=200
         )
 
-        httpserver.expect_request(
-            "/user/1264/workspaces", method="GET"
-        ).respond_with_json(workspaces_response, status=200)
+        httpserver.expect_request("/user/1264/workspaces", method="GET").respond_with_json(
+            workspaces_response, status=200
+        )
 
-        httpserver.expect_request(
-            "/orgs/27736513644467/teams", method="GET"
-        ).respond_with_json(teams_response, status=200)
+        httpserver.expect_request("/orgs/27736513644467/teams", method="GET").respond_with_json(
+            teams_response, status=200
+        )
 
         httpserver.expect_request(
             "/orgs/27736513644467/teams/249211453903161", method="DELETE"
         ).respond_with_data("", status=200)
 
-        httpserver.expect_request(
-            "/orgs/27736513644467/teams", method="POST"
-        ).respond_with_json(team_add_response, status=200)
+        httpserver.expect_request("/orgs/27736513644467/teams", method="POST").respond_with_json(
+            team_add_response, status=200
+        )
 
         # Run the command
         out = exec_cmd(
@@ -658,9 +658,9 @@ class TestTeamsCmd:
             user_response, status=200
         )
 
-        httpserver.expect_request(
-            "/user/1264/workspaces", method="GET"
-        ).respond_with_json(workspaces_response, status=200)
+        httpserver.expect_request("/user/1264/workspaces", method="GET").respond_with_json(
+            workspaces_response, status=200
+        )
 
         httpserver.expect_request(
             "/orgs/27736513644467/teams/69076469523589", method="DELETE"

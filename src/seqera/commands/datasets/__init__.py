@@ -6,10 +6,9 @@ Manage datasets in workspaces.
 
 import sys
 from pathlib import Path
-from typing import Optional
+from typing import Annotated, Optional
 
 import typer
-from typing_extensions import Annotated
 
 from seqera.api.client import SeqeraClient
 from seqera.exceptions import NotFoundError, SeqeraError
@@ -99,7 +98,7 @@ def view_dataset(
         typer.Option("-i", "--id", help="Dataset ID"),
     ],
     subcommand: Annotated[
-        Optional[str],
+        str | None,
         typer.Argument(help="Subcommand: versions"),
     ] = None,
 ) -> None:
@@ -113,7 +112,9 @@ def view_dataset(
 
         if subcommand == "versions":
             # Get dataset versions
-            versions_response = client.get(f"/workspaces/{workspace}/datasets/{dataset_id}/versions")
+            versions_response = client.get(
+                f"/workspaces/{workspace}/datasets/{dataset_id}/versions"
+            )
             versions = versions_response.get("versions", [])
 
             # Output response
@@ -155,7 +156,7 @@ def delete_dataset(
         output_format = get_output_format()
 
         # Get dataset metadata first to verify it exists
-        metadata_response = client.get(f"/workspaces/{workspace}/datasets/{dataset_id}/metadata")
+        client.get(f"/workspaces/{workspace}/datasets/{dataset_id}/metadata")
 
         # Delete dataset
         client.delete(f"/workspaces/{workspace}/datasets/{dataset_id}")
@@ -183,7 +184,7 @@ def get_dataset_url(
         typer.Option("-i", "--id", help="Dataset ID"),
     ],
     version: Annotated[
-        Optional[int],
+        int | None,
         typer.Option("-v", "--version", help="Dataset version (default: latest)"),
     ] = None,
 ) -> None:
@@ -193,7 +194,7 @@ def get_dataset_url(
         output_format = get_output_format()
 
         # Get dataset metadata first to verify it exists
-        metadata_response = client.get(f"/workspaces/{workspace}/datasets/{dataset_id}/metadata")
+        client.get(f"/workspaces/{workspace}/datasets/{dataset_id}/metadata")
 
         # Get dataset versions
         versions_response = client.get(f"/workspaces/{workspace}/datasets/{dataset_id}/versions")
@@ -237,11 +238,11 @@ def download_dataset(
         typer.Option("-i", "--id", help="Dataset ID"),
     ],
     version: Annotated[
-        Optional[int],
+        int | None,
         typer.Option("-v", "--version", help="Dataset version (default: latest)"),
     ] = None,
     output_file: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-o", "--output", help="Output file path"),
     ] = None,
 ) -> None:
@@ -251,7 +252,7 @@ def download_dataset(
         output_format = get_output_format()
 
         # Get dataset metadata first to verify it exists
-        metadata_response = client.get(f"/workspaces/{workspace}/datasets/{dataset_id}/metadata")
+        client.get(f"/workspaces/{workspace}/datasets/{dataset_id}/metadata")
 
         # Get dataset versions
         versions_response = client.get(f"/workspaces/{workspace}/datasets/{dataset_id}/versions")
@@ -280,6 +281,7 @@ def download_dataset(
 
         # Download the file
         import requests
+
         response = requests.get(url)
         response.raise_for_status()
 
@@ -313,7 +315,7 @@ def add_dataset(
         typer.Option("-n", "--name", help="Dataset name"),
     ],
     description: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-d", "--description", help="Dataset description"),
     ] = None,
     header: Annotated[
@@ -368,7 +370,9 @@ def add_dataset(
             }
             upload_response = client.client.post(url, files=files, params=params, headers=headers)
             if upload_response.status_code not in (200, 201):
-                raise SeqeraError(f"Failed to upload dataset file: HTTP {upload_response.status_code}")
+                raise SeqeraError(
+                    f"Failed to upload dataset file: HTTP {upload_response.status_code}"
+                )
 
         # Output response
         result = DatasetAdded(
@@ -394,15 +398,15 @@ def update_dataset(
         typer.Option("-i", "--id", help="Dataset ID"),
     ],
     new_name: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--new-name", help="New dataset name"),
     ] = None,
     description: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-d", "--description", help="Dataset description"),
     ] = None,
     file_path: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-f", "--file", help="Path to new dataset file"),
     ] = None,
     header: Annotated[
@@ -443,9 +447,13 @@ def update_dataset(
                 headers = {
                     "Authorization": f"Bearer {client.token}",
                 }
-                upload_response = client.client.post(url, files=files, params=params, headers=headers)
+                upload_response = client.client.post(
+                    url, files=files, params=params, headers=headers
+                )
                 if upload_response.status_code not in (200, 201):
-                    raise SeqeraError(f"Failed to upload dataset file: HTTP {upload_response.status_code}")
+                    raise SeqeraError(
+                        f"Failed to upload dataset file: HTTP {upload_response.status_code}"
+                    )
 
         # Output response
         result = DatasetUpdated(

@@ -5,6 +5,7 @@ Ported from DatasetsCmdTest.java
 """
 
 import json
+
 import pytest
 from pytest_httpserver import HTTPServer
 
@@ -36,7 +37,7 @@ class TestDatasetsCmd:
                     "mediaType": None,
                     "deleted": False,
                     "dateCreated": "2021-11-26T14:51:20+01:00",
-                    "lastUpdated": "2021-11-26T14:51:20+01:00"
+                    "lastUpdated": "2021-11-26T14:51:20+01:00",
                 },
                 {
                     "id": "1W2FqBiI6WoNokQTkPkEzo",
@@ -45,8 +46,8 @@ class TestDatasetsCmd:
                     "mediaType": None,
                     "deleted": False,
                     "dateCreated": "2021-11-29T08:05:44+01:00",
-                    "lastUpdated": "2021-11-29T08:05:44+01:00"
-                }
+                    "lastUpdated": "2021-11-29T08:05:44+01:00",
+                },
             ]
         }
 
@@ -78,6 +79,7 @@ class TestDatasetsCmd:
             assert data["datasets"][1]["name"] == "dataset2"
         elif output_format == "yaml":
             import yaml
+
             data = yaml.safe_load(out.stdout)
             assert data["workspaceId"] == workspace_id
             assert len(data["datasets"]) == 2
@@ -110,7 +112,7 @@ class TestDatasetsCmd:
                 "mediaType": None,
                 "deleted": False,
                 "dateCreated": "2021-11-26T14:51:20+01:00",
-                "lastUpdated": "2021-11-26T14:51:20+01:00"
+                "lastUpdated": "2021-11-26T14:51:20+01:00",
             }
         }
 
@@ -141,6 +143,7 @@ class TestDatasetsCmd:
             assert data["dataset"]["name"] == "dataset1"
         elif output_format == "yaml":
             import yaml
+
             data = yaml.safe_load(out.stdout)
             assert data["workspaceId"] == workspace_id
             assert data["dataset"]["id"] == dataset_id
@@ -172,7 +175,7 @@ class TestDatasetsCmd:
                 "mediaType": None,
                 "deleted": False,
                 "dateCreated": "2021-11-26T14:51:20+01:00",
-                "lastUpdated": "2021-11-26T14:51:20+01:00"
+                "lastUpdated": "2021-11-26T14:51:20+01:00",
             }
         }
 
@@ -186,7 +189,7 @@ class TestDatasetsCmd:
                     "lastUpdated": "2021-11-29T09:28:09+01:00",
                     "fileName": "transaciones_2021-11-26_filter-advanced.csv",
                     "mediaType": "text/csv",
-                    "url": f"https://example.com/api/workspaces/{workspace_id}/datasets/{dataset_id}/v/1/n/transaciones_2021-11-26_filter-advanced.csv"
+                    "url": f"https://example.com/api/workspaces/{workspace_id}/datasets/{dataset_id}/v/1/n/transaciones_2021-11-26_filter-advanced.csv",
                 },
                 {
                     "datasetId": dataset_id,
@@ -196,8 +199,8 @@ class TestDatasetsCmd:
                     "lastUpdated": "2021-11-29T09:28:09+01:00",
                     "fileName": "transaciones_2021-11-26_filter-advanced.csv",
                     "mediaType": "text/csv",
-                    "url": f"https://example.com/api/workspaces/{workspace_id}/datasets/{dataset_id}/v/2/n/transaciones_2021-11-26_filter-advanced.csv"
-                }
+                    "url": f"https://example.com/api/workspaces/{workspace_id}/datasets/{dataset_id}/v/2/n/transaciones_2021-11-26_filter-advanced.csv",
+                },
             ]
         }
 
@@ -236,6 +239,7 @@ class TestDatasetsCmd:
             assert data["versions"][1]["version"] == 2
         elif output_format == "yaml":
             import yaml
+
             data = yaml.safe_load(out.stdout)
             assert len(data["versions"]) == 2
         else:  # console
@@ -266,7 +270,7 @@ class TestDatasetsCmd:
                 "mediaType": None,
                 "deleted": False,
                 "dateCreated": "2021-11-26T14:51:20+01:00",
-                "lastUpdated": "2021-11-26T14:51:20+01:00"
+                "lastUpdated": "2021-11-26T14:51:20+01:00",
             }
         }
 
@@ -301,6 +305,7 @@ class TestDatasetsCmd:
             assert data["workspaceId"] == workspace_id
         elif output_format == "yaml":
             import yaml
+
             data = yaml.safe_load(out.stdout)
             assert data["id"] == dataset_id
         else:  # console
@@ -332,7 +337,7 @@ class TestDatasetsCmd:
                 "mediaType": None,
                 "deleted": False,
                 "dateCreated": "2021-11-26T14:51:20+01:00",
-                "lastUpdated": "2021-11-26T14:51:20+01:00"
+                "lastUpdated": "2021-11-26T14:51:20+01:00",
             }
         }
 
@@ -346,7 +351,7 @@ class TestDatasetsCmd:
                     "lastUpdated": "2021-11-29T09:28:09+01:00",
                     "fileName": "transaciones_2021-11-26_filter-advanced.csv",
                     "mediaType": "text/csv",
-                    "url": expected_url
+                    "url": expected_url,
                 }
             ]
         }
@@ -383,6 +388,7 @@ class TestDatasetsCmd:
             assert data["workspaceId"] == workspace_id
         elif output_format == "yaml":
             import yaml
+
             data = yaml.safe_load(out.stdout)
             assert data["url"] == expected_url
         else:  # console
@@ -423,13 +429,11 @@ class TestDatasetsCmd:
                 "mediaType": None,
                 "deleted": False,
                 "dateCreated": "2021-11-29T11:18:06.108+01:00",
-                "lastUpdated": "2021-11-29T11:18:06.108+01:00"
+                "lastUpdated": "2021-11-29T11:18:06.108+01:00",
             }
         }
 
-        upload_response = {
-            "version": 1
-        }
+        upload_response = {"version": 1}
 
         httpserver.expect_request(
             f"/workspaces/{workspace_id}/datasets",
@@ -467,6 +471,7 @@ class TestDatasetsCmd:
             assert data["id"] == dataset_id
         elif output_format == "yaml":
             import yaml
+
             data = yaml.safe_load(out.stdout)
             assert data["name"] == dataset_name
         else:  # console
@@ -498,7 +503,7 @@ class TestDatasetsCmd:
                 "mediaType": None,
                 "deleted": False,
                 "dateCreated": "2021-11-26T14:51:20+01:00",
-                "lastUpdated": "2021-11-26T14:51:20+01:00"
+                "lastUpdated": "2021-11-26T14:51:20+01:00",
             }
         }
 
@@ -538,6 +543,7 @@ class TestDatasetsCmd:
             assert data["id"] == dataset_id
         elif output_format == "yaml":
             import yaml
+
             data = yaml.safe_load(out.stdout)
             assert data["name"] == new_name
         else:  # console

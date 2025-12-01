@@ -5,10 +5,9 @@ Manage workspace compute environments for various cloud platforms.
 """
 
 import sys
-from typing import Optional
+from typing import Annotated, Optional
 
 import typer
-from typing_extensions import Annotated
 
 from seqera.api.client import SeqeraClient
 from seqera.exceptions import (
@@ -122,19 +121,30 @@ add_app.command("altair", help="Add new Altair PBS Pro compute environment")(add
 add_app.command("eks", help="Add new Amazon EKS compute environment")(add_eks)
 add_app.command("gke", help="Add new Google GKE compute environment")(add_gke)
 add_app.command("google-batch", help="Add new Google Batch compute environment")(add_google_batch)
-add_app.command("google-ls", help="Add new Google Life Sciences compute environment")(add_google_life_sciences)
+add_app.command("google-ls", help="Add new Google Life Sciences compute environment")(
+    add_google_life_sciences
+)
 add_app.command("k8s", help="Add new Kubernetes compute environment")(add_k8s)
 add_app.command("uge", help="Add new UNIVA grid engine compute environment")(add_uge)
 add_app.command("lsf", help="Add new IBM LSF compute environment")(add_lsf)
 add_app.command("moab", help="Add new MOAB compute environment")(add_moab)
 
 # Register AWS Batch subcommands
-aws_batch_app.command("manual", help="Add AWS Batch compute environment using existing resources")(add_aws_manual)
-aws_batch_app.command("forge", help="Add AWS Batch compute environment with automatic provisioning")(add_aws_forge)
+aws_batch_app.command("manual", help="Add AWS Batch compute environment using existing resources")(
+    add_aws_manual
+)
+aws_batch_app.command(
+    "forge", help="Add AWS Batch compute environment with automatic provisioning"
+)(add_aws_forge)
 
 # Register Azure Batch subcommands
-azure_batch_app.command("manual", help="Add new Azure Batch compute environment using an existing environment")(add_azure_manual)
-azure_batch_app.command("forge", help="Add new Azure Batch compute environment with automatic provisioning of compute resources")(add_azure_forge)
+azure_batch_app.command(
+    "manual", help="Add new Azure Batch compute environment using an existing environment"
+)(add_azure_manual)
+azure_batch_app.command(
+    "forge",
+    help="Add new Azure Batch compute environment with automatic provisioning of compute resources",
+)(add_azure_forge)
 
 # Import slurm and seqera_compute modules to register their commands (use decorator)
 from seqera.commands.computeenvs.platforms import seqera_compute, slurm  # noqa: F401
@@ -165,9 +175,7 @@ def delete_compute_env(
 
     except NotFoundError:
         # Handle 403 as not found
-        handle_compute_env_error(
-            ComputeEnvNotFoundException(compute_env_id, USER_WORKSPACE_NAME)
-        )
+        handle_compute_env_error(ComputeEnvNotFoundException(compute_env_id, USER_WORKSPACE_NAME))
     except Exception as e:
         handle_compute_env_error(e)
 
@@ -199,11 +207,11 @@ def list_compute_envs() -> None:
 @app.command("view")
 def view_compute_env(
     compute_env_id: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-i", "--id", help="Compute environment ID to view"),
     ] = None,
     compute_env_name: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-n", "--name", help="Compute environment name to view"),
     ] = None,
 ) -> None:
@@ -243,9 +251,7 @@ def view_compute_env(
         # Handle 403 as not found
         if hasattr(e, "status_code") and e.status_code == 403:
             ref = compute_env_id or compute_env_name
-            handle_compute_env_error(
-                ComputeEnvNotFoundException(ref, USER_WORKSPACE_NAME)
-            )
+            handle_compute_env_error(ComputeEnvNotFoundException(ref, USER_WORKSPACE_NAME))
         handle_compute_env_error(e)
 
 
@@ -293,11 +299,11 @@ def primary_get() -> None:
 @primary_app.command("set")
 def primary_set(
     compute_env_id: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-i", "--id", help="Compute environment ID to set as primary"),
     ] = None,
     compute_env_name: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-n", "--name", help="Compute environment name to set as primary"),
     ] = None,
 ) -> None:
@@ -341,7 +347,6 @@ def primary_set(
         handle_compute_env_error(e)
 
 
-
 @app.command("export")
 def export_compute_env(
     compute_env_name: Annotated[
@@ -349,7 +354,7 @@ def export_compute_env(
         typer.Option("-n", "--name", help="Compute environment name to export"),
     ],
     filename: Annotated[
-        Optional[str],
+        str | None,
         typer.Argument(help="Output filename (optional, defaults to stdout)"),
     ] = None,
 ) -> None:
@@ -385,6 +390,7 @@ def export_compute_env(
         # Save to file if specified
         if filename and filename != "-":
             import json
+
             with open(filename, "w") as f:
                 json.dump(export_data, f, indent=2)
 

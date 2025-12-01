@@ -58,11 +58,17 @@ class TestTasksCmd:
             assert data["runId"] == "2zGxKoqlnVmGL"
             assert len(data["tasks"]) == 2
             assert data["tasks"][0]["taskId"] == 1
-            assert data["tasks"][0]["process"] == "NFCORE_RNASEQ:RNASEQ:PREPARE_GENOME:GUNZIP_ADDITIONAL_FASTA"
+            assert (
+                data["tasks"][0]["process"]
+                == "NFCORE_RNASEQ:RNASEQ:PREPARE_GENOME:GUNZIP_ADDITIONAL_FASTA"
+            )
             assert data["tasks"][0]["tag"] == "gfp.fa.gz"
             assert data["tasks"][0]["status"] == "COMPLETED"
             assert data["tasks"][1]["taskId"] == 2
-            assert data["tasks"][1]["process"] == "NFCORE_RNASEQ:RNASEQ:PREPARE_GENOME:UNTAR_STAR_INDEX"
+            assert (
+                data["tasks"][1]["process"]
+                == "NFCORE_RNASEQ:RNASEQ:PREPARE_GENOME:UNTAR_STAR_INDEX"
+            )
             assert data["tasks"][1]["status"] == "COMPLETED"
         elif output_format == "yaml":
             import yaml

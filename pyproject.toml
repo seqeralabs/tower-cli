@@ -70,6 +70,8 @@ include = '\.pyi?$'
 [tool.ruff]
 line-length = 100
 target-version = "py310"
+
+[tool.ruff.lint]
 select = [
     "E",   # pycodestyle errors
     "W",   # pycodestyle warnings
@@ -81,11 +83,16 @@ select = [
 ]
 ignore = [
     "E501",  # line too long (handled by black)
+    "E402",  # module level import not at top (needed for typer registration)
+    "E722",  # bare except (used for safe date parsing fallbacks)
+    "E741",  # ambiguous variable name (l used in list comprehensions)
     "B008",  # do not perform function calls in argument defaults
+    "B904",  # raise from err (intentional for clean error messages)
     "C901",  # too complex
+    "UP035", # deprecated typing imports (Dict/List - keep for compatibility)
 ]
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
 
 [tool.mypy]

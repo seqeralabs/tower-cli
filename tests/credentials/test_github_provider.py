@@ -9,8 +9,6 @@ import json
 import pytest
 from pytest_httpserver import HTTPServer
 
-from tests.conftest import ExecOut
-
 
 class TestGithubProvider:
     """Test GitHub credentials provider commands."""

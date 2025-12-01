@@ -591,8 +591,8 @@ class TestAwsBatchForgePlatform:
         Ported from testAddWithNextflowConfig() in AwsBatchForgePlatformTest.java
         """
         # Create temporary nextflow config file
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.config', delete=False) as config_file:
-            config_file.write('nextflow_config')
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".config", delete=False) as config_file:
+            config_file.write("nextflow_config")
             config_path = config_file.name
 
         try:

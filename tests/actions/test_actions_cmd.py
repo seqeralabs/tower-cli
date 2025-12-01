@@ -871,7 +871,9 @@ class TestActionsUpdateCmd:
         )
 
         # Run the command
-        out = exec_cmd("actions", "update", "-n", "hello", "-s", "pause", output_format=output_format)
+        out = exec_cmd(
+            "actions", "update", "-n", "hello", "-s", "pause", output_format=output_format
+        )
 
         # Assertions
         assert out.exit_code == 0

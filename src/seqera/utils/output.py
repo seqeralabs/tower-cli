@@ -8,9 +8,8 @@ Handles formatting of command responses in different formats:
 """
 
 import json
-import sys
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import yaml
 from rich.console import Console
@@ -60,9 +59,9 @@ def output_console(message: str) -> None:
 
 
 def output_table(
-    headers: List[str],
-    rows: List[List[Any]],
-    title: Optional[str] = None,
+    headers: list[str],
+    rows: list[list[Any]],
+    title: str | None = None,
 ) -> None:
     """
     Output data as a table in console format.

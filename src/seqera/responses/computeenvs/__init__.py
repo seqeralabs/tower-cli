@@ -11,7 +11,7 @@ from typing import Any, Dict, List, Optional
 class ComputeEnvResponse:
     """Base response class for compute environment commands."""
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert response to dictionary for JSON/YAML output."""
         return {}
 
@@ -27,7 +27,7 @@ class ComputeEnvDeleted(ComputeEnvResponse):
         self.compute_env_id = compute_env_id
         self.workspace = workspace
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "id": self.compute_env_id,
             "workspaceRef": self.workspace,
@@ -45,7 +45,7 @@ class ComputeEnvAdded(ComputeEnvResponse):
         platform: str,
         compute_env_id: str,
         name: str,
-        workspace_id: Optional[int],
+        workspace_id: int | None,
         workspace: str,
     ) -> None:
         self.platform = platform
@@ -54,7 +54,7 @@ class ComputeEnvAdded(ComputeEnvResponse):
         self.workspace_id = workspace_id
         self.workspace = workspace
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "platform": self.platform,
             "id": self.compute_env_id,
@@ -73,14 +73,14 @@ class ComputeEnvList(ComputeEnvResponse):
     def __init__(
         self,
         workspace: str,
-        compute_envs: List[Dict[str, Any]],
-        base_workspace_url: Optional[str] = None,
+        compute_envs: list[dict[str, Any]],
+        base_workspace_url: str | None = None,
     ) -> None:
         self.workspace = workspace
         self.compute_envs = compute_envs
         self.base_workspace_url = base_workspace_url
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "workspaceRef": self.workspace,
             "computeEnvs": self.compute_envs,
@@ -88,10 +88,11 @@ class ComputeEnvList(ComputeEnvResponse):
 
     def to_console(self) -> str:
         """Format compute environments as a table."""
-        from rich.table import Table
         from datetime import datetime
         from io import StringIO
+
         from rich.console import Console
+        from rich.table import Table
 
         output = f"\n  Compute environments at {self.workspace} workspace:\n\n"
 
@@ -151,12 +152,12 @@ class ComputeEnvView(ComputeEnvResponse):
     def __init__(
         self,
         workspace: str,
-        compute_env: Dict[str, Any],
+        compute_env: dict[str, Any],
     ) -> None:
         self.workspace = workspace
         self.compute_env = compute_env
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "workspaceRef": self.workspace,
             "computeEnv": self.compute_env,
@@ -165,7 +166,12 @@ class ComputeEnvView(ComputeEnvResponse):
     def to_console(self) -> str:
         """Format compute environment details."""
         import json
-        return f"\n  Compute environment at {self.workspace} workspace:\n\n" + json.dumps(self.compute_env, indent=2) + "\n"
+
+        return (
+            f"\n  Compute environment at {self.workspace} workspace:\n\n"
+            + json.dumps(self.compute_env, indent=2)
+            + "\n"
+        )
 
 
 class ComputeEnvUpdated(ComputeEnvResponse):
@@ -176,7 +182,7 @@ class ComputeEnvUpdated(ComputeEnvResponse):
         self.name = name
         self.workspace = workspace
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "id": self.compute_env_id,
             "name": self.name,
@@ -190,15 +196,16 @@ class ComputeEnvUpdated(ComputeEnvResponse):
 class ComputeEnvExport(ComputeEnvResponse):
     """Response for compute environment export command."""
 
-    def __init__(self, config: Dict[str, Any]) -> None:
+    def __init__(self, config: dict[str, Any]) -> None:
         self.config = config
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return self.config
 
     def to_console(self) -> str:
         """Export as JSON."""
         import json
+
         return json.dumps(self.config, indent=2) + "\n"
 
 
@@ -215,7 +222,7 @@ class ComputeEnvImported(ComputeEnvResponse):
         self.name = name
         self.workspace = workspace
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "id": self.compute_env_id,
             "name": self.name,
@@ -229,12 +236,12 @@ class ComputeEnvImported(ComputeEnvResponse):
 class ComputeEnvsPrimaryGet(ComputeEnvResponse):
     """Response for compute environment primary get command."""
 
-    def __init__(self, compute_env_id: Optional[str], name: Optional[str], workspace: str) -> None:
+    def __init__(self, compute_env_id: str | None, name: str | None, workspace: str) -> None:
         self.compute_env_id = compute_env_id
         self.name = name
         self.workspace = workspace
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "id": self.compute_env_id,
             "name": self.name,
@@ -256,7 +263,7 @@ class ComputeEnvsPrimarySet(ComputeEnvResponse):
         self.name = name
         self.workspace = workspace
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "id": self.compute_env_id,
             "name": self.name,

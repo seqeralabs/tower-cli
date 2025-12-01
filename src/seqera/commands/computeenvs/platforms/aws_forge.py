@@ -6,10 +6,9 @@ Forge mode: Seqera automatically creates and manages AWS Batch resources.
 
 import sys
 from pathlib import Path
-from typing import List, Optional
+from typing import Annotated
 
 import typer
-from typing_extensions import Annotated
 
 from seqera.exceptions import SeqeraError
 from seqera.main import get_client, get_output_format
@@ -17,19 +16,19 @@ from seqera.responses.computeenvs import ComputeEnvAdded
 from seqera.utils.output import output_error
 
 
-def read_file_content(file_path: Optional[Path]) -> Optional[str]:
+def read_file_content(file_path: Path | None) -> str | None:
     """Read and return the content of a file."""
     if file_path is None:
         return None
     try:
-        with open(file_path, 'r') as f:
+        with open(file_path) as f:
             return f.read()
     except Exception as e:
         output_error(f"Failed to read file {file_path}: {e}")
         sys.exit(1)
 
 
-def parse_environment_variables(env_vars: Optional[List[str]]) -> Optional[List[dict]]:
+def parse_environment_variables(env_vars: list[str] | None) -> list[dict] | None:
     """Parse environment variables from key=value format with optional scope prefix.
 
     Format: [scope:]key=value
@@ -45,7 +44,7 @@ def parse_environment_variables(env_vars: Optional[List[str]]) -> Optional[List[
 
     result = []
     for env in env_vars:
-        if '=' not in env:
+        if "=" not in env:
             output_error(f"Invalid environment variable format: {env}. Expected [scope:]key=value")
             sys.exit(1)
 
@@ -54,32 +53,34 @@ def parse_environment_variables(env_vars: Optional[List[str]]) -> Optional[List[
         compute = False
         value_part = env
 
-        if ':' in env:
-            parts = env.split(':', 1)
+        if ":" in env:
+            parts = env.split(":", 1)
             scope = parts[0].lower()
-            if scope in ['head', 'compute', 'both']:
+            if scope in ["head", "compute", "both"]:
                 value_part = parts[1]
-                if scope == 'head':
+                if scope == "head":
                     head = True
                     compute = False
-                elif scope == 'compute':
+                elif scope == "compute":
                     head = False
                     compute = True
-                elif scope == 'both':
+                elif scope == "both":
                     head = True
                     compute = True
 
-        if '=' not in value_part:
+        if "=" not in value_part:
             output_error(f"Invalid environment variable format: {env}. Expected [scope:]key=value")
             sys.exit(1)
 
-        key, value = value_part.split('=', 1)
-        result.append({
-            "name": key,
-            "value": value,
-            "head": head,
-            "compute": compute,
-        })
+        key, value = value_part.split("=", 1)
+        result.append(
+            {
+                "name": key,
+                "value": value,
+                "head": head,
+                "compute": compute,
+            }
+        )
     return result
 
 
@@ -124,7 +125,10 @@ def add_aws_forge(
     ] = False,
     fast_storage: Annotated[
         bool,
-        typer.Option("--fast-storage", help="Enable NVMe instance storage for faster I/O (requires Fusion v2)"),
+        typer.Option(
+            "--fast-storage",
+            help="Enable NVMe instance storage for faster I/O (requires Fusion v2)",
+        ),
     ] = False,
     snapshots: Annotated[
         bool,
@@ -139,12 +143,17 @@ def add_aws_forge(
         typer.Option("--gpu", help="Deploy GPU-enabled EC2 instances"),
     ] = False,
     allow_buckets: Annotated[
-        Optional[str],
-        typer.Option("--allow-buckets", help="Comma-separated S3 buckets/paths for read-write access"),
+        str | None,
+        typer.Option(
+            "--allow-buckets", help="Comma-separated S3 buckets/paths for read-write access"
+        ),
     ] = None,
     preserve_resources: Annotated[
         bool,
-        typer.Option("--preserve-resources", help="Preserve Batch resources after compute environment deletion"),
+        typer.Option(
+            "--preserve-resources",
+            help="Preserve Batch resources after compute environment deletion",
+        ),
     ] = False,
     # EFS options
     create_efs: Annotated[
@@ -152,116 +161,133 @@ def add_aws_forge(
         typer.Option("--create-efs", help="Create OneZone EFS without backup"),
     ] = False,
     efs_id: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--efs-id", help="Existing EFS file system ID (e.g., fs-0123456789)"),
     ] = None,
     efs_mount: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--efs-mount", help="EFS mount path (default: pipeline work directory)"),
     ] = None,
     # FSX options
     fsx_size: Annotated[
-        Optional[int],
-        typer.Option("--fsx-size", help="FSx storage capacity in GB (min 1,200 or increments of 2,400)"),
+        int | None,
+        typer.Option(
+            "--fsx-size", help="FSx storage capacity in GB (min 1,200 or increments of 2,400)"
+        ),
     ] = None,
     fsx_dns: Annotated[
-        Optional[str],
-        typer.Option("--fsx-dns", help="FSx file system DNS name (e.g., fs-xxx.fsx.region.amazonaws.com)"),
+        str | None,
+        typer.Option(
+            "--fsx-dns", help="FSx file system DNS name (e.g., fs-xxx.fsx.region.amazonaws.com)"
+        ),
     ] = None,
     fsx_mount: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--fsx-mount", help="FSx mount path (default: pipeline work directory)"),
     ] = None,
     # Common platform options
     pre_run: Annotated[
-        Optional[Path],
+        Path | None,
         typer.Option("--pre-run", help="Pre-run script file"),
     ] = None,
     post_run: Annotated[
-        Optional[Path],
+        Path | None,
         typer.Option("--post-run", help="Post-run script file"),
     ] = None,
     environment: Annotated[
-        Optional[List[str]],
-        typer.Option("--environment", "-e", help="Environment variables ([scope:]key=value, scope: head|compute|both)"),
+        list[str] | None,
+        typer.Option(
+            "--environment",
+            "-e",
+            help="Environment variables ([scope:]key=value, scope: head|compute|both)",
+        ),
     ] = None,
     nextflow_config: Annotated[
-        Optional[Path],
+        Path | None,
         typer.Option("--nextflow-config", help="Nextflow config file"),
     ] = None,
     # Advanced options
     instance_types: Annotated[
-        Optional[str],
-        typer.Option("--instance-types", help="Comma-separated instance types (e.g., m4,c4,optimal)"),
+        str | None,
+        typer.Option(
+            "--instance-types", help="Comma-separated instance types (e.g., m4,c4,optimal)"
+        ),
     ] = None,
     alloc_strategy: Annotated[
-        Optional[str],
-        typer.Option("--alloc-strategy", help="Allocation strategy (BEST_FIT_PROGRESSIVE, SPOT_CAPACITY_OPTIMIZED)"),
+        str | None,
+        typer.Option(
+            "--alloc-strategy",
+            help="Allocation strategy (BEST_FIT_PROGRESSIVE, SPOT_CAPACITY_OPTIMIZED)",
+        ),
     ] = None,
     vpc_id: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--vpc-id", help="VPC identifier"),
     ] = None,
     subnets: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--subnets", help="Comma-separated subnet IDs"),
     ] = None,
     security_groups: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--security-groups", help="Comma-separated security group IDs"),
     ] = None,
     ami_id: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--ami-id", help="Custom AMI ID (must be AWS Linux-2 ECS-optimized)"),
     ] = None,
     key_pair: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--key-pair", help="EC2 key pair for SSH access"),
     ] = None,
     min_cpus: Annotated[
-        Optional[int],
+        int | None,
         typer.Option("--min-cpus", help="Minimum CPUs to keep provisioned (always billed)"),
     ] = None,
     head_job_cpus: Annotated[
-        Optional[int],
+        int | None,
         typer.Option("--head-job-cpus", help="Number of CPUs for Nextflow head job"),
     ] = None,
     head_job_memory: Annotated[
-        Optional[int],
+        int | None,
         typer.Option("--head-job-memory", help="Memory in MiB for Nextflow head job"),
     ] = None,
     head_job_role: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--head-job-role", help="IAM role for Nextflow head job"),
     ] = None,
     compute_job_role: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--compute-job-role", help="IAM role for compute jobs"),
     ] = None,
     batch_execution_role: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--batch-execution-role", help="Execution role for ECS container"),
     ] = None,
     ebs_blocksize: Annotated[
-        Optional[int],
-        typer.Option("--ebs-blocksize", help="EBS auto-expandable volume initial size in GB (default: 50)"),
+        int | None,
+        typer.Option(
+            "--ebs-blocksize", help="EBS auto-expandable volume initial size in GB (default: 50)"
+        ),
     ] = None,
     bid_percentage: Annotated[
-        Optional[int],
-        typer.Option("--bid-percentage", help="Max Spot price as percentage of On-Demand (default: 100)"),
+        int | None,
+        typer.Option(
+            "--bid-percentage", help="Max Spot price as percentage of On-Demand (default: 100)"
+        ),
     ] = None,
     cli_path: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--cli-path", help="AWS CLI path in EC2 instances"),
     ] = None,
     # Credentials option
     credentials_id: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-c", "--credentials", help="Credentials identifier"),
     ] = None,
     # Workspace option
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
     ] = None,
 ) -> None:
@@ -317,10 +343,10 @@ def add_aws_forge(
         env_vars = parse_environment_variables(environment)
 
         # Parse comma-separated lists
-        allow_buckets_list = allow_buckets.split(',') if allow_buckets else None
-        instance_types_list = instance_types.split(',') if instance_types else None
-        subnets_list = subnets.split(',') if subnets else None
-        security_groups_list = security_groups.split(',') if security_groups else None
+        allow_buckets_list = allow_buckets.split(",") if allow_buckets else None
+        instance_types_list = instance_types.split(",") if instance_types else None
+        subnets_list = subnets.split(",") if subnets else None
+        security_groups_list = security_groups.split(",") if security_groups else None
 
         # Build forge configuration
         forge_config = {

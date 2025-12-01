@@ -95,13 +95,13 @@ class TestTeamMembersCmd:
             user_response, status=200
         )
 
-        httpserver.expect_request(
-            "/user/1264/workspaces", method="GET"
-        ).respond_with_json(workspaces_response, status=200)
+        httpserver.expect_request("/user/1264/workspaces", method="GET").respond_with_json(
+            workspaces_response, status=200
+        )
 
-        httpserver.expect_request(
-            "/orgs/27736513644467/teams", method="GET"
-        ).respond_with_json(teams_response, status=200)
+        httpserver.expect_request("/orgs/27736513644467/teams", method="GET").respond_with_json(
+            teams_response, status=200
+        )
 
         httpserver.expect_request(
             "/orgs/27736513644467/teams/267477500890054/members", method="GET"
@@ -200,13 +200,13 @@ class TestTeamMembersCmd:
             user_response, status=200
         )
 
-        httpserver.expect_request(
-            "/user/1264/workspaces", method="GET"
-        ).respond_with_json(workspaces_response, status=200)
+        httpserver.expect_request("/user/1264/workspaces", method="GET").respond_with_json(
+            workspaces_response, status=200
+        )
 
-        httpserver.expect_request(
-            "/orgs/27736513644467/teams", method="GET"
-        ).respond_with_json(teams_response, status=200)
+        httpserver.expect_request("/orgs/27736513644467/teams", method="GET").respond_with_json(
+            teams_response, status=200
+        )
 
         httpserver.expect_request(
             "/orgs/27736513644467/teams/267477500890054/members", method="POST"
@@ -308,13 +308,13 @@ class TestTeamMembersCmd:
             user_response, status=200
         )
 
-        httpserver.expect_request(
-            "/user/1264/workspaces", method="GET"
-        ).respond_with_json(workspaces_response, status=200)
+        httpserver.expect_request("/user/1264/workspaces", method="GET").respond_with_json(
+            workspaces_response, status=200
+        )
 
-        httpserver.expect_request(
-            "/orgs/27736513644467/teams", method="GET"
-        ).respond_with_json(teams_response, status=200)
+        httpserver.expect_request("/orgs/27736513644467/teams", method="GET").respond_with_json(
+            teams_response, status=200
+        )
 
         httpserver.expect_request(
             "/orgs/27736513644467/teams/267477500890054/members", method="GET"

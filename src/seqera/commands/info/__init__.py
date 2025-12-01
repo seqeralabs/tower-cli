@@ -51,9 +51,9 @@ def info() -> None:
     version_check = -1  # -1 = skipped
     credentials_check = -1  # -1 = skipped
 
-    tower_version: Optional[str] = None
-    tower_api_version: Optional[str] = None
-    user_name: Optional[str] = None
+    tower_version: str | None = None
+    tower_api_version: str | None = None
+    user_name: str | None = None
 
     # Get CLI version info
     cli_version = get_cli_version()
@@ -99,7 +99,7 @@ def info() -> None:
             pass
 
     # Build options dict
-    opts: Dict[str, Optional[str]] = {
+    opts: dict[str, str | None] = {
         "cliVersion": cli_version,
         "cliApiVersion": cli_api_version,
         "towerApiVersion": tower_api_version,

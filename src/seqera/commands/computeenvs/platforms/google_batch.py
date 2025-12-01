@@ -32,16 +32,18 @@ def parse_environment_variables(env_vars: list[str] | None) -> list[dict] | None
 
     result = []
     for env in env_vars:
-        if '=' not in env:
+        if "=" not in env:
             output_error(f"Invalid environment variable format: {env}. Expected key=value")
             sys.exit(1)
-        key, value = env.split('=', 1)
-        result.append({
-            "name": key,
-            "value": value,
-            "head": False,
-            "compute": True,
-        })
+        key, value = env.split("=", 1)
+        result.append(
+            {
+                "name": key,
+                "value": value,
+                "head": False,
+                "compute": True,
+            }
+        )
     return result
 
 
@@ -56,7 +58,11 @@ def add_google_batch(
     ],
     location: Annotated[
         str,
-        typer.Option("-l", "--location", help="The location where the job executions are deployed to Google Batch API"),
+        typer.Option(
+            "-l",
+            "--location",
+            help="The location where the job executions are deployed to Google Batch API",
+        ),
     ],
     # Optional main options
     spot: Annotated[
@@ -65,16 +71,25 @@ def add_google_batch(
     ] = False,
     fusion_v2: Annotated[
         bool,
-        typer.Option("--fusion-v2", help="With Fusion v2 enabled, S3 buckets specified in the Pipeline work directory and Allowed S3 Buckets fields will be accessible in the compute nodes storage (requires Wave containers service)"),
+        typer.Option(
+            "--fusion-v2",
+            help="With Fusion v2 enabled, S3 buckets specified in the Pipeline work directory and Allowed S3 Buckets fields will be accessible in the compute nodes storage (requires Wave containers service)",
+        ),
     ] = False,
     wave: Annotated[
         bool,
-        typer.Option("--wave", help="Allow access to private container repositories and the provisioning of containers in your Nextflow pipelines via the Wave containers service"),
+        typer.Option(
+            "--wave",
+            help="Allow access to private container repositories and the provisioning of containers in your Nextflow pipelines via the Wave containers service",
+        ),
     ] = False,
     # Advanced options
     use_private_address: Annotated[
         bool,
-        typer.Option("--use-private-address", help="Do not attach a public IP address to the VM. When enabled only Google internal services are accessible"),
+        typer.Option(
+            "--use-private-address",
+            help="Do not attach a public IP address to the VM. When enabled only Google internal services are accessible",
+        ),
     ] = False,
     boot_disk_size: Annotated[
         int | None,
@@ -82,15 +97,23 @@ def add_google_batch(
     ] = None,
     head_job_cpus: Annotated[
         int | None,
-        typer.Option("--head-job-cpus", help="The number of CPUs to be allocated for the Nextflow runner job"),
+        typer.Option(
+            "--head-job-cpus", help="The number of CPUs to be allocated for the Nextflow runner job"
+        ),
     ] = None,
     head_job_memory: Annotated[
         int | None,
-        typer.Option("--head-job-memory", help="The number of MiB of memory reserved for the Nextflow runner job (value should be a multiple of 256MiB and from 0.5 GB to 8 GB per CPU)"),
+        typer.Option(
+            "--head-job-memory",
+            help="The number of MiB of memory reserved for the Nextflow runner job (value should be a multiple of 256MiB and from 0.5 GB to 8 GB per CPU)",
+        ),
     ] = None,
     service_account_email: Annotated[
         str | None,
-        typer.Option("--service-account-email", help="The service account email address used when deploying pipeline executions with this compute environment"),
+        typer.Option(
+            "--service-account-email",
+            help="The service account email address used when deploying pipeline executions with this compute environment",
+        ),
     ] = None,
     # Common platform options
     pre_run: Annotated[
@@ -103,7 +126,11 @@ def add_google_batch(
     ] = None,
     environment: Annotated[
         list[str] | None,
-        typer.Option("--environment", "-e", help="Environment variables (key=value format, can be specified multiple times)"),
+        typer.Option(
+            "--environment",
+            "-e",
+            help="Environment variables (key=value format, can be specified multiple times)",
+        ),
     ] = None,
     nextflow_config: Annotated[
         Path | None,
@@ -139,7 +166,9 @@ def add_google_batch(
             credentials = creds_response.get("credentials", [])
 
             if not credentials:
-                output_error("No Google Batch credentials found. Please create Google credentials first.")
+                output_error(
+                    "No Google Batch credentials found. Please create Google credentials first."
+                )
                 sys.exit(1)
 
             # Use the first matching credential with the same name as compute env

@@ -167,7 +167,7 @@ class TestParticipantsCmd:
             assert "organization1" in out.stdout
             assert "workspace1" in out.stdout
             # Names may be truncated in table output
-            assert ("jfernandez74" in out.stdout or "jfernand" in out.stdout)
+            assert "jfernandez74" in out.stdout or "jfernand" in out.stdout
             assert "julio" in out.stdout
 
     def test_list_with_pagination(
@@ -233,7 +233,9 @@ class TestParticipantsCmd:
         )
 
         # Run the command
-        out = exec_cmd("participants", "list", "-w", "75887156211589", "--offset", "1", "--max", "2")
+        out = exec_cmd(
+            "participants", "list", "-w", "75887156211589", "--offset", "1", "--max", "2"
+        )
 
         # Assertions
         assert out.exit_code == 0

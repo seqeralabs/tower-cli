@@ -29,8 +29,8 @@ class TestK8sPlatform:
         Ported from testAdd() in K8sPlatformTest.java
         """
         # Create temporary SSL certificate file
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.crt', delete=False) as ssl_file:
-            ssl_file.write('ssl_cert')
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".crt", delete=False) as ssl_file:
+            ssl_file.write("ssl_cert")
             ssl_cert_path = ssl_file.name
 
         try:
@@ -144,8 +144,8 @@ class TestK8sPlatform:
         Ported from testAddWithAdvancedOptions() in K8sPlatformTest.java
         """
         # Create temporary SSL certificate file
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.crt', delete=False) as ssl_file:
-            ssl_file.write('ssl_cert')
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".crt", delete=False) as ssl_file:
+            ssl_file.write("ssl_cert")
             ssl_cert_path = ssl_file.name
 
         try:
@@ -245,16 +245,20 @@ class TestK8sPlatform:
         Ported from testAddWithStaging() in K8sPlatformTest.java
         """
         # Create temporary files
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.crt', delete=False) as ssl_file:
-            ssl_file.write('ssl_cert')
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".crt", delete=False) as ssl_file:
+            ssl_file.write("ssl_cert")
             ssl_cert_path = ssl_file.name
 
-        with tempfile.NamedTemporaryFile(mode='w', prefix='pre', suffix='.sh', delete=False) as pre_file:
-            pre_file.write('pre_run_me')
+        with tempfile.NamedTemporaryFile(
+            mode="w", prefix="pre", suffix=".sh", delete=False
+        ) as pre_file:
+            pre_file.write("pre_run_me")
             pre_run_path = pre_file.name
 
-        with tempfile.NamedTemporaryFile(mode='w', prefix='post', suffix='.sh', delete=False) as post_file:
-            post_file.write('post_run_me')
+        with tempfile.NamedTemporaryFile(
+            mode="w", prefix="post", suffix=".sh", delete=False
+        ) as post_file:
+            post_file.write("post_run_me")
             post_run_path = post_file.name
 
         try:

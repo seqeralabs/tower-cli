@@ -5,8 +5,6 @@ Ported from GkePlatformTest.java
 """
 
 import json
-import tempfile
-from pathlib import Path
 
 import pytest
 from pytest_httpserver import HTTPServer

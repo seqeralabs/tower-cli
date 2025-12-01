@@ -8,9 +8,6 @@ import json
 
 import pytest
 from pytest_httpserver import HTTPServer
-from werkzeug.wrappers import Response as WerkzeugResponse
-
-from tests.conftest import ExecOut
 
 
 class TestAwsProvider:

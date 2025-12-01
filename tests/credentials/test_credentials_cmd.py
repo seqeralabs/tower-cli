@@ -263,4 +263,8 @@ class TestCredentialsCmd:
         # Assertions - should fail
         assert out.exit_code == 1
         assert out.stdout == ""
-        assert "401" in out.stderr or "Unauthorized" in out.stderr or "authentication" in out.stderr.lower()
+        assert (
+            "401" in out.stderr
+            or "Unauthorized" in out.stderr
+            or "authentication" in out.stderr.lower()
+        )

@@ -5,10 +5,9 @@ Manage workflow runs in workspaces.
 """
 
 import sys
-from typing import Optional
+from typing import Annotated, Optional
 
 import typer
-from typing_extensions import Annotated
 
 from seqera.api.client import SeqeraClient
 from seqera.exceptions import (
@@ -81,7 +80,7 @@ def get_workspace_name(client: SeqeraClient) -> str:
 @app.command("list")
 def list_runs(
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
     ] = None,
 ) -> None:
@@ -116,7 +115,7 @@ def view_run(
         typer.Option("-i", "--id", help="Workflow run ID"),
     ],
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
     ] = None,
 ) -> None:
@@ -147,8 +146,12 @@ def view_run(
             "username": workflow.get("userName"),
             "workdir": workflow.get("workDir"),
             "container": workflow.get("container"),
-            "executors": ", ".join(progress.get("executors", [])) if progress.get("executors") else None,
-            "nextflowVersion": workflow.get("nextflow", {}).get("version") if workflow.get("nextflow") else None,
+            "executors": (
+                ", ".join(progress.get("executors", [])) if progress.get("executors") else None
+            ),
+            "nextflowVersion": (
+                workflow.get("nextflow", {}).get("version") if workflow.get("nextflow") else None
+            ),
             "status": workflow.get("status"),
         }
 
@@ -171,7 +174,7 @@ def delete_run(
         typer.Option("-i", "--id", help="Workflow run ID"),
     ],
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
     ] = None,
 ) -> None:
@@ -208,7 +211,7 @@ def cancel_run(
         typer.Option("-i", "--id", help="Workflow run ID"),
     ],
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
     ] = None,
 ) -> None:
@@ -245,7 +248,7 @@ def list_tasks(
         typer.Option("-i", "--id", help="Workflow run ID"),
     ],
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
     ] = None,
 ) -> None:
@@ -283,7 +286,7 @@ def view_metrics(
         typer.Option("-i", "--id", help="Workflow run ID"),
     ],
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
     ] = None,
 ) -> None:

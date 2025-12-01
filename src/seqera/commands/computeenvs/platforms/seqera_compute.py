@@ -2,12 +2,10 @@
 Seqera Compute platform implementation for compute environments.
 """
 
-import sys
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Annotated
 
 import typer
-from typing_extensions import Annotated
 
 from seqera.commands.computeenvs import (
     USER_WORKSPACE_NAME,
@@ -20,7 +18,7 @@ from seqera.main import get_client, get_output_format
 from seqera.responses.computeenvs import ComputeEnvAdded
 
 
-def read_file_content(file_path: Optional[Path]) -> Optional[str]:
+def read_file_content(file_path: Path | None) -> str | None:
     """Read content from a file if provided."""
     if file_path is None:
         return None
@@ -30,7 +28,7 @@ def read_file_content(file_path: Optional[Path]) -> Optional[str]:
         raise SeqeraError(f"Failed to read file {file_path}: {e}")
 
 
-def parse_environment_variables(env_vars: Optional[List[str]]) -> Optional[List[Dict[str, any]]]:
+def parse_environment_variables(env_vars: list[str] | None) -> list[dict[str, any]] | None:
     """
     Parse environment variables from key=value format.
 
@@ -64,12 +62,14 @@ def parse_environment_variables(env_vars: Optional[List[str]]) -> Optional[List[
             var_name = key[5:]
             compute = True
 
-        result.append({
-            "name": var_name,
-            "value": value,
-            "head": head,
-            "compute": compute,
-        })
+        result.append(
+            {
+                "name": var_name,
+                "value": value,
+                "head": head,
+                "compute": compute,
+            }
+        )
 
     return result
 
@@ -78,11 +78,26 @@ def parse_environment_variables(env_vars: Optional[List[str]]) -> Optional[List[
 def add_seqera_compute(
     name: Annotated[str, typer.Option("-n", "--name", help="Compute environment name.")],
     region: Annotated[str, typer.Option("-r", "--region", help="AWS region.")],
-    work_dir: Annotated[Optional[str], typer.Option("--work-dir", help="Work directory suffix relative to the S3 bucket that will be created by Seqera Compute.")] = None,
-    pre_run: Annotated[Optional[Path], typer.Option("--pre-run", help="Pre-run script.")] = None,
-    post_run: Annotated[Optional[Path], typer.Option("--post-run", help="Post-run script.")] = None,
-    nextflow_config: Annotated[Optional[Path], typer.Option("--nextflow-config", help="Nextflow config")] = None,
-    env: Annotated[Optional[List[str]], typer.Option("-e", "--env", help="Add environment variables. By default are only added to the Nextflow head job process, if you want to add them to the process task prefix the name with 'compute:' or 'both:' if you want to make it available to both locations.")] = None,
+    work_dir: Annotated[
+        str | None,
+        typer.Option(
+            "--work-dir",
+            help="Work directory suffix relative to the S3 bucket that will be created by Seqera Compute.",
+        ),
+    ] = None,
+    pre_run: Annotated[Path | None, typer.Option("--pre-run", help="Pre-run script.")] = None,
+    post_run: Annotated[Path | None, typer.Option("--post-run", help="Post-run script.")] = None,
+    nextflow_config: Annotated[
+        Path | None, typer.Option("--nextflow-config", help="Nextflow config")
+    ] = None,
+    env: Annotated[
+        list[str] | None,
+        typer.Option(
+            "-e",
+            "--env",
+            help="Add environment variables. By default are only added to the Nextflow head job process, if you want to add them to the process task prefix the name with 'compute:' or 'both:' if you want to make it available to both locations.",
+        ),
+    ] = None,
 ) -> None:
     """Add new Seqera Compute environment."""
     try:

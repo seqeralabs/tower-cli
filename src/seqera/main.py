@@ -6,10 +6,9 @@ Main entry point for the Seqera CLI application.
 
 import os
 import sys
-from typing import Optional
+from typing import Annotated
 
 import typer
-from typing_extensions import Annotated
 
 from seqera.api.client import SeqeraClient
 from seqera.utils.output import OutputFormat
@@ -22,15 +21,16 @@ app = typer.Typer(
     add_completion=False,
 )
 
+
 # Global state for API client and options
 class GlobalState:
     """Global state for CLI application."""
 
     def __init__(self) -> None:
-        self.client: Optional[SeqeraClient] = None
+        self.client: SeqeraClient | None = None
         self.output_format: OutputFormat = OutputFormat.CONSOLE
-        self.workspace_id: Optional[str] = None
-        self.workspace_ref: Optional[str] = None
+        self.workspace_id: str | None = None
+        self.workspace_ref: str | None = None
 
 
 # Global state instance
@@ -64,7 +64,7 @@ def get_output_format() -> OutputFormat:
 def main_callback(
     ctx: typer.Context,
     access_token: Annotated[
-        Optional[str],
+        str | None,
         typer.Option(
             "-t",
             "--access-token",
@@ -146,7 +146,25 @@ def main_callback(
 
 
 # Import and register subcommands
-from seqera.commands import actions, collaborators, computeenvs, credentials, datasets, info, labels, launch, members, organizations, participants, pipelines, runs, secrets, studios, teams, workspaces
+from seqera.commands import (
+    actions,
+    collaborators,
+    computeenvs,
+    credentials,
+    datasets,
+    info,
+    labels,
+    launch,
+    members,
+    organizations,
+    participants,
+    pipelines,
+    runs,
+    secrets,
+    studios,
+    teams,
+    workspaces,
+)
 
 app.add_typer(actions.app, name="actions")
 app.add_typer(collaborators.app, name="collaborators")

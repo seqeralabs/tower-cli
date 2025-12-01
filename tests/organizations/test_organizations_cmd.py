@@ -57,9 +57,9 @@ class TestOrganizationsCmd:
             user_response, status=200
         )
 
-        httpserver.expect_request(
-            "/user/1264/workspaces", method="GET"
-        ).respond_with_json(workspaces_response, status=200)
+        httpserver.expect_request("/user/1264/workspaces", method="GET").respond_with_json(
+            workspaces_response, status=200
+        )
 
         # Run the command
         out = exec_cmd(
@@ -118,9 +118,9 @@ class TestOrganizationsCmd:
             user_response, status=200
         )
 
-        httpserver.expect_request(
-            "/user/1264/workspaces", method="GET"
-        ).respond_with_json(workspaces_response, status=200)
+        httpserver.expect_request("/user/1264/workspaces", method="GET").respond_with_json(
+            workspaces_response, status=200
+        )
 
         # Run the command
         out = exec_cmd("organizations", "list")
@@ -182,13 +182,13 @@ class TestOrganizationsCmd:
             user_response, status=200
         )
 
-        httpserver.expect_request(
-            "/user/1264/workspaces", method="GET"
-        ).respond_with_json(workspaces_response, status=200)
+        httpserver.expect_request("/user/1264/workspaces", method="GET").respond_with_json(
+            workspaces_response, status=200
+        )
 
-        httpserver.expect_request(
-            "/orgs/27736513644467", method="GET"
-        ).respond_with_json(org_response, status=200)
+        httpserver.expect_request("/orgs/27736513644467", method="GET").respond_with_json(
+            org_response, status=200
+        )
 
         # Run the command
         out = exec_cmd(
@@ -253,9 +253,9 @@ class TestOrganizationsCmd:
             user_response, status=200
         )
 
-        httpserver.expect_request(
-            "/user/1264/workspaces", method="GET"
-        ).respond_with_json(workspaces_response, status=200)
+        httpserver.expect_request("/user/1264/workspaces", method="GET").respond_with_json(
+            workspaces_response, status=200
+        )
 
         # Run the command
         out = exec_cmd("organizations", "view", "-n", "organization11")
@@ -303,13 +303,13 @@ class TestOrganizationsCmd:
             user_response, status=200
         )
 
-        httpserver.expect_request(
-            "/user/1264/workspaces", method="GET"
-        ).respond_with_json(workspaces_response, status=200)
+        httpserver.expect_request("/user/1264/workspaces", method="GET").respond_with_json(
+            workspaces_response, status=200
+        )
 
-        httpserver.expect_request(
-            "/orgs/27736513644467", method="DELETE"
-        ).respond_with_data("", status=204)
+        httpserver.expect_request("/orgs/27736513644467", method="DELETE").respond_with_data(
+            "", status=204
+        )
 
         # Run the command
         out = exec_cmd(
@@ -371,9 +371,9 @@ class TestOrganizationsCmd:
             user_response, status=200
         )
 
-        httpserver.expect_request(
-            "/user/1264/workspaces", method="GET"
-        ).respond_with_json(workspaces_response, status=200)
+        httpserver.expect_request("/user/1264/workspaces", method="GET").respond_with_json(
+            workspaces_response, status=200
+        )
 
         # Run the command
         out = exec_cmd("organizations", "delete", "-n", "organization11")
@@ -419,13 +419,13 @@ class TestOrganizationsCmd:
             user_response, status=200
         )
 
-        httpserver.expect_request(
-            "/user/1264/workspaces", method="GET"
-        ).respond_with_json(workspaces_response, status=200)
+        httpserver.expect_request("/user/1264/workspaces", method="GET").respond_with_json(
+            workspaces_response, status=200
+        )
 
-        httpserver.expect_request(
-            "/orgs/27736513644467", method="DELETE"
-        ).respond_with_data("", status=500)
+        httpserver.expect_request("/orgs/27736513644467", method="DELETE").respond_with_data(
+            "", status=500
+        )
 
         # Run the command
         out = exec_cmd("organizations", "delete", "-n", "organization1")
@@ -434,7 +434,7 @@ class TestOrganizationsCmd:
         assert out.exit_code == 1
         assert out.stdout == ""
         assert "organization1" in out.stderr
-        assert ("could not be deleted" in out.stderr.lower() or "500" in out.stderr)
+        assert "could not be deleted" in out.stderr.lower() or "500" in out.stderr
 
     @pytest.mark.parametrize("output_format", ["console", "json", "yaml"])
     def test_add(
@@ -550,13 +550,13 @@ class TestOrganizationsCmd:
             user_response, status=200
         )
 
-        httpserver.expect_request(
-            "/user/1264/workspaces", method="GET"
-        ).respond_with_json(workspaces_response, status=200)
+        httpserver.expect_request("/user/1264/workspaces", method="GET").respond_with_json(
+            workspaces_response, status=200
+        )
 
-        httpserver.expect_request(
-            "/orgs/275484385882108", method="DELETE"
-        ).respond_with_data("", status=200)
+        httpserver.expect_request("/orgs/275484385882108", method="DELETE").respond_with_data(
+            "", status=200
+        )
 
         httpserver.expect_request("/orgs", method="POST").respond_with_json(
             org_response, status=200
@@ -602,9 +602,7 @@ class TestOrganizationsCmd:
         Ported from testAddError() in OrganizationsCmdTest.java
         """
         # Setup mock HTTP expectations
-        httpserver.expect_request("/orgs", method="POST").respond_with_data(
-            "", status=500
-        )
+        httpserver.expect_request("/orgs", method="POST").respond_with_data("", status=500)
 
         # Run the command
         out = exec_cmd(
@@ -672,17 +670,17 @@ class TestOrganizationsCmd:
             user_response, status=200
         )
 
-        httpserver.expect_request(
-            "/user/1264/workspaces", method="GET"
-        ).respond_with_json(workspaces_response, status=200)
+        httpserver.expect_request("/user/1264/workspaces", method="GET").respond_with_json(
+            workspaces_response, status=200
+        )
 
-        httpserver.expect_request(
-            "/orgs/27736513644467", method="GET"
-        ).respond_with_json(org_response, status=200)
+        httpserver.expect_request("/orgs/27736513644467", method="GET").respond_with_json(
+            org_response, status=200
+        )
 
-        httpserver.expect_request(
-            "/orgs/27736513644467", method="PUT"
-        ).respond_with_data("", status=204)
+        httpserver.expect_request("/orgs/27736513644467", method="PUT").respond_with_data(
+            "", status=204
+        )
 
         # Run the command
         out = exec_cmd(
@@ -765,17 +763,17 @@ class TestOrganizationsCmd:
             user_response, status=200
         )
 
-        httpserver.expect_request(
-            "/user/1264/workspaces", method="GET"
-        ).respond_with_json(workspaces_response, status=200)
+        httpserver.expect_request("/user/1264/workspaces", method="GET").respond_with_json(
+            workspaces_response, status=200
+        )
 
-        httpserver.expect_request(
-            "/orgs/27736513644467", method="GET"
-        ).respond_with_json(org_response, status=200)
+        httpserver.expect_request("/orgs/27736513644467", method="GET").respond_with_json(
+            org_response, status=200
+        )
 
-        httpserver.expect_request(
-            "/orgs/27736513644467", method="PUT"
-        ).respond_with_data("", status=204)
+        httpserver.expect_request("/orgs/27736513644467", method="PUT").respond_with_data(
+            "", status=204
+        )
 
         # Run the command
         out = exec_cmd(
@@ -843,13 +841,13 @@ class TestOrganizationsCmd:
             user_response, status=200
         )
 
-        httpserver.expect_request(
-            "/user/1264/workspaces", method="GET"
-        ).respond_with_json(workspaces_response, status=200)
+        httpserver.expect_request("/user/1264/workspaces", method="GET").respond_with_json(
+            workspaces_response, status=200
+        )
 
-        httpserver.expect_request(
-            "/orgs/27736513644467", method="PUT"
-        ).respond_with_data("", status=500)
+        httpserver.expect_request("/orgs/27736513644467", method="PUT").respond_with_data(
+            "", status=500
+        )
 
         # Run the command
         out = exec_cmd(

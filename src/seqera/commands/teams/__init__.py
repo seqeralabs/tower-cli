@@ -5,10 +5,9 @@ Manage teams in the Seqera Platform.
 """
 
 import sys
-from typing import Optional
+from typing import Annotated, Optional
 
 import typer
-from typing_extensions import Annotated
 
 from seqera.api.client import SeqeraClient
 from seqera.commands.organizations import find_organization_by_name
@@ -75,7 +74,7 @@ def output_response(response: object, output_format: OutputFormat) -> None:
         output_console(response.to_console())
 
 
-def find_team_by_name(client: SeqeraClient, org_id: int, team_name: str) -> Optional[dict]:
+def find_team_by_name(client: SeqeraClient, org_id: int, team_name: str) -> dict | None:
     """
     Find a team by name within an organization.
 
@@ -92,7 +91,7 @@ def find_team_by_name(client: SeqeraClient, org_id: int, team_name: str) -> Opti
 
 def find_member_by_username_or_email(
     client: SeqeraClient, org_id: int, team_id: int, username_or_email: str
-) -> Optional[dict]:
+) -> dict | None:
     """
     Find a team member by username or email.
 
@@ -114,15 +113,15 @@ def list_teams(
         typer.Option("-o", "--organization", help="Organization name"),
     ],
     offset: Annotated[
-        Optional[int],
+        int | None,
         typer.Option("--offset", help="Pagination offset (conflicts with --page)"),
     ] = None,
     max_results: Annotated[
-        Optional[int],
+        int | None,
         typer.Option("--max", help="Maximum number of results"),
     ] = None,
     page: Annotated[
-        Optional[int],
+        int | None,
         typer.Option("--page", help="Page number (conflicts with --offset)"),
     ] = None,
 ) -> None:
@@ -185,11 +184,11 @@ def view_team(
         typer.Option("-o", "--organization", help="Organization name"),
     ],
     name: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-n", "--name", help="Team name"),
     ] = None,
     team_id: Annotated[
-        Optional[int],
+        int | None,
         typer.Option("-i", "--id", help="Team ID"),
     ] = None,
 ) -> None:
@@ -247,7 +246,7 @@ def add_team(
         typer.Option("-n", "--name", help="Team name"),
     ],
     description: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-d", "--description", help="Team description"),
     ] = None,
     overwrite: Annotated[
@@ -288,7 +287,7 @@ def add_team(
             payload["team"]["description"] = description
 
         # Create team
-        team_response = client.post(f"/orgs/{org_id}/teams", json=payload)
+        client.post(f"/orgs/{org_id}/teams", json=payload)
 
         # Output response
         result = TeamAdded(organization=organization, team_name=name)
@@ -305,11 +304,11 @@ def delete_team(
         typer.Option("-o", "--organization", help="Organization name"),
     ],
     name: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-n", "--name", help="Team name"),
     ] = None,
     team_id: Annotated[
-        Optional[int],
+        int | None,
         typer.Option("-i", "--id", help="Team ID"),
     ] = None,
 ) -> None:
@@ -425,10 +424,7 @@ def add_member(
 
         # Add member
         payload = {"userNameOrEmail": member}
-        member_response = client.post(
-            f"/orgs/{org_id}/teams/{team_id}/members",
-            json=payload
-        )
+        member_response = client.post(f"/orgs/{org_id}/teams/{team_id}/members", json=payload)
         member_data = member_response.get("member", {})
 
         # Output response

@@ -9,7 +9,7 @@ import json
 import pytest
 from pytest_httpserver import HTTPServer
 
-from tests.conftest import ExecOut, exec_command
+from tests.conftest import exec_command
 
 
 @pytest.mark.parametrize("output_format", ["console", "json", "yaml"])

@@ -5,10 +5,9 @@ Manage organization collaborators (external users who can be added to workspaces
 """
 
 import sys
-from typing import Optional
+from typing import Annotated, Optional
 
 import typer
-from typing_extensions import Annotated
 
 from seqera.api.client import SeqeraClient
 from seqera.exceptions import (
@@ -81,7 +80,7 @@ def get_user_workspaces(client: SeqeraClient) -> tuple:
     return user_name, orgs_and_workspaces
 
 
-def find_organization_by_id(orgs_and_workspaces: list, org_id: str) -> Optional[dict]:
+def find_organization_by_id(orgs_and_workspaces: list, org_id: str) -> dict | None:
     """Find organization by ID in orgs and workspaces list."""
     org_id_int = int(org_id)
     for entry in orgs_and_workspaces:
@@ -90,7 +89,7 @@ def find_organization_by_id(orgs_and_workspaces: list, org_id: str) -> Optional[
     return None
 
 
-def find_collaborator_by_username(collaborators: list, username: str) -> Optional[dict]:
+def find_collaborator_by_username(collaborators: list, username: str) -> dict | None:
     """Find collaborator by username in collaborators list."""
     for collaborator in collaborators:
         if collaborator.get("userName") == username:
@@ -105,15 +104,15 @@ def list_collaborators(
         typer.Option("-o", "--organization", help="Organization ID"),
     ],
     filter_text: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-f", "--filter", help="Filter collaborators by username prefix"),
     ] = None,
     offset: Annotated[
-        Optional[int],
+        int | None,
         typer.Option("--offset", help="Pagination offset"),
     ] = None,
     max_items: Annotated[
-        Optional[int],
+        int | None,
         typer.Option("--max", help="Maximum number of items to return"),
     ] = None,
 ) -> None:

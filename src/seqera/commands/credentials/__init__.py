@@ -5,10 +5,9 @@ Manage workspace credentials for various cloud providers and services.
 """
 
 import sys
-from typing import Optional
+from typing import Annotated, Optional
 
 import typer
-from typing_extensions import Annotated
 
 from seqera.api.client import SeqeraClient
 from seqera.exceptions import (
@@ -85,6 +84,7 @@ def output_response(response: object, output_format: OutputFormat) -> None:
 
 # AWS Credentials Commands
 
+
 @add_app.command("aws")
 def add_aws(
     name: Annotated[
@@ -92,19 +92,19 @@ def add_aws(
         typer.Option("-n", "--name", help="Credentials name"),
     ],
     access_key: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-a", "--access-key", help="AWS access key"),
     ] = None,
     secret_key: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-s", "--secret-key", help="AWS secret key"),
     ] = None,
     assume_role_arn: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-r", "--assume-role-arn", help="IAM role ARN to assume"),
     ] = None,
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
     ] = None,
     overwrite: Annotated[
@@ -157,19 +157,19 @@ def update_aws(
         typer.Option("-i", "--id", help="Credentials ID"),
     ],
     assume_role_arn: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-r", "--assume-role-arn", help="IAM role ARN to assume"),
     ] = None,
     access_key: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-a", "--access-key", help="AWS access key"),
     ] = None,
     secret_key: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-s", "--secret-key", help="AWS secret key"),
     ] = None,
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
     ] = None,
 ) -> None:
@@ -221,6 +221,7 @@ def update_aws(
 
 # Azure Credentials Commands
 
+
 @add_app.command("azure")
 def add_azure(
     name: Annotated[
@@ -244,7 +245,7 @@ def add_azure(
         typer.Option("--storage-key", help="Azure blob storage account key"),
     ],
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
     ] = None,
     overwrite: Annotated[
@@ -290,6 +291,7 @@ def add_azure(
 
 # Google Credentials Commands
 
+
 @add_app.command("google")
 def add_google(
     name: Annotated[
@@ -301,7 +303,7 @@ def add_google(
         typer.Option("-k", "--key", help="JSON file with the service account key"),
     ],
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
     ] = None,
     overwrite: Annotated[
@@ -353,6 +355,7 @@ def add_google(
 
 # GitHub Credentials Commands
 
+
 @add_app.command("github")
 def add_github(
     name: Annotated[
@@ -365,10 +368,12 @@ def add_github(
     ],
     password: Annotated[
         str,
-        typer.Option("-p", "--password", help="GitHub account password or access token (recommended)"),
+        typer.Option(
+            "-p", "--password", help="GitHub account password or access token (recommended)"
+        ),
     ],
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
     ] = None,
     overwrite: Annotated[
@@ -412,6 +417,7 @@ def add_github(
 
 # GitLab Credentials Commands
 
+
 @add_app.command("gitlab")
 def add_gitlab(
     name: Annotated[
@@ -424,14 +430,16 @@ def add_gitlab(
     ],
     password: Annotated[
         str,
-        typer.Option("-p", "--password", help="GitLab account password or access token (recommended)"),
+        typer.Option(
+            "-p", "--password", help="GitLab account password or access token (recommended)"
+        ),
     ],
     token: Annotated[
         str,
         typer.Option("-t", "--token", help="GitLab account access token"),
     ],
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
     ] = None,
     overwrite: Annotated[
@@ -476,6 +484,7 @@ def add_gitlab(
 
 # Gitea Credentials Commands
 
+
 @add_app.command("gitea")
 def add_gitea(
     name: Annotated[
@@ -491,7 +500,7 @@ def add_gitea(
         typer.Option("-p", "--password", help="Gitea account password"),
     ],
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
     ] = None,
     overwrite: Annotated[
@@ -535,6 +544,7 @@ def add_gitea(
 
 # Bitbucket Credentials Commands
 
+
 @add_app.command("bitbucket")
 def add_bitbucket(
     name: Annotated[
@@ -550,7 +560,7 @@ def add_bitbucket(
         typer.Option("-p", "--password", help="Bitbucket App password"),
     ],
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
     ] = None,
     overwrite: Annotated[
@@ -594,6 +604,7 @@ def add_bitbucket(
 
 # CodeCommit Credentials Commands
 
+
 @add_app.command("codecommit")
 def add_codecommit(
     name: Annotated[
@@ -609,11 +620,11 @@ def add_codecommit(
         typer.Option("--secret-key", help="CodeCommit AWS secret key"),
     ],
     base_url: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--base-url", help="Repository base URL"),
     ] = None,
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
     ] = None,
     overwrite: Annotated[
@@ -661,6 +672,7 @@ def add_codecommit(
 
 # Container Registry Credentials Commands
 
+
 @add_app.command("container-reg")
 def add_container_registry(
     name: Annotated[
@@ -669,18 +681,22 @@ def add_container_registry(
     ],
     username: Annotated[
         str,
-        typer.Option("-u", "--username", help="The user name to grant you access to the container registry"),
+        typer.Option(
+            "-u", "--username", help="The user name to grant you access to the container registry"
+        ),
     ],
     password: Annotated[
         str,
-        typer.Option("-p", "--password", help="The password to grant you access to the container registry"),
+        typer.Option(
+            "-p", "--password", help="The password to grant you access to the container registry"
+        ),
     ],
     registry: Annotated[
         str,
         typer.Option("-r", "--registry", help="The container registry server name"),
     ] = "docker.io",
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
     ] = None,
     overwrite: Annotated[
@@ -725,6 +741,7 @@ def add_container_registry(
 
 # SSH Credentials Commands
 
+
 @add_app.command("ssh")
 def add_ssh(
     name: Annotated[
@@ -736,11 +753,11 @@ def add_ssh(
         typer.Option("-k", "--key", help="SSH private key file"),
     ],
     passphrase: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-p", "--passphrase", help="Passphrase associated with the private key"),
     ] = None,
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
     ] = None,
     overwrite: Annotated[
@@ -796,6 +813,7 @@ def add_ssh(
 
 # Kubernetes Credentials Commands
 
+
 @add_app.command("k8s")
 def add_k8s(
     name: Annotated[
@@ -803,19 +821,19 @@ def add_k8s(
         typer.Option("-n", "--name", help="Credentials name"),
     ],
     token: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-t", "--token", help="Service account token"),
     ] = None,
     certificate: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-c", "--certificate", help="Client certificate file"),
     ] = None,
     private_key: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-k", "--private-key", help="Client key file"),
     ] = None,
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
     ] = None,
     overwrite: Annotated[
@@ -882,6 +900,7 @@ def add_k8s(
 
 # TW Agent Credentials Commands
 
+
 @add_app.command("agent")
 def add_agent(
     name: Annotated[
@@ -897,7 +916,7 @@ def add_agent(
         typer.Option("--work-dir", help="Default work directory"),
     ] = "$TW_AGENT_WORK",
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
     ] = None,
     overwrite: Annotated[
@@ -951,7 +970,7 @@ def list_credentials() -> None:
         credentials = response.get("credentials", [])
 
         # Get user info for workspace URL
-        user_info = client.get("/user-info")
+        client.get("/user-info")
 
         # Output response
         result = CredentialsList(

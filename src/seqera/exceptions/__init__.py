@@ -46,9 +46,7 @@ class CredentialsNotFoundException(NotFoundError):
     def __init__(self, credentials_id: str, workspace: str) -> None:
         self.credentials_id = credentials_id
         self.workspace = workspace
-        super().__init__(
-            f"Credentials '{credentials_id}' not found in workspace '{workspace}'"
-        )
+        super().__init__(f"Credentials '{credentials_id}' not found in workspace '{workspace}'")
 
 
 class ComputeEnvNotFoundException(NotFoundError):
@@ -84,9 +82,7 @@ class PipelineNotFoundException(NotFoundError):
     def __init__(self, pipeline_name: str, workspace: str) -> None:
         self.pipeline_name = pipeline_name
         self.workspace = workspace
-        super().__init__(
-            f"Pipeline '{pipeline_name}' not found in workspace '{workspace}'"
-        )
+        super().__init__(f"Pipeline '{pipeline_name}' not found in workspace '{workspace}'")
 
 
 class RunNotFoundException(NotFoundError):
@@ -95,9 +91,7 @@ class RunNotFoundException(NotFoundError):
     def __init__(self, run_id: str, workspace: str) -> None:
         self.run_id = run_id
         self.workspace = workspace
-        super().__init__(
-            f"Run '{run_id}' not found in workspace '{workspace}'"
-        )
+        super().__init__(f"Run '{run_id}' not found in workspace '{workspace}'")
 
 
 class ActionNotFoundException(NotFoundError):
@@ -106,9 +100,7 @@ class ActionNotFoundException(NotFoundError):
     def __init__(self, action_name: str, workspace: str) -> None:
         self.action_name = action_name
         self.workspace = workspace
-        super().__init__(
-            f"Action '{action_name}' not found in workspace '{workspace}'"
-        )
+        super().__init__(f"Action '{action_name}' not found in workspace '{workspace}'")
 
 
 class MissingRequiredOptionError(SeqeraError):

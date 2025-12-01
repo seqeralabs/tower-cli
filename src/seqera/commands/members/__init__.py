@@ -5,10 +5,9 @@ Manage organization members in the Seqera Platform.
 """
 
 import sys
-from typing import Optional
+from typing import Annotated, Optional
 
 import typer
-from typing_extensions import Annotated
 
 from seqera.api.client import SeqeraClient
 from seqera.commands.organizations import find_organization_by_name
@@ -23,8 +22,8 @@ from seqera.responses import (
     MemberAdded,
     MemberDeleted,
     MemberLeft,
-    MemberUpdated,
     MembersList,
+    MemberUpdated,
 )
 from seqera.utils.output import OutputFormat, output_console, output_error, output_json, output_yaml
 
@@ -67,7 +66,7 @@ def output_response(response: object, output_format: OutputFormat) -> None:
 
 def find_member_by_username_or_email(
     client: SeqeraClient, org_id: int, username_or_email: str
-) -> Optional[dict]:
+) -> dict | None:
     """
     Find an organization member by username or email.
 
@@ -89,15 +88,15 @@ def list_members(
         typer.Option("-o", "--organization", help="Organization name"),
     ],
     offset: Annotated[
-        Optional[int],
+        int | None,
         typer.Option("--offset", help="Pagination offset (conflicts with --page)"),
     ] = None,
     max_results: Annotated[
-        Optional[int],
+        int | None,
         typer.Option("--max", help="Maximum number of results"),
     ] = None,
     page: Annotated[
-        Optional[int],
+        int | None,
         typer.Option("--page", help="Page number (conflicts with --offset)"),
     ] = None,
 ) -> None:

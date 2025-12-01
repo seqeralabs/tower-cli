@@ -7,11 +7,10 @@ Manage pipelines in workspaces.
 import json
 import sys
 from pathlib import Path
-from typing import Optional
+from typing import Annotated, Optional
 
 import typer
 import yaml
-from typing_extensions import Annotated
 
 from seqera.api.client import SeqeraClient
 from seqera.exceptions import (
@@ -75,7 +74,7 @@ def output_response(response: object, output_format: OutputFormat) -> None:
         output_console(response.to_console())
 
 
-def get_workspace_info(client: SeqeraClient, workspace_id: Optional[str] = None) -> tuple:
+def get_workspace_info(client: SeqeraClient, workspace_id: str | None = None) -> tuple:
     """Get workspace reference and workspace ID.
 
     Args:
@@ -119,9 +118,9 @@ def get_workspace_info(client: SeqeraClient, workspace_id: Optional[str] = None)
 
 def find_pipeline(
     client: SeqeraClient,
-    pipeline_name: Optional[str] = None,
-    pipeline_id: Optional[str] = None,
-    workspace_id: Optional[str] = None,
+    pipeline_name: str | None = None,
+    pipeline_id: str | None = None,
+    workspace_id: str | None = None,
 ) -> tuple:
     """Find a pipeline by name or ID.
 
@@ -171,10 +170,10 @@ def find_pipeline(
 
 def get_compute_env(
     client: SeqeraClient,
-    compute_env_name: Optional[str] = None,
-    workspace_id: Optional[str] = None,
+    compute_env_name: str | None = None,
+    workspace_id: str | None = None,
     use_primary: bool = True,
-) -> Optional[dict]:
+) -> dict | None:
     """Get compute environment by name or get primary.
 
     Args:
@@ -233,19 +232,19 @@ def get_compute_env(
 @app.command("list")
 def list_pipelines(
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace ID (numeric)"),
     ] = None,
     offset: Annotated[
-        Optional[int],
+        int | None,
         typer.Option("--offset", help="Pagination offset"),
     ] = None,
     max_items: Annotated[
-        Optional[int],
+        int | None,
         typer.Option("--max", help="Maximum number of items to return"),
     ] = None,
     page: Annotated[
-        Optional[int],
+        int | None,
         typer.Option("--page", help="Page number (1-indexed)"),
     ] = None,
 ) -> None:
@@ -306,15 +305,15 @@ def list_pipelines(
 @app.command("view")
 def view_pipeline(
     pipeline_name: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-n", "--name", help="Pipeline name"),
     ] = None,
     pipeline_id: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-i", "--id", help="Pipeline ID"),
     ] = None,
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace ID (numeric)"),
     ] = None,
 ) -> None:
@@ -363,39 +362,39 @@ def add_pipeline(
         typer.Argument(help="Pipeline repository URL"),
     ],
     compute_env: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-c", "--compute-env", help="Compute environment name"),
     ] = None,
     work_dir: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--work-dir", help="Work directory"),
     ] = None,
     revision: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-r", "--revision", help="Pipeline revision"),
     ] = None,
     config_profiles: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--config-profiles", help="Comma-separated config profiles"),
     ] = None,
     params_file: Annotated[
-        Optional[Path],
+        Path | None,
         typer.Option("--params-file", help="Parameters file (YAML/JSON)"),
     ] = None,
     pre_run: Annotated[
-        Optional[Path],
+        Path | None,
         typer.Option("--pre-run", help="Pre-run script file"),
     ] = None,
     post_run: Annotated[
-        Optional[Path],
+        Path | None,
         typer.Option("--post-run", help="Post-run script file"),
     ] = None,
     description: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-d", "--description", help="Pipeline description"),
     ] = None,
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace ID (numeric)"),
     ] = None,
 ) -> None:
@@ -478,15 +477,15 @@ def add_pipeline(
 @app.command("delete")
 def delete_pipeline(
     pipeline_name: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-n", "--name", help="Pipeline name"),
     ] = None,
     pipeline_id: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-i", "--id", help="Pipeline ID"),
     ] = None,
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace ID (numeric)"),
     ] = None,
 ) -> None:
@@ -527,51 +526,51 @@ def delete_pipeline(
 @app.command("update")
 def update_pipeline(
     pipeline_name: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-n", "--name", help="Pipeline name"),
     ] = None,
     pipeline_id: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--id", help="Pipeline ID"),
     ] = None,
     new_name: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--new-name", help="New pipeline name"),
     ] = None,
     description: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-d", "--description", help="Pipeline description"),
     ] = None,
     compute_env: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-c", "--compute-env", help="Compute environment name"),
     ] = None,
     work_dir: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--work-dir", help="Work directory"),
     ] = None,
     revision: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-r", "--revision", help="Pipeline revision"),
     ] = None,
     config_profiles: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--config-profiles", help="Comma-separated config profiles"),
     ] = None,
     params_file: Annotated[
-        Optional[Path],
+        Path | None,
         typer.Option("--params-file", help="Parameters file (YAML/JSON)"),
     ] = None,
     pre_run: Annotated[
-        Optional[Path],
+        Path | None,
         typer.Option("--pre-run", help="Pre-run script file"),
     ] = None,
     post_run: Annotated[
-        Optional[Path],
+        Path | None,
         typer.Option("--post-run", help="Post-run script file"),
     ] = None,
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace ID (numeric)"),
     ] = None,
 ) -> None:
@@ -596,7 +595,7 @@ def update_pipeline(
                 params["workspaceId"] = workspace
             try:
                 client.get("/pipelines/validate", params=params)
-            except Exception as e:
+            except Exception:
                 raise InvalidResponseException(f"Pipeline name '{new_name}' is not valid")
 
         # Get current launch configuration
@@ -685,19 +684,19 @@ def update_pipeline(
 @app.command("export")
 def export_pipeline(
     pipeline_name: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-n", "--name", help="Pipeline name"),
     ] = None,
     pipeline_id: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-i", "--id", help="Pipeline ID"),
     ] = None,
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace ID (numeric)"),
     ] = None,
     output_file: Annotated[
-        Optional[Path],
+        Path | None,
         typer.Option("-o", "--output", help="Output file path"),
     ] = None,
 ) -> None:
@@ -831,15 +830,15 @@ def import_pipeline(
         typer.Argument(help="Configuration file (JSON/YAML)"),
     ],
     name: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-n", "--name", help="Pipeline name (overrides config)"),
     ] = None,
     compute_env: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-c", "--compute-env", help="Compute environment name (overrides config)"),
     ] = None,
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace ID (numeric)"),
     ] = None,
     overwrite: Annotated[
@@ -869,7 +868,9 @@ def import_pipeline(
         if name:
             config["name"] = name
         elif "name" not in config:
-            raise SeqeraError("Pipeline name must be specified either in config file or with --name")
+            raise SeqeraError(
+                "Pipeline name must be specified either in config file or with --name"
+            )
 
         pipeline_name = config["name"]
 

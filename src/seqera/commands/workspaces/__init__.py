@@ -5,10 +5,9 @@ Manage workspaces in organizations.
 """
 
 import sys
-from typing import Optional
+from typing import Annotated, Optional
 
 import typer
-from typing_extensions import Annotated
 
 from seqera.api.client import SeqeraClient
 from seqera.exceptions import (
@@ -88,7 +87,7 @@ def get_user_workspaces(client: SeqeraClient) -> tuple:
     return user_name, orgs_and_workspaces
 
 
-def find_workspace_by_id(orgs_and_workspaces: list, workspace_id: str) -> Optional[dict]:
+def find_workspace_by_id(orgs_and_workspaces: list, workspace_id: str) -> dict | None:
     """Find workspace by ID in orgs and workspaces list.
 
     Args:
@@ -105,7 +104,9 @@ def find_workspace_by_id(orgs_and_workspaces: list, workspace_id: str) -> Option
     return None
 
 
-def find_workspace_by_name(orgs_and_workspaces: list, workspace_name: str, org_name: Optional[str] = None) -> Optional[dict]:
+def find_workspace_by_name(
+    orgs_and_workspaces: list, workspace_name: str, org_name: str | None = None
+) -> dict | None:
     """Find workspace by name (and optionally org name) in orgs and workspaces list.
 
     Args:
@@ -123,7 +124,7 @@ def find_workspace_by_name(orgs_and_workspaces: list, workspace_name: str, org_n
     return None
 
 
-def find_org_by_name(orgs_and_workspaces: list, org_name: str) -> Optional[dict]:
+def find_org_by_name(orgs_and_workspaces: list, org_name: str) -> dict | None:
     """Find organization by name in orgs and workspaces list.
 
     Args:
@@ -142,7 +143,7 @@ def find_org_by_name(orgs_and_workspaces: list, org_name: str) -> Optional[dict]
 @app.command("list")
 def list_workspaces(
     organization: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-o", "--organization", help="Filter by organization name"),
     ] = None,
 ) -> None:
@@ -156,16 +157,12 @@ def list_workspaces(
 
         # Filter to only entries with workspaces
         workspaces = [
-            entry for entry in orgs_and_workspaces
-            if entry.get("workspaceId") is not None
+            entry for entry in orgs_and_workspaces if entry.get("workspaceId") is not None
         ]
 
         # Filter by organization if specified
         if organization:
-            workspaces = [
-                ws for ws in workspaces
-                if ws.get("orgName") == organization
-            ]
+            workspaces = [ws for ws in workspaces if ws.get("orgName") == organization]
 
         # Output response
         result = WorkspacesList(
@@ -182,11 +179,11 @@ def list_workspaces(
 @app.command("view")
 def view_workspace(
     workspace_id: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-i", "--id", help="Workspace ID"),
     ] = None,
     workspace_name: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-n", "--name", help="Workspace name or organization/workspace format"),
     ] = None,
 ) -> None:
@@ -244,15 +241,15 @@ def add_workspace(
         typer.Option("-o", "--organization", help="Organization name"),
     ],
     full_name: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-f", "--full-name", help="Workspace full name"),
     ] = None,
     description: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-d", "--description", help="Workspace description"),
     ] = None,
     visibility: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-v", "--visibility", help="Workspace visibility (PRIVATE, SHARED)"),
     ] = None,
     overwrite: Annotated[
@@ -320,11 +317,11 @@ def add_workspace(
 @app.command("delete")
 def delete_workspace(
     workspace_id: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-i", "--id", help="Workspace ID"),
     ] = None,
     workspace_name: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-n", "--name", help="Workspace name or organization/workspace format"),
     ] = None,
 ) -> None:
@@ -379,27 +376,27 @@ def delete_workspace(
 @app.command("update")
 def update_workspace(
     workspace_id: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-i", "--id", help="Workspace ID"),
     ] = None,
     workspace_name: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-n", "--name", help="Workspace name or organization/workspace format"),
     ] = None,
     new_name: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--new-name", help="New workspace name"),
     ] = None,
     full_name: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-f", "--full-name", help="Workspace full name"),
     ] = None,
     description: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-d", "--description", help="Workspace description"),
     ] = None,
     visibility: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-v", "--visibility", help="Workspace visibility (PRIVATE, SHARED)"),
     ] = None,
 ) -> None:
@@ -469,11 +466,11 @@ def update_workspace(
 @app.command("leave")
 def leave_workspace(
     workspace_id: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-i", "--id", help="Workspace ID"),
     ] = None,
     workspace_name: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-n", "--name", help="Workspace name or organization/workspace format"),
     ] = None,
 ) -> None:

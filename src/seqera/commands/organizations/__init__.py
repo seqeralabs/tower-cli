@@ -5,10 +5,9 @@ Manage organizations in the Seqera Platform.
 """
 
 import sys
-from typing import Optional
+from typing import Annotated, Optional
 
 import typer
-from typing_extensions import Annotated
 
 from seqera.api.client import SeqeraClient
 from seqera.exceptions import (
@@ -96,7 +95,7 @@ def get_organizations_list(client: SeqeraClient) -> tuple:
     return user_name, organizations
 
 
-def find_organization_by_name(client: SeqeraClient, org_name: str) -> Optional[dict]:
+def find_organization_by_name(client: SeqeraClient, org_name: str) -> dict | None:
     """
     Find an organization by name.
 
@@ -135,11 +134,11 @@ def list_organizations() -> None:
 @app.command("view")
 def view_organization(
     name: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-n", "--name", help="Organization name"),
     ] = None,
     org_id: Annotated[
-        Optional[int],
+        int | None,
         typer.Option("-i", "--id", help="Organization ID"),
     ] = None,
 ) -> None:
@@ -175,11 +174,11 @@ def view_organization(
 @app.command("delete")
 def delete_organization(
     name: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-n", "--name", help="Organization name"),
     ] = None,
     org_id: Annotated[
-        Optional[int],
+        int | None,
         typer.Option("-i", "--id", help="Organization ID"),
     ] = None,
 ) -> None:
@@ -230,15 +229,15 @@ def add_organization(
         typer.Option("-f", "--full-name", help="Organization full name"),
     ],
     description: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-d", "--description", help="Organization description"),
     ] = None,
     location: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-l", "--location", help="Organization location"),
     ] = None,
     website: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--website", help="Organization website"),
     ] = None,
     overwrite: Annotated[
@@ -292,31 +291,31 @@ def add_organization(
 @app.command("update")
 def update_organization(
     name: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-n", "--name", help="Organization name"),
     ] = None,
     org_id: Annotated[
-        Optional[int],
+        int | None,
         typer.Option("-i", "--id", help="Organization ID"),
     ] = None,
     new_name: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--new-name", help="New organization name"),
     ] = None,
     full_name: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-f", "--full-name", help="Organization full name"),
     ] = None,
     description: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-d", "--description", help="Organization description"),
     ] = None,
     location: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-l", "--location", help="Organization location"),
     ] = None,
     website: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--website", help="Organization website"),
     ] = None,
 ) -> None:

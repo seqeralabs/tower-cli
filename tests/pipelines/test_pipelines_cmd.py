@@ -321,9 +321,7 @@ class TestPipelinesAddCmd:
         )
 
         # Create temp params file
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".yml", delete=False
-        ) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".yml", delete=False) as f:
             f.write("timeout: 60\n")
             params_file = f.name
 
@@ -863,9 +861,7 @@ class TestPipelinesImportCmd:
             },
         }
 
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".json", delete=False
-        ) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             json.dump(config, f)
             config_file = f.name
 
@@ -989,9 +985,7 @@ class TestPipelinesImportCmd:
             },
         }
 
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".json", delete=False
-        ) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             json.dump(config, f)
             config_file = f.name
 

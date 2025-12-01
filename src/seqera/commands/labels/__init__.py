@@ -5,10 +5,9 @@ Manage workspace labels for organizing and filtering resources.
 """
 
 import sys
-from typing import Optional
+from typing import Annotated, Optional
 
 import typer
-from typing_extensions import Annotated
 
 from seqera.api.client import SeqeraClient
 from seqera.exceptions import AuthenticationError, NotFoundError, SeqeraError
@@ -57,11 +56,11 @@ def add_label(
         typer.Option("-n", "--name", help="Label name"),
     ],
     value: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-v", "--value", help="Label value (for resource labels)"),
     ] = None,
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace ID"),
     ] = None,
 ) -> None:
@@ -109,7 +108,7 @@ def delete_label(
         typer.Option("-i", "--id", help="Label ID to delete"),
     ],
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace ID"),
     ] = None,
 ) -> None:
@@ -141,7 +140,7 @@ def delete_label(
 @app.command("list")
 def list_labels(
     workspace: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-w", "--workspace", help="Workspace ID"),
     ] = None,
     label_type: Annotated[
@@ -149,7 +148,7 @@ def list_labels(
         typer.Option("-t", "--type", help="Label type filter: all, simple, or resource"),
     ] = "all",
     filter_text: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("-f", "--filter", help="Text to filter labels by name"),
     ] = None,
     max_results: Annotated[
