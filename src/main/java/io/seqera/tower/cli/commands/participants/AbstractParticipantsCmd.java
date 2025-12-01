@@ -25,7 +25,7 @@ import io.seqera.tower.cli.exceptions.TeamNotFoundException;
 import io.seqera.tower.model.ListMembersResponse;
 import io.seqera.tower.model.ListParticipantsResponse;
 import io.seqera.tower.model.ListTeamResponse;
-import io.seqera.tower.model.MemberDbDto;   
+import io.seqera.tower.model.MemberDbDto;
 import io.seqera.tower.model.ParticipantDbDto;
 import io.seqera.tower.model.ParticipantType;
 import io.seqera.tower.model.TeamDbDto;

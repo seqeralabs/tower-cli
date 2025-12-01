@@ -54,5 +54,3 @@ public abstract class AbstractSecretsCmd extends AbstractApiCmd {
     }
 
 }
-
-

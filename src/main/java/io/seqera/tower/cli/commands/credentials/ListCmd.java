@@ -39,7 +39,7 @@ public class ListCmd extends AbstractCredentialsCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
-        
+
         ListCredentialsResponse response = credentialsApi().listCredentials(wspId, null);
         return new CredentialsList(workspaceRef(wspId), response.getCredentials(), baseWorkspaceUrl(wspId));
     }

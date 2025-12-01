@@ -39,7 +39,7 @@ public class ListCmd extends AbstractComputeEnvCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
-        
+
         ListComputeEnvsResponse response = computeEnvsApi().listComputeEnvs(null, wspId);
         return new ComputeEnvList(workspaceRef(wspId), response.getComputeEnvs(), baseWorkspaceUrl(wspId));
     }

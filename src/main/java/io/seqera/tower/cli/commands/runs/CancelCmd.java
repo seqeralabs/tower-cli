@@ -41,7 +41,7 @@ public class CancelCmd extends AbstractRunsCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
-        
+
         try {
             workflowsApi().cancelWorkflow(id, wspId, null);
 

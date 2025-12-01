@@ -44,7 +44,7 @@ public class DeleteCmd extends AbstractRunsCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
-        
+
         try {
             workflowsApi().deleteWorkflow(id, wspId, force);
 

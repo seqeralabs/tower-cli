@@ -257,7 +257,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     protected WorkspacesApi workspacesApi() throws ApiException {
         return workspacesApi == null ? new WorkspacesApi(apiClient()) : workspacesApi;
     }
-    
+
 
 
     protected Properties getCliProperties() throws ApiException {

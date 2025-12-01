@@ -1200,7 +1200,7 @@ public class DataLinksCmdTest extends BaseCmdTest {
         // Create a temporary directory with more than 300 files
         Path tempDirectory = tempDir().resolve("many-files");
         Files.createDirectories(tempDirectory);
-        
+
         // Create 301 files
         for (int i = 0; i < 301; i++) {
             Path file = tempDirectory.resolve("file" + i + ".txt");

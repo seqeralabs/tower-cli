@@ -85,5 +85,3 @@ public abstract class AbstractUpdateCmd extends AbstractCredentialsCmd {
     protected abstract CredentialsProvider getProvider();
 
 }
-
-

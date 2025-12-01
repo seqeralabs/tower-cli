@@ -10,14 +10,14 @@ jobs:
 
       - name: Check out the repo
         uses: actions/checkout@v3
-        
-      - name: Install latest version of Tower-CLI 
+
+      - name: Install latest version of Tower-CLI
         run: |
           TOWER_CLI_VERSION="0.6.3"
           curl -L https://github.com/seqeralabs/tower-cli/releases/download/v${TOWER_CLI_VERSION}/tw-${TOWER_CLI_VERSION}-linux-x86_64 > tw
           chmod +x ./tw
           mv tw /usr/local/bin/
-        
+
 
       - name: Generate terminal images with rich-codex
         uses: ewels/rich-codex@v1

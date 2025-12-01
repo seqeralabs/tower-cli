@@ -41,4 +41,4 @@ public abstract class AbstractProviderUploader implements CloudProviderUploader 
             throw new UncheckedIOException(e);
         }
     }
-} 
+}

@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
         name = "list",
         description = "List available organizations."
 )
-public class ListCmd extends AbstractOrganizationsCmd { 
+public class ListCmd extends AbstractOrganizationsCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
 

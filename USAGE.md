@@ -61,12 +61,12 @@ $ tw credentials list
 
   Credentials at user workspace:
 
-     ID                     | Provider  | Name                               | Last activity                 
+     ID                     | Provider  | Name                               | Last activity
     ------------------------+-----------+------------------------------------+-------------------------------
-     1x1HxFxzxNxptxlx4xO7Gx | aws       | my_aws_creds_1                     | Wed, 6 Apr 2022 08:40:49 GMT  
-     1sxCxvxfx8xnxdxGxQxqxH | aws       | my_aws_creds_2                     | Wed, 9 Apr 2022 08:40:49 GMT  
-     2x7xNsf2xkxxUIxXKxsTCx | ssh       | my_ssh_key                         | Thu, 8 Jul 2021 07:09:46 GMT  
-     4xxxIeUx7xex1xqx1xxesk | github    | my_github_cred                     | Wed, 22 Jun 2022 09:18:05 GMT 
+     1x1HxFxzxNxptxlx4xO7Gx | aws       | my_aws_creds_1                     | Wed, 6 Apr 2022 08:40:49 GMT
+     1sxCxvxfx8xnxdxGxQxqxH | aws       | my_aws_creds_2                     | Wed, 9 Apr 2022 08:40:49 GMT
+     2x7xNsf2xkxxUIxXKxsTCx | ssh       | my_ssh_key                         | Thu, 8 Jul 2021 07:09:46 GMT
+     4xxxIeUx7xex1xqx1xxesk | github    | my_github_cred                     | Wed, 22 Jun 2022 09:18:05 GMT
 ```
 
 ### Delete credentials
@@ -120,7 +120,7 @@ Select a **primary** compute environment to be used by default in a workspace. Y
 ```console
 $ tw compute-envs primary set --name=my_aws_ce
 
-  Primary compute environment for workspace 'user' was set to 'my_aws_ce (1sxCxvxfx8xnxdxGxQxqxH)'  
+  Primary compute environment for workspace 'user' was set to 'my_aws_ce (1sxCxvxfx8xnxdxGxQxqxH)'
 ```
 
 ### Import and export a compute environment
@@ -130,7 +130,7 @@ Export the configuration details of a compute environment in JSON format for scr
 ```console
 $ tw compute-envs export --name=my_aws_ce my_aws_ce_v1.json
 
-  Compute environment exported into 'my_aws_ce_v1.json' 
+  Compute environment exported into 'my_aws_ce_v1.json'
 ```
 
 Similarly, a compute environment can be imported to a workspace from a previously exported JSON file.
@@ -169,7 +169,7 @@ Export the configuration details of a pipeline in JSON format for scripting and 
 ```console
 $ tw pipelines export --name=my_rnaseq_nf_pipeline my_rnaseq_nf_pipeline_v1.json
 
-  Pipeline exported into 'my_rnaseq_nf_pipeline_v1.json' 
+  Pipeline exported into 'my_rnaseq_nf_pipeline_v1.json'
 ```
 
 Similarly, a pipeline can be imported to a workspace from a previously exported JSON file.
@@ -199,7 +199,7 @@ If no custom parameters are passed via the CLI during launch, the defaults set f
 > **Note**: tw CLI users are bound to the same user permissions that apply in the Platform UI. Launch users can launch pre-configured pipelines in the workspaces they have access to, but they cannot add or run new pipelines.
 
 ```console
-$ tw launch my_rnaseq_nf_pipeline 
+$ tw launch my_rnaseq_nf_pipeline
 
   Workflow 1XCXxX0vCX8xhx submitted at user workspace.
 
@@ -232,7 +232,7 @@ See [Nextflow configuration][nextflow-config] for more information.
 The CLI can directly launch pipelines that have not been added to the Launchpad in a Seqera workspace by using the full pipeline repository URL:
 
 ```console
-$ tw launch https://github.com/nf-core/rnaseq --params-file=./custom_rnaseq_params.yaml --compute-env=my_aws_ce --revision 3.8.1 --profile=test,docker  
+$ tw launch https://github.com/nf-core/rnaseq --params-file=./custom_rnaseq_params.yaml --compute-env=my_aws_ce --revision 3.8.1 --profile=test,docker
 
   Workflow 2XDXxX0vCX8xhx submitted at user workspace.
 
@@ -247,7 +247,7 @@ $ tw launch https://github.com/nf-core/rnaseq --params-file=./custom_rnaseq_para
 
 ## Runs
 
-Run `tw runs -h` to view supported runs operations.  
+Run `tw runs -h` to view supported runs operations.
 
 Runs display all the current and previous pipeline runs in the specified workspace. Each new or resumed run is given a random name such as _grave_williams_ by default, which can be overridden with a custom value at launch. See [Runs](https://docs.seqera.io/platform/latest/monitoring/overview) for more information. As a run executes, it can transition through the following states:
 
@@ -270,20 +270,20 @@ $ tw runs view -i 2vFUbBx63cfsBY -w seqeralabs/showcase
 
     General
     ---------------------+-------------------------------------------------
-     ID                  | 2vFUbBx63cfsBY                                  
-     Operation ID        | b5d55384-734e-4af0-8e47-0d3abec71264            
-     Run name            | adoring_brown                                   
-     Status              | SUCCEEDED                                       
-     Starting date       | Fri, 31 May 2024 10:38:30 GMT                   
-     Commit ID           | b89fac32650aacc86fcda9ee77e00612a1d77066        
-     Session ID          | 9365c6f4-6d79-4ca9-b6e1-2425f4d957fe            
-     Username            | drpatelhh                                       
-     Workdir             | s3://seqeralabs-showcase/scratch/2vFUbBx63cfsBY 
-     Container           | No container was reported                       
-     Executors           | awsbatch                                        
-     Compute Environment | seqera_aws_ireland_fusionv2_nvme                
-     Nextflow Version    | 23.10.1                                         
-     Labels              | star_salmon,yeast  
+     ID                  | 2vFUbBx63cfsBY
+     Operation ID        | b5d55384-734e-4af0-8e47-0d3abec71264
+     Run name            | adoring_brown
+     Status              | SUCCEEDED
+     Starting date       | Fri, 31 May 2024 10:38:30 GMT
+     Commit ID           | b89fac32650aacc86fcda9ee77e00612a1d77066
+     Session ID          | 9365c6f4-6d79-4ca9-b6e1-2425f4d957fe
+     Username            | drpatelhh
+     Workdir             | s3://seqeralabs-showcase/scratch/2vFUbBx63cfsBY
+     Container           | No container was reported
+     Executors           | awsbatch
+     Compute Environment | seqera_aws_ireland_fusionv2_nvme
+     Nextflow Version    | 23.10.1
+     Labels              | star_salmon,yeast
 ```
 
 ### List runs
@@ -295,15 +295,15 @@ $ tw runs list
 
   Pipeline runs at [seqeralabs / testing] workspace:
 
-     ID             | Status    | Project Name               | Run Name                        | Username              | Submit Date                   
+     ID             | Status    | Project Name               | Run Name                        | Username              | Submit Date
     ----------------+-----------+----------------------------+---------------------------------+-----------------------+-------------------------------
-     49Gb5XVMud2e7H | FAILED    | seqeralabs/nf-aggregate    | distraught_archimedes           | adrian-navarro-seqera | Fri, 31 May 2024 16:22:10 GMT 
-     4anNFvTUwRFDp  | SUCCEEDED | nextflow-io/rnaseq-nf      | nasty_kilby                     | mattia-bosio-seqera   | Fri, 31 May 2024 15:23:12 GMT 
-     3wo3Kfni6Kl3hO | SUCCEEDED | nf-core/proteinfold        | reverent_linnaeus               | mattia-bosio-seqera   | Fri, 31 May 2024 15:22:38 GMT 
+     49Gb5XVMud2e7H | FAILED    | seqeralabs/nf-aggregate    | distraught_archimedes           | adrian-navarro-seqera | Fri, 31 May 2024 16:22:10 GMT
+     4anNFvTUwRFDp  | SUCCEEDED | nextflow-io/rnaseq-nf      | nasty_kilby                     | mattia-bosio-seqera   | Fri, 31 May 2024 15:23:12 GMT
+     3wo3Kfni6Kl3hO | SUCCEEDED | nf-core/proteinfold        | reverent_linnaeus               | mattia-bosio-seqera   | Fri, 31 May 2024 15:22:38 GMT
 
 <snip>
 
-     4fIRrFgZV3eDb1 | FAILED    | nextflow-io/hello          | gigantic_lichterman             | pedro-geadas          | Mon, 29 Apr 2024 08:44:47 GMT 
+     4fIRrFgZV3eDb1 | FAILED    | nextflow-io/hello          | gigantic_lichterman             | pedro-geadas          | Mon, 29 Apr 2024 08:44:47 GMT
      cHEdKBXmdoQQM  | FAILED    | mathysgrapotte/stimulus    | mighty_poitras                  | evanfloden            | Mon, 29 Apr 2024 08:08:52 GMT
 ```
 
@@ -329,7 +329,7 @@ $ tw runs list --filter hello_slurm_20240530
 
   Pipeline runs at [seqeralabs / showcase] workspace:
 
-     ID            | Status    | Project Name      | Run Name                             | Username   | Submit Date                   
+     ID            | Status    | Project Name      | Run Name                             | Username   | Submit Date
     ---------------+-----------+-------------------+--------------------------------------+------------+-------------------------------
      pZeJBOLtIvP7R | SUCCEEDED | nextflow-io/hello | hello_slurm_20240530_e75584566f774e7 | adamtalbot | Thu, 30 May 2024 09:12:51 GMT
 ```
@@ -341,34 +341,34 @@ $ tw runs list --filter="after:2024-05-29T00:00:00.000Z before:2024-05-30T00:00:
 
   Pipeline runs at [seqeralabs / testing] workspace:
 
-     ID             | Status    | Project Name          | Run Name           | Username              | Submit Date                   
+     ID             | Status    | Project Name          | Run Name           | Username              | Submit Date
     ----------------+-----------+-----------------------+--------------------+-----------------------+-------------------------------
-     xJvK95W6YUmEz  | SUCCEEDED | nextflow-io/rnaseq-nf | ondemand2          | mark-panganiban       | Wed, 29 May 2024 20:35:28 GMT 
-     1c1ckn9a3j0xF0 | SUCCEEDED | nextflow-io/rnaseq-nf | fargate            | mark-panganiban       | Wed, 29 May 2024 20:28:02 GMT 
-     3sYX1acJ01T7rL | SUCCEEDED | nextflow-io/rnaseq-nf | min1vpcu-spot      | mark-panganiban       | Wed, 29 May 2024 20:27:47 GMT 
-     4ZYJGWJCttXqXq | SUCCEEDED | nextflow-io/rnaseq-nf | min1cpu-ondemand   | mark-panganiban       | Wed, 29 May 2024 20:25:21 GMT 
-     4LCxsffTqf3ysT | SUCCEEDED | nextflow-io/rnaseq-nf | lonely_northcutt   | mark-panganiban       | Wed, 29 May 2024 20:09:51 GMT 
-     4Y8EcyopNiYBlJ | SUCCEEDED | nextflow-io/rnaseq-nf | fargate            | mark-panganiban       | Wed, 29 May 2024 18:53:47 GMT 
-     dyKevNwxK50XX  | SUCCEEDED | mark814/nr-test       | cheeky_cuvier      | mark-panganiban       | Wed, 29 May 2024 12:21:10 GMT 
-     eS6sVB5A387aR  | SUCCEEDED | mark814/nr-test       | evil_murdock       | mark-panganiban       | Wed, 29 May 2024 12:11:08 GMT 
+     xJvK95W6YUmEz  | SUCCEEDED | nextflow-io/rnaseq-nf | ondemand2          | mark-panganiban       | Wed, 29 May 2024 20:35:28 GMT
+     1c1ckn9a3j0xF0 | SUCCEEDED | nextflow-io/rnaseq-nf | fargate            | mark-panganiban       | Wed, 29 May 2024 20:28:02 GMT
+     3sYX1acJ01T7rL | SUCCEEDED | nextflow-io/rnaseq-nf | min1vpcu-spot      | mark-panganiban       | Wed, 29 May 2024 20:27:47 GMT
+     4ZYJGWJCttXqXq | SUCCEEDED | nextflow-io/rnaseq-nf | min1cpu-ondemand   | mark-panganiban       | Wed, 29 May 2024 20:25:21 GMT
+     4LCxsffTqf3ysT | SUCCEEDED | nextflow-io/rnaseq-nf | lonely_northcutt   | mark-panganiban       | Wed, 29 May 2024 20:09:51 GMT
+     4Y8EcyopNiYBlJ | SUCCEEDED | nextflow-io/rnaseq-nf | fargate            | mark-panganiban       | Wed, 29 May 2024 18:53:47 GMT
+     dyKevNwxK50XX  | SUCCEEDED | mark814/nr-test       | cheeky_cuvier      | mark-panganiban       | Wed, 29 May 2024 12:21:10 GMT
+     eS6sVB5A387aR  | SUCCEEDED | mark814/nr-test       | evil_murdock       | mark-panganiban       | Wed, 29 May 2024 12:11:08 GMT
 ```
 
 A leading and trailing `*` wildcard character is supported:
 
 ```console
-$ tw runs list --filter="*man/rnaseq-*"    
+$ tw runs list --filter="*man/rnaseq-*"
 
   Pipeline runs at [seqeralabs / testing] workspace:
 
-     ID             | Status    | Project Name        | Run Name            | Username       | Submit Date                   
+     ID             | Status    | Project Name        | Run Name            | Username       | Submit Date
     ----------------+-----------+---------------------+---------------------+----------------+-------------------------------
-     5z4AMshti4g0GK | SUCCEEDED | robnewman/rnaseq-nf | admiring_darwin     | rob-newman     | Tue, 16 Jan 2024 19:56:29 GMT 
-     62LqiS4O4FatSy | SUCCEEDED | robnewman/rnaseq-nf | cheeky_yonath       | joaquim-gamero | Wed, 3 Jan 2024 12:36:09 GMT  
-     3k2nu8ZmcBFSGv | SUCCEEDED | robnewman/rnaseq-nf | compassionate_jones | pedro-geadas   | Tue, 2 Jan 2024 16:22:26 GMT  
-     3zG2ggf5JsniNW | SUCCEEDED | robnewman/rnaseq-nf | fervent_payne       | rob-newman     | Wed, 20 Dec 2023 23:55:17 GMT 
-     1SNIcSXRuJMSNZ | SUCCEEDED | robnewman/rnaseq-nf | curious_babbage     | rob-newman     | Thu, 28 Sep 2023 17:48:04 GMT 
-     5lI2fZUZfiokBI | SUCCEEDED | robnewman/rnaseq-nf | boring_heisenberg   | rob-newman     | Thu, 28 Sep 2023 12:29:27 GMT 
-     5I4lsRXIHVEjNB | SUCCEEDED | robnewman/rnaseq-nf | ecstatic_ptolemy    | rob-newman     | Wed, 27 Sep 2023 22:06:19 GMT 
+     5z4AMshti4g0GK | SUCCEEDED | robnewman/rnaseq-nf | admiring_darwin     | rob-newman     | Tue, 16 Jan 2024 19:56:29 GMT
+     62LqiS4O4FatSy | SUCCEEDED | robnewman/rnaseq-nf | cheeky_yonath       | joaquim-gamero | Wed, 3 Jan 2024 12:36:09 GMT
+     3k2nu8ZmcBFSGv | SUCCEEDED | robnewman/rnaseq-nf | compassionate_jones | pedro-geadas   | Tue, 2 Jan 2024 16:22:26 GMT
+     3zG2ggf5JsniNW | SUCCEEDED | robnewman/rnaseq-nf | fervent_payne       | rob-newman     | Wed, 20 Dec 2023 23:55:17 GMT
+     1SNIcSXRuJMSNZ | SUCCEEDED | robnewman/rnaseq-nf | curious_babbage     | rob-newman     | Thu, 28 Sep 2023 17:48:04 GMT
+     5lI2fZUZfiokBI | SUCCEEDED | robnewman/rnaseq-nf | boring_heisenberg   | rob-newman     | Thu, 28 Sep 2023 12:29:27 GMT
+     5I4lsRXIHVEjNB | SUCCEEDED | robnewman/rnaseq-nf | ecstatic_ptolemy    | rob-newman     | Wed, 27 Sep 2023 22:06:19 GMT
 ```
 
 ### Relaunch run
@@ -386,7 +386,7 @@ Run `tw runs labels -h` to view all the required and optional fields for managin
 In the example below, we add the labels `test` and `rnaseq-demo` to the run with ID `5z4AMshti4g0GK`:
 
 ```console
-$ tw runs labels -i 5z4AMshti4g0GK test,rnaseq-demo 
+$ tw runs labels -i 5z4AMshti4g0GK test,rnaseq-demo
 
  'set' labels on 'run' with id '5z4AMshti4g0GK' at 34830707738561 workspace
 ```
@@ -405,7 +405,7 @@ $ tw runs dump -i 5z4AMshti4g0GK -o file.tar.gz
 - Workflow details
 - Task details
 
-  Pipeline run '5z4AMshti4g0GK' at [seqeralabs / testing] workspace details dump at 'file.tar.gz' 
+  Pipeline run '5z4AMshti4g0GK' at [seqeralabs / testing] workspace details dump at 'file.tar.gz'
 ```
 
 ## Workspaces
@@ -436,13 +436,13 @@ $ tw workspaces add --name=shared-workspace --full-name=shared-workspace-for-all
 List all the workspaces in which you are a participant:
 
 ```console
-$ tw workspaces list                      
+$ tw workspaces list
 
   Workspaces for abhinav user:
 
-     Workspace ID    | Workspace Name   | Organization Name | Organization ID 
+     Workspace ID    | Workspace Name   | Organization Name | Organization ID
     -----------------+------------------+-------------------+-----------------
-     26002603030407  | shared-workspace | my-tower-org      | 04303000612070  
+     26002603030407  | shared-workspace | my-tower-org      | 04303000612070
 ```
 
 ## Participants
@@ -457,9 +457,9 @@ $ tw participants list
 
   Participants for 'my-tower-org/shared-workspace' workspace:
 
-     ID             | Participant Type | Name                        | Workspace Role 
+     ID             | Participant Type | Name                        | Workspace Role
     ----------------+------------------+-----------------------------+----------------
-     45678460861822 | MEMBER           | abhinav (abhinav@mydomain.com) | owner          
+     45678460861822 | MEMBER           | abhinav (abhinav@mydomain.com) | owner
 ```
 
 ### Add participants
@@ -469,7 +469,7 @@ To add a new _collaborator_ to the workspace, use the `add` subcommand. The defa
 See [Participant roles][participant-roles] for more information.
 
 ```console
-$ tw participants add --name=collaborator@mydomain.com --type=MEMBER                           
+$ tw participants add --name=collaborator@mydomain.com --type=MEMBER
 
   User 'collaborator' was added as participant to 'shared-workspace' workspace with role 'launch'
 ```
@@ -486,7 +486,7 @@ $ tw  participants update --name=collaborator@mydomain.com --type=COLLABORATOR -
 
 ## Data Links
 
-Run `tw data-links -h` to view supported data link operations.  
+Run `tw data-links -h` to view supported data link operations.
 
 Data links allow you to work with public and private cloud storage buckets in Data Explorer in the specified workspace. See [Data Explorer][data-explorer] for more information. AWS S3, Azure Blob Storage, and Google Cloud Storage are supported. The full list of operations are:
 
@@ -508,20 +508,20 @@ $ tw data-links list -w seqeralabs/showcase
 
   Data links at [seqeralabs / showcase] workspace:
 
- ID                                        | Provider | Name                           | Resource ref                                                    | Region    
+ ID                                        | Provider | Name                           | Resource ref                                                    | Region
 -------------------------------------------+----------+--------------------------------+-----------------------------------------------------------------+-----------
- v1-cloud-833bb845bd9ec1970c4a7b0bb7b8c4ad | aws      | e2e-data-explorer-tests-aws    | s3://e2e-data-explorer-tests-aws                                | eu-west-2 
- v1-cloud-60700a33ec3fae68d424cf948fa8d10c | aws      | nf-tower-bucket                | s3://nf-tower-bucket                                            | eu-west-1 
- v1-user-09705781697816b62f9454bc4b9434b4  | aws      | vscode-analysis-demo           | s3://seqera-development-permanent-bucket/studios-demo/vscode/   | eu-west-2 
- v1-user-0dede00fabbc4b9e2610261822a2d6ae  | aws      | seqeralabs-showcase            | s3://seqeralabs-showcase                                        | eu-west-1 
- v1-user-171aa8801cabe4af71500335f193d649  | aws      | projectA-rnaseq-analysis       | s3://seqeralabs-showcase/demo/nf-core-rnaseq/                   | eu-west-1 
+ v1-cloud-833bb845bd9ec1970c4a7b0bb7b8c4ad | aws      | e2e-data-explorer-tests-aws    | s3://e2e-data-explorer-tests-aws                                | eu-west-2
+ v1-cloud-60700a33ec3fae68d424cf948fa8d10c | aws      | nf-tower-bucket                | s3://nf-tower-bucket                                            | eu-west-1
+ v1-user-09705781697816b62f9454bc4b9434b4  | aws      | vscode-analysis-demo           | s3://seqera-development-permanent-bucket/studios-demo/vscode/   | eu-west-2
+ v1-user-0dede00fabbc4b9e2610261822a2d6ae  | aws      | seqeralabs-showcase            | s3://seqeralabs-showcase                                        | eu-west-1
+ v1-user-171aa8801cabe4af71500335f193d649  | aws      | projectA-rnaseq-analysis       | s3://seqeralabs-showcase/demo/nf-core-rnaseq/                   | eu-west-1
 
 <snip>
 
- v1-user-bb4fa9625a44721510c47ac1cb97905b  | aws      | genome-in-a-bottle             | s3://giab                                                       | us-east-1 
- v1-user-e7bf26921ba74032bd6ae1870df381fc  | aws      | NCBI_Sequence_Read_Archive_SRA | s3://sra-pub-src-1/                                             | us-east-1 
+ v1-user-bb4fa9625a44721510c47ac1cb97905b  | aws      | genome-in-a-bottle             | s3://giab                                                       | us-east-1
+ v1-user-e7bf26921ba74032bd6ae1870df381fc  | aws      | NCBI_Sequence_Read_Archive_SRA | s3://sra-pub-src-1/                                             | us-east-1
 
-  Showing from 0 to 99 from a total of 16 entries. 
+  Showing from 0 to 99 from a total of 16 entries.
 ```
 
 ### Add a custom data link
@@ -533,9 +533,9 @@ $ tw data-links add -w seqeralabs/showcase -n FOO -u az://seqeralabs.azure-bench
 
   Data link created:
 
- ID                                       | Provider | Name | Resource ref                       | Region 
+ ID                                       | Provider | Name | Resource ref                       | Region
 ------------------------------------------+----------+------+------------------------------------+--------
- v1-user-152116183ee325463901430bb9efb8c9 | azure    | FOO  | az://seqeralabs.azure-benchmarking |        
+ v1-user-152116183ee325463901430bb9efb8c9 | azure    | FOO  | az://seqeralabs.azure-benchmarking |
 ```
 
 ### Update a custom data link
@@ -547,9 +547,9 @@ $ tw data-links update -w seqeralabs/showcase -i v1-user-152116183ee325463901430
 
   Data link updated:
 
- ID                                       | Provider | Name | Resource ref                       | Region 
+ ID                                       | Provider | Name | Resource ref                       | Region
 ------------------------------------------+----------+------+------------------------------------+--------
- v1-user-152116183ee325463901430bb9efb8c9 | azure    | BAR  | az://seqeralabs.azure-benchmarking |        
+ v1-user-152116183ee325463901430bb9efb8c9 | azure    | BAR  | az://seqeralabs.azure-benchmarking |
 ```
 
 ### Delete a custom data link
@@ -571,49 +571,49 @@ $ tw data-links list -w seqeralabs/showcase -n 1000genomes
 
   Data links at [seqeralabs / showcase] workspace:
 
- ID                                       | Provider | Name        | Resource ref     | Region    
+ ID                                       | Provider | Name        | Resource ref     | Region
 ------------------------------------------+----------+-------------+------------------+-----------
- v1-user-6d8f44c239e2a098b3e02e918612452a | aws      | 1000genomes | s3://1000genomes | us-east-1 
+ v1-user-6d8f44c239e2a098b3e02e918612452a | aws      | 1000genomes | s3://1000genomes | us-east-1
 
   Showing from 0 to 99 from a total of 1 entries.
 
-$ tw data-links browse -w seqeralabs/showcase -i v1-user-6d8f44c239e2a098b3e02e918612452a         
+$ tw data-links browse -w seqeralabs/showcase -i v1-user-6d8f44c239e2a098b3e02e918612452a
 
   Content of 's3://1000genomes' and path 'null':
 
- Type   | Name                                       | Size     
+ Type   | Name                                       | Size
 --------+--------------------------------------------+----------
- FILE   | 20131219.populations.tsv                   | 1663     
- FILE   | 20131219.superpopulations.tsv              | 97       
- FILE   | CHANGELOG                                  | 257098   
- FILE   | README.alignment_data                      | 15977    
- FILE   | README.analysis_history                    | 5289     
- FILE   | README.complete_genomics_data              | 5967     
- FILE   | README.crams                               | 563      
- FILE   | README.ebi_aspera_info                     | 935      
- FILE   | README.ftp_structure                       | 8408     
- FILE   | README.pilot_data                          | 2082     
- FILE   | README.populations                         | 1938     
- FILE   | README.sequence_data                       | 7857     
- FILE   | README_missing_files_20150612              | 672      
- FILE   | README_phase3_alignments_sequence_20150526 | 136      
- FILE   | README_phase3_data_move_20150612           | 273      
- FILE   | alignment.index                            | 3579471  
- FILE   | analysis.sequence.index                    | 54743580 
- FILE   | exome.alignment.index                      | 3549051  
- FILE   | sequence.index                             | 67069489 
- FOLDER | 1000G_2504_high_coverage/                  | 0        
- FOLDER | alignment_indices/                         | 0        
- FOLDER | changelog_details/                         | 0        
- FOLDER | complete_genomics_indices/                 | 0        
- FOLDER | data/                                      | 0        
- FOLDER | hgsv_sv_discovery/                         | 0        
- FOLDER | phase1/                                    | 0        
- FOLDER | phase3/                                    | 0        
- FOLDER | pilot_data/                                | 0        
- FOLDER | release/                                   | 0        
- FOLDER | sequence_indices/                          | 0        
- FOLDER | technical/                                 | 0        
+ FILE   | 20131219.populations.tsv                   | 1663
+ FILE   | 20131219.superpopulations.tsv              | 97
+ FILE   | CHANGELOG                                  | 257098
+ FILE   | README.alignment_data                      | 15977
+ FILE   | README.analysis_history                    | 5289
+ FILE   | README.complete_genomics_data              | 5967
+ FILE   | README.crams                               | 563
+ FILE   | README.ebi_aspera_info                     | 935
+ FILE   | README.ftp_structure                       | 8408
+ FILE   | README.pilot_data                          | 2082
+ FILE   | README.populations                         | 1938
+ FILE   | README.sequence_data                       | 7857
+ FILE   | README_missing_files_20150612              | 672
+ FILE   | README_phase3_alignments_sequence_20150526 | 136
+ FILE   | README_phase3_data_move_20150612           | 273
+ FILE   | alignment.index                            | 3579471
+ FILE   | analysis.sequence.index                    | 54743580
+ FILE   | exome.alignment.index                      | 3549051
+ FILE   | sequence.index                             | 67069489
+ FOLDER | 1000G_2504_high_coverage/                  | 0
+ FOLDER | alignment_indices/                         | 0
+ FOLDER | changelog_details/                         | 0
+ FOLDER | complete_genomics_indices/                 | 0
+ FOLDER | data/                                      | 0
+ FOLDER | hgsv_sv_discovery/                         | 0
+ FOLDER | phase1/                                    | 0
+ FOLDER | phase3/                                    | 0
+ FOLDER | pilot_data/                                | 0
+ FOLDER | release/                                   | 0
+ FOLDER | sequence_indices/                          | 0
+ FOLDER | technical/                                 | 0
 ```
 
 [compute-envs]: https://docs.seqera.io/platform/latest/compute-envs/overview

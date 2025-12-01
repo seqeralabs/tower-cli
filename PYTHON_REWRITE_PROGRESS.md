@@ -24,7 +24,7 @@
   - `rich` - Terminal formatting
   - `pyyaml` - YAML support
   - `pytest` + `pytest-httpserver` - Testing
-- Configured dev tools: `ruff`, `black`, `mypy`
+- Configured dev tools: `ruff` (lint + format), `mypy`, `pre-commit`
 
 #### 2. Core Architecture ✅
 
@@ -166,7 +166,7 @@
 
 ### Completed ✅
 
-- ✅ Code formatting with `black`
+- ✅ Code formatting with `ruff format`
 - ✅ Linting with `ruff` (all checks passing)
 - ✅ pyproject.toml updated with modern ruff config
 
@@ -174,7 +174,7 @@
 
 - **Test Coverage:** 71.70%
 - **All linter checks:** Passing
-- **Code formatting:** Consistent (black)
+- **Code formatting:** Consistent (ruff format)
 
 ### Remaining
 
@@ -235,7 +235,7 @@ All commands support three output formats:
 
 - ✅ All major command groups ported to Python
 - ✅ All tests passing (457)
-- ✅ Code quality checks passing (ruff, black)
+- ✅ Code quality checks passing (ruff lint + format, pre-commit)
 - 🔄 Test coverage at 71.70% (target: 80%)
 - ✅ Type hints on all public APIs
 - 🔄 Documentation updates in progress

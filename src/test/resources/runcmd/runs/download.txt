@@ -74,7 +74,7 @@ WARN: ==========================================================================
 ===================================================================================
 WARN: =============================================================================
   When using '--additional_fasta <FASTA_FILE>' the aligner index will not
-  be re-built with the transgenes incorporated by default since you have 
+  be re-built with the transgenes incorporated by default since you have
   already provided an index via '--star_index <INDEX>'.
 
   Set '--additional_fasta <FASTA_FILE> --star_index false --save_reference' to

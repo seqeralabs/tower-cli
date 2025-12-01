@@ -60,7 +60,7 @@ public class ImportCmd extends AbstractPipelinesCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
-        
+
         CreatePipelineRequest request;
 
         request = parseJson(FilesHelper.readString(fileName), CreatePipelineRequest.class);

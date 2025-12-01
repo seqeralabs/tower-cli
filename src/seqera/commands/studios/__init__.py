@@ -41,7 +41,7 @@ def handle_studios_error(e: Exception) -> None:
     if isinstance(e, AuthenticationError):
         output_error("Unauthorized")
         sys.exit(1)
-    elif isinstance(e, (WorkspaceNotFoundException, NotFoundError)):
+    elif isinstance(e, WorkspaceNotFoundException | NotFoundError):
         output_error(str(e))
         sys.exit(1)
     elif isinstance(e, InvalidResponseException):

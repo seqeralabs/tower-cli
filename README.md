@@ -173,7 +173,7 @@ tw CLI is a platform binary executable created by a native compilation from Java
     ========================================================================================================================
     Finished generating 'tw' in 1m 6s.
     [native-image-plugin] Native Image written to: <tower-cli-repository-root>/build/native/nativeCompile
-    
+
     BUILD SUCCESSFUL in 1m 8s
     6 actionable tasks: 2 executed, 4 up-to-date
     ```

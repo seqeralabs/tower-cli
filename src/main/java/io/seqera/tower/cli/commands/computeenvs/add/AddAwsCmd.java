@@ -32,4 +32,3 @@ import picocli.CommandLine.Command;
 )
 public class AddAwsCmd extends AbstractComputeEnvCmd {
 }
-

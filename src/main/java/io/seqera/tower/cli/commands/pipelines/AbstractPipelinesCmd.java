@@ -79,5 +79,3 @@ public abstract class AbstractPipelinesCmd extends AbstractApiCmd {
     }
 
 }
-
-

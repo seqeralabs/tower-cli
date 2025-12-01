@@ -47,10 +47,10 @@ def handle_pipelines_error(e: Exception) -> None:
     if isinstance(e, AuthenticationError):
         output_error("Unauthorized")
         sys.exit(1)
-    elif isinstance(e, (PipelineNotFoundException, WorkspaceNotFoundException, NotFoundError)):
+    elif isinstance(e, PipelineNotFoundException | WorkspaceNotFoundException | NotFoundError):
         output_error(str(e))
         sys.exit(1)
-    elif isinstance(e, (MultiplePipelinesFoundException, NoComputeEnvironmentException)):
+    elif isinstance(e, MultiplePipelinesFoundException | NoComputeEnvironmentException):
         output_error(str(e))
         sys.exit(1)
     elif isinstance(e, InvalidResponseException):

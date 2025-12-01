@@ -54,4 +54,3 @@ public class ListCmd extends AbstractActionsCmd {
         return new ActionsList(response.getActions(), userName(), baseWorkspaceUrl(wspId), showLabelsOption.showLabels);
     }
 }
-

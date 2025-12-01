@@ -61,5 +61,3 @@ public abstract class AbstractComputeEnvCmd extends AbstractApiCmd {
         return computeEnvsApi().describeComputeEnv(id, workspaceId, List.of(ComputeEnvQueryAttribute.LABELS)).getComputeEnv();
     }
 }
-
-

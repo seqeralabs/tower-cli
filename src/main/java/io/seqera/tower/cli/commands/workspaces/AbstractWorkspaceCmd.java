@@ -35,7 +35,7 @@ public abstract class AbstractWorkspaceCmd extends AbstractApiCmd {
 
     public AbstractWorkspaceCmd() {
     }
-    
+
     protected OrgAndWorkspaceDto orgAndWorkspaceByName(String workspaceName, String organizationName) throws ApiException {
         return findOrgAndWorkspaceByName(organizationName, workspaceName);
     }
@@ -91,5 +91,3 @@ public abstract class AbstractWorkspaceCmd extends AbstractApiCmd {
         workspacesApi().deleteWorkspace(orgId, wspId);
     }
 }
-
-

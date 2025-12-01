@@ -117,8 +117,7 @@ class InvalidWorkspaceParameterError(ValidationError):
     def __init__(self, workspace: str) -> None:
         self.workspace = workspace
         super().__init__(
-            f"Invalid workspace parameter: {workspace}. "
-            f"Expected format: 'organization/workspace'"
+            f"Invalid workspace parameter: {workspace}. Expected format: 'organization/workspace'"
         )
 
 

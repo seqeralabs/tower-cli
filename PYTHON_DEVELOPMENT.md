@@ -160,17 +160,32 @@ def add_credentials(name: str, provider: str) -> Dict[str, Any]:
 
 ### Formatting
 
-Use black and ruff for formatting:
+Use ruff for formatting and linting:
 
 ```bash
 # Format code
-black src/ tests/
+ruff format src/ tests/
 
 # Lint code
 ruff check src/ tests/
 
+# Lint and auto-fix
+ruff check --fix src/ tests/
+
 # Type check
 mypy src/
+```
+
+### Pre-commit
+
+The project uses pre-commit for automated checks. Install the hooks:
+
+```bash
+# Install pre-commit hooks
+pre-commit install
+
+# Run all checks manually
+pre-commit run --all-files
 ```
 
 ## Testing

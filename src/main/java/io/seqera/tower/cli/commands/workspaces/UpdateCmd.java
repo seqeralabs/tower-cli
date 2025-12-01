@@ -88,4 +88,3 @@ public class UpdateCmd extends AbstractWorkspaceCmd {
         return new WorkspaceUpdated(response.getWorkspace().getName(), ws.getOrgName(), response.getWorkspace().getVisibility());
     }
 }
-

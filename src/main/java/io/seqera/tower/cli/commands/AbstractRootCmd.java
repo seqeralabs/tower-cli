@@ -26,5 +26,3 @@ public abstract class AbstractRootCmd extends AbstractApiCmd {
     }
 
 }
-
-

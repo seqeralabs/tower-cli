@@ -255,7 +255,7 @@ class LaunchCmdTest extends BaseCmdTest {
                                     "stubRun":false,
                                     "optimizationId": "rOYdwTnmTaRCJjUq",
                                     "optimizationTargets": "cpus, memory"
-                                    
+
                                 }
                             }"""
                         )),

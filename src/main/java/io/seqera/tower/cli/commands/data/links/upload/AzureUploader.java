@@ -75,7 +75,7 @@ public class AzureUploader extends AbstractProviderUploader {
             // Send an empty block list to abort the upload
             // Per Azure documentation, any Uncommitted blocks not part of the final BlockList are garbage collected
             String emptyBlockList = "<?xml version=\"1.0\" encoding=\"utf-8\"?><BlockList></BlockList>";
-            
+
             HttpRequest abortRequest = HttpRequest.newBuilder()
                     .uri(URI.create(abortUrl))
                     .PUT(HttpRequest.BodyPublishers.ofString(emptyBlockList))
@@ -127,4 +127,4 @@ public class AzureUploader extends AbstractProviderUploader {
         xml.append("</BlockList>");
         return xml.toString();
     }
-} 
+}
