@@ -53,6 +53,28 @@ tw-cli is published to the Seqera [Homebrew](https://brew.sh/) tap and can be in
 brew install seqeralabs/tap/tw
 ```
 
+## Alternative: Python Package (All Platforms)
+
+The CLI is also available as a Python package, which works on any platform with Python 3.10+:
+
+```bash
+# Install from source
+pip install .
+
+# Or install in development mode
+pip install -e .
+```
+
+After installation, use the `seqera` command:
+
+```bash
+seqera --help
+seqera info
+seqera pipelines list -w org/workspace
+```
+
+The Python version supports the same commands and options as the native binary. See the [Python Development Guide](./PYTHON_DEVELOPMENT.md) for more details.
+
 ### 2. Configuration
 
 You need an access token for the CLI to interact with your Seqera instance. Select **User tokens** from the user menu in the [Seqera UI](https://cloud.seqera.io), then select **Add token** to create a new token.
