@@ -15,6 +15,7 @@
 ### Achievements
 
 #### 1. Project Infrastructure ✅
+
 - Created Python project with `pyproject.toml`
 - Modern dependencies:
   - `typer` - CLI framework
@@ -28,6 +29,7 @@
 #### 2. Core Architecture ✅
 
 **API Client** (`src/seqera/api/client.py`):
+
 - `SeqeraClient` class with httpx-based HTTP client
 - Authentication via Bearer token
 - Error handling with custom exceptions:
@@ -39,12 +41,14 @@
 - Context manager support
 
 **CLI Framework** (`src/seqera/main.py`):
+
 - Main `app` using Typer
 - Global options: `--url`, `--access-token`, `--output`, `--verbose`, `--insecure`
 - Global state management for API client
 - Output format handling (console/json/yaml)
 
 **Output Formatting** (`src/seqera/utils/output.py`):
+
 - JSON output
 - YAML output
 - Rich console output (tables, colors)
@@ -53,6 +57,7 @@
 #### 3. Test Infrastructure ✅
 
 **Test Framework** (`tests/conftest.py`):
+
 - Pytest fixtures matching Java's `BaseCmdTest`:
   - `cli_runner` - CLI testing with CliRunner
   - `httpserver` - Mock HTTP server (pytest-httpserver)
@@ -86,6 +91,7 @@
 12. ✅ **TW Agent** - 3 tests - Connection ID + work directory
 
 **Also implemented:**
+
 - ✅ `credentials list` - List all credentials
 - ✅ `credentials delete` - Delete credentials by ID
 
@@ -135,7 +141,7 @@
 ### Commands Implemented ✅
 
 | Command | Tests | Description |
-|---------|-------|-------------|
+| ------- | ----- | ----------- |
 | `info` | 6 | System info and health status |
 | `secrets` | 18 | Pipeline secrets management (list, add, delete, view, update) |
 | `labels` | 21 | Resource labels management (list, add, delete) |
@@ -159,16 +165,19 @@
 **Status:** 🔄 In progress
 
 ### Completed ✅
+
 - ✅ Code formatting with `black`
 - ✅ Linting with `ruff` (all checks passing)
 - ✅ pyproject.toml updated with modern ruff config
 
 ### Metrics
+
 - **Test Coverage:** 71.70%
 - **All linter checks:** Passing
 - **Code formatting:** Consistent (black)
 
 ### Remaining
+
 - ⏳ Type checking with `mypy`
 - ⏳ Additional docstrings
 - ⏳ README updates with Python installation instructions
@@ -189,7 +198,7 @@
 
 ### Command Summary
 
-```
+```text
 seqera --help
 
 Commands:
@@ -215,6 +224,7 @@ Commands:
 ### Output Formats
 
 All commands support three output formats:
+
 - **Console** - Rich formatted tables and colors
 - **JSON** - Machine-readable JSON output
 - **YAML** - Human-readable YAML output

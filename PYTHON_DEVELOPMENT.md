@@ -42,7 +42,7 @@ seqera --url http://localhost:8080 --access-token fake_token credentials add aws
 
 ## Project Structure
 
-```
+```text
 tower-cli/
 ├── src/seqera/              # Python source code
 │   ├── main.py              # CLI entry point
@@ -69,12 +69,14 @@ tower-cli/
 Follow this workflow for each new feature:
 
 1. **Read Java Test** - Find the corresponding Java test file
+
    ```bash
    # Example: For AWS credentials
    cat src/test/java/io/seqera/tower/cli/credentials/providers/AwsProviderTest.java
    ```
 
 2. **Port Test to Python** - Create the Python test
+
    ```python
    # tests/credentials/test_azure_provider.py
    def test_add_azure_credentials(httpserver, exec_cmd):
@@ -84,12 +86,14 @@ Follow this workflow for each new feature:
    ```
 
 3. **Run Test (Should Fail)** - Verify test fails
+
    ```bash
    pytest tests/credentials/test_azure_provider.py -v
    # Should fail with NotImplementedError or similar
    ```
 
 4. **Implement Feature** - Write the code
+
    ```python
    # src/seqera/commands/credentials/__init__.py
    @add_app.command("azure")
@@ -98,6 +102,7 @@ Follow this workflow for each new feature:
    ```
 
 5. **Run Test (Should Pass)** - Verify test passes
+
    ```bash
    pytest tests/credentials/test_azure_provider.py -v
    # Should pass ✅
@@ -106,6 +111,7 @@ Follow this workflow for each new feature:
 6. **Refactor** - Improve code quality
 
 7. **Commit** - Commit your changes
+
    ```bash
    git add .
    git commit -m "Add Azure credentials provider"
@@ -232,6 +238,7 @@ Available in `tests/conftest.py`:
 ### Adding a New Credential Provider
 
 1. Port test from Java:
+
    ```python
    # tests/credentials/test_xyz_provider.py
    class TestXyzProvider:
@@ -240,6 +247,7 @@ Available in `tests/conftest.py`:
    ```
 
 2. Add command:
+
    ```python
    # src/seqera/commands/credentials/__init__.py
    @add_app.command("xyz")
@@ -369,11 +377,11 @@ mypy src/seqera/
 
 ## Resources
 
-- **Typer Documentation**: https://typer.tiangolo.com/
-- **httpx Documentation**: https://www.python-httpx.org/
-- **pytest Documentation**: https://docs.pytest.org/
-- **pytest-httpserver**: https://pytest-httpserver.readthedocs.io/
-- **Rich Documentation**: https://rich.readthedocs.io/
+- [Typer Documentation](https://typer.tiangolo.com/)
+- [httpx Documentation](https://www.python-httpx.org/)
+- [pytest Documentation](https://docs.pytest.org/)
+- [pytest-httpserver](https://pytest-httpserver.readthedocs.io/)
+- [Rich Documentation](https://rich.readthedocs.io/)
 
 ---
 
