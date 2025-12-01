@@ -151,6 +151,7 @@ from seqera.commands import (
     collaborators,
     computeenvs,
     credentials,
+    datalinks,
     datasets,
     info,
     labels,
@@ -170,6 +171,7 @@ app.add_typer(actions.app, name="actions")
 app.add_typer(collaborators.app, name="collaborators")
 app.add_typer(credentials.app, name="credentials")
 app.add_typer(computeenvs.app, name="compute-envs")
+app.add_typer(datalinks.app, name="data-links")
 app.add_typer(datasets.app, name="datasets")
 app.command(name="info", help="System info and health status")(info.info)
 app.add_typer(labels.app, name="labels")
