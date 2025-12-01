@@ -2,8 +2,13 @@
 
 **Project:** Rewrite tower-cli from Java to Python using Test-Driven Development
 **Started:** 2025-11-19
-**Status:** ✅ PHASE 5 COMPLETE - All polish and documentation complete
+**Completed:** 2025-12-01
+**Status:** ✅ PROJECT COMPLETE - Python CLI is the sole CLI in this repository
 **Approach:** Test-driven, porting Java tests first, then implementing features
+
+> **Note:** This document is now an archived historical record. The Java code has been removed.
+> All 55,000+ lines of Java code have been replaced with ~15,000 lines of Python code.
+> Total tests: 479 passing.
 
 ---
 
