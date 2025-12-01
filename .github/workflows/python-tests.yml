@@ -2,10 +2,9 @@ name: Python CLI Tests
 on:
   push:
     branches:
-      - '*'
-      - '!refs/tags/.*'
+      - '**'
     tags-ignore:
-      - '*'
+      - '**'
   pull_request:
     types: [opened, reopened, synchronize]
 
