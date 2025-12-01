@@ -1,0 +1,108 @@
+{
+  "metrics": [
+    {
+      "id": 2439198,
+      "process": "SAMPLESHEET_CHECK",
+      "cpu": {
+        "mean": 66.7,
+        "min": 66.7,
+        "q1": 66.7,
+        "q2": 66.7,
+        "q3": 66.7,
+        "max": 66.7,
+        "minLabel": "NFCORE_RNASEQ:RNASEQ:INPUT_CHECK:SAMPLESHEET_CHECK (samplesheet_test.csv)",
+        "maxLabel": "NFCORE_RNASEQ:RNASEQ:INPUT_CHECK:SAMPLESHEET_CHECK (samplesheet_test.csv)",
+        "q1Label": "NFCORE_RNASEQ:RNASEQ:INPUT_CHECK:SAMPLESHEET_CHECK (samplesheet_test.csv)",
+        "q2Label": "NFCORE_RNASEQ:RNASEQ:INPUT_CHECK:SAMPLESHEET_CHECK (samplesheet_test.csv)",
+        "q3Label": "NFCORE_RNASEQ:RNASEQ:INPUT_CHECK:SAMPLESHEET_CHECK (samplesheet_test.csv)",
+        "warnings": []
+      },
+      "mem": {
+        "mean": 3014660,
+        "min": 3014660,
+        "q1": 3014660,
+        "q2": 3014660,
+        "q3": 3014660,
+        "max": 3014660,
+        "minLabel": "NFCORE_RNASEQ:RNASEQ:INPUT_CHECK:SAMPLESHEET_CHECK (samplesheet_test.csv)",
+        "maxLabel": "NFCORE_RNASEQ:RNASEQ:INPUT_CHECK:SAMPLESHEET_CHECK (samplesheet_test.csv)",
+        "q1Label": "NFCORE_RNASEQ:RNASEQ:INPUT_CHECK:SAMPLESHEET_CHECK (samplesheet_test.csv)",
+        "q2Label": "NFCORE_RNASEQ:RNASEQ:INPUT_CHECK:SAMPLESHEET_CHECK (samplesheet_test.csv)",
+        "q3Label": "NFCORE_RNASEQ:RNASEQ:INPUT_CHECK:SAMPLESHEET_CHECK (samplesheet_test.csv)",
+        "warnings": []
+      },
+      "vmem": {
+        "mean": 11575300,
+        "min": 11575300,
+        "q1": 11575300,
+        "q2": 11575300,
+        "q3": 11575300,
+        "max": 11575300,
+        "minLabel": "NFCORE_RNASEQ:RNASEQ:INPUT_CHECK:SAMPLESHEET_CHECK (samplesheet_test.csv)",
+        "maxLabel": "NFCORE_RNASEQ:RNASEQ:INPUT_CHECK:SAMPLESHEET_CHECK (samplesheet_test.csv)",
+        "q1Label": "NFCORE_RNASEQ:RNASEQ:INPUT_CHECK:SAMPLESHEET_CHECK (samplesheet_test.csv)",
+        "q2Label": "NFCORE_RNASEQ:RNASEQ:INPUT_CHECK:SAMPLESHEET_CHECK (samplesheet_test.csv)",
+        "q3Label": "NFCORE_RNASEQ:RNASEQ:INPUT_CHECK:SAMPLESHEET_CHECK (samplesheet_test.csv)",
+        "warnings": []
+      },
+      "time": null,
+      "reads": {
+        "mean": 673556,
+        "min": 673556,
+        "q1": 673556,
+        "q2": 673556,
+        "q3": 673556,
+        "max": 673556,
+        "minLabel": "NFCORE_RNASEQ:RNASEQ:INPUT_CHECK:SAMPLESHEET_CHECK (samplesheet_test.csv)",
+        "maxLabel": "NFCORE_RNASEQ:RNASEQ:INPUT_CHECK:SAMPLESHEET_CHECK (samplesheet_test.csv)",
+        "q1Label": "NFCORE_RNASEQ:RNASEQ:INPUT_CHECK:SAMPLESHEET_CHECK (samplesheet_test.csv)",
+        "q2Label": "NFCORE_RNASEQ:RNASEQ:INPUT_CHECK:SAMPLESHEET_CHECK (samplesheet_test.csv)",
+        "q3Label": "NFCORE_RNASEQ:RNASEQ:INPUT_CHECK:SAMPLESHEET_CHECK (samplesheet_test.csv)",
+        "warnings": []
+      },
+      "writes": {
+        "mean": 1428,
+        "min": 1428,
+        "q1": 1428,
+        "q2": 1428,
+        "q3": 1428,
+        "max": 1428,
+        "minLabel": "NFCORE_RNASEQ:RNASEQ:INPUT_CHECK:SAMPLESHEET_CHECK (samplesheet_test.csv)",
+        "maxLabel": "NFCORE_RNASEQ:RNASEQ:INPUT_CHECK:SAMPLESHEET_CHECK (samplesheet_test.csv)",
+        "q1Label": "NFCORE_RNASEQ:RNASEQ:INPUT_CHECK:SAMPLESHEET_CHECK (samplesheet_test.csv)",
+        "q2Label": "NFCORE_RNASEQ:RNASEQ:INPUT_CHECK:SAMPLESHEET_CHECK (samplesheet_test.csv)",
+        "q3Label": "NFCORE_RNASEQ:RNASEQ:INPUT_CHECK:SAMPLESHEET_CHECK (samplesheet_test.csv)",
+        "warnings": []
+      },
+      "cpuUsage": {
+        "mean": 66.7,
+        "min": 66.7,
+        "q1": 66.7,
+        "q2": 66.7,
+        "q3": 66.7,
+        "max": 66.7,
+        "minLabel": "NFCORE_RNASEQ:RNASEQ:INPUT_CHECK:SAMPLESHEET_CHECK (samplesheet_test.csv)",
+        "maxLabel": "NFCORE_RNASEQ:RNASEQ:INPUT_CHECK:SAMPLESHEET_CHECK (samplesheet_test.csv)",
+        "q1Label": "NFCORE_RNASEQ:RNASEQ:INPUT_CHECK:SAMPLESHEET_CHECK (samplesheet_test.csv)",
+        "q2Label": "NFCORE_RNASEQ:RNASEQ:INPUT_CHECK:SAMPLESHEET_CHECK (samplesheet_test.csv)",
+        "q3Label": "NFCORE_RNASEQ:RNASEQ:INPUT_CHECK:SAMPLESHEET_CHECK (samplesheet_test.csv)",
+        "warnings": []
+      },
+      "memUsage": {
+        "mean": 0.05,
+        "min": 0.05,
+        "q1": 0.05,
+        "q2": 0.05,
+        "q3": 0.05,
+        "max": 0.05,
+        "minLabel": "NFCORE_RNASEQ:RNASEQ:INPUT_CHECK:SAMPLESHEET_CHECK (samplesheet_test.csv)",
+        "maxLabel": "NFCORE_RNASEQ:RNASEQ:INPUT_CHECK:SAMPLESHEET_CHECK (samplesheet_test.csv)",
+        "q1Label": "NFCORE_RNASEQ:RNASEQ:INPUT_CHECK:SAMPLESHEET_CHECK (samplesheet_test.csv)",
+        "q2Label": "NFCORE_RNASEQ:RNASEQ:INPUT_CHECK:SAMPLESHEET_CHECK (samplesheet_test.csv)",
+        "q3Label": "NFCORE_RNASEQ:RNASEQ:INPUT_CHECK:SAMPLESHEET_CHECK (samplesheet_test.csv)",
+        "warnings": []
+      },
+      "timeUsage": null
+    }
+  ]
+}
