@@ -708,9 +708,12 @@ class InfoResponse(Response):
             value = self.opts.get(key)
             return value if value is not None else default
 
-        # Build output
+        # Build output - pre-render all Rich markup to ANSI codes
         output_parts = []
-        output_parts.append("\n    [bold yellow]Details[/bold yellow]")
+        string_io = StringIO()
+        temp_console = Console(file=string_io, force_terminal=True, width=120)
+        temp_console.print("[bold yellow]Details[/bold yellow]")
+        output_parts.append("\n    " + string_io.getvalue().strip())
 
         # Details table
         details_table = Table(show_header=False, show_edge=False, padding=(0, 2), box=None)
@@ -731,8 +734,11 @@ class InfoResponse(Response):
         details_str = string_io.getvalue()
         output_parts.append("    " + details_str.replace("\n", "\n    ").rstrip())
 
-        # Health status section
-        output_parts.append("\n    [bold yellow]System health status[/bold yellow]")
+        # Health status section - pre-render markup
+        string_io = StringIO()
+        temp_console = Console(file=string_io, force_terminal=True, width=120)
+        temp_console.print("[bold yellow]System health status[/bold yellow]")
+        output_parts.append("\n    " + string_io.getvalue().strip())
 
         # Health table
         health_table = Table(show_header=False, show_edge=False, padding=(0, 2), box=None)
@@ -766,41 +772,41 @@ class InfoResponse(Response):
         health_str = string_io.getvalue()
         output_parts.append("    " + health_str.replace("\n", "\n    ").rstrip())
 
-        # Error messages
+        # Error messages - pre-render each with Rich
+        def render_error(message: str) -> str:
+            """Pre-render error message with Rich."""
+            sio = StringIO()
+            c = Console(file=sio, force_terminal=True, width=120)
+            c.print(message)
+            return sio.getvalue().strip()
+
         if self.connection_check == 0:
             endpoint = self.opts.get("towerApiEndpoint", "")
             if "/api" in endpoint:
                 output_parts.append(
-                    f"\n    [bold red]Tower API URL {endpoint} is not available[/bold red]\n"
+                    f"\n    {render_error(f'[bold red]Tower API URL {endpoint} is not available[/bold red]')}\n"
                 )
             else:
                 output_parts.append(
-                    f"\n    [bold red]Tower API URL {endpoint} is not available (did you mean {endpoint}/api?)[/bold red]\n"
+                    f"\n    {render_error(f'[bold red]Tower API URL {endpoint} is not available (did you mean {endpoint}/api?)[/bold red]')}\n"
                 )
 
         if self.version_check == 0:
             tower_api_ver = self.opts.get("towerApiVersion", "")
             cli_api_ver = self.opts.get("cliApiVersion", "")
             output_parts.append(
-                f"\n    [bold red]Tower API version is {tower_api_ver} while the minimum required version to be fully compatible is {cli_api_ver}[/bold red]\n"
+                f"\n    {render_error(f'[bold red]Tower API version is {tower_api_ver} while the minimum required version to be fully compatible is {cli_api_ver}[/bold red]')}\n"
             )
 
         if self.credentials_check == 0:
             output_parts.append(
-                "\n    [bold red]Review that your current access token is valid and active.[/bold red]\n"
+                f"\n    {render_error('[bold red]Review that your current access token is valid and active.[/bold red]')}\n"
             )
 
         output_parts.append("")
 
-        # Join all parts and render with Rich
-        output_text = "\n".join(output_parts)
-
-        # Render the full output with Rich
-        string_io = StringIO()
-        console = Console(file=string_io, force_terminal=True, width=120)
-        console.print(output_text)
-
-        return string_io.getvalue()
+        # All parts are pre-rendered, just join and return
+        return "\n".join(output_parts)
 
     def get_exit_code(self) -> int:
         """Get exit code based on check results."""

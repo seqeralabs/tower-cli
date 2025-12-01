@@ -53,9 +53,11 @@ def output_console(message: str) -> None:
     Output message in console format.
 
     Args:
-        message: Message to output
+        message: Message to output (may contain pre-rendered ANSI codes)
     """
-    console.print(message)
+    # Use print() directly since message may already contain ANSI escape codes
+    # from pre-rendered Rich tables. Using console.print() would corrupt these.
+    print(message)
 
 
 def output_table(
