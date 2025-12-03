@@ -86,7 +86,7 @@ def main_callback(
         typer.Option(
             "-o",
             "--output",
-            envvar=["SEQERA_OUTPUT_FORMAT", "TOWER_CLI_OUTPUT_FORMAT"],
+            envvar=["SEQERA_OUTPUT_FORMAT", "SEQERA_CLI_OUTPUT_FORMAT"],
             help="Output format: console, json, or yaml.",
         ),
     ] = "console",

@@ -747,8 +747,8 @@ def export_pipeline(
         if launch.get("configText"):
             launch_export["configText"] = launch["configText"]
 
-        if launch.get("towerConfig"):
-            launch_export["towerConfig"] = launch["towerConfig"]
+        if launch.get("seqeraConfig"):
+            launch_export["seqeraConfig"] = launch["seqeraConfig"]
 
         if launch.get("paramsText"):
             launch_export["paramsText"] = launch["paramsText"]

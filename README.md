@@ -40,7 +40,7 @@ Or install from source:
 
 ```bash
 git clone https://github.com/seqeralabs/tower-cli.git
-cd tower-cli
+cd seqera-cli
 pip install .
 ```
 
@@ -93,7 +93,7 @@ $ seqera info
     System health status
     ---------------------------------------+------------------
      Remote API server connection check    | OK
-     Tower API version check               | OK
+     Seqera Platform API version check     | OK
      Authentication API credential's token | OK
 ```
 

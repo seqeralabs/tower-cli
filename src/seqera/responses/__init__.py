@@ -676,9 +676,9 @@ class InfoResponse(Response):
         """Convert to dictionary for JSON/YAML output."""
         return {
             "details": {
-                "towerApiEndpoint": self.opts.get("towerApiEndpoint"),
-                "towerApiVersion": self.opts.get("towerApiVersion"),
-                "towerVersion": self.opts.get("towerVersion"),
+                "seqeraApiEndpoint": self.opts.get("seqeraApiEndpoint"),
+                "seqeraApiVersion": self.opts.get("seqeraApiVersion"),
+                "seqeraVersion": self.opts.get("seqeraVersion"),
                 "cliVersion": self.opts.get("cliVersion"),
                 "cliApiVersion": self.opts.get("cliApiVersion"),
                 "userName": self.opts.get("userName"),
@@ -720,9 +720,11 @@ class InfoResponse(Response):
         details_table.add_column("Key", style="bold")
         details_table.add_column("Value")
 
-        details_table.add_row("Tower API endpoint", get_opt("towerApiEndpoint", undefined))
-        details_table.add_row("Tower API version", get_opt("towerApiVersion", undefined))
-        details_table.add_row("Tower version", get_opt("towerVersion", undefined))
+        details_table.add_row(
+            "Seqera Platform API endpoint", get_opt("seqeraApiEndpoint", undefined)
+        )
+        details_table.add_row("Seqera Platform API version", get_opt("seqeraApiVersion", undefined))
+        details_table.add_row("Seqera version", get_opt("seqeraVersion", undefined))
         details_table.add_row("CLI version", get_opt("cliVersion", undefined))
         details_table.add_row("CLI minimum API version", get_opt("cliApiVersion", undefined))
         details_table.add_row("Authenticated user", get_opt("userName", undefined))
@@ -755,7 +757,7 @@ class InfoResponse(Response):
         ver_status = (
             ok if self.version_check == 1 else (fail if self.version_check == 0 else skipped)
         )
-        health_table.add_row("Tower API version check", ver_status)
+        health_table.add_row("Seqera Platform API version check", ver_status)
 
         # Credentials check
         cred_status = (
@@ -781,21 +783,21 @@ class InfoResponse(Response):
             return sio.getvalue().strip()
 
         if self.connection_check == 0:
-            endpoint = self.opts.get("towerApiEndpoint", "")
+            endpoint = self.opts.get("seqeraApiEndpoint", "")
             if "/api" in endpoint:
                 output_parts.append(
-                    f"\n    {render_error(f'[bold red]Tower API URL {endpoint} is not available[/bold red]')}\n"
+                    f"\n    {render_error(f'[bold red]Seqera Platform API URL {endpoint} is not available[/bold red]')}\n"
                 )
             else:
                 output_parts.append(
-                    f"\n    {render_error(f'[bold red]Tower API URL {endpoint} is not available (did you mean {endpoint}/api?)[/bold red]')}\n"
+                    f"\n    {render_error(f'[bold red]Seqera Platform API URL {endpoint} is not available (did you mean {endpoint}/api?)[/bold red]')}\n"
                 )
 
         if self.version_check == 0:
-            tower_api_ver = self.opts.get("towerApiVersion", "")
+            seqera_api_ver = self.opts.get("seqeraApiVersion", "")
             cli_api_ver = self.opts.get("cliApiVersion", "")
             output_parts.append(
-                f"\n    {render_error(f'[bold red]Tower API version is {tower_api_ver} while the minimum required version to be fully compatible is {cli_api_ver}[/bold red]')}\n"
+                f"\n    {render_error(f'[bold red]Seqera Platform API veseqera_api{seqera_api_ver} while the minimum required version to be fully compatible is {cli_api_ver}[/bold red]')}\n"
             )
 
         if self.credentials_check == 0:

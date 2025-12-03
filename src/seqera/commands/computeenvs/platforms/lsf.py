@@ -71,7 +71,7 @@ def add_lsf(
         str | None,
         typer.Option(
             "--head-job-options",
-            help="LSF submit options for the Nextflow head job. These options are added to the 'bsub' command run by Tower to launch the pipeline execution",
+            help="LSF submit options for the Nextflow head job. These options are added to the 'bsub' command run by Seqera to launch the pipeline execution",
         ),
     ] = None,
     unit_for_limits: Annotated[

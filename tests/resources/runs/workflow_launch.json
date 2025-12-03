@@ -99,7 +99,7 @@
     "userSecrets": null,
     "workspaceSecrets": null,
     "configText": null,
-    "towerConfig": null,
+    "seqeraConfig": null,
     "paramsText": "outdir: s3://fusionfs/results",
     "preRunScript": null,
     "postRunScript": null,

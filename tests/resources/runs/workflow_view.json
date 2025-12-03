@@ -14,7 +14,7 @@
     "userName": "jfernandez74",
     "scriptId": null,
     "revision": "main",
-    "commandLine": "nextflow run https://github.com/grananda/nextflow-hello -name spontaneous_easley -with-tower https://scratch.staging-tower.xyz/api -r main",
+    "commandLine": "nextflow run https://github.com/grananda/nextflow-hello -name spontaneous_easley -with-seqera https://scratch.staging-seqera.xyz/api -r main",
     "projectName": "grananda/nextflow-hello",
     "scriptName": null,
     "launchId": "5SCyEXKrCqFoGzOXGpesr5",

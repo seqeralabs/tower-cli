@@ -46,7 +46,7 @@ seqera --url http://localhost:8080 --access-token your_token credentials list
 ## Project Structure
 
 ```text
-tower-cli/
+seqera-cli/
 ├── src/seqera/              # Python source code
 │   ├── main.py              # CLI entry point
 │   ├── api/                 # API client

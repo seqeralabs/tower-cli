@@ -68,7 +68,7 @@ def add_azure_manual(
         str,
         typer.Option(
             "--compute-pool-name",
-            help="The Azure Batch compute pool to be used to run the Nextflow jobs. This needs to be a pre-configured Batch compute pool which includes the azcopy command line (see the Tower documentation for details)",
+            help="The Azure Batch compute pool to be used to run the Nextflow jobs. This needs to be a pre-configured Batch compute pool which includes the azcopy command line (see the Seqera documentation for details)",
         ),
     ],
     fusion_v2: Annotated[

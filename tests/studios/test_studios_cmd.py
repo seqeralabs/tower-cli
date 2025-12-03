@@ -287,7 +287,7 @@ class TestStudiosViewCmd:
                     },
                     "name": "studio-a66d",
                     "description": "my first studio",
-                    "studioUrl": "https://a3e8370e7.dev-tower.com",
+                    "studioUrl": "https://a3e8370e7.dev-seqera.com",
                     "computeEnv": {
                         "id": "3xkkzYH2nbD3nZjrzKm0oR",
                         "name": "ce1",

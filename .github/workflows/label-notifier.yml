@@ -8,7 +8,7 @@ on:
 
 jobs:
   notify:
-    runs-on: tower-cli
+    runs-on: seqera-cli
     steps:
         - uses: jenschelkopf/issue-label-notification-action@1.3
           with:
@@ -17,4 +17,4 @@ jobs:
               squad-pipelines=@squad-pipelines
               squad-data=@squad-data
               squad-unifiedcompute=@squad-unified-compute
-              documentation=@tower-docs-codeowners
+              documentation=@seqera-docs-codeowners

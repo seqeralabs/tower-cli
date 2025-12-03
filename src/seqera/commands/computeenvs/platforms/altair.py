@@ -161,7 +161,7 @@ def add_altair(
         str | None,
         typer.Option(
             "--head-job-options",
-            help="Altair PBS submit options for the Nextflow head job. These options are added to the 'qsub' command run by Tower to launch the pipeline execution.",
+            help="Altair PBS submit options for the Nextflow head job. These options are added to the 'qsub' command run by Seqera to launch the pipeline execution.",
         ),
     ] = None,
     pre_run: Annotated[Path | None, typer.Option("--pre-run", help="Pre-run script.")] = None,

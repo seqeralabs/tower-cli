@@ -1,4 +1,4 @@
-name: Generate dependency graph for tower-cli
+name: Generate dependency graph for seqera-cli
 on:
   push:
     branches: ['master']
@@ -20,7 +20,7 @@ jobs:
         native-image-musl: 'true'
 
 
-    - name: Generate and submit dependency graph for tower-cli
+    - name: Generate and submit dependency graph for seqera-cli
       uses: gradle/actions/dependency-submission@v4
       with:
         dependency-resolution-task: ":dependencies"

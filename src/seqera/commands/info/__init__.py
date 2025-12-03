@@ -27,7 +27,7 @@ def get_cli_version() -> str:
 
 def get_cli_api_version() -> str:
     """Get CLI minimum API version."""
-    # This should match the minimum supported Tower API version
+    # This should match the minimum supported Seqera Platform API version
     return "1.0.0"
 
 
@@ -44,15 +44,15 @@ def info() -> None:
     """
     Display system information and health status.
 
-    Shows CLI version, Tower API endpoint, Tower version, and performs
+    Shows CLI version, Seqera Platform API endpoint, Seqera version, and performs
     health checks on connectivity, API version compatibility, and credentials.
     """
     connection_check = 1
     version_check = -1  # -1 = skipped
     credentials_check = -1  # -1 = skipped
 
-    tower_version: str | None = None
-    tower_api_version: str | None = None
+    seqera_version: str | None = None
+    seqera_api_version: str | None = None
     user_name: str | None = None
 
     # Get CLI version info
@@ -62,8 +62,8 @@ def info() -> None:
     client = get_client()
     output_format = get_output_format()
 
-    # Get Tower API endpoint
-    tower_api_endpoint = client.base_url
+    # Get Seqera Platform API endpoint
+    seqera_api_endpoint = client.base_url
 
     # Try to get service info
     try:
@@ -71,14 +71,14 @@ def info() -> None:
         service_info = service_info_response.get("serviceInfo", {})
 
         if service_info:
-            tower_api_version = service_info.get("apiVersion")
-            tower_version = service_info.get("version")
+            seqera_api_version = service_info.get("apiVersion")
+            seqera_version = service_info.get("version")
 
             # Check version compatibility
-            if tower_api_version and cli_api_version:
-                tower_ver_tuple = parse_version(tower_api_version)
+            if seqera_api_version and cli_api_version:
+                seqera_ver_tuple = parse_version(seqera_api_version)
                 cli_ver_tuple = parse_version(cli_api_version)
-                version_check = 1 if tower_ver_tuple >= cli_ver_tuple else 0
+                version_check = 1 if seqera_ver_tuple >= cli_ver_tuple else 0
     except Exception:
         # Connection failed
         connection_check = 0
@@ -102,9 +102,9 @@ def info() -> None:
     opts: dict[str, str | None] = {
         "cliVersion": cli_version,
         "cliApiVersion": cli_api_version,
-        "towerApiVersion": tower_api_version,
-        "towerVersion": tower_version,
-        "towerApiEndpoint": tower_api_endpoint,
+        "seqeraApiVersion": seqera_api_version,
+        "seqeraVersion": seqera_version,
+        "seqeraApiEndpoint": seqera_api_endpoint,
         "userName": user_name,
     }
 

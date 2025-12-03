@@ -4,7 +4,7 @@
       "starred": false,
       "workflow": {
         "id": "5mDfiUtqyptDib",
-        "commandLine": "nextflow run https://github.com/grananda/nextflow-hello -name spontaneous_easley -with-tower https://scratch.staging-tower.xyz/api -r main",
+        "commandLine": "nextflow run https://github.com/grananda/nextflow-hello -name spontaneous_easley -with-seqera https://scratch.staging-seqera.xyz/api -r main",
         "ownerId": 9,
         "submit": "2021-09-22T05:45:44Z",
         "dateCreated": "2021-09-22T05:45:44Z",
@@ -16,7 +16,7 @@
       "starred": false,
       "workflow": {
         "id": "6mDfiUtqyptDib",
-        "commandLine": "nextflow run https://github.com/grananda/nextflow-hello -name spontaneous_easley -with-tower https://scratch.staging-tower.xyz/api -r main",
+        "commandLine": "nextflow run https://github.com/grananda/nextflow-hello -name spontaneous_easley -with-seqera https://scratch.staging-seqera.xyz/api -r main",
         "ownerId": 9,
         "submit": "2021-09-22T05:45:44Z",
         "dateCreated": "2021-09-22T05:45:44Z",

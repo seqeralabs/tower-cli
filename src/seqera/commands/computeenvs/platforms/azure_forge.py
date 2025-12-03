@@ -89,7 +89,7 @@ def add_azure_forge(
         bool,
         typer.Option(
             "--preserve-resources",
-            help="Enable this if you want to preserve the Batch compute pool created by Tower independently from the lifecycle of this compute environment",
+            help="Enable this if you want to preserve the Batch compute pool created by Seqera independently from the lifecycle of this compute environment",
         ),
     ] = False,
     registry_credentials: Annotated[

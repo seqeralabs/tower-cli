@@ -158,7 +158,7 @@
 | `teams` | 26 | Team and team members management |
 | `participants` | 20 | Workspace participants management |
 | `launch` | 19 | Pipeline launching with labels support |
-| `actions` | 28 | GitHub/Tower webhook actions (list, view, add, delete, update) |
+| `actions` | 28 | GitHub/Seqera webhook actions (list, view, add, delete, update) |
 | `members` | 18 | Organization members management |
 | `collaborators` | 9 | Organization collaborators management |
 | `studios` | 19 | Data studios management (list, view, start, stop, delete, checkpoints) |
@@ -271,4 +271,4 @@ All commands support three output formats:
 ---
 
 **Last Updated:** 2025-12-01
-**Branch:** claude/rewrite-tower-cli-python-01JoUyM2GRqoBEGpkzC6CZxQ
+**Branch:** claude/rewrite-seqera-cli-python-01JoUyM2GRqoBEGpkzC6CZxQ

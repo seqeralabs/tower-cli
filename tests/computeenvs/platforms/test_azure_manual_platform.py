@@ -60,7 +60,7 @@ class TestAzureBatchManualPlatform:
                     "region": "europe",
                     "fusion2Enabled": False,
                     "waveEnabled": False,
-                    "headPool": "tower_pool",
+                    "headPool": "seqera_pool",
                 },
                 "credentialsId": "57Ic6reczFn78H1DTaaXkp",
             }
@@ -88,7 +88,7 @@ class TestAzureBatchManualPlatform:
             "--work-dir",
             "az://nextflow-ci/jordeu",
             "--compute-pool-name",
-            "tower_pool",
+            "seqera_pool",
             output_format=output_format,
         )
 
@@ -160,7 +160,7 @@ class TestAzureBatchManualPlatform:
                     "region": "europe",
                     "fusion2Enabled": True,
                     "waveEnabled": True,
-                    "headPool": "tower_pool",
+                    "headPool": "seqera_pool",
                     "tokenDuration": "24",
                 },
                 "credentialsId": "57Ic6reczFn78H1DTaaXkp",
@@ -191,7 +191,7 @@ class TestAzureBatchManualPlatform:
             "--fusion-v2",
             "--wave",
             "--compute-pool-name",
-            "tower_pool",
+            "seqera_pool",
             "--token-duration",
             "24",
         )

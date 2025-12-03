@@ -459,8 +459,8 @@ def add_github_action(
         handle_actions_error(e)
 
 
-@add_app.command("tower")
-def add_tower_action(
+@add_app.command("seqera")
+def add_seqera_action(
     name: Annotated[
         str,
         typer.Option("-n", "--name", help="Action name"),
@@ -482,7 +482,7 @@ def add_tower_action(
         typer.Option("--overwrite", help="Overwrite if action already exists"),
     ] = False,
 ) -> None:
-    """Add a Tower webhook action."""
+    """Add a Seqera webhook action."""
     try:
         client = get_client()
         output_format = get_output_format()
@@ -525,7 +525,7 @@ def add_tower_action(
         payload = {
             "name": name,
             "launch": launch_config,
-            "source": "tower",
+            "source": "seqera",
         }
 
         # Create action

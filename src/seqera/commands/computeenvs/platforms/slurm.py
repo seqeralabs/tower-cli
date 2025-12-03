@@ -163,7 +163,7 @@ def add_slurm(
         str | None,
         typer.Option(
             "--head-job-options",
-            help="Slurm submit options for the Nextflow head job. These options are added to the 'sbatch' command run by Tower to launch the pipeline execution.",
+            help="Slurm submit options for the Nextflow head job. These options are added to the 'sbatch' command run by Seqera to launch the pipeline execution.",
         ),
     ] = None,
     pre_run: Annotated[Path | None, typer.Option("--pre-run", help="Pre-run script.")] = None,

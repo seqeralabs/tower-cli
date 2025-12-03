@@ -48,8 +48,8 @@ class TestInfoCmd:
             output_data = json.loads(result.stdout)
             assert output_data["details"]["cliVersion"] == "0.1.0"
             assert output_data["details"]["cliApiVersion"] == "1.0.0"
-            assert output_data["details"]["towerApiVersion"] == "1.38.0"
-            assert output_data["details"]["towerVersion"] == "22.3.0-torricelli"
+            assert output_data["details"]["seqeraApiVersion"] == "1.38.0"
+            assert output_data["details"]["seqeraVersion"] == "22.3.0-torricelli"
             assert output_data["details"]["userName"] == "jordi"
             assert output_data["checks"]["connectionCheck"] == 1
             assert output_data["checks"]["versionCheck"] == 1
@@ -60,8 +60,8 @@ class TestInfoCmd:
             output_data = yaml.safe_load(result.stdout)
             assert output_data["details"]["cliVersion"] == "0.1.0"
             assert output_data["details"]["cliApiVersion"] == "1.0.0"
-            assert output_data["details"]["towerApiVersion"] == "1.38.0"
-            assert output_data["details"]["towerVersion"] == "22.3.0-torricelli"
+            assert output_data["details"]["seqeraApiVersion"] == "1.38.0"
+            assert output_data["details"]["seqeraVersion"] == "22.3.0-torricelli"
             assert output_data["details"]["userName"] == "jordi"
             assert output_data["checks"]["connectionCheck"] == 1
             assert output_data["checks"]["versionCheck"] == 1
@@ -70,9 +70,9 @@ class TestInfoCmd:
             # Check for key information in console output
             # Note: Rich adds ANSI color codes, so we check for parts of the strings
             assert "Details" in result.stdout
-            assert "Tower API endpoint" in result.stdout
-            assert "Tower API version" in result.stdout
-            assert "Tower version" in result.stdout
+            assert "Seqera Platform API endpoint" in result.stdout
+            assert "Seqera Platform API version" in result.stdout
+            assert "Seqera version" in result.stdout
             assert "torricelli" in result.stdout
             assert "1.38" in result.stdout
             assert "jordi" in result.stdout
@@ -111,7 +111,7 @@ class TestInfoCmd:
         httpserver: HTTPServer,
         exec_cmd: Callable,
     ) -> None:
-        """Test info command when Tower API version is too old."""
+        """Test info command when Seqera Platform API version is too old."""
         # Setup mock responses with obsolete version
         service_info = load_test_resource("info/service-info-obsolete.json")
         user_info = load_test_resource("user.json")

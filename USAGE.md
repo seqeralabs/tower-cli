@@ -1,6 +1,6 @@
 # tw CLI commands
 
-> **Note**: The CLI performs operations in the user workspace context by default. Use the `TOWER_WORKSPACE_ID` environment variable or the `--workspace` parameter to specify an organization workspace ID.
+> **Note**: The CLI performs operations in the user workspace context by default. Use the `SEQERA_WORKSPACE_ID` environment variable or the `--workspace` parameter to specify an organization workspace ID.
 
 Use the `-h` or `--help` parameter to list the available commands and their associated options.
 
@@ -18,7 +18,7 @@ To launch pipelines in a Seqera workspace, you need [credentials][credentials] f
 
 1. Compute environments
 2. Pipeline repository Git providers
-3. (Optional) [Tower agent][tower-agent] — used with HPC clusters
+3. (Optional) [Seqera agent][tower-agent] — used with HPC clusters
 4. (Optional) Container registries, such as docker.io
 
 ### Add credentials
@@ -401,7 +401,7 @@ Run `tw runs dump -h` to view all the required and optional fields for dumping a
 
 ```console
 $ tw runs dump -i 5z4AMshti4g0GK -o file.tar.gz
-- Tower info
+- Seqera info
 - Workflow details
 - Task details
 
@@ -424,9 +424,9 @@ See [User workspaces][user-workspaces] for more information.
 In the example below, we create a shared workspace to be used for sharing pipelines with other private workspaces. See [Shared workspaces][shared-workspaces] for more information.
 
 ```console
-$ tw workspaces add --name=shared-workspace --full-name=shared-workspace-for-all  --org=my-tower-org --visibility=SHARED
+$ tw workspaces add --name=shared-workspace --full-name=shared-workspace-for-all  --org=my-seqera-org --visibility=SHARED
 
-  A 'SHARED' workspace 'shared-workspace' added for 'my-tower-org' organization
+  A 'SHARED' workspace 'shared-workspace' added for 'my-seqera-org' organization
 ```
 
 > **Note**: By default, a workspace is set to private when created.
@@ -442,7 +442,7 @@ $ tw workspaces list
 
      Workspace ID    | Workspace Name   | Organization Name | Organization ID
     -----------------+------------------+-------------------+-----------------
-     26002603030407  | shared-workspace | my-tower-org      | 04303000612070
+     26002603030407  | shared-workspace | my-seqera-org      | 04303000612070
 ```
 
 ## Participants
@@ -455,7 +455,7 @@ Run `tw participants add -h` to view the required and optional fields for adding
 ```console
 $ tw participants list
 
-  Participants for 'my-tower-org/shared-workspace' workspace:
+  Participants for 'my-seqera-org/shared-workspace' workspace:
 
      ID             | Participant Type | Name                        | Workspace Role
     ----------------+------------------+-----------------------------+----------------
@@ -498,7 +498,7 @@ Data links allow you to work with public and private cloud storage buckets in Da
 
 ### List data links
 
-Run `tw data-links list -h` to view all the optional fields for listing data links in a workspace. If a workspace is not defined, the `TOWER_WORKSPACE_ID` workspace is used by default. Data links can be one of two types:
+Run `tw data-links list -h` to view all the optional fields for listing data links in a workspace. If a workspace is not defined, the `SEQERA_WORKSPACE_ID` workspace is used by default. Data links can be one of two types:
 
 - `v1-cloud-<id>`: **cloud** data links auto-discovered using credentials attached to the workspace
 - `v1-user-<id>`: **custom** data links created by users
@@ -511,7 +511,7 @@ $ tw data-links list -w seqeralabs/showcase
  ID                                        | Provider | Name                           | Resource ref                                                    | Region
 -------------------------------------------+----------+--------------------------------+-----------------------------------------------------------------+-----------
  v1-cloud-833bb845bd9ec1970c4a7b0bb7b8c4ad | aws      | e2e-data-explorer-tests-aws    | s3://e2e-data-explorer-tests-aws                                | eu-west-2
- v1-cloud-60700a33ec3fae68d424cf948fa8d10c | aws      | nf-tower-bucket                | s3://nf-tower-bucket                                            | eu-west-1
+ v1-cloud-60700a33ec3fae68d424cf948fa8d10c | aws      | nf-seqera-bucket                | s3://nf-seqera-bucket                                            | eu-west-1
  v1-user-09705781697816b62f9454bc4b9434b4  | aws      | vscode-analysis-demo           | s3://seqera-development-permanent-bucket/studios-demo/vscode/   | eu-west-2
  v1-user-0dede00fabbc4b9e2610261822a2d6ae  | aws      | seqeralabs-showcase            | s3://seqeralabs-showcase                                        | eu-west-1
  v1-user-171aa8801cabe4af71500335f193d649  | aws      | projectA-rnaseq-analysis       | s3://seqeralabs-showcase/demo/nf-core-rnaseq/                   | eu-west-1
