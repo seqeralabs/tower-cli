@@ -166,9 +166,7 @@ class DataLinksList:
             lines.append("  No data links found")
         else:
             # Header
-            lines.append(
-                f"  {'ID':<45} {'Name':<30} {'Provider':<10} {'Region':<15} {'Resource'}"
-            )
+            lines.append(f"  {'ID':<45} {'Name':<30} {'Provider':<10} {'Region':<15} {'Resource'}")
             lines.append("  " + "-" * 120)
             for dl in self.data_links:
                 dl_id = dl.get("id", "")[:44]

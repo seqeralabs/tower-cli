@@ -11,7 +11,6 @@ from pytest_httpserver import HTTPServer
 
 from tests.conftest import exec_command
 
-
 # Test resource data
 CREDENTIALS_RESPONSE = {
     "credentials": [
@@ -61,9 +60,7 @@ DATALINKS_LIST_RESPONSE = {
             "type": "bucket",
             "provider": "aws",
             "region": "us-east-1",
-            "credentials": [
-                {"id": "57Ic6reczFn78H1DTaaXkp", "name": "aws", "provider": "aws"}
-            ],
+            "credentials": [{"id": "57Ic6reczFn78H1DTaaXkp", "name": "aws", "provider": "aws"}],
             "publicAccessible": False,
             "hidden": False,
             "status": None,
@@ -77,9 +74,7 @@ DATALINKS_LIST_RESPONSE = {
             "type": "bucket",
             "provider": "aws",
             "region": "us-east-1",
-            "credentials": [
-                {"id": "57Ic6reczFn78H1DTaaXkp", "name": "aws", "provider": "aws"}
-            ],
+            "credentials": [{"id": "57Ic6reczFn78H1DTaaXkp", "name": "aws", "provider": "aws"}],
             "publicAccessible": False,
             "hidden": False,
             "status": None,
@@ -93,9 +88,7 @@ DATALINKS_LIST_RESPONSE = {
             "type": "bucket",
             "provider": "aws",
             "region": "us-west-2",
-            "credentials": [
-                {"id": "57Ic6reczFn78H1DTaaXkp", "name": "aws", "provider": "aws"}
-            ],
+            "credentials": [{"id": "57Ic6reczFn78H1DTaaXkp", "name": "aws", "provider": "aws"}],
             "publicAccessible": False,
             "hidden": False,
             "status": None,
@@ -158,9 +151,7 @@ class TestDataLinksCmd:
             output_data = json.loads(out.stdout)
             assert "dataLinks" in output_data
             assert len(output_data["dataLinks"]) == 3
-            assert (
-                output_data["dataLinks"][0]["name"] == "a-test-bucket-eend-us-east-1"
-            )
+            assert output_data["dataLinks"][0]["name"] == "a-test-bucket-eend-us-east-1"
         elif output_format == "yaml":
             import yaml
 
@@ -274,9 +265,7 @@ class TestDataLinksCmd:
             "type": "bucket",
             "provider": "aws",
             "region": "us-east-1",
-            "credentials": [
-                {"id": "57Ic6reczFn78H1DTaaXkp", "name": "aws", "provider": "aws"}
-            ],
+            "credentials": [{"id": "57Ic6reczFn78H1DTaaXkp", "name": "aws", "provider": "aws"}],
             "publicAccessible": False,
             "hidden": False,
             "status": None,
@@ -374,9 +363,7 @@ class TestDataLinksCmd:
             "type": "bucket",
             "provider": "aws",
             "region": "us-east-1",
-            "credentials": [
-                {"id": "57Ic6reczFn78H1DTaaXkp", "name": "aws", "provider": "aws"}
-            ],
+            "credentials": [{"id": "57Ic6reczFn78H1DTaaXkp", "name": "aws", "provider": "aws"}],
             "publicAccessible": False,
             "hidden": False,
             "status": None,
@@ -515,9 +502,7 @@ class TestBuildSearchParameter:
         """Test building search with all parameters."""
         from seqera.commands.datalinks import _build_search
 
-        result = _build_search(
-            "bucket-name", "aws", "eu-west-1", "s3://some-bucket/is/path"
-        )
+        result = _build_search("bucket-name", "aws", "eu-west-1", "s3://some-bucket/is/path")
         assert result is not None
         assert "bucket-name" in result
         assert "provider:aws" in result
