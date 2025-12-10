@@ -5,18 +5,18 @@ Manage workspace credentials for various cloud providers and services.
 """
 
 import sys
-from typing import Annotated, Optional
+from pathlib import Path
+from typing import Annotated
 
 import typer
 
-from seqera.api.client import SeqeraClient
 from seqera.exceptions import (
     AuthenticationError,
     CredentialsNotFoundException,
     NotFoundError,
     SeqeraError,
 )
-from seqera.main import get_client, get_output_format
+from seqera.main import get_sdk, get_output_format
 from seqera.responses import (
     CredentialsAdded,
     CredentialsDeleted,
@@ -82,6 +82,19 @@ def output_response(response: object, output_format: OutputFormat) -> None:
         output_console(response.to_console())
 
 
+def get_workspace_ref(sdk, workspace_id: str | None) -> str:
+    """Get workspace reference string for display."""
+    if not workspace_id:
+        return USER_WORKSPACE_NAME
+
+    # Get workspace details from user's workspaces
+    for ws in sdk.workspaces.list():
+        if str(ws.workspace_id) == str(workspace_id):
+            return f"{ws.org_name} / {ws.workspace_name}"
+
+    return f"workspace {workspace_id}"
+
+
 # AWS Credentials Commands
 
 
@@ -114,34 +127,26 @@ def add_aws(
 ) -> None:
     """Add new AWS workspace credentials."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
-        # Build credentials payload
-        keys = {}
-        if access_key and secret_key:
-            keys["accessKey"] = access_key
-            keys["secretKey"] = secret_key
-        if assume_role_arn:
-            keys["assumeRoleArn"] = assume_role_arn
+        workspace_ref = get_workspace_ref(sdk, workspace)
 
-        payload = {
-            "credentials": {
-                "name": name,
-                "provider": "aws",
-                "keys": keys,
-            }
-        }
-
-        # Create credentials
-        response = client.post("/credentials", json=payload)
+        # Add credentials using SDK
+        creds = sdk.credentials.add_aws(
+            name=name,
+            workspace=workspace,
+            access_key=access_key,
+            secret_key=secret_key,
+            assume_role_arn=assume_role_arn,
+        )
 
         # Output response
         result = CredentialsAdded(
             provider="AWS",
-            credentials_id=response.get("credentialsId", ""),
+            credentials_id=creds.id,
             name=name,
-            workspace=USER_WORKSPACE_NAME,
+            workspace=workspace_ref,
         )
 
         output_response(result, output_format)
@@ -175,18 +180,12 @@ def update_aws(
 ) -> None:
     """Update existing AWS workspace credentials."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
-        # First, fetch existing credentials
-        try:
-            existing_response = client.get(f"/credentials/{credentials_id}")
-        except NotFoundError:
-            raise CredentialsNotFoundException(credentials_id, USER_WORKSPACE_NAME)
+        workspace_ref = get_workspace_ref(sdk, workspace)
 
-        existing = existing_response.get("credentials", {})
-
-        # Build updated credentials payload
+        # Build keys for update
         keys = {}
         if access_key and secret_key:
             keys["accessKey"] = access_key
@@ -194,23 +193,18 @@ def update_aws(
         if assume_role_arn:
             keys["assumeRoleArn"] = assume_role_arn
 
-        payload = {
-            "credentials": {
-                "id": credentials_id,
-                "name": existing.get("name", ""),
-                "provider": "aws",
-                "keys": keys,
-            }
-        }
-
-        # Update credentials
-        client.put(f"/credentials/{credentials_id}", json=payload)
+        # Update credentials using SDK
+        creds = sdk.credentials.update(
+            credentials_id,
+            workspace=workspace,
+            keys=keys if keys else None,
+        )
 
         # Output response
         result = CredentialsUpdated(
             provider="AWS",
-            name=existing.get("name", ""),
-            workspace=USER_WORKSPACE_NAME,
+            name=creds.name,
+            workspace=workspace_ref,
         )
 
         output_response(result, output_format)
@@ -255,32 +249,27 @@ def add_azure(
 ) -> None:
     """Add new Azure workspace credentials."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
-        # Build credentials payload
-        payload = {
-            "credentials": {
-                "name": name,
-                "provider": "azure",
-                "keys": {
-                    "batchName": batch_name,
-                    "batchKey": batch_key,
-                    "storageName": storage_name,
-                    "storageKey": storage_key,
-                },
-            }
-        }
+        workspace_ref = get_workspace_ref(sdk, workspace)
 
-        # Create credentials
-        response = client.post("/credentials", json=payload)
+        # Add credentials using SDK
+        creds = sdk.credentials.add_azure(
+            name=name,
+            workspace=workspace,
+            batch_name=batch_name,
+            batch_key=batch_key,
+            storage_name=storage_name,
+            storage_key=storage_key,
+        )
 
         # Output response
         result = CredentialsAdded(
             provider="AZURE",
-            credentials_id=response.get("credentialsId", ""),
+            credentials_id=creds.id,
             name=name,
-            workspace=USER_WORKSPACE_NAME,
+            workspace=workspace_ref,
         )
 
         output_response(result, output_format)
@@ -313,38 +302,24 @@ def add_google(
 ) -> None:
     """Add new Google workspace credentials."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
-        # Read the service account key file
-        from pathlib import Path
+        workspace_ref = get_workspace_ref(sdk, workspace)
 
-        key_path = Path(key)
-        if not key_path.exists():
-            raise FileNotFoundError(f"Service account key file not found: {key}")
-
-        key_content = key_path.read_text()
-
-        # Build credentials payload
-        payload = {
-            "credentials": {
-                "name": name,
-                "provider": "google",
-                "keys": {
-                    "data": key_content,
-                },
-            }
-        }
-
-        # Create credentials
-        response = client.post("/credentials", json=payload)
+        # Add credentials using SDK (it handles file reading)
+        creds = sdk.credentials.add_google(
+            name=name,
+            key_file=key,
+            workspace=workspace,
+        )
 
         # Output response
         result = CredentialsAdded(
             provider="GOOGLE",
-            credentials_id=response.get("credentialsId", ""),
+            credentials_id=creds.id,
             name=name,
-            workspace=USER_WORKSPACE_NAME,
+            workspace=workspace_ref,
         )
 
         output_response(result, output_format)
@@ -383,30 +358,25 @@ def add_github(
 ) -> None:
     """Add new GitHub workspace credentials."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
-        # Build credentials payload
-        payload = {
-            "credentials": {
-                "name": name,
-                "provider": "github",
-                "keys": {
-                    "username": username,
-                    "password": password,
-                },
-            }
-        }
+        workspace_ref = get_workspace_ref(sdk, workspace)
 
-        # Create credentials
-        response = client.post("/credentials", json=payload)
+        # Add credentials using SDK
+        creds = sdk.credentials.add_github(
+            name=name,
+            username=username,
+            password=password,
+            workspace=workspace,
+        )
 
         # Output response
         result = CredentialsAdded(
             provider="GITHUB",
-            credentials_id=response.get("credentialsId", ""),
+            credentials_id=creds.id,
             name=name,
-            workspace=USER_WORKSPACE_NAME,
+            workspace=workspace_ref,
         )
 
         output_response(result, output_format)
@@ -449,31 +419,26 @@ def add_gitlab(
 ) -> None:
     """Add new GitLab workspace credentials."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
-        # Build credentials payload
-        payload = {
-            "credentials": {
-                "name": name,
-                "provider": "gitlab",
-                "keys": {
-                    "username": username,
-                    "password": password,
-                    "token": token,
-                },
-            }
-        }
+        workspace_ref = get_workspace_ref(sdk, workspace)
 
-        # Create credentials
-        response = client.post("/credentials", json=payload)
+        # Add credentials using SDK
+        creds = sdk.credentials.add_gitlab(
+            name=name,
+            username=username,
+            password=password,
+            token=token,
+            workspace=workspace,
+        )
 
         # Output response
         result = CredentialsAdded(
             provider="GITLAB",
-            credentials_id=response.get("credentialsId", ""),
+            credentials_id=creds.id,
             name=name,
-            workspace=USER_WORKSPACE_NAME,
+            workspace=workspace_ref,
         )
 
         output_response(result, output_format)
@@ -510,30 +475,25 @@ def add_gitea(
 ) -> None:
     """Add new Gitea workspace credentials."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
-        # Build credentials payload
-        payload = {
-            "credentials": {
-                "name": name,
-                "provider": "gitea",
-                "keys": {
-                    "username": username,
-                    "password": password,
-                },
-            }
-        }
+        workspace_ref = get_workspace_ref(sdk, workspace)
 
-        # Create credentials
-        response = client.post("/credentials", json=payload)
+        # Add credentials using SDK
+        creds = sdk.credentials.add_gitea(
+            name=name,
+            username=username,
+            password=password,
+            workspace=workspace,
+        )
 
         # Output response
         result = CredentialsAdded(
             provider="GITEA",
-            credentials_id=response.get("credentialsId", ""),
+            credentials_id=creds.id,
             name=name,
-            workspace=USER_WORKSPACE_NAME,
+            workspace=workspace_ref,
         )
 
         output_response(result, output_format)
@@ -570,30 +530,25 @@ def add_bitbucket(
 ) -> None:
     """Add new Bitbucket workspace credentials."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
-        # Build credentials payload
-        payload = {
-            "credentials": {
-                "name": name,
-                "provider": "bitbucket",
-                "keys": {
-                    "username": username,
-                    "password": password,
-                },
-            }
-        }
+        workspace_ref = get_workspace_ref(sdk, workspace)
 
-        # Create credentials
-        response = client.post("/credentials", json=payload)
+        # Add credentials using SDK
+        creds = sdk.credentials.add_bitbucket(
+            name=name,
+            username=username,
+            password=password,
+            workspace=workspace,
+        )
 
         # Output response
         result = CredentialsAdded(
             provider="BITBUCKET",
-            credentials_id=response.get("credentialsId", ""),
+            credentials_id=creds.id,
             name=name,
-            workspace=USER_WORKSPACE_NAME,
+            workspace=workspace_ref,
         )
 
         output_response(result, output_format)
@@ -634,34 +589,26 @@ def add_codecommit(
 ) -> None:
     """Add new CodeCommit workspace credentials."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
-        # Build credentials payload
-        payload = {
-            "credentials": {
-                "name": name,
-                "provider": "codecommit",
-                "keys": {
-                    "username": access_key,
-                    "password": secret_key,
-                },
-            }
-        }
+        workspace_ref = get_workspace_ref(sdk, workspace)
 
-        # Add base URL if provided
-        if base_url:
-            payload["credentials"]["baseUrl"] = base_url
-
-        # Create credentials
-        response = client.post("/credentials", json=payload)
+        # Add credentials using SDK
+        creds = sdk.credentials.add_codecommit(
+            name=name,
+            access_key=access_key,
+            secret_key=secret_key,
+            workspace=workspace,
+            base_url=base_url,
+        )
 
         # Output response
         result = CredentialsAdded(
             provider="CODECOMMIT",
-            credentials_id=response.get("credentialsId", ""),
+            credentials_id=creds.id,
             name=name,
-            workspace=USER_WORKSPACE_NAME,
+            workspace=workspace_ref,
         )
 
         output_response(result, output_format)
@@ -706,31 +653,26 @@ def add_container_registry(
 ) -> None:
     """Add new Container Registry workspace credentials."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
-        # Build credentials payload
-        payload = {
-            "credentials": {
-                "name": name,
-                "provider": "container-reg",
-                "keys": {
-                    "userName": username,  # Note: camelCase with capital N
-                    "password": password,
-                    "registry": registry,
-                },
-            }
-        }
+        workspace_ref = get_workspace_ref(sdk, workspace)
 
-        # Create credentials
-        response = client.post("/credentials", json=payload)
+        # Add credentials using SDK
+        creds = sdk.credentials.add_container_registry(
+            name=name,
+            username=username,
+            password=password,
+            workspace=workspace,
+            registry=registry,
+        )
 
         # Output response
         result = CredentialsAdded(
             provider="CONTAINER_REG",
-            credentials_id=response.get("credentialsId", ""),
+            credentials_id=creds.id,
             name=name,
-            workspace=USER_WORKSPACE_NAME,
+            workspace=workspace_ref,
         )
 
         output_response(result, output_format)
@@ -767,42 +709,25 @@ def add_ssh(
 ) -> None:
     """Add new SSH workspace credentials."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
-        # Read the private key file
-        from pathlib import Path
+        workspace_ref = get_workspace_ref(sdk, workspace)
 
-        key_path = Path(key)
-        if not key_path.exists():
-            raise FileNotFoundError(f"SSH private key file not found: {key}")
-
-        key_content = key_path.read_text()
-
-        # Build credentials payload
-        payload = {
-            "credentials": {
-                "name": name,
-                "provider": "ssh",
-                "keys": {
-                    "privateKey": key_content,
-                },
-            }
-        }
-
-        # Add passphrase if provided
-        if passphrase:
-            payload["credentials"]["keys"]["passphrase"] = passphrase
-
-        # Create credentials
-        response = client.post("/credentials", json=payload)
+        # Add credentials using SDK (it handles file reading)
+        creds = sdk.credentials.add_ssh(
+            name=name,
+            private_key=key,
+            workspace=workspace,
+            passphrase=passphrase,
+        )
 
         # Output response
         result = CredentialsAdded(
             provider="SSH",
-            credentials_id=response.get("credentialsId", ""),
+            credentials_id=creds.id,
             name=name,
-            workspace=USER_WORKSPACE_NAME,
+            workspace=workspace_ref,
         )
 
         output_response(result, output_format)
@@ -843,53 +768,30 @@ def add_k8s(
 ) -> None:
     """Add new Kubernetes workspace credentials."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
         # Validate input - either token OR certificate+private_key
-        if token:
-            # Token mode
-            keys = {"token": token}
-        elif certificate and private_key:
-            # Certificate mode
-            from pathlib import Path
-
-            cert_path = Path(certificate)
-            if not cert_path.exists():
-                raise FileNotFoundError(f"Certificate file not found: {certificate}")
-
-            key_path = Path(private_key)
-            if not key_path.exists():
-                raise FileNotFoundError(f"Private key file not found: {private_key}")
-
-            cert_content = cert_path.read_text()
-            key_content = key_path.read_text()
-
-            keys = {
-                "certificate": cert_content,
-                "privateKey": key_content,
-            }
-        else:
+        if not token and not (certificate and private_key):
             raise ValueError("Must provide either --token OR both --certificate and --private-key")
 
-        # Build credentials payload
-        payload = {
-            "credentials": {
-                "name": name,
-                "provider": "k8s",
-                "keys": keys,
-            }
-        }
+        workspace_ref = get_workspace_ref(sdk, workspace)
 
-        # Create credentials
-        response = client.post("/credentials", json=payload)
+        # Add credentials using SDK (it handles file reading)
+        creds = sdk.credentials.add_k8s(
+            name=name,
+            workspace=workspace,
+            token=token,
+            certificate=certificate,
+            private_key=private_key,
+        )
 
         # Output response
         result = CredentialsAdded(
             provider="K8S",
-            credentials_id=response.get("credentialsId", ""),
+            credentials_id=creds.id,
             name=name,
-            workspace=USER_WORKSPACE_NAME,
+            workspace=workspace_ref,
         )
 
         output_response(result, output_format)
@@ -926,30 +828,25 @@ def add_agent(
 ) -> None:
     """Add new TW Agent workspace credentials."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
-        # Build credentials payload
-        payload = {
-            "credentials": {
-                "name": name,
-                "provider": "tw-agent",
-                "keys": {
-                    "connectionId": connection_id,
-                    "workDir": work_dir,
-                },
-            }
-        }
+        workspace_ref = get_workspace_ref(sdk, workspace)
 
-        # Create credentials
-        response = client.post("/credentials", json=payload)
+        # Add credentials using SDK
+        creds = sdk.credentials.add_agent(
+            name=name,
+            connection_id=connection_id,
+            workspace=workspace,
+            work_dir=work_dir,
+        )
 
         # Output response
         result = CredentialsAdded(
             provider="TW_AGENT",
-            credentials_id=response.get("credentialsId", ""),
+            credentials_id=creds.id,
             name=name,
-            workspace=USER_WORKSPACE_NAME,
+            workspace=workspace_ref,
         )
 
         output_response(result, output_format)
@@ -959,24 +856,30 @@ def add_agent(
 
 
 @app.command("list")
-def list_credentials() -> None:
+def list_credentials(
+    workspace: Annotated[
+        str | None,
+        typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
+    ] = None,
+) -> None:
     """List all credentials in the workspace."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
-        # Get credentials list
-        response = client.get("/credentials")
-        credentials = response.get("credentials", [])
+        workspace_ref = get_workspace_ref(sdk, workspace)
 
-        # Get user info for workspace URL
-        client.get("/user-info")
+        # Get credentials using SDK
+        creds_list = list(sdk.credentials.list(workspace=workspace))
+
+        # Convert to dicts for response formatting (mode='json' to serialize datetimes)
+        credentials = [cred.model_dump(by_alias=True, mode="json") for cred in creds_list]
 
         # Output response
         result = CredentialsList(
-            workspace=USER_WORKSPACE_NAME,
+            workspace=workspace_ref,
             credentials=credentials,
-            base_workspace_url=None,  # TODO: Extract from user_info if needed
+            base_workspace_url=None,
         )
 
         output_response(result, output_format)
@@ -991,19 +894,25 @@ def delete_credentials(
         str,
         typer.Option("-i", "--id", help="Credentials ID to delete"),
     ],
+    workspace: Annotated[
+        str | None,
+        typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
+    ] = None,
 ) -> None:
     """Delete credentials by ID."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
-        # Delete credentials
-        client.delete(f"/credentials/{credentials_id}")
+        workspace_ref = get_workspace_ref(sdk, workspace)
+
+        # Delete credentials using SDK
+        sdk.credentials.delete(credentials_id, workspace=workspace)
 
         # Output response
         result = CredentialsDeleted(
             credentials_id=credentials_id,
-            workspace=USER_WORKSPACE_NAME,
+            workspace=workspace_ref,
         )
 
         output_response(result, output_format)

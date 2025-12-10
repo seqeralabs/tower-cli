@@ -595,6 +595,21 @@ class TestWorkspacesCmd:
             "/orgs/27736513644467/workspaces/validate", method="GET", query_string="name=workspace1"
         ).respond_with_data("", status=204)
 
+        # SDK get() calls GET to get full workspace details when checking for overwrite
+        httpserver.expect_request(
+            "/orgs/27736513644467/workspaces/75887156211589", method="GET"
+        ).respond_with_json(
+            {
+                "workspace": {
+                    "id": 75887156211589,
+                    "name": "workspace1",
+                    "fullName": "workspace 1",
+                    "description": "Workspace description",
+                    "visibility": "PRIVATE",
+                }
+            }
+        )
+
         httpserver.expect_request(
             "/orgs/27736513644467/workspaces/75887156211589", method="DELETE"
         ).respond_with_data("", status=204)

@@ -9,14 +9,13 @@ from typing import Annotated, Optional
 
 import typer
 
-from seqera.api.client import SeqeraClient
 from seqera.exceptions import (
     AuthenticationError,
     ComputeEnvNotFoundException,
     NotFoundError,
     SeqeraError,
 )
-from seqera.main import get_client, get_output_format
+from seqera.main import get_sdk, get_output_format
 from seqera.responses.computeenvs import (
     ComputeEnvAdded,
     ComputeEnvDeleted,
@@ -159,11 +158,11 @@ def delete_compute_env(
 ) -> None:
     """Delete a compute environment."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
-        # Delete compute environment
-        client.delete(f"/compute-envs/{compute_env_id}")
+        # Delete compute environment using SDK
+        sdk.compute_envs.delete(compute_env_id)
 
         # Output response
         result = ComputeEnvDeleted(
@@ -184,12 +183,14 @@ def delete_compute_env(
 def list_compute_envs() -> None:
     """List all compute environments in the workspace."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
-        # Get compute environments list
-        response = client.get("/compute-envs")
-        compute_envs = response.get("computeEnvs", [])
+        # Get compute environments using SDK
+        envs = list(sdk.compute_envs.list())
+
+        # Convert to dicts for response formatting (mode='json' to serialize datetimes)
+        compute_envs = [ce.model_dump(by_alias=True, mode="json") for ce in envs]
 
         # Output response
         result = ComputeEnvList(
@@ -217,27 +218,19 @@ def view_compute_env(
 ) -> None:
     """View compute environment details."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
-        # Resolve compute environment ID if name is provided
-        if compute_env_name and not compute_env_id:
-            # Get list and find by name
-            response = client.get("/compute-envs")
-            compute_envs = response.get("computeEnvs", [])
-            for ce in compute_envs:
-                if ce.get("name") == compute_env_name:
-                    compute_env_id = ce.get("id")
-                    break
-            if not compute_env_id:
-                raise ComputeEnvNotFoundException(compute_env_name, USER_WORKSPACE_NAME)
-
-        if not compute_env_id:
+        if not compute_env_id and not compute_env_name:
             output_error("Either --id or --name must be provided")
             sys.exit(1)
 
-        # Get compute environment details
-        compute_env = client.get(f"/compute-envs/{compute_env_id}")
+        # Get compute environment using SDK (supports both ID and name)
+        ce_ref = compute_env_id or compute_env_name
+        ce = sdk.compute_envs.get(ce_ref)
+
+        # Convert to dict for response formatting (mode='json' to serialize datetimes)
+        compute_env = {"computeEnv": ce.model_dump(by_alias=True, mode="json")}
 
         # Output response
         result = ComputeEnvView(
@@ -248,10 +241,6 @@ def view_compute_env(
         output_response(result, output_format)
 
     except Exception as e:
-        # Handle 403 as not found
-        if hasattr(e, "status_code") and e.status_code == 403:
-            ref = compute_env_id or compute_env_name
-            handle_compute_env_error(ComputeEnvNotFoundException(ref, USER_WORKSPACE_NAME))
         handle_compute_env_error(e)
 
 
@@ -259,19 +248,11 @@ def view_compute_env(
 def primary_get() -> None:
     """Get the primary compute environment."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
-        # Get compute environments list to find primary
-        response = client.get("/compute-envs")
-        compute_envs = response.get("computeEnvs", [])
-
-        # Find the primary compute environment
-        primary_ce = None
-        for ce in compute_envs:
-            if ce.get("primary"):
-                primary_ce = ce
-                break
+        # Get primary compute environment using SDK
+        primary_ce = sdk.compute_envs.get_primary()
 
         if not primary_ce:
             # No primary set
@@ -281,12 +262,9 @@ def primary_get() -> None:
                 workspace=USER_WORKSPACE_NAME,
             )
         else:
-            # Get full details of primary compute environment
-            ce_id = primary_ce.get("id")
-            ce_details = client.get(f"/compute-envs/{ce_id}")
             result = ComputeEnvsPrimaryGet(
-                compute_env_id=ce_id,
-                name=ce_details.get("name"),
+                compute_env_id=primary_ce.id,
+                name=primary_ce.name,
                 workspace=USER_WORKSPACE_NAME,
             )
 
@@ -309,35 +287,24 @@ def primary_set(
 ) -> None:
     """Set a compute environment as primary."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
-        # Resolve compute environment ID if name is provided
-        if compute_env_name and not compute_env_id:
-            # Get list and find by name
-            response = client.get("/compute-envs")
-            compute_envs = response.get("computeEnvs", [])
-            for ce in compute_envs:
-                if ce.get("name") == compute_env_name:
-                    compute_env_id = ce.get("id")
-                    break
-            if not compute_env_id:
-                raise ComputeEnvNotFoundException(compute_env_name, USER_WORKSPACE_NAME)
-
-        if not compute_env_id:
+        if not compute_env_id and not compute_env_name:
             output_error("Either --id or --name must be provided")
             sys.exit(1)
 
-        # Get compute environment details first
-        ce_details = client.get(f"/compute-envs/{compute_env_id}")
+        # Get compute environment using SDK (for name resolution and validation)
+        ce_ref = compute_env_id or compute_env_name
+        ce = sdk.compute_envs.get(ce_ref)
 
-        # Set as primary
-        client.post(f"/compute-envs/{compute_env_id}/primary", json={})
+        # Set as primary using SDK
+        sdk.compute_envs.set_primary(ce.id)
 
         # Output response
         result = ComputeEnvsPrimarySet(
-            compute_env_id=compute_env_id,
-            name=ce_details.get("name"),
+            compute_env_id=ce.id,
+            name=ce.name,
             workspace=USER_WORKSPACE_NAME,
         )
 
@@ -360,42 +327,24 @@ def export_compute_env(
 ) -> None:
     """Export compute environment configuration to JSON."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
-        # Get list and find by name
-        response = client.get("/compute-envs")
-        compute_envs = response.get("computeEnvs", [])
+        # Export config using SDK
+        export_data = sdk.compute_envs.export_config(compute_env_name)
 
-        compute_env_id = None
-        for ce in compute_envs:
-            if ce.get("name") == compute_env_name:
-                compute_env_id = ce.get("id")
-                break
-
-        if not compute_env_id:
-            raise ComputeEnvNotFoundException(compute_env_name, USER_WORKSPACE_NAME)
-
-        # Get full compute environment details
-        ce_details = client.get(f"/compute-envs/{compute_env_id}")
-
-        # Extract config for export
-        config = ce_details.get("config", {})
-
-        # Create export format (config only for simplified version)
-        export_data = {
-            "config": config,
-        }
+        # Wrap config for export format
+        export_config = {"config": export_data.get("config", {})}
 
         # Save to file if specified
         if filename and filename != "-":
             import json
 
             with open(filename, "w") as f:
-                json.dump(export_data, f, indent=2)
+                json.dump(export_config, f, indent=2)
 
         # Output response
-        result = ComputeEnvExport(config=export_data)
+        result = ComputeEnvExport(config=export_config)
         output_response(result, output_format)
 
     except Exception as e:

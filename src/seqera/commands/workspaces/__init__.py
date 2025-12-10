@@ -5,11 +5,10 @@ Manage workspaces in organizations.
 """
 
 import sys
-from typing import Annotated, Optional
+from typing import Annotated
 
 import typer
 
-from seqera.api.client import SeqeraClient
 from seqera.exceptions import (
     AuthenticationError,
     NotFoundError,
@@ -17,7 +16,7 @@ from seqera.exceptions import (
     SeqeraError,
     WorkspaceNotFoundException,
 )
-from seqera.main import get_client, get_output_format
+from seqera.main import get_sdk, get_output_format
 from seqera.responses import (
     ParticipantLeft,
     WorkspaceAdded,
@@ -68,78 +67,6 @@ def output_response(response: object, output_format: OutputFormat) -> None:
         output_console(response.to_console())
 
 
-def get_user_workspaces(client: SeqeraClient) -> tuple:
-    """Get user info and workspaces list.
-
-    Returns:
-        tuple: (user_name, orgs_and_workspaces list)
-    """
-    # Get user info
-    user_info = client.get("/user-info")
-    user = user_info.get("user", {})
-    user_name = user.get("userName", "")
-    user_id = user.get("id")
-
-    # Get workspaces
-    workspaces_response = client.get(f"/user/{user_id}/workspaces")
-    orgs_and_workspaces = workspaces_response.get("orgsAndWorkspaces", [])
-
-    return user_name, orgs_and_workspaces
-
-
-def find_workspace_by_id(orgs_and_workspaces: list, workspace_id: str) -> dict | None:
-    """Find workspace by ID in orgs and workspaces list.
-
-    Args:
-        orgs_and_workspaces: List of org/workspace entries
-        workspace_id: Workspace ID to find
-
-    Returns:
-        Workspace entry if found, None otherwise
-    """
-    workspace_id_int = int(workspace_id)
-    for entry in orgs_and_workspaces:
-        if entry.get("workspaceId") == workspace_id_int:
-            return entry
-    return None
-
-
-def find_workspace_by_name(
-    orgs_and_workspaces: list, workspace_name: str, org_name: str | None = None
-) -> dict | None:
-    """Find workspace by name (and optionally org name) in orgs and workspaces list.
-
-    Args:
-        orgs_and_workspaces: List of org/workspace entries
-        workspace_name: Workspace name to find
-        org_name: Optional organization name to filter by
-
-    Returns:
-        Workspace entry if found, None otherwise
-    """
-    for entry in orgs_and_workspaces:
-        if entry.get("workspaceName") == workspace_name:
-            if org_name is None or entry.get("orgName") == org_name:
-                return entry
-    return None
-
-
-def find_org_by_name(orgs_and_workspaces: list, org_name: str) -> dict | None:
-    """Find organization by name in orgs and workspaces list.
-
-    Args:
-        orgs_and_workspaces: List of org/workspace entries
-        org_name: Organization name to find
-
-    Returns:
-        Organization entry if found, None otherwise
-    """
-    for entry in orgs_and_workspaces:
-        if entry.get("orgName") == org_name and entry.get("workspaceId") is None:
-            return entry
-    return None
-
-
 @app.command("list")
 def list_workspaces(
     organization: Annotated[
@@ -149,25 +76,26 @@ def list_workspaces(
 ) -> None:
     """List all workspaces."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
-        # Get user workspaces
-        user_name, orgs_and_workspaces = get_user_workspaces(client)
+        # Get user info for display
+        user_info = sdk.user_info()
+        user_name = user_info.get("user", {}).get("userName", "")
+
+        # Get workspaces using SDK
+        all_workspaces = list(sdk.workspaces.list(organization=organization))
 
         # Filter to only entries with workspaces
-        workspaces = [
-            entry for entry in orgs_and_workspaces if entry.get("workspaceId") is not None
-        ]
+        workspaces = [ws for ws in all_workspaces if ws.workspace_id is not None]
 
-        # Filter by organization if specified
-        if organization:
-            workspaces = [ws for ws in workspaces if ws.get("orgName") == organization]
+        # Convert to dicts for response formatting
+        workspaces_dicts = [ws.model_dump(by_alias=True) for ws in workspaces]
 
         # Output response
         result = WorkspacesList(
             user_name=user_name,
-            workspaces=workspaces,
+            workspaces=workspaces_dicts,
         )
 
         output_response(result, output_format)
@@ -189,41 +117,22 @@ def view_workspace(
 ) -> None:
     """View workspace details."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
-        # Get user workspaces
-        user_name, orgs_and_workspaces = get_user_workspaces(client)
-
-        # Find workspace
-        workspace_entry = None
-        if workspace_id:
-            workspace_entry = find_workspace_by_id(orgs_and_workspaces, workspace_id)
-            if not workspace_entry:
-                raise WorkspaceNotFoundException(workspace_id)
-        elif workspace_name:
-            # Check if name is in org/workspace format
-            if "/" in workspace_name:
-                org_name, ws_name = workspace_name.split("/", 1)
-                workspace_entry = find_workspace_by_name(orgs_and_workspaces, ws_name, org_name)
-            else:
-                workspace_entry = find_workspace_by_name(orgs_and_workspaces, workspace_name)
-
-            if not workspace_entry:
-                raise WorkspaceNotFoundException(workspace_name)
-        else:
+        if not workspace_id and not workspace_name:
             output_error("Either --id or --name must be specified")
             sys.exit(1)
 
-        # Get workspace details
-        org_id = workspace_entry.get("orgId")
-        ws_id = workspace_entry.get("workspaceId")
+        # Get workspace using SDK
+        workspace_ref = workspace_id or workspace_name
+        workspace = sdk.workspaces.get(workspace_ref)
 
-        workspace_response = client.get(f"/orgs/{org_id}/workspaces/{ws_id}")
-        workspace = workspace_response.get("workspace", {})
+        # Convert to dict for response formatting (mode='json' to serialize datetimes)
+        workspace_dict = workspace.model_dump(by_alias=True, mode="json")
 
         # Output response
-        result = WorkspaceView(workspace=workspace)
+        result = WorkspaceView(workspace=workspace_dict)
         output_response(result, output_format)
 
     except Exception as e:
@@ -259,53 +168,31 @@ def add_workspace(
 ) -> None:
     """Add a new workspace to an organization."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
-        # Get user workspaces
-        user_name, orgs_and_workspaces = get_user_workspaces(client)
-
-        # Find organization
-        org_entry = find_org_by_name(orgs_and_workspaces, organization)
-        if not org_entry:
-            raise OrganizationNotFoundException(organization)
-
-        org_id = org_entry.get("orgId")
-
-        # Check if workspace already exists with overwrite
+        # Handle overwrite - delete existing workspace if it exists
         if overwrite:
-            existing_workspace = find_workspace_by_name(orgs_and_workspaces, name, organization)
-            if existing_workspace:
-                # Delete existing workspace
-                existing_ws_id = existing_workspace.get("workspaceId")
-                client.delete(f"/orgs/{org_id}/workspaces/{existing_ws_id}")
+            try:
+                existing = sdk.workspaces.get(f"{organization}/{name}")
+                sdk.workspaces.delete(existing.id)
+            except WorkspaceNotFoundException:
+                pass  # Workspace doesn't exist, that's fine
 
-        # Validate workspace name
-        client.get(f"/orgs/{org_id}/workspaces/validate", params={"name": name})
-
-        # Build workspace payload
-        payload = {
-            "workspace": {
-                "name": name,
-            }
-        }
-
-        if full_name:
-            payload["workspace"]["fullName"] = full_name
-        if description:
-            payload["workspace"]["description"] = description
-        if visibility:
-            payload["workspace"]["visibility"] = visibility
-
-        # Create workspace
-        response = client.post(f"/orgs/{org_id}/workspaces", json=payload)
-        workspace = response.get("workspace", {})
+        # Create workspace using SDK
+        workspace = sdk.workspaces.add(
+            name=name,
+            organization=organization,
+            full_name=full_name,
+            description=description,
+            visibility=visibility or "PRIVATE",
+        )
 
         # Output response
         result = WorkspaceAdded(
             workspace_name=name,
             org_name=organization,
-            visibility=workspace.get("visibility", visibility or "PRIVATE"),
+            visibility=workspace.visibility or visibility or "PRIVATE",
         )
 
         output_response(result, output_format)
@@ -327,39 +214,41 @@ def delete_workspace(
 ) -> None:
     """Delete a workspace."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
-        # Get user workspaces
-        user_name, orgs_and_workspaces = get_user_workspaces(client)
-
-        # Find workspace
-        workspace_entry = None
-        if workspace_id:
-            workspace_entry = find_workspace_by_id(orgs_and_workspaces, workspace_id)
-            if not workspace_entry:
-                raise WorkspaceNotFoundException(workspace_id)
-        elif workspace_name:
-            # Check if name is in org/workspace format
-            if "/" in workspace_name:
-                org_name, ws_name = workspace_name.split("/", 1)
-                workspace_entry = find_workspace_by_name(orgs_and_workspaces, ws_name, org_name)
-            else:
-                workspace_entry = find_workspace_by_name(orgs_and_workspaces, workspace_name)
-
-            if not workspace_entry:
-                raise WorkspaceNotFoundException(workspace_name)
-        else:
+        if not workspace_id and not workspace_name:
             output_error("Either --id or --name must be specified")
             sys.exit(1)
 
-        # Delete workspace
-        org_id = workspace_entry.get("orgId")
-        ws_id = workspace_entry.get("workspaceId")
-        ws_name = workspace_entry.get("workspaceName")
-        org_name = workspace_entry.get("orgName")
+        workspace_ref = workspace_id or workspace_name
 
-        client.delete(f"/orgs/{org_id}/workspaces/{ws_id}")
+        # Get workspace details before deleting for response
+        # Find it in the workspaces list to get org info
+        ws_name = None
+        org_name = None
+        for ws in sdk.workspaces.list():
+            if workspace_id and str(ws.workspace_id) == str(workspace_id):
+                ws_name = ws.workspace_name
+                org_name = ws.org_name
+                break
+            elif workspace_name:
+                if "/" in workspace_name:
+                    org, name = workspace_name.split("/", 1)
+                    if ws.org_name == org and ws.workspace_name == name:
+                        ws_name = ws.workspace_name
+                        org_name = ws.org_name
+                        break
+                elif ws.workspace_name == workspace_name:
+                    ws_name = ws.workspace_name
+                    org_name = ws.org_name
+                    break
+
+        if not ws_name:
+            raise WorkspaceNotFoundException(workspace_ref)
+
+        # Delete workspace using SDK
+        sdk.workspaces.delete(workspace_ref)
 
         # Output response
         result = WorkspaceDeleted(
@@ -402,59 +291,52 @@ def update_workspace(
 ) -> None:
     """Update a workspace."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
-        # Get user workspaces
-        user_name, orgs_and_workspaces = get_user_workspaces(client)
-
-        # Find workspace
-        workspace_entry = None
-        if workspace_id:
-            workspace_entry = find_workspace_by_id(orgs_and_workspaces, workspace_id)
-            if not workspace_entry:
-                raise WorkspaceNotFoundException(workspace_id)
-        elif workspace_name:
-            # Check if name is in org/workspace format
-            if "/" in workspace_name:
-                org_name, ws_name = workspace_name.split("/", 1)
-                workspace_entry = find_workspace_by_name(orgs_and_workspaces, ws_name, org_name)
-            else:
-                workspace_entry = find_workspace_by_name(orgs_and_workspaces, workspace_name)
-
-            if not workspace_entry:
-                raise WorkspaceNotFoundException(workspace_name)
-        else:
+        if not workspace_id and not workspace_name:
             output_error("Either --id or --name must be specified")
             sys.exit(1)
 
-        # Get current workspace details
-        org_id = workspace_entry.get("orgId")
-        ws_id = workspace_entry.get("workspaceId")
-        ws_name = workspace_entry.get("workspaceName")
-        org_name = workspace_entry.get("orgName")
+        workspace_ref = workspace_id or workspace_name
 
-        workspace_response = client.get(f"/orgs/{org_id}/workspaces/{ws_id}")
-        current_workspace = workspace_response.get("workspace", {})
+        # Get original workspace info for response
+        ws_name = None
+        org_name = None
+        for ws in sdk.workspaces.list():
+            if workspace_id and str(ws.workspace_id) == str(workspace_id):
+                ws_name = ws.workspace_name
+                org_name = ws.org_name
+                break
+            elif workspace_name:
+                if "/" in workspace_name:
+                    org, name = workspace_name.split("/", 1)
+                    if ws.org_name == org and ws.workspace_name == name:
+                        ws_name = ws.workspace_name
+                        org_name = ws.org_name
+                        break
+                elif ws.workspace_name == workspace_name:
+                    ws_name = ws.workspace_name
+                    org_name = ws.org_name
+                    break
 
-        # Build update payload with current values as defaults
-        payload = {
-            "workspace": {
-                "name": new_name if new_name else current_workspace.get("name"),
-                "fullName": full_name if full_name else current_workspace.get("fullName"),
-                "description": description if description else current_workspace.get("description"),
-                "visibility": visibility if visibility else current_workspace.get("visibility"),
-            }
-        }
+        if not ws_name:
+            raise WorkspaceNotFoundException(workspace_ref)
 
-        # Update workspace
-        client.put(f"/orgs/{org_id}/workspaces/{ws_id}", json=payload)
+        # Update workspace using SDK
+        updated = sdk.workspaces.update(
+            workspace_ref,
+            name=new_name,
+            full_name=full_name,
+            description=description,
+            visibility=visibility,
+        )
 
-        # Output response (use original workspace name for response)
+        # Output response
         result = WorkspaceUpdated(
             workspace_name=ws_name,
             org_name=org_name,
-            visibility=payload["workspace"]["visibility"],
+            visibility=updated.visibility or "PRIVATE",
         )
 
         output_response(result, output_format)
@@ -476,38 +358,36 @@ def leave_workspace(
 ) -> None:
     """Leave a workspace as a participant."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
-        # Get user workspaces
-        user_name, orgs_and_workspaces = get_user_workspaces(client)
-
-        # Find workspace
-        workspace_entry = None
-        if workspace_id:
-            workspace_entry = find_workspace_by_id(orgs_and_workspaces, workspace_id)
-            if not workspace_entry:
-                raise WorkspaceNotFoundException(workspace_id)
-        elif workspace_name:
-            # Check if name is in org/workspace format
-            if "/" in workspace_name:
-                org_name, ws_name = workspace_name.split("/", 1)
-                workspace_entry = find_workspace_by_name(orgs_and_workspaces, ws_name, org_name)
-            else:
-                workspace_entry = find_workspace_by_name(orgs_and_workspaces, workspace_name)
-
-            if not workspace_entry:
-                raise WorkspaceNotFoundException(workspace_name)
-        else:
+        if not workspace_id and not workspace_name:
             output_error("Either --id or --name must be specified")
             sys.exit(1)
 
-        # Leave workspace (delete participant)
-        org_id = workspace_entry.get("orgId")
-        ws_id = workspace_entry.get("workspaceId")
-        ws_name = workspace_entry.get("workspaceName")
+        workspace_ref = workspace_id or workspace_name
 
-        client.delete(f"/orgs/{org_id}/workspaces/{ws_id}/participants")
+        # Get workspace name for response
+        ws_name = None
+        for ws in sdk.workspaces.list():
+            if workspace_id and str(ws.workspace_id) == str(workspace_id):
+                ws_name = ws.workspace_name
+                break
+            elif workspace_name:
+                if "/" in workspace_name:
+                    org, name = workspace_name.split("/", 1)
+                    if ws.org_name == org and ws.workspace_name == name:
+                        ws_name = ws.workspace_name
+                        break
+                elif ws.workspace_name == workspace_name:
+                    ws_name = ws.workspace_name
+                    break
+
+        if not ws_name:
+            raise WorkspaceNotFoundException(workspace_ref)
+
+        # Leave workspace using SDK
+        sdk.workspaces.leave(workspace_ref)
 
         # Output response
         result = ParticipantLeft(workspace_name=ws_name)

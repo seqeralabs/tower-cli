@@ -214,7 +214,7 @@ class TestRunsCmd:
 
         if output_format == "json":
             data = json.loads(out.stdout)
-            assert data["workspaceRef"] == "jordi"  # From user response
+            assert data["workspaceRef"] == user_workspace_name
             assert len(data["runs"]) == 2
             assert data["runs"][0]["workflow"]["id"] == "5mDfiUtqyptDib"
             assert data["runs"][0]["workflow"]["runName"] == "spontaneous_easley"
@@ -223,11 +223,11 @@ class TestRunsCmd:
             import yaml
 
             data = yaml.safe_load(out.stdout)
-            assert data["workspaceRef"] == "jordi"  # From user response
+            assert data["workspaceRef"] == user_workspace_name
             assert len(data["runs"]) == 2
             assert data["runs"][0]["workflow"]["id"] == "5mDfiUtqyptDib"
         else:  # console
-            assert "jordi" in out.stdout  # From user response
+            assert user_workspace_name in out.stdout
             assert "5mDfiUtqyptDib" in out.stdout
             assert "spontaneous" in out.stdout  # May be truncated in table
 
@@ -264,7 +264,7 @@ class TestRunsCmd:
         # Assertions
         assert out.exit_code == 0
         assert out.stderr == ""
-        assert "jordi" in out.stdout  # From user response
+        assert user_workspace_name in out.stdout
 
     @pytest.mark.parametrize("output_format", ["console", "json", "yaml"])
     def test_view(
@@ -284,6 +284,20 @@ class TestRunsCmd:
 
         httpserver.expect_request("/workflow/5mDfiUtqyptDib", method="GET").respond_with_data(
             workflow_view, status=200, content_type="application/json"
+        )
+
+        # Also mock the progress endpoint which is called separately by the SDK
+        httpserver.expect_request(
+            "/workflow/5mDfiUtqyptDib/progress", method="GET"
+        ).respond_with_json(
+            {
+                "progress": {
+                    "workflowProgress": {
+                        "executors": None,
+                    }
+                }
+            },
+            status=200,
         )
 
         user_response = {
@@ -312,14 +326,14 @@ class TestRunsCmd:
 
         if output_format == "json":
             data = json.loads(out.stdout)
-            assert data["workspaceRef"] == "jordi"  # From user response
+            assert data["workspaceRef"] == user_workspace_name
             assert data["general"]["id"] == "5mDfiUtqyptDib"
             assert data["general"]["runName"] == "spontaneous_easley"
         elif output_format == "yaml":
             import yaml
 
             data = yaml.safe_load(out.stdout)
-            assert data["workspaceRef"] == "jordi"  # From user response
+            assert data["workspaceRef"] == user_workspace_name
             assert data["general"]["id"] == "5mDfiUtqyptDib"
         else:  # console
             assert "5mDfiUtqyptDib" in out.stdout

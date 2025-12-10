@@ -22,7 +22,7 @@ class Pipeline(SeqeraModel):
     name: str
     description: str | None = None
     icon: str | None = None
-    repository: str = Field(alias="pipeline")
+    repository: str | None = Field(None, alias="pipeline")
     compute_env_id: str | None = Field(None, alias="computeEnvId")
     date_created: datetime | None = Field(None, alias="dateCreated")
     last_updated: datetime | None = Field(None, alias="lastUpdated")

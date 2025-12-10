@@ -143,11 +143,18 @@ class RunsResource(BaseResource):
 
         Raises:
             RunNotFoundException: If run not found
+            AuthenticationError: If unauthorized
         """
+        from seqera.exceptions import AuthenticationError, NotFoundError
+
         params = self._build_params(workspace=workspace)
 
         try:
             self._client.delete(f"/workflow/{run_id}", params=params)
+        except AuthenticationError:
+            raise  # Re-raise authentication errors as-is
+        except NotFoundError:
+            raise RunNotFoundException(run_id, str(workspace or "user"))
         except Exception:
             raise RunNotFoundException(run_id, str(workspace or "user"))
 

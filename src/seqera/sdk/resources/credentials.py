@@ -63,8 +63,13 @@ class CredentialsResource(BaseResource):
         Raises:
             CredentialsNotFoundException: If credentials not found
         """
+        from seqera.exceptions import NotFoundError
+
         params = self._build_params(workspace=workspace)
-        response = self._client.get(f"/credentials/{credentials_id}", params=params)
+        try:
+            response = self._client.get(f"/credentials/{credentials_id}", params=params)
+        except NotFoundError:
+            raise CredentialsNotFoundException(credentials_id, str(workspace or "user"))
 
         creds_data = response.get("credentials", {})
         if not creds_data:
@@ -75,10 +80,10 @@ class CredentialsResource(BaseResource):
     def add_aws(
         self,
         name: str,
-        access_key: str,
-        secret_key: str,
         workspace: str | int | None = None,
         *,
+        access_key: str | None = None,
+        secret_key: str | None = None,
         description: str | None = None,
         assume_role_arn: str | None = None,
     ) -> Credentials:
@@ -87,19 +92,19 @@ class CredentialsResource(BaseResource):
 
         Args:
             name: Credentials name
+            workspace: Workspace ID or "org/workspace" reference
             access_key: AWS access key ID
             secret_key: AWS secret access key
-            workspace: Workspace ID or "org/workspace" reference
             description: Description
             assume_role_arn: IAM role ARN to assume
 
         Returns:
             Created Credentials object
         """
-        keys: dict[str, Any] = {
-            "accessKey": access_key,
-            "secretKey": secret_key,
-        }
+        keys: dict[str, Any] = {}
+        if access_key and secret_key:
+            keys["accessKey"] = access_key
+            keys["secretKey"] = secret_key
         if assume_role_arn:
             keys["assumeRoleArn"] = assume_role_arn
 
@@ -272,6 +277,317 @@ class CredentialsResource(BaseResource):
             description=description,
         )
 
+    def add_gitlab(
+        self,
+        name: str,
+        username: str,
+        password: str,
+        token: str,
+        workspace: str | int | None = None,
+        *,
+        description: str | None = None,
+    ) -> Credentials:
+        """
+        Add GitLab credentials.
+
+        Args:
+            name: Credentials name
+            username: GitLab username
+            password: GitLab password
+            token: GitLab access token
+            workspace: Workspace ID or "org/workspace" reference
+            description: Description
+
+        Returns:
+            Created Credentials object
+        """
+        keys = {
+            "username": username,
+            "password": password,
+            "token": token,
+        }
+
+        return self._add_credentials(
+            name=name,
+            provider="gitlab",
+            keys=keys,
+            workspace=workspace,
+            description=description,
+        )
+
+    def add_gitea(
+        self,
+        name: str,
+        username: str,
+        password: str,
+        workspace: str | int | None = None,
+        *,
+        description: str | None = None,
+    ) -> Credentials:
+        """
+        Add Gitea credentials.
+
+        Args:
+            name: Credentials name
+            username: Gitea username
+            password: Gitea password
+            workspace: Workspace ID or "org/workspace" reference
+            description: Description
+
+        Returns:
+            Created Credentials object
+        """
+        keys = {
+            "username": username,
+            "password": password,
+        }
+
+        return self._add_credentials(
+            name=name,
+            provider="gitea",
+            keys=keys,
+            workspace=workspace,
+            description=description,
+        )
+
+    def add_bitbucket(
+        self,
+        name: str,
+        username: str,
+        password: str,
+        workspace: str | int | None = None,
+        *,
+        description: str | None = None,
+    ) -> Credentials:
+        """
+        Add Bitbucket credentials.
+
+        Args:
+            name: Credentials name
+            username: Bitbucket username
+            password: Bitbucket App password
+            workspace: Workspace ID or "org/workspace" reference
+            description: Description
+
+        Returns:
+            Created Credentials object
+        """
+        keys = {
+            "username": username,
+            "password": password,
+        }
+
+        return self._add_credentials(
+            name=name,
+            provider="bitbucket",
+            keys=keys,
+            workspace=workspace,
+            description=description,
+        )
+
+    def add_codecommit(
+        self,
+        name: str,
+        access_key: str,
+        secret_key: str,
+        workspace: str | int | None = None,
+        *,
+        description: str | None = None,
+        base_url: str | None = None,
+    ) -> Credentials:
+        """
+        Add CodeCommit credentials.
+
+        Args:
+            name: Credentials name
+            access_key: AWS access key
+            secret_key: AWS secret key
+            workspace: Workspace ID or "org/workspace" reference
+            description: Description
+            base_url: Repository base URL
+
+        Returns:
+            Created Credentials object
+        """
+        keys = {
+            "username": access_key,
+            "password": secret_key,
+        }
+
+        return self._add_credentials(
+            name=name,
+            provider="codecommit",
+            keys=keys,
+            workspace=workspace,
+            description=description,
+            base_url=base_url,
+        )
+
+    def add_ssh(
+        self,
+        name: str,
+        private_key: str,
+        workspace: str | int | None = None,
+        *,
+        description: str | None = None,
+        passphrase: str | None = None,
+    ) -> Credentials:
+        """
+        Add SSH credentials.
+
+        Args:
+            name: Credentials name
+            private_key: SSH private key content or path to file
+            workspace: Workspace ID or "org/workspace" reference
+            description: Description
+            passphrase: Private key passphrase
+
+        Returns:
+            Created Credentials object
+        """
+        from pathlib import Path
+
+        # Read key file if it's a path
+        key_content = private_key
+        if Path(private_key).exists():
+            key_content = Path(private_key).read_text()
+
+        keys: dict[str, Any] = {"privateKey": key_content}
+        if passphrase:
+            keys["passphrase"] = passphrase
+
+        return self._add_credentials(
+            name=name,
+            provider="ssh",
+            keys=keys,
+            workspace=workspace,
+            description=description,
+        )
+
+    def add_k8s(
+        self,
+        name: str,
+        workspace: str | int | None = None,
+        *,
+        description: str | None = None,
+        token: str | None = None,
+        certificate: str | None = None,
+        private_key: str | None = None,
+    ) -> Credentials:
+        """
+        Add Kubernetes credentials.
+
+        Args:
+            name: Credentials name
+            workspace: Workspace ID or "org/workspace" reference
+            description: Description
+            token: Service account token (alternative to certificate+private_key)
+            certificate: Client certificate content or path
+            private_key: Client key content or path
+
+        Returns:
+            Created Credentials object
+        """
+        from pathlib import Path
+
+        keys: dict[str, Any] = {}
+
+        if token:
+            keys["token"] = token
+        elif certificate and private_key:
+            # Read files if they're paths
+            cert_content = certificate
+            if Path(certificate).exists():
+                cert_content = Path(certificate).read_text()
+
+            key_content = private_key
+            if Path(private_key).exists():
+                key_content = Path(private_key).read_text()
+
+            keys["certificate"] = cert_content
+            keys["privateKey"] = key_content
+
+        return self._add_credentials(
+            name=name,
+            provider="k8s",
+            keys=keys,
+            workspace=workspace,
+            description=description,
+        )
+
+    def add_agent(
+        self,
+        name: str,
+        connection_id: str,
+        workspace: str | int | None = None,
+        *,
+        description: str | None = None,
+        work_dir: str = "$TW_AGENT_WORK",
+    ) -> Credentials:
+        """
+        Add Tower Agent credentials.
+
+        Args:
+            name: Credentials name
+            connection_id: Agent connection identifier
+            workspace: Workspace ID or "org/workspace" reference
+            description: Description
+            work_dir: Default work directory
+
+        Returns:
+            Created Credentials object
+        """
+        keys = {
+            "connectionId": connection_id,
+            "workDir": work_dir,
+        }
+
+        return self._add_credentials(
+            name=name,
+            provider="tw-agent",
+            keys=keys,
+            workspace=workspace,
+            description=description,
+        )
+
+    def update(
+        self,
+        credentials_id: str,
+        workspace: str | int | None = None,
+        *,
+        keys: dict[str, Any] | None = None,
+    ) -> Credentials:
+        """
+        Update credentials.
+
+        Args:
+            credentials_id: Credentials ID
+            workspace: Workspace ID or "org/workspace" reference
+            keys: New credential keys
+
+        Returns:
+            Updated Credentials object
+        """
+        params = self._build_params(workspace=workspace)
+
+        # Fetch existing credentials
+        existing = self.get(credentials_id, workspace=workspace)
+
+        payload: dict[str, Any] = {
+            "credentials": {
+                "id": credentials_id,
+                "name": existing.name,
+                "provider": existing.provider_type,  # Use provider_type to handle discriminator
+            }
+        }
+
+        if keys:
+            payload["credentials"]["keys"] = keys
+
+        self._client.put(f"/credentials/{credentials_id}", json=payload, params=params)
+
+        return existing
+
     def delete(
         self,
         credentials_id: str,
@@ -294,6 +610,7 @@ class CredentialsResource(BaseResource):
         keys: dict[str, Any],
         workspace: str | int | None = None,
         description: str | None = None,
+        base_url: str | None = None,
     ) -> Credentials:
         """Internal method to add credentials."""
         params = self._build_params(workspace=workspace)
@@ -308,6 +625,8 @@ class CredentialsResource(BaseResource):
 
         if description:
             payload["credentials"]["description"] = description
+        if base_url:
+            payload["credentials"]["baseUrl"] = base_url
 
         response = self._client.post("/credentials", json=payload, params=params)
 

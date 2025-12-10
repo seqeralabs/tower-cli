@@ -116,8 +116,8 @@ class BaseResource:
 
         # Find matching workspace
         for entry in orgs_and_workspaces:
-            entry_org = entry.get("orgName", "")
-            entry_ws = entry.get("workspaceName", "")
+            entry_org = entry.get("orgName") or ""
+            entry_ws = entry.get("workspaceName") or ""
             entry_ws_id = entry.get("workspaceId")
 
             if org_name:

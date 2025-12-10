@@ -629,10 +629,23 @@ class TestPipelinesUpdateCmd:
                     {
                         "pipelineId": 217997727159863,
                         "name": "sleep_one_minute",
-                        "repository": "https://github.com/pditommaso/nf-sleep",
+                        "pipeline": "https://github.com/pditommaso/nf-sleep",
                     }
                 ],
                 "totalSize": 1,
+            }
+        )
+
+        httpserver.expect_request(
+            "/pipelines/217997727159863",
+            method="GET",
+        ).respond_with_json(
+            {
+                "pipeline": {
+                    "pipelineId": 217997727159863,
+                    "name": "sleep_one_minute",
+                    "pipeline": "https://github.com/pditommaso/nf-sleep",
+                }
             }
         )
 

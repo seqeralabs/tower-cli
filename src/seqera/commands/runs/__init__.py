@@ -5,18 +5,17 @@ Manage workflow runs in workspaces.
 """
 
 import sys
-from typing import Annotated, Optional
+from typing import Annotated
 
 import typer
 
-from seqera.api.client import SeqeraClient
 from seqera.exceptions import (
     AuthenticationError,
     NotFoundError,
     RunNotFoundException,
     SeqeraError,
 )
-from seqera.main import get_client, get_output_format
+from seqera.main import get_sdk, get_output_format
 from seqera.responses import (
     MetricsList,
     RunCancelled,
@@ -67,14 +66,17 @@ def output_response(response: object, output_format: OutputFormat) -> None:
         output_console(response.to_console())
 
 
-def get_workspace_name(client: SeqeraClient) -> str:
-    """Get the workspace name from user info."""
-    try:
-        user_response = client.get("/user-info")
-        user_name = user_response.get("user", {}).get("userName", USER_WORKSPACE_NAME)
-        return user_name
-    except Exception:
+def get_workspace_ref(sdk, workspace_id: str | None) -> str:
+    """Get workspace reference string for display."""
+    if not workspace_id:
         return USER_WORKSPACE_NAME
+
+    # Get workspace details from user's workspaces
+    for ws in sdk.workspaces.list():
+        if str(ws.workspace_id) == str(workspace_id):
+            return f"{ws.org_name} / {ws.workspace_name}"
+
+    return f"workspace {workspace_id}"
 
 
 @app.command("list")
@@ -86,15 +88,19 @@ def list_runs(
 ) -> None:
     """List workflow runs in workspace."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
-        # Get workflows
-        response = client.get("/workflow")
-        workflows = response.get("workflows", [])
+        # Get workspace name for display
+        workspace_name = get_workspace_ref(sdk, workspace)
 
-        # Get workspace name
-        workspace_name = get_workspace_name(client)
+        # Get workflows using SDK
+        runs = list(sdk.runs.list(workspace=workspace))
+
+        # Convert to dicts for response formatting (mode='json' to serialize datetimes)
+        workflows = []
+        for run in runs:
+            workflows.append({"workflow": run.model_dump(by_alias=True, mode="json")})
 
         # Output response
         result = RunsList(
@@ -121,38 +127,36 @@ def view_run(
 ) -> None:
     """View workflow run details."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
-        # Get workflow
-        try:
-            response = client.get(f"/workflow/{run_id}")
-        except NotFoundError:
-            raise RunNotFoundException(run_id, USER_WORKSPACE_NAME)
+        # Get workspace name for display
+        workspace_name = get_workspace_ref(sdk, workspace)
 
-        workflow = response.get("workflow", {})
-        progress = response.get("progress", {}).get("workflowProgress", {})
+        # Get workflow using SDK
+        run = sdk.runs.get(run_id, workspace=workspace)
 
-        # Get workspace name
-        workspace_name = get_workspace_name(client)
+        # Get progress info
+        progress = sdk.runs.progress(run_id, workspace=workspace)
+        workflow_progress = progress.get("workflowProgress", {})
 
         # Build general info
         general = {
-            "id": workflow.get("id"),
-            "runName": workflow.get("runName"),
-            "startingDate": workflow.get("start"),
-            "commitId": workflow.get("commitId"),
-            "sessionId": workflow.get("sessionId"),
-            "username": workflow.get("userName"),
-            "workdir": workflow.get("workDir"),
-            "container": workflow.get("container"),
+            "id": run.id,
+            "runName": run.run_name,
+            "startingDate": run.start.isoformat() if run.start else None,
+            "commitId": run.commit_id,
+            "sessionId": run.session_id,
+            "username": run.user_name,
+            "workdir": run.work_dir,
+            "container": run.container,
             "executors": (
-                ", ".join(progress.get("executors", [])) if progress.get("executors") else None
+                ", ".join(workflow_progress.get("executors", []))
+                if workflow_progress.get("executors")
+                else None
             ),
-            "nextflowVersion": (
-                workflow.get("nextflow", {}).get("version") if workflow.get("nextflow") else None
-            ),
-            "status": workflow.get("status"),
+            "nextflowVersion": (run.nextflow.version if run.nextflow else None),
+            "status": run.status,
         }
 
         # Output response
@@ -180,17 +184,14 @@ def delete_run(
 ) -> None:
     """Delete a workflow run."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
-        # Delete workflow
-        try:
-            client.delete(f"/workflow/{run_id}")
-        except NotFoundError:
-            raise RunNotFoundException(run_id, USER_WORKSPACE_NAME)
+        # Get workspace name for display
+        workspace_name = get_workspace_ref(sdk, workspace)
 
-        # Get workspace name
-        workspace_name = get_workspace_name(client)
+        # Delete workflow using SDK
+        sdk.runs.delete(run_id, workspace=workspace)
 
         # Output response
         result = RunDeleted(
@@ -217,17 +218,14 @@ def cancel_run(
 ) -> None:
     """Cancel a running workflow."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
-        # Cancel workflow
-        try:
-            client.post(f"/workflow/{run_id}/cancel")
-        except NotFoundError:
-            raise RunNotFoundException(run_id, USER_WORKSPACE_NAME)
+        # Get workspace name for display
+        workspace_name = get_workspace_ref(sdk, workspace)
 
-        # Get workspace name
-        workspace_name = get_workspace_name(client)
+        # Cancel workflow using SDK
+        sdk.runs.cancel(run_id, workspace=workspace)
 
         # Output response
         result = RunCancelled(
@@ -254,18 +252,14 @@ def list_tasks(
 ) -> None:
     """List tasks for a workflow run."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
-        # Get tasks
-        response = client.get(f"/workflow/{run_id}/tasks")
-        tasks_data = response.get("tasks", [])
+        # Get tasks using SDK
+        tasks_list = list(sdk.runs.tasks(run_id, workspace=workspace))
 
-        # Extract task objects from response
-        tasks = []
-        for task_data in tasks_data:
-            task = task_data.get("task", {})
-            tasks.append(task)
+        # Convert to dicts for response formatting (mode='json' to serialize datetimes)
+        tasks = [task.model_dump(by_alias=True, mode="json") for task in tasks_list]
 
         # Output response
         result = TasksList(
@@ -292,12 +286,11 @@ def view_metrics(
 ) -> None:
     """View workflow run metrics."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
-        # Get metrics
-        response = client.get(f"/workflow/{run_id}/metrics")
-        metrics = response.get("metrics", [])
+        # Get metrics using SDK
+        metrics = sdk.runs.metrics(run_id, workspace=workspace)
 
         # Output response
         result = MetricsList(

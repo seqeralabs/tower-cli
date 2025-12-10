@@ -256,14 +256,17 @@ class TestComputeEnvsCmd:
             compute_envs_response, status=200
         )
 
+        # SDK's get_primary() calls get() which expects computeEnv wrapper
         httpserver.expect_request(
             "/compute-envs/isnEDBLvHDAIteOEF44ow", method="GET"
         ).respond_with_json(
             {
-                "id": "isnEDBLvHDAIteOEF44ow",
-                "name": "demo",
-                "platform": "aws-batch",
-                "status": "AVAILABLE",
+                "computeEnv": {
+                    "id": "isnEDBLvHDAIteOEF44ow",
+                    "name": "demo",
+                    "platform": "aws-batch",
+                    "status": "AVAILABLE",
+                }
             },
             status=200,
         )
@@ -309,15 +312,17 @@ class TestComputeEnvsCmd:
 
         Ported from testPrimarySet() in ComputeEnvsCmdTest.java
         """
-        # Setup mock HTTP expectations
+        # Setup mock HTTP expectations - SDK's get() expects computeEnv wrapper
         httpserver.expect_request(
             "/compute-envs/isnEDBLvHDAIteOEF44ow", method="GET"
         ).respond_with_json(
             {
-                "id": "isnEDBLvHDAIteOEF44ow",
-                "name": "demo",
-                "platform": "aws-batch",
-                "status": "AVAILABLE",
+                "computeEnv": {
+                    "id": "isnEDBLvHDAIteOEF44ow",
+                    "name": "demo",
+                    "platform": "aws-batch",
+                    "status": "AVAILABLE",
+                }
             },
             status=200,
         )

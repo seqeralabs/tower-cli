@@ -4,14 +4,19 @@ Seqera Platform CLI
 Main entry point for the Seqera CLI application.
 """
 
+from __future__ import annotations
+
 import os
 import sys
-from typing import Annotated
+from typing import Annotated, TYPE_CHECKING
 
 import typer
 
 from seqera.api.client import SeqeraClient
 from seqera.utils.output import OutputFormat
+
+if TYPE_CHECKING:
+    from seqera.sdk.client import Seqera
 
 # Create main app
 app = typer.Typer(
@@ -28,6 +33,7 @@ class GlobalState:
 
     def __init__(self) -> None:
         self.client: SeqeraClient | None = None
+        self._sdk_client: Seqera | None = None
         self.output_format: OutputFormat = OutputFormat.CONSOLE
         self.workspace_id: str | None = None
         self.workspace_ref: str | None = None
@@ -38,15 +44,27 @@ state = GlobalState()
 
 
 def get_client() -> SeqeraClient:
-    """Get the global API client instance."""
+    """Get the global API client instance (for backwards compatibility)."""
     if state.client is None:
         raise RuntimeError("API client not initialized. This is a bug.")
     return state.client
 
 
+def get_sdk() -> "Seqera":
+    """Get the global SDK client instance."""
+    if state._sdk_client is None:
+        raise RuntimeError("SDK client not initialized. This is a bug.")
+    return state._sdk_client
+
+
 def set_client(client: SeqeraClient) -> None:
     """Set the global API client instance."""
     state.client = client
+
+
+def set_sdk(sdk: "Seqera") -> None:
+    """Set the global SDK client instance."""
+    state._sdk_client = sdk
 
 
 def set_output_format(format: OutputFormat) -> None:
@@ -135,7 +153,7 @@ def main_callback(
         )
         raise typer.Exit(1)
 
-    # Initialize API client
+    # Initialize API client (for backwards compatibility during transition)
     client = SeqeraClient(
         base_url=url,
         token=access_token,
@@ -143,6 +161,16 @@ def main_callback(
         verbose=verbose,
     )
     set_client(client)
+
+    # Initialize SDK client
+    from seqera.sdk.client import Seqera
+
+    sdk = Seqera(
+        access_token=access_token,
+        url=url,
+        insecure=insecure,
+    )
+    set_sdk(sdk)
 
 
 # Import and register subcommands

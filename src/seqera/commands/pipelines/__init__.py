@@ -7,12 +7,11 @@ Manage pipelines in workspaces.
 import json
 import sys
 from pathlib import Path
-from typing import Annotated, Optional
+from typing import Annotated
 
 import typer
 import yaml
 
-from seqera.api.client import SeqeraClient
 from seqera.exceptions import (
     AuthenticationError,
     InvalidResponseException,
@@ -23,7 +22,7 @@ from seqera.exceptions import (
     SeqeraError,
     WorkspaceNotFoundException,
 )
-from seqera.main import get_client, get_output_format
+from seqera.main import get_sdk, get_output_format
 from seqera.responses import (
     PipelineAdded,
     PipelineDeleted,
@@ -74,159 +73,17 @@ def output_response(response: object, output_format: OutputFormat) -> None:
         output_console(response.to_console())
 
 
-def get_workspace_info(client: SeqeraClient, workspace_id: str | None = None) -> tuple:
-    """Get workspace reference and workspace ID.
+def get_workspace_ref(sdk, workspace_id: str | None) -> str:
+    """Get workspace reference string for display."""
+    if not workspace_id:
+        return "[user]"
 
-    Args:
-        client: Seqera API client
-        workspace_id: Optional workspace ID
+    # Get workspace details from user's workspaces
+    for ws in sdk.workspaces.list():
+        if str(ws.workspace_id) == str(workspace_id):
+            return f"[{ws.org_name} / {ws.workspace_name}]"
 
-    Returns:
-        Tuple of (workspace_ref, workspace_id)
-    """
-    # Get user info
-    user_info = client.get("/user-info")
-    user = user_info.get("user", {})
-    user_id = user.get("id")
-    user_name = user.get("userName", "")
-
-    if workspace_id:
-        # Get workspace details
-        workspaces_response = client.get(f"/user/{user_id}/workspaces")
-        orgs_and_workspaces = workspaces_response.get("orgsAndWorkspaces", [])
-
-        # Find workspace
-        workspace_id_int = int(workspace_id)
-        workspace_entry = None
-        for entry in orgs_and_workspaces:
-            if entry.get("workspaceId") == workspace_id_int:
-                workspace_entry = entry
-                break
-
-        if not workspace_entry:
-            raise WorkspaceNotFoundException(workspace_id)
-
-        org_name = workspace_entry.get("orgName", "")
-        workspace_name = workspace_entry.get("workspaceName", "")
-        workspace_ref = f"[{org_name} / {workspace_name}]"
-        return workspace_ref, workspace_id
-    else:
-        # Use user workspace
-        workspace_ref = f"[{user_name}]"
-        return workspace_ref, None
-
-
-def find_pipeline(
-    client: SeqeraClient,
-    pipeline_name: str | None = None,
-    pipeline_id: str | None = None,
-    workspace_id: str | None = None,
-) -> tuple:
-    """Find a pipeline by name or ID.
-
-    Args:
-        client: Seqera API client
-        pipeline_name: Optional pipeline name
-        pipeline_id: Optional pipeline ID
-        workspace_id: Optional workspace ID
-
-    Returns:
-        Tuple of (pipeline, workspace_ref)
-    """
-    workspace_ref, ws_id = get_workspace_info(client, workspace_id)
-
-    if pipeline_id:
-        # Get by ID
-        params = {}
-        if ws_id:
-            params["workspaceId"] = ws_id
-
-        response = client.get(f"/pipelines/{pipeline_id}", params=params)
-        pipeline = response.get("pipeline")
-        if not pipeline:
-            raise PipelineNotFoundException(pipeline_id, workspace_ref)
-        return pipeline, workspace_ref
-
-    elif pipeline_name:
-        # Search by name
-        params = {"search": f'"{pipeline_name}"'}
-        if ws_id:
-            params["workspaceId"] = ws_id
-
-        response = client.get("/pipelines", params=params)
-        pipelines = response.get("pipelines", [])
-
-        if not pipelines:
-            raise PipelineNotFoundException(pipeline_name, workspace_ref)
-
-        if len(pipelines) > 1:
-            raise MultiplePipelinesFoundException(pipeline_name, workspace_ref)
-
-        return pipelines[0], workspace_ref
-
-    else:
-        raise SeqeraError("Either pipeline name or ID must be specified")
-
-
-def get_compute_env(
-    client: SeqeraClient,
-    compute_env_name: str | None = None,
-    workspace_id: str | None = None,
-    use_primary: bool = True,
-) -> dict | None:
-    """Get compute environment by name or get primary.
-
-    Args:
-        client: Seqera API client
-        compute_env_name: Optional compute environment name
-        workspace_id: Optional workspace ID
-        use_primary: Whether to use primary compute env if name not specified
-
-    Returns:
-        Compute environment dict or None
-    """
-    params = {"status": "AVAILABLE"}
-    if workspace_id:
-        params["workspaceId"] = workspace_id
-
-    response = client.get("/compute-envs", params=params)
-    compute_envs = response.get("computeEnvs", [])
-
-    if not compute_envs:
-        workspace_ref, _ = get_workspace_info(client, workspace_id)
-        raise NoComputeEnvironmentException(workspace_ref)
-
-    if compute_env_name:
-        # Find by name
-        for ce in compute_envs:
-            if ce.get("name") == compute_env_name:
-                # Get full details
-                ce_id = ce.get("id")
-                ce_params = {}
-                if workspace_id:
-                    ce_params["workspaceId"] = workspace_id
-                ce_response = client.get(f"/compute-envs/{ce_id}", params=ce_params)
-                return ce_response.get("computeEnv")
-        return None
-    elif use_primary:
-        # Get primary compute env
-        for ce in compute_envs:
-            if ce.get("primary"):
-                ce_id = ce.get("id")
-                ce_params = {}
-                if workspace_id:
-                    ce_params["workspaceId"] = workspace_id
-                ce_response = client.get(f"/compute-envs/{ce_id}", params=ce_params)
-                return ce_response.get("computeEnv")
-        # If no primary, use first one
-        ce_id = compute_envs[0].get("id")
-        ce_params = {}
-        if workspace_id:
-            ce_params["workspaceId"] = workspace_id
-        ce_response = client.get(f"/compute-envs/{ce_id}", params=ce_params)
-        return ce_response.get("computeEnv")
-
-    return None
+    return f"[workspace {workspace_id}]"
 
 
 @app.command("list")
@@ -250,28 +107,31 @@ def list_pipelines(
 ) -> None:
     """List all pipelines in a workspace."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
         # Check for conflicting pagination options
         if page is not None and offset is not None:
             raise SeqeraError("Please use either --page or --offset as pagination parameter")
 
-        # Get workspace info
-        workspace_ref, ws_id = get_workspace_info(client, workspace)
+        # Get workspace reference for display
+        workspace_ref = get_workspace_ref(sdk, workspace)
 
-        # Build params
+        # For CLI, we need to handle pagination manually since we want to show
+        # specific pages rather than auto-iterate. Use the underlying client.
+        client = sdk._http_client
+
         params = {}
-        if ws_id:
-            params["workspaceId"] = ws_id
+        if workspace:
+            params["workspaceId"] = workspace
 
         # Add pagination params
         pagination_info = None
         if page is not None:
             if max_items is None:
                 max_items = 20
-            offset = (page - 1) * max_items
-            params["offset"] = offset
+            computed_offset = (page - 1) * max_items
+            params["offset"] = computed_offset
             params["max"] = max_items
             pagination_info = {"page": page, "max": max_items}
         elif offset is not None or max_items is not None:
@@ -319,30 +179,33 @@ def view_pipeline(
 ) -> None:
     """View pipeline details."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
         if not pipeline_name and not pipeline_id:
             output_error("Either --name or --id must be specified")
             sys.exit(1)
 
-        # Find pipeline
-        pipeline, workspace_ref = find_pipeline(client, pipeline_name, pipeline_id, workspace)
+        workspace_ref = get_workspace_ref(sdk, workspace)
 
-        # Get launch configuration
-        pipeline_id = pipeline.get("pipelineId")
-        params = {}
-        if workspace:
-            params["workspaceId"] = workspace
+        # Get pipeline using SDK
+        if pipeline_id:
+            pipeline = sdk.pipelines.get(pipeline_id, workspace=workspace)
+        else:
+            pipeline = sdk.pipelines.get_by_name(pipeline_name, workspace=workspace)
 
-        launch_response = client.get(f"/pipelines/{pipeline_id}/launch", params=params)
-        launch = launch_response.get("launch")
+        # Get launch info
+        launch_info = sdk.pipelines.get_launch_info(pipeline.pipeline_id, workspace=workspace)
+
+        # Convert to dict for response formatting
+        pipeline_dict = pipeline.model_dump(by_alias=True)
+        launch_dict = launch_info.model_dump(by_alias=True)
 
         # Output response
         result = PipelineView(
             workspace=workspace_ref,
-            pipeline=pipeline,
-            launch=launch,
+            pipeline=pipeline_dict,
+            launch=launch_dict,
         )
 
         output_response(result, output_format)
@@ -400,72 +263,50 @@ def add_pipeline(
 ) -> None:
     """Add a new pipeline."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
-        # Get workspace info
-        workspace_ref, ws_id = get_workspace_info(client, workspace)
+        workspace_ref = get_workspace_ref(sdk, workspace)
 
-        # Get compute environment
-        ce = get_compute_env(client, compute_env, ws_id)
-        if not ce:
-            raise SeqeraError(f"Compute environment '{compute_env}' not found")
+        # Check that compute environments exist (required by CLI policy)
+        available_envs = list(sdk.compute_envs.list(workspace=workspace, status="AVAILABLE"))
+        if not available_envs:
+            from seqera.exceptions import NoComputeEnvironmentException
 
-        ce_id = ce.get("id")
-        ce_work_dir = ce.get("config", {}).get("workDir")
+            raise NoComputeEnvironmentException(workspace_ref)
 
-        # Build launch configuration
-        launch_config = {
-            "computeEnvId": ce_id,
-            "pipeline": repository,
-        }
-
-        # Add work directory (from compute env if not specified)
-        if work_dir:
-            launch_config["workDir"] = work_dir
-        elif ce_work_dir:
-            launch_config["workDir"] = ce_work_dir
-
-        # Add optional fields
-        if revision:
-            launch_config["revision"] = revision
-
-        if config_profiles:
-            launch_config["configProfiles"] = config_profiles.split(",")
-
+        # Read params from file if provided
+        params = None
         if params_file:
-            params_text = params_file.read_text()
-            launch_config["paramsText"] = params_text
+            params = params_file.read_text()
 
-        if pre_run:
-            launch_config["preRunScript"] = pre_run.read_text()
+        # Read scripts if provided
+        pre_run_script = pre_run.read_text() if pre_run else None
+        post_run_script = post_run.read_text() if post_run else None
 
-        if post_run:
-            launch_config["postRunScript"] = post_run.read_text()
+        # Parse config profiles
+        profiles = config_profiles.split(",") if config_profiles else None
 
-        # Build payload
-        payload = {
-            "name": name,
-            "launch": launch_config,
-        }
-
-        if description:
-            payload["description"] = description
-
-        # Create pipeline
-        params = {}
-        if ws_id:
-            params["workspaceId"] = ws_id
-
-        response = client.post("/pipelines", json=payload, params=params)
-        pipeline = response.get("pipeline", {})
-        pipeline_id = pipeline.get("pipelineId")
+        # Add pipeline using SDK
+        pipeline = sdk.pipelines.add(
+            name=name,
+            repository=repository,
+            workspace=workspace,
+            description=description,
+            compute_env=compute_env,
+            work_dir=work_dir,
+            revision=revision,
+            config_profiles=profiles,
+            params=params,
+            pre_run_script=pre_run_script,
+            post_run_script=post_run_script,
+        )
 
         # Output response
         result = PipelineAdded(
             workspace=workspace_ref,
             pipeline_name=name,
-            pipeline_id=pipeline_id,
+            pipeline_id=pipeline.pipeline_id,
         )
 
         output_response(result, output_format)
@@ -491,25 +332,26 @@ def delete_pipeline(
 ) -> None:
     """Delete a pipeline."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
         if not pipeline_name and not pipeline_id:
             output_error("Either --name or --id must be specified")
             sys.exit(1)
 
-        # Find pipeline
-        pipeline, workspace_ref = find_pipeline(client, pipeline_name, pipeline_id, workspace)
+        workspace_ref = get_workspace_ref(sdk, workspace)
 
-        # Delete pipeline
-        pipeline_id = pipeline.get("pipelineId")
-        name = pipeline.get("name")
+        # Get pipeline to get its name for the response
+        if pipeline_id:
+            pipeline = sdk.pipelines.get(pipeline_id, workspace=workspace)
+        else:
+            pipeline = sdk.pipelines.get_by_name(pipeline_name, workspace=workspace)
 
-        params = {}
-        if workspace:
-            params["workspaceId"] = workspace
+        name = pipeline.name
+        pid = pipeline.pipeline_id
 
-        client.delete(f"/pipelines/{pipeline_id}", params=params)
+        # Delete using SDK
+        sdk.pipelines.delete(pid, workspace=workspace)
 
         # Output response
         result = PipelineDeleted(
@@ -576,98 +418,48 @@ def update_pipeline(
 ) -> None:
     """Update a pipeline."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
         if not pipeline_name and not pipeline_id:
             output_error("Either --name or --id must be specified")
             sys.exit(1)
 
-        # Find pipeline
-        pipeline, workspace_ref = find_pipeline(client, pipeline_name, pipeline_id, workspace)
-        pid = pipeline.get("pipelineId")
-        current_name = pipeline.get("name")
+        workspace_ref = get_workspace_ref(sdk, workspace)
 
-        # Validate new name if provided
-        if new_name and new_name != current_name:
-            params = {"name": new_name}
-            if workspace:
-                params["workspaceId"] = workspace
-            try:
-                client.get("/pipelines/validate", params=params)
-            except Exception:
-                raise InvalidResponseException(f"Pipeline name '{new_name}' is not valid")
+        # Get pipeline to get ID if using name
+        if pipeline_id:
+            pipeline = sdk.pipelines.get(pipeline_id, workspace=workspace)
+        else:
+            pipeline = sdk.pipelines.get_by_name(pipeline_name, workspace=workspace)
 
-        # Get current launch configuration
-        params = {}
-        if workspace:
-            params["workspaceId"] = workspace
+        current_name = pipeline.name
+        pid = pipeline.pipeline_id
 
-        launch_response = client.get(f"/pipelines/{pid}/launch", params=params)
-        current_launch = launch_response.get("launch", {})
+        # Read params from file if provided
+        params = params_file.read_text() if params_file else None
 
-        # Build updated launch configuration
-        launch_config = {
-            "pipeline": current_launch.get("pipeline"),
-            "pullLatest": current_launch.get("pullLatest", False),
-            "stubRun": current_launch.get("stubRun", False),
-        }
+        # Read scripts if provided
+        pre_run_script = pre_run.read_text() if pre_run else None
+        post_run_script = post_run.read_text() if post_run else None
 
-        # Update compute environment if specified
-        if compute_env:
-            ce = get_compute_env(client, compute_env, workspace)
-            if not ce:
-                raise SeqeraError(f"Compute environment '{compute_env}' not found")
-            launch_config["computeEnvId"] = ce.get("id")
-        elif current_launch.get("computeEnv"):
-            launch_config["computeEnvId"] = current_launch["computeEnv"].get("id")
+        # Parse config profiles
+        profiles = config_profiles.split(",") if config_profiles else None
 
-        # Update other fields
-        if work_dir:
-            launch_config["workDir"] = work_dir
-        elif current_launch.get("workDir"):
-            launch_config["workDir"] = current_launch["workDir"]
-
-        if revision is not None:
-            launch_config["revision"] = revision
-        elif current_launch.get("revision"):
-            launch_config["revision"] = current_launch["revision"]
-
-        if config_profiles is not None:
-            launch_config["configProfiles"] = config_profiles.split(",")
-        elif current_launch.get("configProfiles"):
-            launch_config["configProfiles"] = current_launch["configProfiles"]
-
-        if params_file:
-            launch_config["paramsText"] = params_file.read_text()
-        elif current_launch.get("paramsText"):
-            launch_config["paramsText"] = current_launch["paramsText"]
-
-        if pre_run:
-            launch_config["preRunScript"] = pre_run.read_text()
-        elif current_launch.get("preRunScript"):
-            launch_config["preRunScript"] = current_launch["preRunScript"]
-
-        if post_run:
-            launch_config["postRunScript"] = post_run.read_text()
-        elif current_launch.get("postRunScript"):
-            launch_config["postRunScript"] = current_launch["postRunScript"]
-
-        # Build update payload
-        payload = {
-            "name": new_name if new_name else current_name,
-            "launch": launch_config,
-        }
-
-        if description is not None:
-            payload["description"] = description
-
-        # Update pipeline
-        params = {}
-        if workspace:
-            params["workspaceId"] = workspace
-
-        client.put(f"/pipelines/{pid}", json=payload, params=params)
+        # Update using SDK
+        sdk.pipelines.update(
+            pid,
+            workspace=workspace,
+            name=new_name,
+            description=description,
+            compute_env=compute_env,
+            work_dir=work_dir,
+            revision=revision,
+            config_profiles=profiles,
+            params=params,
+            pre_run_script=pre_run_script,
+            post_run_script=post_run_script,
+        )
 
         # Output response
         result = PipelineUpdated(
@@ -702,107 +494,29 @@ def export_pipeline(
 ) -> None:
     """Export pipeline configuration."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
         if not pipeline_name and not pipeline_id:
             output_error("Either --name or --id must be specified")
             sys.exit(1)
 
-        # Find pipeline
-        pipeline, workspace_ref = find_pipeline(client, pipeline_name, pipeline_id, workspace)
-        pid = pipeline.get("pipelineId")
+        # Get pipeline
+        if pipeline_id:
+            pipeline = sdk.pipelines.get(pipeline_id, workspace=workspace)
+        else:
+            pipeline = sdk.pipelines.get_by_name(pipeline_name, workspace=workspace)
 
-        # Get launch configuration
-        params = {}
-        if workspace:
-            params["workspaceId"] = workspace
+        pid = pipeline.pipeline_id
 
-        launch_response = client.get(f"/pipelines/{pid}/launch", params=params)
-        launch = launch_response.get("launch", {})
+        # Export config using SDK
+        export_data = sdk.pipelines.export_config(pid, workspace=workspace)
 
-        # Build export payload (similar to import format)
-        export_data = {}
-
-        if pipeline.get("description"):
-            export_data["description"] = pipeline["description"]
-
-        if pipeline.get("icon"):
-            export_data["icon"] = pipeline["icon"]
-
-        # Build launch config for export
-        launch_export = {}
-
-        if launch.get("computeEnv"):
-            launch_export["computeEnvId"] = launch["computeEnv"].get("id")
-
-        launch_export["pipeline"] = launch.get("pipeline")
-
-        if launch.get("workDir"):
-            launch_export["workDir"] = launch["workDir"]
-
-        if launch.get("revision"):
-            launch_export["revision"] = launch["revision"]
-
-        if launch.get("configText"):
-            launch_export["configText"] = launch["configText"]
-
-        if launch.get("seqeraConfig"):
-            launch_export["seqeraConfig"] = launch["seqeraConfig"]
-
-        if launch.get("paramsText"):
-            launch_export["paramsText"] = launch["paramsText"]
-
-        if launch.get("preRunScript"):
-            launch_export["preRunScript"] = launch["preRunScript"]
-
-        if launch.get("postRunScript"):
-            launch_export["postRunScript"] = launch["postRunScript"]
-
-        if launch.get("mainScript"):
-            launch_export["mainScript"] = launch["mainScript"]
-
-        if launch.get("entryName"):
-            launch_export["entryName"] = launch["entryName"]
-
-        if launch.get("schemaName"):
-            launch_export["schemaName"] = launch["schemaName"]
-
-        launch_export["resume"] = launch.get("resume", False)
-        launch_export["pullLatest"] = launch.get("pullLatest", False)
-        launch_export["stubRun"] = launch.get("stubRun", False)
-
-        if launch.get("sessionId"):
-            launch_export["sessionId"] = launch["sessionId"]
-
-        if launch.get("runName"):
-            launch_export["runName"] = launch["runName"]
-
-        if launch.get("configProfiles"):
-            launch_export["configProfiles"] = launch["configProfiles"]
-
-        if launch.get("userSecrets"):
-            launch_export["userSecrets"] = launch["userSecrets"]
-
-        if launch.get("workspaceSecrets"):
-            launch_export["workspaceSecrets"] = launch["workspaceSecrets"]
-
-        if launch.get("optimizationId"):
-            launch_export["optimizationId"] = launch["optimizationId"]
-
-        if launch.get("optimizationTargets"):
-            launch_export["optimizationTargets"] = launch["optimizationTargets"]
-
-        if launch.get("headJobCpus"):
-            launch_export["headJobCpus"] = launch["headJobCpus"]
-
-        if launch.get("headJobMemoryMb"):
-            launch_export["headJobMemoryMb"] = launch["headJobMemoryMb"]
-
-        if launch.get("launchContainer"):
-            launch_export["launchContainer"] = launch["launchContainer"]
-
-        export_data["launch"] = launch_export
+        # Add pipeline metadata
+        if pipeline.description:
+            export_data = {"description": pipeline.description, "launch": export_data}
+        else:
+            export_data = {"launch": export_data}
 
         # Format output
         config_output = json.dumps(export_data, indent=2)
@@ -848,11 +562,10 @@ def import_pipeline(
 ) -> None:
     """Import pipeline from configuration file."""
     try:
-        client = get_client()
+        sdk = get_sdk()
         output_format = get_output_format()
 
-        # Get workspace info
-        workspace_ref, ws_id = get_workspace_info(client, workspace)
+        workspace_ref = get_workspace_ref(sdk, workspace)
 
         # Read configuration file
         config_text = config_file.read_text()
@@ -874,57 +587,42 @@ def import_pipeline(
 
         pipeline_name = config["name"]
 
-        # Handle overwrite
+        # Handle overwrite - delete existing pipeline if it exists
         if overwrite:
             try:
-                # Try to find and delete existing pipeline
-                existing_pipeline, _ = find_pipeline(client, pipeline_name, None, ws_id)
-                existing_id = existing_pipeline.get("pipelineId")
-                params = {}
-                if ws_id:
-                    params["workspaceId"] = ws_id
-                client.delete(f"/pipelines/{existing_id}", params=params)
+                existing = sdk.pipelines.get_by_name(pipeline_name, workspace=workspace)
+                sdk.pipelines.delete(existing.pipeline_id, workspace=workspace)
             except PipelineNotFoundException:
                 pass  # Pipeline doesn't exist, that's fine
 
-        # Get compute environment
+        # Extract launch config
         launch_config = config.get("launch", {})
 
-        if compute_env:
-            # Use specified compute env
-            ce = get_compute_env(client, compute_env, ws_id)
-            if not ce:
-                raise SeqeraError(f"Compute environment '{compute_env}' not found")
-            launch_config["computeEnvId"] = ce.get("id")
-        elif "computeEnvId" not in launch_config:
-            # Use primary compute env
-            ce = get_compute_env(client, None, ws_id)
-            if not ce:
-                raise NoComputeEnvironmentException(workspace_ref)
-            launch_config["computeEnvId"] = ce.get("id")
+        # Get repository from launch config
+        repository = launch_config.get("pipeline")
+        if not repository:
+            raise SeqeraError("Pipeline repository must be specified in launch config")
 
-        # Add work directory from compute env if not in config
-        if "workDir" not in launch_config and ce:
-            ce_work_dir = ce.get("config", {}).get("workDir")
-            if ce_work_dir:
-                launch_config["workDir"] = ce_work_dir
-
-        config["launch"] = launch_config
-
-        # Create pipeline
-        params = {}
-        if ws_id:
-            params["workspaceId"] = ws_id
-
-        response = client.post("/pipelines", json=config, params=params)
-        pipeline = response.get("pipeline", {})
-        pipeline_id = pipeline.get("pipelineId")
+        # Add pipeline using SDK
+        pipeline = sdk.pipelines.add(
+            name=pipeline_name,
+            repository=repository,
+            workspace=workspace,
+            description=config.get("description"),
+            compute_env=compute_env,
+            work_dir=launch_config.get("workDir"),
+            revision=launch_config.get("revision"),
+            config_profiles=launch_config.get("configProfiles"),
+            params=launch_config.get("paramsText"),
+            pre_run_script=launch_config.get("preRunScript"),
+            post_run_script=launch_config.get("postRunScript"),
+        )
 
         # Output response
         result = PipelineAdded(
             workspace=workspace_ref,
             pipeline_name=pipeline_name,
-            pipeline_id=pipeline_id,
+            pipeline_id=pipeline.pipeline_id,
         )
 
         output_response(result, output_format)
