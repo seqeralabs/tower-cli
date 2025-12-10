@@ -3,16 +3,16 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "seqera-cli"
-version = "0.1.0"
-description = "Seqera Platform CLI - Python implementation"
+name = "seqera"
+version = "0.2.0"
+description = "Seqera Platform SDK and CLI - Python library and command-line interface"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "Apache-2.0"}
 authors = [
     {name = "Seqera", email = "hello@seqera.io"}
 ]
-keywords = ["nextflow", "seqera", "platform", "cli", "bioinformatics"]
+keywords = ["nextflow", "seqera", "platform", "cli", "sdk", "bioinformatics", "api"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
