@@ -1,91 +1,113 @@
-# Seqera Platform CLI
+# Seqera Platform CLI & Python SDK
 
-`seqera` is the command line interface for [Seqera Platform](https://cloud.seqera.io/). It brings Seqera concepts like pipelines, actions, and compute environments to the terminal.
+`seqera` is the official Python package for [Seqera Platform](https://cloud.seqera.io/), providing both a command-line interface and a programmatic SDK.
 
-Seqera Platform is a full-stack application for the management of data pipelines and compute resources. It enables collaborative data analysis at scale, on-premises or in any cloud.
+- **CLI**: Manage pipelines, runs, and infrastructure from the terminal
+- **SDK**: Integrate Seqera Platform into Python applications and scripts
 
-The CLI interacts with Seqera to provide an interface to launch pipelines, manage cloud resources, and administer your analysis.
+Built on the [Seqera Platform API](https://cloud.seqera.io/openapi/index.html).
 
-![tw](assets/img/tw-screenshot.png)
+See the [Seqera Platform documentation](https://docs.seqera.io/platform/latest) to learn more.
 
-The key features are:
+## Installation
 
-- **A Nextflow-like experience**: The CLI provides a developer-friendly environment. Pipelines can be launched similarly to Nextflow but with the Seqera benefits of monitoring, logging, resource provisioning, dataset management, and collaborative sharing.
-
-- **Infrastructure as Code**: All Seqera resources, including pipelines and compute environments, can be described in a declarative manner. This enables a complete definition of an analysis environment that can be versioned and treated as code.
-
-- **Built on OpenAPI**: The CLI interacts with Seqera via the [Seqera Platform API](https://cloud.seqera.io/openapi/index.html) which uses the OpenAPI 3.0 specification.
-
-See the [Seqera Platform documentation](https://docs.seqera.io/platform/latest) to learn more about the application.
-
-## Availability
-
-The Seqera CLI can be installed on macOS, Windows, and Linux.
-
-It is compatible with [Seqera Cloud](https://cloud.seqera.io/) and Enterprise versions 21.08 and later.
-
-## Getting Started
-
-### 1. Installation
-
-#### Using pip (recommended)
-
-The CLI requires Python 3.10 or later:
+Requires Python 3.10+. Compatible with [Seqera Cloud](https://cloud.seqera.io/) and Enterprise 21.08+.
 
 ```bash
-pip install seqera-cli
+pip install seqera
 ```
 
-Or install from source:
+## Configuration
+
+Create an access token in the [Seqera UI](https://cloud.seqera.io) under **User tokens**.
 
 ```bash
-git clone https://github.com/seqeralabs/tower-cli.git
-cd seqera-cli
-pip install .
+export SEQERA_ACCESS_TOKEN=<your token>
 ```
 
-After installation, the `seqera` command will be available:
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `SEQERA_ACCESS_TOKEN` | API access token | (required) |
+| `SEQERA_API_ENDPOINT` | API URL | `https://api.cloud.seqera.io` |
+| `SEQERA_WORKSPACE` | Default workspace | User workspace |
+
+## Python SDK
+
+```python
+from seqera import Seqera
+
+client = Seqera()  # uses SEQERA_ACCESS_TOKEN
+
+# List pipelines
+for pipeline in client.pipelines.list():
+    print(f"{pipeline.name}: {pipeline.repository}")
+
+# Launch a pipeline
+result = client.pipelines.launch(
+    "my-pipeline",
+    workspace="my-org/my-workspace",
+    params={"input": "s3://bucket/samples.csv"},
+)
+print(f"Run ID: {result.workflow_id}")
+
+# Monitor runs
+run = client.runs.get(result.workflow_id)
+print(f"Status: {run.status}")
+
+# List tasks for a run
+for task in client.runs.tasks(run.id):
+    print(f"{task.name}: {task.status}")
+```
+
+### Async support
+
+```python
+from seqera import AsyncSeqera
+import asyncio
+
+async def main():
+    async with AsyncSeqera() as client:
+        async for run in client.runs.list():
+            print(f"{run.run_name}: {run.status}")
+
+asyncio.run(main())
+```
+
+### Available resources
+
+| Resource | Methods |
+|----------|---------|
+| `client.pipelines` | `list`, `get`, `add`, `update`, `delete`, `launch` |
+| `client.runs` | `list`, `get`, `cancel`, `delete`, `tasks`, `metrics` |
+| `client.compute_envs` | `list`, `get`, `delete`, `get_primary`, `set_primary` |
+| `client.credentials` | `list`, `add_*`, `delete` |
+| `client.workspaces` | `list`, `get`, `add`, `update`, `delete` |
+| `client.datasets` | `list`, `get`, `add`, `update`, `delete` |
+| `client.secrets` | `list`, `get`, `add`, `update`, `delete` |
+| `client.labels` | `list`, `add`, `delete` |
+
+### Error handling
+
+```python
+from seqera import Seqera, PipelineNotFoundException, AuthenticationError
+
+client = Seqera()
+
+try:
+    pipeline = client.pipelines.get("nonexistent")
+except PipelineNotFoundException:
+    print("Pipeline not found")
+except AuthenticationError:
+    print("Invalid token")
+```
+
+## CLI
 
 ```bash
 seqera --help
 ```
 
-### 2. Configuration
-
-You need an access token for the CLI to interact with your Seqera instance. Select **User tokens** from the user menu in the [Seqera UI](https://cloud.seqera.io), then select **Add token** to create a new token.
-
-Copy the access token value and use it with the CLI in one of two ways:
-
-- **Environment variable** (recommended):
-
-    ```bash
-    export SEQERA_ACCESS_TOKEN=<your access token>
-    ```
-
-    Add this to your `.bashrc`, `.zshrc`, or `.bash_profile` for it to persist across sessions.
-
-- **Command flag**:
-
-    ```bash
-    seqera --access-token=<your access token> <command>
-    ```
-
-#### Additional Configuration
-
-Configure the following optional environment variables:
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `SEQERA_ACCESS_TOKEN` | Access token for authentication | (required) |
-| `SEQERA_API_ENDPOINT` | Seqera API URL | `https://api.cloud.seqera.io` |
-| `SEQERA_WORKSPACE_ID` | Default workspace ID | User workspace |
-| `SEQERA_OUTPUT_FORMAT` | Output format: console, json, yaml | console |
-
-> **Note**: Legacy `TOWER_*` environment variables are also supported for backwards compatibility.
-
-### 3. Health check
-
-Confirm the installation, configuration, and connection:
+Verify connection:
 
 ```console
 $ seqera info
@@ -97,51 +119,32 @@ $ seqera info
      Authentication API credential's token | OK
 ```
 
-## Commands
+### CLI commands
 
-See [Usage](./USAGE.md) for detailed instructions to use the CLI.
-
-### Available Commands
-
-```text
-seqera actions        Manage pipeline actions
-seqera collaborators  List organization collaborators
-seqera compute-envs   Manage compute environments
-seqera credentials    Manage workspace credentials
-seqera data-links     Manage data links
-seqera datasets       Manage datasets
-seqera info           System info and health status
-seqera labels         Manage labels
-seqera launch         Launch a pipeline
-seqera members        Manage organization members
-seqera organizations  Manage organizations
-seqera participants   Manage workspace participants
-seqera pipelines      Manage pipelines
-seqera runs           Manage pipeline runs
-seqera secrets        Manage workspace secrets
-seqera studios        Manage data studios
-seqera teams          Manage teams
-seqera workspaces     Manage workspaces
+```
+pipelines      Manage workspace pipelines
+runs           Manage pipeline runs
+compute-envs   Manage compute environments
+credentials    Manage workspace credentials
+workspaces     Manage workspaces
+datasets       Manage datasets
+secrets        Manage workspace secrets
+labels         Manage labels
+organizations  Manage organizations
+teams          Manage teams
 ```
 
+See [USAGE.md](./USAGE.md) for detailed CLI documentation.
+
 ## Development
-
-See [Development Guide](./DEVELOPMENT.md) for information on contributing to the CLI.
-
-### Running Tests
 
 ```bash
 pip install -e ".[dev]"
 pytest tests/
-```
-
-### Code Quality
-
-```bash
 ruff check src/ tests/
-ruff format src/ tests/
-mypy src/seqera
 ```
+
+See [DEVELOPMENT.md](./DEVELOPMENT.md) for contribution guidelines.
 
 ## License
 

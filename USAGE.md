@@ -1,16 +1,17 @@
-# tw CLI commands
+# Seqera CLI Usage
 
-> **Note**: The CLI performs operations in the user workspace context by default. Use the `SEQERA_WORKSPACE_ID` environment variable or the `--workspace` parameter to specify an organization workspace ID.
+> **Note**: The CLI performs operations in the user workspace context by default. Use the `SEQERA_WORKSPACE` environment variable or the `--workspace` parameter to specify an organization workspace.
 
-Use the `-h` or `--help` parameter to list the available commands and their associated options.
+Use `-h` or `--help` to list available commands and options.
 
-![`tw --help`](./assets/img/rich_codex/tw-info.svg)
+```bash
+seqera --help
+seqera credentials add --help
+```
 
-For help with a specific subcommand, run the command with `-h` or `--help` appended. For example, `tw credentials add google -h`.
-
-> **Tip**: Use `tw --output=json <command>` to dump and store Seqera Platform entities in JSON format.
+> **Tip**: Use `seqera --output=json <command>` to output JSON for scripting.
 >
-> **Tip**: Use `tw --output=json <command> | jq -r '.[].<key>'`  to pipe the command to use jq to retrieve specific values in the JSON output. For example, `tw --output=json workspaces list | jq -r '.workspaces[].orgId'` returns the organization ID for each workspace listed.
+> **Tip**: Use `seqera --output=json <command> | jq -r '.key'` to extract specific values.
 
 ## Credentials
 
@@ -23,8 +24,8 @@ To launch pipelines in a Seqera workspace, you need [credentials][credentials] f
 
 ### Add credentials
 
-Run `tw credentials add -h` to view a list of providers.
-Run `tw credentials add <provider> -h` to view the required fields for your provider.
+Run `seqera credentials add -h` to view a list of providers.
+Run `seqera credentials add <provider> -h` to view the required fields for your provider.
 
 > **Note**: You can add multiple credentials from the same provider in the same workspace.
 
@@ -33,7 +34,7 @@ Run `tw credentials add <provider> -h` to view the required fields for your prov
 Seqera requires credentials to access your cloud compute environments. See the [compute environment page][compute-envs] for your cloud provider for more information.
 
   ```console
-  $ tw credentials add aws --name=my_aws_creds --access-key=<aws access key> --secret-key=<aws secret key>
+  $ seqera credentials add aws --name=my_aws_creds --access-key=<aws access key> --secret-key=<aws secret key>
 
     New AWS credentials 'my_aws_creds (1sxCxvxfx8xnxdxGxQxqxH)' added at user workspace
   ```
@@ -43,7 +44,7 @@ Seqera requires credentials to access your cloud compute environments. See the [
 Seqera requires access credentials to interact with pipeline Git repositories. See [Git integration][git-integration] for more information.
 
   ```console
-  $ tw credentials add github -n=my_GH_creds -u=<GitHub username> -p=<GitHub access token>
+  $ seqera credentials add github -n=my_GH_creds -u=<GitHub username> -p=<GitHub access token>
 
     New GITHUB credentials 'my_GH_creds (xxxxx3prfGlpxxxvR2xxxxo7ow)' added at user workspace
   ```
@@ -57,7 +58,7 @@ Configure credentials for the Nextflow Wave container service to authenticate to
 ### List credentials
 
 ```console
-$ tw credentials list
+$ seqera credentials list
 
   Credentials at user workspace:
 
@@ -72,7 +73,7 @@ $ tw credentials list
 ### Delete credentials
 
 ```console
-$ tw credentials delete --name=my_aws_creds
+$ seqera credentials delete --name=my_aws_creds
 
   Credentials '1sxCxvxfx8xnxdxGxQxqxH' deleted at user workspace
 ```
@@ -83,13 +84,13 @@ Compute environments in Seqera define the execution platform where a pipeline ru
 
 ### Add a compute environment
 
-Run `tw compute-envs add -h` to view the list of supported platforms.
-Run `tw compute-envs add <platform> -h` to view the required and optional fields for your platform.
+Run `seqera compute-envs add -h` to view the list of supported platforms.
+Run `seqera compute-envs add <platform> -h` to view the required and optional fields for your platform.
 
 You must add the credentials for your provider before creating your compute environment.
 
 ```console
-$ tw compute-envs add aws-batch forge --name=my_aws_ce --credentials=<my_aws_creds_1> --region=eu-west-1 --max-cpus=256 --work-dir=s3://<bucket name> --wait=AVAILABLE
+$ seqera compute-envs add aws-batch forge --name=my_aws_ce --credentials=<my_aws_creds_1> --region=eu-west-1 --max-cpus=256 --work-dir=s3://<bucket name> --wait=AVAILABLE
 
   New AWS-BATCH compute environment 'my_aws_ce' added at user workspace
 ```
@@ -108,7 +109,7 @@ See the [compute environment page][compute-envs] for your provider for detailed 
 ### Delete a compute environment
 
 ```console
-$ tw compute-envs delete --name=my_aws_ce
+$ seqera compute-envs delete --name=my_aws_ce
 
   Compute environment '1sxCxvxfx8xnxdxGxQxqxH' deleted at user workspace
 ```
@@ -118,7 +119,7 @@ $ tw compute-envs delete --name=my_aws_ce
 Select a **primary** compute environment to be used by default in a workspace. You can override the workspace primary compute environment by explicitly specifying an alternative compute environment when you create or launch a pipeline.
 
 ```console
-$ tw compute-envs primary set --name=my_aws_ce
+$ seqera compute-envs primary set --name=my_aws_ce
 
   Primary compute environment for workspace 'user' was set to 'my_aws_ce (1sxCxvxfx8xnxdxGxQxqxH)'
 ```
@@ -128,7 +129,7 @@ $ tw compute-envs primary set --name=my_aws_ce
 Export the configuration details of a compute environment in JSON format for scripting and reproducibility purposes.
 
 ```console
-$ tw compute-envs export --name=my_aws_ce my_aws_ce_v1.json
+$ seqera compute-envs export --name=my_aws_ce my_aws_ce_v1.json
 
   Compute environment exported into 'my_aws_ce_v1.json'
 ```
@@ -136,7 +137,7 @@ $ tw compute-envs export --name=my_aws_ce my_aws_ce_v1.json
 Similarly, a compute environment can be imported to a workspace from a previously exported JSON file.
 
 ```console
-$ tw compute-envs import --name=my_aws_ce_v1 ./my_aws_ce_v1.json
+$ seqera compute-envs import --name=my_aws_ce_v1 ./my_aws_ce_v1.json
 
   New AWS-BATCH compute environment 'my_aws_ce_v1' added at user workspace
 ```
@@ -145,15 +146,15 @@ $ tw compute-envs import --name=my_aws_ce_v1 ./my_aws_ce_v1.json
 
 Pipelines define pre-configured workflows in a workspace. A pipeline consists of a workflow repository, launch parameters, and a compute environment.
 
-Run `tw pipelines -h` to view the list of supported operations.
-Run `tw pipelines add -h` to view the required and optional fields for adding your pipeline.
+Run `seqera pipelines -h` to view the list of supported operations.
+Run `seqera pipelines add -h` to view the required and optional fields for adding your pipeline.
 
 ### Add a pipeline
 
 Add a pre-configured pipeline to the Launchpad:
 
 ```console
-$ tw pipelines add --name=my_rnaseq_nf_pipeline --params-file=my_rnaseq_nf_pipeline_params.yaml https://github.com/nextflow-io/rnaseq-nf
+$ seqera pipelines add --name=my_rnaseq_nf_pipeline --params-file=my_rnaseq_nf_pipeline_params.yaml https://github.com/nextflow-io/rnaseq-nf
 
  New pipeline 'my_rnaseq_nf_pipeline' added at user workspace
 ```
@@ -167,7 +168,7 @@ The optional `--params-file` flag is used to pass a set of default parameters th
 Export the configuration details of a pipeline in JSON format for scripting and reproducibility purposes.
 
 ```console
-$ tw pipelines export --name=my_rnaseq_nf_pipeline my_rnaseq_nf_pipeline_v1.json
+$ seqera pipelines export --name=my_rnaseq_nf_pipeline my_rnaseq_nf_pipeline_v1.json
 
   Pipeline exported into 'my_rnaseq_nf_pipeline_v1.json'
 ```
@@ -175,7 +176,7 @@ $ tw pipelines export --name=my_rnaseq_nf_pipeline my_rnaseq_nf_pipeline_v1.json
 Similarly, a pipeline can be imported to a workspace from a previously exported JSON file.
 
 ```console
-$ tw pipelines import --name=my_rnaseq_nf_pipeline_v1 ./my_rnaseq_nf_pipeline_v1.json
+$ seqera pipelines import --name=my_rnaseq_nf_pipeline_v1 ./my_rnaseq_nf_pipeline_v1.json
 
   New pipeline 'my_rnaseq_nf_pipeline_v1' added at user workspace
 ```
@@ -185,21 +186,21 @@ $ tw pipelines import --name=my_rnaseq_nf_pipeline_v1 ./my_rnaseq_nf_pipeline_v1
 The default launch parameters can be changed with the `update` command:
 
 ```console
-tw pipelines update --name=my_rnaseq_nf_pipeline --params-file=my_rnaseq_nf_pipeline_params_2.yaml
+seqera pipelines update --name=my_rnaseq_nf_pipeline --params-file=my_rnaseq_nf_pipeline_params_2.yaml
 ```
 
 ## Launch pipelines
 
-Run `tw launch -h` to view supported launch options.
+Run `seqera launch -h` to view supported launch options.
 
 ### Launch a preconfigured pipeline
 
 If no custom parameters are passed via the CLI during launch, the defaults set for the pipeline in the Launchpad will be used.
 
-> **Note**: tw CLI users are bound to the same user permissions that apply in the Platform UI. Launch users can launch pre-configured pipelines in the workspaces they have access to, but they cannot add or run new pipelines.
+> **Note**: seqeraCLI users are bound to the same user permissions that apply in the Platform UI. Launch users can launch pre-configured pipelines in the workspaces they have access to, but they cannot add or run new pipelines.
 
 ```console
-$ tw launch my_rnaseq_nf_pipeline
+$ seqera launch my_rnaseq_nf_pipeline
 
   Workflow 1XCXxX0vCX8xhx submitted at user workspace.
 
@@ -218,7 +219,7 @@ When using `--wait`, `tw` can exit with one of two exit codes:
 To specify custom parameters during pipeline launch, specify a custom `--params-file`:
 
 ```console
-$ tw launch my_rnaseq_nf_pipeline --params-file=my_rnaseq_nf_pipeline_params_2.yaml
+$ seqera launch my_rnaseq_nf_pipeline --params-file=my_rnaseq_nf_pipeline_params_2.yaml
 
   Workflow 2XDXxX0vCX8xhx submitted at user workspace.
 
@@ -232,7 +233,7 @@ See [Nextflow configuration][nextflow-config] for more information.
 The CLI can directly launch pipelines that have not been added to the Launchpad in a Seqera workspace by using the full pipeline repository URL:
 
 ```console
-$ tw launch https://github.com/nf-core/rnaseq --params-file=./custom_rnaseq_params.yaml --compute-env=my_aws_ce --revision 3.8.1 --profile=test,docker
+$ seqera launch https://github.com/nf-core/rnaseq --params-file=./custom_rnaseq_params.yaml --compute-env=my_aws_ce --revision 3.8.1 --profile=test,docker
 
   Workflow 2XDXxX0vCX8xhx submitted at user workspace.
 
@@ -247,7 +248,7 @@ $ tw launch https://github.com/nf-core/rnaseq --params-file=./custom_rnaseq_para
 
 ## Runs
 
-Run `tw runs -h` to view supported runs operations.
+Run `seqera runs -h` to view supported runs operations.
 
 Runs display all the current and previous pipeline runs in the specified workspace. Each new or resumed run is given a random name such as _grave_williams_ by default, which can be overridden with a custom value at launch. See [Runs](https://docs.seqera.io/platform/latest/monitoring/overview) for more information. As a run executes, it can transition through the following states:
 
@@ -260,10 +261,10 @@ Runs display all the current and previous pipeline runs in the specified workspa
 
 ### View pipeline's runs
 
-Run `tw runs view -h` to view all the required and optional fields for viewing a pipeline's runs.
+Run `seqera runs view -h` to view all the required and optional fields for viewing a pipeline's runs.
 
 ```console
-$ tw runs view -i 2vFUbBx63cfsBY -w seqeralabs/showcase
+$ seqera runs view -i 2vFUbBx63cfsBY -w seqeralabs/showcase
 
   Run at [seqeralabs / showcase] workspace:
 
@@ -288,10 +289,10 @@ $ tw runs view -i 2vFUbBx63cfsBY -w seqeralabs/showcase
 
 ### List runs
 
-Run `tw runs list -h` to view all the required and optional fields for listing runs in a workspace.
+Run `seqera runs list -h` to view all the required and optional fields for listing runs in a workspace.
 
 ```console
-$ tw runs list
+$ seqera runs list
 
   Pipeline runs at [seqeralabs / testing] workspace:
 
@@ -325,7 +326,7 @@ If no `keyword` is defined, the filtering is applied to the `runName`, `projectN
 > Note: The `after` and `before` flags require an [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) timestamp with UTC timezone (`YYYY-MM-DDThh:mm:ss.sssZ`)
 
 ```console
-$ tw runs list --filter hello_slurm_20240530
+$ seqera runs list --filter hello_slurm_20240530
 
   Pipeline runs at [seqeralabs / showcase] workspace:
 
@@ -337,7 +338,7 @@ $ tw runs list --filter hello_slurm_20240530
 Multiple filter criteria can be defined:
 
 ```console
-$ tw runs list --filter="after:2024-05-29T00:00:00.000Z before:2024-05-30T00:00:00.000Z username:mark-panganiban"
+$ seqera runs list --filter="after:2024-05-29T00:00:00.000Z before:2024-05-30T00:00:00.000Z username:mark-panganiban"
 
   Pipeline runs at [seqeralabs / testing] workspace:
 
@@ -356,7 +357,7 @@ $ tw runs list --filter="after:2024-05-29T00:00:00.000Z before:2024-05-30T00:00:
 A leading and trailing `*` wildcard character is supported:
 
 ```console
-$ tw runs list --filter="*man/rnaseq-*"
+$ seqera runs list --filter="*man/rnaseq-*"
 
   Pipeline runs at [seqeralabs / testing] workspace:
 
@@ -373,34 +374,34 @@ $ tw runs list --filter="*man/rnaseq-*"
 
 ### Relaunch run
 
-Run `tw runs relaunch -h` to view all the required and optional fields for relaunching a run in a workspace.
+Run `seqera runs relaunch -h` to view all the required and optional fields for relaunching a run in a workspace.
 
 ### Cancel a run
 
-Run `tw runs cancel -h` to view all the required and optional fields for canceling a run in a workspace.
+Run `seqera runs cancel -h` to view all the required and optional fields for canceling a run in a workspace.
 
 ### Manage labels for runs
 
-Run `tw runs labels -h` to view all the required and optional fields for managing labels for runs in a workspace.
+Run `seqera runs labels -h` to view all the required and optional fields for managing labels for runs in a workspace.
 
 In the example below, we add the labels `test` and `rnaseq-demo` to the run with ID `5z4AMshti4g0GK`:
 
 ```console
-$ tw runs labels -i 5z4AMshti4g0GK test,rnaseq-demo
+$ seqera runs labels -i 5z4AMshti4g0GK test,rnaseq-demo
 
  'set' labels on 'run' with id '5z4AMshti4g0GK' at 34830707738561 workspace
 ```
 
 ### Delete a run
 
-Run `tw runs delete -h` to view all the required and optional fields for deleting a run in a workspace.
+Run `seqera runs delete -h` to view all the required and optional fields for deleting a run in a workspace.
 
 ### Dump all logs and details of a run
 
-Run `tw runs dump -h` to view all the required and optional fields for dumping all logs and details of a run in a workspace. The supported formats are `.tar.xz` and `.tar.gz`. In the example below, we dump all the logs and details for the run with ID `5z4AMshti4g0GK` to the output file `file.tar.gz`.
+Run `seqera runs dump -h` to view all the required and optional fields for dumping all logs and details of a run in a workspace. The supported formats are `.tar.xz` and `.tar.gz`. In the example below, we dump all the logs and details for the run with ID `5z4AMshti4g0GK` to the output file `file.tar.gz`.
 
 ```console
-$ tw runs dump -i 5z4AMshti4g0GK -o file.tar.gz
+$ seqera runs dump -i 5z4AMshti4g0GK -o file.tar.gz
 - Seqera info
 - Workflow details
 - Task details
@@ -410,8 +411,8 @@ $ tw runs dump -i 5z4AMshti4g0GK -o file.tar.gz
 
 ## Workspaces
 
-Run `tw workspaces -h` to view supported workspace operations.
-Run `tw workspaces add -h` to view the required and optional fields for adding your workspace.
+Run `seqera workspaces -h` to view supported workspace operations.
+Run `seqera workspaces add -h` to view the required and optional fields for adding your workspace.
 
 Workspaces provide the context in which a user launches workflow executions, defines the available resources, and manages who can access those resources. Workspaces contain pipelines, runs, actions, compute environments, credentials, datasets, data links, and secrets. Access permissions are controlled with participants, collaborators, and teams.
 
@@ -424,7 +425,7 @@ See [User workspaces][user-workspaces] for more information.
 In the example below, we create a shared workspace to be used for sharing pipelines with other private workspaces. See [Shared workspaces][shared-workspaces] for more information.
 
 ```console
-$ tw workspaces add --name=shared-workspace --full-name=shared-workspace-for-all  --org=my-seqera-org --visibility=SHARED
+$ seqera workspaces add --name=shared-workspace --full-name=shared-workspace-for-all  --org=my-seqera-org --visibility=SHARED
 
   A 'SHARED' workspace 'shared-workspace' added for 'my-seqera-org' organization
 ```
@@ -436,7 +437,7 @@ $ tw workspaces add --name=shared-workspace --full-name=shared-workspace-for-all
 List all the workspaces in which you are a participant:
 
 ```console
-$ tw workspaces list
+$ seqera workspaces list
 
   Workspaces for abhinav user:
 
@@ -447,13 +448,13 @@ $ tw workspaces list
 
 ## Participants
 
-Run `tw participants -h` to view supported participant operations.
-Run `tw participants add -h` to view the required and optional fields for adding a participant.
+Run `seqera participants -h` to view supported participant operations.
+Run `seqera participants add -h` to view the required and optional fields for adding a participant.
 
 ### List participants
 
 ```console
-$ tw participants list
+$ seqera participants list
 
   Participants for 'my-seqera-org/shared-workspace' workspace:
 
@@ -469,7 +470,7 @@ To add a new _collaborator_ to the workspace, use the `add` subcommand. The defa
 See [Participant roles][participant-roles] for more information.
 
 ```console
-$ tw participants add --name=collaborator@mydomain.com --type=MEMBER
+$ seqera participants add --name=collaborator@mydomain.com --type=MEMBER
 
   User 'collaborator' was added as participant to 'shared-workspace' workspace with role 'launch'
 ```
@@ -479,14 +480,14 @@ $ tw participants add --name=collaborator@mydomain.com --type=MEMBER
 To update the role of a _Collaborator_ to `ADMIN` or `MAINTAIN`, use the `update` subcommand:
 
 ```console
-$ tw  participants update --name=collaborator@mydomain.com --type=COLLABORATOR --role=MAINTAIN
+$ seqera participants update --name=collaborator@mydomain.com --type=COLLABORATOR --role=MAINTAIN
 
   Participant 'collaborator@mydomain.com' has now role 'maintain' for workspace 'shared-workspace'
 ```
 
 ## Data Links
 
-Run `tw data-links -h` to view supported data link operations.
+Run `seqera data-links -h` to view supported data link operations.
 
 Data links allow you to work with public and private cloud storage buckets in Data Explorer in the specified workspace. See [Data Explorer][data-explorer] for more information. AWS S3, Azure Blob Storage, and Google Cloud Storage are supported. The full list of operations are:
 
@@ -498,13 +499,13 @@ Data links allow you to work with public and private cloud storage buckets in Da
 
 ### List data links
 
-Run `tw data-links list -h` to view all the optional fields for listing data links in a workspace. If a workspace is not defined, the `SEQERA_WORKSPACE_ID` workspace is used by default. Data links can be one of two types:
+Run `seqera data-links list -h` to view all the optional fields for listing data links in a workspace. If a workspace is not defined, the `SEQERA_WORKSPACE_ID` workspace is used by default. Data links can be one of two types:
 
 - `v1-cloud-<id>`: **cloud** data links auto-discovered using credentials attached to the workspace
 - `v1-user-<id>`: **custom** data links created by users
 
 ```console
-$ tw data-links list -w seqeralabs/showcase
+$ seqera data-links list -w seqeralabs/showcase
 
   Data links at [seqeralabs / showcase] workspace:
 
@@ -526,10 +527,10 @@ $ tw data-links list -w seqeralabs/showcase
 
 ### Add a custom data link
 
-Run `tw data-links add -h` to view all the required and optional fields for adding a custom data link to a workspace. Users with the `MAINTAIN` role and above for a workspace can add custom data links. The data link `name`, `uri` and `provider` (one of `aws`, `azure`, or `google`) fields are required. If adding a custom data link for a private bucket, the `credentials` identifier field is also required. Adding a custom data link for a public bucket doesn't require credentials.
+Run `seqera data-links add -h` to view all the required and optional fields for adding a custom data link to a workspace. Users with the `MAINTAIN` role and above for a workspace can add custom data links. The data link `name`, `uri` and `provider` (one of `aws`, `azure`, or `google`) fields are required. If adding a custom data link for a private bucket, the `credentials` identifier field is also required. Adding a custom data link for a public bucket doesn't require credentials.
 
 ```console
-$ tw data-links add -w seqeralabs/showcase -n FOO -u az://seqeralabs.azure-benchmarking -p azure -c seqera_azure_credentials
+$ seqera data-links add -w seqeralabs/showcase -n FOO -u az://seqeralabs.azure-benchmarking -p azure -c seqera_azure_credentials
 
   Data link created:
 
@@ -540,10 +541,10 @@ $ tw data-links add -w seqeralabs/showcase -n FOO -u az://seqeralabs.azure-bench
 
 ### Update a custom data link
 
-Run `tw data-links update -h` to view all the required and optional fields for updating a custom data link in a workspace. Users with the `MAINTAIN` role and above for a workspace can update custom data links.
+Run `seqera data-links update -h` to view all the required and optional fields for updating a custom data link in a workspace. Users with the `MAINTAIN` role and above for a workspace can update custom data links.
 
 ```console
-$ tw data-links update -w seqeralabs/showcase -i v1-user-152116183ee325463901430bb9efb8c9 -n BAR
+$ seqera data-links update -w seqeralabs/showcase -i v1-user-152116183ee325463901430bb9efb8c9 -n BAR
 
   Data link updated:
 
@@ -554,20 +555,20 @@ $ tw data-links update -w seqeralabs/showcase -i v1-user-152116183ee325463901430
 
 ### Delete a custom data link
 
-Run `tw data-links delete -h` to view all the required and optional fields for deleting a custom data link from a workspace. Users with the `MAINTAIN` role and above for a workspace can delete custom data links.
+Run `seqera data-links delete -h` to view all the required and optional fields for deleting a custom data link from a workspace. Users with the `MAINTAIN` role and above for a workspace can delete custom data links.
 
 ```console
-$ tw data-links delete -w seqeralabs/showcase -i v1-user-152116183ee325463901430bb9efb8c9
+$ seqera data-links delete -w seqeralabs/showcase -i v1-user-152116183ee325463901430bb9efb8c9
 
   Data link 'v1-user-152116183ee325463901430bb9efb8c9' deleted at '138659136604200' workspace.
 ```
 
 ### Browse the contents of a data link
 
-Run `tw data-links browse -h` to view all the required and optional fields for browsing a data link in a workspace. Define the data link id using the required `-i` or `--id` argument, which can be found by first using the `list` operation for a workspace. In the example below, a `name` is optionally defined to only retrieve data links with names that start with the given word:
+Run `seqera data-links browse -h` to view all the required and optional fields for browsing a data link in a workspace. Define the data link id using the required `-i` or `--id` argument, which can be found by first using the `list` operation for a workspace. In the example below, a `name` is optionally defined to only retrieve data links with names that start with the given word:
 
 ```console
-$ tw data-links list -w seqeralabs/showcase -n 1000genomes
+$ seqera data-links list -w seqeralabs/showcase -n 1000genomes
 
   Data links at [seqeralabs / showcase] workspace:
 
@@ -577,7 +578,7 @@ $ tw data-links list -w seqeralabs/showcase -n 1000genomes
 
   Showing from 0 to 99 from a total of 1 entries.
 
-$ tw data-links browse -w seqeralabs/showcase -i v1-user-6d8f44c239e2a098b3e02e918612452a
+$ seqera data-links browse -w seqeralabs/showcase -i v1-user-6d8f44c239e2a098b3e02e918612452a
 
   Content of 's3://1000genomes' and path 'null':
 
