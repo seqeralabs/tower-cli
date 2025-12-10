@@ -29,7 +29,7 @@ dependencies {
     implementation 'ch.qos.logback:logback-core:1.5.19'
     implementation 'ch.qos.logback:logback-classic:1.5.19'
 
-    implementation 'io.seqera.tower:tower-java-sdk:1.92.0'
+    implementation 'io.seqera.tower:tower-java-sdk:1.96.0'
     // Upgrade transitive Jersey client dependencies to non-vulnerable 2.x version
     implementation "org.glassfish.jersey.core:jersey-client:2.47"
     implementation "org.glassfish.jersey.media:jersey-media-multipart:2.47"
