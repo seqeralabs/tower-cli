@@ -136,11 +136,9 @@ public class UploadCmd extends AbstractDataLinksCmd {
 
         DataLinkMultiPartUploadResponse urlResponse;
         if (outputDir != null) {
-            urlResponse = dataLinksApi().generateDataLinkUploadUrl1(id, outputDir, uploadRequest, credId, wspId, null);
+            urlResponse = dataLinksApi().generateDataLinkUploadUrlWithPath(id, outputDir, uploadRequest, credId, wspId, null);
         } else {
-            // TODO: fix
-            urlResponse = null;
-//            urlResponse = dataLinksApi().generateDataLinkUploadUrl(id, uploadRequest, credId, wspId, null);
+            urlResponse = dataLinksApi().generateDataLinkUploadUrl(id, uploadRequest, credId, wspId, null);
         }
 
         ProgressTracker tracker = new ProgressTracker(app().getOut(), showProgress, contentLength);
