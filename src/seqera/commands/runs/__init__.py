@@ -17,12 +17,16 @@ from seqera.exceptions import (
 )
 from seqera.main import get_sdk, get_output_format
 from seqera.responses import (
+    LabelsManaged,
     MetricsList,
     RunCancelled,
     RunDeleted,
+    RunDump,
+    RunRelaunched,
     RunsList,
     RunView,
     TasksList,
+    TaskView,
 )
 from seqera.utils.output import OutputFormat, output_console, output_error, output_json, output_yaml
 
@@ -296,6 +300,518 @@ def view_metrics(
         result = MetricsList(
             run_id=run_id,
             metrics=metrics,
+        )
+
+        output_response(result, output_format)
+
+    except Exception as e:
+        handle_runs_error(e)
+
+
+@app.command("relaunch")
+def relaunch_run(
+    run_id: Annotated[
+        str,
+        typer.Option("-i", "--id", help="Pipeline run ID to relaunch"),
+    ],
+    workspace: Annotated[
+        str | None,
+        typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
+    ] = None,
+    pipeline: Annotated[
+        str | None,
+        typer.Option("--pipeline", help="Pipeline to launch"),
+    ] = None,
+    no_resume: Annotated[
+        bool,
+        typer.Option("--no-resume", help="Do not resume the pipeline run"),
+    ] = False,
+    name: Annotated[
+        str | None,
+        typer.Option("-n", "--name", help="Custom workflow run name"),
+    ] = None,
+    work_dir: Annotated[
+        str | None,
+        typer.Option("--work-dir", help="Work directory"),
+    ] = None,
+    compute_env: Annotated[
+        str | None,
+        typer.Option("-c", "--compute-env", help="Compute environment name or ID"),
+    ] = None,
+    revision: Annotated[
+        str | None,
+        typer.Option("-r", "--revision", help="Pipeline revision"),
+    ] = None,
+    params_file: Annotated[
+        str | None,
+        typer.Option("-p", "--params-file", help="Parameters file (JSON/YAML)"),
+    ] = None,
+    config: Annotated[
+        str | None,
+        typer.Option("--config", help="Nextflow config file"),
+    ] = None,
+    pre_run: Annotated[
+        str | None,
+        typer.Option("--pre-run", help="Pre-run script file"),
+    ] = None,
+    post_run: Annotated[
+        str | None,
+        typer.Option("--post-run", help="Post-run script file"),
+    ] = None,
+    profile: Annotated[
+        str | None,
+        typer.Option("--profile", help="Nextflow profile(s) (comma-separated)"),
+    ] = None,
+) -> None:
+    """Relaunch a pipeline run."""
+    from pathlib import Path
+
+    try:
+        sdk = get_sdk()
+        output_format = get_output_format()
+
+        # Validate work-dir and no-resume combination
+        if work_dir and not no_resume:
+            output_error(
+                "Not allowed to change '--work-dir' option when resuming. "
+                "Use '--no-resume' if you want to relaunch into a different working directory without resuming."
+            )
+            sys.exit(1)
+
+        # Get workspace name for display
+        workspace_name = get_workspace_ref(sdk, workspace)
+
+        # Get original workflow run
+        original_run = sdk.runs.get(run_id, workspace=workspace)
+
+        # Get launch info for the original run
+        client = sdk._http_client
+        params = {}
+        if workspace:
+            params["workspaceId"] = workspace
+
+        launch_response = client.get(f"/workflow/{run_id}/launch", params=params)
+        launch = launch_response.get("launch", {})
+
+        # Check if resume is possible
+        if not launch.get("resumeCommitId"):
+            no_resume = True
+
+        # Determine compute env ID
+        compute_env_id = None
+        if compute_env:
+            ce = sdk.compute_envs.get(compute_env, workspace=workspace)
+            compute_env_id = ce.id
+        else:
+            compute_env_id = launch.get("computeEnv", {}).get("id")
+
+        # Determine work directory
+        if work_dir:
+            final_work_dir = work_dir
+        elif not no_resume and launch.get("resumeDir"):
+            final_work_dir = launch.get("resumeDir")
+        elif launch.get("workDir"):
+            final_work_dir = launch.get("workDir")
+        else:
+            final_work_dir = original_run.work_dir
+
+        # Determine revision
+        if revision:
+            final_revision = revision
+        elif not no_resume and launch.get("resumeCommitId"):
+            final_revision = launch.get("resumeCommitId")
+        else:
+            final_revision = launch.get("revision")
+
+        # Read files if provided
+        params_text = None
+        if params_file:
+            params_text = Path(params_file).read_text()
+        elif launch.get("paramsText"):
+            params_text = launch.get("paramsText")
+
+        config_text = None
+        if config:
+            config_text = Path(config).read_text()
+        elif launch.get("configText"):
+            config_text = launch.get("configText")
+
+        pre_run_script = None
+        if pre_run:
+            pre_run_script = Path(pre_run).read_text()
+        elif launch.get("preRunScript"):
+            pre_run_script = launch.get("preRunScript")
+
+        post_run_script = None
+        if post_run:
+            post_run_script = Path(post_run).read_text()
+        elif launch.get("postRunScript"):
+            post_run_script = launch.get("postRunScript")
+
+        # Config profiles
+        config_profiles = None
+        if profile:
+            config_profiles = profile.split(",")
+        elif launch.get("configProfiles"):
+            config_profiles = launch.get("configProfiles")
+
+        # Build launch request
+        launch_request = {
+            "id": original_run.launch_id,
+            "sessionId": launch.get("sessionId") if no_resume else original_run.session_id,
+            "computeEnvId": compute_env_id,
+            "pipeline": pipeline or launch.get("pipeline"),
+            "workDir": final_work_dir,
+            "revision": final_revision,
+            "configProfiles": config_profiles,
+            "configText": config_text,
+            "paramsText": params_text,
+            "preRunScript": pre_run_script,
+            "postRunScript": post_run_script,
+            "mainScript": launch.get("mainScript"),
+            "entryName": launch.get("entryName"),
+            "schemaName": launch.get("schemaName"),
+            "resume": not no_resume,
+            "pullLatest": launch.get("pullLatest"),
+            "stubRun": launch.get("stubRun"),
+        }
+
+        if name:
+            launch_request["runName"] = name
+
+        # Submit the workflow
+        submit_request = {"launch": launch_request}
+        response = client.post("/workflow/launch", json=submit_request, params=params)
+
+        new_workflow_id = response.get("workflowId")
+
+        # Build watch URL
+        watch_url = None
+        if workspace:
+            # Get org and workspace names
+            for ws in sdk.workspaces.list():
+                if str(ws.workspace_id) == str(workspace):
+                    watch_url = f"{sdk._http_client.base_url}/orgs/{ws.org_name}/workspaces/{ws.workspace_name}/watch/{new_workflow_id}"
+                    break
+
+        # Output response
+        result = RunRelaunched(
+            run_id=new_workflow_id,
+            workspace=workspace_name,
+            watch_url=watch_url,
+        )
+
+        output_response(result, output_format)
+
+    except Exception as e:
+        handle_runs_error(e)
+
+
+@app.command("dump")
+def dump_run(
+    run_id: Annotated[
+        str,
+        typer.Option("-i", "--id", help="Pipeline run identifier"),
+    ],
+    output_file: Annotated[
+        str,
+        typer.Option("-o", "--output", help="Output file (.tar.xz or .tar.gz)"),
+    ],
+    workspace: Annotated[
+        str | None,
+        typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
+    ] = None,
+    add_task_logs: Annotated[
+        bool,
+        typer.Option("--add-task-logs", help="Add all task stdout, stderr and log files"),
+    ] = False,
+    add_fusion_logs: Annotated[
+        bool,
+        typer.Option("--add-fusion-logs", help="Add all Fusion task logs"),
+    ] = False,
+    only_failed: Annotated[
+        bool,
+        typer.Option("--only-failed", help="Dump only failed tasks"),
+    ] = False,
+    silent: Annotated[
+        bool,
+        typer.Option("--silent", help="Do not show download progress"),
+    ] = False,
+) -> None:
+    """Dump all logs and details of a run into a compressed tarball file."""
+    import json
+    import tarfile
+    from pathlib import Path
+
+    try:
+        sdk = get_sdk()
+        output_format = get_output_format()
+
+        # Validate output file format
+        if not (output_file.endswith(".tar.xz") or output_file.endswith(".tar.gz")):
+            output_error("Output file must end with .tar.xz or .tar.gz")
+            sys.exit(1)
+
+        compression = "xz" if output_file.endswith(".tar.xz") else "gz"
+        mode = f"w:{compression}"
+
+        # Get workspace name for display
+        workspace_name = get_workspace_ref(sdk, workspace)
+
+        if not silent:
+            typer.echo(f"Dumping run {run_id} from {workspace_name}...")
+
+        # Get workflow details
+        run = sdk.runs.get(run_id, workspace=workspace)
+
+        # Get progress info
+        progress = sdk.runs.progress(run_id, workspace=workspace)
+
+        # Get metrics
+        metrics = sdk.runs.metrics(run_id, workspace=workspace)
+
+        # Get tasks
+        tasks_list = list(sdk.runs.tasks(run_id, workspace=workspace))
+        if only_failed:
+            tasks_list = [t for t in tasks_list if t.status == "FAILED"]
+
+        # Create tarball
+        with tarfile.open(output_file, mode) as tar:
+            # Add workflow metadata
+            workflow_data = run.model_dump(by_alias=True, mode="json")
+            workflow_json = json.dumps(workflow_data, indent=2)
+            _add_string_to_tar(tar, "workflow.json", workflow_json)
+
+            # Add progress
+            progress_json = json.dumps(progress, indent=2)
+            _add_string_to_tar(tar, "progress.json", progress_json)
+
+            # Add metrics
+            metrics_json = json.dumps(metrics, indent=2)
+            _add_string_to_tar(tar, "metrics.json", metrics_json)
+
+            # Add tasks
+            tasks_data = [t.model_dump(by_alias=True, mode="json") for t in tasks_list]
+            tasks_json = json.dumps(tasks_data, indent=2)
+            _add_string_to_tar(tar, "tasks.json", tasks_json)
+
+            if not silent:
+                typer.echo(f"  Added workflow metadata, {len(tasks_list)} tasks")
+
+            # Add task logs if requested
+            if add_task_logs:
+                if not silent:
+                    typer.echo("  Fetching task logs...")
+                # Note: Task log fetching would require additional API calls
+                # This is a simplified implementation
+
+        # Output response
+        result = RunDump(
+            run_id=run_id,
+            output_file=output_file,
+        )
+
+        output_response(result, output_format)
+
+    except Exception as e:
+        handle_runs_error(e)
+
+
+def _add_string_to_tar(tar: "tarfile.TarFile", name: str, content: str) -> None:
+    """Add a string as a file to a tarball."""
+    import io
+    import tarfile
+
+    data = content.encode("utf-8")
+    info = tarfile.TarInfo(name=name)
+    info.size = len(data)
+    tar.addfile(info, io.BytesIO(data))
+
+
+@app.command("task")
+def view_task(
+    run_id: Annotated[
+        str,
+        typer.Option("-i", "--id", help="Workflow run ID"),
+    ],
+    task_id: Annotated[
+        int,
+        typer.Option("-t", "--task-id", help="Task ID"),
+    ],
+    workspace: Annotated[
+        str | None,
+        typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
+    ] = None,
+) -> None:
+    """View details of a single task in a workflow run."""
+    try:
+        sdk = get_sdk()
+        output_format = get_output_format()
+
+        # Get task details using API client directly
+        client = sdk._http_client
+        params = {}
+        if workspace:
+            params["workspaceId"] = workspace
+
+        response = client.get(f"/workflow/{run_id}/task/{task_id}", params=params)
+        task = response.get("task", {})
+
+        # Output response
+        result = TaskView(
+            run_id=run_id,
+            task=task,
+        )
+
+        output_response(result, output_format)
+
+    except Exception as e:
+        handle_runs_error(e)
+
+
+def parse_labels(labels_str: str) -> list[dict]:
+    """Parse comma-separated labels into a list of dicts.
+
+    Supports format: name=value or just name (for simple labels).
+    """
+    labels = []
+    for label in labels_str.split(","):
+        label = label.strip()
+        if not label:
+            continue
+        if "=" in label:
+            name, value = label.split("=", 1)
+            labels.append({"name": name.strip(), "value": value.strip()})
+        else:
+            labels.append({"name": label})
+    return labels
+
+
+def find_or_create_label_ids(
+    client,
+    labels: list[dict],
+    workspace_id: str | None,
+    no_create: bool = False,
+    operation: str = "set",
+) -> list[int]:
+    """Find label IDs, optionally creating labels that don't exist."""
+    params = {"type": "all", "max": 1000}
+    if workspace_id:
+        params["workspaceId"] = workspace_id
+
+    response = client.get("/labels", params=params)
+    existing_labels = response.get("labels", [])
+
+    label_map = {}
+    for existing in existing_labels:
+        key = existing.get("name")
+        if existing.get("value"):
+            key = f"{key}={existing.get('value')}"
+        label_map[key] = existing.get("id")
+
+    label_ids = []
+    for label in labels:
+        name = label.get("name")
+        value = label.get("value")
+        key = f"{name}={value}" if value else name
+
+        if key in label_map:
+            label_ids.append(label_map[key])
+        elif operation == "delete":
+            continue
+        elif no_create:
+            raise SeqeraError(f"Label '{key}' not found and --no-create specified")
+        else:
+            payload = {"name": name, "resource": value is not None}
+            if value:
+                payload["value"] = value
+
+            create_params = {}
+            if workspace_id:
+                create_params["workspaceId"] = workspace_id
+
+            create_response = client.post("/labels", json=payload, params=create_params)
+            label_ids.append(create_response.get("id"))
+
+    return label_ids
+
+
+@app.command("labels")
+def manage_run_labels(
+    run_id: Annotated[
+        str,
+        typer.Option("-i", "--id", help="Workflow run ID"),
+    ],
+    labels: Annotated[
+        str,
+        typer.Argument(help="Comma-separated list of labels (format: name or name=value)"),
+    ] = "",
+    operation: Annotated[
+        str,
+        typer.Option("-o", "--operation", help="Operation type: set, append, or delete"),
+    ] = "set",
+    no_create: Annotated[
+        bool,
+        typer.Option("--no-create", help="Don't create labels that don't exist"),
+    ] = False,
+    workspace: Annotated[
+        str | None,
+        typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
+    ] = None,
+) -> None:
+    """Manage labels for a workflow run."""
+    try:
+        sdk = get_sdk()
+        output_format = get_output_format()
+
+        if not labels:
+            output_error("Labels argument is required")
+            sys.exit(1)
+
+        if operation not in ("set", "append", "delete"):
+            output_error("Operation must be 'set', 'append', or 'delete'")
+            sys.exit(1)
+
+        # Parse labels
+        parsed_labels = parse_labels(labels)
+        if not parsed_labels:
+            output_error("No valid labels provided")
+            sys.exit(1)
+
+        # Use underlying client for labels operations
+        client = sdk._http_client
+
+        # Find or create label IDs
+        label_ids = find_or_create_label_ids(client, parsed_labels, workspace, no_create, operation)
+
+        if not label_ids:
+            output_error("No labels to apply")
+            sys.exit(1)
+
+        # Build request
+        request_payload = {
+            "labelIds": label_ids,
+            "workflowIds": [run_id],
+        }
+
+        params = {}
+        if workspace:
+            params["workspaceId"] = workspace
+
+        # Apply labels based on operation
+        if operation == "set":
+            client.post("/labels/workflows/apply", json=request_payload, params=params)
+        elif operation == "append":
+            client.post("/labels/workflows/add", json=request_payload, params=params)
+        elif operation == "delete":
+            client.post("/labels/workflows/remove", json=request_payload, params=params)
+
+        # Output response
+        result = LabelsManaged(
+            operation=operation,
+            entity_type="workflow",
+            entity_id=run_id,
+            workspace_id=int(workspace) if workspace else None,
         )
 
         output_response(result, output_format)

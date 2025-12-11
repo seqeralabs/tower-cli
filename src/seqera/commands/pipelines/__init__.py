@@ -24,6 +24,7 @@ from seqera.exceptions import (
 )
 from seqera.main import get_sdk, get_output_format
 from seqera.responses import (
+    LabelsManaged,
     PipelineAdded,
     PipelineDeleted,
     PipelineExport,
@@ -623,6 +624,173 @@ def import_pipeline(
             workspace=workspace_ref,
             pipeline_name=pipeline_name,
             pipeline_id=pipeline.pipeline_id,
+        )
+
+        output_response(result, output_format)
+
+    except Exception as e:
+        handle_pipelines_error(e)
+
+
+def parse_labels(labels_str: str) -> list[dict]:
+    """Parse comma-separated labels into a list of dicts.
+
+    Supports format: name=value or just name (for simple labels).
+    """
+    labels = []
+    for label in labels_str.split(","):
+        label = label.strip()
+        if not label:
+            continue
+        if "=" in label:
+            name, value = label.split("=", 1)
+            labels.append({"name": name.strip(), "value": value.strip()})
+        else:
+            labels.append({"name": label})
+    return labels
+
+
+def find_or_create_label_ids(
+    client,
+    labels: list[dict],
+    workspace_id: str | None,
+    no_create: bool = False,
+    operation: str = "set",
+) -> list[int]:
+    """Find label IDs, optionally creating labels that don't exist."""
+    params = {"type": "all", "max": 1000}
+    if workspace_id:
+        params["workspaceId"] = workspace_id
+
+    response = client.get("/labels", params=params)
+    existing_labels = response.get("labels", [])
+
+    label_map = {}
+    for existing in existing_labels:
+        key = existing.get("name")
+        if existing.get("value"):
+            key = f"{key}={existing.get('value')}"
+        label_map[key] = existing.get("id")
+
+    label_ids = []
+    for label in labels:
+        name = label.get("name")
+        value = label.get("value")
+        key = f"{name}={value}" if value else name
+
+        if key in label_map:
+            label_ids.append(label_map[key])
+        elif operation == "delete":
+            continue
+        elif no_create:
+            raise SeqeraError(f"Label '{key}' not found and --no-create specified")
+        else:
+            payload = {"name": name, "resource": value is not None}
+            if value:
+                payload["value"] = value
+
+            create_params = {}
+            if workspace_id:
+                create_params["workspaceId"] = workspace_id
+
+            create_response = client.post("/labels", json=payload, params=create_params)
+            label_ids.append(create_response.get("id"))
+
+    return label_ids
+
+
+@app.command("labels")
+def manage_pipeline_labels(
+    pipeline_name: Annotated[
+        str | None,
+        typer.Option("-n", "--name", help="Pipeline name"),
+    ] = None,
+    pipeline_id: Annotated[
+        str | None,
+        typer.Option("-i", "--id", help="Pipeline ID"),
+    ] = None,
+    labels: Annotated[
+        str,
+        typer.Argument(help="Comma-separated list of labels (format: name or name=value)"),
+    ] = "",
+    operation: Annotated[
+        str,
+        typer.Option("-o", "--operation", help="Operation type: set, append, or delete"),
+    ] = "set",
+    no_create: Annotated[
+        bool,
+        typer.Option("--no-create", help="Don't create labels that don't exist"),
+    ] = False,
+    workspace: Annotated[
+        str | None,
+        typer.Option("-w", "--workspace", help="Workspace ID (numeric)"),
+    ] = None,
+) -> None:
+    """Manage labels for a pipeline."""
+    try:
+        sdk = get_sdk()
+        output_format = get_output_format()
+
+        if not pipeline_name and not pipeline_id:
+            output_error("Either --name or --id must be specified")
+            sys.exit(1)
+
+        if not labels:
+            output_error("Labels argument is required")
+            sys.exit(1)
+
+        if operation not in ("set", "append", "delete"):
+            output_error("Operation must be 'set', 'append', or 'delete'")
+            sys.exit(1)
+
+        # Get pipeline
+        if pipeline_id:
+            pipeline = sdk.pipelines.get(pipeline_id, workspace=workspace)
+        else:
+            pipeline = sdk.pipelines.get_by_name(pipeline_name, workspace=workspace)
+
+        pid = pipeline.pipeline_id
+
+        # Parse labels
+        parsed_labels = parse_labels(labels)
+        if not parsed_labels:
+            output_error("No valid labels provided")
+            sys.exit(1)
+
+        # Use underlying client for labels operations
+        client = sdk._http_client
+
+        # Find or create label IDs
+        label_ids = find_or_create_label_ids(client, parsed_labels, workspace, no_create, operation)
+
+        if not label_ids:
+            output_error("No labels to apply")
+            sys.exit(1)
+
+        # Build request
+        request_payload = {
+            "labelIds": label_ids,
+            "pipelineIds": [pid],
+        }
+
+        params = {}
+        if workspace:
+            params["workspaceId"] = workspace
+
+        # Apply labels based on operation
+        if operation == "set":
+            client.post("/labels/pipelines/apply", json=request_payload, params=params)
+        elif operation == "append":
+            client.post("/labels/pipelines/add", json=request_payload, params=params)
+        elif operation == "delete":
+            client.post("/labels/pipelines/remove", json=request_payload, params=params)
+
+        # Output response
+        result = LabelsManaged(
+            operation=operation,
+            entity_type="pipeline",
+            entity_id=str(pid),
+            workspace_id=int(workspace) if workspace else None,
         )
 
         output_response(result, output_format)

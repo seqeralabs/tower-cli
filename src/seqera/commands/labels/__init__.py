@@ -137,6 +137,70 @@ def delete_label(
         handle_labels_error(e)
 
 
+@app.command("update")
+def update_label(
+    label_id: Annotated[
+        str,
+        typer.Option("-i", "--id", help="Label ID to update"),
+    ],
+    name: Annotated[
+        str | None,
+        typer.Option("-n", "--name", help="New label name"),
+    ] = None,
+    value: Annotated[
+        str | None,
+        typer.Option("-v", "--value", help="New label value (for resource labels)"),
+    ] = None,
+    workspace: Annotated[
+        str | None,
+        typer.Option("-w", "--workspace", help="Workspace ID"),
+    ] = None,
+) -> None:
+    """Update an existing label."""
+    try:
+        client = get_client()
+        output_format = get_output_format()
+
+        if not name and value is None:
+            output_error("Either --name or --value must be specified")
+            sys.exit(1)
+
+        # Add workspace ID to query params if provided
+        params = {}
+        if workspace:
+            params["workspaceId"] = workspace
+
+        # First, get the existing label to preserve fields
+        existing_label = client.get(f"/labels/{label_id}", params=params)
+
+        # Build update payload
+        payload = {
+            "name": name if name else existing_label.get("name"),
+            "resource": existing_label.get("resource", False),
+        }
+        if value is not None:
+            payload["value"] = value
+        elif existing_label.get("value"):
+            payload["value"] = existing_label.get("value")
+
+        # Update label
+        client.put(f"/labels/{label_id}", json=payload, params=params)
+
+        # Output response
+        result = LabelAdded(
+            label_id=int(label_id),
+            name=payload["name"],
+            resource=payload.get("resource", False),
+            value=payload.get("value"),
+            workspace_id=workspace or "",
+        )
+
+        output_response(result, output_format)
+
+    except Exception as e:
+        handle_labels_error(e)
+
+
 @app.command("list")
 def list_labels(
     workspace: Annotated[

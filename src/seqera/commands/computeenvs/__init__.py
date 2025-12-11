@@ -349,3 +349,97 @@ def export_compute_env(
 
     except Exception as e:
         handle_compute_env_error(e)
+
+
+@app.command("import")
+def import_compute_env(
+    config_file: Annotated[
+        str,
+        typer.Argument(help="Configuration file (JSON)"),
+    ],
+    name: Annotated[
+        str | None,
+        typer.Option("-n", "--name", help="Compute environment name (overrides config)"),
+    ] = None,
+    workspace: Annotated[
+        str | None,
+        typer.Option("-w", "--workspace", help="Workspace ID"),
+    ] = None,
+    overwrite: Annotated[
+        bool,
+        typer.Option("--overwrite", help="Overwrite if compute environment already exists"),
+    ] = False,
+) -> None:
+    """Import compute environment from configuration file."""
+    import json
+    from pathlib import Path
+
+    try:
+        sdk = get_sdk()
+        output_format = get_output_format()
+
+        # Read configuration file
+        config_path = Path(config_file)
+        if not config_path.exists():
+            output_error(f"Configuration file not found: {config_file}")
+            sys.exit(1)
+
+        config_text = config_path.read_text()
+        try:
+            config = json.loads(config_text)
+        except json.JSONDecodeError as e:
+            output_error(f"Failed to parse configuration file: {e}")
+            sys.exit(1)
+
+        # Extract config from the wrapper if needed
+        if "config" in config:
+            config = config["config"]
+
+        # Override name if specified
+        ce_name = name or config.get("name")
+        if not ce_name:
+            output_error(
+                "Compute environment name must be specified either in config file or with --name"
+            )
+            sys.exit(1)
+
+        # Handle overwrite - delete existing compute environment if it exists
+        if overwrite:
+            try:
+                existing = sdk.compute_envs.get(ce_name, workspace=workspace)
+                sdk.compute_envs.delete(existing.id, workspace=workspace)
+            except Exception:
+                pass  # CE doesn't exist, that's fine
+
+        # Get workspace reference for display
+        workspace_ref = "[user]"
+        if workspace:
+            for ws in sdk.workspaces.list():
+                if str(ws.workspace_id) == str(workspace):
+                    workspace_ref = f"[{ws.org_name} / {ws.workspace_name}]"
+                    break
+
+        # Create compute environment using the API directly
+        client = sdk._http_client
+        params = {}
+        if workspace:
+            params["workspaceId"] = workspace
+
+        # Set the name in config
+        config["name"] = ce_name
+
+        # Submit the compute environment
+        response = client.post("/compute-envs", json={"computeEnv": config}, params=params)
+        ce_id = response.get("computeEnvId", "")
+
+        # Output response
+        result = ComputeEnvAdded(
+            name=ce_name,
+            compute_env_id=ce_id,
+            workspace=workspace_ref,
+        )
+
+        output_response(result, output_format)
+
+    except Exception as e:
+        handle_compute_env_error(e)

@@ -551,3 +551,50 @@ def list_checkpoints(
 
     except Exception as e:
         handle_studios_error(e)
+
+
+@app.command("templates")
+def list_templates(
+    workspace: Annotated[
+        str | None,
+        typer.Option("-w", "--workspace", help="Workspace ID (numeric)"),
+    ] = None,
+) -> None:
+    """List available studio templates."""
+    try:
+        client = get_client()
+        output_format = get_output_format()
+
+        # Get workspace info
+        workspace_ref, ws_id = get_workspace_info(client, workspace)
+
+        # Build params
+        params = {}
+        if ws_id:
+            params["workspaceId"] = ws_id
+
+        # Get templates
+        response = client.get("/studios/templates", params=params)
+        templates = response.get("templates", [])
+
+        # Output response
+        if output_format == OutputFormat.JSON:
+            output_json({"workspace": workspace_ref, "templates": templates})
+        elif output_format == OutputFormat.YAML:
+            output_yaml({"workspace": workspace_ref, "templates": templates})
+        else:
+            lines = [f"  Studio templates at {workspace_ref}:", ""]
+            if not templates:
+                lines.append("    No templates found")
+            else:
+                lines.append(f"    {'ID':<12} {'Name':<30} {'Container'}")
+                lines.append("    " + "-" * 70)
+                for template in templates:
+                    template_id = str(template.get("id", ""))[:11]
+                    name = template.get("name", "")[:29]
+                    container = template.get("containerImage", "")
+                    lines.append(f"    {template_id:<12} {name:<30} {container}")
+            output_console("\n".join(lines))
+
+    except Exception as e:
+        handle_studios_error(e)

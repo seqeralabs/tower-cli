@@ -4,14 +4,17 @@ Data Links commands for Seqera Platform CLI.
 Provides commands for managing data links (cloud storage buckets/containers).
 """
 
+import sys
 from enum import Enum
+from pathlib import Path
 from typing import Annotated, Any
 
+import httpx
 import typer
 
 from seqera.api.client import SeqeraClient
 from seqera.main import get_client, get_output_format
-from seqera.utils.output import OutputFormat, output_console, output_json, output_yaml
+from seqera.utils.output import OutputFormat, output_console, output_error, output_json, output_yaml
 
 app = typer.Typer(name="data-links", help="Manage data links.")
 
@@ -278,6 +281,40 @@ class DataLinkContentList:
             lines.append("")
             lines.append(f"  Next page token: {self.next_page_token}")
 
+        return "\n".join(lines)
+
+
+class DataLinkFileTransferResult:
+    """Response for download/upload data link commands."""
+
+    def __init__(
+        self,
+        direction: str,  # "download" or "upload"
+        paths: list[dict[str, Any]],
+    ) -> None:
+        self.direction = direction
+        self.paths = paths
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "transferDirection": self.direction,
+            "paths": self.paths,
+        }
+
+    def to_console(self) -> str:
+        direction_label = "downloaded" if self.direction == "download" else "uploaded"
+        lines = [f"  Successfully {direction_label} files", ""]
+
+        if self.paths:
+            lines.append(f"  {'Type':<10} {'File count':<12} {'Path'}")
+            lines.append("  " + "-" * 70)
+            for path_info in self.paths:
+                item_type = path_info.get("type", "")[:9]
+                file_count = str(path_info.get("fileCount", 0))[:11]
+                path = path_info.get("path", "")
+                lines.append(f"  {item_type:<10} {file_count:<12} {path}")
+
+        lines.append("")
         return "\n".join(lines)
 
 
@@ -602,4 +639,571 @@ def browse_data_link(
         objects=browse_response.get("objects", []),
         next_page_token=browse_response.get("nextPageToken"),
     )
+    _output_result(result, output_format)
+
+
+def _download_file(
+    client: SeqeraClient,
+    data_link_id: str,
+    remote_path: str,
+    local_path: Path,
+    credentials_id: str,
+    workspace_id: int | None,
+    show_progress: bool = True,
+) -> None:
+    """Download a single file from a data link.
+
+    Args:
+        client: Seqera API client
+        data_link_id: Data link ID
+        remote_path: Path of file in data link
+        local_path: Local path to save file to
+        credentials_id: Credentials ID
+        workspace_id: Workspace ID
+        show_progress: Whether to show progress output
+    """
+    # Get download URL from API
+    params: dict[str, Any] = {"credentialsId": credentials_id}
+    if workspace_id:
+        params["workspaceId"] = workspace_id
+
+    url_response = client.get(
+        f"/data-links/{data_link_id}/download/{remote_path}",
+        params=params,
+    )
+    download_url = url_response.get("url")
+
+    if not download_url:
+        raise typer.Exit(1)
+
+    if show_progress:
+        typer.echo(f"  Downloading file: {remote_path}")
+
+    # Create parent directories if needed
+    local_path.parent.mkdir(parents=True, exist_ok=True)
+
+    # Download the file
+    with httpx.stream("GET", download_url, follow_redirects=True, timeout=60.0) as response:
+        if response.status_code != 200:
+            output_error(f"Failed to download file: HTTP {response.status_code}")
+            raise typer.Exit(1)
+
+        content_length = response.headers.get("content-length")
+        total_size = int(content_length) if content_length else None
+
+        with open(local_path, "wb") as f:
+            downloaded = 0
+            for chunk in response.iter_bytes(chunk_size=8192):
+                f.write(chunk)
+                downloaded += len(chunk)
+
+                # Show progress if we know the total size
+                if show_progress and total_size and total_size > 0:
+                    percent = (downloaded / total_size) * 100
+                    typer.echo(f"\r    Progress: {percent:.1f}%", nl=False)
+
+        if show_progress and total_size:
+            typer.echo()  # New line after progress
+
+
+def _explore_data_link_tree(
+    client: SeqeraClient,
+    data_link_id: str,
+    paths: list[str],
+    credentials_id: str,
+    workspace_id: int | None,
+) -> list[dict[str, Any]]:
+    """Explore data link tree to get all files under given paths.
+
+    Args:
+        client: Seqera API client
+        data_link_id: Data link ID
+        paths: List of paths to explore
+        credentials_id: Credentials ID
+        workspace_id: Workspace ID
+
+    Returns:
+        List of file items
+    """
+    params: dict[str, Any] = {"credentialsId": credentials_id}
+    if workspace_id:
+        params["workspaceId"] = workspace_id
+
+    # POST with paths in body
+    response = client.post(
+        f"/data-links/{data_link_id}/browse-tree",
+        json={"paths": paths},
+        params=params,
+    )
+    return response.get("items", [])
+
+
+@app.command("download")
+def download_data_link(
+    data_link_id: Annotated[
+        str,
+        typer.Option("-i", "--id", help="Data link ID."),
+    ],
+    credentials: Annotated[
+        str,
+        typer.Option("-c", "--credentials", help="Credentials identifier (required)."),
+    ],
+    paths: Annotated[
+        list[str],
+        typer.Argument(help="Paths to files or directories to download."),
+    ],
+    workspace: Annotated[
+        str | None,
+        typer.Option("-w", "--workspace", help="Workspace numeric identifier or name."),
+    ] = None,
+    output_dir: Annotated[
+        str | None,
+        typer.Option("-o", "--output-dir", help="Output directory."),
+    ] = None,
+) -> None:
+    """Download content from a data link."""
+    client = get_client()
+    output_format = get_output_format()
+
+    workspace_id = _resolve_workspace_id(client, workspace)
+
+    # Resolve credentials
+    cred_id = _resolve_credentials_id(client, workspace_id, credentials)
+
+    path_info: list[dict[str, Any]] = []
+    show_progress = output_format != OutputFormat.JSON
+
+    for path in paths:
+        # Explore the tree to see if this is a file or directory
+        items = _explore_data_link_tree(
+            client, data_link_id, [path], cred_id, workspace_id
+        )
+
+        if not items:
+            # If no items found, assume this is a single file path
+            filename = Path(path).name
+            target_path = Path(output_dir, filename) if output_dir else Path(filename)
+
+            _download_file(
+                client,
+                data_link_id,
+                path,
+                target_path,
+                cred_id,
+                workspace_id,
+                show_progress,
+            )
+
+            path_info.append({
+                "type": "FILE",
+                "path": path,
+                "fileCount": 1,
+            })
+        else:
+            # Download each file in the tree
+            for item in items:
+                item_path = item.get("path", "")
+                target_path = (
+                    Path(output_dir, item_path) if output_dir else Path(item_path)
+                )
+
+                _download_file(
+                    client,
+                    data_link_id,
+                    item_path,
+                    target_path,
+                    cred_id,
+                    workspace_id,
+                    show_progress,
+                )
+
+            path_info.append({
+                "type": "FOLDER",
+                "path": path,
+                "fileCount": len(items),
+            })
+
+    result = DataLinkFileTransferResult(direction="download", paths=path_info)
+    _output_result(result, output_format)
+
+
+# Upload constants
+MAX_FILE_SIZE = 5 * 1024 * 1024 * 1024 * 1024  # 5 TB
+MAX_FILES_TO_UPLOAD = 300
+MULTI_UPLOAD_PART_SIZE = 250 * 1024 * 1024  # 250 MB
+
+
+def _get_file_chunk(file_path: Path, index: int) -> bytes:
+    """Get a chunk of a file for multipart upload.
+
+    Args:
+        file_path: Path to the file
+        index: Chunk index (0-based)
+
+    Returns:
+        Bytes of the chunk
+    """
+    start = index * MULTI_UPLOAD_PART_SIZE
+    end = min(start + MULTI_UPLOAD_PART_SIZE, file_path.stat().st_size)
+    length = end - start
+
+    with open(file_path, "rb") as f:
+        f.seek(start)
+        return f.read(length)
+
+
+def _count_files_and_validate(paths: list[str]) -> int:
+    """Count total files and validate for upload constraints.
+
+    Args:
+        paths: List of file/directory paths
+
+    Returns:
+        Total file count
+
+    Raises:
+        typer.Exit: If validation fails
+    """
+    total_files = 0
+
+    for path_str in paths:
+        path = Path(path_str)
+        if path.is_dir():
+            for file_path in path.rglob("*"):
+                if file_path.is_file():
+                    total_files += 1
+                    if file_path.stat().st_size > MAX_FILE_SIZE:
+                        output_error(
+                            f"File {file_path} exceeds maximum size of 5 TB to upload."
+                        )
+                        raise typer.Exit(1)
+
+                    if total_files > MAX_FILES_TO_UPLOAD:
+                        output_error(
+                            f"Cannot upload more than {MAX_FILES_TO_UPLOAD} files at once. "
+                            f"Found at least {total_files} files at provided paths."
+                        )
+                        raise typer.Exit(1)
+        else:
+            total_files += 1
+            if path.stat().st_size > MAX_FILE_SIZE:
+                output_error(f"File {path} exceeds maximum size of 5 TB to upload.")
+                raise typer.Exit(1)
+
+    return total_files
+
+
+def _get_data_link(
+    client: SeqeraClient,
+    data_link_id: str,
+    workspace_id: int | None,
+    credentials_id: str | None,
+) -> dict[str, Any]:
+    """Get data link details.
+
+    Args:
+        client: Seqera API client
+        data_link_id: Data link ID
+        workspace_id: Workspace ID
+        credentials_id: Credentials ID
+
+    Returns:
+        Data link dict
+    """
+    params: dict[str, Any] = {}
+    if workspace_id:
+        params["workspaceId"] = workspace_id
+    if credentials_id:
+        params["credentialsId"] = credentials_id
+
+    response = client.get(f"/data-links/{data_link_id}", params=params)
+    return response.get("dataLink", response)
+
+
+def _upload_file_multipart(
+    client: SeqeraClient,
+    data_link_id: str,
+    file_path: Path,
+    relative_key: str,
+    credentials_id: str,
+    workspace_id: int | None,
+    output_dir: str | None,
+    provider: str,
+    show_progress: bool = True,
+) -> None:
+    """Upload a file using multipart upload.
+
+    Args:
+        client: Seqera API client
+        data_link_id: Data link ID
+        file_path: Local file path
+        relative_key: Key/path in the data link
+        credentials_id: Credentials ID
+        workspace_id: Workspace ID
+        output_dir: Remote output directory
+        provider: Cloud provider (aws, azure, google, seqeracompute)
+        show_progress: Whether to show progress output
+    """
+    import mimetypes
+
+    if not file_path.exists():
+        output_error(f"File not found: {file_path}")
+        raise typer.Exit(1)
+
+    # Detect MIME type
+    mime_type, _ = mimetypes.guess_type(str(file_path))
+    if mime_type is None:
+        mime_type = "application/octet-stream"
+
+    content_length = file_path.stat().st_size
+
+    if show_progress:
+        typer.echo(f"  Uploading file: {file_path}")
+
+    # Build request for upload URL
+    upload_request = {
+        "fileName": relative_key,
+        "contentLength": content_length,
+        "contentType": mime_type,
+    }
+
+    params: dict[str, Any] = {"credentialsId": credentials_id}
+    if workspace_id:
+        params["workspaceId"] = workspace_id
+
+    # Get upload URLs
+    if output_dir:
+        url_response = client.post(
+            f"/data-links/{data_link_id}/upload/{output_dir}",
+            json=upload_request,
+            params=params,
+        )
+    else:
+        url_response = client.post(
+            f"/data-links/{data_link_id}/upload",
+            json=upload_request,
+            params=params,
+        )
+
+    upload_urls = url_response.get("uploadUrls", [])
+    upload_id = url_response.get("uploadId")
+
+    if not upload_urls:
+        output_error("No upload URLs returned from API")
+        raise typer.Exit(1)
+
+    # Upload chunks
+    tags: list[dict[str, Any]] = []
+    with_error = False
+
+    try:
+        for index, url in enumerate(upload_urls):
+            chunk = _get_file_chunk(file_path, index)
+
+            # Upload chunk to presigned URL
+            response = httpx.put(url, content=chunk, timeout=300.0)
+
+            if response.status_code != 200:
+                with_error = True
+                output_error(
+                    f"Failed to upload chunk {index}: HTTP {response.status_code}"
+                )
+                raise typer.Exit(1)
+
+            # Get ETag from response for AWS/Seqera Compute
+            etag = response.headers.get("etag")
+            if etag:
+                tags.append({
+                    "eTag": etag,
+                    "partNumber": index + 1,
+                })
+
+            if show_progress:
+                percent = ((index + 1) / len(upload_urls)) * 100
+                typer.echo(f"\r    Progress: {percent:.1f}%", nl=False)
+
+        if show_progress:
+            typer.echo()  # New line after progress
+
+    except Exception as e:
+        with_error = True
+        if not isinstance(e, SystemExit):
+            output_error(f"Upload failed: {e}")
+        raise
+
+    finally:
+        # Finalize upload
+        finish_request = {
+            "fileName": relative_key,
+            "uploadId": upload_id,
+            "withError": with_error,
+            "tags": tags,
+        }
+
+        if output_dir:
+            client.post(
+                f"/data-links/{data_link_id}/upload/{output_dir}/finish",
+                json=finish_request,
+                params=params,
+            )
+        else:
+            client.post(
+                f"/data-links/{data_link_id}/upload/finish",
+                json=finish_request,
+                params=params,
+            )
+
+
+def _upload_directory(
+    client: SeqeraClient,
+    data_link_id: str,
+    base_dir: Path,
+    current_dir: Path,
+    base_prefix: str,
+    credentials_id: str,
+    workspace_id: int | None,
+    output_dir: str | None,
+    provider: str,
+    show_progress: bool = True,
+) -> int:
+    """Recursively upload a directory.
+
+    Args:
+        client: Seqera API client
+        data_link_id: Data link ID
+        base_dir: Base directory for relative paths
+        current_dir: Current directory being processed
+        base_prefix: Prefix for remote paths
+        credentials_id: Credentials ID
+        workspace_id: Workspace ID
+        output_dir: Remote output directory
+        provider: Cloud provider
+        show_progress: Whether to show progress
+
+    Returns:
+        Number of files uploaded
+    """
+    total_files = 0
+
+    for item in current_dir.iterdir():
+        if item.is_dir():
+            total_files += _upload_directory(
+                client,
+                data_link_id,
+                base_dir,
+                item,
+                base_prefix,
+                credentials_id,
+                workspace_id,
+                output_dir,
+                provider,
+                show_progress,
+            )
+        else:
+            relative_path = item.relative_to(base_dir)
+            full_key = base_prefix + str(relative_path)
+
+            _upload_file_multipart(
+                client,
+                data_link_id,
+                item,
+                full_key,
+                credentials_id,
+                workspace_id,
+                output_dir,
+                provider,
+                show_progress,
+            )
+            total_files += 1
+
+    return total_files
+
+
+@app.command("upload")
+def upload_data_link(
+    data_link_id: Annotated[
+        str,
+        typer.Option("-i", "--id", help="Data link ID."),
+    ],
+    credentials: Annotated[
+        str,
+        typer.Option("-c", "--credentials", help="Credentials identifier (required)."),
+    ],
+    paths: Annotated[
+        list[str],
+        typer.Argument(help="Paths to files or directories to upload."),
+    ],
+    workspace: Annotated[
+        str | None,
+        typer.Option("-w", "--workspace", help="Workspace numeric identifier or name."),
+    ] = None,
+    output_dir: Annotated[
+        str | None,
+        typer.Option("-o", "--output-dir", help="Remote output directory."),
+    ] = None,
+) -> None:
+    """Upload content to a data link."""
+    # Validate files before starting
+    _count_files_and_validate(paths)
+
+    client = get_client()
+    output_format = get_output_format()
+
+    workspace_id = _resolve_workspace_id(client, workspace)
+
+    # Resolve credentials
+    cred_id = _resolve_credentials_id(client, workspace_id, credentials)
+
+    # Get data link to determine provider
+    data_link = _get_data_link(client, data_link_id, workspace_id, cred_id)
+    provider = data_link.get("provider", "").lower()
+
+    if provider not in ("aws", "azure", "google", "seqeracompute"):
+        output_error(f"Unsupported data-link provider: {provider}")
+        raise typer.Exit(1)
+
+    path_info: list[dict[str, Any]] = []
+    show_progress = output_format != OutputFormat.JSON
+
+    for path_str in paths:
+        path = Path(path_str)
+
+        if path.is_dir():
+            base_prefix = path.name + "/"
+            file_count = _upload_directory(
+                client,
+                data_link_id,
+                path,
+                path,
+                base_prefix,
+                cred_id,
+                workspace_id,
+                output_dir,
+                provider,
+                show_progress,
+            )
+            path_info.append({
+                "type": "FOLDER",
+                "path": str(path),
+                "fileCount": file_count,
+            })
+        else:
+            _upload_file_multipart(
+                client,
+                data_link_id,
+                path,
+                path.name,
+                cred_id,
+                workspace_id,
+                output_dir,
+                provider,
+                show_progress,
+            )
+            path_info.append({
+                "type": "FILE",
+                "path": str(path),
+                "fileCount": 1,
+            })
+
+    result = DataLinkFileTransferResult(direction="upload", paths=path_info)
     _output_result(result, output_format)

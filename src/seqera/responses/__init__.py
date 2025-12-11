@@ -1915,6 +1915,88 @@ class RunCancelled(Response):
         return f"  Run '{self.run_id}' cancelled at {self.workspace} workspace"
 
 
+class RunRelaunched(Response):
+    """Response for run relaunched command."""
+
+    def __init__(
+        self,
+        run_id: str,
+        workspace: str,
+        watch_url: str | None = None,
+    ) -> None:
+        self.run_id = run_id
+        self.workspace = workspace
+        self.watch_url = watch_url
+
+    def to_dict(self) -> dict[str, Any]:
+        result = {
+            "workflowId": self.run_id,
+            "workspace": self.workspace,
+        }
+        if self.watch_url:
+            result["watchUrl"] = self.watch_url
+        return result
+
+    def to_console(self) -> str:
+        lines = [f"  Workflow {self.run_id} submitted at {self.workspace} workspace."]
+        if self.watch_url:
+            lines.append("")
+            lines.append(f"    Watch: {self.watch_url}")
+        return "\n".join(lines)
+
+
+class RunDump(Response):
+    """Response for run dump command."""
+
+    def __init__(
+        self,
+        run_id: str,
+        output_file: str,
+    ) -> None:
+        self.run_id = run_id
+        self.output_file = output_file
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "runId": self.run_id,
+            "outputFile": self.output_file,
+        }
+
+    def to_console(self) -> str:
+        return f"  Run {self.run_id} dumped to {self.output_file}"
+
+
+class TaskView(Response):
+    """Response for viewing a single task."""
+
+    def __init__(
+        self,
+        run_id: str,
+        task: dict,
+    ) -> None:
+        self.run_id = run_id
+        self.task = task
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "runId": self.run_id,
+            "task": self.task,
+        }
+
+    def to_console(self) -> str:
+        lines = [f"  Task details for run {self.run_id}:", ""]
+        lines.append(f"    Task ID:    {self.task.get('taskId', '')}")
+        lines.append(f"    Process:    {self.task.get('process', '')}")
+        lines.append(f"    Tag:        {self.task.get('tag', '') or '-'}")
+        lines.append(f"    Status:     {self.task.get('status', '')}")
+        lines.append(f"    Exit code:  {self.task.get('exit', '')}")
+        lines.append(f"    Container:  {self.task.get('container', '') or '-'}")
+        lines.append(f"    Executor:   {self.task.get('executor', '') or '-'}")
+        if self.task.get("workdir"):
+            lines.append(f"    Work dir:   {self.task.get('workdir')}")
+        return "\n".join(lines)
+
+
 class TasksList(Response):
     """Response for tasks list command."""
 
@@ -3218,3 +3300,33 @@ class LaunchSubmitted(Response):
             # Build URL for user workspace run
             output += f"\n\n    {self.base_url}/watch/{self.workflow_id}"
         return output
+
+
+class LabelsManaged(Response):
+    """Response for labels management operations (set, append, delete)."""
+
+    def __init__(
+        self,
+        operation: str,
+        entity_type: str,
+        entity_id: str,
+        workspace_id: int | None = None,
+    ) -> None:
+        self.operation = operation
+        self.entity_type = entity_type
+        self.entity_id = entity_id
+        self.workspace_id = workspace_id
+
+    def to_dict(self) -> dict[str, Any]:
+        result = {
+            "operation": self.operation,
+            "type": self.entity_type,
+            "id": self.entity_id,
+        }
+        if self.workspace_id:
+            result["workspaceId"] = self.workspace_id
+        return result
+
+    def to_console(self) -> str:
+        workspace_ref = str(self.workspace_id) if self.workspace_id else "user"
+        return f"  '{self.operation}' labels on '{self.entity_type}' with id '{self.entity_id}' at {workspace_ref} workspace"
