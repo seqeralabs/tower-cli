@@ -247,6 +247,45 @@ progress = client.runs.progress("abc123")
 print(progress)  # dict with workflow progress
 ```
 
+### Get single task
+
+```python
+task = client.runs.get_task("abc123", task_id=1)
+print(f"Task: {task.name}")
+print(f"Status: {task.status}")
+print(f"Exit code: {task.exit_code}")
+```
+
+### Relaunch run
+
+```python
+# Relaunch with resume (default)
+new_workflow_id = client.runs.relaunch("abc123")
+print(f"New workflow: {new_workflow_id}")
+
+# Relaunch without resume
+new_workflow_id = client.runs.relaunch(
+    "abc123",
+    resume=False,
+    work_dir="s3://bucket/new-work",
+    compute_env="different-ce",
+)
+```
+
+### Dump run details
+
+Get all data needed to create a dump/archive of a workflow run:
+
+```python
+dump_data = client.runs.dump(
+    "abc123",
+    add_task_logs=True,
+    add_fusion_logs=True,
+    only_failed=False,
+)
+# Returns dict with: workflow, tasks, metrics, progress, task_logs
+```
+
 ---
 
 ## Compute Environments
@@ -299,6 +338,20 @@ client.compute_envs.delete("abc123")
 
 ```python
 config = client.compute_envs.export_config("aws-batch-prod")
+```
+
+### Import config
+
+```python
+# Import from config dict
+config = {"name": "new-ce", "platform": "aws-batch", ...}
+ce_id = client.compute_envs.import_config(config)
+
+# Import with name override
+ce_id = client.compute_envs.import_config(config, name="custom-name")
+
+# Import with overwrite (deletes existing CE with same name)
+ce_id = client.compute_envs.import_config(config, overwrite=True)
 ```
 
 ---
@@ -536,10 +589,64 @@ label = client.labels.add(
 )
 ```
 
+### Update label
+
+```python
+# Update name
+label = client.labels.update(label_id=123, name="new-name")
+
+# Update value (for resource labels)
+label = client.labels.update(label_id=123, value="new-value")
+```
+
 ### Delete label
 
 ```python
 client.labels.delete(label_id=123)
+```
+
+### Manage labels on workflows
+
+```python
+# Apply labels (replaces existing)
+client.labels.apply_to_workflows(
+    label_ids=[123, 456],
+    workflow_ids=["abc123", "def456"],
+)
+
+# Add labels (appends to existing)
+client.labels.add_to_workflows(
+    label_ids=[123, 456],
+    workflow_ids=["abc123"],
+)
+
+# Remove labels
+client.labels.remove_from_workflows(
+    label_ids=[123],
+    workflow_ids=["abc123"],
+)
+```
+
+### Manage labels on pipelines
+
+```python
+# Apply labels (replaces existing)
+client.labels.apply_to_pipelines(
+    label_ids=[123, 456],
+    pipeline_ids=[1, 2, 3],
+)
+
+# Add/remove work the same as workflows
+client.labels.add_to_pipelines(label_ids=[123], pipeline_ids=[1])
+client.labels.remove_from_pipelines(label_ids=[123], pipeline_ids=[1])
+```
+
+### Manage labels on actions
+
+```python
+client.labels.apply_to_actions(label_ids=[123], action_ids=["action-1"])
+client.labels.add_to_actions(label_ids=[123], action_ids=["action-1"])
+client.labels.remove_from_actions(label_ids=[123], action_ids=["action-1"])
 ```
 
 ---
@@ -703,6 +810,14 @@ client.studios.start("studio-id")
 client.studios.stop("studio-id")
 ```
 
+### List templates
+
+```python
+templates = client.studios.templates()
+for template in templates:
+    print(f"{template['id']}: {template['name']}")
+```
+
 ---
 
 ## Data Links
@@ -722,8 +837,255 @@ for link in client.data_links.list():
 link = client.data_links.add(
     name="my-bucket",
     provider="aws",
-    uri="s3://my-bucket",
-    credentials="creds-id",  # optional for public buckets
+    resource_ref="s3://my-bucket",
+    credentials_id="creds-id",  # optional for public buckets
+    description="My data bucket",
+)
+```
+
+### Update data link
+
+```python
+link = client.data_links.update(
+    data_link_id="v1-user-abc123",
+    name="renamed-bucket",
+    description="Updated description",
+)
+```
+
+### Delete data link
+
+```python
+client.data_links.delete("v1-user-abc123")
+```
+
+### Browse data link
+
+```python
+# List root contents
+files = client.data_links.browse("v1-user-abc123")
+for f in files:
+    print(f"{f['type']}: {f['name']}")
+
+# List subdirectory
+files = client.data_links.browse("v1-user-abc123", path="data/samples/")
+```
+
+### Download files
+
+Get a presigned URL and download a file:
+
+```python
+import httpx
+
+# Get presigned download URL
+url = client.data_links.get_download_url(
+    data_link_id="v1-user-abc123",
+    path="data/sample.fastq.gz",
+    credentials_id="creds-id",
+)
+
+# Download the file
+with httpx.stream("GET", url) as response:
+    response.raise_for_status()
+    with open("sample.fastq.gz", "wb") as f:
+        for chunk in response.iter_bytes():
+            f.write(chunk)
+```
+
+Download with progress tracking:
+
+```python
+import httpx
+from pathlib import Path
+
+def download_file(client, data_link_id: str, remote_path: str,
+                  local_path: str, credentials_id: str):
+    """Download a file from a data link with progress."""
+    url = client.data_links.get_download_url(
+        data_link_id=data_link_id,
+        path=remote_path,
+        credentials_id=credentials_id,
+    )
+
+    with httpx.stream("GET", url) as response:
+        response.raise_for_status()
+        total = int(response.headers.get("content-length", 0))
+
+        with open(local_path, "wb") as f:
+            downloaded = 0
+            for chunk in response.iter_bytes(chunk_size=8192):
+                f.write(chunk)
+                downloaded += len(chunk)
+                if total:
+                    print(f"\rDownloading: {downloaded}/{total} bytes "
+                          f"({100*downloaded/total:.1f}%)", end="")
+        print()  # newline after progress
+
+# Usage
+download_file(
+    client,
+    data_link_id="v1-user-abc123",
+    remote_path="results/analysis.csv",
+    local_path="./analysis.csv",
+    credentials_id="my-aws-creds",
+)
+```
+
+### Upload files
+
+Upload a small file (< 5GB) using a presigned URL:
+
+```python
+import httpx
+from pathlib import Path
+
+def upload_file(client, data_link_id: str, local_path: str,
+                remote_path: str, credentials_id: str):
+    """Upload a file to a data link."""
+    # Determine content type
+    import mimetypes
+    content_type = mimetypes.guess_type(local_path)[0] or "application/octet-stream"
+
+    # Get presigned upload URL
+    result = client.data_links.get_upload_url(
+        data_link_id=data_link_id,
+        path=remote_path,
+        credentials_id=credentials_id,
+        content_type=content_type,
+    )
+
+    # Upload the file
+    with open(local_path, "rb") as f:
+        response = httpx.put(
+            result["url"],
+            content=f,
+            headers={"Content-Type": content_type},
+        )
+        response.raise_for_status()
+
+    print(f"Uploaded {local_path} to {remote_path}")
+
+# Usage
+upload_file(
+    client,
+    data_link_id="v1-user-abc123",
+    local_path="./results.csv",
+    remote_path="data/results/results.csv",
+    credentials_id="my-aws-creds",
+)
+```
+
+Upload large files using multipart upload (for files > 5MB):
+
+```python
+import httpx
+import math
+from pathlib import Path
+
+PART_SIZE = 100 * 1024 * 1024  # 100 MB per part
+
+def upload_large_file(client, data_link_id: str, local_path: str,
+                      remote_path: str, credentials_id: str):
+    """Upload a large file using multipart upload."""
+    file_size = Path(local_path).stat().st_size
+    num_parts = math.ceil(file_size / PART_SIZE)
+
+    # Initiate multipart upload (first request without part_number)
+    init_result = client.data_links.get_upload_url(
+        data_link_id=data_link_id,
+        path=remote_path,
+        credentials_id=credentials_id,
+    )
+    upload_id = init_result.get("uploadId")
+
+    # Upload each part
+    parts = []
+    with open(local_path, "rb") as f:
+        for part_num in range(1, num_parts + 1):
+            chunk = f.read(PART_SIZE)
+
+            # Get presigned URL for this part
+            part_result = client.data_links.get_upload_url(
+                data_link_id=data_link_id,
+                path=remote_path,
+                credentials_id=credentials_id,
+                part_number=part_num,
+                upload_id=upload_id,
+            )
+
+            # Upload the part
+            response = httpx.put(part_result["url"], content=chunk)
+            response.raise_for_status()
+
+            # Store ETag for completion
+            etag = response.headers.get("ETag")
+            parts.append({"PartNumber": part_num, "ETag": etag})
+
+            print(f"Uploaded part {part_num}/{num_parts}")
+
+    # Complete multipart upload (implementation depends on cloud provider)
+    print(f"Upload complete: {remote_path}")
+    return parts
+
+# Usage
+upload_large_file(
+    client,
+    data_link_id="v1-user-abc123",
+    local_path="./large_dataset.bam",
+    remote_path="data/alignments/large_dataset.bam",
+    credentials_id="my-aws-creds",
+)
+```
+
+Download multiple files from a directory:
+
+```python
+def download_directory(client, data_link_id: str, remote_dir: str,
+                       local_dir: str, credentials_id: str):
+    """Download all files from a data link directory."""
+    from pathlib import Path
+    import httpx
+
+    Path(local_dir).mkdir(parents=True, exist_ok=True)
+
+    # Browse the remote directory
+    files = client.data_links.browse(data_link_id, path=remote_dir)
+
+    for item in files:
+        if item["type"] == "FILE":
+            remote_path = f"{remote_dir}/{item['name']}".lstrip("/")
+            local_path = Path(local_dir) / item["name"]
+
+            # Get download URL and download
+            url = client.data_links.get_download_url(
+                data_link_id=data_link_id,
+                path=remote_path,
+                credentials_id=credentials_id,
+            )
+
+            response = httpx.get(url)
+            response.raise_for_status()
+            local_path.write_bytes(response.content)
+
+            print(f"Downloaded: {item['name']}")
+
+        elif item["type"] == "FOLDER":
+            # Recursively download subdirectories
+            subdir = f"{remote_dir}/{item['name']}".lstrip("/")
+            download_directory(
+                client, data_link_id, subdir,
+                str(Path(local_dir) / item["name"]),
+                credentials_id,
+            )
+
+# Usage
+download_directory(
+    client,
+    data_link_id="v1-user-abc123",
+    remote_dir="results/2024-01/",
+    local_dir="./downloaded_results",
+    credentials_id="my-aws-creds",
 )
 ```
 
@@ -827,20 +1189,20 @@ for pipeline in client.pipelines.list():
 | Resource | Methods |
 |----------|---------|
 | `client.pipelines` | `list`, `get`, `get_by_name`, `add`, `update`, `delete`, `launch`, `get_launch_info`, `export_config` |
-| `client.runs` | `list`, `get`, `cancel`, `delete`, `tasks`, `metrics`, `progress` |
-| `client.compute_envs` | `list`, `get`, `delete`, `get_primary`, `set_primary`, `export_config` |
+| `client.runs` | `list`, `get`, `get_task`, `cancel`, `delete`, `relaunch`, `dump`, `tasks`, `metrics`, `progress` |
+| `client.compute_envs` | `list`, `get`, `get_by_name`, `delete`, `get_primary`, `set_primary`, `export_config`, `import_config` |
 | `client.credentials` | `list`, `get`, `add_aws`, `add_azure`, `add_google`, `add_github`, `add_gitlab`, `add_gitea`, `add_bitbucket`, `add_codecommit`, `add_container_registry`, `add_ssh`, `add_k8s`, `add_agent`, `update`, `delete` |
 | `client.workspaces` | `list`, `get`, `add`, `update`, `delete`, `leave` |
 | `client.secrets` | `list`, `get`, `add`, `update`, `delete` |
-| `client.labels` | `list`, `add`, `delete` |
+| `client.labels` | `list`, `add`, `update`, `delete`, `apply_to_workflows`, `add_to_workflows`, `remove_from_workflows`, `apply_to_pipelines`, `add_to_pipelines`, `remove_from_pipelines`, `apply_to_actions`, `add_to_actions`, `remove_from_actions` |
 | `client.datasets` | `list`, `get`, `add`, `update`, `delete` |
 | `client.organizations` | `list`, `get`, `add`, `update`, `delete` |
 | `client.teams` | `list`, `get`, `add`, `update`, `delete` |
 | `client.members` | `list`, `add`, `update`, `delete`, `leave` |
 | `client.participants` | `list`, `add`, `update`, `delete` |
 | `client.actions` | `list`, `get`, `add`, `update`, `delete` |
-| `client.studios` | `list`, `get`, `delete`, `start`, `stop`, `checkpoints` |
+| `client.studios` | `list`, `get`, `delete`, `start`, `stop`, `checkpoints`, `templates` |
 | `client.collaborators` | `list`, `add`, `delete` |
-| `client.data_links` | `list`, `get`, `add`, `update`, `delete`, `browse` |
+| `client.data_links` | `list`, `get`, `add`, `update`, `delete`, `browse`, `get_download_url`, `get_upload_url` |
 | `client.info()` | Get API info |
 | `client.user_info()` | Get current user info |
