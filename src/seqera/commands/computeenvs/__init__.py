@@ -432,10 +432,18 @@ def import_compute_env(
         response = client.post("/compute-envs", json={"computeEnv": config}, params=params)
         ce_id = response.get("computeEnvId", "")
 
+        # Get platform from config
+        ce_platform = config.get("platform", "unknown")
+
+        # Parse workspace ID
+        ws_id = int(workspace) if workspace and workspace.isdigit() else None
+
         # Output response
         result = ComputeEnvAdded(
+            platform=ce_platform,
             name=ce_name,
             compute_env_id=ce_id,
+            workspace_id=ws_id,
             workspace=workspace_ref,
         )
 

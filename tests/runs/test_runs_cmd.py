@@ -400,3 +400,241 @@ class TestRunsCmd:
             or "Unauthorized" in out.stderr
             or "authentication" in out.stderr.lower()
         )
+
+    @pytest.mark.parametrize("output_format", ["console", "json", "yaml"])
+    def test_relaunch(
+        self,
+        httpserver: HTTPServer,
+        exec_cmd: callable,
+        user_workspace_name: str,
+        output_format: str,
+    ) -> None:
+        """Test relaunching a workflow run."""
+        # Setup mock HTTP expectations
+        workflow_view = load_resource("workflow_view")
+
+        httpserver.expect_request("/workflow/5mDfiUtqyptDib", method="GET").respond_with_data(
+            workflow_view, status=200, content_type="application/json"
+        )
+
+        # Mock the launch info endpoint (GET /workflow/{id}/launch)
+        httpserver.expect_request(
+            "/workflow/5mDfiUtqyptDib/launch",
+            method="GET",
+        ).respond_with_json(
+            {
+                "launch": {
+                    "id": "5mDfiUtqyptDib",
+                    "pipeline": "https://github.com/nextflow-io/hello",
+                    "workDir": "s3://bucket/work",
+                    "resumeCommitId": "abc123",
+                    "computeEnv": {
+                        "id": "ce-id-123",
+                        "name": "aws-batch",
+                    },
+                }
+            },
+            status=200,
+        )
+
+        httpserver.expect_request(
+            "/workflow/launch",
+            method="POST",
+        ).respond_with_json(
+            {"workflowId": "6nEghVtrzyqEjc"},
+            status=200,
+        )
+
+        # Run the command
+        out = exec_cmd(
+            "runs",
+            "relaunch",
+            "-i",
+            "5mDfiUtqyptDib",
+            output_format=output_format,
+        )
+
+        # Assertions
+        assert out.exit_code == 0
+        assert out.stderr == ""
+
+        if output_format == "json":
+            data = json.loads(out.stdout)
+            assert data["workflowId"] == "6nEghVtrzyqEjc"
+        elif output_format == "yaml":
+            import yaml
+
+            data = yaml.safe_load(out.stdout)
+            assert data["workflowId"] == "6nEghVtrzyqEjc"
+        else:  # console
+            assert "6nEghVtrzyqEjc" in out.stdout
+
+    @pytest.mark.parametrize("output_format", ["console", "json", "yaml"])
+    def test_relaunch_no_resume(
+        self,
+        httpserver: HTTPServer,
+        exec_cmd: callable,
+        user_workspace_name: str,
+        output_format: str,
+    ) -> None:
+        """Test relaunching a workflow run without resume."""
+        # Setup mock HTTP expectations
+        workflow_view = load_resource("workflow_view")
+
+        httpserver.expect_request("/workflow/5mDfiUtqyptDib", method="GET").respond_with_data(
+            workflow_view, status=200, content_type="application/json"
+        )
+
+        # Mock the launch info endpoint (GET /workflow/{id}/launch)
+        httpserver.expect_request(
+            "/workflow/5mDfiUtqyptDib/launch",
+            method="GET",
+        ).respond_with_json(
+            {
+                "launch": {
+                    "id": "5mDfiUtqyptDib",
+                    "pipeline": "https://github.com/nextflow-io/hello",
+                    "workDir": "s3://bucket/work",
+                    "resumeCommitId": "abc123",
+                    "computeEnv": {
+                        "id": "ce-id-123",
+                        "name": "aws-batch",
+                    },
+                }
+            },
+            status=200,
+        )
+
+        httpserver.expect_request(
+            "/workflow/launch",
+            method="POST",
+        ).respond_with_json(
+            {"workflowId": "7oFghWusAzrFkd"},
+            status=200,
+        )
+
+        # Run the command
+        out = exec_cmd(
+            "runs",
+            "relaunch",
+            "-i",
+            "5mDfiUtqyptDib",
+            "--no-resume",
+            output_format=output_format,
+        )
+
+        # Assertions
+        assert out.exit_code == 0
+        assert out.stderr == ""
+
+        if output_format == "json":
+            data = json.loads(out.stdout)
+            assert data["workflowId"] == "7oFghWusAzrFkd"
+
+    @pytest.mark.parametrize("output_format", ["console", "json", "yaml"])
+    def test_task(
+        self,
+        httpserver: HTTPServer,
+        exec_cmd: callable,
+        output_format: str,
+    ) -> None:
+        """Test viewing a single task."""
+        # Setup mock HTTP expectations
+        httpserver.expect_request(
+            "/workflow/5mDfiUtqyptDib/task/1",
+            method="GET",
+        ).respond_with_json(
+            {
+                "task": {
+                    "taskId": 1,
+                    "name": "NFCORE_RNASEQ:RNASEQ:FASTQ_FASTQC_UMITOOLS_TRIMGALORE:FASTQC",
+                    "process": "NFCORE_RNASEQ:RNASEQ:FASTQ_FASTQC_UMITOOLS_TRIMGALORE:FASTQC",
+                    "status": "COMPLETED",
+                    "hash": "a1/b2c3d4",
+                    "exit": 0,
+                    "workdir": "s3://bucket/work/a1/b2c3d4",
+                    "cpus": 2,
+                    "memory": 8589934592,
+                }
+            },
+            status=200,
+        )
+
+        # Run the command
+        out = exec_cmd(
+            "runs",
+            "task",
+            "-i",
+            "5mDfiUtqyptDib",
+            "-t",
+            "1",
+            output_format=output_format,
+        )
+
+        # Assertions
+        assert out.exit_code == 0
+        assert out.stderr == ""
+
+        if output_format == "json":
+            data = json.loads(out.stdout)
+            assert data["task"]["taskId"] == 1
+            assert data["task"]["status"] == "COMPLETED"
+        elif output_format == "yaml":
+            import yaml
+
+            data = yaml.safe_load(out.stdout)
+            assert data["task"]["taskId"] == 1
+            assert data["task"]["status"] == "COMPLETED"
+        else:  # console
+            assert "COMPLETED" in out.stdout
+            assert "FASTQC" in out.stdout
+
+    @pytest.mark.parametrize("output_format", ["console", "json", "yaml"])
+    def test_labels(
+        self,
+        httpserver: HTTPServer,
+        exec_cmd: callable,
+        output_format: str,
+    ) -> None:
+        """Test managing labels on a workflow run."""
+        # Setup mock HTTP expectations
+        # Get existing labels
+        httpserver.expect_request("/labels", method="GET").respond_with_json(
+            {"labels": [{"id": 1, "name": "test-label", "resource": False}]},
+            status=200,
+        )
+
+        # Apply labels to workflow
+        httpserver.expect_request(
+            "/labels/workflows/apply",
+            method="POST",
+        ).respond_with_data("", status=204)
+
+        # Run the command
+        out = exec_cmd(
+            "runs",
+            "labels",
+            "-i",
+            "5mDfiUtqyptDib",
+            "test-label",
+            output_format=output_format,
+        )
+
+        # Assertions
+        assert out.exit_code == 0
+        assert out.stderr == ""
+
+        if output_format == "json":
+            data = json.loads(out.stdout)
+            assert data["operation"] == "set"
+            assert data["type"] == "workflow"
+            assert data["id"] == "5mDfiUtqyptDib"
+        elif output_format == "yaml":
+            import yaml
+
+            data = yaml.safe_load(out.stdout)
+            assert data["operation"] == "set"
+            assert data["type"] == "workflow"
+        else:  # console
+            assert "set" in out.stdout
+            assert "workflow" in out.stdout

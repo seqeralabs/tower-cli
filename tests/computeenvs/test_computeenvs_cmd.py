@@ -360,3 +360,194 @@ class TestComputeEnvsCmd:
         else:  # console
             assert "demo" in out.stdout
             assert user_workspace_name in out.stdout
+
+
+class TestComputeEnvsImportCmd:
+    """Test compute-envs import command."""
+
+    @pytest.mark.parametrize("output_format", ["console", "json", "yaml"])
+    def test_import(
+        self,
+        httpserver: HTTPServer,
+        exec_cmd: callable,
+        user_workspace_name: str,
+        output_format: str,
+        tmp_path,
+    ) -> None:
+        """Test importing compute environment from config file."""
+        import json as json_module
+
+        # Setup mock HTTP expectations
+        httpserver.expect_request(
+            "/compute-envs",
+            method="POST",
+        ).respond_with_json(
+            {"computeEnvId": "new-ce-id-123"},
+            status=200,
+        )
+
+        # Create config file - uses "config" wrapper (like export output)
+        config = {
+            "config": {
+                "name": "imported-ce",
+                "platform": "aws-batch",
+                "region": "us-east-1",
+                "workDir": "s3://my-bucket/work",
+            }
+        }
+
+        config_file = tmp_path / "ce-config.json"
+        config_file.write_text(json_module.dumps(config))
+
+        # Run the command
+        out = exec_cmd(
+            "compute-envs",
+            "import",
+            str(config_file),
+            output_format=output_format,
+        )
+
+        # Assertions
+        assert out.exit_code == 0, f"Command failed with exit code {out.exit_code}. stdout: {out.stdout!r}, stderr: {out.stderr!r}"
+        assert out.stderr == ""
+
+        if output_format == "json":
+            data = json.loads(out.stdout)
+            assert data["id"] == "new-ce-id-123"
+            assert data["name"] == "imported-ce"
+            assert data["platform"] == "aws-batch"
+        elif output_format == "yaml":
+            import yaml
+
+            data = yaml.safe_load(out.stdout)
+            assert data["id"] == "new-ce-id-123"
+            assert data["name"] == "imported-ce"
+            assert data["platform"] == "aws-batch"
+        else:  # console
+            assert "new-ce-id-123" in out.stdout or "imported-ce" in out.stdout
+
+    @pytest.mark.parametrize("output_format", ["console", "json", "yaml"])
+    def test_import_with_name_override(
+        self,
+        httpserver: HTTPServer,
+        exec_cmd: callable,
+        user_workspace_name: str,
+        output_format: str,
+        tmp_path,
+    ) -> None:
+        """Test importing compute environment with name override."""
+        import json as json_module
+
+        # Setup mock HTTP expectations
+        httpserver.expect_request(
+            "/compute-envs",
+            method="POST",
+        ).respond_with_json(
+            {"computeEnvId": "new-ce-id-456"},
+            status=200,
+        )
+
+        # Create config file - uses "config" wrapper (like export output)
+        config = {
+            "config": {
+                "name": "original-name",
+                "platform": "aws-batch",
+            }
+        }
+
+        config_file = tmp_path / "ce-config.json"
+        config_file.write_text(json_module.dumps(config))
+
+        # Run the command with name override
+        out = exec_cmd(
+            "compute-envs",
+            "import",
+            str(config_file),
+            "-n",
+            "overridden-name",
+            output_format=output_format,
+        )
+
+        # Assertions
+        assert out.exit_code == 0
+        assert out.stderr == ""
+
+        if output_format == "json":
+            data = json.loads(out.stdout)
+            assert data["id"] == "new-ce-id-456"
+            assert data["name"] == "overridden-name"
+
+    @pytest.mark.parametrize("output_format", ["console", "json", "yaml"])
+    def test_import_with_overwrite(
+        self,
+        httpserver: HTTPServer,
+        exec_cmd: callable,
+        user_workspace_name: str,
+        output_format: str,
+        tmp_path,
+    ) -> None:
+        """Test importing compute environment with overwrite flag."""
+        import json as json_module
+
+        # Setup mock HTTP expectations
+        # First, list to find existing CE
+        httpserver.expect_request(
+            "/compute-envs",
+            method="GET",
+        ).respond_with_json(
+            {
+                "computeEnvs": [
+                    {
+                        "id": "existing-ce-id",
+                        "name": "existing-ce",
+                        "platform": "aws-batch",
+                        "status": "AVAILABLE",
+                    }
+                ]
+            },
+            status=200,
+        )
+
+        # Delete existing CE
+        httpserver.expect_request(
+            "/compute-envs/existing-ce-id",
+            method="DELETE",
+        ).respond_with_data("", status=204)
+
+        # Create new CE
+        httpserver.expect_request(
+            "/compute-envs",
+            method="POST",
+        ).respond_with_json(
+            {"computeEnvId": "new-ce-id-789"},
+            status=200,
+        )
+
+        # Create config file - uses "config" wrapper (like export output)
+        config = {
+            "config": {
+                "name": "existing-ce",
+                "platform": "aws-batch",
+            }
+        }
+
+        config_file = tmp_path / "ce-config.json"
+        config_file.write_text(json_module.dumps(config))
+
+        # Run the command with overwrite
+        out = exec_cmd(
+            "compute-envs",
+            "import",
+            str(config_file),
+            "--overwrite",
+            output_format=output_format,
+        )
+
+        # Assertions
+        assert out.exit_code == 0
+        assert out.stderr == ""
+
+        if output_format == "json":
+            data = json.loads(out.stdout)
+            assert data["id"] == "new-ce-id-789"
+            assert data["name"] == "existing-ce"

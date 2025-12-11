@@ -711,3 +711,107 @@ class TestStudiosCheckpointsCmd:
             assert "studio-a66d_2" in out.stdout
             assert "studio-a66d_1" in out.stdout
             assert "Checkpoints" in out.stdout
+
+
+class TestStudiosTemplatesCmd:
+    """Test studios templates command."""
+
+    @pytest.mark.parametrize("output_format", ["console", "json", "yaml"])
+    def test_templates(
+        self,
+        httpserver: HTTPServer,
+        exec_cmd: callable,
+        output_format: str,
+    ) -> None:
+        """Test listing studio templates."""
+        httpserver.expect_request(
+            "/user-info",
+            method="GET",
+        ).respond_with_json(
+            {
+                "user": {
+                    "id": 1264,
+                    "userName": "user",
+                    "email": "user@seqera.io",
+                }
+            }
+        )
+
+        httpserver.expect_request(
+            "/user/1264/workspaces",
+            method="GET",
+        ).respond_with_json(
+            {
+                "orgsAndWorkspaces": [
+                    {
+                        "orgId": 154662193913883,
+                        "orgName": "organization1",
+                        "workspaceId": 75887156211589,
+                        "workspaceName": "workspace1",
+                    }
+                ]
+            }
+        )
+
+        httpserver.expect_request(
+            "/studios/templates",
+            method="GET",
+        ).respond_with_json(
+            {
+                "templates": [
+                    {
+                        "id": "jupyter",
+                        "name": "Jupyter Notebook",
+                        "description": "Interactive Python notebook environment",
+                        "repository": "cr.seqera.io/public/data-studio-jupyter:4.2.5",
+                        "icon": "jupyter",
+                    },
+                    {
+                        "id": "vscode",
+                        "name": "VS Code",
+                        "description": "Visual Studio Code IDE",
+                        "repository": "cr.seqera.io/public/data-studio-vscode:1.93.1",
+                        "icon": "vscode",
+                    },
+                    {
+                        "id": "rstudio",
+                        "name": "RStudio",
+                        "description": "RStudio IDE for R",
+                        "repository": "cr.seqera.io/public/data-studio-rstudio:2024.04.2",
+                        "icon": "rstudio",
+                    },
+                ],
+            }
+        )
+
+        # Run the command
+        out = exec_cmd(
+            "studios",
+            "templates",
+            "-w",
+            "75887156211589",
+            output_format=output_format,
+        )
+
+        # Assertions
+        assert out.exit_code == 0
+        assert out.stderr == ""
+
+        if output_format == "json":
+            data = json.loads(out.stdout)
+            assert len(data["templates"]) == 3
+            assert data["templates"][0]["id"] == "jupyter"
+            assert data["templates"][0]["name"] == "Jupyter Notebook"
+            assert data["templates"][1]["id"] == "vscode"
+            assert data["templates"][2]["id"] == "rstudio"
+        elif output_format == "yaml":
+            import yaml
+
+            data = yaml.safe_load(out.stdout)
+            assert len(data["templates"]) == 3
+            assert data["templates"][0]["id"] == "jupyter"
+        else:  # console
+            assert "Jupyter" in out.stdout
+            assert "VS Code" in out.stdout or "vscode" in out.stdout
+            assert "RStudio" in out.stdout or "rstudio" in out.stdout
+            assert "templates" in out.stdout.lower()

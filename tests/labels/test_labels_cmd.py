@@ -510,3 +510,122 @@ class TestLabelsCmd:
             assert "res-find-label" in out.stdout
             assert "label-to-find" in out.stdout
             assert "find-label" in out.stdout
+
+    @pytest.mark.parametrize("output_format", ["console", "json", "yaml"])
+    def test_update_label_name(
+        self,
+        httpserver: HTTPServer,
+        exec_cmd: callable,
+        output_format: str,
+    ) -> None:
+        """Test updating a label name."""
+        # Setup mock HTTP expectations
+        # First GET existing label
+        httpserver.expect_request(
+            "/labels/1234",
+            method="GET",
+        ).respond_with_json(
+            {
+                "id": 1234,
+                "name": "old-name",
+                "value": None,
+                "resource": False,
+            },
+            status=200,
+        )
+
+        # Then PUT to update
+        httpserver.expect_request(
+            "/labels/1234",
+            method="PUT",
+        ).respond_with_data("", status=204)
+
+        # Run the command
+        out = exec_cmd(
+            "labels",
+            "update",
+            "-i",
+            "1234",
+            "-n",
+            "new-name",
+            "-w",
+            "5662",
+            output_format=output_format,
+        )
+
+        # Assertions
+        assert out.exit_code == 0
+        assert out.stderr == ""
+
+        if output_format == "json":
+            data = json.loads(out.stdout)
+            assert data["id"] == 1234
+            assert data["name"] == "new-name"
+        elif output_format == "yaml":
+            import yaml
+
+            data = yaml.safe_load(out.stdout)
+            assert data["id"] == 1234
+            assert data["name"] == "new-name"
+        else:  # console
+            assert "new-name" in out.stdout
+
+    @pytest.mark.parametrize("output_format", ["console", "json", "yaml"])
+    def test_update_label_value(
+        self,
+        httpserver: HTTPServer,
+        exec_cmd: callable,
+        output_format: str,
+    ) -> None:
+        """Test updating a label value."""
+        # Setup mock HTTP expectations
+        # First GET existing label
+        httpserver.expect_request(
+            "/labels/1234",
+            method="GET",
+        ).respond_with_json(
+            {
+                "id": 1234,
+                "name": "res-label",
+                "value": "old-value",
+                "resource": True,
+            },
+            status=200,
+        )
+
+        # Then PUT to update
+        httpserver.expect_request(
+            "/labels/1234",
+            method="PUT",
+        ).respond_with_data("", status=204)
+
+        # Run the command
+        out = exec_cmd(
+            "labels",
+            "update",
+            "-i",
+            "1234",
+            "-v",
+            "new-value",
+            "-w",
+            "5662",
+            output_format=output_format,
+        )
+
+        # Assertions
+        assert out.exit_code == 0
+        assert out.stderr == ""
+
+        if output_format == "json":
+            data = json.loads(out.stdout)
+            assert data["id"] == 1234
+            assert data["name"] == "res-label"
+            assert data["value"] == "new-value"
+        elif output_format == "yaml":
+            import yaml
+
+            data = yaml.safe_load(out.stdout)
+            assert data["id"] == 1234
+            assert data["value"] == "new-value"
+        else:  # console
+            assert "res-label" in out.stdout

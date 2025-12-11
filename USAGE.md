@@ -409,6 +409,25 @@ $ seqera runs dump -i 5z4AMshti4g0GK -o file.tar.gz
   Pipeline run '5z4AMshti4g0GK' at [seqeralabs / testing] workspace details dump at 'file.tar.gz'
 ```
 
+### View a single task
+
+Run `seqera runs task -h` to view all the required and optional fields for viewing a single task in a workflow run.
+
+```console
+$ seqera runs task -i 5z4AMshti4g0GK -t 1
+
+  Task details for run 5z4AMshti4g0GK:
+
+    Task ID:    1
+    Process:    NFCORE_RNASEQ:RNASEQ:FASTQC
+    Tag:        -
+    Status:     COMPLETED
+    Exit code:  0
+    Container:  quay.io/biocontainers/fastqc:0.11.9
+    Executor:   awsbatch
+    Work dir:   s3://bucket/work/a1/b2c3d4
+```
+
 ## Workspaces
 
 Run `seqera workspaces -h` to view supported workspace operations.
@@ -617,6 +636,144 @@ $ seqera data-links browse -w seqeralabs/showcase -i v1-user-6d8f44c239e2a098b3e
  FOLDER | technical/                                 | 0
 ```
 
+## Labels
+
+Run `seqera labels -h` to view supported label operations.
+
+Labels allow you to organize and categorize resources in a workspace. There are two types of labels:
+
+- **Simple labels**: Just a name (e.g., `production`, `test`)
+- **Resource labels**: A key-value pair (e.g., `env=production`, `project=rnaseq`)
+
+### List labels
+
+Run `seqera labels list -h` to view all the optional fields for listing labels in a workspace.
+
+```console
+$ seqera labels list -w seqeralabs/showcase
+
+  Labels at [seqeralabs / showcase] workspace:
+
+     ID              | Name         | Value    | Type
+    -----------------+--------------+----------+----------
+     97027588903667  | awesome-label|          | simple
+     250670995082875 | new-label    |          | simple
+     232243090533688 | res-label    | aaaa     | resource
+
+  Showing from 0 to 99 from a total of 3 entries.
+```
+
+### Add a label
+
+Run `seqera labels add -h` to view all the required and optional fields for adding a label to a workspace.
+
+```console
+$ seqera labels add -n my-label -w seqeralabs/showcase
+
+  Label 'my-label' (id: 12345) added at [seqeralabs / showcase] workspace
+```
+
+To add a resource label with a value:
+
+```console
+$ seqera labels add -n env -v production -w seqeralabs/showcase
+
+  Label 'env=production' (id: 12346) added at [seqeralabs / showcase] workspace
+```
+
+### Update a label
+
+Run `seqera labels update -h` to view all the required and optional fields for updating a label in a workspace.
+
+```console
+$ seqera labels update -i 12345 -n renamed-label -w seqeralabs/showcase
+
+  Label 'renamed-label' updated at [seqeralabs / showcase] workspace
+```
+
+### Delete a label
+
+Run `seqera labels delete -h` to view all the required and optional fields for deleting a label from a workspace.
+
+```console
+$ seqera labels delete -i 12345 -w seqeralabs/showcase
+
+  Label '12345' deleted at [seqeralabs / showcase] workspace
+```
+
+## Studios
+
+Run `seqera studios -h` to view supported Data Studios operations.
+
+Data Studios provide interactive analysis environments in the Seqera Platform. See [Data Studios][data-studios] for more information.
+
+### List studios
+
+Run `seqera studios list -h` to view all the optional fields for listing studios in a workspace.
+
+```console
+$ seqera studios list -w seqeralabs/showcase
+
+  Studios at [seqeralabs / showcase] workspace:
+
+     ID       | Name              | Status   | Template
+    ----------+-------------------+----------+------------------
+     abc123   | my-jupyter        | running  | Jupyter Notebook
+     def456   | my-rstudio        | stopped  | RStudio
+```
+
+### View a studio
+
+Run `seqera studios view -h` to view all the required and optional fields for viewing a studio.
+
+```console
+$ seqera studios view -i abc123 -w seqeralabs/showcase
+
+  Studio details at [seqeralabs / showcase] workspace:
+
+    ID:         abc123
+    Name:       my-jupyter
+    Status:     running
+    Template:   Jupyter Notebook
+    URL:        https://cloud.seqera.io/studios/abc123
+```
+
+### Start and stop a studio
+
+Run `seqera studios start -h` or `seqera studios stop -h` to view the fields for starting or stopping a studio.
+
+```console
+$ seqera studios start -i abc123 -w seqeralabs/showcase
+
+  Studio 'abc123' starting at [seqeralabs / showcase] workspace
+```
+
+### List studio templates
+
+Run `seqera studios templates -h` to view all the optional fields for listing available studio templates in a workspace.
+
+```console
+$ seqera studios templates -w seqeralabs/showcase
+
+  Studio templates at [seqeralabs / showcase]:
+
+    ID           Name                           Container
+    ----------------------------------------------------------------------
+    jupyter      Jupyter Notebook               cr.seqera.io/public/data-studio-jupyter
+    vscode       VS Code                        cr.seqera.io/public/data-studio-vscode
+    rstudio      RStudio                        cr.seqera.io/public/data-studio-rstudio
+```
+
+### Delete a studio
+
+Run `seqera studios delete -h` to view all the required and optional fields for deleting a studio.
+
+```console
+$ seqera studios delete -i abc123 -w seqeralabs/showcase
+
+  Studio 'abc123' deleted at [seqeralabs / showcase] workspace
+```
+
 [compute-envs]: https://docs.seqera.io/platform/latest/compute-envs/overview
 [credentials]: https://docs.seqera.io/platform/latest/credentials/overview
 [git-integration]: https://docs.seqera.io/platform/latest/git/overview
@@ -627,3 +784,4 @@ $ seqera data-links browse -w seqeralabs/showcase -i v1-user-6d8f44c239e2a098b3e
 [user-workspaces]: https://docs.seqera.io/platform/latest/orgs-and-teams/workspace-management
 [wave-docs]: https://www.nextflow.io/docs/latest/wave.html
 [data-explorer]: https://docs.seqera.io/platform/latest/data/data-explorer
+[data-studios]: https://docs.seqera.io/platform/latest/data-studios/overview

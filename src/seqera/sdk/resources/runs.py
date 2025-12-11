@@ -237,3 +237,158 @@ class RunsResource(BaseResource):
         params = self._build_params(workspace=workspace)
         response = self._client.get(f"/workflow/{run_id}/progress", params=params)
         return response.get("progress", {})
+
+    def get_task(
+        self,
+        run_id: str,
+        task_id: int,
+        workspace: str | int | None = None,
+    ) -> Task:
+        """
+        Get details of a single task in a workflow run.
+
+        Args:
+            run_id: Workflow run ID
+            task_id: Task ID
+            workspace: Workspace ID or "org/workspace" reference
+
+        Returns:
+            Task object with full details
+        """
+        params = self._build_params(workspace=workspace)
+        response = self._client.get(f"/workflow/{run_id}/task/{task_id}", params=params)
+        task_data = response.get("task", {})
+        return Task.model_validate(task_data)
+
+    def relaunch(
+        self,
+        run_id: str,
+        workspace: str | int | None = None,
+        *,
+        pipeline: str | None = None,
+        work_dir: str | None = None,
+        compute_env: str | None = None,
+        resume: bool = True,
+        params: dict[str, Any] | None = None,
+        config_profiles: list[str] | None = None,
+        pre_run_script: str | None = None,
+        post_run_script: str | None = None,
+    ) -> str:
+        """
+        Relaunch a pipeline run.
+
+        Args:
+            run_id: Workflow run ID to relaunch
+            workspace: Workspace ID or "org/workspace" reference
+            pipeline: Pipeline repository URL (optional, uses original if not specified)
+            work_dir: Work directory (optional)
+            compute_env: Compute environment name or ID (optional)
+            resume: Whether to resume from previous run (default True)
+            params: Pipeline parameters (optional)
+            config_profiles: Nextflow config profiles (optional)
+            pre_run_script: Pre-run script (optional)
+            post_run_script: Post-run script (optional)
+
+        Returns:
+            New workflow ID
+        """
+        query_params = self._build_params(workspace=workspace)
+
+        # Get original run details
+        original = self.get(run_id, workspace=workspace)
+
+        # Build launch payload from original run
+        launch_payload: dict[str, Any] = {
+            "sessionId": original.session_id,
+            "resume": resume,
+        }
+
+        # Use provided values or fall back to original
+        if pipeline:
+            launch_payload["pipeline"] = pipeline
+        if work_dir:
+            launch_payload["workDir"] = work_dir
+        if compute_env:
+            # Resolve compute environment ID if name provided
+            launch_payload["computeEnvId"] = compute_env
+        if params:
+            launch_payload["paramsText"] = params
+        if config_profiles:
+            launch_payload["configProfiles"] = config_profiles
+        if pre_run_script:
+            launch_payload["preRunScript"] = pre_run_script
+        if post_run_script:
+            launch_payload["postRunScript"] = post_run_script
+
+        response = self._client.post(
+            "/workflow/launch",
+            json={"launch": launch_payload},
+            params=query_params,
+        )
+        return response.get("workflowId", "")
+
+    def dump(
+        self,
+        run_id: str,
+        workspace: str | int | None = None,
+        *,
+        add_task_logs: bool = False,
+        add_fusion_logs: bool = False,
+        only_failed: bool = False,
+    ) -> dict[str, Any]:
+        """
+        Get all data needed to create a dump of a workflow run.
+
+        This returns the workflow details, tasks, and optionally logs
+        that can be used to create a compressed archive.
+
+        Args:
+            run_id: Workflow run ID
+            workspace: Workspace ID or "org/workspace" reference
+            add_task_logs: Include task logs in dump
+            add_fusion_logs: Include fusion logs in dump
+            only_failed: Only include failed tasks
+
+        Returns:
+            Dictionary containing workflow data, tasks, and logs
+        """
+        params = self._build_params(workspace=workspace)
+
+        # Get workflow details
+        workflow = self.get(run_id, workspace=workspace)
+
+        # Get all tasks
+        all_tasks = list(self.tasks(run_id, workspace=workspace))
+
+        # Filter to failed tasks if requested
+        if only_failed:
+            all_tasks = [t for t in all_tasks if t.status == "FAILED"]
+
+        # Get metrics
+        metrics = self.metrics(run_id, workspace=workspace)
+
+        # Get progress
+        progress_data = self.progress(run_id, workspace=workspace)
+
+        result = {
+            "workflow": workflow.model_dump(by_alias=True, mode="json"),
+            "tasks": [t.model_dump(by_alias=True, mode="json") for t in all_tasks],
+            "metrics": metrics,
+            "progress": progress_data,
+        }
+
+        # Optionally get task logs
+        if add_task_logs:
+            task_logs = {}
+            for task in all_tasks:
+                try:
+                    log_response = self._client.get(
+                        f"/workflow/{run_id}/log/{task.task_id}",
+                        params=params,
+                    )
+                    task_logs[str(task.task_id)] = log_response
+                except Exception:
+                    pass  # Skip tasks without logs
+            result["task_logs"] = task_logs
+
+        return result

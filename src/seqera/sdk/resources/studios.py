@@ -144,3 +144,20 @@ class StudiosResource(BaseResource):
             return paginated, total_size
 
         return PaginatedList(fetch_page)
+
+    def templates(
+        self,
+        workspace: str | int | None = None,
+    ) -> list[dict]:
+        """
+        List available studio templates.
+
+        Args:
+            workspace: Workspace ID or "org/workspace" reference
+
+        Returns:
+            List of template dictionaries
+        """
+        params = self._build_params(workspace=workspace)
+        response = self._client.get("/studios/templates", params=params)
+        return response.get("templates", [])
