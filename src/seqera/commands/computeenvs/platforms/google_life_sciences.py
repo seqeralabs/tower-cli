@@ -84,13 +84,33 @@ def add_google_life_sciences(
             "-c", "--credentials", help="Credentials identifier [default: workspace credentials]"
         ),
     ] = None,
+    # Labels option
+    labels: Annotated[
+        str | None,
+        typer.Option("--labels", help="Comma-separated list of labels"),
+    ] = None,
+    # Wait option
+    wait: Annotated[
+        str | None,
+        typer.Option(
+            "--wait",
+            help="Wait until compute environment reaches status (CREATING, AVAILABLE, ERRORED, INVALID)",
+        ),
+    ] = None,
+    # Workspace option
+    workspace: Annotated[
+        str | None,
+        typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
+    ] = None,
 ) -> None:
     """Add new Google Life Sciences compute environment."""
     # Import here to avoid circular imports
     from seqera.commands.computeenvs import (
         USER_WORKSPACE_NAME,
+        find_or_create_label_ids,
         handle_compute_env_error,
         output_response,
+        wait_for_compute_env_status,
     )
     from seqera.exceptions import SeqeraError
     from seqera.main import get_client, get_output_format
@@ -165,21 +185,38 @@ def add_google_life_sciences(
             config["headJobMemoryMb"] = head_job_memory
 
         # Create compute environment
-        payload = {
-            "computeEnv": {
-                "name": name,
-                "platform": "google-lifesciences",
-                "credentialsId": credentials_id,
-                "config": config,
-            }
+        compute_env_payload = {
+            "name": name,
+            "platform": "google-lifesciences",
+            "credentialsId": credentials_id,
+            "config": config,
         }
 
+        # Add labels if specified
+        if labels:
+            label_ids = find_or_create_label_ids(client, labels, workspace)
+            if label_ids:
+                compute_env_payload["labelIds"] = label_ids
+
+        payload = {"computeEnv": compute_env_payload}
+
         response = client.post("/compute-envs", json=payload)
+        compute_env_id = response.get("computeEnvId", "")
+
+        # Wait for status if requested
+        if wait:
+            typer.echo(f"Waiting for compute environment to reach '{wait}' status...")
+            if wait_for_compute_env_status(client, compute_env_id, wait, workspace):
+                typer.echo(f"Compute environment reached '{wait}' status")
+            else:
+                typer.echo(
+                    f"Warning: Compute environment did not reach '{wait}' status within timeout"
+                )
 
         # Output response
         result = ComputeEnvAdded(
             platform="google-lifesciences",
-            compute_env_id=response.get("computeEnvId", ""),
+            compute_env_id=compute_env_id,
             name=name,
             workspace_id=None,
             workspace=USER_WORKSPACE_NAME,

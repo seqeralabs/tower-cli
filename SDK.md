@@ -933,6 +933,22 @@ for link in client.data_links.list():
     print(f"{link.name}: {link.resource_ref}")
 ```
 
+### Get data link
+
+```python
+# By ID
+link = client.data_links.get("v1-user-abc123")
+
+# By name
+link = client.data_links.get_by_name("my-bucket")
+
+# By URI
+link = client.data_links.get_by_uri("s3://my-bucket")
+
+print(f"Name: {link.name}")
+print(f"URI: {link.resource_ref}")
+```
+
 ### Add data link
 
 ```python
@@ -1305,6 +1321,6 @@ for pipeline in client.pipelines.list():
 | `client.actions` | `list`, `get`, `add`, `update`, `delete` |
 | `client.studios` | `list`, `get`, `delete`, `start`, `stop`, `checkpoints`, `templates`, `create`, `create_from_existing` |
 | `client.collaborators` | `list`, `add`, `delete` |
-| `client.data_links` | `list`, `get`, `add`, `update`, `delete`, `browse`, `get_download_url`, `get_upload_url` |
+| `client.data_links` | `list`, `get`, `get_by_name`, `get_by_uri`, `add`, `update`, `delete`, `browse`, `get_download_url`, `get_upload_url` |
 | `client.info()` | Get API info |
 | `client.user_info()` | Get current user info |

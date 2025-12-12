@@ -236,10 +236,18 @@ def get_compute_env(
 def list_actions(
     workspace: Annotated[
         str | None,
-        typer.Option("-w", "--workspace", help="Workspace ID (numeric)"),
+        typer.Option(
+            "-w",
+            "--workspace",
+            help="Workspace numeric identifier (TOWER_WORKSPACE_ID as default) or workspace reference as OrganizationName/WorkspaceName",
+        ),
     ] = None,
+    show_labels: Annotated[
+        bool,
+        typer.Option("-l", "--labels", help="Show labels"),
+    ] = False,
 ) -> None:
-    """List all actions in a workspace."""
+    """List the available Pipeline Actions for the authenticated user or given workspace."""
     try:
         client = get_client()
         output_format = get_output_format()
@@ -260,6 +268,7 @@ def list_actions(
         result = ActionsList(
             workspace=workspace_ref,
             actions=actions,
+            show_labels=show_labels,
         )
 
         output_response(result, output_format)
@@ -375,22 +384,110 @@ def add_github_action(
     ],
     pipeline: Annotated[
         str,
-        typer.Option("--pipeline", help="Pipeline repository URL"),
+        typer.Option("--pipeline", help="Pipeline to launch"),
     ],
+    labels: Annotated[
+        str | None,
+        typer.Option("--labels", help="Comma-separated list of labels"),
+    ] = None,
+    workspace: Annotated[
+        str | None,
+        typer.Option(
+            "-w",
+            "--workspace",
+            help="Workspace numeric identifier (TOWER_WORKSPACE_ID as default) or workspace reference as OrganizationName/WorkspaceName",
+        ),
+    ] = None,
     compute_env: Annotated[
         str | None,
         typer.Option("-c", "--compute-env", help="Compute environment name"),
     ] = None,
-    workspace: Annotated[
+    work_dir: Annotated[
         str | None,
-        typer.Option("-w", "--workspace", help="Workspace ID (numeric)"),
+        typer.Option("--work-dir", help="Path where the pipeline scratch data is stored"),
+    ] = None,
+    profile: Annotated[
+        str | None,
+        typer.Option(
+            "-p",
+            "--profile",
+            help="Comma-separated list of one or more configuration profile names you want to use for this pipeline execution",
+        ),
+    ] = None,
+    params_file: Annotated[
+        str | None,
+        typer.Option("--params-file", help="Pipeline parameters in either JSON or YML format"),
+    ] = None,
+    revision: Annotated[
+        str | None,
+        typer.Option("--revision", help="A valid repository commit Id, tag or branch name"),
+    ] = None,
+    config: Annotated[
+        str | None,
+        typer.Option("--config", help="Path to a Nextflow config file"),
+    ] = None,
+    pre_run: Annotated[
+        str | None,
+        typer.Option(
+            "--pre-run",
+            help="Bash script that is executed in the same environment where Nextflow runs just before the pipeline is launched",
+        ),
+    ] = None,
+    post_run: Annotated[
+        str | None,
+        typer.Option(
+            "--post-run",
+            help="Bash script that is executed in the same environment where Nextflow runs immediately after the pipeline completion",
+        ),
+    ] = None,
+    pull_latest: Annotated[
+        bool,
+        typer.Option(
+            "--pull-latest",
+            help="Enable Nextflow to pull the latest repository version before running the pipeline",
+        ),
+    ] = False,
+    stub_run: Annotated[
+        bool,
+        typer.Option(
+            "--stub-run", help="Execute the workflow replacing process scripts with command stubs"
+        ),
+    ] = False,
+    main_script: Annotated[
+        str | None,
+        typer.Option("--main-script", help="Pipeline main script file if different from `main.nf`"),
+    ] = None,
+    entry_name: Annotated[
+        str | None,
+        typer.Option(
+            "--entry-name", help="Main workflow name to be executed when using DLS2 syntax"
+        ),
+    ] = None,
+    schema_name: Annotated[
+        str | None,
+        typer.Option("--schema-name", help="Schema name"),
+    ] = None,
+    user_secrets: Annotated[
+        str | None,
+        typer.Option(
+            "--user-secrets",
+            help="Pipeline Secrets required by the pipeline execution that belong to the launching user personal context",
+        ),
+    ] = None,
+    workspace_secrets: Annotated[
+        str | None,
+        typer.Option(
+            "--workspace-secrets", help="Pipeline Secrets required by the pipeline execution"
+        ),
     ] = None,
     overwrite: Annotated[
         bool,
-        typer.Option("--overwrite", help="Overwrite if action already exists"),
+        typer.Option("--overwrite", help="Overwrite the action if it already exists"),
     ] = False,
 ) -> None:
-    """Add a GitHub webhook action."""
+    """Add a GitHub action."""
+    from pathlib import Path
+
     try:
         client = get_client()
         output_format = get_output_format()
@@ -425,9 +522,39 @@ def add_github_action(
             "pipeline": pipeline,
         }
 
-        # Add work directory from compute env
-        if ce_work_dir:
+        # Add work directory
+        if work_dir:
+            launch_config["workDir"] = work_dir
+        elif ce_work_dir:
             launch_config["workDir"] = ce_work_dir
+
+        # Add optional launch parameters
+        if revision:
+            launch_config["revision"] = revision
+        if profile:
+            launch_config["configProfiles"] = [p.strip() for p in profile.split(",")]
+        if params_file:
+            launch_config["paramsText"] = Path(params_file).read_text()
+        if config:
+            launch_config["configText"] = Path(config).read_text()
+        if pre_run:
+            launch_config["preRunScript"] = Path(pre_run).read_text()
+        if post_run:
+            launch_config["postRunScript"] = Path(post_run).read_text()
+        if pull_latest:
+            launch_config["pullLatest"] = True
+        if stub_run:
+            launch_config["stubRun"] = True
+        if main_script:
+            launch_config["mainScript"] = main_script
+        if entry_name:
+            launch_config["entryName"] = entry_name
+        if schema_name:
+            launch_config["schemaName"] = schema_name
+        if user_secrets:
+            launch_config["userSecrets"] = [s.strip() for s in user_secrets.split(",")]
+        if workspace_secrets:
+            launch_config["workspaceSecrets"] = [s.strip() for s in workspace_secrets.split(",")]
 
         # Build payload
         payload = {
@@ -435,6 +562,16 @@ def add_github_action(
             "launch": launch_config,
             "source": "github",
         }
+
+        # Handle labels
+        if labels:
+            parsed_labels = parse_labels(labels)
+            if parsed_labels:
+                label_ids = find_or_create_label_ids(
+                    client, parsed_labels, ws_id, no_create=False, operation="set"
+                )
+                if label_ids:
+                    payload["labelIds"] = label_ids
 
         # Create action
         params = {}
@@ -468,22 +605,110 @@ def add_seqera_action(
     ],
     pipeline: Annotated[
         str,
-        typer.Option("--pipeline", help="Pipeline repository URL"),
+        typer.Option("--pipeline", help="Pipeline to launch"),
     ],
+    labels: Annotated[
+        str | None,
+        typer.Option("--labels", help="Comma-separated list of labels"),
+    ] = None,
+    workspace: Annotated[
+        str | None,
+        typer.Option(
+            "-w",
+            "--workspace",
+            help="Workspace numeric identifier (TOWER_WORKSPACE_ID as default) or workspace reference as OrganizationName/WorkspaceName",
+        ),
+    ] = None,
     compute_env: Annotated[
         str | None,
         typer.Option("-c", "--compute-env", help="Compute environment name"),
     ] = None,
-    workspace: Annotated[
+    work_dir: Annotated[
         str | None,
-        typer.Option("-w", "--workspace", help="Workspace ID (numeric)"),
+        typer.Option("--work-dir", help="Path where the pipeline scratch data is stored"),
+    ] = None,
+    profile: Annotated[
+        str | None,
+        typer.Option(
+            "-p",
+            "--profile",
+            help="Comma-separated list of one or more configuration profile names you want to use for this pipeline execution",
+        ),
+    ] = None,
+    params_file: Annotated[
+        str | None,
+        typer.Option("--params-file", help="Pipeline parameters in either JSON or YML format"),
+    ] = None,
+    revision: Annotated[
+        str | None,
+        typer.Option("--revision", help="A valid repository commit Id, tag or branch name"),
+    ] = None,
+    config: Annotated[
+        str | None,
+        typer.Option("--config", help="Path to a Nextflow config file"),
+    ] = None,
+    pre_run: Annotated[
+        str | None,
+        typer.Option(
+            "--pre-run",
+            help="Bash script that is executed in the same environment where Nextflow runs just before the pipeline is launched",
+        ),
+    ] = None,
+    post_run: Annotated[
+        str | None,
+        typer.Option(
+            "--post-run",
+            help="Bash script that is executed in the same environment where Nextflow runs immediately after the pipeline completion",
+        ),
+    ] = None,
+    pull_latest: Annotated[
+        bool,
+        typer.Option(
+            "--pull-latest",
+            help="Enable Nextflow to pull the latest repository version before running the pipeline",
+        ),
+    ] = False,
+    stub_run: Annotated[
+        bool,
+        typer.Option(
+            "--stub-run", help="Execute the workflow replacing process scripts with command stubs"
+        ),
+    ] = False,
+    main_script: Annotated[
+        str | None,
+        typer.Option("--main-script", help="Pipeline main script file if different from `main.nf`"),
+    ] = None,
+    entry_name: Annotated[
+        str | None,
+        typer.Option(
+            "--entry-name", help="Main workflow name to be executed when using DLS2 syntax"
+        ),
+    ] = None,
+    schema_name: Annotated[
+        str | None,
+        typer.Option("--schema-name", help="Schema name"),
+    ] = None,
+    user_secrets: Annotated[
+        str | None,
+        typer.Option(
+            "--user-secrets",
+            help="Pipeline Secrets required by the pipeline execution that belong to the launching user personal context",
+        ),
+    ] = None,
+    workspace_secrets: Annotated[
+        str | None,
+        typer.Option(
+            "--workspace-secrets", help="Pipeline Secrets required by the pipeline execution"
+        ),
     ] = None,
     overwrite: Annotated[
         bool,
-        typer.Option("--overwrite", help="Overwrite if action already exists"),
+        typer.Option("--overwrite", help="Overwrite the action if it already exists"),
     ] = False,
 ) -> None:
-    """Add a Seqera webhook action."""
+    """Add a Tower action."""
+    from pathlib import Path
+
     try:
         client = get_client()
         output_format = get_output_format()
@@ -518,9 +743,39 @@ def add_seqera_action(
             "pipeline": pipeline,
         }
 
-        # Add work directory from compute env
-        if ce_work_dir:
+        # Add work directory
+        if work_dir:
+            launch_config["workDir"] = work_dir
+        elif ce_work_dir:
             launch_config["workDir"] = ce_work_dir
+
+        # Add optional launch parameters
+        if revision:
+            launch_config["revision"] = revision
+        if profile:
+            launch_config["configProfiles"] = [p.strip() for p in profile.split(",")]
+        if params_file:
+            launch_config["paramsText"] = Path(params_file).read_text()
+        if config:
+            launch_config["configText"] = Path(config).read_text()
+        if pre_run:
+            launch_config["preRunScript"] = Path(pre_run).read_text()
+        if post_run:
+            launch_config["postRunScript"] = Path(post_run).read_text()
+        if pull_latest:
+            launch_config["pullLatest"] = True
+        if stub_run:
+            launch_config["stubRun"] = True
+        if main_script:
+            launch_config["mainScript"] = main_script
+        if entry_name:
+            launch_config["entryName"] = entry_name
+        if schema_name:
+            launch_config["schemaName"] = schema_name
+        if user_secrets:
+            launch_config["userSecrets"] = [s.strip() for s in user_secrets.split(",")]
+        if workspace_secrets:
+            launch_config["workspaceSecrets"] = [s.strip() for s in workspace_secrets.split(",")]
 
         # Build payload
         payload = {
@@ -528,6 +783,16 @@ def add_seqera_action(
             "launch": launch_config,
             "source": "seqera",
         }
+
+        # Handle labels
+        if labels:
+            parsed_labels = parse_labels(labels)
+            if parsed_labels:
+                label_ids = find_or_create_label_ids(
+                    client, parsed_labels, ws_id, no_create=False, operation="set"
+                )
+                if label_ids:
+                    payload["labelIds"] = label_ids
 
         # Create action
         params = {}
@@ -559,28 +824,116 @@ app.add_typer(add_app, name="add")
 
 @app.command("update")
 def update_action(
+    action_id: Annotated[
+        str | None,
+        typer.Option("-i", "--id", help="Action unique id"),
+    ] = None,
     action_name: Annotated[
         str | None,
         typer.Option("-n", "--name", help="Action name"),
     ] = None,
-    action_id: Annotated[
+    status: Annotated[
         str | None,
-        typer.Option("-i", "--id", help="Action ID"),
+        typer.Option("-s", "--status", help="Action status (pause or active)"),
     ] = None,
     new_name: Annotated[
         str | None,
-        typer.Option("--new-name", help="New action name"),
-    ] = None,
-    status: Annotated[
-        str | None,
-        typer.Option("-s", "--status", help="Action status (pause/active)"),
+        typer.Option("--new-name", help="Action new name"),
     ] = None,
     workspace: Annotated[
         str | None,
-        typer.Option("-w", "--workspace", help="Workspace ID (numeric)"),
+        typer.Option(
+            "-w",
+            "--workspace",
+            help="Workspace numeric identifier (TOWER_WORKSPACE_ID as default) or workspace reference as OrganizationName/WorkspaceName",
+        ),
+    ] = None,
+    compute_env: Annotated[
+        str | None,
+        typer.Option("-c", "--compute-env", help="Compute environment name"),
+    ] = None,
+    work_dir: Annotated[
+        str | None,
+        typer.Option("--work-dir", help="Path where the pipeline scratch data is stored"),
+    ] = None,
+    profile: Annotated[
+        str | None,
+        typer.Option(
+            "-p",
+            "--profile",
+            help="Comma-separated list of one or more configuration profile names you want to use for this pipeline execution",
+        ),
+    ] = None,
+    params_file: Annotated[
+        str | None,
+        typer.Option("--params-file", help="Pipeline parameters in either JSON or YML format"),
+    ] = None,
+    revision: Annotated[
+        str | None,
+        typer.Option("--revision", help="A valid repository commit Id, tag or branch name"),
+    ] = None,
+    config: Annotated[
+        str | None,
+        typer.Option("--config", help="Path to a Nextflow config file"),
+    ] = None,
+    pre_run: Annotated[
+        str | None,
+        typer.Option(
+            "--pre-run",
+            help="Bash script that is executed in the same environment where Nextflow runs just before the pipeline is launched",
+        ),
+    ] = None,
+    post_run: Annotated[
+        str | None,
+        typer.Option(
+            "--post-run",
+            help="Bash script that is executed in the same environment where Nextflow runs immediately after the pipeline completion",
+        ),
+    ] = None,
+    pull_latest: Annotated[
+        bool,
+        typer.Option(
+            "--pull-latest",
+            help="Enable Nextflow to pull the latest repository version before running the pipeline",
+        ),
+    ] = False,
+    stub_run: Annotated[
+        bool,
+        typer.Option(
+            "--stub-run", help="Execute the workflow replacing process scripts with command stubs"
+        ),
+    ] = False,
+    main_script: Annotated[
+        str | None,
+        typer.Option("--main-script", help="Pipeline main script file if different from `main.nf`"),
+    ] = None,
+    entry_name: Annotated[
+        str | None,
+        typer.Option(
+            "--entry-name", help="Main workflow name to be executed when using DLS2 syntax"
+        ),
+    ] = None,
+    schema_name: Annotated[
+        str | None,
+        typer.Option("--schema-name", help="Schema name"),
+    ] = None,
+    user_secrets: Annotated[
+        str | None,
+        typer.Option(
+            "--user-secrets",
+            help="Pipeline Secrets required by the pipeline execution that belong to the launching user personal context",
+        ),
+    ] = None,
+    workspace_secrets: Annotated[
+        str | None,
+        typer.Option(
+            "--workspace-secrets", help="Pipeline Secrets required by the pipeline execution"
+        ),
     ] = None,
 ) -> None:
-    """Update an action."""
+    """Update a Pipeline Action."""
+    from pathlib import Path
+
     try:
         client = get_client()
         output_format = get_output_format()
@@ -595,45 +948,84 @@ def update_action(
         current_name = action.get("name")
         current_status = action.get("status")
 
-        # Handle status change (pause/active)
+        # Get current launch config
+        launch_config = action.get("launch", {}).copy() if action.get("launch") else {}
+
+        # Update compute environment if specified
+        if compute_env:
+            ws_id = workspace if workspace else None
+            ce = get_compute_env(client, compute_env, ws_id)
+            if ce:
+                launch_config["computeEnvId"] = ce.get("id")
+
+        # Update launch configuration
+        if work_dir:
+            launch_config["workDir"] = work_dir
+        if revision:
+            launch_config["revision"] = revision
+        if profile:
+            launch_config["configProfiles"] = [p.strip() for p in profile.split(",")]
+        if params_file:
+            launch_config["paramsText"] = Path(params_file).read_text()
+        if config:
+            launch_config["configText"] = Path(config).read_text()
+        if pre_run:
+            launch_config["preRunScript"] = Path(pre_run).read_text()
+        if post_run:
+            launch_config["postRunScript"] = Path(post_run).read_text()
+        if pull_latest:
+            launch_config["pullLatest"] = True
+        if stub_run:
+            launch_config["stubRun"] = True
+        if main_script:
+            launch_config["mainScript"] = main_script
+        if entry_name:
+            launch_config["entryName"] = entry_name
+        if schema_name:
+            launch_config["schemaName"] = schema_name
+        if user_secrets:
+            launch_config["userSecrets"] = [s.strip() for s in user_secrets.split(",")]
+        if workspace_secrets:
+            launch_config["workspaceSecrets"] = [s.strip() for s in workspace_secrets.split(",")]
+
+        # Build update payload
+        payload = {}
+        if new_name and new_name != current_name:
+            # Validate new name if provided
+            validate_params = {"name": new_name}
+            if workspace:
+                validate_params["workspaceId"] = workspace
+            try:
+                client.get("/actions/validate", params=validate_params)
+            except Exception:
+                raise SeqeraError(f"Action name '{new_name}' is not valid")
+            payload["name"] = new_name
+        else:
+            payload["name"] = current_name
+
+        # Add launch config to payload
+        if launch_config:
+            payload["launch"] = launch_config
+
+        # Update the action
+        params = {}
+        if workspace:
+            params["workspaceId"] = workspace
+
+        try:
+            client.put(f"/actions/{aid}", json=payload, params=params)
+        except Exception:
+            raise SeqeraError(
+                f"Unable to update action '{current_name}' for workspace '{workspace_ref}'"
+            )
+
+        # Handle status change (pause/active) after update
         if status:
             status_upper = status.upper()
 
             # Check if already in that state
             if current_status == status_upper:
                 raise SeqeraError(f"The action is already set to '{status_upper}'")
-
-            # Build update payload
-            payload = {}
-            if new_name and new_name != current_name:
-                # Validate new name if provided
-                validate_params = {"name": new_name}
-                if workspace:
-                    validate_params["workspaceId"] = workspace
-                try:
-                    client.get("/actions/validate", params=validate_params)
-                except Exception:
-                    raise SeqeraError(f"Action name '{new_name}' is not valid")
-                payload["name"] = new_name
-            else:
-                # Include current name in update
-                payload["name"] = current_name
-
-            # Add current launch config to update
-            if action.get("launch"):
-                payload["launch"] = action["launch"]
-
-            # Update the action first
-            params = {}
-            if workspace:
-                params["workspaceId"] = workspace
-
-            try:
-                client.put(f"/actions/{aid}", json=payload, params=params)
-            except Exception:
-                raise SeqeraError(
-                    f"Unable to update action '{current_name}' for workspace '{workspace_ref}'"
-                )
 
             # Now pause/unpause if needed
             if status_upper == "PAUSE":
@@ -643,38 +1035,6 @@ def update_action(
                     raise SeqeraError(
                         f"An error has occur while setting the action '{current_name}' to 'PAUSE'"
                     )
-        else:
-            # Regular update without status change
-            payload = {}
-
-            # Validate new name if provided
-            if new_name and new_name != current_name:
-                validate_params = {"name": new_name}
-                if workspace:
-                    validate_params["workspaceId"] = workspace
-                try:
-                    client.get("/actions/validate", params=validate_params)
-                except Exception:
-                    raise SeqeraError(f"Action name '{new_name}' is not valid")
-                payload["name"] = new_name
-            else:
-                payload["name"] = current_name
-
-            # Add current launch config
-            if action.get("launch"):
-                payload["launch"] = action["launch"]
-
-            # Update action
-            params = {}
-            if workspace:
-                params["workspaceId"] = workspace
-
-            try:
-                client.put(f"/actions/{aid}", json=payload, params=params)
-            except Exception:
-                raise SeqeraError(
-                    f"Unable to update action '{current_name}' for workspace '{workspace_ref}'"
-                )
 
         # Output response
         result = ActionUpdated(

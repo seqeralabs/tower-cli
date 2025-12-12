@@ -6,6 +6,7 @@ Main entry point for the Seqera CLI application.
 
 from __future__ import annotations
 
+import importlib.metadata
 import os
 import sys
 from typing import TYPE_CHECKING, Annotated
@@ -14,6 +15,23 @@ import typer
 
 from seqera.api.client import SeqeraClient
 from seqera.utils.output import OutputFormat
+
+
+def get_version() -> str:
+    """Get the package version."""
+    try:
+        return importlib.metadata.version("seqera")
+    except importlib.metadata.PackageNotFoundError:
+        return "unknown"
+
+
+def version_callback(value: bool) -> None:
+    """Print version information and exit."""
+    if value:
+        version = get_version()
+        typer.echo(f"seqera {version}")
+        raise typer.Exit()
+
 
 if TYPE_CHECKING:
     from seqera.sdk.client import Seqera
@@ -81,6 +99,16 @@ def get_output_format() -> OutputFormat:
 @app.callback()
 def main_callback(
     ctx: typer.Context,
+    version: Annotated[
+        bool | None,
+        typer.Option(
+            "-V",
+            "--version",
+            callback=version_callback,
+            is_eager=True,
+            help="Show version information and exit.",
+        ),
+    ] = None,
     access_token: Annotated[
         str | None,
         typer.Option(
@@ -177,6 +205,7 @@ def main_callback(
 from seqera.commands import (
     actions,
     collaborators,
+    completion,
     computeenvs,
     credentials,
     datalinks,
@@ -197,10 +226,13 @@ from seqera.commands import (
 
 app.add_typer(actions.app, name="actions")
 app.add_typer(collaborators.app, name="collaborators")
-app.add_typer(credentials.app, name="credentials")
 app.add_typer(computeenvs.app, name="compute-envs")
+app.add_typer(credentials.app, name="credentials")
 app.add_typer(datalinks.app, name="data-links")
 app.add_typer(datasets.app, name="datasets")
+app.command(name="generate-completion", help="Generate shell completion script")(
+    completion.generate_completion
+)
 app.command(name="info", help="System info and health status")(info.info)
 app.add_typer(labels.app, name="labels")
 app.command(name="launch", help="Launch a pipeline")(launch.launch)

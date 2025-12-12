@@ -91,22 +91,38 @@ def get_workspace_ref(sdk, workspace_id: str | None) -> str:
 def list_pipelines(
     workspace: Annotated[
         str | None,
-        typer.Option("-w", "--workspace", help="Workspace ID (numeric)"),
+        typer.Option(
+            "-w",
+            "--workspace",
+            help="Workspace numeric identifier (TOWER_WORKSPACE_ID as default) or workspace reference as OrganizationName/WorkspaceName",
+        ),
     ] = None,
-    offset: Annotated[
-        int | None,
-        typer.Option("--offset", help="Pagination offset"),
+    show_labels: Annotated[
+        bool,
+        typer.Option("-l", "--labels", help="Show labels"),
+    ] = False,
+    filter_str: Annotated[
+        str | None,
+        typer.Option("-f", "--filter", help="Show only pipelines that contain the given word"),
     ] = None,
-    max_items: Annotated[
-        int | None,
-        typer.Option("--max", help="Maximum number of items to return"),
+    visibility: Annotated[
+        str | None,
+        typer.Option("--visibility", help="Show pipelines: all, private, shared"),
     ] = None,
     page: Annotated[
         int | None,
-        typer.Option("--page", help="Page number (1-indexed)"),
+        typer.Option("--page", help="Pages to display"),
+    ] = None,
+    offset: Annotated[
+        int | None,
+        typer.Option("--offset", help="Rows record offset"),
+    ] = None,
+    max_items: Annotated[
+        int | None,
+        typer.Option("--max", help="Maximum number of records to display"),
     ] = None,
 ) -> None:
-    """List all pipelines in a workspace."""
+    """List workspace pipelines."""
     try:
         sdk = get_sdk()
         output_format = get_output_format()
@@ -125,12 +141,16 @@ def list_pipelines(
         params = {}
         if workspace:
             params["workspaceId"] = workspace
+        if filter_str:
+            params["search"] = filter_str
+        if visibility:
+            params["visibility"] = visibility.upper()
 
         # Add pagination params
         pagination_info = None
         if page is not None:
             if max_items is None:
-                max_items = 20
+                max_items = 100
             computed_offset = (page - 1) * max_items
             params["offset"] = computed_offset
             params["max"] = max_items
@@ -155,6 +175,7 @@ def list_pipelines(
             workspace=workspace_ref,
             pipelines=pipelines,
             pagination_info=pagination_info,
+            show_labels=show_labels,
         )
 
         output_response(result, output_format)
@@ -217,52 +238,114 @@ def view_pipeline(
 
 @app.command("add")
 def add_pipeline(
+    repository: Annotated[
+        str,
+        typer.Argument(help="Nextflow pipeline URL"),
+    ],
     name: Annotated[
         str,
         typer.Option("-n", "--name", help="Pipeline name"),
     ],
-    repository: Annotated[
-        str,
-        typer.Argument(help="Pipeline repository URL"),
-    ],
+    workspace: Annotated[
+        str | None,
+        typer.Option(
+            "-w",
+            "--workspace",
+            help="Workspace numeric identifier (TOWER_WORKSPACE_ID as default) or workspace reference as OrganizationName/WorkspaceName",
+        ),
+    ] = None,
+    description: Annotated[
+        str | None,
+        typer.Option("-d", "--description", help="Pipeline description"),
+    ] = None,
+    labels: Annotated[
+        str | None,
+        typer.Option("--labels", help="Comma-separated list of labels"),
+    ] = None,
     compute_env: Annotated[
         str | None,
         typer.Option("-c", "--compute-env", help="Compute environment name"),
     ] = None,
     work_dir: Annotated[
         str | None,
-        typer.Option("--work-dir", help="Work directory"),
+        typer.Option("--work-dir", help="Path where the pipeline scratch data is stored"),
     ] = None,
-    revision: Annotated[
+    profile: Annotated[
         str | None,
-        typer.Option("-r", "--revision", help="Pipeline revision"),
-    ] = None,
-    config_profiles: Annotated[
-        str | None,
-        typer.Option("--config-profiles", help="Comma-separated config profiles"),
+        typer.Option(
+            "-p",
+            "--profile",
+            help="Comma-separated list of one or more configuration profile names you want to use for this pipeline execution",
+        ),
     ] = None,
     params_file: Annotated[
         Path | None,
-        typer.Option("--params-file", help="Parameters file (YAML/JSON)"),
+        typer.Option("--params-file", help="Pipeline parameters in either JSON or YML format"),
+    ] = None,
+    revision: Annotated[
+        str | None,
+        typer.Option("--revision", help="A valid repository commit Id, tag or branch name"),
+    ] = None,
+    config: Annotated[
+        Path | None,
+        typer.Option("--config", help="Path to a Nextflow config file"),
     ] = None,
     pre_run: Annotated[
         Path | None,
-        typer.Option("--pre-run", help="Pre-run script file"),
+        typer.Option(
+            "--pre-run",
+            help="Bash script that is executed in the same environment where Nextflow runs just before the pipeline is launched",
+        ),
     ] = None,
     post_run: Annotated[
         Path | None,
-        typer.Option("--post-run", help="Post-run script file"),
+        typer.Option(
+            "--post-run",
+            help="Bash script that is executed in the same environment where Nextflow runs immediately after the pipeline completion",
+        ),
     ] = None,
-    description: Annotated[
+    pull_latest: Annotated[
+        bool,
+        typer.Option(
+            "--pull-latest",
+            help="Enable Nextflow to pull the latest repository version before running the pipeline",
+        ),
+    ] = False,
+    stub_run: Annotated[
+        bool,
+        typer.Option(
+            "--stub-run", help="Execute the workflow replacing process scripts with command stubs"
+        ),
+    ] = False,
+    main_script: Annotated[
         str | None,
-        typer.Option("-d", "--description", help="Pipeline description"),
+        typer.Option("--main-script", help="Pipeline main script file if different from `main.nf`"),
     ] = None,
-    workspace: Annotated[
+    entry_name: Annotated[
         str | None,
-        typer.Option("-w", "--workspace", help="Workspace ID (numeric)"),
+        typer.Option(
+            "--entry-name", help="Main workflow name to be executed when using DLS2 syntax"
+        ),
+    ] = None,
+    schema_name: Annotated[
+        str | None,
+        typer.Option("--schema-name", help="Schema name"),
+    ] = None,
+    user_secrets: Annotated[
+        str | None,
+        typer.Option(
+            "--user-secrets",
+            help="Pipeline Secrets required by the pipeline execution that belong to the launching user personal context",
+        ),
+    ] = None,
+    workspace_secrets: Annotated[
+        str | None,
+        typer.Option(
+            "--workspace-secrets", help="Pipeline Secrets required by the pipeline execution"
+        ),
     ] = None,
 ) -> None:
-    """Add a new pipeline."""
+    """Add a workspace pipeline."""
     try:
         sdk = get_sdk()
         output_format = get_output_format()
@@ -281,12 +364,34 @@ def add_pipeline(
         if params_file:
             params = params_file.read_text()
 
+        # Read config from file if provided
+        config_text = None
+        if config:
+            config_text = config.read_text()
+
         # Read scripts if provided
         pre_run_script = pre_run.read_text() if pre_run else None
         post_run_script = post_run.read_text() if post_run else None
 
         # Parse config profiles
-        profiles = config_profiles.split(",") if config_profiles else None
+        profiles = profile.split(",") if profile else None
+
+        # Build additional launch options
+        extra_options = {}
+        if pull_latest:
+            extra_options["pullLatest"] = True
+        if stub_run:
+            extra_options["stubRun"] = True
+        if main_script:
+            extra_options["mainScript"] = main_script
+        if entry_name:
+            extra_options["entryName"] = entry_name
+        if schema_name:
+            extra_options["schemaName"] = schema_name
+        if user_secrets:
+            extra_options["userSecrets"] = [s.strip() for s in user_secrets.split(",")]
+        if workspace_secrets:
+            extra_options["workspaceSecrets"] = [s.strip() for s in workspace_secrets.split(",")]
 
         # Add pipeline using SDK
         pipeline = sdk.pipelines.add(
@@ -299,9 +404,30 @@ def add_pipeline(
             revision=revision,
             config_profiles=profiles,
             params=params,
+            config_text=config_text,
             pre_run_script=pre_run_script,
             post_run_script=post_run_script,
+            **extra_options,
         )
+
+        # Handle labels if specified
+        if labels:
+            parsed_labels = parse_labels(labels)
+            if parsed_labels:
+                client = sdk._http_client
+                label_ids = find_or_create_label_ids(
+                    client, parsed_labels, workspace, no_create=False, operation="set"
+                )
+                if label_ids:
+                    # Apply labels to pipeline
+                    request_payload = {
+                        "labelIds": label_ids,
+                        "pipelineIds": [pipeline.pipeline_id],
+                    }
+                    params = {}
+                    if workspace:
+                        params["workspaceId"] = workspace
+                    client.post("/labels/pipelines/apply", json=request_payload, params=params)
 
         # Output response
         result = PipelineAdded(

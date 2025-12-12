@@ -1190,6 +1190,8 @@ class PipelinesList(Response):
         table.add_column("Name")
         table.add_column("Repository")
         table.add_column("Last Updated")
+        if self.show_labels:
+            table.add_column("Labels")
 
         for pipeline in self.pipelines:
             pipeline_id = str(pipeline.get("pipelineId", ""))
@@ -1209,7 +1211,21 @@ class PipelinesList(Response):
             else:
                 last_updated_str = "-"
 
-            table.add_row(pipeline_id, name, repository, last_updated_str)
+            if self.show_labels:
+                labels = pipeline.get("labels", [])
+                labels_str = (
+                    ", ".join(
+                        f"{lbl.get('name')}={lbl.get('value')}"
+                        if lbl.get("value")
+                        else lbl.get("name", "")
+                        for lbl in labels
+                    )
+                    if labels
+                    else "-"
+                )
+                table.add_row(pipeline_id, name, repository, last_updated_str, labels_str)
+            else:
+                table.add_row(pipeline_id, name, repository, last_updated_str)
 
         # Render table to string
         from io import StringIO
@@ -1747,10 +1763,12 @@ class RunsList(Response):
         workspace: str,
         runs: list,
         base_workspace_url: str | None = None,
+        show_labels: bool = False,
     ) -> None:
         self.workspace = workspace
         self.runs = runs
         self.base_workspace_url = base_workspace_url
+        self.show_labels = show_labels
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -1779,6 +1797,8 @@ class RunsList(Response):
         table.add_column("Project")
         table.add_column("Status")
         table.add_column("Submitted")
+        if self.show_labels:
+            table.add_column("Labels")
 
         for run in self.runs:
             workflow = run.get("workflow", {})
@@ -1798,7 +1818,21 @@ class RunsList(Response):
             else:
                 submit_str = "-"
 
-            table.add_row(run_id, run_name, project, status, submit_str)
+            if self.show_labels:
+                labels = workflow.get("labels", [])
+                labels_str = (
+                    ", ".join(
+                        f"{lbl.get('name')}={lbl.get('value')}"
+                        if lbl.get("value")
+                        else lbl.get("name", "")
+                        for lbl in labels
+                    )
+                    if labels
+                    else "-"
+                )
+                table.add_row(run_id, run_name, project, status, submit_str, labels_str)
+            else:
+                table.add_row(run_id, run_name, project, status, submit_str)
 
         # Render table to string
         from io import StringIO
@@ -2891,10 +2925,12 @@ class ActionsList(Response):
         workspace: str,
         actions: list,
         base_workspace_url: str | None = None,
+        show_labels: bool = False,
     ) -> None:
         self.workspace = workspace
         self.actions = actions
         self.base_workspace_url = base_workspace_url
+        self.show_labels = show_labels
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -2925,6 +2961,8 @@ class ActionsList(Response):
         table.add_column("Pipeline")
         table.add_column("Status")
         table.add_column("Last Seen")
+        if self.show_labels:
+            table.add_column("Labels")
 
         for action in self.actions:
             action_id = action.get("id", "")
@@ -2944,7 +2982,21 @@ class ActionsList(Response):
             else:
                 last_seen_str = "-"
 
-            table.add_row(action_id, name, source, pipeline, status, last_seen_str)
+            if self.show_labels:
+                labels = action.get("labels", [])
+                labels_str = (
+                    ", ".join(
+                        f"{lbl.get('name')}={lbl.get('value')}"
+                        if lbl.get("value")
+                        else lbl.get("name", "")
+                        for lbl in labels
+                    )
+                    if labels
+                    else "-"
+                )
+                table.add_row(action_id, name, source, pipeline, status, last_seen_str, labels_str)
+            else:
+                table.add_row(action_id, name, source, pipeline, status, last_seen_str)
 
         # Render table to string
         string_io = StringIO()

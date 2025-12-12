@@ -38,6 +38,15 @@ app = typer.Typer(
     no_args_is_help=True,
 )
 
+# Create view subcommand app
+view_app = typer.Typer(
+    name="view",
+    help="View pipeline's runs",
+    no_args_is_help=True,
+    invoke_without_command=True,
+)
+app.add_typer(view_app)
+
 # Default workspace name
 USER_WORKSPACE_NAME = "user"
 
@@ -90,17 +99,57 @@ def list_runs(
         str | None,
         typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
     ] = None,
+    filter_str: Annotated[
+        str | None,
+        typer.Option("-f", "--filter", help="Show only runs that match the defined filter(s)"),
+    ] = None,
+    show_labels: Annotated[
+        bool,
+        typer.Option("-l", "--labels", help="Show labels"),
+    ] = False,
+    page: Annotated[
+        int | None,
+        typer.Option("--page", help="Pages to display"),
+    ] = None,
+    offset: Annotated[
+        int | None,
+        typer.Option("--offset", help="Rows record offset"),
+    ] = None,
+    max_results: Annotated[
+        int | None,
+        typer.Option("--max", help="Maximum number of records to display"),
+    ] = None,
 ) -> None:
     """List workflow runs in workspace."""
     try:
         sdk = get_sdk()
         output_format = get_output_format()
 
+        # Handle page vs offset conflict
+        if page is not None and offset is not None:
+            output_error("Cannot specify both --page and --offset")
+            sys.exit(1)
+
         # Get workspace name for display
         workspace_name = get_workspace_ref(sdk, workspace)
 
+        # Build search query from filter
+        search = filter_str
+
         # Get workflows using SDK
-        runs = list(sdk.runs.list(workspace=workspace))
+        runs = list(sdk.runs.list(workspace=workspace, search=search))
+
+        # Apply pagination manually if needed (SDK may not support it directly)
+        if page is not None:
+            page_size = max_results or 100
+            start_offset = (page - 1) * page_size
+            runs = runs[start_offset : start_offset + page_size]
+        elif offset is not None:
+            runs = runs[offset:]
+            if max_results:
+                runs = runs[:max_results]
+        elif max_results:
+            runs = runs[:max_results]
 
         # Convert to dicts for response formatting (mode='json' to serialize datetimes)
         workflows = []
@@ -111,6 +160,7 @@ def list_runs(
         result = RunsList(
             workspace=workspace_name,
             runs=workflows,
+            show_labels=show_labels,
         )
 
         output_response(result, output_format)
@@ -119,18 +169,77 @@ def list_runs(
         handle_runs_error(e)
 
 
-@app.command("view")
+@view_app.callback(invoke_without_command=True)
 def view_run(
+    ctx: typer.Context,
     run_id: Annotated[
         str,
-        typer.Option("-i", "--id", help="Workflow run ID"),
+        typer.Option("-i", "--id", help="Pipeline run identifier"),
     ],
     workspace: Annotated[
         str | None,
-        typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
+        typer.Option(
+            "-w",
+            "--workspace",
+            help="Workspace numeric identifier (TOWER_WORKSPACE_ID as default) or workspace reference as OrganizationName/WorkspaceName",
+        ),
     ] = None,
+    show_config: Annotated[
+        bool,
+        typer.Option("--config", help="Display pipeline run configuration"),
+    ] = False,
+    show_params: Annotated[
+        bool,
+        typer.Option("--params", help="Display pipeline run parameters"),
+    ] = False,
+    show_command: Annotated[
+        bool,
+        typer.Option("--command", help="Display pipeline run command"),
+    ] = False,
+    show_status: Annotated[
+        bool,
+        typer.Option("--status", help="Display pipeline run status"),
+    ] = False,
+    show_processes: Annotated[
+        bool,
+        typer.Option("--processes", help="Display pipeline run processes"),
+    ] = False,
+    show_stats: Annotated[
+        bool,
+        typer.Option("--stats", help="Display pipeline run stats"),
+    ] = False,
+    show_load: Annotated[
+        bool,
+        typer.Option("--load", help="Display pipeline run load"),
+    ] = False,
+    show_utilization: Annotated[
+        bool,
+        typer.Option("--utilization", help="Display pipeline run utilization"),
+    ] = False,
+    show_metrics_memory: Annotated[
+        bool,
+        typer.Option("--metrics-memory", help="Display pipeline run memory metrics"),
+    ] = False,
+    show_metrics_cpu: Annotated[
+        bool,
+        typer.Option("--metrics-cpu", help="Display pipeline run CPU metrics"),
+    ] = False,
+    show_metrics_time: Annotated[
+        bool,
+        typer.Option("--metrics-time", help="Display pipeline run job time metrics"),
+    ] = False,
+    show_metrics_io: Annotated[
+        bool,
+        typer.Option("--metrics-io", help="Display pipeline run I/O metrics"),
+    ] = False,
 ) -> None:
-    """View workflow run details."""
+    """View pipeline's runs."""
+    # If a subcommand was invoked, pass along context and return
+    if ctx.invoked_subcommand is not None:
+        # Store run_id and workspace in context for subcommands
+        ctx.obj = {"run_id": run_id, "workspace": workspace}
+        return
+
     try:
         sdk = get_sdk()
         output_format = get_output_format()
@@ -145,7 +254,108 @@ def view_run(
         progress = sdk.runs.progress(run_id, workspace=workspace)
         workflow_progress = progress.get("workflowProgress", {})
 
-        # Build general info
+        # Get launch info if needed for config/params/command
+        launch_info = None
+        if show_config or show_params or show_command:
+            client = sdk._http_client
+            params = {}
+            if workspace:
+                params["workspaceId"] = workspace
+            try:
+                launch_response = client.get(f"/workflow/{run_id}/launch", params=params)
+                launch_info = launch_response.get("launch", {})
+            except Exception:
+                launch_info = {}
+
+        # Build response based on what options are requested
+        if show_config:
+            config_text = launch_info.get("configText", "") if launch_info else ""
+            output_console(f"\nPipeline run configuration:\n\n{config_text}")
+            return
+
+        if show_params:
+            params_text = launch_info.get("paramsText", "") if launch_info else ""
+            output_console(f"\nPipeline run parameters:\n\n{params_text}")
+            return
+
+        if show_command:
+            command_line = run.command_line or ""
+            output_console(f"\nPipeline run command:\n\n{command_line}")
+            return
+
+        if show_status:
+            # Display status with task counts
+            pending = workflow_progress.get("pending", 0)
+            submitted = workflow_progress.get("submitted", 0)
+            running = workflow_progress.get("running", 0)
+            succeeded = workflow_progress.get("succeeded", 0)
+            failed = workflow_progress.get("failed", 0)
+            cached = workflow_progress.get("cached", 0)
+            output_console(
+                f"\nPipeline run status: {run.status}\n\n"
+                f"  Pending:   {pending}\n"
+                f"  Submitted: {submitted}\n"
+                f"  Running:   {running}\n"
+                f"  Succeeded: {succeeded}\n"
+                f"  Failed:    {failed}\n"
+                f"  Cached:    {cached}\n"
+            )
+            return
+
+        if show_processes:
+            processes = workflow_progress.get("processes", [])
+            output_console("\nPipeline run processes:\n")
+            for proc in processes:
+                name = proc.get("name", "")
+                pending = proc.get("pending", 0)
+                running = proc.get("running", 0)
+                succeeded = proc.get("succeeded", 0)
+                failed = proc.get("failed", 0)
+                output_console(
+                    f"  {name}: pending={pending}, running={running}, succeeded={succeeded}, failed={failed}"
+                )
+            return
+
+        if show_stats:
+            stats = run.stats or {}
+            output_console(f"\nPipeline run stats:\n\n{stats}")
+            return
+
+        if show_load:
+            load_cpus = workflow_progress.get("loadCpus", 0)
+            load_memory = workflow_progress.get("loadMemory", 0)
+            peak_cpus = workflow_progress.get("peakCpus", 0)
+            peak_memory = workflow_progress.get("peakMemory", 0)
+            output_console(
+                f"\nPipeline run load:\n\n"
+                f"  Load CPUs:    {load_cpus}\n"
+                f"  Load Memory:  {load_memory}\n"
+                f"  Peak CPUs:    {peak_cpus}\n"
+                f"  Peak Memory:  {peak_memory}\n"
+            )
+            return
+
+        if show_utilization:
+            # Get metrics for utilization
+            metrics = sdk.runs.metrics(run_id, workspace=workspace)
+            output_console(f"\nPipeline run utilization:\n\n{metrics}")
+            return
+
+        if show_metrics_memory or show_metrics_cpu or show_metrics_time or show_metrics_io:
+            metrics = sdk.runs.metrics(run_id, workspace=workspace)
+            metric_type = "all"
+            if show_metrics_memory:
+                metric_type = "memory"
+            elif show_metrics_cpu:
+                metric_type = "cpu"
+            elif show_metrics_time:
+                metric_type = "time"
+            elif show_metrics_io:
+                metric_type = "io"
+            output_console(f"\nPipeline run {metric_type} metrics:\n\n{metrics}")
+            return
+
+        # Default: show general info
         general = {
             "id": run.id,
             "runName": run.run_name,
@@ -244,24 +454,80 @@ def cancel_run(
         handle_runs_error(e)
 
 
-@app.command("tasks")
-def list_tasks(
+@view_app.command("tasks")
+def view_tasks(
+    ctx: typer.Context,
     run_id: Annotated[
-        str,
-        typer.Option("-i", "--id", help="Workflow run ID"),
-    ],
+        str | None,
+        typer.Option("-i", "--id", help="Pipeline run identifier"),
+    ] = None,
     workspace: Annotated[
         str | None,
-        typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
+        typer.Option(
+            "-w",
+            "--workspace",
+            help="Workspace numeric identifier (TOWER_WORKSPACE_ID as default) or workspace reference as OrganizationName/WorkspaceName",
+        ),
+    ] = None,
+    columns: Annotated[
+        str | None,
+        typer.Option(
+            "-c",
+            "--columns",
+            help="Additional task columns to display: taskId, process, tag, status, hash, exit, container, nativeId, submit, duration, realtime, pcpu, pmem, peakRss, peakVmem, rchar, wchar, volCtxt, invCtxt",
+        ),
+    ] = None,
+    filter_str: Annotated[
+        str | None,
+        typer.Option(
+            "-f", "--filter", help="Only show task with parameters that start with the given word"
+        ),
+    ] = None,
+    page: Annotated[
+        int | None,
+        typer.Option("--page", help="Pages to display"),
+    ] = None,
+    offset: Annotated[
+        int | None,
+        typer.Option("--offset", help="Rows record offset"),
+    ] = None,
+    max_results: Annotated[
+        int | None,
+        typer.Option("--max", help="Maximum number of records to display"),
     ] = None,
 ) -> None:
-    """List tasks for a workflow run."""
+    """Display pipeline's run tasks."""
     try:
+        # Get run_id from context if not provided directly
+        if ctx.obj and not run_id:
+            run_id = ctx.obj.get("run_id")
+            workspace = workspace or ctx.obj.get("workspace")
+
+        if not run_id:
+            output_error("Pipeline run ID is required (use -i/--id)")
+            sys.exit(1)
+
         sdk = get_sdk()
         output_format = get_output_format()
 
         # Get tasks using SDK
         tasks_list = list(sdk.runs.tasks(run_id, workspace=workspace))
+
+        # Apply filter if specified
+        if filter_str:
+            tasks_list = [t for t in tasks_list if filter_str.lower() in (t.process or "").lower()]
+
+        # Apply pagination
+        if page is not None:
+            page_size = max_results or 100
+            start_offset = (page - 1) * page_size
+            tasks_list = tasks_list[start_offset : start_offset + page_size]
+        elif offset is not None:
+            tasks_list = tasks_list[offset:]
+            if max_results:
+                tasks_list = tasks_list[:max_results]
+        elif max_results:
+            tasks_list = tasks_list[:max_results]
 
         # Convert to dicts for response formatting (mode='json' to serialize datetimes)
         tasks = [task.model_dump(by_alias=True, mode="json") for task in tasks_list]
@@ -278,19 +544,53 @@ def list_tasks(
         handle_runs_error(e)
 
 
-@app.command("metrics")
+@view_app.command("metrics")
 def view_metrics(
+    ctx: typer.Context,
     run_id: Annotated[
-        str,
-        typer.Option("-i", "--id", help="Workflow run ID"),
-    ],
+        str | None,
+        typer.Option("-i", "--id", help="Pipeline run identifier"),
+    ] = None,
     workspace: Annotated[
         str | None,
-        typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
+        typer.Option(
+            "-w",
+            "--workspace",
+            help="Workspace numeric identifier (TOWER_WORKSPACE_ID as default) or workspace reference as OrganizationName/WorkspaceName",
+        ),
+    ] = None,
+    filter_str: Annotated[
+        str | None,
+        typer.Option("-f", "--filter", help="Filters by process name"),
+    ] = None,
+    metric_type: Annotated[
+        str | None,
+        typer.Option(
+            "-t", "--type", help="Process metric types separated by comma: cpu, mem, time, io"
+        ),
+    ] = None,
+    columns: Annotated[
+        str | None,
+        typer.Option(
+            "-c", "--columns", help="Process metric columns to display: mean, min, q1, q2, q3, max"
+        ),
+    ] = None,
+    view_mode: Annotated[
+        str | None,
+        typer.Option("-v", "--view", help="Metric table view mode: expanded, condensed"),
     ] = None,
 ) -> None:
-    """View workflow run metrics."""
+    """Display pipeline's run metrics."""
     try:
+        # Get run_id from context if not provided directly
+        if ctx.obj and not run_id:
+            run_id = ctx.obj.get("run_id")
+            workspace = workspace or ctx.obj.get("workspace")
+
+        if not run_id:
+            output_error("Pipeline run ID is required (use -i/--id)")
+            sys.exit(1)
+
         sdk = get_sdk()
         output_format = get_output_format()
 
@@ -691,23 +991,53 @@ def _add_string_to_tar(tar: Any, name: str, content: str) -> None:
     tar.addfile(info, io.BytesIO(data))
 
 
-@app.command("task")
+@view_app.command("task")
 def view_task(
-    run_id: Annotated[
-        str,
-        typer.Option("-i", "--id", help="Workflow run ID"),
-    ],
+    ctx: typer.Context,
     task_id: Annotated[
-        int,
-        typer.Option("-t", "--task-id", help="Task ID"),
-    ],
+        int | None,
+        typer.Option("-t", help="Pipeline's run task identifier"),
+    ] = None,
+    run_id: Annotated[
+        str | None,
+        typer.Option("-i", "--id", help="Pipeline run identifier"),
+    ] = None,
     workspace: Annotated[
         str | None,
-        typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
+        typer.Option(
+            "-w",
+            "--workspace",
+            help="Workspace numeric identifier (TOWER_WORKSPACE_ID as default) or workspace reference as OrganizationName/WorkspaceName",
+        ),
     ] = None,
+    execution_time: Annotated[
+        bool,
+        typer.Option("--execution-time", help="Task execution time data"),
+    ] = False,
+    resources_requested: Annotated[
+        bool,
+        typer.Option("--resources-requested", help="Task requested resources data"),
+    ] = False,
+    resources_usage: Annotated[
+        bool,
+        typer.Option("--resources-usage", help="Task resources usage data"),
+    ] = False,
 ) -> None:
-    """View details of a single task in a workflow run."""
+    """Display pipeline's run task details."""
     try:
+        # Get run_id from context if not provided directly
+        if ctx.obj and not run_id:
+            run_id = ctx.obj.get("run_id")
+            workspace = workspace or ctx.obj.get("workspace")
+
+        if not run_id:
+            output_error("Pipeline run ID is required (use -i/--id)")
+            sys.exit(1)
+
+        if task_id is None:
+            output_error("Task ID is required (use -t)")
+            sys.exit(1)
+
         sdk = get_sdk()
         output_format = get_output_format()
 
@@ -799,12 +1129,13 @@ def find_or_create_label_ids(
     return label_ids
 
 
-@app.command("download")
-def download_run_file(
+@view_app.command("download")
+def view_download(
+    ctx: typer.Context,
     run_id: Annotated[
-        str,
-        typer.Option("-i", "--id", help="Workflow run ID"),
-    ],
+        str | None,
+        typer.Option("-i", "--id", help="Pipeline run identifier"),
+    ] = None,
     file_type: Annotated[
         str,
         typer.Option(
@@ -824,13 +1155,26 @@ def download_run_file(
     ] = None,
     workspace: Annotated[
         str | None,
-        typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
+        typer.Option(
+            "-w",
+            "--workspace",
+            help="Workspace numeric identifier (TOWER_WORKSPACE_ID as default) or workspace reference as OrganizationName/WorkspaceName",
+        ),
     ] = None,
 ) -> None:
     """Download a pipeline's run related files."""
     from pathlib import Path
 
     try:
+        # Get run_id from context if not provided directly
+        if ctx.obj and not run_id:
+            run_id = ctx.obj.get("run_id")
+            workspace = workspace or ctx.obj.get("workspace")
+
+        if not run_id:
+            output_error("Pipeline run ID is required (use -i/--id)")
+            sys.exit(1)
+
         sdk = get_sdk()
         output_format = get_output_format()
 

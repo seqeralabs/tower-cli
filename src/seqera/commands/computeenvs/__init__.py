@@ -5,6 +5,7 @@ Manage workspace compute environments for various cloud platforms.
 """
 
 import sys
+import time
 from typing import Annotated, Optional
 
 import typer
@@ -15,7 +16,7 @@ from seqera.exceptions import (
     NotFoundError,
     SeqeraError,
 )
-from seqera.main import get_output_format, get_sdk
+from seqera.main import get_client, get_output_format, get_sdk
 from seqera.responses.computeenvs import (
     ComputeEnvAdded,
     ComputeEnvDeleted,
@@ -31,6 +32,107 @@ from seqera.utils.output import OutputFormat, output_console, output_error, outp
 
 # Constants
 USER_WORKSPACE_NAME = "user"
+
+# Valid wait statuses for compute environments
+VALID_WAIT_STATUSES = ["CREATING", "AVAILABLE", "ERRORED", "INVALID"]
+
+
+def wait_for_compute_env_status(
+    client,
+    compute_env_id: str,
+    target_status: str,
+    workspace_id: str | None = None,
+    timeout: int = 600,
+    poll_interval: int = 5,
+) -> bool:
+    """Wait for a compute environment to reach the target status.
+
+    Args:
+        client: Seqera API client
+        compute_env_id: Compute environment ID
+        target_status: Target status to wait for (CREATING, AVAILABLE, ERRORED, INVALID)
+        workspace_id: Optional workspace ID
+        timeout: Maximum time to wait in seconds (default 600)
+        poll_interval: Time between status checks in seconds (default 5)
+
+    Returns:
+        True if target status reached, False if timeout
+    """
+    target_upper = target_status.upper()
+    if target_upper not in VALID_WAIT_STATUSES:
+        raise SeqeraError(
+            f"Invalid wait status '{target_status}'. Must be one of: {', '.join(VALID_WAIT_STATUSES)}"
+        )
+
+    start_time = time.time()
+
+    while time.time() - start_time < timeout:
+        params = {}
+        if workspace_id:
+            params["workspaceId"] = workspace_id
+
+        try:
+            response = client.get(f"/compute-envs/{compute_env_id}", params=params)
+            ce = response.get("computeEnv", {})
+            current_status = ce.get("status", "").upper()
+
+            if current_status == target_upper:
+                return True
+
+            # Terminal states that mean we should stop waiting
+            if (
+                current_status in ["AVAILABLE", "ERRORED", "INVALID"]
+                and current_status != target_upper
+            ):
+                return False
+
+        except Exception:
+            pass
+
+        time.sleep(poll_interval)
+
+    return False
+
+
+def find_or_create_label_ids(client, labels_str: str, workspace_id: str | None = None) -> list[int]:
+    """Find existing labels or create new ones, returning their IDs.
+
+    Args:
+        client: Seqera API client
+        labels_str: Comma-separated label names
+        workspace_id: Optional workspace ID
+
+    Returns:
+        List of label IDs
+    """
+    if not labels_str:
+        return []
+
+    params = {}
+    if workspace_id:
+        params["workspaceId"] = workspace_id
+
+    # Get existing labels
+    labels_response = client.get("/labels", params=params)
+    existing_labels = {l.get("name"): l.get("id") for l in labels_response.get("labels", [])}
+
+    label_ids = []
+    for label_name in labels_str.split(","):
+        label_name = label_name.strip()
+        if not label_name:
+            continue
+
+        if label_name in existing_labels:
+            label_ids.append(existing_labels[label_name])
+        else:
+            # Create new label
+            create_response = client.post("/labels", json={"name": label_name}, params=params)
+            new_label_id = create_response.get("id")
+            if new_label_id:
+                label_ids.append(new_label_id)
+                existing_labels[label_name] = new_label_id
+
+    return label_ids
 
 
 def output_response(response, output_format: OutputFormat) -> None:
@@ -180,21 +282,41 @@ def delete_compute_env(
 
 
 @app.command("list")
-def list_compute_envs() -> None:
+def list_compute_envs(
+    workspace: Annotated[
+        str | None,
+        typer.Option(
+            "-w",
+            "--workspace",
+            help="Workspace numeric identifier or workspace reference as OrganizationName/WorkspaceName",
+        ),
+    ] = None,
+) -> None:
     """List all compute environments in the workspace."""
     try:
         sdk = get_sdk()
         output_format = get_output_format()
 
         # Get compute environments using SDK
-        envs = list(sdk.compute_envs.list())
+        envs = list(sdk.compute_envs.list(workspace=workspace))
 
         # Convert to dicts for response formatting (mode='json' to serialize datetimes)
         compute_envs = [ce.model_dump(by_alias=True, mode="json") for ce in envs]
 
+        # Get workspace reference for display
+        workspace_ref = USER_WORKSPACE_NAME
+        if workspace:
+            for ws in sdk.workspaces.list():
+                if (
+                    str(ws.workspace_id) == str(workspace)
+                    or f"{ws.org_name}/{ws.workspace_name}" == workspace
+                ):
+                    workspace_ref = f"{ws.org_name} / {ws.workspace_name}"
+                    break
+
         # Output response
         result = ComputeEnvList(
-            workspace=USER_WORKSPACE_NAME,
+            workspace=workspace_ref,
             compute_envs=compute_envs,
             base_workspace_url=None,
         )

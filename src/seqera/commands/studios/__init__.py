@@ -842,11 +842,11 @@ def add_studio(
     ],
     template: Annotated[
         str | None,
-        typer.Option("--template", help="Studio template name or repository URL"),
+        typer.Option("-t", "--template", help="Studio template name or repository URL"),
     ] = None,
-    custom_image: Annotated[
+    custom_template: Annotated[
         str | None,
-        typer.Option("--custom-image", help="Custom container image URL"),
+        typer.Option("-ct", "--custom-template", help="Custom container image URL"),
     ] = None,
     description: Annotated[
         str | None,
@@ -925,12 +925,12 @@ def add_studio(
         workspace_ref, ws_id = get_workspace_info(client, workspace)
 
         # Validate template requirements
-        if not template and not custom_image:
-            output_error("Either --template or --custom-image must be specified")
+        if not template and not custom_template:
+            output_error("Either --template or --custom-template must be specified")
             sys.exit(1)
 
-        if custom_image and conda_env_yml:
-            output_error("Cannot use --conda-env-yml with --custom-image")
+        if custom_template and conda_env_yml:
+            output_error("Cannot use --conda-env-yml with --custom-template")
             sys.exit(1)
 
         # Find compute environment
@@ -946,7 +946,7 @@ def add_studio(
                 sys.exit(1)
             template_url = template_info.get("repository")
         else:
-            template_url = custom_image
+            template_url = custom_template
 
         # Read conda env file if specified
         conda_env_string = None

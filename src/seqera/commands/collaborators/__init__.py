@@ -107,6 +107,10 @@ def list_collaborators(
         str | None,
         typer.Option("-f", "--filter", help="Filter collaborators by username prefix"),
     ] = None,
+    page: Annotated[
+        int | None,
+        typer.Option("--page", help="Page number (1-indexed)"),
+    ] = None,
     offset: Annotated[
         int | None,
         typer.Option("--offset", help="Pagination offset"),
@@ -121,6 +125,10 @@ def list_collaborators(
         client = get_client()
         output_format = get_output_format()
 
+        # Check for conflicting pagination options
+        if page is not None and offset is not None:
+            raise SeqeraError("Please use either --page or --offset as pagination parameter")
+
         # Get user workspaces to validate organization
         user_name, orgs_and_workspaces = get_user_workspaces(client)
 
@@ -134,8 +142,13 @@ def list_collaborators(
         # Build query parameters
         params = {}
         # Default pagination values (matching Java implementation)
-        params["max"] = max_items if max_items is not None else 100
-        params["offset"] = offset if offset is not None else 0
+        default_max = 100
+        if page is not None:
+            params["max"] = max_items if max_items is not None else default_max
+            params["offset"] = (page - 1) * params["max"]
+        else:
+            params["max"] = max_items if max_items is not None else default_max
+            params["offset"] = offset if offset is not None else 0
 
         if filter_text:
             params["search"] = filter_text
@@ -151,6 +164,8 @@ def list_collaborators(
             "max": params["max"],
             "totalSize": total_size,
         }
+        if page is not None:
+            pagination_info["page"] = page
 
         result = CollaboratorsList(
             org_id=org_id,

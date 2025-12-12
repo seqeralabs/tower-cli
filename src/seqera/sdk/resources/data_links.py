@@ -64,6 +64,54 @@ class DataLinksResource(BaseResource):
         link_data = response.get("dataLink", {})
         return DataLink.model_validate(link_data)
 
+    def get_by_name(
+        self,
+        name: str,
+        workspace: str | int | None = None,
+    ) -> DataLink:
+        """
+        Get a data link by name.
+
+        Args:
+            name: Data link name
+            workspace: Workspace ID or "org/workspace" reference
+
+        Returns:
+            DataLink object
+
+        Raises:
+            Exception: If data link not found
+        """
+        for link in self.list(workspace=workspace):
+            if link.name == name:
+                return self.get(link.id, workspace=workspace)
+
+        raise Exception(f"Data link with name '{name}' not found")
+
+    def get_by_uri(
+        self,
+        uri: str,
+        workspace: str | int | None = None,
+    ) -> DataLink:
+        """
+        Get a data link by resource URI.
+
+        Args:
+            uri: Data link resource URI (e.g., s3://bucket-name)
+            workspace: Workspace ID or "org/workspace" reference
+
+        Returns:
+            DataLink object
+
+        Raises:
+            Exception: If data link not found
+        """
+        for link in self.list(workspace=workspace):
+            if link.resource_ref == uri:
+                return self.get(link.id, workspace=workspace)
+
+        raise Exception(f"Data link with URI '{uri}' not found")
+
     def add(
         self,
         name: str,

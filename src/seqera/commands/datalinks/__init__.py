@@ -738,44 +738,112 @@ def _explore_data_link_tree(
     return response.get("items", [])
 
 
+def _resolve_data_link_id(
+    client: SeqeraClient,
+    workspace_id: int | None,
+    data_link_id: str | None,
+    data_link_name: str | None,
+    data_link_uri: str | None,
+    credentials_id: str | None,
+) -> str:
+    """Resolve data link identifier (id, name, or uri) to data link ID."""
+    if data_link_id:
+        return data_link_id
+
+    # Search for data link by name or uri
+    params: dict[str, Any] = {}
+    if workspace_id:
+        params["workspaceId"] = workspace_id
+    if credentials_id:
+        params["credentialsId"] = credentials_id
+
+    search_parts = []
+    if data_link_name:
+        search_parts.append(data_link_name)
+    if data_link_uri:
+        search_parts.append(f"resourceRef:{data_link_uri}")
+
+    if search_parts:
+        params["search"] = " ".join(search_parts)
+
+    response = client.get("/data-links", params=params)
+    data_links = response.get("dataLinks", [])
+
+    if not data_links:
+        output_error("Data link not found")
+        raise typer.Exit(1)
+
+    if len(data_links) > 1:
+        output_error(
+            "Multiple data links found matching criteria. Please use --id to specify exactly which one."
+        )
+        raise typer.Exit(1)
+
+    return data_links[0].get("id")
+
+
 @app.command("download")
 def download_data_link(
-    data_link_id: Annotated[
-        str,
-        typer.Option("-i", "--id", help="Data link ID."),
-    ],
-    credentials: Annotated[
-        str,
-        typer.Option("-c", "--credentials", help="Credentials identifier (required)."),
-    ],
     paths: Annotated[
         list[str],
         typer.Argument(help="Paths to files or directories to download."),
     ],
     workspace: Annotated[
         str | None,
-        typer.Option("-w", "--workspace", help="Workspace numeric identifier or name."),
+        typer.Option(
+            "-w",
+            "--workspace",
+            help="Workspace numeric identifier (TOWER_WORKSPACE_ID as default) or workspace reference as OrganizationName/WorkspaceName",
+        ),
+    ] = None,
+    data_link_id: Annotated[
+        str | None,
+        typer.Option("-i", "--id", help="Data link id"),
+    ] = None,
+    data_link_name: Annotated[
+        str | None,
+        typer.Option("-n", "--name", help="Data link name (e.g. my-custom-data-link-name)"),
+    ] = None,
+    data_link_uri: Annotated[
+        str | None,
+        typer.Option("--uri", help="Data link URI (e.g. s3://another-bucket)"),
+    ] = None,
+    credentials: Annotated[
+        str | None,
+        typer.Option("-c", "--credentials", help="Credentials identifier"),
     ] = None,
     output_dir: Annotated[
         str | None,
         typer.Option("-o", "--output-dir", help="Output directory."),
     ] = None,
 ) -> None:
-    """Download content from a data link."""
+    """Download content of data-link."""
+    # Validate that at least one identifier is provided
+    if not data_link_id and not data_link_name and not data_link_uri:
+        output_error("At least one of --id, --name, or --uri must be provided")
+        raise typer.Exit(1)
+
     client = get_client()
     output_format = get_output_format()
 
     workspace_id = _resolve_workspace_id(client, workspace)
 
     # Resolve credentials
-    cred_id = _resolve_credentials_id(client, workspace_id, credentials)
+    cred_id = _resolve_credentials_id(client, workspace_id, credentials) if credentials else None
+
+    # Resolve data link ID from name or uri if not provided directly
+    resolved_data_link_id = _resolve_data_link_id(
+        client, workspace_id, data_link_id, data_link_name, data_link_uri, cred_id
+    )
 
     path_info: list[dict[str, Any]] = []
     show_progress = output_format != OutputFormat.JSON
 
     for path in paths:
         # Explore the tree to see if this is a file or directory
-        items = _explore_data_link_tree(client, data_link_id, [path], cred_id, workspace_id)
+        items = _explore_data_link_tree(
+            client, resolved_data_link_id, [path], cred_id, workspace_id
+        )
 
         if not items:
             # If no items found, assume this is a single file path
@@ -784,7 +852,7 @@ def download_data_link(
 
             _download_file(
                 client,
-                data_link_id,
+                resolved_data_link_id,
                 path,
                 target_path,
                 cred_id,
@@ -807,7 +875,7 @@ def download_data_link(
 
                 _download_file(
                     client,
-                    data_link_id,
+                    resolved_data_link_id,
                     item_path,
                     target_path,
                     cred_id,
@@ -1119,28 +1187,45 @@ def _upload_directory(
 
 @app.command("upload")
 def upload_data_link(
-    data_link_id: Annotated[
-        str,
-        typer.Option("-i", "--id", help="Data link ID."),
-    ],
-    credentials: Annotated[
-        str,
-        typer.Option("-c", "--credentials", help="Credentials identifier (required)."),
-    ],
     paths: Annotated[
         list[str],
         typer.Argument(help="Paths to files or directories to upload."),
     ],
     workspace: Annotated[
         str | None,
-        typer.Option("-w", "--workspace", help="Workspace numeric identifier or name."),
+        typer.Option(
+            "-w",
+            "--workspace",
+            help="Workspace numeric identifier (TOWER_WORKSPACE_ID as default) or workspace reference as OrganizationName/WorkspaceName",
+        ),
+    ] = None,
+    data_link_id: Annotated[
+        str | None,
+        typer.Option("-i", "--id", help="Data link id"),
+    ] = None,
+    data_link_name: Annotated[
+        str | None,
+        typer.Option("-n", "--name", help="Data link name (e.g. my-custom-data-link-name)"),
+    ] = None,
+    data_link_uri: Annotated[
+        str | None,
+        typer.Option("--uri", help="Data link URI (e.g. s3://another-bucket)"),
+    ] = None,
+    credentials: Annotated[
+        str | None,
+        typer.Option("-c", "--credentials", help="Credentials identifier"),
     ] = None,
     output_dir: Annotated[
         str | None,
         typer.Option("-o", "--output-dir", help="Remote output directory."),
     ] = None,
 ) -> None:
-    """Upload content to a data link."""
+    """Upload content to data-link."""
+    # Validate that at least one identifier is provided
+    if not data_link_id and not data_link_name and not data_link_uri:
+        output_error("At least one of --id, --name, or --uri must be provided")
+        raise typer.Exit(1)
+
     # Validate files before starting
     _count_files_and_validate(paths)
 
@@ -1150,10 +1235,15 @@ def upload_data_link(
     workspace_id = _resolve_workspace_id(client, workspace)
 
     # Resolve credentials
-    cred_id = _resolve_credentials_id(client, workspace_id, credentials)
+    cred_id = _resolve_credentials_id(client, workspace_id, credentials) if credentials else None
+
+    # Resolve data link ID from name or uri if not provided directly
+    resolved_data_link_id = _resolve_data_link_id(
+        client, workspace_id, data_link_id, data_link_name, data_link_uri, cred_id
+    )
 
     # Get data link to determine provider
-    data_link = _get_data_link(client, data_link_id, workspace_id, cred_id)
+    data_link = _get_data_link(client, resolved_data_link_id, workspace_id, cred_id)
     provider = data_link.get("provider", "").lower()
 
     if provider not in ("aws", "azure", "google", "seqeracompute"):
@@ -1170,7 +1260,7 @@ def upload_data_link(
             base_prefix = path.name + "/"
             file_count = _upload_directory(
                 client,
-                data_link_id,
+                resolved_data_link_id,
                 path,
                 path,
                 base_prefix,
@@ -1190,7 +1280,7 @@ def upload_data_link(
         else:
             _upload_file_multipart(
                 client,
-                data_link_id,
+                resolved_data_link_id,
                 path,
                 path.name,
                 cred_id,

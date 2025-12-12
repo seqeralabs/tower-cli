@@ -9,6 +9,31 @@ seqera --help
 seqera credentials add --help
 ```
 
+## Version
+
+Display the CLI version:
+
+```console
+$ seqera --version
+
+seqera 0.1.0
+```
+
+## Shell completion
+
+Generate shell completion scripts for bash, zsh, or fish:
+
+```bash
+# Bash
+eval "$(seqera generate-completion bash)"
+
+# Zsh
+eval "$(seqera generate-completion zsh)"
+
+# Fish
+seqera generate-completion fish > ~/.config/fish/completions/seqera.fish
+```
+
 > **Tip**: Use `seqera --output=json <command>` to output JSON for scripting.
 >
 > **Tip**: Use `seqera --output=json <command> | jq -r '.key'` to extract specific values.
@@ -713,6 +738,36 @@ $ seqera data-links browse -w seqeralabs/showcase -i v1-user-6d8f44c239e2a098b3e
  FOLDER | release/                                   | 0
  FOLDER | sequence_indices/                          | 0
  FOLDER | technical/                                 | 0
+```
+
+### Download files from a data link
+
+Run `seqera data-links download -h` to view all the required and optional fields for downloading files. You can identify the data link by ID, name, or URI:
+
+```console
+# By ID
+$ seqera data-links download -i v1-user-abc123 -c my-creds -p data/sample.csv -o ./sample.csv
+
+# By name
+$ seqera data-links download -n my-bucket -c my-creds -p data/sample.csv -o ./sample.csv
+
+# By URI
+$ seqera data-links download --uri s3://my-bucket -c my-creds -p data/sample.csv -o ./sample.csv
+```
+
+### Upload files to a data link
+
+Run `seqera data-links upload -h` to view all the required and optional fields for uploading files. You can identify the data link by ID, name, or URI:
+
+```console
+# By ID
+$ seqera data-links upload -i v1-user-abc123 -c my-creds -p data/results.csv -f ./results.csv
+
+# By name
+$ seqera data-links upload -n my-bucket -c my-creds -p data/results.csv -f ./results.csv
+
+# By URI
+$ seqera data-links upload --uri s3://my-bucket -c my-creds -p data/results.csv -f ./results.csv
 ```
 
 ## Labels

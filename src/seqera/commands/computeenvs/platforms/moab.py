@@ -175,6 +175,24 @@ def add_moab(
             "-c", "--credentials", help="Credentials identifier [default: workspace credentials]"
         ),
     ] = None,
+    # Labels option
+    labels: Annotated[
+        str | None,
+        typer.Option("--labels", help="Comma-separated list of labels"),
+    ] = None,
+    # Wait option
+    wait: Annotated[
+        str | None,
+        typer.Option(
+            "--wait",
+            help="Wait until compute environment reaches status (CREATING, AVAILABLE, ERRORED, INVALID)",
+        ),
+    ] = None,
+    # Workspace option
+    workspace: Annotated[
+        str | None,
+        typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
+    ] = None,
     pre_run: Annotated[
         Path | None,
         typer.Option("--pre-run", help="Pre-run script"),
@@ -249,19 +267,42 @@ def add_moab(
         if env_vars:
             config["environment"] = env_vars
 
-        # Create compute environment request
-        request = {
-            "computeEnv": {
-                "name": name,
-                "platform": PLATFORM_ID,
-                "credentialsId": credentials_id,
-                "config": config,
-            }
+        # Import label and wait functions
+        from seqera.commands.computeenvs import (
+            find_or_create_label_ids,
+            wait_for_compute_env_status,
+        )
+
+        # Build compute env payload
+        compute_env_payload = {
+            "name": name,
+            "platform": PLATFORM_ID,
+            "credentialsId": credentials_id,
+            "config": config,
         }
+
+        # Add labels if specified
+        if labels:
+            label_ids = find_or_create_label_ids(client, labels, workspace)
+            if label_ids:
+                compute_env_payload["labelIds"] = label_ids
+
+        # Create compute environment request
+        request = {"computeEnv": compute_env_payload}
 
         # Create compute environment
         response = client.post("/compute-envs", json=request)
-        compute_env_id = response.get("computeEnvId")
+        compute_env_id = response.get("computeEnvId", "")
+
+        # Wait for status if requested
+        if wait:
+            typer.echo(f"Waiting for compute environment to reach '{wait}' status...")
+            if wait_for_compute_env_status(client, compute_env_id, wait, workspace):
+                typer.echo(f"Compute environment reached '{wait}' status")
+            else:
+                typer.echo(
+                    f"Warning: Compute environment did not reach '{wait}' status within timeout"
+                )
 
         # Output response
         result = ComputeEnvAdded(
