@@ -14,6 +14,7 @@ from typing import TYPE_CHECKING, Annotated
 import typer
 
 from seqera.api.client import SeqeraClient
+from seqera.config import SeqeraConfig, load_config
 from seqera.utils.output import OutputFormat
 
 
@@ -55,6 +56,7 @@ class GlobalState:
         self.output_format: OutputFormat = OutputFormat.CONSOLE
         self.workspace_id: str | None = None
         self.workspace_ref: str | None = None
+        self.config: SeqeraConfig | None = None
 
 
 # Global state instance
@@ -83,6 +85,18 @@ def set_client(client: SeqeraClient) -> None:
 def set_sdk(sdk: Seqera) -> None:
     """Set the global SDK client instance."""
     state._sdk_client = sdk
+
+
+def get_config() -> SeqeraConfig:
+    """Get the global configuration."""
+    if state.config is None:
+        raise RuntimeError("Configuration not loaded. This is a bug.")
+    return state.config
+
+
+def set_config(config: SeqeraConfig) -> None:
+    """Set the global configuration."""
+    state.config = config
 
 
 def set_output_format(format: OutputFormat) -> None:
@@ -156,6 +170,11 @@ def main_callback(
     Seqera Platform CLI.
 
     Interact with Seqera Platform from the command line.
+
+    Configuration is loaded with the following precedence (highest to lowest):
+    1. Command-line options and environment variables
+    2. TOML config file ($XDG_CONFIG_HOME/seqera/config.toml)
+    3. Nextflow auth config ($NXF_HOME/seqera-auth.config)
     """
     # Set output format
     try:
@@ -172,19 +191,46 @@ def main_callback(
     if ctx.invoked_subcommand is None or ctx.resilient_parsing:
         return
 
+    # Load layered configuration
+    # Note: access_token and url from Typer are already resolved from env vars
+    # We only pass them if they were explicitly set (not default)
+    config = load_config(
+        env_access_token=access_token,
+        env_url=url if url != "https://api.cloud.seqera.io" else None,
+    )
+    set_config(config)
+
+    # Use the final resolved access token
+    final_token = config.access_token
+    final_url = config.url
+
     # Check for access token
-    if not access_token:
+    if not final_token:
         typer.echo(
             "Error: Missing Seqera Platform access token. "
-            "Set SEQERA_ACCESS_TOKEN environment variable or use --access-token option.",
+            "Set SEQERA_ACCESS_TOKEN environment variable, use --access-token option, "
+            "or configure in $XDG_CONFIG_HOME/seqera/config.toml or $NXF_HOME/seqera-auth.config.",
             err=True,
         )
         raise typer.Exit(1)
 
+    # Show config source in verbose mode
+    if verbose:
+        token_source = config.get_source("access_token") or "default"
+        url_source = config.get_source("url") or "default"
+        typer.echo(f"[config] access_token from: {token_source}", err=True)
+        typer.echo(f"[config] url from: {url_source}", err=True)
+        if config.workspace_id:
+            ws_source = config.get_source("workspace_id") or "default"
+            typer.echo(f"[config] workspace_id from: {ws_source}", err=True)
+        if config.compute_env_id:
+            ce_source = config.get_source("compute_env_id") or "default"
+            typer.echo(f"[config] compute_env_id from: {ce_source}", err=True)
+
     # Initialize API client (for backwards compatibility during transition)
     client = SeqeraClient(
-        base_url=url,
-        token=access_token,
+        base_url=final_url,
+        token=final_token,
         insecure=insecure,
         verbose=verbose,
     )
@@ -194,8 +240,8 @@ def main_callback(
     from seqera.sdk.client import Seqera
 
     sdk = Seqera(
-        access_token=access_token,
-        url=url,
+        access_token=final_token,
+        url=final_url,
         insecure=insecure,
     )
     set_sdk(sdk)

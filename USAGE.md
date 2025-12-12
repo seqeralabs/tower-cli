@@ -9,6 +9,66 @@ seqera --help
 seqera credentials add --help
 ```
 
+## Configuration
+
+The CLI loads configuration from multiple sources with the following precedence (highest to lowest):
+
+1. **Command-line options** (`--access-token`, `--url`, etc.)
+2. **Environment variables** (`SEQERA_ACCESS_TOKEN`, `TOWER_ACCESS_TOKEN`, etc.)
+3. **TOML config file** (`$XDG_CONFIG_HOME/seqera/config.toml` or `~/.config/seqera/config.toml`)
+4. **Nextflow auth config** (`$NXF_HOME/seqera-auth.config` or `~/.nextflow/seqera-auth.config`)
+
+Each configuration value is resolved independently, so you can mix sources (e.g., token from environment, workspace from config file).
+
+### Environment variables
+
+| Variable | Description |
+|----------|-------------|
+| `SEQERA_ACCESS_TOKEN` | Seqera Platform access token |
+| `TOWER_ACCESS_TOKEN` | Alternative access token variable (legacy) |
+| `SEQERA_API_ENDPOINT` | API endpoint URL |
+| `TOWER_API_ENDPOINT` | Alternative API endpoint variable (legacy) |
+| `SEQERA_WORKSPACE` | Default workspace ID |
+| `TOWER_WORKSPACE_ID` | Alternative workspace variable (legacy) |
+| `SEQERA_COMPUTE_ENV` | Default compute environment ID |
+
+### TOML config file
+
+Create a config file at `~/.config/seqera/config.toml` (or `$XDG_CONFIG_HOME/seqera/config.toml`):
+
+```toml
+access_token = "your-access-token"
+url = "https://api.cloud.seqera.io"
+workspace_id = "123456789"
+compute_env_id = "abc123def456"
+```
+
+### Nextflow auth config
+
+The CLI can also read credentials from a Nextflow-style auth config file at `~/.nextflow/seqera-auth.config` (or `$NXF_HOME/seqera-auth.config`):
+
+```groovy
+tower {
+    accessToken = 'your-access-token'
+    endpoint = 'https://api.cloud.seqera.io'
+    workspaceId = '123456789'
+    computeEnvId = 'abc123def456'
+}
+```
+
+This allows sharing authentication configuration between Nextflow and the Seqera CLI.
+
+### Debugging configuration
+
+Use the `-v/--verbose` flag to see where each configuration value was loaded from:
+
+```console
+$ seqera -v info
+[config] access_token from: ~/.config/seqera/config.toml
+[config] url from: environment
+...
+```
+
 ## Version
 
 Display the CLI version:
