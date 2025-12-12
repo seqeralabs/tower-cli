@@ -286,6 +286,29 @@ dump_data = client.runs.dump(
 # Returns dict with: workflow, tasks, metrics, progress, task_logs
 ```
 
+### Download log file
+
+Download workflow or task log files:
+
+```python
+# Download workflow stdout
+content = client.runs.download_log(
+    "abc123",
+    file_type="stdout",  # stdout, log, stderr, timeline
+)
+
+# Download task log file
+task_content = client.runs.download_log(
+    "abc123",
+    file_type="log",
+    task_id=42,
+)
+
+# Save to file
+with open("workflow.log", "wb") as f:
+    f.write(content)
+```
+
 ---
 
 ## Compute Environments
@@ -352,6 +375,13 @@ ce_id = client.compute_envs.import_config(config, name="custom-name")
 
 # Import with overwrite (deletes existing CE with same name)
 ce_id = client.compute_envs.import_config(config, overwrite=True)
+```
+
+### Update compute environment
+
+```python
+# Rename a compute environment
+client.compute_envs.update("ce-id", name="new-name")
 ```
 
 ---
@@ -818,6 +848,36 @@ for template in templates:
     print(f"{template['id']}: {template['name']}")
 ```
 
+### Create studio
+
+```python
+# Create a new studio with a template
+studio = client.studios.create(
+    name="My Analysis Studio",
+    compute_env_id="ce-123",
+    template_url="cr.seqera.io/public/data-studio-jupyter:1.0",
+    cpu=4,
+    memory=16384,
+    gpu=0,
+    description="My data analysis environment",
+    auto_start=True,  # Start immediately
+)
+print(f"Created studio: {studio.session_id}")
+```
+
+### Create studio from existing
+
+```python
+# Clone a studio from an existing one (preserves checkpoint state)
+studio = client.studios.create_from_existing(
+    name="Cloned Studio",
+    parent_studio_id="parent-studio-id",
+    parent_checkpoint_id=123,  # Optional, uses most recent if not specified
+    auto_start=True,
+)
+print(f"Cloned studio: {studio.session_id}")
+```
+
 ---
 
 ## Data Links
@@ -1189,8 +1249,8 @@ for pipeline in client.pipelines.list():
 | Resource | Methods |
 |----------|---------|
 | `client.pipelines` | `list`, `get`, `get_by_name`, `add`, `update`, `delete`, `launch`, `get_launch_info`, `export_config` |
-| `client.runs` | `list`, `get`, `get_task`, `cancel`, `delete`, `relaunch`, `dump`, `tasks`, `metrics`, `progress` |
-| `client.compute_envs` | `list`, `get`, `get_by_name`, `delete`, `get_primary`, `set_primary`, `export_config`, `import_config` |
+| `client.runs` | `list`, `get`, `get_task`, `cancel`, `delete`, `relaunch`, `dump`, `download_log`, `tasks`, `metrics`, `progress` |
+| `client.compute_envs` | `list`, `get`, `get_by_name`, `delete`, `get_primary`, `set_primary`, `export_config`, `import_config`, `update` |
 | `client.credentials` | `list`, `get`, `add_aws`, `add_azure`, `add_google`, `add_github`, `add_gitlab`, `add_gitea`, `add_bitbucket`, `add_codecommit`, `add_container_registry`, `add_ssh`, `add_k8s`, `add_agent`, `update`, `delete` |
 | `client.workspaces` | `list`, `get`, `add`, `update`, `delete`, `leave` |
 | `client.secrets` | `list`, `get`, `add`, `update`, `delete` |
@@ -1201,7 +1261,7 @@ for pipeline in client.pipelines.list():
 | `client.members` | `list`, `add`, `update`, `delete`, `leave` |
 | `client.participants` | `list`, `add`, `update`, `delete` |
 | `client.actions` | `list`, `get`, `add`, `update`, `delete` |
-| `client.studios` | `list`, `get`, `delete`, `start`, `stop`, `checkpoints`, `templates` |
+| `client.studios` | `list`, `get`, `delete`, `start`, `stop`, `checkpoints`, `templates`, `create`, `create_from_existing` |
 | `client.collaborators` | `list`, `add`, `delete` |
 | `client.data_links` | `list`, `get`, `add`, `update`, `delete`, `browse`, `get_download_url`, `get_upload_url` |
 | `client.info()` | Get API info |

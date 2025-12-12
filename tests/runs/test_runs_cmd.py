@@ -638,3 +638,104 @@ class TestRunsCmd:
         else:  # console
             assert "set" in out.stdout
             assert "workflow" in out.stdout
+
+    @pytest.mark.parametrize("output_format", ["console", "json", "yaml"])
+    def test_download_workflow_stdout(
+        self,
+        httpserver: HTTPServer,
+        exec_cmd: callable,
+        output_format: str,
+        tmp_path: Path,
+    ) -> None:
+        """Test downloading workflow stdout file."""
+        # Setup mock HTTP expectation
+        httpserver.expect_request(
+            "/workflow/5mDfiUtqyptDib/download/nf-5mDfiUtqyptDib.txt",
+            method="GET",
+        ).respond_with_data(b"Workflow output content", status=200)
+
+        # Run the command with output path
+        output_file = tmp_path / "workflow_stdout.txt"
+        out = exec_cmd(
+            "runs",
+            "download",
+            "-i",
+            "5mDfiUtqyptDib",
+            "--type",
+            "stdout",
+            "-o",
+            str(output_file),
+            output_format=output_format,
+        )
+
+        # Assertions
+        assert out.exit_code == 0
+        assert out.stderr == ""
+        assert output_file.exists()
+        assert output_file.read_bytes() == b"Workflow output content"
+
+        if output_format == "json":
+            data = json.loads(out.stdout)
+            assert data["fileType"] == "stdout"
+            assert data["runId"] == "5mDfiUtqyptDib"
+        elif output_format == "yaml":
+            import yaml
+
+            data = yaml.safe_load(out.stdout)
+            assert data["fileType"] == "stdout"
+            assert data["runId"] == "5mDfiUtqyptDib"
+        else:  # console
+            assert "Downloaded" in out.stdout
+            assert "stdout" in out.stdout
+
+    @pytest.mark.parametrize("output_format", ["console", "json", "yaml"])
+    def test_download_task_stderr(
+        self,
+        httpserver: HTTPServer,
+        exec_cmd: callable,
+        output_format: str,
+        tmp_path: Path,
+    ) -> None:
+        """Test downloading task stderr file."""
+        # Setup mock HTTP expectation
+        httpserver.expect_request(
+            "/workflow/5mDfiUtqyptDib/download/task/42/.command.err",
+            method="GET",
+        ).respond_with_data(b"Task error content", status=200)
+
+        # Run the command
+        output_file = tmp_path / "task_stderr.txt"
+        out = exec_cmd(
+            "runs",
+            "download",
+            "-i",
+            "5mDfiUtqyptDib",
+            "--type",
+            "stderr",
+            "-t",
+            "42",
+            "-o",
+            str(output_file),
+            output_format=output_format,
+        )
+
+        # Assertions
+        assert out.exit_code == 0
+        assert out.stderr == ""
+        assert output_file.exists()
+        assert output_file.read_bytes() == b"Task error content"
+
+        if output_format == "json":
+            data = json.loads(out.stdout)
+            assert data["fileType"] == "stderr"
+            assert data["runId"] == "5mDfiUtqyptDib"
+            assert data["taskId"] == 42
+        elif output_format == "yaml":
+            import yaml
+
+            data = yaml.safe_load(out.stdout)
+            assert data["fileType"] == "stderr"
+            assert data["taskId"] == 42
+        else:  # console
+            assert "Downloaded" in out.stdout
+            assert "task" in out.stdout.lower()

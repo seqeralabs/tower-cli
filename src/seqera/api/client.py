@@ -131,16 +131,18 @@ class SeqeraClient:
         self,
         endpoint: str,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+        raw: bool = False,
+    ) -> dict[str, Any] | bytes:
         """
         Perform a GET request.
 
         Args:
             endpoint: API endpoint (relative to base_url)
             params: Query parameters
+            raw: If True, return raw bytes instead of parsed JSON
 
         Returns:
-            Parsed JSON response
+            Parsed JSON response or raw bytes if raw=True
         """
         url = (
             endpoint
@@ -148,6 +150,15 @@ class SeqeraClient:
             else urljoin(self.base_url + "/", endpoint.lstrip("/"))
         )
         response = self.client.get(url, params=params)
+
+        if raw:
+            # For raw requests, just check status and return content
+            if 200 <= response.status_code < 300:
+                return response.content
+            # Handle errors
+            self._handle_response(response)
+            return b""
+
         return self._handle_response(response)
 
     def post(

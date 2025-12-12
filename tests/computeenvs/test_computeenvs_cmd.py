@@ -551,3 +551,83 @@ class TestComputeEnvsImportCmd:
             data = json.loads(out.stdout)
             assert data["id"] == "new-ce-id-789"
             assert data["name"] == "existing-ce"
+
+
+class TestComputeEnvsUpdateCmd:
+    """Test compute-envs update command."""
+
+    @pytest.mark.parametrize("output_format", ["console", "json", "yaml"])
+    def test_update_by_id(
+        self,
+        httpserver: HTTPServer,
+        exec_cmd: callable,
+        user_workspace_name: str,
+        output_format: str,
+    ) -> None:
+        """Test updating compute environment by ID."""
+        # Get compute env by ID
+        httpserver.expect_request(
+            "/compute-envs/4Ks2gtNrdv7VWyHnRaeCa4",
+            method="GET",
+        ).respond_with_json(
+            {"computeEnv": {"id": "4Ks2gtNrdv7VWyHnRaeCa4", "name": "old-ce-name", "platform": "aws-batch"}},
+            status=200,
+        )
+
+        # Validate new name
+        httpserver.expect_request(
+            "/compute-envs/validate",
+            method="GET",
+        ).respond_with_data("", status=200)
+
+        # Update compute env
+        httpserver.expect_request(
+            "/compute-envs/4Ks2gtNrdv7VWyHnRaeCa4",
+            method="PUT",
+        ).respond_with_data("", status=204)
+
+        # Run the command
+        out = exec_cmd(
+            "compute-envs",
+            "update",
+            "-i",
+            "4Ks2gtNrdv7VWyHnRaeCa4",
+            "--new-name",
+            "renamed-ce",
+            output_format=output_format,
+        )
+
+        # Assertions
+        assert out.exit_code == 0
+        assert out.stderr == ""
+
+        if output_format == "json":
+            data = json.loads(out.stdout)
+            assert data["name"] == "renamed-ce"
+            assert data["id"] == "4Ks2gtNrdv7VWyHnRaeCa4"
+        elif output_format == "yaml":
+            import yaml
+
+            data = yaml.safe_load(out.stdout)
+            assert data["name"] == "renamed-ce"
+        else:  # console
+            assert "updated" in out.stdout.lower()
+            assert "renamed-ce" in out.stdout
+
+    def test_update_missing_new_name(
+        self,
+        httpserver: HTTPServer,
+        exec_cmd: callable,
+    ) -> None:
+        """Test update fails without --new-name."""
+        # Run the command
+        out = exec_cmd(
+            "compute-envs",
+            "update",
+            "-i",
+            "4Ks2gtNrdv7VWyHnRaeCa4",
+        )
+
+        # Assertions
+        assert out.exit_code == 1
+        assert "--new-name" in out.stderr or "required" in out.stderr.lower()

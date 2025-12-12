@@ -142,6 +142,16 @@ $ seqera compute-envs import --name=my_aws_ce_v1 ./my_aws_ce_v1.json
   New AWS-BATCH compute environment 'my_aws_ce_v1' added at user workspace
 ```
 
+### Update a compute environment
+
+Update settings for an existing compute environment (e.g., rename it).
+
+```console
+$ seqera compute-envs update --name=my_aws_ce --new-name=my_aws_ce_renamed
+
+  Compute environment 'my_aws_ce_renamed' updated at user workspace
+```
+
 ## Pipelines
 
 Pipelines define pre-configured workflows in a workspace. A pipeline consists of a workflow repository, launch parameters, and a compute environment.
@@ -426,6 +436,28 @@ $ seqera runs task -i 5z4AMshti4g0GK -t 1
     Container:  quay.io/biocontainers/fastqc:0.11.9
     Executor:   awsbatch
     Work dir:   s3://bucket/work/a1/b2c3d4
+```
+
+### Download log files
+
+Download workflow or task log files from a run. Available file types:
+- **stdout** - Standard output (workflow: `nf-{id}.txt`, task: `.command.out`)
+- **log** - Log file (workflow: `nf-{id}.log`, task: `.command.log`)
+- **stderr** - Standard error (task only: `.command.err`)
+- **timeline** - Timeline HTML (workflow only: `timeline-{id}.html`)
+
+```console
+$ seqera runs download -i 5z4AMshti4g0GK --type=stdout
+
+  Downloaded stdout file for run 5z4AMshti4g0GK to 'nf-5z4AMshti4g0GK.txt'
+```
+
+Download a task's log file:
+
+```console
+$ seqera runs download -i 5z4AMshti4g0GK --type=log -t 42 -o task-42.log
+
+  Downloaded log file for task 42 to 'task-42.log'
 ```
 
 ## Workspaces
@@ -762,6 +794,47 @@ $ seqera studios templates -w seqeralabs/showcase
     jupyter      Jupyter Notebook               cr.seqera.io/public/data-studio-jupyter
     vscode       VS Code                        cr.seqera.io/public/data-studio-vscode
     rstudio      RStudio                        cr.seqera.io/public/data-studio-rstudio
+```
+
+### Add a studio
+
+Create a new studio session with a template and compute environment.
+
+```console
+$ seqera studios add -n my-jupyter-studio -c my-compute-env --template Jupyter -w 12345
+
+  Studio 'abc123' created at [myorg / myworkspace] workspace
+```
+
+With additional options:
+
+```console
+$ seqera studios add -n my-studio -c my-compute-env --template Jupyter \
+    --cpu 4 --memory 16384 --gpu 1 \
+    --description "My analysis studio" \
+    --labels "project=myproject" \
+    --auto-start \
+    -w 12345
+
+  Studio 'abc123' created and started at [myorg / myworkspace] workspace
+```
+
+### Add a studio from existing
+
+Create a new studio from an existing studio's checkpoint (preserving state/data).
+
+```console
+$ seqera studios add-as-new -n cloned-studio -p parent-studio-id -w 12345
+
+  Studio 'def456' created at [myorg / myworkspace] workspace
+```
+
+Using a specific checkpoint:
+
+```console
+$ seqera studios add-as-new -n cloned-studio --parent-name "My Studio" --parent-checkpoint-id checkpoint-123 -w 12345
+
+  Studio 'def456' created at [myorg / myworkspace] workspace
 ```
 
 ### Delete a studio

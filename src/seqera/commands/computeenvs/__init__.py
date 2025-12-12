@@ -314,6 +314,79 @@ def primary_set(
         handle_compute_env_error(e)
 
 
+@app.command("update")
+def update_compute_env(
+    compute_env_id: Annotated[
+        str | None,
+        typer.Option("-i", "--id", help="Compute environment ID to update"),
+    ] = None,
+    compute_env_name: Annotated[
+        str | None,
+        typer.Option("-n", "--name", help="Compute environment name to update"),
+    ] = None,
+    new_name: Annotated[
+        str | None,
+        typer.Option("--new-name", help="New name for the compute environment"),
+    ] = None,
+    workspace: Annotated[
+        str | None,
+        typer.Option("-w", "--workspace", help="Workspace ID"),
+    ] = None,
+) -> None:
+    """Update compute environment settings."""
+    try:
+        sdk = get_sdk()
+        output_format = get_output_format()
+
+        if not compute_env_id and not compute_env_name:
+            output_error("Either --id or --name must be provided")
+            sys.exit(1)
+
+        if not new_name:
+            output_error("--new-name is required")
+            sys.exit(1)
+
+        # Get compute environment using SDK (for name resolution)
+        ce_ref = compute_env_id or compute_env_name
+        ce = sdk.compute_envs.get(ce_ref, workspace=workspace)
+
+        # Validate new name
+        client = sdk._http_client
+        params = {}
+        if workspace:
+            params["workspaceId"] = workspace
+
+        try:
+            client.get(f"/compute-envs/validate?name={new_name}", params=params)
+        except Exception:
+            output_error(f"Compute environment name '{new_name}' is not valid")
+            sys.exit(1)
+
+        # Get workspace reference for display
+        workspace_ref = USER_WORKSPACE_NAME
+        if workspace:
+            for ws in sdk.workspaces.list():
+                if str(ws.workspace_id) == str(workspace):
+                    workspace_ref = f"{ws.org_name} / {ws.workspace_name}"
+                    break
+
+        # Update the compute environment
+        update_payload = {"name": new_name}
+        client.put(f"/compute-envs/{ce.id}", json=update_payload, params=params)
+
+        # Output response
+        result = ComputeEnvUpdated(
+            compute_env_id=ce.id,
+            name=new_name,
+            workspace=workspace_ref,
+        )
+
+        output_response(result, output_format)
+
+    except Exception as e:
+        handle_compute_env_error(e)
+
+
 @app.command("export")
 def export_compute_env(
     compute_env_name: Annotated[

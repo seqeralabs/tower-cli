@@ -3330,3 +3330,94 @@ class LabelsManaged(Response):
     def to_console(self) -> str:
         workspace_ref = str(self.workspace_id) if self.workspace_id else "user"
         return f"  '{self.operation}' labels on '{self.entity_type}' with id '{self.entity_id}' at {workspace_ref} workspace"
+
+
+class RunFileDownloaded(Response):
+    """Response for run file download command."""
+
+    def __init__(
+        self,
+        file_path: str,
+        file_type: str,
+        run_id: str,
+        task_id: int | None = None,
+    ) -> None:
+        self.file_path = file_path
+        self.file_type = file_type
+        self.run_id = run_id
+        self.task_id = task_id
+
+    def to_dict(self) -> dict[str, Any]:
+        result = {
+            "filePath": self.file_path,
+            "fileType": self.file_type,
+            "runId": self.run_id,
+        }
+        if self.task_id:
+            result["taskId"] = self.task_id
+        return result
+
+    def to_console(self) -> str:
+        if self.task_id:
+            return f"  Downloaded {self.file_type} file for task {self.task_id} to '{self.file_path}'"
+        return f"  Downloaded {self.file_type} file for run {self.run_id} to '{self.file_path}'"
+
+
+class ComputeEnvUpdated(Response):
+    """Response for compute environment updated command."""
+
+    def __init__(
+        self,
+        compute_env_id: str,
+        name: str,
+        workspace: str,
+    ) -> None:
+        self.compute_env_id = compute_env_id
+        self.name = name
+        self.workspace = workspace
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "computeEnvId": self.compute_env_id,
+            "name": self.name,
+            "workspace": self.workspace,
+        }
+
+    def to_console(self) -> str:
+        return f"  Compute environment '{self.name}' updated at {self.workspace} workspace"
+
+
+class StudiosCreated(Response):
+    """Response for studios add command."""
+
+    def __init__(
+        self,
+        session_id: str,
+        workspace_id: int | None,
+        workspace_ref: str,
+        base_workspace_url: str | None = None,
+        auto_start: bool = False,
+    ) -> None:
+        self.session_id = session_id
+        self.workspace_id = workspace_id
+        self.workspace_ref = workspace_ref
+        self.base_workspace_url = base_workspace_url
+        self.auto_start = auto_start
+
+    def to_dict(self) -> dict[str, Any]:
+        result = {
+            "sessionId": self.session_id,
+            "workspaceRef": self.workspace_ref,
+        }
+        if self.workspace_id:
+            result["workspaceId"] = self.workspace_id
+        if self.auto_start:
+            result["autoStart"] = self.auto_start
+        return result
+
+    def to_console(self) -> str:
+        status = "created and started" if self.auto_start else "created"
+        output = f"  Studio '{self.session_id}' {status} at {self.workspace_ref} workspace"
+        if self.base_workspace_url:
+            output += f"\n\n    {self.base_workspace_url}/studios/{self.session_id}"
+        return output

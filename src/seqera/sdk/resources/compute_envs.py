@@ -245,6 +245,38 @@ class ComputeEnvsResource(BaseResource):
         response = self._client.post("/compute-envs", json={"computeEnv": config}, params=params)
         return response.get("computeEnvId", "")
 
+    def update(
+        self,
+        compute_env: str,
+        workspace: str | int | None = None,
+        *,
+        name: str | None = None,
+    ) -> None:
+        """
+        Update a compute environment.
+
+        Args:
+            compute_env: Compute environment ID or name
+            workspace: Workspace ID or "org/workspace" reference
+            name: New name for the compute environment
+        """
+        params = self._build_params(workspace=workspace)
+
+        # Get compute environment ID
+        if self._looks_like_id(compute_env):
+            ce_id = compute_env
+        else:
+            ce = self.get_by_name(compute_env, workspace=workspace)
+            ce_id = ce.id
+
+        # Build update payload
+        update_payload: dict[str, Any] = {}
+        if name:
+            update_payload["name"] = name
+
+        if update_payload:
+            self._client.put(f"/compute-envs/{ce_id}", json=update_payload, params=params)
+
     def _looks_like_id(self, value: str | int) -> bool:
         """Check if value looks like a compute environment ID (UUID or numeric)."""
         if isinstance(value, int):

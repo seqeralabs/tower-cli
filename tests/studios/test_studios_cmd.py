@@ -815,3 +815,265 @@ class TestStudiosTemplatesCmd:
             assert "VS Code" in out.stdout or "vscode" in out.stdout
             assert "RStudio" in out.stdout or "rstudio" in out.stdout
             assert "templates" in out.stdout.lower()
+
+
+class TestStudiosAddCmd:
+    """Test studios add command."""
+
+    @pytest.mark.parametrize("output_format", ["console", "json", "yaml"])
+    def test_add_studio(
+        self,
+        httpserver: HTTPServer,
+        exec_cmd: callable,
+        output_format: str,
+    ) -> None:
+        """Test adding a new studio."""
+        # Setup mock HTTP expectations
+        # Get user info
+        httpserver.expect_ordered_request("/user-info", method="GET").respond_with_json(
+            {"user": {"id": 1, "userName": "testuser"}},
+            status=200,
+        )
+
+        # Get workspaces
+        httpserver.expect_ordered_request(
+            "/user/1/workspaces", method="GET"
+        ).respond_with_json(
+            {
+                "orgsAndWorkspaces": [
+                    {
+                        "workspaceId": 12345,
+                        "orgName": "myorg",
+                        "workspaceName": "myworkspace",
+                    }
+                ]
+            },
+            status=200,
+        )
+
+        # Get compute envs
+        httpserver.expect_ordered_request("/compute-envs", method="GET").respond_with_json(
+            {
+                "computeEnvs": [
+                    {"id": "ce-123", "name": "my-compute-env", "status": "AVAILABLE"}
+                ]
+            },
+            status=200,
+        )
+
+        # Get templates
+        httpserver.expect_ordered_request("/studios/templates", method="GET").respond_with_json(
+            {
+                "templates": [
+                    {
+                        "id": "jupyter",
+                        "name": "Jupyter",
+                        "repository": "cr.seqera.io/public/data-studio-jupyter:1.0",
+                    }
+                ]
+            },
+            status=200,
+        )
+
+        # Create studio
+        httpserver.expect_ordered_request(
+            "/studios",
+            method="POST",
+        ).respond_with_json(
+            {"studio": {"sessionId": "new-studio-id-456"}},
+            status=200,
+        )
+
+        # Run the command
+        out = exec_cmd(
+            "studios",
+            "add",
+            "-n",
+            "My New Studio",
+            "-c",
+            "my-compute-env",
+            "--template",
+            "Jupyter",
+            "-w",
+            "12345",
+            output_format=output_format,
+        )
+
+        # Assertions
+        assert out.exit_code == 0
+        assert out.stderr == ""
+
+        if output_format == "json":
+            data = json.loads(out.stdout)
+            assert data["sessionId"] == "new-studio-id-456"
+        elif output_format == "yaml":
+            import yaml
+
+            data = yaml.safe_load(out.stdout)
+            assert data["sessionId"] == "new-studio-id-456"
+        else:  # console
+            assert "new-studio-id-456" in out.stdout
+            assert "created" in out.stdout.lower()
+
+    def test_add_studio_missing_template(
+        self,
+        httpserver: HTTPServer,
+        exec_cmd: callable,
+    ) -> None:
+        """Test add fails without template or custom-image."""
+        # Get user info
+        httpserver.expect_ordered_request("/user-info", method="GET").respond_with_json(
+            {"user": {"id": 1, "userName": "testuser"}},
+            status=200,
+        )
+
+        # Get workspaces
+        httpserver.expect_ordered_request(
+            "/user/1/workspaces", method="GET"
+        ).respond_with_json(
+            {
+                "orgsAndWorkspaces": [
+                    {
+                        "workspaceId": 12345,
+                        "orgName": "myorg",
+                        "workspaceName": "myworkspace",
+                    }
+                ]
+            },
+            status=200,
+        )
+
+        # Run the command without template
+        out = exec_cmd(
+            "studios",
+            "add",
+            "-n",
+            "My Studio",
+            "-c",
+            "my-compute-env",
+            "-w",
+            "12345",
+        )
+
+        # Assertions
+        assert out.exit_code == 1
+        assert "template" in out.stderr.lower() or "custom-image" in out.stderr.lower()
+
+
+class TestStudiosAddAsNewCmd:
+    """Test studios add-as-new command."""
+
+    @pytest.mark.parametrize("output_format", ["console", "json", "yaml"])
+    def test_add_as_new(
+        self,
+        httpserver: HTTPServer,
+        exec_cmd: callable,
+        output_format: str,
+    ) -> None:
+        """Test adding a studio from an existing one."""
+        # Setup mock HTTP expectations (using regular requests, not ordered, since some are called multiple times)
+        # Get user info (called multiple times)
+        httpserver.expect_request("/user-info", method="GET").respond_with_json(
+            {"user": {"id": 1, "userName": "testuser"}},
+            status=200,
+        )
+
+        # Get workspaces (called multiple times)
+        httpserver.expect_request(
+            "/user/1/workspaces", method="GET"
+        ).respond_with_json(
+            {
+                "orgsAndWorkspaces": [
+                    {
+                        "workspaceId": 12345,
+                        "orgName": "myorg",
+                        "workspaceName": "myworkspace",
+                    }
+                ]
+            },
+            status=200,
+        )
+
+        # Get parent studio
+        httpserver.expect_request(
+            "/studios/parent-studio-id",
+            method="GET",
+        ).respond_with_json(
+            {
+                "studio": {
+                    "sessionId": "parent-studio-id",
+                    "name": "Parent Studio",
+                    "configuration": {"cpu": 4, "memory": 16384, "gpu": 0},
+                    "template": {"repository": "cr.seqera.io/public/data-studio-jupyter:1.0"},
+                    "computeEnv": {"id": "ce-123"},
+                }
+            },
+            status=200,
+        )
+
+        # Get checkpoints
+        httpserver.expect_request(
+            "/studios/parent-studio-id/checkpoints",
+            method="GET",
+        ).respond_with_json(
+            {"checkpoints": [{"id": "checkpoint-123", "createdAt": "2024-01-01T00:00:00Z"}]},
+            status=200,
+        )
+
+        # Create new studio
+        httpserver.expect_request(
+            "/studios",
+            method="POST",
+        ).respond_with_json(
+            {"studio": {"sessionId": "cloned-studio-id-789"}},
+            status=200,
+        )
+
+        # Run the command
+        out = exec_cmd(
+            "studios",
+            "add-as-new",
+            "-n",
+            "Cloned Studio",
+            "-p",
+            "parent-studio-id",
+            "-w",
+            "12345",
+            output_format=output_format,
+        )
+
+        # Assertions
+        assert out.exit_code == 0
+        assert out.stderr == ""
+
+        if output_format == "json":
+            data = json.loads(out.stdout)
+            assert data["sessionId"] == "cloned-studio-id-789"
+        elif output_format == "yaml":
+            import yaml
+
+            data = yaml.safe_load(out.stdout)
+            assert data["sessionId"] == "cloned-studio-id-789"
+        else:  # console
+            assert "cloned-studio-id-789" in out.stdout
+            assert "created" in out.stdout.lower()
+
+    def test_add_as_new_missing_parent(
+        self,
+        httpserver: HTTPServer,
+        exec_cmd: callable,
+    ) -> None:
+        """Test add-as-new fails without parent studio."""
+        # Run the command without parent
+        out = exec_cmd(
+            "studios",
+            "add-as-new",
+            "-n",
+            "Cloned Studio",
+            "-w",
+            "12345",
+        )
+
+        # Assertions
+        assert out.exit_code == 1
+        assert "parent" in out.stderr.lower()

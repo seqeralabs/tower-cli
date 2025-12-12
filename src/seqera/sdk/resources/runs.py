@@ -327,6 +327,74 @@ class RunsResource(BaseResource):
         )
         return response.get("workflowId", "")
 
+    def download_log(
+        self,
+        run_id: str,
+        workspace: str | int | None = None,
+        *,
+        file_type: str = "stdout",
+        task_id: int | None = None,
+    ) -> bytes:
+        """
+        Download a log file for a workflow run or task.
+
+        Args:
+            run_id: Workflow run ID
+            workspace: Workspace ID or "org/workspace" reference
+            file_type: Type of file to download: 'stdout', 'log', 'stderr', or 'timeline'
+            task_id: Task ID (optional, downloads workflow logs if not specified)
+
+        Returns:
+            File contents as bytes
+
+        Raises:
+            SeqeraError: If file type is invalid or file not available
+        """
+        from seqera.exceptions import SeqeraError
+
+        params = self._build_params(workspace=workspace)
+
+        if task_id is None:
+            # Download workflow log
+            if file_type == "stdout":
+                file_name = f"nf-{run_id}.txt"
+            elif file_type == "log":
+                file_name = f"nf-{run_id}.log"
+            elif file_type == "timeline":
+                file_name = f"timeline-{run_id}.html"
+            elif file_type == "stderr":
+                raise SeqeraError("Error file is not available for pipeline's runs")
+            else:
+                raise SeqeraError(f"Invalid file type: {file_type}")
+
+            # Download workflow log file
+            response = self._client.get(
+                f"/workflow/{run_id}/download/{file_name}",
+                params=params,
+                raw=True,
+            )
+            return response
+        else:
+            # Download task log
+            if file_type == "stdout":
+                file_name = ".command.out"
+            elif file_type == "log":
+                file_name = ".command.log"
+            elif file_type == "stderr":
+                file_name = ".command.err"
+            elif file_type == "timeline":
+                raise SeqeraError("Timeline file is not available for tasks")
+            else:
+                raise SeqeraError(f"Invalid file type: {file_type}")
+
+            # Download task log file
+            response = self._client.get(
+                f"/workflow/{run_id}/download/task/{task_id}/{file_name}",
+                params=params,
+                raw=True,
+            )
+            return response
+
     def dump(
         self,
         run_id: str,

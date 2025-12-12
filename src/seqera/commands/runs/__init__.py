@@ -22,6 +22,7 @@ from seqera.responses import (
     RunCancelled,
     RunDeleted,
     RunDump,
+    RunFileDownloaded,
     RunRelaunched,
     RunsList,
     RunView,
@@ -734,6 +735,92 @@ def find_or_create_label_ids(
             label_ids.append(create_response.get("id"))
 
     return label_ids
+
+
+@app.command("download")
+def download_run_file(
+    run_id: Annotated[
+        str,
+        typer.Option("-i", "--id", help="Workflow run ID"),
+    ],
+    file_type: Annotated[
+        str,
+        typer.Option("--type", help="File type to download: stdout, log, stderr (tasks only), or timeline (workflow only)"),
+    ] = "stdout",
+    task_id: Annotated[
+        int | None,
+        typer.Option("-t", "--task", help="Task identifier (for task-specific files)"),
+    ] = None,
+    output_path: Annotated[
+        str | None,
+        typer.Option("-o", "--output", help="Output file path (optional, defaults to current directory)"),
+    ] = None,
+    workspace: Annotated[
+        str | None,
+        typer.Option("-w", "--workspace", help="Workspace reference (organization/workspace)"),
+    ] = None,
+) -> None:
+    """Download a pipeline's run related files."""
+    from pathlib import Path
+
+    try:
+        sdk = get_sdk()
+        output_format = get_output_format()
+
+        # Validate file type
+        valid_types = ["stdout", "log", "stderr", "timeline"]
+        if file_type not in valid_types:
+            output_error(f"Invalid file type '{file_type}'. Valid options: {', '.join(valid_types)}")
+            sys.exit(1)
+
+        # Download the file using SDK
+        content = sdk.runs.download_log(
+            run_id,
+            workspace=workspace,
+            file_type=file_type,
+            task_id=task_id,
+        )
+
+        # Determine output filename
+        if output_path:
+            file_path = Path(output_path)
+        else:
+            if task_id is None:
+                # Workflow files
+                if file_type == "stdout":
+                    file_path = Path(f"nf-{run_id}.txt")
+                elif file_type == "log":
+                    file_path = Path(f"nf-{run_id}.log")
+                elif file_type == "timeline":
+                    file_path = Path(f"timeline-{run_id}.html")
+                else:
+                    file_path = Path(f"nf-{run_id}.txt")
+            else:
+                # Task files
+                if file_type == "stdout":
+                    file_path = Path(f"task-{task_id}.command.out")
+                elif file_type == "log":
+                    file_path = Path(f"task-{task_id}.command.log")
+                elif file_type == "stderr":
+                    file_path = Path(f"task-{task_id}.command.err")
+                else:
+                    file_path = Path(f"task-{task_id}.out")
+
+        # Write the file
+        file_path.write_bytes(content)
+
+        # Output response
+        result = RunFileDownloaded(
+            file_path=str(file_path),
+            file_type=file_type,
+            run_id=run_id,
+            task_id=task_id,
+        )
+
+        output_response(result, output_format)
+
+    except Exception as e:
+        handle_runs_error(e)
 
 
 @app.command("labels")

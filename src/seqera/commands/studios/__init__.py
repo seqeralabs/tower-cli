@@ -21,6 +21,7 @@ from seqera.main import get_client, get_output_format
 from seqera.responses import (
     StudioCheckpoints,
     StudioDeleted,
+    StudiosCreated,
     StudiosList,
     StudioStarted,
     StudioStopped,
@@ -595,6 +596,409 @@ def list_templates(
                     container = template.get("containerImage", "")
                     lines.append(f"    {template_id:<12} {name:<30} {container}")
             output_console("\n".join(lines))
+
+    except Exception as e:
+        handle_studios_error(e)
+
+
+def find_compute_env_by_name(client: SeqeraClient, name: str, workspace_id: str | None) -> dict:
+    """Find a compute environment by name.
+
+    Args:
+        client: Seqera API client
+        name: Compute environment name
+        workspace_id: Optional workspace ID
+
+    Returns:
+        Compute environment dict
+
+    Raises:
+        SeqeraError: If compute environment not found
+    """
+    params = {}
+    if workspace_id:
+        params["workspaceId"] = workspace_id
+
+    response = client.get("/compute-envs", params=params)
+    compute_envs = response.get("computeEnvs", [])
+
+    for ce in compute_envs:
+        if ce.get("name") == name:
+            return ce
+
+    raise SeqeraError(f"Compute environment '{name}' not found")
+
+
+def find_template_by_name(client: SeqeraClient, name: str, workspace_id: str | None) -> dict | None:
+    """Find a studio template by name or repository.
+
+    Args:
+        client: Seqera API client
+        name: Template name or repository URL
+        workspace_id: Optional workspace ID
+
+    Returns:
+        Template dict or None if not found
+    """
+    params = {}
+    if workspace_id:
+        params["workspaceId"] = workspace_id
+
+    response = client.get("/studios/templates", params=params)
+    templates = response.get("templates", [])
+
+    for template in templates:
+        if template.get("repository") == name or template.get("name") == name:
+            return template
+
+    return None
+
+
+@app.command("add")
+def add_studio(
+    name: Annotated[
+        str,
+        typer.Option("-n", "--name", help="Studio name"),
+    ],
+    compute_env: Annotated[
+        str,
+        typer.Option("-c", "--compute-env", help="Compute environment name"),
+    ],
+    template: Annotated[
+        str | None,
+        typer.Option("--template", help="Studio template name or repository URL"),
+    ] = None,
+    custom_image: Annotated[
+        str | None,
+        typer.Option("--custom-image", help="Custom container image URL"),
+    ] = None,
+    description: Annotated[
+        str | None,
+        typer.Option("-d", "--description", help="Studio description"),
+    ] = None,
+    conda_env_yml: Annotated[
+        str | None,
+        typer.Option("--conda-env-yml", help="Path to conda environment YAML file"),
+    ] = None,
+    cpu: Annotated[
+        int,
+        typer.Option("--cpu", help="Number of CPUs"),
+    ] = 2,
+    memory: Annotated[
+        int,
+        typer.Option("--memory", help="Memory in MB"),
+    ] = 8192,
+    gpu: Annotated[
+        int,
+        typer.Option("--gpu", help="Number of GPUs"),
+    ] = 0,
+    auto_start: Annotated[
+        bool,
+        typer.Option("-a", "--auto-start", help="Start studio immediately after creation"),
+    ] = False,
+    private: Annotated[
+        bool,
+        typer.Option("--private", help="Create a private studio"),
+    ] = False,
+    labels: Annotated[
+        str | None,
+        typer.Option("--labels", help="Comma-separated list of labels"),
+    ] = None,
+    mount_data_link: Annotated[
+        str | None,
+        typer.Option("--mount-data-link", help="Data link ID to mount"),
+    ] = None,
+    workspace: Annotated[
+        str | None,
+        typer.Option("-w", "--workspace", help="Workspace ID (numeric)"),
+    ] = None,
+) -> None:
+    """Add a new studio."""
+    from pathlib import Path
+
+    try:
+        client = get_client()
+        output_format = get_output_format()
+
+        # Get workspace info
+        workspace_ref, ws_id = get_workspace_info(client, workspace)
+
+        # Validate template requirements
+        if not template and not custom_image:
+            output_error("Either --template or --custom-image must be specified")
+            sys.exit(1)
+
+        if custom_image and conda_env_yml:
+            output_error("Cannot use --conda-env-yml with --custom-image")
+            sys.exit(1)
+
+        # Find compute environment
+        ce = find_compute_env_by_name(client, compute_env, workspace)
+        ce_id = ce.get("id")
+
+        # Resolve template
+        template_url = None
+        if template:
+            template_info = find_template_by_name(client, template, workspace)
+            if not template_info:
+                output_error(f"Template '{template}' not found")
+                sys.exit(1)
+            template_url = template_info.get("repository")
+        else:
+            template_url = custom_image
+
+        # Read conda env file if specified
+        conda_env_string = None
+        if conda_env_yml:
+            conda_path = Path(conda_env_yml)
+            if not conda_path.exists():
+                output_error(f"Conda environment file not found: {conda_env_yml}")
+                sys.exit(1)
+            conda_env_string = conda_path.read_text()
+
+        # Build configuration
+        configuration = {
+            "gpu": gpu,
+            "cpu": cpu,
+            "memory": memory,
+        }
+
+        if conda_env_string:
+            configuration["condaEnvironment"] = conda_env_string
+
+        if mount_data_link:
+            configuration["mountData"] = [{"dataLinkId": mount_data_link}]
+
+        # Build request payload
+        request = {
+            "name": name,
+            "computeEnvId": ce_id,
+            "dataStudioToolUrl": template_url,
+            "configuration": configuration,
+            "isPrivate": private,
+        }
+
+        if description:
+            request["description"] = description
+
+        # Handle labels
+        if labels:
+            label_ids = []
+            # Parse and resolve label IDs
+            params = {}
+            if workspace:
+                params["workspaceId"] = workspace
+
+            labels_response = client.get("/labels", params=params)
+            existing_labels = {l.get("name"): l.get("id") for l in labels_response.get("labels", [])}
+
+            for label_name in labels.split(","):
+                label_name = label_name.strip()
+                if label_name in existing_labels:
+                    label_ids.append(existing_labels[label_name])
+
+            if label_ids:
+                request["labelIds"] = label_ids
+
+        # Create studio
+        params = {}
+        if workspace:
+            params["workspaceId"] = workspace
+
+        response = client.post(f"/studios?autoStart={str(auto_start).lower()}", json=request, params=params)
+        studio = response.get("studio", {})
+        session_id = studio.get("sessionId", "")
+
+        # Build base URL for studio link
+        base_url = None
+        if workspace:
+            base_url = f"{client.base_url}/orgs/{workspace}/studios"
+
+        # Output response
+        result = StudiosCreated(
+            session_id=session_id,
+            workspace_id=int(workspace) if workspace else None,
+            workspace_ref=workspace_ref,
+            base_workspace_url=base_url,
+            auto_start=auto_start,
+        )
+
+        output_response(result, output_format)
+
+    except Exception as e:
+        handle_studios_error(e)
+
+
+@app.command("add-as-new")
+def add_studio_from_existing(
+    name: Annotated[
+        str,
+        typer.Option("-n", "--name", help="Studio name"),
+    ],
+    parent_studio_id: Annotated[
+        str | None,
+        typer.Option("-p", "--parent-id", help="Parent studio ID"),
+    ] = None,
+    parent_studio_name: Annotated[
+        str | None,
+        typer.Option("--parent-name", help="Parent studio name"),
+    ] = None,
+    parent_checkpoint_id: Annotated[
+        str | None,
+        typer.Option("--parent-checkpoint-id", help="Parent checkpoint ID (defaults to most recent)"),
+    ] = None,
+    description: Annotated[
+        str | None,
+        typer.Option("-d", "--description", help="Studio description"),
+    ] = None,
+    cpu: Annotated[
+        int | None,
+        typer.Option("--cpu", help="Number of CPUs (defaults to parent)"),
+    ] = None,
+    memory: Annotated[
+        int | None,
+        typer.Option("--memory", help="Memory in MB (defaults to parent)"),
+    ] = None,
+    gpu: Annotated[
+        int | None,
+        typer.Option("--gpu", help="Number of GPUs (defaults to parent)"),
+    ] = None,
+    auto_start: Annotated[
+        bool,
+        typer.Option("-a", "--auto-start", help="Start studio immediately after creation"),
+    ] = False,
+    private: Annotated[
+        bool,
+        typer.Option("--private", help="Create a private studio"),
+    ] = False,
+    labels: Annotated[
+        str | None,
+        typer.Option("--labels", help="Comma-separated list of labels"),
+    ] = None,
+    workspace: Annotated[
+        str | None,
+        typer.Option("-w", "--workspace", help="Workspace ID (numeric)"),
+    ] = None,
+) -> None:
+    """Add a new studio from an existing one."""
+    try:
+        client = get_client()
+        output_format = get_output_format()
+
+        if not parent_studio_id and not parent_studio_name:
+            output_error("Either --parent-id or --parent-name must be specified")
+            sys.exit(1)
+
+        # Get workspace info
+        workspace_ref, ws_id = get_workspace_info(client, workspace)
+
+        # Find parent studio
+        parent_studio, _ = find_studio(client, parent_studio_name, parent_studio_id, workspace)
+        parent_session_id = parent_studio.get("sessionId")
+
+        # Get checkpoint ID
+        checkpoint_id = None
+        if parent_checkpoint_id:
+            # Validate checkpoint exists
+            params = {}
+            if workspace:
+                params["workspaceId"] = workspace
+            try:
+                checkpoint_response = client.get(
+                    f"/studios/{parent_session_id}/checkpoints/{parent_checkpoint_id}",
+                    params=params,
+                )
+                checkpoint_id = checkpoint_response.get("id")
+            except Exception:
+                output_error(f"Checkpoint '{parent_checkpoint_id}' not found")
+                sys.exit(1)
+        else:
+            # Get most recent checkpoint
+            params = {"max": 1}
+            if workspace:
+                params["workspaceId"] = workspace
+            checkpoints_response = client.get(f"/studios/{parent_session_id}/checkpoints", params=params)
+            checkpoints = checkpoints_response.get("checkpoints", [])
+            if checkpoints:
+                checkpoint_id = checkpoints[0].get("id")
+
+        # Get parent configuration
+        parent_config = parent_studio.get("configuration", {})
+        parent_template = parent_studio.get("template", {})
+        parent_compute_env = parent_studio.get("computeEnv", {})
+
+        # Build configuration (use provided values or fallback to parent)
+        configuration = {
+            "gpu": gpu if gpu is not None else parent_config.get("gpu", 0),
+            "cpu": cpu if cpu is not None else parent_config.get("cpu", 2),
+            "memory": memory if memory is not None else parent_config.get("memory", 8192),
+        }
+
+        # Preserve mount data from parent
+        mount_data = parent_config.get("mountData")
+        if mount_data:
+            configuration["mountData"] = mount_data
+
+        # Build description
+        final_description = description
+        if not final_description:
+            final_description = f"Started from studio {parent_studio.get('name', parent_session_id)}"
+
+        # Build request payload
+        request = {
+            "name": name,
+            "description": final_description,
+            "computeEnvId": parent_compute_env.get("id"),
+            "dataStudioToolUrl": parent_template.get("repository"),
+            "configuration": configuration,
+            "isPrivate": private,
+        }
+
+        if checkpoint_id:
+            request["initialCheckpointId"] = checkpoint_id
+
+        # Handle labels
+        if labels:
+            label_ids = []
+            params = {}
+            if workspace:
+                params["workspaceId"] = workspace
+
+            labels_response = client.get("/labels", params=params)
+            existing_labels = {l.get("name"): l.get("id") for l in labels_response.get("labels", [])}
+
+            for label_name in labels.split(","):
+                label_name = label_name.strip()
+                if label_name in existing_labels:
+                    label_ids.append(existing_labels[label_name])
+
+            if label_ids:
+                request["labelIds"] = label_ids
+
+        # Create studio
+        params = {}
+        if workspace:
+            params["workspaceId"] = workspace
+
+        response = client.post(f"/studios?autoStart={str(auto_start).lower()}", json=request, params=params)
+        studio = response.get("studio", {})
+        session_id = studio.get("sessionId", "")
+
+        # Build base URL for studio link
+        base_url = None
+        if workspace:
+            base_url = f"{client.base_url}/orgs/{workspace}/studios"
+
+        # Output response
+        result = StudiosCreated(
+            session_id=session_id,
+            workspace_id=int(workspace) if workspace else None,
+            workspace_ref=workspace_ref,
+            base_workspace_url=base_url,
+            auto_start=auto_start,
+        )
+
+        output_response(result, output_format)
 
     except Exception as e:
         handle_studios_error(e)
