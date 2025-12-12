@@ -32,13 +32,13 @@ import io.seqera.tower.model.SubmitWorkflowLaunchRequest;
 import io.seqera.tower.model.SubmitWorkflowLaunchResponse;
 import io.seqera.tower.model.WorkflowLaunchRequest;
 import io.seqera.tower.model.WorkflowStatus;
+import jakarta.annotation.Nullable;
 import picocli.CommandLine;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collections;
@@ -156,7 +156,7 @@ public class LaunchCmd extends AbstractRootCmd {
 
     protected Response runTowerPipeline(Long wspId) throws ApiException, IOException {
 
-        ListPipelinesResponse pipelines = pipelinesApi().listPipelines(Collections.emptyList(), wspId, 50, 0, pipeline, "all");
+        ListPipelinesResponse pipelines = pipelinesApi().listPipelines(Collections.emptyList(), wspId, 50, 0, null, null, pipeline, "all");
         if (pipelines.getTotalSize() == 0) {
             throw new InvalidResponseException(String.format("Pipeline '%s' not found on this workspace.", pipeline));
         }

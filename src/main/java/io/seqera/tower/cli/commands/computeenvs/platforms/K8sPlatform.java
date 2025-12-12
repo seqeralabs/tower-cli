@@ -56,12 +56,7 @@ public class K8sPlatform extends AbstractPlatform<K8sComputeConfig> {
 
     @Override
     public K8sComputeConfig computeConfig() throws IOException {
-        return new K8sComputeConfig()
-                .workDir(workDir)
-                .preRunScript(preRunScriptString())
-                .postRunScript(postRunScriptString())
-                .nextflowConfig(nextflowConfigString())
-                .environment(environmentVariables())
+        K8sComputeConfig config = new K8sComputeConfig()
                 .computeServiceAccount(adv().computeAccount)
                 .headPodSpec(FilesHelper.readString(adv().headPodSpec))
                 .headServiceAccount(headAccount)
@@ -72,6 +67,15 @@ public class K8sPlatform extends AbstractPlatform<K8sComputeConfig> {
                 .sslCert(FilesHelper.readString(sslCert))
                 .storageClaimName(storageClaim)
                 .storageMountPath(adv().storageMount);
+
+        // Common
+        config.workDir(workDir)
+                .preRunScript(preRunScriptString())
+                .postRunScript(postRunScriptString())
+                .nextflowConfig(nextflowConfigString())
+                .environment(environmentVariables());
+
+        return config;
     }
 
     private AdvancedOptions adv() {

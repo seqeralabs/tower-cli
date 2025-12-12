@@ -107,7 +107,7 @@ public class AwsUploader extends AbstractProviderUploader {
         finishMultiPartUploadRequest.setTags(tags);
 
         if (outputDir != null) {
-            dataLinksApi.finishDataLinkUpload1(id, outputDir, finishMultiPartUploadRequest, credId, wspId);
+            dataLinksApi.finishDataLinkUploadWithPath(id, outputDir, finishMultiPartUploadRequest, credId, wspId);
         } else {
             dataLinksApi.finishDataLinkUpload(id, finishMultiPartUploadRequest, credId, wspId);
         }

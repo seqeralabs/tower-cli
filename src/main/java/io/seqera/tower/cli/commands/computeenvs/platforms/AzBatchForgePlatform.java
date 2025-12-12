@@ -73,16 +73,17 @@ public class AzBatchForgePlatform extends AbstractPlatform<AzBatchConfig> {
     public AzBatchConfig computeConfig(Long workspaceId, CredentialsApi credentialsApi) throws ApiException, IOException {
         AzBatchConfig config = new AzBatchConfig();
 
-        config
-                // Common
-                .workDir(workDir)
+        config.fusion2Enabled(fusionV2)
+                .waveEnabled(wave)
+                .region(location);
+        // Common
+        config.workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
                 .nextflowConfig(nextflowConfigString())
-                .environment(environmentVariables())
-                .fusion2Enabled(fusionV2)
-                .waveEnabled(wave)
-                .region(location);
+                .environment(environmentVariables());
+
+
 
         if (adv != null) {
             config

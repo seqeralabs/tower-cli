@@ -21,8 +21,8 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceRequiredOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.datasets.DatasetDownload;
-import io.seqera.tower.model.Dataset;
-import io.seqera.tower.model.DatasetVersionDbDto;
+import io.seqera.tower.model.DatasetDto;
+import io.seqera.tower.model.DatasetVersionDto;
 import picocli.CommandLine;
 
 import java.io.File;
@@ -46,8 +46,8 @@ public class DownloadCmd extends AbstractDatasetsCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
-        Dataset dataset = fetchDescribeDatasetResponse(datasetRefOptions, wspId);
-        DatasetVersionDbDto datasetVersion = fetchDatasetVersion(wspId, dataset.getId(), dataset.getMediaType(), version);
+        DatasetDto dataset = fetchDescribeDatasetResponse(datasetRefOptions, wspId);
+        DatasetVersionDto datasetVersion = fetchDatasetVersion(wspId, dataset.getId(), dataset.getMediaType(), version);
 
         File file = datasetsApi().downloadDataset(wspId, dataset.getId(), datasetVersion.getVersion().toString(), datasetVersion.getFileName());
 

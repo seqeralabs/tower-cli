@@ -27,7 +27,6 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.commands.data.links.DataLinkService;
 import io.seqera.tower.cli.commands.labels.Label;
-import io.seqera.tower.cli.commands.labels.LabelsOptionalOptions;
 import io.seqera.tower.cli.exceptions.StudioNotFoundException;
 import io.seqera.tower.model.DataStudioConfiguration;
 import io.seqera.tower.cli.commands.enums.OutputType;
@@ -105,7 +104,7 @@ public class AbstractStudiosCmd extends AbstractApiCmd {
                     targetStatus,
                     DataStudioStatus.values(),
                     () -> checkStudioStatus(sessionId, workspaceId),
-                    DataStudioStatus.STOPPED, DataStudioStatus.ERRORED, DataStudioStatus.RUNNING
+                    DataStudioStatus.stopped, DataStudioStatus.errored, DataStudioStatus.running
             );
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();

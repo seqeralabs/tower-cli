@@ -74,7 +74,7 @@ public class AddCmd extends AbstractWorkspaceCmd {
 
         CreateWorkspaceRequest request = new CreateWorkspaceRequest().workspace(workspace);
 
-        workspacesApi().workspaceValidate(orgWspDto.getOrgId(), workspaceName);
+        workspacesApi().validateWorkspaceName(orgWspDto.getOrgId(), workspaceName);
         CreateWorkspaceResponse response = workspacesApi().createWorkspace(orgWspDto.getOrgId(), request);
 
         return new WorkspaceAdded(response.getWorkspace().getName(), organizationName, response.getWorkspace().getVisibility());
@@ -87,7 +87,7 @@ public class AddCmd extends AbstractWorkspaceCmd {
             return Visibility.SHARED;
         } else {
             throw new ApiException(
-                    String.format("Invalid value for option '--visibility': expected one of [PRIVATE, SHARED] (case-sensitive) but was '%s'", visibility)
+                    String.format("Invalid value for option '--visibility': expected one of [PRIVATE, SHARED] but was '%s'", visibility)
             );
         }
     }

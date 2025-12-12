@@ -75,7 +75,7 @@ public class AddCmd extends AbstractApiCmd {
         req.name(name);
         req.description(description);
         req.resourceRef(url);
-        req.type(DataLinkType.BUCKET);
+        req.type(DataLinkType.bucket);
         req.provider(io.seqera.tower.model.DataLinkProvider.fromValue(provider.toLowerCase()));
 
         if (Objects.isNull(credsId)) {

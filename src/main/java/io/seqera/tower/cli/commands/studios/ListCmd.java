@@ -62,7 +62,7 @@ public class ListCmd extends AbstractStudiosCmd {
 
         DataStudioListResponse response = new DataStudioListResponse();
 
-        List<DataStudioQueryAttribute> actionQueryAttributes = showLabelsOption.showLabels ? List.of(DataStudioQueryAttribute.LABELS) : NO_STUDIO_ATTRIBUTES;
+        List<DataStudioQueryAttribute> actionQueryAttributes = showLabelsOption.showLabels ? List.of(DataStudioQueryAttribute.labels) : NO_STUDIO_ATTRIBUTES;
 
         try {
            response = studiosApi().listDataStudios(wspId, filter, max, offset, actionQueryAttributes);

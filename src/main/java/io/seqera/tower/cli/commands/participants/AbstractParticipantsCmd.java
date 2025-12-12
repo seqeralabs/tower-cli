@@ -26,7 +26,7 @@ import io.seqera.tower.model.ListMembersResponse;
 import io.seqera.tower.model.ListParticipantsResponse;
 import io.seqera.tower.model.ListTeamResponse;
 import io.seqera.tower.model.MemberDbDto;   
-import io.seqera.tower.model.ParticipantDbDto;
+import io.seqera.tower.model.ParticipantResponseDto;
 import io.seqera.tower.model.ParticipantType;
 import io.seqera.tower.model.TeamDbDto;
 import picocli.CommandLine;
@@ -85,11 +85,11 @@ public class AbstractParticipantsCmd extends AbstractApiCmd {
         throw new TeamNotFoundException(orgId, name);
     }
 
-    protected ParticipantDbDto findWorkspaceParticipant(Long organizationId, Long workspaceId, String name, ParticipantType type) throws ApiException {
+    protected ParticipantResponseDto findWorkspaceParticipant(Long organizationId, Long workspaceId, String name, ParticipantType type) throws ApiException {
         ListParticipantsResponse listParticipantsResponse = workspacesApi().listWorkspaceParticipants(organizationId, workspaceId, null, null, name);
 
         if (listParticipantsResponse.getParticipants() != null) {
-            ParticipantDbDto participant = listParticipantsResponse.getParticipants().stream().filter(it -> it.getType() == type).findFirst().orElse(null);
+            ParticipantResponseDto participant = listParticipantsResponse.getParticipants().stream().filter(it -> it.getType() == type).findFirst().orElse(null);
 
             if (participant != null) {
                 return participant;
@@ -100,7 +100,7 @@ public class AbstractParticipantsCmd extends AbstractApiCmd {
     }
 
     protected void deleteParticipantByNameAndType(Long wspId, String participantName, ParticipantType type) throws ParticipantNotFoundException, ApiException {
-        ParticipantDbDto participant = findWorkspaceParticipant(orgId(wspId), wspId, participantName, type);
+        ParticipantResponseDto participant = findWorkspaceParticipant(orgId(wspId), wspId, participantName, type);
         workspacesApi().deleteWorkspaceParticipant(orgId(wspId), wspId, participant.getParticipantId());
     }
 }

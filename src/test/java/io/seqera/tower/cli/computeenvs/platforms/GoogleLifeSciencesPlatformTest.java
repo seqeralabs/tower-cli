@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
+import org.mockserver.model.JsonBody;
 import org.mockserver.model.MediaType;
 
 import java.io.IOException;
@@ -48,7 +49,10 @@ class GoogleLifeSciencesPlatformTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"credentialsId\":\"6XfOhoztUq6de3Dw3X9LSb\",\"name\":\"google\",\"platform\":\"google-lifesciences\",\"config\":{\"region\":\"europe\",\"workDir\":\"gs://workdir\"}}}"), exactly(1)
+                request().withMethod("POST").withPath("/compute-envs").withBody(
+                        JsonBody.json("{\"computeEnv\":{\"credentialsId\":\"6XfOhoztUq6de3Dw3X9LSb\",\"name\":\"google\",\"platform\":\"google-lifesciences\",\"config\":{\"region\":\"europe\",\"workDir\":\"gs://workdir\"}}}")
+                ),
+                exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -67,7 +71,10 @@ class GoogleLifeSciencesPlatformTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"credentialsId\":\"6XfOhoztUq6de3Dw3X9LSb\",\"name\":\"google\",\"platform\":\"google-lifesciences\",\"config\":{\"region\":\"europe\",\"workDir\":\"gs://workdir\",\"usePrivateAddress\":true}}}"), exactly(1)
+                request().withMethod("POST").withPath("/compute-envs").withBody(
+                        JsonBody.json("{\"computeEnv\":{\"credentialsId\":\"6XfOhoztUq6de3Dw3X9LSb\",\"name\":\"google\",\"platform\":\"google-lifesciences\",\"config\":{\"region\":\"europe\",\"workDir\":\"gs://workdir\",\"usePrivateAddress\":true}}}")
+                ),
+                exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -89,7 +96,10 @@ class GoogleLifeSciencesPlatformTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"credentialsId\":\"6XfOhoztUq6de3Dw3X9LSb\",\"name\":\"google\",\"platform\":\"google-lifesciences\",\"config\":{\"region\":\"europe\",\"workDir\":\"gs://workdir\",\"nfsTarget\":\"1.2.3.4:/my_share_name\"}}}"), exactly(1)
+                request().withMethod("POST").withPath("/compute-envs").withBody(
+                        JsonBody.json("{\"computeEnv\":{\"credentialsId\":\"6XfOhoztUq6de3Dw3X9LSb\",\"name\":\"google\",\"platform\":\"google-lifesciences\",\"config\":{\"region\":\"europe\",\"workDir\":\"gs://workdir\",\"nfsTarget\":\"1.2.3.4:/my_share_name\"}}}")
+                ),
+                exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );

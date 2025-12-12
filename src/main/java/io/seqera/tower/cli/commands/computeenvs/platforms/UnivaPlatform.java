@@ -60,13 +60,6 @@ public class UnivaPlatform extends AbstractPlatform<UnivaComputeConfig> {
         UnivaComputeConfig config = new UnivaComputeConfig();
 
         config
-                // Common
-                .environment(environmentVariables())
-                .workDir(workDir)
-                .preRunScript(preRunScriptString())
-                .postRunScript(postRunScriptString())
-                .nextflowConfig(nextflowConfigString())
-
                 // Main
                 .launchDir(launchDir)
                 .userName(userName)
@@ -78,6 +71,13 @@ public class UnivaPlatform extends AbstractPlatform<UnivaComputeConfig> {
                 // Advanced
                 .maxQueueSize(adv().maxQueueSize)
                 .headJobOptions(adv().headJobOptions);
+
+        // Common
+        config.workDir(workDir)
+                .preRunScript(preRunScriptString())
+                .postRunScript(postRunScriptString())
+                .nextflowConfig(nextflowConfigString())
+                .environment(environmentVariables());
 
         return config;
     }

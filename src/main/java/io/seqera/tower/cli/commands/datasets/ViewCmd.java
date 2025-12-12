@@ -22,7 +22,7 @@ import io.seqera.tower.cli.commands.datasets.versions.VersionsCmd;
 import io.seqera.tower.cli.commands.global.WorkspaceRequiredOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.datasets.DatasetView;
-import io.seqera.tower.model.Dataset;
+import io.seqera.tower.model.DatasetDto;
 import picocli.CommandLine;
 
 import java.io.IOException;
@@ -45,7 +45,7 @@ public class ViewCmd extends AbstractDatasetsCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
-        Dataset response = fetchDescribeDatasetResponse(datasetRefOptions, wspId);
+        DatasetDto response = fetchDescribeDatasetResponse(datasetRefOptions, wspId);
 
         return new DatasetView(response, workspace.workspace);
     }

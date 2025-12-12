@@ -27,7 +27,7 @@ import io.seqera.tower.model.LabelType;
 import io.seqera.tower.model.ListLabelsResponse;
 import picocli.CommandLine;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.io.IOException;
 
 @CommandLine.Command(

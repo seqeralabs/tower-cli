@@ -25,6 +25,7 @@ import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
+import org.mockserver.model.JsonBody;
 import org.mockserver.model.MediaType;
 
 import java.io.IOException;
@@ -50,7 +51,9 @@ class AltairPlatformTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"credentialsId\":\"2ba2oekqeTEBzwSDgXg7xf\",\"name\":\"altair\",\"platform\":\"altair-platform\",\"config\":{\"userName\":\"jordi\",\"hostName\":\"ssh.mydomain.net\",\"workDir\":\"/home/jordeu/nf\",\"headQueue\":\"normal\"}}}"), exactly(1)
+                request().withMethod("POST").withPath("/compute-envs").withBody(
+                        JsonBody.json("{\"computeEnv\":{\"credentialsId\":\"2ba2oekqeTEBzwSDgXg7xf\",\"name\":\"altair\",\"platform\":\"altair-platform\",\"config\":{\"userName\":\"jordi\",\"hostName\":\"ssh.mydomain.net\",\"workDir\":\"/home/jordeu/nf\",\"headQueue\":\"normal\"}}}")
+                ), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -69,7 +72,9 @@ class AltairPlatformTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"credentialsId\":\"2ba2oekqeTEBzwSDgXg7xf\",\"name\":\"altair\",\"platform\":\"altair-platform\",\"config\":{\"userName\":\"jordi\",\"hostName\":\"ssh.mydomain.net\",\"maxQueueSize\":200,\"workDir\":\"/home/jordeu/nf\",\"headQueue\":\"normal\"}}}"), exactly(1)
+                request().withMethod("POST").withPath("/compute-envs").withBody(
+                        JsonBody.json("{\"computeEnv\":{\"credentialsId\":\"2ba2oekqeTEBzwSDgXg7xf\",\"name\":\"altair\",\"platform\":\"altair-platform\",\"config\":{\"userName\":\"jordi\",\"hostName\":\"ssh.mydomain.net\",\"maxQueueSize\":200,\"workDir\":\"/home/jordeu/nf\",\"headQueue\":\"normal\"}}}")
+                ), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -90,7 +95,9 @@ class AltairPlatformTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"credentialsId\":\"2ba2oekqeTEBzwSDgXg7xf\",\"name\":\"altair\",\"platform\":\"altair-platform\",\"config\":{\"environment\":[{\"name\":\"HEAD\",\"value\":\"value1\",\"head\":true,\"compute\":false},{\"name\":\"COMPUTE\",\"value\":\"value2\",\"head\":false,\"compute\":true},{\"name\":\"BOTH\",\"value\":\"value3\",\"head\":true,\"compute\":true},{\"name\":\"HEAD\",\"value\":\"value4\",\"head\":true,\"compute\":false}],\"workDir\":\"/home/jordeu/nf\",\"headQueue\":\"normal\"}}}"), exactly(1)
+                request().withMethod("POST").withPath("/compute-envs").withBody(
+                        JsonBody.json("{\"computeEnv\":{\"credentialsId\":\"2ba2oekqeTEBzwSDgXg7xf\",\"name\":\"altair\",\"platform\":\"altair-platform\",\"config\":{\"environment\":[{\"name\":\"HEAD\",\"value\":\"value1\",\"head\":true,\"compute\":false},{\"name\":\"COMPUTE\",\"value\":\"value2\",\"head\":false,\"compute\":true},{\"name\":\"BOTH\",\"value\":\"value3\",\"head\":true,\"compute\":true},{\"name\":\"HEAD\",\"value\":\"value4\",\"head\":true,\"compute\":false}],\"workDir\":\"/home/jordeu/nf\",\"headQueue\":\"normal\"}}}")
+                ), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -112,7 +119,9 @@ class AltairPlatformTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"credentialsId\":\"2ba2oekqeTEBzwSDgXg7xf\",\"name\":\"altair\",\"platform\":\"altair-platform\",\"config\":{\"userName\":\"jordi\",\"hostName\":\"ssh.mydomain.net\",\"workDir\":\"/home/jordeu/nf\",\"nextflowConfig\":\"nextflow_config\",\"headQueue\":\"normal\"}}}"),
+                request().withMethod("POST").withPath("/compute-envs").withBody(
+                        JsonBody.json("{\"computeEnv\":{\"credentialsId\":\"2ba2oekqeTEBzwSDgXg7xf\",\"name\":\"altair\",\"platform\":\"altair-platform\",\"config\":{\"userName\":\"jordi\",\"hostName\":\"ssh.mydomain.net\",\"workDir\":\"/home/jordeu/nf\",\"nextflowConfig\":\"nextflow_config\",\"headQueue\":\"normal\"}}}")
+                ),
                 exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
