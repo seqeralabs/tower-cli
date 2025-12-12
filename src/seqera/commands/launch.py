@@ -250,7 +250,7 @@ def launch(
     ] = None,
     params_file: Annotated[
         str | None,
-        typer.Option("-p", "--params-file", help="Parameters file (JSON/YAML)"),
+        typer.Option("--params-file", help="Parameters file (JSON/YAML)"),
     ] = None,
     revision: Annotated[
         str | None,
@@ -270,7 +270,7 @@ def launch(
     ] = None,
     profile: Annotated[
         str | None,
-        typer.Option("--profile", help="Nextflow profile(s) (comma-separated)"),
+        typer.Option("-p", "--profile", help="Nextflow profile(s) (comma-separated)"),
     ] = None,
     main_script: Annotated[
         str | None,

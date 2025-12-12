@@ -292,7 +292,10 @@ def view_action(
         typer.Option("-w", "--workspace", help="Workspace ID (numeric)"),
     ] = None,
 ) -> None:
-    """View action details."""
+    """View action details.
+
+    Either --name or --id must be specified to identify the action.
+    """
     try:
         client = get_client()
         output_format = get_output_format()
@@ -931,7 +934,10 @@ def update_action(
         ),
     ] = None,
 ) -> None:
-    """Update a Pipeline Action."""
+    """Update a Pipeline Action.
+
+    Either --name or --id must be specified to identify the action.
+    """
     from pathlib import Path
 
     try:

@@ -645,7 +645,7 @@ def relaunch_run(
     ] = None,
     params_file: Annotated[
         str | None,
-        typer.Option("-p", "--params-file", help="Parameters file (JSON/YAML)"),
+        typer.Option("--params-file", help="Parameters file (JSON/YAML)"),
     ] = None,
     config: Annotated[
         str | None,
@@ -661,7 +661,7 @@ def relaunch_run(
     ] = None,
     profile: Annotated[
         str | None,
-        typer.Option("--profile", help="Nextflow profile(s) (comma-separated)"),
+        typer.Option("-p", "--profile", help="Nextflow profile(s) (comma-separated)"),
     ] = None,
     launch_container: Annotated[
         str | None,
@@ -1023,7 +1023,10 @@ def view_task(
         typer.Option("--resources-usage", help="Task resources usage data"),
     ] = False,
 ) -> None:
-    """Display pipeline's run task details."""
+    """Display pipeline's run task details.
+
+    The -t option is required to specify the task identifier.
+    """
     try:
         # Get run_id from context if not provided directly
         if ctx.obj and not run_id:

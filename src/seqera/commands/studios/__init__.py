@@ -914,7 +914,10 @@ def add_studio(
         typer.Option("-w", "--workspace", help="Workspace ID (numeric)"),
     ] = None,
 ) -> None:
-    """Add a new studio."""
+    """Add a new studio.
+
+    Either --template or --custom-template must be specified.
+    """
     from pathlib import Path
 
     try:
