@@ -1,6 +1,7 @@
 """Tests for the Seqera SDK client."""
 
 import os
+
 import pytest
 from pytest_httpserver import HTTPServer
 
@@ -79,12 +80,14 @@ class TestSeqeraClient:
         """Test client info endpoint."""
         from seqera import Seqera
 
-        httpserver.expect_request("/service-info").respond_with_json({
-            "serviceInfo": {
-                "version": "24.1.0",
-                "apiVersion": "1.0.0",
+        httpserver.expect_request("/service-info").respond_with_json(
+            {
+                "serviceInfo": {
+                    "version": "24.1.0",
+                    "apiVersion": "1.0.0",
+                }
             }
-        })
+        )
 
         with Seqera(
             access_token="test-token",
@@ -102,21 +105,23 @@ class TestPipelinesResource:
         """Test listing pipelines."""
         from seqera import Seqera
 
-        httpserver.expect_request("/pipelines").respond_with_json({
-            "pipelines": [
-                {
-                    "pipelineId": 1,
-                    "name": "test-pipeline",
-                    "pipeline": "https://github.com/test/repo",
-                },
-                {
-                    "pipelineId": 2,
-                    "name": "another-pipeline",
-                    "pipeline": "https://github.com/test/another",
-                },
-            ],
-            "totalSize": 2,
-        })
+        httpserver.expect_request("/pipelines").respond_with_json(
+            {
+                "pipelines": [
+                    {
+                        "pipelineId": 1,
+                        "name": "test-pipeline",
+                        "pipeline": "https://github.com/test/repo",
+                    },
+                    {
+                        "pipelineId": 2,
+                        "name": "another-pipeline",
+                        "pipeline": "https://github.com/test/another",
+                    },
+                ],
+                "totalSize": 2,
+            }
+        )
 
         with Seqera(
             access_token="test-token",
@@ -134,14 +139,16 @@ class TestPipelinesResource:
         """Test getting a pipeline by ID."""
         from seqera import Seqera
 
-        httpserver.expect_request("/pipelines/123").respond_with_json({
-            "pipeline": {
-                "pipelineId": 123,
-                "name": "my-pipeline",
-                "pipeline": "https://github.com/test/repo",
-                "description": "A test pipeline",
+        httpserver.expect_request("/pipelines/123").respond_with_json(
+            {
+                "pipeline": {
+                    "pipelineId": 123,
+                    "name": "my-pipeline",
+                    "pipeline": "https://github.com/test/repo",
+                    "description": "A test pipeline",
+                }
             }
-        })
+        )
 
         with Seqera(
             access_token="test-token",
@@ -162,25 +169,27 @@ class TestRunsResource:
         """Test listing workflow runs."""
         from seqera import Seqera
 
-        httpserver.expect_request("/workflow").respond_with_json({
-            "workflows": [
-                {
-                    "workflow": {
-                        "id": "abc123",
-                        "runName": "run-1",
-                        "status": "SUCCEEDED",
-                    }
-                },
-                {
-                    "workflow": {
-                        "id": "def456",
-                        "runName": "run-2",
-                        "status": "RUNNING",
-                    }
-                },
-            ],
-            "totalSize": 2,
-        })
+        httpserver.expect_request("/workflow").respond_with_json(
+            {
+                "workflows": [
+                    {
+                        "workflow": {
+                            "id": "abc123",
+                            "runName": "run-1",
+                            "status": "SUCCEEDED",
+                        }
+                    },
+                    {
+                        "workflow": {
+                            "id": "def456",
+                            "runName": "run-2",
+                            "status": "RUNNING",
+                        }
+                    },
+                ],
+                "totalSize": 2,
+            }
+        )
 
         with Seqera(
             access_token="test-token",
@@ -198,14 +207,16 @@ class TestRunsResource:
         """Test getting a workflow run by ID."""
         from seqera import Seqera
 
-        httpserver.expect_request("/workflow/abc123").respond_with_json({
-            "workflow": {
-                "id": "abc123",
-                "runName": "my-run",
-                "status": "SUCCEEDED",
-                "workDir": "/work/dir",
+        httpserver.expect_request("/workflow/abc123").respond_with_json(
+            {
+                "workflow": {
+                    "id": "abc123",
+                    "runName": "my-run",
+                    "status": "SUCCEEDED",
+                    "workDir": "/work/dir",
+                }
             }
-        })
+        )
 
         with Seqera(
             access_token="test-token",
@@ -280,16 +291,28 @@ class TestPaginatedList:
         from seqera import Seqera
 
         # First page
-        httpserver.expect_ordered_request("/pipelines", query_string="offset=0&max=50").respond_with_json({
-            "pipelines": [{"pipelineId": i, "name": f"p{i}", "pipeline": "url"} for i in range(50)],
-            "totalSize": 75,
-        })
+        httpserver.expect_ordered_request(
+            "/pipelines", query_string="offset=0&max=50"
+        ).respond_with_json(
+            {
+                "pipelines": [
+                    {"pipelineId": i, "name": f"p{i}", "pipeline": "url"} for i in range(50)
+                ],
+                "totalSize": 75,
+            }
+        )
 
         # Second page
-        httpserver.expect_ordered_request("/pipelines", query_string="offset=50&max=50").respond_with_json({
-            "pipelines": [{"pipelineId": i, "name": f"p{i}", "pipeline": "url"} for i in range(50, 75)],
-            "totalSize": 75,
-        })
+        httpserver.expect_ordered_request(
+            "/pipelines", query_string="offset=50&max=50"
+        ).respond_with_json(
+            {
+                "pipelines": [
+                    {"pipelineId": i, "name": f"p{i}", "pipeline": "url"} for i in range(50, 75)
+                ],
+                "totalSize": 75,
+            }
+        )
 
         with Seqera(
             access_token="test-token",
@@ -306,13 +329,13 @@ class TestPackageExports:
     def test_main_exports(self):
         """Test that main classes are exported from package root."""
         from seqera import (
-            Seqera,
             AsyncSeqera,
             Pipeline,
+            PipelineNotFoundException,
+            Seqera,
+            SeqeraError,
             Workflow,
             Workspace,
-            SeqeraError,
-            PipelineNotFoundException,
         )
 
         assert Seqera is not None

@@ -5,7 +5,7 @@ Manage workflow runs in workspaces.
 """
 
 import sys
-from typing import Annotated
+from typing import Annotated, Any
 
 import typer
 
@@ -15,7 +15,7 @@ from seqera.exceptions import (
     RunNotFoundException,
     SeqeraError,
 )
-from seqera.main import get_sdk, get_output_format
+from seqera.main import get_output_format, get_sdk
 from seqera.responses import (
     LabelsManaged,
     MetricsList,
@@ -618,7 +618,7 @@ def dump_run(
         handle_runs_error(e)
 
 
-def _add_string_to_tar(tar: "tarfile.TarFile", name: str, content: str) -> None:
+def _add_string_to_tar(tar: Any, name: str, content: str) -> None:
     """Add a string as a file to a tarball."""
     import io
     import tarfile
@@ -745,7 +745,10 @@ def download_run_file(
     ],
     file_type: Annotated[
         str,
-        typer.Option("--type", help="File type to download: stdout, log, stderr (tasks only), or timeline (workflow only)"),
+        typer.Option(
+            "--type",
+            help="File type to download: stdout, log, stderr (tasks only), or timeline (workflow only)",
+        ),
     ] = "stdout",
     task_id: Annotated[
         int | None,
@@ -753,7 +756,9 @@ def download_run_file(
     ] = None,
     output_path: Annotated[
         str | None,
-        typer.Option("-o", "--output", help="Output file path (optional, defaults to current directory)"),
+        typer.Option(
+            "-o", "--output", help="Output file path (optional, defaults to current directory)"
+        ),
     ] = None,
     workspace: Annotated[
         str | None,
@@ -770,7 +775,9 @@ def download_run_file(
         # Validate file type
         valid_types = ["stdout", "log", "stderr", "timeline"]
         if file_type not in valid_types:
-            output_error(f"Invalid file type '{file_type}'. Valid options: {', '.join(valid_types)}")
+            output_error(
+                f"Invalid file type '{file_type}'. Valid options: {', '.join(valid_types)}"
+            )
             sys.exit(1)
 
         # Download the file using SDK

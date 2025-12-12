@@ -790,7 +790,9 @@ def add_studio(
                 params["workspaceId"] = workspace
 
             labels_response = client.get("/labels", params=params)
-            existing_labels = {l.get("name"): l.get("id") for l in labels_response.get("labels", [])}
+            existing_labels = {
+                l.get("name"): l.get("id") for l in labels_response.get("labels", [])
+            }
 
             for label_name in labels.split(","):
                 label_name = label_name.strip()
@@ -805,7 +807,9 @@ def add_studio(
         if workspace:
             params["workspaceId"] = workspace
 
-        response = client.post(f"/studios?autoStart={str(auto_start).lower()}", json=request, params=params)
+        response = client.post(
+            f"/studios?autoStart={str(auto_start).lower()}", json=request, params=params
+        )
         studio = response.get("studio", {})
         session_id = studio.get("sessionId", "")
 
@@ -845,7 +849,9 @@ def add_studio_from_existing(
     ] = None,
     parent_checkpoint_id: Annotated[
         str | None,
-        typer.Option("--parent-checkpoint-id", help="Parent checkpoint ID (defaults to most recent)"),
+        typer.Option(
+            "--parent-checkpoint-id", help="Parent checkpoint ID (defaults to most recent)"
+        ),
     ] = None,
     description: Annotated[
         str | None,
@@ -917,7 +923,9 @@ def add_studio_from_existing(
             params = {"max": 1}
             if workspace:
                 params["workspaceId"] = workspace
-            checkpoints_response = client.get(f"/studios/{parent_session_id}/checkpoints", params=params)
+            checkpoints_response = client.get(
+                f"/studios/{parent_session_id}/checkpoints", params=params
+            )
             checkpoints = checkpoints_response.get("checkpoints", [])
             if checkpoints:
                 checkpoint_id = checkpoints[0].get("id")
@@ -942,7 +950,9 @@ def add_studio_from_existing(
         # Build description
         final_description = description
         if not final_description:
-            final_description = f"Started from studio {parent_studio.get('name', parent_session_id)}"
+            final_description = (
+                f"Started from studio {parent_studio.get('name', parent_session_id)}"
+            )
 
         # Build request payload
         request = {
@@ -965,7 +975,9 @@ def add_studio_from_existing(
                 params["workspaceId"] = workspace
 
             labels_response = client.get("/labels", params=params)
-            existing_labels = {l.get("name"): l.get("id") for l in labels_response.get("labels", [])}
+            existing_labels = {
+                l.get("name"): l.get("id") for l in labels_response.get("labels", [])
+            }
 
             for label_name in labels.split(","):
                 label_name = label_name.strip()
@@ -980,7 +992,9 @@ def add_studio_from_existing(
         if workspace:
             params["workspaceId"] = workspace
 
-        response = client.post(f"/studios?autoStart={str(auto_start).lower()}", json=request, params=params)
+        response = client.post(
+            f"/studios?autoStart={str(auto_start).lower()}", json=request, params=params
+        )
         studio = response.get("studio", {})
         session_id = studio.get("sessionId", "")
 

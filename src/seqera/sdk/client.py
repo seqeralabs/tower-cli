@@ -119,9 +119,7 @@ class Seqera:
 
         # Resolve API URL
         if url == "https://api.cloud.seqera.io":
-            env_url = os.environ.get("SEQERA_API_ENDPOINT") or os.environ.get(
-                "TOWER_API_ENDPOINT"
-            )
+            env_url = os.environ.get("SEQERA_API_ENDPOINT") or os.environ.get("TOWER_API_ENDPOINT")
             if env_url:
                 url = env_url
 
@@ -394,7 +392,7 @@ class Seqera:
         """
         self._http_client.close()
 
-    def __enter__(self) -> "Seqera":
+    def __enter__(self) -> Seqera:
         """Context manager entry."""
         return self
 
@@ -462,9 +460,7 @@ class AsyncSeqera:
 
         # Resolve API URL
         if url == "https://api.cloud.seqera.io":
-            env_url = os.environ.get("SEQERA_API_ENDPOINT") or os.environ.get(
-                "TOWER_API_ENDPOINT"
-            )
+            env_url = os.environ.get("SEQERA_API_ENDPOINT") or os.environ.get("TOWER_API_ENDPOINT")
             if env_url:
                 url = env_url
 
@@ -500,14 +496,14 @@ class AsyncSeqera:
         self._runs: AsyncRunsResource | None = None
 
     @property
-    def pipelines(self) -> "AsyncPipelinesResource":
+    def pipelines(self) -> AsyncPipelinesResource:
         """Access async pipelines resource."""
         if self._pipelines is None:
             self._pipelines = AsyncPipelinesResource(self._client, self._default_workspace)
         return self._pipelines
 
     @property
-    def runs(self) -> "AsyncRunsResource":
+    def runs(self) -> AsyncRunsResource:
         """Access async runs resource."""
         if self._runs is None:
             self._runs = AsyncRunsResource(self._client, self._default_workspace)
@@ -523,7 +519,7 @@ class AsyncSeqera:
         """Close the async HTTP client."""
         await self._client.aclose()
 
-    async def __aenter__(self) -> "AsyncSeqera":
+    async def __aenter__(self) -> AsyncSeqera:
         """Async context manager entry."""
         return self
 
@@ -542,7 +538,7 @@ class AsyncPipelinesResource:
     async def list(
         self,
         workspace: str | int | None = None,
-    ) -> "AsyncPaginatedList":
+    ) -> AsyncPaginatedList:
         """List pipelines asynchronously."""
         from seqera.models.pipelines import Pipeline
 
@@ -573,7 +569,7 @@ class AsyncRunsResource:
     async def list(
         self,
         workspace: str | int | None = None,
-    ) -> "AsyncPaginatedList":
+    ) -> AsyncPaginatedList:
         """List runs asynchronously."""
         from seqera.models.runs import Workflow
 
@@ -609,7 +605,7 @@ class AsyncPaginatedList:
         self._fetch_page = fetch_page
         self._page_size = page_size
 
-    def __aiter__(self) -> "AsyncPaginatedList":
+    def __aiter__(self) -> AsyncPaginatedList:
         self._items: list[Any] = []
         self._offset = 0
         self._index = 0

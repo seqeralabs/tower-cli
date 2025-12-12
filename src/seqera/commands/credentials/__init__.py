@@ -16,7 +16,7 @@ from seqera.exceptions import (
     NotFoundError,
     SeqeraError,
 )
-from seqera.main import get_sdk, get_output_format
+from seqera.main import get_output_format, get_sdk
 from seqera.responses import (
     CredentialsAdded,
     CredentialsDeleted,
@@ -197,7 +197,6 @@ def update_google(
     ] = None,
 ) -> None:
     """Update existing Google workspace credentials."""
-    from pathlib import Path
 
     try:
         sdk = get_sdk()
@@ -686,7 +685,6 @@ def update_ssh(
     ] = None,
 ) -> None:
     """Update existing SSH workspace credentials."""
-    from pathlib import Path
 
     try:
         sdk = get_sdk()
@@ -769,7 +767,6 @@ def update_k8s(
     ] = None,
 ) -> None:
     """Update existing Kubernetes workspace credentials."""
-    from pathlib import Path
 
     try:
         sdk = get_sdk()

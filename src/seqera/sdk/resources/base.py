@@ -25,7 +25,7 @@ class BaseResource:
 
     def __init__(
         self,
-        client: "SeqeraClient",
+        client: SeqeraClient,
         default_workspace: str | int | None = None,
     ) -> None:
         """

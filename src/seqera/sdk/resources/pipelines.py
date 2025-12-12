@@ -4,7 +4,6 @@ Pipelines resource for the Seqera SDK.
 
 from __future__ import annotations
 
-import json
 from pathlib import Path
 from typing import Any
 
@@ -535,7 +534,9 @@ class PipelinesResource(BaseResource):
             params["workspaceId"] = workspace_id
 
         response = self._client.get("/labels", params=params)
-        existing_labels = {label.get("name"): label.get("id") for label in response.get("labels", [])}
+        existing_labels = {
+            label.get("name"): label.get("id") for label in response.get("labels", [])
+        }
 
         label_ids = []
         for label in labels:

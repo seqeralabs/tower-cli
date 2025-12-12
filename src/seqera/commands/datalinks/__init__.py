@@ -775,9 +775,7 @@ def download_data_link(
 
     for path in paths:
         # Explore the tree to see if this is a file or directory
-        items = _explore_data_link_tree(
-            client, data_link_id, [path], cred_id, workspace_id
-        )
+        items = _explore_data_link_tree(client, data_link_id, [path], cred_id, workspace_id)
 
         if not items:
             # If no items found, assume this is a single file path
@@ -794,18 +792,18 @@ def download_data_link(
                 show_progress,
             )
 
-            path_info.append({
-                "type": "FILE",
-                "path": path,
-                "fileCount": 1,
-            })
+            path_info.append(
+                {
+                    "type": "FILE",
+                    "path": path,
+                    "fileCount": 1,
+                }
+            )
         else:
             # Download each file in the tree
             for item in items:
                 item_path = item.get("path", "")
-                target_path = (
-                    Path(output_dir, item_path) if output_dir else Path(item_path)
-                )
+                target_path = Path(output_dir, item_path) if output_dir else Path(item_path)
 
                 _download_file(
                     client,
@@ -817,11 +815,13 @@ def download_data_link(
                     show_progress,
                 )
 
-            path_info.append({
-                "type": "FOLDER",
-                "path": path,
-                "fileCount": len(items),
-            })
+            path_info.append(
+                {
+                    "type": "FOLDER",
+                    "path": path,
+                    "fileCount": len(items),
+                }
+            )
 
     result = DataLinkFileTransferResult(direction="download", paths=path_info)
     _output_result(result, output_format)
@@ -873,9 +873,7 @@ def _count_files_and_validate(paths: list[str]) -> int:
                 if file_path.is_file():
                     total_files += 1
                     if file_path.stat().st_size > MAX_FILE_SIZE:
-                        output_error(
-                            f"File {file_path} exceeds maximum size of 5 TB to upload."
-                        )
+                        output_error(f"File {file_path} exceeds maximum size of 5 TB to upload.")
                         raise typer.Exit(1)
 
                     if total_files > MAX_FILES_TO_UPLOAD:
@@ -1005,18 +1003,18 @@ def _upload_file_multipart(
 
             if response.status_code != 200:
                 with_error = True
-                output_error(
-                    f"Failed to upload chunk {index}: HTTP {response.status_code}"
-                )
+                output_error(f"Failed to upload chunk {index}: HTTP {response.status_code}")
                 raise typer.Exit(1)
 
             # Get ETag from response for AWS/Seqera Compute
             etag = response.headers.get("etag")
             if etag:
-                tags.append({
-                    "eTag": etag,
-                    "partNumber": index + 1,
-                })
+                tags.append(
+                    {
+                        "eTag": etag,
+                        "partNumber": index + 1,
+                    }
+                )
 
             if show_progress:
                 percent = ((index + 1) / len(upload_urls)) * 100
@@ -1182,11 +1180,13 @@ def upload_data_link(
                 provider,
                 show_progress,
             )
-            path_info.append({
-                "type": "FOLDER",
-                "path": str(path),
-                "fileCount": file_count,
-            })
+            path_info.append(
+                {
+                    "type": "FOLDER",
+                    "path": str(path),
+                    "fileCount": file_count,
+                }
+            )
         else:
             _upload_file_multipart(
                 client,
@@ -1199,11 +1199,13 @@ def upload_data_link(
                 provider,
                 show_progress,
             )
-            path_info.append({
-                "type": "FILE",
-                "path": str(path),
-                "fileCount": 1,
-            })
+            path_info.append(
+                {
+                    "type": "FILE",
+                    "path": str(path),
+                    "fileCount": 1,
+                }
+            )
 
     result = DataLinkFileTransferResult(direction="upload", paths=path_info)
     _output_result(result, output_format)

@@ -2,7 +2,7 @@
 Common models shared across the SDK.
 """
 
-from typing import Generic, TypeVar, Iterator, Callable, Any
+from typing import Callable, Generic, Iterator, TypeVar
 
 from seqera.models.base import SeqeraModel
 

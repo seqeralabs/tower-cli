@@ -16,7 +16,7 @@ from seqera.exceptions import (
     SeqeraError,
     WorkspaceNotFoundException,
 )
-from seqera.main import get_sdk, get_output_format
+from seqera.main import get_output_format, get_sdk
 from seqera.responses import (
     ParticipantLeft,
     WorkspaceAdded,

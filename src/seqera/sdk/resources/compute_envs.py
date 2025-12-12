@@ -229,7 +229,9 @@ class ComputeEnvsResource(BaseResource):
         # Override name if specified
         ce_name = name or config.get("name")
         if not ce_name:
-            raise ValueError("Compute environment name must be specified either in config or with name parameter")
+            raise ValueError(
+                "Compute environment name must be specified either in config or with name parameter"
+            )
 
         # Handle overwrite - delete existing CE if it exists
         if overwrite:

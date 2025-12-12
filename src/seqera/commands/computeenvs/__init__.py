@@ -15,7 +15,7 @@ from seqera.exceptions import (
     NotFoundError,
     SeqeraError,
 )
-from seqera.main import get_sdk, get_output_format
+from seqera.main import get_output_format, get_sdk
 from seqera.responses.computeenvs import (
     ComputeEnvAdded,
     ComputeEnvDeleted,

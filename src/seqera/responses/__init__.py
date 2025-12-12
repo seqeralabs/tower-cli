@@ -3359,7 +3359,9 @@ class RunFileDownloaded(Response):
 
     def to_console(self) -> str:
         if self.task_id:
-            return f"  Downloaded {self.file_type} file for task {self.task_id} to '{self.file_path}'"
+            return (
+                f"  Downloaded {self.file_type} file for task {self.task_id} to '{self.file_path}'"
+            )
         return f"  Downloaded {self.file_type} file for run {self.run_id} to '{self.file_path}'"
 
 

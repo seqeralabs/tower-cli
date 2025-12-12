@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import os
 import sys
-from typing import Annotated, TYPE_CHECKING
+from typing import TYPE_CHECKING, Annotated
 
 import typer
 
@@ -50,7 +50,7 @@ def get_client() -> SeqeraClient:
     return state.client
 
 
-def get_sdk() -> "Seqera":
+def get_sdk() -> Seqera:
     """Get the global SDK client instance."""
     if state._sdk_client is None:
         raise RuntimeError("SDK client not initialized. This is a bug.")
@@ -62,7 +62,7 @@ def set_client(client: SeqeraClient) -> None:
     state.client = client
 
 
-def set_sdk(sdk: "Seqera") -> None:
+def set_sdk(sdk: Seqera) -> None:
     """Set the global SDK client instance."""
     state._sdk_client = sdk
 

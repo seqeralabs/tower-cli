@@ -408,7 +408,9 @@ class TestComputeEnvsImportCmd:
         )
 
         # Assertions
-        assert out.exit_code == 0, f"Command failed with exit code {out.exit_code}. stdout: {out.stdout!r}, stderr: {out.stderr!r}"
+        assert (
+            out.exit_code == 0
+        ), f"Command failed with exit code {out.exit_code}. stdout: {out.stdout!r}, stderr: {out.stderr!r}"
         assert out.stderr == ""
 
         if output_format == "json":
@@ -570,7 +572,13 @@ class TestComputeEnvsUpdateCmd:
             "/compute-envs/4Ks2gtNrdv7VWyHnRaeCa4",
             method="GET",
         ).respond_with_json(
-            {"computeEnv": {"id": "4Ks2gtNrdv7VWyHnRaeCa4", "name": "old-ce-name", "platform": "aws-batch"}},
+            {
+                "computeEnv": {
+                    "id": "4Ks2gtNrdv7VWyHnRaeCa4",
+                    "name": "old-ce-name",
+                    "platform": "aws-batch",
+                }
+            },
             status=200,
         )
 

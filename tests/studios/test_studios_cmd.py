@@ -836,9 +836,7 @@ class TestStudiosAddCmd:
         )
 
         # Get workspaces
-        httpserver.expect_ordered_request(
-            "/user/1/workspaces", method="GET"
-        ).respond_with_json(
+        httpserver.expect_ordered_request("/user/1/workspaces", method="GET").respond_with_json(
             {
                 "orgsAndWorkspaces": [
                     {
@@ -853,11 +851,7 @@ class TestStudiosAddCmd:
 
         # Get compute envs
         httpserver.expect_ordered_request("/compute-envs", method="GET").respond_with_json(
-            {
-                "computeEnvs": [
-                    {"id": "ce-123", "name": "my-compute-env", "status": "AVAILABLE"}
-                ]
-            },
+            {"computeEnvs": [{"id": "ce-123", "name": "my-compute-env", "status": "AVAILABLE"}]},
             status=200,
         )
 
@@ -928,9 +922,7 @@ class TestStudiosAddCmd:
         )
 
         # Get workspaces
-        httpserver.expect_ordered_request(
-            "/user/1/workspaces", method="GET"
-        ).respond_with_json(
+        httpserver.expect_ordered_request("/user/1/workspaces", method="GET").respond_with_json(
             {
                 "orgsAndWorkspaces": [
                     {
@@ -979,9 +971,7 @@ class TestStudiosAddAsNewCmd:
         )
 
         # Get workspaces (called multiple times)
-        httpserver.expect_request(
-            "/user/1/workspaces", method="GET"
-        ).respond_with_json(
+        httpserver.expect_request("/user/1/workspaces", method="GET").respond_with_json(
             {
                 "orgsAndWorkspaces": [
                     {
