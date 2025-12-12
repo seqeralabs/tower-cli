@@ -174,6 +174,9 @@ class PipelinesResource(BaseResource):
         stub_run: bool = False,
         resume: bool = False,
         labels: list[str] | None = None,
+        head_job_container: str | None = None,
+        user_secrets: list[str] | None = None,
+        workspace_secrets: list[str] | None = None,
     ) -> LaunchResult:
         """
         Launch a pipeline.
@@ -194,6 +197,9 @@ class PipelinesResource(BaseResource):
             stub_run: Run in stub mode (dry run)
             resume: Resume from previous run
             labels: Labels to apply to the run
+            head_job_container: Container to run the Nextflow head job (BETA)
+            user_secrets: User secrets for the pipeline execution
+            workspace_secrets: Workspace secrets for the pipeline execution
 
         Returns:
             LaunchResult with workflow ID
@@ -260,6 +266,16 @@ class PipelinesResource(BaseResource):
         if labels:
             label_ids = self._resolve_labels(labels, ws_id)
             launch_payload["labelIds"] = label_ids
+
+        # Add head job container (BETA)
+        if head_job_container:
+            launch_payload["headJobContainer"] = head_job_container
+
+        # Add secrets
+        if user_secrets:
+            launch_payload["userSecrets"] = user_secrets
+        if workspace_secrets:
+            launch_payload["workspaceSecrets"] = workspace_secrets
 
         # Build request params
         post_params: dict[str, Any] = {}

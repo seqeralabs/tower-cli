@@ -178,6 +178,9 @@ class StudiosResource(BaseResource):
         label_ids: list[int] | None = None,
         is_private: bool = False,
         auto_start: bool = False,
+        lifespan: int | None = None,
+        wait: str | None = None,
+        wait_timeout: int = 600,
     ) -> Studio:
         """
         Create a new studio.
@@ -192,10 +195,13 @@ class StudiosResource(BaseResource):
             memory: Memory in MB (default 8192)
             gpu: Number of GPUs (default 0)
             conda_environment: Conda environment YAML string
-            mount_data: Data links to mount
+            mount_data: Data links to mount (list of dicts with dataLinkId keys)
             label_ids: Label IDs to apply
             is_private: Create as private studio
             auto_start: Start studio immediately
+            lifespan: Lifespan in hours (defaults to workspace setting)
+            wait: Wait for studio to reach specified status (e.g., "RUNNING")
+            wait_timeout: Maximum time to wait in seconds (default 600)
 
         Returns:
             Created Studio object
@@ -214,6 +220,9 @@ class StudiosResource(BaseResource):
 
         if mount_data:
             configuration["mountData"] = mount_data
+
+        if lifespan is not None:
+            configuration["lifespan"] = lifespan
 
         # Build request payload
         request = {
@@ -234,7 +243,59 @@ class StudiosResource(BaseResource):
         params["autoStart"] = str(auto_start).lower()
         response = self._client.post("/studios", json=request, params=params)
         studio_data = response.get("studio", {})
-        return Studio.model_validate(studio_data)
+        studio = Studio.model_validate(studio_data)
+
+        # Wait for status if requested
+        if wait and studio.session_id:
+            self._wait_for_status(studio.session_id, wait, workspace, wait_timeout)
+            # Refresh studio to get updated status
+            studio = self.get(studio.session_id, workspace=workspace)
+
+        return studio
+
+    def _wait_for_status(
+        self,
+        studio_id: str,
+        target_status: str,
+        workspace: str | int | None,
+        timeout: int = 600,
+        poll_interval: int = 10,
+    ) -> bool:
+        """Wait for a studio to reach the target status.
+
+        Args:
+            studio_id: Studio session ID
+            target_status: Target status to wait for (e.g., RUNNING)
+            workspace: Workspace ID or "org/workspace" reference
+            timeout: Maximum time to wait in seconds
+            poll_interval: Time between status checks in seconds
+
+        Returns:
+            True if target status reached, False if timeout
+        """
+        import time
+
+        terminal_states = ["STOPPED", "ERRORED", "DELETED"]
+        target_upper = target_status.upper()
+        start_time = time.time()
+
+        while time.time() - start_time < timeout:
+            try:
+                studio = self.get(studio_id, workspace=workspace)
+                current_status = (studio.status or "").upper()
+
+                if current_status == target_upper:
+                    return True
+
+                if current_status in terminal_states and current_status != target_upper:
+                    return False
+
+            except Exception:
+                pass
+
+            time.sleep(poll_interval)
+
+        return False
 
     def create_from_existing(
         self,
@@ -250,6 +311,10 @@ class StudiosResource(BaseResource):
         label_ids: list[int] | None = None,
         is_private: bool = False,
         auto_start: bool = False,
+        mount_data: list[dict] | None = None,
+        lifespan: int | None = None,
+        wait: str | None = None,
+        wait_timeout: int = 600,
     ) -> Studio:
         """
         Create a new studio from an existing studio's checkpoint.
@@ -266,6 +331,10 @@ class StudiosResource(BaseResource):
             label_ids: Label IDs to apply
             is_private: Create as private studio
             auto_start: Start studio immediately
+            mount_data: Data links to mount (overrides parent if specified)
+            lifespan: Lifespan in hours (defaults to workspace setting)
+            wait: Wait for studio to reach specified status (e.g., "RUNNING")
+            wait_timeout: Maximum time to wait in seconds (default 600)
 
         Returns:
             Created Studio object
@@ -293,10 +362,16 @@ class StudiosResource(BaseResource):
             "memory": memory if memory is not None else getattr(parent_config, "memory", 8192),
         }
 
-        # Preserve mount data from parent
-        mount_data = getattr(parent_config, "mount_data", None)
+        # Handle mount data (use provided or fallback to parent)
         if mount_data:
             configuration["mountData"] = mount_data
+        else:
+            parent_mount_data = getattr(parent_config, "mount_data", None)
+            if parent_mount_data:
+                configuration["mountData"] = parent_mount_data
+
+        if lifespan is not None:
+            configuration["lifespan"] = lifespan
 
         # Build description
         final_description = description or f"Started from studio {parent.name or parent_studio_id}"
@@ -321,4 +396,12 @@ class StudiosResource(BaseResource):
         params["autoStart"] = str(auto_start).lower()
         response = self._client.post("/studios", json=request, params=params)
         studio_data = response.get("studio", {})
-        return Studio.model_validate(studio_data)
+        studio = Studio.model_validate(studio_data)
+
+        # Wait for status if requested
+        if wait and studio.session_id:
+            self._wait_for_status(studio.session_id, wait, workspace, wait_timeout)
+            # Refresh studio to get updated status
+            studio = self.get(studio.session_id, workspace=workspace)
+
+        return studio

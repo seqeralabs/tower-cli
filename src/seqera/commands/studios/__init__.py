@@ -629,6 +629,182 @@ def find_compute_env_by_name(client: SeqeraClient, name: str, workspace_id: str 
     raise SeqeraError(f"Compute environment '{name}' not found")
 
 
+import time
+
+
+def wait_for_studio_status(
+    client: SeqeraClient,
+    session_id: str,
+    target_status: str,
+    workspace_id: str | None,
+    timeout: int = 600,
+    poll_interval: int = 10,
+) -> bool:
+    """Wait for a studio to reach the target status.
+
+    Args:
+        client: Seqera API client
+        session_id: Studio session ID
+        target_status: Target status to wait for (e.g., RUNNING)
+        workspace_id: Optional workspace ID
+        timeout: Maximum time to wait in seconds (default 600)
+        poll_interval: Time between status checks in seconds (default 10)
+
+    Returns:
+        True if target status reached, False if timeout or terminal error state
+    """
+    terminal_states = ["STOPPED", "ERRORED", "DELETED"]
+    target_upper = target_status.upper()
+    start_time = time.time()
+
+    while time.time() - start_time < timeout:
+        params = {}
+        if workspace_id:
+            params["workspaceId"] = workspace_id
+
+        try:
+            response = client.get(f"/studios/{session_id}", params=params)
+            studio = response.get("studio", {})
+            current_status = studio.get("status", "").upper()
+
+            if current_status == target_upper:
+                return True
+
+            if current_status in terminal_states and current_status != target_upper:
+                return False
+
+        except Exception:
+            pass
+
+        time.sleep(poll_interval)
+
+    return False
+
+
+def find_data_link_by_name(
+    client: SeqeraClient, name: str, workspace_id: str | None
+) -> dict | None:
+    """Find a data link by name.
+
+    Args:
+        client: Seqera API client
+        name: Data link name
+        workspace_id: Optional workspace ID
+
+    Returns:
+        Data link dict or None if not found
+    """
+    params = {}
+    if workspace_id:
+        params["workspaceId"] = workspace_id
+
+    response = client.get("/data-links", params=params)
+    data_links = response.get("dataLinks", [])
+
+    for dl in data_links:
+        if dl.get("name") == name:
+            return dl
+
+    return None
+
+
+def find_data_link_by_uri(client: SeqeraClient, uri: str, workspace_id: str | None) -> dict | None:
+    """Find a data link by resource reference (URI).
+
+    Args:
+        client: Seqera API client
+        uri: Data link URI (e.g., s3://bucket)
+        workspace_id: Optional workspace ID
+
+    Returns:
+        Data link dict or None if not found
+    """
+    params = {}
+    if workspace_id:
+        params["workspaceId"] = workspace_id
+
+    response = client.get("/data-links", params=params)
+    data_links = response.get("dataLinks", [])
+
+    for dl in data_links:
+        if dl.get("resourceRef") == uri:
+            return dl
+
+    return None
+
+
+def resolve_mount_data(
+    client: SeqeraClient,
+    workspace_id: str | None,
+    mount_data_link: str | None = None,
+    mount_data_ids: str | None = None,
+    mount_data: str | None = None,
+    mount_data_uris: str | None = None,
+) -> list[dict] | None:
+    """Resolve mount data specifications to data link IDs.
+
+    Args:
+        client: Seqera API client
+        workspace_id: Optional workspace ID
+        mount_data_link: Single data link ID (deprecated)
+        mount_data_ids: Comma-separated data link IDs
+        mount_data: Comma-separated data link names
+        mount_data_uris: Comma-separated data link URIs
+
+    Returns:
+        List of mount data dicts or None
+
+    Raises:
+        SeqeraError: If mount options are mutually exclusive or data link not found
+    """
+    # Count how many options are provided
+    provided = sum(
+        1 for opt in [mount_data_link, mount_data_ids, mount_data, mount_data_uris] if opt
+    )
+    if provided > 1:
+        raise SeqeraError(
+            "--mount-data-link, --mount-data-ids, --mount-data, and --mount-data-uris are mutually exclusive"
+        )
+
+    if not provided:
+        return None
+
+    mount_data_list = []
+
+    if mount_data_link:
+        # Single ID (deprecated option)
+        mount_data_list.append({"dataLinkId": mount_data_link})
+
+    elif mount_data_ids:
+        # Multiple IDs
+        for dl_id in mount_data_ids.split(","):
+            dl_id = dl_id.strip()
+            if dl_id:
+                mount_data_list.append({"dataLinkId": dl_id})
+
+    elif mount_data:
+        # Names - resolve to IDs
+        for name in mount_data.split(","):
+            name = name.strip()
+            if name:
+                dl = find_data_link_by_name(client, name, workspace_id)
+                if not dl:
+                    raise SeqeraError(f"Data link '{name}' not found")
+                mount_data_list.append({"dataLinkId": dl.get("id")})
+
+    elif mount_data_uris:
+        # URIs - resolve to IDs
+        for uri in mount_data_uris.split(","):
+            uri = uri.strip()
+            if uri:
+                dl = find_data_link_by_uri(client, uri, workspace_id)
+                if not dl:
+                    raise SeqeraError(f"Data link with URI '{uri}' not found")
+                mount_data_list.append({"dataLinkId": dl.get("id")})
+
+    return mount_data_list if mount_data_list else None
+
+
 def find_template_by_name(client: SeqeraClient, name: str, workspace_id: str | None) -> dict | None:
     """Find a studio template by name or repository.
 
@@ -706,7 +882,32 @@ def add_studio(
     ] = None,
     mount_data_link: Annotated[
         str | None,
-        typer.Option("--mount-data-link", help="Data link ID to mount"),
+        typer.Option(
+            "--mount-data-link", help="Data link ID to mount (deprecated, use --mount-data-ids)"
+        ),
+    ] = None,
+    mount_data_ids: Annotated[
+        str | None,
+        typer.Option("--mount-data-ids", help="Comma-separated list of data link IDs to mount"),
+    ] = None,
+    mount_data: Annotated[
+        str | None,
+        typer.Option("--mount-data", help="Comma-separated list of data link names to mount"),
+    ] = None,
+    mount_data_uris: Annotated[
+        str | None,
+        typer.Option(
+            "--mount-data-uris",
+            help="Comma-separated list of data link URIs to mount (e.g., s3://bucket)",
+        ),
+    ] = None,
+    lifespan: Annotated[
+        int | None,
+        typer.Option("--lifespan", help="Lifespan in hours (defaults to workspace setting)"),
+    ] = None,
+    wait: Annotated[
+        str | None,
+        typer.Option("--wait", help="Wait until Studio reaches specified status (e.g., RUNNING)"),
     ] = None,
     workspace: Annotated[
         str | None,
@@ -766,8 +967,15 @@ def add_studio(
         if conda_env_string:
             configuration["condaEnvironment"] = conda_env_string
 
-        if mount_data_link:
-            configuration["mountData"] = [{"dataLinkId": mount_data_link}]
+        if lifespan is not None:
+            configuration["lifespan"] = lifespan
+
+        # Resolve mount data options
+        mount_data_resolved = resolve_mount_data(
+            client, workspace, mount_data_link, mount_data_ids, mount_data, mount_data_uris
+        )
+        if mount_data_resolved:
+            configuration["mountData"] = mount_data_resolved
 
         # Build request payload
         request = {
@@ -812,6 +1020,14 @@ def add_studio(
         )
         studio = response.get("studio", {})
         session_id = studio.get("sessionId", "")
+
+        # Wait for status if requested
+        if wait:
+            typer.echo(f"Waiting for studio to reach '{wait}' status...")
+            if wait_for_studio_status(client, session_id, wait, workspace):
+                typer.echo(f"Studio reached '{wait}' status")
+            else:
+                typer.echo(f"Warning: Studio did not reach '{wait}' status within timeout")
 
         # Build base URL for studio link
         base_url = None
@@ -881,6 +1097,29 @@ def add_studio_from_existing(
         str | None,
         typer.Option("--labels", help="Comma-separated list of labels"),
     ] = None,
+    mount_data_ids: Annotated[
+        str | None,
+        typer.Option("--mount-data-ids", help="Comma-separated list of data link IDs to mount"),
+    ] = None,
+    mount_data: Annotated[
+        str | None,
+        typer.Option("--mount-data", help="Comma-separated list of data link names to mount"),
+    ] = None,
+    mount_data_uris: Annotated[
+        str | None,
+        typer.Option(
+            "--mount-data-uris",
+            help="Comma-separated list of data link URIs to mount (e.g., s3://bucket)",
+        ),
+    ] = None,
+    lifespan: Annotated[
+        int | None,
+        typer.Option("--lifespan", help="Lifespan in hours (defaults to workspace setting)"),
+    ] = None,
+    wait: Annotated[
+        str | None,
+        typer.Option("--wait", help="Wait until Studio reaches specified status (e.g., RUNNING)"),
+    ] = None,
     workspace: Annotated[
         str | None,
         typer.Option("-w", "--workspace", help="Workspace ID (numeric)"),
@@ -942,10 +1181,20 @@ def add_studio_from_existing(
             "memory": memory if memory is not None else parent_config.get("memory", 8192),
         }
 
-        # Preserve mount data from parent
-        mount_data = parent_config.get("mountData")
-        if mount_data:
-            configuration["mountData"] = mount_data
+        if lifespan is not None:
+            configuration["lifespan"] = lifespan
+
+        # Resolve mount data options (use provided values or fallback to parent)
+        mount_data_resolved = resolve_mount_data(
+            client, workspace, None, mount_data_ids, mount_data, mount_data_uris
+        )
+        if mount_data_resolved:
+            configuration["mountData"] = mount_data_resolved
+        else:
+            # Preserve mount data from parent if no new mount data specified
+            parent_mount_data = parent_config.get("mountData")
+            if parent_mount_data:
+                configuration["mountData"] = parent_mount_data
 
         # Build description
         final_description = description
@@ -997,6 +1246,14 @@ def add_studio_from_existing(
         )
         studio = response.get("studio", {})
         session_id = studio.get("sessionId", "")
+
+        # Wait for status if requested
+        if wait:
+            typer.echo(f"Waiting for studio to reach '{wait}' status...")
+            if wait_for_studio_status(client, session_id, wait, workspace):
+                typer.echo(f"Studio reached '{wait}' status")
+            else:
+                typer.echo(f"Warning: Studio did not reach '{wait}' status within timeout")
 
         # Build base URL for studio link
         base_url = None

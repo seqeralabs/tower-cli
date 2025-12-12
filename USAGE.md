@@ -256,6 +256,21 @@ $ seqera launch https://github.com/nf-core/rnaseq --params-file=./custom_rnaseq_
 
 > **Note**: CLI users are bound to the same user permissions that apply in the Platform UI. Launch users can launch pre-configured pipelines in the workspaces they have access to, but they cannot add or run new pipelines.
 
+### Additional launch options
+
+The `launch` command supports additional options for advanced use cases:
+
+```console
+$ seqera launch my_pipeline \
+    --launch-container="quay.io/seqeralabs/nf-launcher:j17" \
+    --user-secrets="MY_SECRET,OTHER_SECRET" \
+    --workspace-secrets="SHARED_SECRET"
+```
+
+- `--launch-container`: Specify a custom container image for the Nextflow head job (BETA feature)
+- `--user-secrets`: Comma-separated list of user secrets to make available during pipeline execution
+- `--workspace-secrets`: Comma-separated list of workspace secrets to make available during pipeline execution
+
 ## Runs
 
 Run `seqera runs -h` to view supported runs operations.
@@ -386,6 +401,37 @@ $ seqera runs list --filter="*man/rnaseq-*"
 
 Run `seqera runs relaunch -h` to view all the required and optional fields for relaunching a run in a workspace.
 
+```console
+$ seqera runs relaunch -i 5z4AMshti4g0GK
+
+  Workflow 6ABCxX0vCX8xhx submitted at user workspace.
+
+    https://cloud.seqera.io/user/abhinav/watch/6ABCxX0vCX8xhx
+```
+
+Additional options for relaunch:
+
+```console
+$ seqera runs relaunch -i 5z4AMshti4g0GK \
+    --no-resume \
+    --pull-latest \
+    --launch-container="quay.io/seqeralabs/nf-launcher:j17" \
+    --main-script="custom_main.nf" \
+    --entry-name="my_workflow" \
+    --user-secrets="MY_SECRET" \
+    --workspace-secrets="SHARED_SECRET"
+```
+
+- `--no-resume`: Start fresh instead of resuming from the previous run
+- `--pull-latest`: Pull the latest pipeline code before running
+- `--stub-run`: Execute in stub/dry-run mode
+- `--launch-container`: Custom container for the Nextflow head job (BETA)
+- `--main-script`: Main script file if different from main.nf
+- `--entry-name`: Main workflow name for DLS2 syntax
+- `--schema-name`: Schema name for the pipeline
+- `--user-secrets`: Comma-separated user secrets for the execution
+- `--workspace-secrets`: Comma-separated workspace secrets for the execution
+
 ### Cancel a run
 
 Run `seqera runs cancel -h` to view all the required and optional fields for canceling a run in a workspace.
@@ -441,6 +487,7 @@ $ seqera runs task -i 5z4AMshti4g0GK -t 1
 ### Download log files
 
 Download workflow or task log files from a run. Available file types:
+
 - **stdout** - Standard output (workflow: `nf-{id}.txt`, task: `.command.out`)
 - **log** - Log file (workflow: `nf-{id}.log`, task: `.command.log`)
 - **stderr** - Standard error (task only: `.command.err`)
@@ -814,10 +861,21 @@ $ seqera studios add -n my-studio -c my-compute-env --template Jupyter \
     --description "My analysis studio" \
     --labels "project=myproject" \
     --auto-start \
+    --lifespan 24 \
+    --mount-data-ids v1-user-abc123 \
+    --wait RUNNING \
     -w 12345
 
   Studio 'abc123' created and started at [myorg / myworkspace] workspace
 ```
+
+Additional studio options:
+
+- `--lifespan`: Hours until the studio automatically stops
+- `--mount-data-ids`: Data link IDs to mount (can be specified multiple times)
+- `--mount-data`: Data link names to mount (can be specified multiple times)
+- `--mount-data-uris`: Data link URIs to mount (can be specified multiple times)
+- `--wait`: Wait for the studio to reach a specific status (e.g., `RUNNING`)
 
 ### Add a studio from existing
 
@@ -836,6 +894,25 @@ $ seqera studios add-as-new -n cloned-studio --parent-name "My Studio" --parent-
 
   Studio 'def456' created at [myorg / myworkspace] workspace
 ```
+
+With additional options:
+
+```console
+$ seqera studios add-as-new -n cloned-studio -p parent-studio-id \
+    --lifespan 48 \
+    --mount-data-ids v1-user-abc123 \
+    --auto-start \
+    --wait RUNNING \
+    -w 12345
+
+  Studio 'def456' created and started at [myorg / myworkspace] workspace
+```
+
+- `--lifespan`: Hours until the studio automatically stops
+- `--mount-data-ids`: Data link IDs to mount (can be specified multiple times)
+- `--mount-data`: Data link names to mount (can be specified multiple times)
+- `--mount-data-uris`: Data link URIs to mount (can be specified multiple times)
+- `--wait`: Wait for the studio to reach a specific status (e.g., `RUNNING`)
 
 ### Delete a studio
 

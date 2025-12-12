@@ -46,7 +46,7 @@ $ seqera info
 
 ### Commands
 
-```
+```text
 pipelines      Manage workspace pipelines
 runs           Manage pipeline runs
 compute-envs   Manage compute environments

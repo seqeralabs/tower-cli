@@ -273,6 +273,14 @@ class RunsResource(BaseResource):
         config_profiles: list[str] | None = None,
         pre_run_script: str | None = None,
         post_run_script: str | None = None,
+        head_job_container: str | None = None,
+        pull_latest: bool | None = None,
+        stub_run: bool | None = None,
+        main_script: str | None = None,
+        entry_name: str | None = None,
+        schema_name: str | None = None,
+        user_secrets: list[str] | None = None,
+        workspace_secrets: list[str] | None = None,
     ) -> str:
         """
         Relaunch a pipeline run.
@@ -288,6 +296,14 @@ class RunsResource(BaseResource):
             config_profiles: Nextflow config profiles (optional)
             pre_run_script: Pre-run script (optional)
             post_run_script: Post-run script (optional)
+            head_job_container: Container to run the Nextflow head job (BETA)
+            pull_latest: Pull latest repository version before running
+            stub_run: Execute workflow with command stubs
+            main_script: Pipeline main script file if different from main.nf
+            entry_name: Main workflow name for DLS2 syntax
+            schema_name: Schema name
+            user_secrets: User secrets for the pipeline execution
+            workspace_secrets: Workspace secrets for the pipeline execution
 
         Returns:
             New workflow ID
@@ -319,6 +335,24 @@ class RunsResource(BaseResource):
             launch_payload["preRunScript"] = pre_run_script
         if post_run_script:
             launch_payload["postRunScript"] = post_run_script
+
+        # Add new options
+        if head_job_container:
+            launch_payload["headJobContainer"] = head_job_container
+        if pull_latest is not None:
+            launch_payload["pullLatest"] = pull_latest
+        if stub_run is not None:
+            launch_payload["stubRun"] = stub_run
+        if main_script:
+            launch_payload["mainScript"] = main_script
+        if entry_name:
+            launch_payload["entryName"] = entry_name
+        if schema_name:
+            launch_payload["schemaName"] = schema_name
+        if user_secrets:
+            launch_payload["userSecrets"] = user_secrets
+        if workspace_secrets:
+            launch_payload["workspaceSecrets"] = workspace_secrets
 
         response = self._client.post(
             "/workflow/launch",

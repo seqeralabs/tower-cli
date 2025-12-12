@@ -363,6 +363,49 @@ def relaunch_run(
         str | None,
         typer.Option("--profile", help="Nextflow profile(s) (comma-separated)"),
     ] = None,
+    launch_container: Annotated[
+        str | None,
+        typer.Option(
+            "--launch-container", help="Container to be used to run the Nextflow head job (BETA)"
+        ),
+    ] = None,
+    pull_latest: Annotated[
+        bool | None,
+        typer.Option("--pull-latest", help="Pull latest repository version before running"),
+    ] = None,
+    stub_run: Annotated[
+        bool | None,
+        typer.Option(
+            "--stub-run", help="Execute workflow replacing process scripts with command stubs"
+        ),
+    ] = None,
+    main_script: Annotated[
+        str | None,
+        typer.Option("--main-script", help="Pipeline main script file if different from main.nf"),
+    ] = None,
+    entry_name: Annotated[
+        str | None,
+        typer.Option(
+            "--entry-name", help="Main workflow name to be executed when using DLS2 syntax"
+        ),
+    ] = None,
+    schema_name: Annotated[
+        str | None,
+        typer.Option("--schema-name", help="Schema name"),
+    ] = None,
+    user_secrets: Annotated[
+        str | None,
+        typer.Option(
+            "--user-secrets", help="User secrets (comma-separated) for the pipeline execution"
+        ),
+    ] = None,
+    workspace_secrets: Annotated[
+        str | None,
+        typer.Option(
+            "--workspace-secrets",
+            help="Workspace secrets (comma-separated) for the pipeline execution",
+        ),
+    ] = None,
 ) -> None:
     """Relaunch a pipeline run."""
     from pathlib import Path
@@ -469,13 +512,32 @@ def relaunch_run(
             "paramsText": params_text,
             "preRunScript": pre_run_script,
             "postRunScript": post_run_script,
-            "mainScript": launch.get("mainScript"),
-            "entryName": launch.get("entryName"),
-            "schemaName": launch.get("schemaName"),
+            "mainScript": main_script if main_script else launch.get("mainScript"),
+            "entryName": entry_name if entry_name else launch.get("entryName"),
+            "schemaName": schema_name if schema_name else launch.get("schemaName"),
             "resume": not no_resume,
-            "pullLatest": launch.get("pullLatest"),
-            "stubRun": launch.get("stubRun"),
+            "pullLatest": pull_latest if pull_latest is not None else launch.get("pullLatest"),
+            "stubRun": stub_run if stub_run is not None else launch.get("stubRun"),
         }
+
+        # Handle launch container (BETA)
+        if launch_container:
+            launch_request["headJobContainer"] = launch_container
+        elif launch.get("headJobContainer"):
+            launch_request["headJobContainer"] = launch.get("headJobContainer")
+
+        # Handle secrets
+        if user_secrets:
+            secret_names = [s.strip() for s in user_secrets.split(",")]
+            launch_request["userSecrets"] = secret_names
+        elif launch.get("userSecrets"):
+            launch_request["userSecrets"] = launch.get("userSecrets")
+
+        if workspace_secrets:
+            secret_names = [s.strip() for s in workspace_secrets.split(",")]
+            launch_request["workspaceSecrets"] = secret_names
+        elif launch.get("workspaceSecrets"):
+            launch_request["workspaceSecrets"] = launch.get("workspaceSecrets")
 
         if name:
             launch_request["runName"] = name

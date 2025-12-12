@@ -308,6 +308,25 @@ def launch(
         str | None,
         typer.Option("--wait", help="Wait for completion (optional)"),
     ] = None,
+    launch_container: Annotated[
+        str | None,
+        typer.Option(
+            "--launch-container", help="Container to be used to run the Nextflow head job (BETA)"
+        ),
+    ] = None,
+    user_secrets: Annotated[
+        str | None,
+        typer.Option(
+            "--user-secrets", help="User secrets (comma-separated) for the pipeline execution"
+        ),
+    ] = None,
+    workspace_secrets: Annotated[
+        str | None,
+        typer.Option(
+            "--workspace-secrets",
+            help="Workspace secrets (comma-separated) for the pipeline execution",
+        ),
+    ] = None,
 ) -> None:
     """Launch a pipeline."""
     try:
@@ -422,6 +441,19 @@ def launch(
             label_names = [l.strip() for l in label.split(",")]
             label_ids = resolve_labels(client, label_names, workspace_id)
             launch_payload["labelIds"] = label_ids
+
+        # Handle launch container (BETA)
+        if launch_container:
+            launch_payload["headJobContainer"] = launch_container
+
+        # Handle secrets
+        if user_secrets:
+            secret_names = [s.strip() for s in user_secrets.split(",")]
+            launch_payload["userSecrets"] = secret_names
+
+        if workspace_secrets:
+            secret_names = [s.strip() for s in workspace_secrets.split(",")]
+            launch_payload["workspaceSecrets"] = secret_names
 
         # Submit launch
         post_params = {}

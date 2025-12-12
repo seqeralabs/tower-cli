@@ -71,7 +71,7 @@ from itertools import islice
 first_10 = list(islice(client.pipelines.list(), 10))
 ```
 
-## Workspaces
+## Workspace Parameter
 
 All operations accept an optional `workspace` parameter. If omitted, uses the default workspace.
 
@@ -172,6 +172,9 @@ result = client.pipelines.launch(
     pull_latest=True,
     resume=False,
     stub_run=False,
+    head_job_container="quay.io/seqeralabs/nf-launcher:j17",  # BETA
+    user_secrets=["MY_SECRET"],
+    workspace_secrets=["SHARED_SECRET"],
 )
 ```
 
@@ -269,6 +272,20 @@ new_workflow_id = client.runs.relaunch(
     resume=False,
     work_dir="s3://bucket/new-work",
     compute_env="different-ce",
+)
+
+# Relaunch with additional options
+new_workflow_id = client.runs.relaunch(
+    "abc123",
+    resume=True,
+    pull_latest=True,
+    stub_run=False,
+    head_job_container="quay.io/seqeralabs/nf-launcher:j17",  # BETA
+    main_script="main.nf",
+    entry_name="my_workflow",
+    schema_name="nextflow_schema.json",
+    user_secrets=["MY_SECRET"],
+    workspace_secrets=["SHARED_SECRET"],
 )
 ```
 
@@ -861,8 +878,21 @@ studio = client.studios.create(
     gpu=0,
     description="My data analysis environment",
     auto_start=True,  # Start immediately
+    lifespan=24,  # Hours until auto-stop
+    mount_data=[{"dataLinkId": "v1-user-abc123"}],
 )
 print(f"Created studio: {studio.session_id}")
+
+# Create studio and wait for it to be running
+studio = client.studios.create(
+    name="My Analysis Studio",
+    compute_env_id="ce-123",
+    template_url="cr.seqera.io/public/data-studio-jupyter:1.0",
+    auto_start=True,
+    wait="RUNNING",  # Wait for studio to reach RUNNING status
+    wait_timeout=600,  # Max seconds to wait (default 600)
+)
+print(f"Studio running: {studio.status}")
 ```
 
 ### Create studio from existing
@@ -874,8 +904,20 @@ studio = client.studios.create_from_existing(
     parent_studio_id="parent-studio-id",
     parent_checkpoint_id=123,  # Optional, uses most recent if not specified
     auto_start=True,
+    lifespan=48,  # Hours until auto-stop
+    mount_data=[{"dataLinkId": "v1-user-abc123"}],
 )
 print(f"Cloned studio: {studio.session_id}")
+
+# Clone and wait for running status
+studio = client.studios.create_from_existing(
+    name="Cloned Studio",
+    parent_studio_id="parent-studio-id",
+    auto_start=True,
+    wait="RUNNING",
+    wait_timeout=600,
+)
+print(f"Cloned studio running: {studio.status}")
 ```
 
 ---
