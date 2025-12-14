@@ -11,6 +11,15 @@ import os
 import sys
 from typing import TYPE_CHECKING, Annotated
 
+import rich_click.rich_click as rc
+
+# Apply rich-click formatting to Typer (must be done before importing typer)
+from rich_click.patch import patch_typer
+
+patch_typer()
+rc.THEME = "quartz-nu"
+rc.COMMANDS_BEFORE_OPTIONS = True
+
 import typer
 
 from seqera.api.client import SeqeraClient
