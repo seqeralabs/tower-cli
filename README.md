@@ -154,10 +154,15 @@ tw CLI is a platform binary executable created by a native compilation from Java
     ./gradlew runReflectionConfigGenerator
     ```
 
-    The GraalVM reflection metadata generation relies on code paths being executed with [a tracing agent](https://www.graalvm.org/jdk21/reference-manual/native-image/metadata/AutomaticMetadataCollection/#tracing-agent) to dynamically capture various execution paths and update the reflect-config.json.
+   The GraalVM reflection metadata generation relies on code paths being executed with the [Tracing Agent](https://www.graalvm.org/jdk21/reference-manual/native-image/metadata/AutomaticMetadataCollection/#tracing-agent) to dynamically
+   capture various execution paths and update the `reflect-config.json` and `resource-config.json` files. This is a utility task that uses reflection to make calls to all classes in the Tower SDK package in order to capture and generate
+   methods reflection metadata of any new fields/classes in Tower SDK.
 
-    This is a utility task that uses reflection to make calls to all classes in the Tower SDK package,
-    in order to capture and generate methods reflection metadata of any new fields/classes in Tower SDK and update resource-config.json
+   Additionally, for more complete coverage, run the test suite with the Tracing Agent enabled:
+
+    ```bash
+       ./gradlew test -Dtracing-agent=true
+    ```
 
 1. Create the native client:
 

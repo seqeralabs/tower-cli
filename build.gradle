@@ -120,6 +120,10 @@ test {
     // Use junit platform for unit tests
     useJUnitPlatform()
     dependsOn checkLicenses
+    // Run tests with GraalVM Tracing Agent enabled
+    if (System.getProperty('tracing-agent')?.toBoolean()) {
+        jvmArgs = ["-agentlib:native-image-agent=access-filter-file=conf/access-filter-file.json,config-merge-dir=conf/"]
+    }
 }
 
 graalvmNative {

@@ -65,6 +65,7 @@ import io.seqera.tower.model.PipelineDbDto;
 import io.seqera.tower.model.PipelineQueryAttribute;
 import io.seqera.tower.model.UserResponseDto;
 import io.seqera.tower.model.WorkflowQueryAttribute;
+import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.media.multipart.BodyPart;
@@ -272,6 +273,16 @@ public abstract class AbstractApiCmd extends AbstractCmd {
 
     private ApiClient buildApiClient() {
         return new ApiClient() {
+
+            @Override
+            public ClientConfig getDefaultClientConfig() {
+                ClientConfig config = super.getDefaultClientConfig();
+                // Disable conditionally enabled providers, as warnings get printed when their corresponding classes are not available in the classpath
+                config.property(CommonProperties.PROVIDER_DEFAULT_DISABLE, "ALL");
+
+                return config;
+            }
+
             @Override
             protected void applyDebugSetting(ClientConfig clientConfig) {
                 if (app().verbose) {
