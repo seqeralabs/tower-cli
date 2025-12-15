@@ -17,8 +17,9 @@ import rich_click.rich_click as rc
 from rich_click.patch import patch_typer
 
 patch_typer()
-rc.THEME = "quartz-nu"
+rc.THEME = "cargo-modern"
 rc.COMMANDS_BEFORE_OPTIONS = True
+rc.SHOW_ARGUMENTS = True
 
 import typer
 

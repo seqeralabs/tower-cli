@@ -11,6 +11,8 @@ from typing import Annotated, Any
 
 import httpx
 import typer
+from rich.console import Console
+from rich.table import Table
 
 from seqera.api.client import SeqeraClient
 from seqera.main import get_client, get_output_format
@@ -33,6 +35,14 @@ class Visibility(str, Enum):
     HIDDEN = "hidden"
     VISIBLE = "visible"
     ALL = "all"
+
+
+class DisplayStyle(str, Enum):
+    """Display style options for list output."""
+
+    TABLE = "table"
+    PANELS = "panels"
+    JSON = "json"
 
 
 def _output_result(result: Any, output_format: OutputFormat) -> None:
@@ -78,12 +88,12 @@ def _resolve_workspace_id(client: SeqeraClient, workspace: str | None) -> int | 
 def _resolve_workspace_ref(client: SeqeraClient, workspace_id: int | None) -> str:
     """Get workspace reference string from workspace ID."""
     if workspace_id is None:
-        return "[user workspace]"
+        return "user workspace"
 
     user_info = client.get("/user-info")
     user_id = user_info.get("user", {}).get("id")
     if not user_id:
-        return f"[workspace {workspace_id}]"
+        return f"workspace {workspace_id}"
 
     workspaces_response = client.get(f"/user/{user_id}/workspaces")
     workspaces = workspaces_response.get("orgsAndWorkspaces", [])
@@ -92,9 +102,9 @@ def _resolve_workspace_ref(client: SeqeraClient, workspace_id: int | None) -> st
         if ws.get("workspaceId") == workspace_id:
             org_name = ws.get("orgName", "")
             ws_name = ws.get("workspaceName", "")
-            return f"[{org_name} / {ws_name}]" if ws_name else f"[{org_name}]"
+            return f"{org_name} / {ws_name}" if ws_name else org_name
 
-    return f"[workspace {workspace_id}]"
+    return f"workspace {workspace_id}"
 
 
 def _resolve_credentials_id(
@@ -163,27 +173,73 @@ class DataLinksList:
             "isIncomplete": self.is_incomplete,
         }
 
-    def to_console(self) -> str:
-        lines = [f"Data Links at workspace {self.workspace_ref}:", ""]
+    def to_console(self, style: str = "table") -> str:
+        from rich.markup import escape
+        from rich.text import Text
+
         if not self.data_links:
-            lines.append("  No data links found")
-        else:
-            # Header
-            lines.append(f"  {'ID':<45} {'Name':<30} {'Provider':<10} {'Region':<15} {'Resource'}")
-            lines.append("  " + "-" * 120)
-            for dl in self.data_links:
-                dl_id = dl.get("id", "")[:44]
-                name = dl.get("name", "")[:29]
-                provider = dl.get("provider", "")[:9]
-                region = dl.get("region", "")[:14]
-                resource = dl.get("resourceRef", "")
-                lines.append(f"  {dl_id:<45} {name:<30} {provider:<10} {region:<15} {resource}")
+            return f"Data Links in workspace '{self.workspace_ref}':\n\n  No data links found"
 
-        if self.is_incomplete:
-            lines.append("")
-            lines.append("  Note: Results may be incomplete. Use --wait to fetch all data links.")
+        console = Console(force_terminal=True)
+        count = self.total_size if self.total_size is not None else len(self.data_links)
 
-        return "\n".join(lines)
+        if style == "panels":
+            # Panel style: each data link as a card with ID on its own line
+            with console.capture() as capture:
+                console.print(
+                    f"\n[bold]Data Links in workspace '{escape(self.workspace_ref)}' "
+                    f"({count})[/bold]\n"
+                )
+
+                for dl in self.data_links:
+                    # ID on its own line
+                    console.print(f"[dim]{dl.get('id', '')}[/dim]")
+
+                    # Create a small table for the details
+                    details_table = Table(show_header=False, box=None, padding=(0, 2))
+                    details_table.add_column("Label", style="bold")
+                    details_table.add_column("Value")
+
+                    details_table.add_row("Name", Text(dl.get("name", ""), style="cyan"))
+                    details_table.add_row("Provider", Text(dl.get("provider", ""), style="magenta"))
+                    details_table.add_row("Region", Text(dl.get("region", ""), style="green"))
+                    details_table.add_row("Resource", Text(dl.get("resourceRef", ""), style="blue"))
+
+                    console.print(details_table)
+                    console.print()  # Blank line between entries
+
+                if self.is_incomplete:
+                    console.print(
+                        "  Note: Results may be incomplete. Use --wait to fetch all data links."
+                    )
+
+            return capture.get()
+
+        # Default table style
+        table = Table(title=f"Data Links in workspace '{escape(self.workspace_ref)}' ({count})")
+        table.add_column("Name", style="cyan")
+        table.add_column("Provider", style="magenta")
+        table.add_column("Region", style="green")
+        table.add_column("Resource", style="blue")
+        table.add_column("ID", style="dim")
+
+        for dl in self.data_links:
+            table.add_row(
+                dl.get("name", ""),
+                dl.get("provider", ""),
+                dl.get("region", ""),
+                dl.get("resourceRef", ""),
+                dl.get("id", ""),
+            )
+
+        with console.capture() as capture:
+            console.print(table)
+            if self.is_incomplete:
+                console.print(
+                    "\n  Note: Results may be incomplete. Use --wait to fetch all data links."
+                )
+
+        return capture.get()
 
 
 class DataLinkView:
@@ -323,6 +379,10 @@ class DataLinkFileTransferResult:
 
 @app.command("list")
 def list_data_links(
+    filter_text: Annotated[
+        str | None,
+        typer.Argument(help="Filter by data link name or resource URI."),
+    ] = None,
     workspace: Annotated[
         str | None,
         typer.Option("-w", "--workspace", help="Workspace numeric identifier or name."),
@@ -351,6 +411,10 @@ def list_data_links(
         Visibility | None,
         typer.Option("--visibility", help="Filter by visibility (hidden, visible, all)."),
     ] = None,
+    display: Annotated[
+        DisplayStyle,
+        typer.Option("-d", "--display", help="Display style: table, panels, or json."),
+    ] = DisplayStyle.TABLE,
     wait: Annotated[
         bool,
         typer.Option("--wait", help="Wait for all data links to be fetched."),
@@ -376,7 +440,7 @@ def list_data_links(
     if credentials:
         cred_id = _resolve_credentials_id(client, workspace_id, credentials)
 
-    # Build search query
+    # Build search query from explicit options (not filter_text - that's client-side only)
     search = _build_search(name, provider, region, uri)
 
     # Build request params
@@ -403,6 +467,16 @@ def list_data_links(
     data_links = response.get("dataLinks", [])
     total_size = response.get("totalSize")
 
+    # Client-side filtering if filter_text provided (in case API doesn't filter both)
+    if filter_text:
+        filter_lower = filter_text.lower()
+        data_links = [
+            dl
+            for dl in data_links
+            if filter_lower in dl.get("name", "").lower()
+            or filter_lower in dl.get("resourceRef", "").lower()
+        ]
+
     result = DataLinksList(
         workspace_ref=workspace_ref,
         data_links=data_links,
@@ -411,7 +485,16 @@ def list_data_links(
         max_items=max_results,
         total_size=total_size,
     )
-    _output_result(result, output_format)
+
+    # Handle display style
+    if display == DisplayStyle.JSON:
+        output_json(result.to_dict())
+    elif output_format == OutputFormat.JSON:
+        output_json(result.to_dict())
+    elif output_format == OutputFormat.YAML:
+        output_yaml(result.to_dict())
+    else:
+        output_console(result.to_console(style=display.value))
 
 
 @app.command("add")
