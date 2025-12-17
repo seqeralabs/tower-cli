@@ -149,8 +149,8 @@ public class LaunchCmd extends AbstractRootCmd {
                 .optimizationId(coalesce(adv().disableOptimization, false) ? null : base.getOptimizationId())
                 .optimizationTargets(coalesce(adv().disableOptimization, false) ? null : base.getOptimizationTargets())
                 .labelIds(base.getLabelIds())
-                .headJobCpus(base.getHeadJobCpus())
-                .headJobMemoryMb(base.getHeadJobMemoryMb())
+                .headJobCpus(coalesce(adv().headJobCpus, base.getHeadJobCpus()))
+                .headJobMemoryMb(coalesce(adv().headJobMemoryMb, base.getHeadJobMemoryMb()))
                 .launchContainer(launchContainer);
     }
 
@@ -290,6 +290,12 @@ public class LaunchCmd extends AbstractRootCmd {
 
         @Option(names = {"--disable-optimization"}, description = "Turn off the optimization for the pipeline before launching.")
         public Boolean disableOptimization;
+
+        @Option(names = {"--head-job-cpus"}, description = "The number of CPUs to be allocated for the Nextflow runner job (overrides compute environment setting).")
+        public Integer headJobCpus;
+
+        @Option(names = {"--head-job-memory"}, description = "The number of MiB of memory reserved for the Nextflow runner job (overrides compute environment setting).")
+        public Integer headJobMemoryMb;
 
     }
 
