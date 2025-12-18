@@ -644,9 +644,9 @@ def update_data_link(
 
 @app.command("browse")
 def browse_data_link(
-    data_link_id: Annotated[
+    data_link: Annotated[
         str,
-        typer.Option("-i", "--id", help="Data link ID."),
+        typer.Argument(help="Data link ID or name."),
     ],
     workspace: Annotated[
         str | None,
@@ -684,6 +684,9 @@ def browse_data_link(
     if credentials:
         cred_id = _resolve_credentials_id(client, workspace_id, credentials)
 
+    # Resolve data link ID or name to ID
+    data_link_id = _resolve_data_link_id_or_name(client, workspace_id, data_link, cred_id)
+
     # Build request params for describe
     describe_params: dict[str, Any] = {}
     if workspace_id:
@@ -693,7 +696,7 @@ def browse_data_link(
 
     # Get data link details
     describe_response = client.get(f"/data-links/{data_link_id}", params=describe_params)
-    data_link = describe_response.get("dataLink", describe_response)
+    data_link_info = describe_response.get("dataLink", describe_response)
 
     # Build browse params
     browse_params: dict[str, Any] = {}
@@ -717,7 +720,7 @@ def browse_data_link(
     browse_response = client.get(browse_url, params=browse_params)
 
     result = DataLinkContentList(
-        data_link=data_link,
+        data_link=data_link_info,
         path=path,
         objects=browse_response.get("objects", []),
         next_page_token=browse_response.get("nextPageToken"),
@@ -819,6 +822,59 @@ def _explore_data_link_tree(
         params=params,
     )
     return response.get("items", [])
+
+
+def _resolve_data_link_id_or_name(
+    client: SeqeraClient,
+    workspace_id: int | None,
+    id_or_name: str,
+    credentials_id: str | None = None,
+) -> str:
+    """Resolve data link ID or name to data link ID.
+
+    First tries to use the value as an ID directly, then falls back to exact name match.
+    """
+    # First, try to use it as an ID directly
+    params: dict[str, Any] = {}
+    if workspace_id:
+        params["workspaceId"] = workspace_id
+    if credentials_id:
+        params["credentialsId"] = credentials_id
+
+    try:
+        response = client.get(f"/data-links/{id_or_name}", params=params)
+        data_link = response.get("dataLink", response)
+        if data_link and data_link.get("id"):
+            return data_link.get("id")
+    except Exception:
+        pass  # Not a valid ID, try searching by name
+
+    # Search by name
+    search_params = {**params, "search": id_or_name}
+    response = client.get("/data-links", params=search_params)
+    data_links = response.get("dataLinks", [])
+
+    # Only accept exact name matches
+    exact_matches = [dl for dl in data_links if dl.get("name") == id_or_name]
+    if len(exact_matches) == 1:
+        return exact_matches[0].get("id")
+
+    if len(exact_matches) > 1:
+        output_error(
+            f"Multiple data links found with name '{id_or_name}'. "
+            "Please use the data link ID instead."
+        )
+        raise typer.Exit(1)
+
+    # No exact match found - suggest partial matches if any
+    if data_links:
+        suggestions = [dl.get("name") for dl in data_links[:5]]  # Limit to 5 suggestions
+        suggestion_str = ", ".join(f"'{s}'" for s in suggestions)
+        output_error(f"Data link '{id_or_name}' not found. " f"Did you mean: {suggestion_str}?")
+    else:
+        output_error(f"Data link '{id_or_name}' not found")
+
+    raise typer.Exit(1)
 
 
 def _resolve_data_link_id(

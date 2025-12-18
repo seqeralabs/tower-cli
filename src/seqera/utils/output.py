@@ -88,11 +88,22 @@ def output_error(message: str) -> None:
     """
     Output error message to stderr.
 
+    Formats the error in a panel matching the rich-click/typer style.
+
     Args:
         message: Error message
     """
+    from rich.panel import Panel
+
     error_console = Console(stderr=True)
-    error_console.print(f"[bold red]Error:[/bold red] {message}")
+    error_console.print(
+        Panel(
+            message,
+            title="Error",
+            title_align="left",
+            border_style="red",
+        )
+    )
 
 
 def format_response(data: Any, format: OutputFormat) -> None:
