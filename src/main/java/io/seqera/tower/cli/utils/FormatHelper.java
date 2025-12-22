@@ -249,6 +249,8 @@ public class FormatHelper {
                 return ansi("@|fg(red) INVALID|@");
             case AVAILABLE:
                 return ansi("@|fg(green) AVAILABLE|@");
+            case DELETING:
+                return ansi("@|fg(214) DELETING|@");
             default:
                 return status.toString();
         }
