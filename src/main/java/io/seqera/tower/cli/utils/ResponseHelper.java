@@ -96,7 +96,8 @@ public class ResponseHelper {
                     break;
 
                 case 403:
-                    print(err, "Unknown. Check that the provided identifier is correct.");
+                    String errorMessage = decodeMessage(ex);
+                    print(err, (errorMessage == null ? "Forbidden" : errorMessage) + ".");
                     break;
 
                 default:
