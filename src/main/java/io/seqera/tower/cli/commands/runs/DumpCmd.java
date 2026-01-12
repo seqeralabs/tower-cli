@@ -60,22 +60,22 @@ public class DumpCmd extends AbstractRunsCmd {
 
     public static final List<String> SUPPORTED_FILE_FORMATS = List.of(".tar.xz", ".tar.gz");
 
-    @Option(names = {"-i", "-id"}, description = "Pipeline run identifier.", required = true)
+    @Option(names = {"-i", "-id"}, description = "Pipeline run identifier", required = true)
     public String id;
 
-    @Option(names = {"-o", "--output"}, description = "Output file to store the dump. (supported formats: .tar.xz and .tar.gz)", required = true)
+    @Option(names = {"-o", "--output"}, description = "Output file to store the dump (supported formats: .tar.xz and .tar.gz)", required = true)
     Path outputFile;
 
-    @Option(names = {"--add-task-logs"}, description = "Add all task stdout, stderr and log files.")
+    @Option(names = {"--add-task-logs"}, description = "Add all task stdout, stderr and log files")
     public boolean addTaskLogs;
 
-    @Option(names = {"--add-fusion-logs"}, description = "Add all Fusion task logs.")
+    @Option(names = {"--add-fusion-logs"}, description = "Add all Fusion task logs")
     public boolean addFusionLogs;
 
-    @Option(names = {"--only-failed"}, description = "Dump only failed tasks.")
+    @Option(names = {"--only-failed"}, description = "Dump only failed tasks")
     public boolean onlyFailed;
 
-    @Option(names = {"--silent"}, description = "Do not show download progress.")
+    @Option(names = {"--silent"}, description = "Do not show download progress")
     public boolean silent;
 
     @Mixin

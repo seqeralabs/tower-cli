@@ -25,10 +25,10 @@ import picocli.CommandLine;
 
 import java.io.IOException;
 
-@CommandLine.Command(name = "labels", description = "Manages labels for runs.")
+@CommandLine.Command(name = "labels", description = "Manage pipeline run labels")
 public class LabelsCmd extends AbstractPipelinesCmd {
 
-    @CommandLine.Option(names = {"-i", "-id"}, description = "Pipeline run identifier.", required = true)
+    @CommandLine.Option(names = {"-i", "-id"}, description = "Pipeline run identifier", required = true)
     public String id;
 
     @CommandLine.Mixin

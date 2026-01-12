@@ -33,20 +33,20 @@ import java.io.IOException;
 
 @Command(
         name = "add",
-        description = "Add a workspace secret."
+        description = "Add a secret"
 )
 public class AddCmd extends AbstractSecretsCmd {
 
-    @Option(names = {"-n", "--name"}, description = "Secret name.", required = true)
+    @Option(names = {"-n", "--name"}, description = "Secret name", required = true)
     public String name;
 
     @Mixin
     public WorkspaceOptionalOptions workspace;
 
-    @Option(names = {"-v", "--value"}, description = "Secret value.")
+    @Option(names = {"-v", "--value"}, description = "Secret value")
     public String value;
 
-    @CommandLine.Option(names = {"--overwrite"}, description = "Overwrite the secret if it already exists.", defaultValue = "false")
+    @CommandLine.Option(names = {"--overwrite"}, description = "Overwrite the secret if it already exists", defaultValue = "false")
     public Boolean overwrite;
 
     @Override

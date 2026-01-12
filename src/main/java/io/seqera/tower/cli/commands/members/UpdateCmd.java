@@ -30,17 +30,17 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "update",
-        description = "Update the role of an organization member."
+        description = "Update an organization member role"
 )
 public class UpdateCmd extends AbstractMembersClass {
 
-    @CommandLine.Option(names = {"-u", "--user"}, description = "Username or email to update from organization members.", required = true)
+    @CommandLine.Option(names = {"-u", "--user"}, description = "Username or email address", required = true)
     public String user;
 
-    @CommandLine.Option(names = {"-r", "--role"}, description = "Member organization role (OWNER, MEMBER or COLLABORATOR).", required = true)
+    @CommandLine.Option(names = {"-r", "--role"}, description = "Organization role: OWNER, MEMBER, or COLLABORATOR", required = true)
     public OrgRole role;
 
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name or identifier.", required = true)
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name or identifier", required = true)
     public String organizationRef;
 
     @Override

@@ -28,7 +28,7 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "data-links",
-        description = "Manage data-links.",
+        description = "Manage data links",
         subcommands = {
                 ListCmd.class,
                 AddCmd.class,

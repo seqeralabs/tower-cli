@@ -25,10 +25,10 @@ public class ParentStudioRefOptions {
     public ParentStudioRef studio;
 
     public static class ParentStudioRef {
-        @CommandLine.Option(names = {"-pid", "--parent-id"}, description = "Parent Studio session ID.")
+        @CommandLine.Option(names = {"-pid", "--parent-id"}, description = "Parent studio session identifier")
         public String sessionId;
 
-        @CommandLine.Option(names = {"-pn", "--parent-name"}, description = "Parent Studio name.")
+        @CommandLine.Option(names = {"-pn", "--parent-name"}, description = "Parent studio name")
         public String name;
     }
 }

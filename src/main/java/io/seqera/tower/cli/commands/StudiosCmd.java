@@ -30,7 +30,7 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "studios",
-        description = "Manage studios.",
+        description = "Manage studios",
         subcommands = {
                 ViewCmd.class,
                 ListCmd.class,

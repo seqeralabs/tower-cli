@@ -28,11 +28,11 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "delete",
-        description = "Delete a pipeline execution."
+        description = "Delete a pipeline run"
 )
 public class DeleteCmd extends AbstractRunsCmd {
 
-    @CommandLine.Option(names = {"-i", "-id"}, description = "Pipeline run identifier.", required = true)
+    @CommandLine.Option(names = {"-i", "-id"}, description = "Pipeline run identifier", required = true)
     public String id;
 
     @CommandLine.Option(names = {"--force"}, description = "Force the deletion even if any workflows are active")

@@ -30,14 +30,14 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "add",
-        description = "Add a new organization."
+        description = "Add an organization"
 )
 public class AddCmd extends AbstractOrganizationsCmd {
 
-    @CommandLine.Option(names = {"-n", "--name"}, description = "Organization name.", required = true)
+    @CommandLine.Option(names = {"-n", "--name"}, description = "Organization name", required = true)
     public String name;
 
-    @CommandLine.Option(names = {"-f", "--full-name"}, description = "Organization full name.", required = true)
+    @CommandLine.Option(names = {"-f", "--full-name"}, description = "Organization full name", required = true)
     public String fullName;
 
     @CommandLine.Mixin

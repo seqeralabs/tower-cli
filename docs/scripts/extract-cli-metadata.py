@@ -23,6 +23,9 @@ from pathlib import Path
 from dataclasses import dataclass, field, asdict
 from typing import Optional
 
+# Global constants cache for resolving references
+CONSTANTS_CACHE = {}
+
 
 @dataclass
 class Parameter:
@@ -67,29 +70,92 @@ class Command:
     full_command: Optional[str] = None  # Full command path like "compute-envs add aws-batch"
 
 
-def extract_string_value(text: str) -> Optional[str]:
-    """Extract string value from annotation, handling multiline and concatenation."""
+def extract_constants_from_file(file_path: Path) -> dict:
+    """Extract public static final String constants from a Java file."""
+    try:
+        content = file_path.read_text(encoding='utf-8')
+    except:
+        return {}
+
+    constants = {}
+    class_name = get_fully_qualified_class_name(file_path)
+    if not class_name:
+        # Try to extract simple class name from file
+        simple_name = file_path.stem
+        class_name = simple_name
+
+    # Pattern to match: public static final String CONSTANT_NAME = "value";
+    pattern = r'public\s+static\s+final\s+String\s+(\w+)\s*=\s*([^;]+);'
+
+    for match in re.finditer(pattern, content):
+        const_name = match.group(1)
+        const_value_raw = match.group(2).strip()
+
+        # Try to extract the actual string value
+        const_value = extract_string_value_simple(const_value_raw)
+        if const_value:
+            # Store both simple name and qualified name
+            constants[const_name] = const_value
+            constants[f"{class_name}.{const_name}"] = const_value
+            # Also store short class name + constant
+            simple_name = class_name.split('.')[-1]
+            constants[f"{simple_name}.{const_name}"] = const_value
+
+    return constants
+
+
+def extract_string_value_simple(text: str) -> Optional[str]:
+    """Simple string extraction without constant resolution."""
     if not text:
         return None
-    
+
+    text = text.strip()
+
+    # Handle concatenated strings like "foo" + "bar"
+    if '+' in text:
+        parts = re.findall(r'"([^"]*)"', text)
+        if parts:
+            return ''.join(parts)
+
+    # Handle simple quoted strings
+    if text.startswith('"') and text.endswith('"'):
+        return text[1:-1]
+
+    # Handle any remaining quoted strings
+    parts = re.findall(r'"([^"]*)"', text)
+    if parts:
+        return ''.join(parts)
+
+    return None
+
+
+def extract_string_value(text: str) -> Optional[str]:
+    """Extract string value from annotation, handling multiline, concatenation, and constant references."""
+    if not text:
+        return None
+
     # Remove outer quotes and handle string concatenation
     text = text.strip()
-    
+
     # Handle concatenated strings like "foo" + "bar" first (before simple check)
     if '+' in text:
         parts = re.findall(r'"([^"]*)"', text)
         if parts:
             return ''.join(parts)
-    
+
     # Handle simple quoted strings
     if text.startswith('"') and text.endswith('"'):
         return text[1:-1]
-    
+
     # Handle any remaining quoted strings
     parts = re.findall(r'"([^"]*)"', text)
     if parts:
         return ''.join(parts)
-    
+
+    # Check if it's a constant reference (e.g., "DESCRIPTION" or "ClassName.DESCRIPTION")
+    if text and not text.startswith('"') and text in CONSTANTS_CACHE:
+        return CONSTANTS_CACHE[text]
+
     return text
 
 
@@ -660,7 +726,14 @@ def main():
     # Find all relevant Java files
     java_files = find_java_files(root_dir)
     print(f"Found {len(java_files)} Java files to process", file=sys.stderr)
-    
+
+    # Extract all constants first (needed for resolving constant references in descriptions)
+    global CONSTANTS_CACHE
+    for file_path in java_files:
+        file_constants = extract_constants_from_file(file_path)
+        CONSTANTS_CACHE.update(file_constants)
+    print(f"Extracted {len(CONSTANTS_CACHE)} string constants", file=sys.stderr)
+
     # Parse all command files
     commands = {}
     for file_path in java_files:

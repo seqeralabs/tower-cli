@@ -54,7 +54,7 @@ public class StartCmd extends AbstractStudiosCmd {
     @CommandLine.Option(names = {"--wait"}, description = "Wait until given status or fail. Valid options: ${COMPLETION-CANDIDATES}.")
     public DataStudioStatus wait;
 
-    @CommandLine.Option(names = {"--labels"}, description = "Comma-separated list of labels.", split = ",", converter = Label.StudioResourceLabelsConverter.class)
+    @CommandLine.Option(names = {"--labels"}, description = "Comma-separated list of labels", split = ",", converter = Label.StudioResourceLabelsConverter.class)
     public List<Label> labels;
 
     @CommandLine.Option(names = {"--description"}, description = "Optional configuration override for 'description'.")

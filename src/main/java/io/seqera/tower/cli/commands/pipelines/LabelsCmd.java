@@ -24,7 +24,7 @@ import picocli.CommandLine;
 
 import java.io.IOException;
 
-@CommandLine.Command(name = "labels", description = "Manages labels for pipelines.")
+@CommandLine.Command(name = "labels", description = "Manage pipeline labels")
 public class LabelsCmd extends AbstractPipelinesCmd {
 
     @CommandLine.Mixin

@@ -28,7 +28,7 @@ import picocli.CommandLine.Command;
 
 @Command(
         name = "delete",
-        description = "Delete workspace credentials."
+        description = "Delete workspace credentials"
 )
 public class DeleteCmd extends AbstractCredentialsCmd {
 

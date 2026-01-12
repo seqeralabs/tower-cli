@@ -27,7 +27,7 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "leave",
-        description = "Leave a workspace."
+        description = "Leave a workspace"
 )
 public class LeaveCmd extends AbstractParticipantsCmd {
 

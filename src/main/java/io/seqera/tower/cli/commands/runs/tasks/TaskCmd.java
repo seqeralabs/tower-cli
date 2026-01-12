@@ -32,23 +32,23 @@ import java.util.Map;
 
 @CommandLine.Command(
         name = "task",
-        description = "Display pipeline's run task details."
+        description = "Display pipeline run task details"
 )
 public class TaskCmd extends AbstractRunsCmd {
 
     @CommandLine.ParentCommand
     public ViewCmd parentCommand;
 
-    @CommandLine.Option(names = {"-t"}, description = "Pipeline's run task identifier.", required = true)
+    @CommandLine.Option(names = {"-t"}, description = "Pipeline run task identifier", required = true)
     public Long id;
 
-    @CommandLine.Option(names = {"--execution-time"}, description = "Task execution time data.")
+    @CommandLine.Option(names = {"--execution-time"}, description = "Task execution time data")
     boolean executionTime;
 
-    @CommandLine.Option(names = {"--resources-requested"}, description = "Task requested resources data.")
+    @CommandLine.Option(names = {"--resources-requested"}, description = "Task requested resources data")
     boolean resourcesRequested;
 
-    @CommandLine.Option(names = {"--resources-usage"}, description = "Task resources usage data.")
+    @CommandLine.Option(names = {"--resources-usage"}, description = "Task resources usage data")
     boolean resourcesUsage;
 
 

@@ -37,7 +37,7 @@ import java.io.IOException;
 
 @Command(
         name = "update",
-        description = "Update workspace credentials.",
+        description = "Update workspace credentials",
         subcommands = {
                 UpdateAwsCmd.class,
                 UpdateCodeCommitCmd.class,

@@ -46,7 +46,7 @@ import static io.seqera.tower.cli.utils.FormatHelper.formatLabels;
 
 @CommandLine.Command(
         name = "view",
-        description = "View pipeline's runs.",
+        description = "View pipeline run details",
         subcommands = {
                 DownloadCmd.class,
                 MetricsCmd.class,
@@ -56,7 +56,7 @@ import static io.seqera.tower.cli.utils.FormatHelper.formatLabels;
 )
 public class ViewCmd extends AbstractRunsCmd {
 
-    @CommandLine.Option(names = {"-i", "--id"}, description = "Pipeline run identifier.", required = true)
+    @CommandLine.Option(names = {"-i", "--id"}, description = "Pipeline run identifier", required = true)
     public String id;
 
     @CommandLine.Mixin

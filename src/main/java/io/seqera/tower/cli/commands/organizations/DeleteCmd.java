@@ -28,7 +28,7 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "delete",
-        description = "Delete an organization."
+        description = "Delete an organization"
 )
 public class DeleteCmd extends AbstractOrganizationsCmd {
 

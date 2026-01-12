@@ -24,7 +24,7 @@ import picocli.CommandLine.Mixin;
 
 @Command(
         name = "aws",
-        description = "Update AWS workspace credentials."
+        description = "Update AWS credentials"
 )
 public class UpdateAwsCmd extends AbstractUpdateCmd {
 

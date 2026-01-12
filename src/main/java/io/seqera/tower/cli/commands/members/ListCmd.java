@@ -29,14 +29,14 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "list",
-        description = "List all the teams in a given organization."
+        description = "List organization members"
 )
 public class ListCmd extends AbstractMembersClass {
 
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name or identifier.", required = true)
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name or identifier", required = true)
     public String organizationRef;
 
-    @CommandLine.Option(names = {"-f", "--filter"}, description = "Only show members with usernames that start with the given word.")
+    @CommandLine.Option(names = {"-f", "--filter"}, description = "Filter members by username prefix")
     public String startsWith;
 
     @CommandLine.Mixin

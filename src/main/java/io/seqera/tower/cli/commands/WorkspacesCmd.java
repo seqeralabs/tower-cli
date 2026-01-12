@@ -27,7 +27,7 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "workspaces",
-        description = "Manage workspaces.",
+        description = "Manage workspaces",
         subcommands = {
                 ListCmd.class,
                 DeleteCmd.class,

@@ -21,12 +21,12 @@ import picocli.CommandLine;
 
 public class OrganizationsOptions {
 
-    @CommandLine.Option(names = {"-d", "--description"}, description = "Organization description.")
+    @CommandLine.Option(names = {"-d", "--description"}, description = "Organization description")
     public String description;
 
-    @CommandLine.Option(names = {"-l", "--location"}, description = "Organization location.")
+    @CommandLine.Option(names = {"-l", "--location"}, description = "Organization location")
     public String location;
 
-    @CommandLine.Option(names = {"-w", "--website"}, description = "Organization website URL.")
+    @CommandLine.Option(names = {"-w", "--website"}, description = "Organization website URL")
     public String website;
 }

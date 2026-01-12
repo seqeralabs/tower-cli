@@ -31,20 +31,20 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "add",
-        description = "Add a new organization team."
+        description = "Add a team"
 )
 public class AddCmd extends AbstractTeamsCmd {
 
-    @CommandLine.Option(names = {"-n", "--name"}, description = "Team name.", required = true)
+    @CommandLine.Option(names = {"-n", "--name"}, description = "Team name", required = true)
     public String teamName;
 
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name or identifier.", required = true)
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name or identifier", required = true)
     public String organizationRef;
 
-    @CommandLine.Option(names = {"-d", "--description"}, description = "Team description.")
+    @CommandLine.Option(names = {"-d", "--description"}, description = "Team description")
     public String teamDescription;
 
-    @CommandLine.Option(names = {"--overwrite"}, description = "Overwrite the team if it already exists.", defaultValue = "false")
+    @CommandLine.Option(names = {"--overwrite"}, description = "Overwrite the team if it already exists", defaultValue = "false")
     public Boolean overwrite;
 
     @Override

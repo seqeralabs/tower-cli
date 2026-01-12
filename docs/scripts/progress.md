@@ -122,16 +122,44 @@ python docs/scripts/extract-cli-metadata.py src/main/java > docs/cli-metadata.js
 - Specified formats: "Export compute environment for further creation" → "Export compute environment configuration as a JSON file"
 - No abbreviations: "id" → "identifier", "compute env" → "compute environment"
 
+**Additional Updates (2026-01-12 continued)**
+- Enhanced metadata extractor with constant resolution - now resolves references like `WorkspaceOptionalOptions.DESCRIPTION`
+- Updated 3 global mixin classes:
+  1. `WorkspaceOptionalOptions` - improved description, affects 50+ commands
+  2. `WorkspaceRequiredOptions` - reuses improved description
+  3. `PaginationOptions` - improved --page, --offset, --max descriptions
+
+**Batch 1** (47 commands):
+- **Actions family** (8 commands): ActionsCmd, AddCmd + 2 subcommands, DeleteCmd, ListCmd, UpdateCmd, ViewCmd, LabelsCmd, ActionRefOptions mixin
+- **Collaborators family** (2 commands): CollaboratorsCmd, ListCmd
+- **Credentials family** (29 commands): CredentialsCmd, AddCmd + 12 provider subcommands, UpdateCmd + 11 provider subcommands, DeleteCmd, ListCmd, CredentialsRefOptions mixin
+- **Datasets family** (8 commands): DatasetsCmd, AddCmd, DeleteCmd, DownloadCmd, ListCmd, UpdateCmd, ViewCmd, UrlCmd, DatasetRefOptions mixin
+- **Verified**: Metadata extractor confirmed all changes
+
+**Batch 2** (19 commands):
+- **Data-links family** (9 commands): DataLinksCmd, AddCmd, BrowseCmd, DeleteCmd, DownloadCmd, ListCmd, UpdateCmd, UploadCmd, DataLinkRefOptions mixin
+- **Info command** (1 command): InfoCmd
+- **Labels family** (6 commands): LabelsCmd, AddLabelsCmd, DeleteLabelsCmd, ListLabelsCmd, UpdateLabelsCmd, LabelsOptionalOptions mixin
+- **Launch command** (3 commands): LaunchCmd with 15+ options improved
+- **Verified**: Metadata extractor confirmed all changes
+
+**Pattern Examples Applied**:
+- Removed redundant "workspace" scope qualifiers
+- Standardized to "identifier" instead of "id" or "ID"
+- Removed trailing periods from fragments
+- Imperative verb forms for commands
+- Concise, descriptive option text
+- Batch updates via sed for repetitive patterns (credentials add/update subcommands)
+- Hyphenation: "data-links" → "data links" in descriptions, "data link" in singular
+
 ### 🚧 Remaining Work
 
-**Commands to Update**: 150 commands remaining (161 total - 11 compute-envs complete)
+**Commands to Update**: 89 commands remaining (161 total - 11 compute-envs - 3 mixins - 58 new complete)
 
-**Top-Level Commands** (18 remaining):
+**Top-Level Commands** (9 remaining):
 - `tw` (root) - Update to "Seqera Platform CLI"
-- `actions`, `collaborators`, `credentials`, `datasets`, `data-links`
-- `info`, `labels`, `launch`, `members`, `organizations`
-- `participants`, `pipelines`, `runs`, `secrets`, `studios`
-- `teams`, `workspaces`
+- ✅ `actions`, `collaborators`, `credentials`, `datasets`, `data-links`, `info`, `labels`, `launch` - COMPLETE
+- `members`, `organizations`, `participants`, `pipelines`, `runs`, `secrets`, `studios`, `teams`, `workspaces`
 
 **Subcommands by Family**:
 - Actions: ~8 commands

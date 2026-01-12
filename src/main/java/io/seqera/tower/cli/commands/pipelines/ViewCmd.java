@@ -29,7 +29,7 @@ import picocli.CommandLine.Command;
 
 @Command(
         name = "view",
-        description = "View pipeline details."
+        description = "View pipeline details"
 )
 public class ViewCmd extends AbstractPipelinesCmd {
 

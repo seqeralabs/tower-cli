@@ -39,14 +39,14 @@ import java.util.stream.Stream;
 
 @CommandLine.Command(
         name = "tasks",
-        description = "Display pipeline's run tasks."
+        description = "Display pipeline run tasks"
 )
 public class TasksCmd extends AbstractRunsCmd {
 
     @CommandLine.Option(names = {"-c", "--columns"}, split = ",", description = "Additional task columns to display: ${COMPLETION-CANDIDATES}")
     public List<TaskColumn> columns;
 
-    @CommandLine.Option(names = {"-f", "--filter"}, description = "Only show task with parameters that start with the given word")
+    @CommandLine.Option(names = {"-f", "--filter"}, description = "Show only tasks with parameters starting with the given word")
     public String startsWith;
 
     @CommandLine.Mixin

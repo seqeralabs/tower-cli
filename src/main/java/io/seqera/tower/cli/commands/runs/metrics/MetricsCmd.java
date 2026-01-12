@@ -38,20 +38,20 @@ import java.util.Map;
 
 @CommandLine.Command(
         name = "metrics",
-        description = "Display pipeline's run metrics."
+        description = "Display pipeline run metrics"
 )
 public class MetricsCmd extends AbstractRunsCmd {
 
-    @CommandLine.Option(names = {"-f", "--filter"}, description = "Filters by process name.")
+    @CommandLine.Option(names = {"-f", "--filter"}, description = "Filter by process name")
     public String filter = "";
 
-    @CommandLine.Option(names = {"-t", "--type"}, split = ",", description = "Process metric types separated by comma: ${COMPLETION-CANDIDATES} [default: displays all].")
+    @CommandLine.Option(names = {"-t", "--type"}, split = ",", description = "Process metric types separated by comma: ${COMPLETION-CANDIDATES} (default: displays all)")
     public List<MetricType> type;
 
-    @CommandLine.Option(names = {"-c", "--columns"}, split = ",", description = "Process metric columns to display: ${COMPLETION-CANDIDATES} [default: displays all].")
+    @CommandLine.Option(names = {"-c", "--columns"}, split = ",", description = "Process metric columns to display: ${COMPLETION-CANDIDATES} (default: displays all)")
     public List<MetricColumn> columns;
 
-    @CommandLine.Option(names = {"-v", "--view"}, description = "Metric table view mode: ${COMPLETION-CANDIDATES} [default: condensed].")
+    @CommandLine.Option(names = {"-v", "--view"}, description = "Metric table view mode: ${COMPLETION-CANDIDATES} (default: condensed)")
     public MetricPreviewFormat view = MetricPreviewFormat.condensed;
 
     @CommandLine.ParentCommand

@@ -26,10 +26,10 @@ public class ActionRefOptions {
 
     public static class ActionRef {
 
-        @CommandLine.Option(names = {"-i", "--id"}, description = "Action unique id.")
+        @CommandLine.Option(names = {"-i", "--id"}, description = "Action unique identifier")
         public String actionId;
 
-        @CommandLine.Option(names = {"-n", "--name"}, description = "Action name.")
+        @CommandLine.Option(names = {"-n", "--name"}, description = "Action name")
         public String actionName;
     }
 }

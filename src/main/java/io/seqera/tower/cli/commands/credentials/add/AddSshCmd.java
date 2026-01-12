@@ -24,7 +24,7 @@ import picocli.CommandLine.Mixin;
 
 @Command(
         name = "ssh",
-        description = "Add new SSH workspace credentials."
+        description = "Add SSH credentials"
 )
 public class AddSshCmd extends AbstractAddCmd {
 

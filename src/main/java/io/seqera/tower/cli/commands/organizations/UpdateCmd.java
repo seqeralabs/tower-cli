@@ -29,17 +29,17 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "update",
-        description = "Update organization details."
+        description = "Update an organization"
 )
 public class UpdateCmd extends AbstractOrganizationsCmd {
 
     @CommandLine.Mixin
     OrganizationRefOptions organizationRefOptions;
 
-    @CommandLine.Option(names = {"--new-name"}, description = "Organization new name.")
+    @CommandLine.Option(names = {"--new-name"}, description = "New name for the organization")
     public String newName;
 
-    @CommandLine.Option(names = {"-f", "--full-name"}, description = "Organization full name.")
+    @CommandLine.Option(names = {"-f", "--full-name"}, description = "Organization full name")
     public String fullName;
 
     @CommandLine.Mixin

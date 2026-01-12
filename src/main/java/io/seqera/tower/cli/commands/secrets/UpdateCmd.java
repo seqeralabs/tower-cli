@@ -31,13 +31,13 @@ import java.io.IOException;
 
 @Command(
         name = "update",
-        description = "Update a workspace secret."
+        description = "Update a secret"
 )
 public class UpdateCmd extends AbstractSecretsCmd {
 
     @Mixin
     public WorkspaceOptionalOptions workspace;
-    @Option(names = {"-v", "--value"}, description = "Secret value.")
+    @Option(names = {"-v", "--value"}, description = "Secret value")
     public String value;
     @Mixin
     SecretRefOptions ref;

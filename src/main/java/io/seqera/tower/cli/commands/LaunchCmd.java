@@ -52,41 +52,41 @@ import static io.seqera.tower.cli.utils.ResponseHelper.waitStatus;
 
 @Command(
         name = "launch",
-        description = "Launch a Nextflow pipeline execution."
+        description = "Launch a pipeline"
 )
 public class LaunchCmd extends AbstractRootCmd {
 
-    @Parameters(index = "0", paramLabel = "PIPELINE_OR_URL", description = "Workspace pipeline name or full pipeline URL.", arity = "1")
+    @Parameters(index = "0", paramLabel = "PIPELINE_OR_URL", description = "Workspace pipeline name or pipeline URL", arity = "1")
     String pipeline;
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
-    @Option(names = {"--params-file"}, description = "Pipeline parameters in either JSON or YML format.")
+    @Option(names = {"--params-file"}, description = "Pipeline parameters file in JSON or YAML format")
     Path paramsFile;
 
-    @Option(names = {"-c", "--compute-env"}, description = "Compute environment name [default: primary compute environment].")
+    @Option(names = {"-c", "--compute-env"}, description = "Compute environment name (defaults to primary compute environment)")
     String computeEnv;
 
-    @Option(names = {"-n", "--name"}, description = "Custom workflow run name")
+    @Option(names = {"-n", "--name"}, description = "Workflow run name")
     String name;
 
-    @Option(names = {"--work-dir"}, description = "Path where the pipeline scratch data is stored.")
+    @Option(names = {"--work-dir"}, description = "Path for pipeline scratch data storage")
     String workDir;
 
-    @Option(names = {"-p", "--profile"}, split = ",", description = "Comma-separated list of one or more configuration profile names you want to use for this pipeline execution.")
+    @Option(names = {"-p", "--profile"}, split = ",", description = "Comma-separated list of configuration profiles")
     List<String> profile;
 
-    @Option(names = {"-r", "--revision"}, description = "A valid repository commit Id, tag or branch name.")
+    @Option(names = {"-r", "--revision"}, description = "Git commit ID, tag, or branch name")
     String revision;
 
-    @Option(names = {"--wait"}, description = "Wait until given status or fail. Valid options: ${COMPLETION-CANDIDATES}.")
+    @Option(names = {"--wait"}, description = "Wait until workflow reaches specified status: ${COMPLETION-CANDIDATES}")
     public WorkflowStatus wait;
 
-    @Option(names = {"-l", "--labels"}, split = ",", description = "Comma-separated list of labels for the pipeline. Use 'key=value' format for resource labels.", converter = Label.LabelConverter.class)
+    @Option(names = {"-l", "--labels"}, split = ",", description = "Comma-separated list of labels (use key=value format for resource labels)", converter = Label.LabelConverter.class)
     List<Label> labels;
 
-    @Option(names = {"--launch-container"}, description = "Container to be used to run the nextflow head job (BETA).")
+    @Option(names = {"--launch-container"}, description = "Container image for Nextflow head job (BETA)")
     String launchContainer;
 
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)

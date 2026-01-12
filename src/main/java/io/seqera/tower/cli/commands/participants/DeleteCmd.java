@@ -28,7 +28,7 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "delete",
-        description = "Delete a workspace participant."
+        description = "Remove a workspace participant"
 )
 public class DeleteCmd extends AbstractParticipantsCmd {
 

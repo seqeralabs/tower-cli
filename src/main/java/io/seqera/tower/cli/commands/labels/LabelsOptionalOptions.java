@@ -23,7 +23,7 @@ import java.util.List;
 
 public class LabelsOptionalOptions {
 
-    @CommandLine.Option(names = {"--labels"}, split = ",", description = "Comma-separated list of labels.", converter = Label.LabelConverter.class)
+    @CommandLine.Option(names = {"--labels"}, split = ",", description = "Comma-separated list of labels", converter = Label.LabelConverter.class)
     public List<Label> labels = null;
 
 }

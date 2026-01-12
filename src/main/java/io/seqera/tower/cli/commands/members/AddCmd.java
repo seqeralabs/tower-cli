@@ -29,14 +29,14 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "add",
-        description = "Add a new organization member."
+        description = "Add an organization member"
 )
 public class AddCmd extends AbstractMembersClass {
 
-    @CommandLine.Option(names = {"-u", "--user"}, description = "User email to add as organization member.", required = true)
+    @CommandLine.Option(names = {"-u", "--user"}, description = "User email address", required = true)
     public String user;
 
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name or identifier.", required = true)
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name or identifier", required = true)
     public String organizationRef;
 
     @Override

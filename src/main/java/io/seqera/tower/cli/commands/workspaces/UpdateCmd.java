@@ -35,20 +35,20 @@ import java.util.Objects;
 
 @Command(
         name = "update",
-        description = "Update an existing organization workspace."
+        description = "Update a workspace"
 )
 public class UpdateCmd extends AbstractWorkspaceCmd {
 
-    @CommandLine.Option(names = {"-i", "--id"}, description = "Workspace ID to delete.", required = true)
+    @CommandLine.Option(names = {"-i", "--id"}, description = "Workspace identifier", required = true)
     public Long workspaceId;
 
-    @Option(names = {"--new-name"}, description = "The workspace new name.")
+    @Option(names = {"--new-name"}, description = "Workspace new name")
     public String workspaceNewName;
 
-    @Option(names = {"-f", "--fullName"}, description = "The workspace full name.")
+    @Option(names = {"-f", "--fullName"}, description = "Workspace full name")
     public String workspaceFullName;
 
-    @Option(names = {"-d", "--description"}, description = "The workspace description.")
+    @Option(names = {"-d", "--description"}, description = "Workspace description")
     public String description;
 
     @Override

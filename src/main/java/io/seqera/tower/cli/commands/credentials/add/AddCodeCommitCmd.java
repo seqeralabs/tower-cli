@@ -25,7 +25,7 @@ import picocli.CommandLine.Command;
 
 @Command(
         name = "codecommit",
-        description = "Add new CodeCommit workspace credentials."
+        description = "Add CodeCommit credentials"
 )
 public class AddCodeCommitCmd extends AbstractAddCmd<CodeCommitSecurityKeys> {
 

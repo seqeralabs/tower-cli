@@ -34,14 +34,14 @@ import java.util.List;
 
 @CommandLine.Command(
         name = "list",
-        description = "List all pipeline runs."
+        description = "List pipeline runs"
 )
 public class ListCmd extends AbstractRunsCmd {
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
-    @CommandLine.Option(names = {"-f", "--filter"}, description = "Show only pipeline runs that match the defined filter(s).")
+    @CommandLine.Option(names = {"-f", "--filter"}, description = "Show only pipeline runs matching the filter")
     public String filter;
 
     @CommandLine.Mixin

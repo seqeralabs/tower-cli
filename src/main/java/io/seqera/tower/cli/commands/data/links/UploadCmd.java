@@ -43,7 +43,7 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "upload",
-        description = "Upload content to data-link."
+        description = "Upload files to a data link"
 )
 public class UploadCmd extends AbstractDataLinksCmd {
 
@@ -57,13 +57,13 @@ public class UploadCmd extends AbstractDataLinksCmd {
     @CommandLine.Mixin
     public DataLinkRefOptions dataLinkRefOptions;
 
-    @CommandLine.Option(names = {"-c", "--credentials"}, description = "Credentials identifier.", required = true)
+    @CommandLine.Option(names = {"-c", "--credentials"}, description = "Credentials identifier", required = true)
     public String credentialsRef;
 
-    @CommandLine.Option(names = {"-o", "--output-dir"}, description = "Output directory.")
+    @CommandLine.Option(names = {"-o", "--output-dir"}, description = "Destination directory in the data link")
     public String outputDir;
 
-    @CommandLine.Parameters(arity = "1..*", description = "Paths to files or directories to upload.")
+    @CommandLine.Parameters(arity = "1..*", description = "Paths to files or directories to upload")
     private List<String> paths;
 
     @Override

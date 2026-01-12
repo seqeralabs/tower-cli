@@ -33,15 +33,15 @@ public class PaginationOptions {
     public Sizeable sizeable;
 
     public static class Pageable {
-        @CommandLine.Option(names = {"--page"}, description = "Pages to display [default: 1].")
+        @CommandLine.Option(names = {"--page"}, description = "Page number for paginated results (default: 1)")
         public Integer page;
 
-        @CommandLine.Option(names = {"--offset"}, description = "Rows record offset [default: 0].")
+        @CommandLine.Option(names = {"--offset"}, description = "Row offset for paginated results (default: 0)")
         public Integer offset;
     }
 
     public static class Sizeable {
-        @CommandLine.Option(names = {"--max"}, description = "Maximum number of records to display [default: " + MAX + "].")
+        @CommandLine.Option(names = {"--max"}, description = "Maximum number of records to display (default: " + MAX + ")")
         public Integer max;
     }
 

@@ -28,14 +28,14 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "delete",
-        description = "Delete an organization member."
+        description = "Remove an organization member"
 )
 public class DeleteCmd extends AbstractMembersClass{
 
-    @CommandLine.Option(names = {"-u", "--user"}, description = "Username or email to delete from organization members.", required = true)
+    @CommandLine.Option(names = {"-u", "--user"}, description = "Username or email address", required = true)
     public String user;
 
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name or identifier.", required = true)
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name or identifier", required = true)
     public String organizationRef;
 
     @Override
