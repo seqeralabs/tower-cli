@@ -38,7 +38,7 @@ public abstract class AbstractPipelinesCmd extends AbstractApiCmd {
 
         String exactName = quotePipelineName(pipelineName);
 
-        ListPipelinesResponse list = pipelinesApi().listPipelines(pipelineQueryAttributes, workspaceId, null, null, exactName, "all");
+        ListPipelinesResponse list = pipelinesApi().listPipelines(pipelineQueryAttributes, workspaceId, null, null, null, null, exactName, "all");
 
         if (list.getPipelines().isEmpty()) {
             throw new PipelineNotFoundException(exactName, workspaceRef(workspaceId));

@@ -50,7 +50,7 @@
         "name": "NFCORE_RNASEQ:RNASEQ:PREPARE_GENOME:GUNZIP_ADDITIONAL_FASTA (gfp.fa.gz)",
         "time": 14400000,
         "hash": "6b/923449",
-        "exit": "0"
+        "exit": 0
       }
     },
     {
@@ -103,7 +103,7 @@
         "name": "NFCORE_RNASEQ:RNASEQ:PREPARE_GENOME:UNTAR_STAR_INDEX (star.tar.gz)",
         "time": 14400000,
         "hash": "22/539b64",
-        "exit": "0"
+        "exit": 0
       }
     }
   ],

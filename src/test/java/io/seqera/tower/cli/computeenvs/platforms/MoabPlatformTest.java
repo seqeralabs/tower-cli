@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
+import org.mockserver.model.JsonBody;
 import org.mockserver.model.MediaType;
 
 import static io.seqera.tower.cli.commands.AbstractApiCmd.USER_WORKSPACE_NAME;
@@ -46,7 +47,9 @@ class MoabPlatformTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"credentialsId\":\"2ba2oekqeTEBzwSDgXg7xf\",\"name\":\"moab\",\"platform\":\"moab-platform\",\"config\":{\"userName\":\"jordi\",\"hostName\":\"ssh.mydomain.net\",\"workDir\":\"/home/jordeu/nf\",\"headQueue\":\"normal\"}}}"), exactly(1)
+                request().withMethod("POST").withPath("/compute-envs").withBody(
+                        JsonBody.json("{\"computeEnv\":{\"credentialsId\":\"2ba2oekqeTEBzwSDgXg7xf\",\"name\":\"moab\",\"platform\":\"moab-platform\",\"config\":{\"userName\":\"jordi\",\"hostName\":\"ssh.mydomain.net\",\"workDir\":\"/home/jordeu/nf\",\"headQueue\":\"normal\"}}}")
+                ), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -65,12 +68,15 @@ class MoabPlatformTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/compute-envs").withBody("{\"computeEnv\":{\"credentialsId\":\"2ba2oekqeTEBzwSDgXg7xf\",\"name\":\"moab\",\"platform\":\"moab-platform\",\"config\":{\"userName\":\"jordi\",\"hostName\":\"ssh.mydomain.net\",\"maxQueueSize\":200,\"workDir\":\"/home/jordeu/nf\",\"headQueue\":\"normal\"}}}"), exactly(1)
+                request().withMethod("POST").withPath("/compute-envs").withBody(
+                        JsonBody.json("{\"computeEnv\":{\"credentialsId\":\"2ba2oekqeTEBzwSDgXg7xf\",\"name\":\"moab\",\"platform\":\"moab-platform\",\"config\":{\"userName\":\"jordi\",\"hostName\":\"ssh.mydomain.net\",\"maxQueueSize\":200,\"workDir\":\"/home/jordeu/nf\",\"headQueue\":\"normal\"}}}")
+                ), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         ExecOut out = exec(mock, "compute-envs", "add", "moab", "-n", "moab", "--work-dir", "/home/jordeu/nf", "-u", "jordi", "-H", "ssh.mydomain.net", "-q", "normal", "--max-queue-size=200");
+
 
         assertEquals("", out.stdErr);
         assertEquals(new ComputeEnvAdded("moab-platform", "isnEDBLvHDAIteOEF44ow", "moab", null, USER_WORKSPACE_NAME).toString(), out.stdOut);

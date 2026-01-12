@@ -23,7 +23,7 @@ import io.seqera.tower.model.DataLinkDto;
 import io.seqera.tower.model.DataStudioConfiguration;
 import io.seqera.tower.model.DataStudioDto;
 import io.seqera.tower.model.DataStudioStatusInfo;
-import io.seqera.tower.model.StudioUser;
+import io.seqera.tower.model.UserInfo;
 
 import java.io.PrintWriter;
 
@@ -46,7 +46,7 @@ public class StudiosView extends Response {
         out.println(ansi(String.format("%n  @|bold Studio at workspace '%s'|@%n", workspaceRef)));
 
         DataStudioStatusInfo statusInfo = studio.getStatusInfo();
-        StudioUser studioUser = studio.getUser();
+        UserInfo studioUser = studio.getUser();
         DataStudioConfiguration config = studio.getConfiguration();
         TableList table = new TableList(out, 2);
         table.setPrefix(" ");

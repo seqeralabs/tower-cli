@@ -46,7 +46,7 @@ public class Label {
     }
 
     public LabelType getType() {
-        return value == null ? LabelType.SIMPLE : LabelType.RESOURCE;
+        return value == null ? LabelType.simple : LabelType.resource;
     }
 
     public static class LabelConverter implements CommandLine.ITypeConverter<Label> {

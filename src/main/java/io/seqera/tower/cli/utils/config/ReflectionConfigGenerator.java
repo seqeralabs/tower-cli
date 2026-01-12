@@ -31,7 +31,7 @@ import java.lang.reflect.*;
  *
  * This is a utility class that uses reflection to make calls to all classes in the Tower SDK model package,
  * in order to capture methods reflection metadata of any new fields/classes in Tower SDK.
- * Execute this class with the GraalVM tracing agent (see gradle task 'runReflectionConfigGenerator').
+ * Execute this class with the GraalVM tracing agent (see Gradle task 'runReflectionConfigGenerator').
  *
  */
 public class ReflectionConfigGenerator {
@@ -39,28 +39,57 @@ public class ReflectionConfigGenerator {
     private static final String TOWER_MODEL_PACKAGE = "io.seqera.tower.model";
 
     public static void main(String[] args) {
-
         try (ScanResult scanResult = new ClassGraph()
                 .acceptPackages(TOWER_MODEL_PACKAGE)
                 .enableClassInfo()
-                .scan()) {
+                .scan()
+        ) {
+            processAllClasses(scanResult);
+        }
+    }
 
-            for (ClassInfo classInfo : scanResult.getAllClasses()) {
-                Class<?> clazz = classInfo.loadClass();
-
-                for (Constructor<?> ctor : clazz.getDeclaredConstructors()) {
-                    ctor.setAccessible(true);
-                    try {
-                        Object instance = ctor.newInstance(new Object[ctor.getParameterCount()]);
-                        for (Method method : clazz.getDeclaredMethods()) {
-                            method.setAccessible(true);
-                            method.invoke(instance, new Object[method.getParameterCount()]);
-                        }
-                    } catch (Throwable t) {
-                        System.out.println("Error on " + clazz.getName() + ": " + t);
-                    }
-                }
+    private static void processAllClasses(ScanResult scanResult) {
+        for (ClassInfo classInfo : scanResult.getAllClasses()) {
+            Class<?> aClass = classInfo.loadClass();
+            if (aClass.isEnum()) {
+                processEnumClass(aClass);
+            } else {
+                processRegularClass(aClass);
             }
         }
     }
+
+    private static void processRegularClass(Class<?> aClass) {
+        for (Constructor<?> ctor : aClass.getDeclaredConstructors()) {
+            ctor.setAccessible(true);
+            try {
+                Object instance = ctor.newInstance(new Object[ctor.getParameterCount()]);
+                invokeAllInstanceMethods(aClass, instance);
+            } catch (Throwable t) {
+                System.out.println("Error invoking constructor of class '" + aClass.getName() + "': " + t);
+            }
+        }
+    }
+
+    private static <E> void processEnumClass(Class<E> enumClass) {
+        for (E constant : enumClass.getEnumConstants()) {
+            invokeAllInstanceMethods(enumClass, constant);
+        }
+    }
+
+    private static void invokeAllInstanceMethods(Class<?> aClass, Object instance) {
+        for (Method method : aClass.getDeclaredMethods()) {
+            invokeMethod(aClass, instance, method);
+        }
+    }
+
+    private static void invokeMethod(Class<?> aClass, Object instance, Method method) {
+        try {
+            method.setAccessible(true);
+            method.invoke(instance, new Object[method.getParameterCount()]);
+        } catch (Throwable t) {
+            System.out.println("Error invoking method '" + method.getName() + "' of class '" + aClass.getName() + "': " + t);
+        }
+    }
+
 }

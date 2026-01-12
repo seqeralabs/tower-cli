@@ -54,12 +54,6 @@ public class GoogleBatchPlatform extends AbstractPlatform<GoogleBatchConfig> {
         GoogleBatchConfig config = new GoogleBatchConfig();
 
         config
-                // Common
-                .workDir(workDir)
-                .preRunScript(preRunScriptString())
-                .postRunScript(postRunScriptString())
-                .nextflowConfig(nextflowConfigString())
-                .environment(environmentVariables())
                 .fusion2Enabled(fusionV2)
                 .waveEnabled(wave)
 
@@ -76,6 +70,13 @@ public class GoogleBatchPlatform extends AbstractPlatform<GoogleBatchConfig> {
                 .headJobMemoryMb(adv.headJobMemoryMb)
                 .serviceAccount(adv.serviceAccountEmail);
         }
+
+        // Common
+        config.workDir(workDir)
+                .preRunScript(preRunScriptString())
+                .postRunScript(postRunScriptString())
+                .nextflowConfig(nextflowConfigString())
+                .environment(environmentVariables());
 
         return config;
     }

@@ -18,15 +18,15 @@
 package io.seqera.tower.cli.responses.participants;
 
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.model.ParticipantDbDto;
+import io.seqera.tower.model.ParticipantResponseDto;
 import io.seqera.tower.model.ParticipantType;
 
 public class ParticipantAdded extends Response {
 
-    final public ParticipantDbDto participant;
+    final public ParticipantResponseDto participant;
     final public String workspaceName;
 
-    public ParticipantAdded(ParticipantDbDto participant, String workspaceName) {
+    public ParticipantAdded(ParticipantResponseDto participant, String workspaceName) {
         this.participant = participant;
         this.workspaceName = workspaceName;
     }

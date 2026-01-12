@@ -262,19 +262,19 @@ public class FormatHelper {
         }
 
         switch (status) {
-            case STARTING:
+            case starting:
                 return ansi("@|fg(214) STARTING|@");
-            case RUNNING:
+            case running:
                 return ansi("@|fg(green) RUNNING|@");
-            case STOPPING:
+            case stopping:
                 return ansi("@|fg(214) STOPPING|@");
-            case STOPPED:
+            case stopped:
                 return ansi("@|fg(214) STOPPED|@");
-            case ERRORED:
+            case errored:
                 return ansi("@|fg(red) ERRORED|@");
-            case BUILDING:
+            case building:
                 return ansi("@|fg(214) BUILDING|@");
-            case BUILDFAILED:
+            case buildFailed:
                 return ansi("@|fg(red) BUILDFAILED|@");
             default:
                 return status.toString();
@@ -306,11 +306,11 @@ public class FormatHelper {
         }
 
         switch (role) {
-            case COLLABORATOR:
+            case collaborator:
                 return ansi("@|fg(214) COLLABORATOR|@");
-            case MEMBER:
+            case member:
                 return ansi("@|fg(green) MEMBER|@");
-            case OWNER:
+            case owner:
                 return ansi("@|fg(magenta) OWNER|@");
             default:
                 return role.toString();

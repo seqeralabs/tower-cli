@@ -68,12 +68,10 @@ public class EksPlatform extends AbstractPlatform<EksComputeConfig> {
                 .computeServiceAccount(adv().computeAccount)
                 .podCleanup(adv().podCleanup)
                 .headPodSpec(FilesHelper.readString(adv().headPodSpec))
-                .servicePodSpec(FilesHelper.readString(adv().servicePodSpec))
+                .servicePodSpec(FilesHelper.readString(adv().servicePodSpec));
 
-                // Common
-                .workDir(workDir)
-
-                // Staging
+        // Common
+        config.workDir(workDir)
                 .preRunScript(preRunScriptString())
                 .postRunScript(postRunScriptString())
                 .nextflowConfig(nextflowConfigString())

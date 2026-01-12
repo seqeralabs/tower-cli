@@ -26,6 +26,7 @@ import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
 import java.io.IOException;
+import java.util.List;
 
 @Command(
         name = "list",
@@ -40,7 +41,7 @@ public class ListCmd extends AbstractComputeEnvCmd {
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
         
-        ListComputeEnvsResponse response = computeEnvsApi().listComputeEnvs(null, wspId);
+        ListComputeEnvsResponse response = computeEnvsApi().listComputeEnvs(null, wspId, List.of());
         return new ComputeEnvList(workspaceRef(wspId), response.getComputeEnvs(), baseWorkspaceUrl(wspId));
     }
 }
