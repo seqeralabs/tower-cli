@@ -30,7 +30,7 @@ import java.util.List;
 
 @Command(
         name = "list",
-        description = "List all workspace compute environments."
+        description = "List compute environments."
 )
 public class ListCmd extends AbstractComputeEnvCmd {
 

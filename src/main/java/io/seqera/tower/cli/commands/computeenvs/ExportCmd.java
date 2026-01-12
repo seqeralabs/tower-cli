@@ -34,7 +34,7 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "export",
-        description = "Export compute environment for further creation."
+        description = "Export compute environment configuration as a JSON file."
 )
 public class ExportCmd extends AbstractComputeEnvCmd {
 
@@ -44,7 +44,7 @@ public class ExportCmd extends AbstractComputeEnvCmd {
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
-    @CommandLine.Parameters(index = "0", paramLabel = "FILENAME", description = "File name to export.", arity = "0..1")
+    @CommandLine.Parameters(index = "0", paramLabel = "FILENAME", description = "File name and path for the exported compute environment configuration.", arity = "0..1")
     String fileName = null;
 
     @Override

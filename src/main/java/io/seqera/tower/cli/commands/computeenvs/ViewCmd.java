@@ -28,7 +28,7 @@ import picocli.CommandLine.Command;
 
 @Command(
         name = "view",
-        description = "View compute environment."
+        description = "View compute environment details."
 )
 public class ViewCmd extends AbstractComputeEnvCmd {
 

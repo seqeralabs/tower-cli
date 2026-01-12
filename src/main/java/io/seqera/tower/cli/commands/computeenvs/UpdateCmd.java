@@ -33,7 +33,7 @@ import java.io.IOException;
 
 @Command(
         name = "update",
-        description = "Update compute environments."
+        description = "Update a compute environment."
 )
 public class UpdateCmd extends AbstractComputeEnvCmd {
 
@@ -43,7 +43,7 @@ public class UpdateCmd extends AbstractComputeEnvCmd {
     @Mixin
     public WorkspaceOptionalOptions workspace;
 
-    @Option(names = {"--new-name"}, description = "Compute environment new name.")
+    @Option(names = {"--new-name"}, description = "New compute environment name.")
     public String newName;
 
     @Override

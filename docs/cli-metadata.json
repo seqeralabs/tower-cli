@@ -641,7 +641,7 @@
     },
     "io.seqera.tower.cli.commands.ComputeEnvsCmd": {
       "name": "compute-envs",
-      "description": "Manage workspace compute environments.",
+      "description": "Manage compute environments.",
       "full_command": "tw compute-envs",
       "parent": "tw",
       "subcommands": [
@@ -4484,7 +4484,7 @@
     },
     "io.seqera.tower.cli.commands.computeenvs.PrimaryCmd": {
       "name": "primary",
-      "description": "Sets or gets a primary compute environment within current workspace.",
+      "description": "Manage the primary compute environment.",
       "full_command": "tw compute-envs primary",
       "parent": "compute-envs",
       "subcommands": [
@@ -4498,7 +4498,7 @@
     },
     "io.seqera.tower.cli.commands.computeenvs.AddCmd": {
       "name": "add",
-      "description": "Add new compute environment.",
+      "description": "Add a new compute environment.",
       "full_command": "tw compute-envs add",
       "parent": "compute-envs",
       "subcommands": [
@@ -4523,7 +4523,7 @@
     },
     "io.seqera.tower.cli.commands.computeenvs.DeleteCmd": {
       "name": "delete",
-      "description": "Delete compute environment.",
+      "description": "Delete a compute environment.",
       "full_command": "tw compute-envs delete",
       "parent": "compute-envs",
       "subcommands": [],
@@ -4534,7 +4534,7 @@
             "-i",
             "--id"
           ],
-          "description": "Compute environment unique id.",
+          "description": "Compute environment unique identifier.",
           "required": false,
           "default_value": null,
           "arity": null,
@@ -4580,7 +4580,7 @@
     },
     "io.seqera.tower.cli.commands.computeenvs.ListCmd": {
       "name": "list",
-      "description": "List all workspace compute environments.",
+      "description": "List compute environments.",
       "full_command": "tw compute-envs list",
       "parent": "compute-envs",
       "subcommands": [],
@@ -4609,7 +4609,7 @@
     },
     "io.seqera.tower.cli.commands.computeenvs.UpdateCmd": {
       "name": "update",
-      "description": "Update compute environments.",
+      "description": "Update a compute environment.",
       "full_command": "tw compute-envs update",
       "parent": "compute-envs",
       "subcommands": [],
@@ -4619,7 +4619,7 @@
           "names": [
             "--new-name"
           ],
-          "description": "Compute environment new name.",
+          "description": "New compute environment name.",
           "required": false,
           "default_value": null,
           "arity": null,
@@ -4631,7 +4631,7 @@
             "-i",
             "--id"
           ],
-          "description": "Compute environment unique id.",
+          "description": "Compute environment unique identifier.",
           "required": false,
           "default_value": null,
           "arity": null,
@@ -4677,7 +4677,7 @@
     },
     "io.seqera.tower.cli.commands.computeenvs.ImportCmd": {
       "name": "import",
-      "description": "Add a compute environment from file content.",
+      "description": "Import a compute environment configuration from a JSON file.",
       "full_command": "tw compute-envs import",
       "parent": "compute-envs",
       "subcommands": [],
@@ -4687,7 +4687,7 @@
           "names": [
             "--overwrite"
           ],
-          "description": "Overwrite the compute env if it already exists.",
+          "description": "Overwrite the compute environment if it already exists.",
           "required": false,
           "default_value": "false",
           "arity": null,
@@ -4699,7 +4699,7 @@
         {
           "index": "0",
           "param_label": "FILENAME",
-          "description": "File name to import.",
+          "description": "File path containing the compute environment configuration.",
           "arity": "1",
           "required": true
         }
@@ -4708,7 +4708,7 @@
     },
     "io.seqera.tower.cli.commands.computeenvs.ExportCmd": {
       "name": "export",
-      "description": "Export compute environment for further creation.",
+      "description": "Export compute environment configuration as a JSON file.",
       "full_command": "tw compute-envs export",
       "parent": "compute-envs",
       "subcommands": [],
@@ -4719,7 +4719,7 @@
             "-i",
             "--id"
           ],
-          "description": "Compute environment unique id.",
+          "description": "Compute environment unique identifier.",
           "required": false,
           "default_value": null,
           "arity": null,
@@ -4755,7 +4755,7 @@
         {
           "index": "0",
           "param_label": "FILENAME",
-          "description": "File name to export.",
+          "description": "File name and path for the exported compute environment configuration.",
           "arity": "0..1",
           "required": true
         }
@@ -4773,7 +4773,7 @@
     },
     "io.seqera.tower.cli.commands.computeenvs.ViewCmd": {
       "name": "view",
-      "description": "View compute environment.",
+      "description": "View compute environment details.",
       "full_command": "tw compute-envs view",
       "parent": "compute-envs",
       "subcommands": [],
@@ -4784,7 +4784,7 @@
             "-i",
             "--id"
           ],
-          "description": "Compute environment unique id.",
+          "description": "Compute environment unique identifier.",
           "required": false,
           "default_value": null,
           "arity": null,
@@ -8151,7 +8151,7 @@
     },
     "io.seqera.tower.cli.commands.computeenvs.primary.GetCmd": {
       "name": "get",
-      "description": "Gets a workspace primary compute environment.",
+      "description": "Get the primary compute environment.",
       "full_command": "tw compute-envs primary get",
       "parent": "primary",
       "subcommands": [],
@@ -8162,7 +8162,7 @@
     },
     "io.seqera.tower.cli.commands.computeenvs.primary.SetCmd": {
       "name": "set",
-      "description": "Sets a workspace compute environment as primary.",
+      "description": "Set a compute environment as primary.",
       "full_command": "tw compute-envs primary set",
       "parent": "primary",
       "subcommands": [],
@@ -8173,7 +8173,7 @@
             "-i",
             "--id"
           ],
-          "description": "Compute environment unique id.",
+          "description": "Compute environment unique identifier.",
           "required": false,
           "default_value": null,
           "arity": null,
@@ -8991,7 +8991,7 @@
       },
       {
         "name": "compute-envs",
-        "description": "Manage workspace compute environments.",
+        "description": "Manage compute environments.",
         "full_command": "tw compute-envs",
         "parent": "tw",
         "subcommands": [
@@ -9011,7 +9011,7 @@
         "children": [
           {
             "name": "add",
-            "description": "Add new compute environment.",
+            "description": "Add a new compute environment.",
             "full_command": "tw compute-envs add",
             "parent": "compute-envs",
             "subcommands": [
@@ -9325,7 +9325,7 @@
           },
           {
             "name": "update",
-            "description": "Update compute environments.",
+            "description": "Update a compute environment.",
             "full_command": "tw compute-envs update",
             "parent": "compute-envs",
             "subcommands": [],
@@ -9335,7 +9335,7 @@
                 "names": [
                   "--new-name"
                 ],
-                "description": "Compute environment new name.",
+                "description": "New compute environment name.",
                 "required": false,
                 "default_value": null,
                 "arity": null,
@@ -9347,7 +9347,7 @@
                   "-i",
                   "--id"
                 ],
-                "description": "Compute environment unique id.",
+                "description": "Compute environment unique identifier.",
                 "required": false,
                 "default_value": null,
                 "arity": null,
@@ -9394,7 +9394,7 @@
           },
           {
             "name": "delete",
-            "description": "Delete compute environment.",
+            "description": "Delete a compute environment.",
             "full_command": "tw compute-envs delete",
             "parent": "compute-envs",
             "subcommands": [],
@@ -9405,7 +9405,7 @@
                   "-i",
                   "--id"
                 ],
-                "description": "Compute environment unique id.",
+                "description": "Compute environment unique identifier.",
                 "required": false,
                 "default_value": null,
                 "arity": null,
@@ -9452,7 +9452,7 @@
           },
           {
             "name": "view",
-            "description": "View compute environment.",
+            "description": "View compute environment details.",
             "full_command": "tw compute-envs view",
             "parent": "compute-envs",
             "subcommands": [],
@@ -9463,7 +9463,7 @@
                   "-i",
                   "--id"
                 ],
-                "description": "Compute environment unique id.",
+                "description": "Compute environment unique identifier.",
                 "required": false,
                 "default_value": null,
                 "arity": null,
@@ -9510,7 +9510,7 @@
           },
           {
             "name": "list",
-            "description": "List all workspace compute environments.",
+            "description": "List compute environments.",
             "full_command": "tw compute-envs list",
             "parent": "compute-envs",
             "subcommands": [],
@@ -9540,7 +9540,7 @@
           },
           {
             "name": "export",
-            "description": "Export compute environment for further creation.",
+            "description": "Export compute environment configuration as a JSON file.",
             "full_command": "tw compute-envs export",
             "parent": "compute-envs",
             "subcommands": [],
@@ -9551,7 +9551,7 @@
                   "-i",
                   "--id"
                 ],
-                "description": "Compute environment unique id.",
+                "description": "Compute environment unique identifier.",
                 "required": false,
                 "default_value": null,
                 "arity": null,
@@ -9587,7 +9587,7 @@
               {
                 "index": "0",
                 "param_label": "FILENAME",
-                "description": "File name to export.",
+                "description": "File name and path for the exported compute environment configuration.",
                 "arity": "0..1",
                 "required": true
               }
@@ -9606,7 +9606,7 @@
           },
           {
             "name": "import",
-            "description": "Add a compute environment from file content.",
+            "description": "Import a compute environment configuration from a JSON file.",
             "full_command": "tw compute-envs import",
             "parent": "compute-envs",
             "subcommands": [],
@@ -9616,7 +9616,7 @@
                 "names": [
                   "--overwrite"
                 ],
-                "description": "Overwrite the compute env if it already exists.",
+                "description": "Overwrite the compute environment if it already exists.",
                 "required": false,
                 "default_value": "false",
                 "arity": null,
@@ -9628,7 +9628,7 @@
               {
                 "index": "0",
                 "param_label": "FILENAME",
-                "description": "File name to import.",
+                "description": "File path containing the compute environment configuration.",
                 "arity": "1",
                 "required": true
               }
@@ -9638,7 +9638,7 @@
           },
           {
             "name": "primary",
-            "description": "Sets or gets a primary compute environment within current workspace.",
+            "description": "Manage the primary compute environment.",
             "full_command": "tw compute-envs primary",
             "parent": "compute-envs",
             "subcommands": [
@@ -9652,7 +9652,7 @@
             "children": [
               {
                 "name": "get",
-                "description": "Gets a workspace primary compute environment.",
+                "description": "Get the primary compute environment.",
                 "full_command": "tw compute-envs primary get",
                 "parent": "primary",
                 "subcommands": [],
@@ -9664,7 +9664,7 @@
               },
               {
                 "name": "set",
-                "description": "Sets a workspace compute environment as primary.",
+                "description": "Set a compute environment as primary.",
                 "full_command": "tw compute-envs primary set",
                 "parent": "primary",
                 "subcommands": [],
@@ -9675,7 +9675,7 @@
                       "-i",
                       "--id"
                     ],
-                    "description": "Compute environment unique id.",
+                    "description": "Compute environment unique identifier.",
                     "required": false,
                     "default_value": null,
                     "arity": null,
@@ -17276,7 +17276,7 @@
           "-i",
           "--id"
         ],
-        "description": "Compute environment unique id.",
+        "description": "Compute environment unique identifier.",
         "required": false,
         "default_value": null,
         "arity": null,
