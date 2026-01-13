@@ -51,7 +51,7 @@ public class K8sProvider extends AbstractProvider<K8sSecurityKeys> {
 
     public static class Keys {
 
-        @Option(names = {"-t", "--token"}, description = "Service account token.")
+        @Option(names = {"-t", "--token"}, description = "Kubernetes service account token for authentication. Alternative to certificate-based authentication.")
         public String token;
 
         @ArgGroup(exclusive = false)
@@ -60,10 +60,10 @@ public class K8sProvider extends AbstractProvider<K8sSecurityKeys> {
 
     public static class ClientCerts {
 
-        @Option(names = {"-c", "--certificate"}, description = "Client certificate file.")
+        @Option(names = {"-c", "--certificate"}, description = "Path to Kubernetes client certificate file (PEM format). Used with private key for certificate-based authentication.")
         public Path certificate;
 
-        @Option(names = {"-k", "--private-key"}, description = "Client key file.")
+        @Option(names = {"-k", "--private-key"}, description = "Path to Kubernetes client private key file (PEM format). Used with certificate for certificate-based authentication.")
         public Path privateKey;
     }
 }

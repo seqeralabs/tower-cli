@@ -1398,12 +1398,141 @@ grep -r "Tower" platforms/*.java | grep -i description
 | **Storage formats correct** | Yes | Verified | ✅ |
 | **No Tower references** | Yes | Verified | ✅ |
 
-### Next Steps (Remaining Phase 3 Work)
+---
 
-**Phase 3h: Credentials Enrichment** (Next priority):
-- Map credential add/update commands to OpenAPI credential schemas
-- Enrich 12 provider-specific credential classes
-- Estimated: 60-80 options
+## ✅ Phase 3h: Credentials Provider Enrichment (COMPLETE - 2026-01-13)
+
+### Overview
+
+Following the successful Platform class enrichment in Phase 3g, we completed manual enrichment of all 12 credential Provider classes with high-quality, OpenAPI-informed descriptions. Like compute environments, credential providers use the `@CommandLine.Mixin` pattern which prevents automated metadata extraction.
+
+### Approach
+
+Used parallel agent-based research to gather comprehensive intelligence:
+
+**Agent 1: codebase-locator** (Agent: a503a86)
+- Located all 12 credential Provider implementation classes
+- Identified file structure: add/update commands with Provider mixins
+- Confirmed same architecture pattern as compute-envs Platform classes
+
+**Agent 2: codebase-analyzer - OpenAPI** (Agent: abb1801)
+- Analyzed 16 credential SecurityKeys schemas in OpenAPI spec
+- Documented discriminator pattern: SecurityKeys → AwsSecurityKeys, GitHubSecurityKeys, etc.
+- All properties have types, descriptions, and writeOnly flags for sensitive fields
+
+**Agent 3: codebase-analyzer - CLI** (Agent: ae853ff)
+- Analyzed cli-metadata.json for credential commands
+- Confirmed: All 23 provider-specific add/update commands have empty options arrays
+- Same limitation as Platform classes: Provider mixins not extracted
+
+**Agent 4: codebase-pattern-finder** (Agent: ab220ed)
+- Identified transformation patterns: kebab-case → camelCase, file_to_text, etc.
+- Documented naming conventions for all 12 providers
+- High confidence direct mappings for most options
+
+### Providers Enriched (12 Total)
+
+**Cloud Providers** (3):
+- ✅ AwsProvider.java (3 options: accessKey, secretKey, assumeRoleArn)
+- ✅ AzureProvider.java (4 options: batchKey, batchName, storageKey, storageName)
+- ✅ GoogleProvider.java (1 option: serviceAccountKey/key)
+
+**Git Providers** (5):
+- ✅ GithubProvider.java (2 options: username, password)
+- ✅ GitlabProvider.java (3 options: username, password, token)
+- ✅ GiteaProvider.java (2 options: username, password)
+- ✅ BitbucketProvider.java (2 options: username, password)
+- ✅ CodeCommitProvider.java (2 options: accessKey, secretKey)
+
+**Infrastructure Providers** (2):
+- ✅ K8sProvider.java (3 options: token, certificate, privateKey)
+- ✅ SshProvider.java (2 options: serviceAccountKey/key, passphrase)
+
+**Other Providers** (2):
+- ✅ ContainerRegistryProvider.java (3 options: username, password, registry)
+- ✅ TwAgentProvider.java (2 options: connectionId, workDir)
+
+### Enrichment Quality Standards
+
+**Technical Precision**:
+- Before: "The AWS access key required to access the desired service."
+- After: "AWS access key identifier. Part of AWS IAM credentials used for programmatic access to AWS services."
+
+**Security Context**:
+- Before: "The AWS secret key required to access the desired service."
+- After: "AWS secret access key. Part of AWS IAM credentials used for programmatic access to AWS services. Keep this value secure."
+
+**Practical Guidance**:
+- Before: "JSON file with the service account key."
+- After: "Path to JSON file containing Google Cloud service account key. Download from Google Cloud Console IAM & Admin > Service Accounts."
+
+**Authentication Method Clarity**:
+- Before: "Github account password or access token (recommended)."
+- After: "GitHub password or personal access token. Use of personal access tokens is recommended for security. Generate tokens at Settings > Developer settings > Personal access tokens."
+
+**Provider-Specific Examples**:
+- Container Registry: "Examples: docker.io (Docker Hub), quay.io (Quay), ghcr.io (GitHub Container Registry). Default: docker.io."
+- K8s: "Path to Kubernetes client certificate file (PEM format). Used with private key for certificate-based authentication."
+
+### Statistics
+
+| Metric | Count |
+|--------|-------|
+| **Provider classes enriched** | 12 |
+| **Option descriptions enhanced** | 29 |
+| **Cloud providers** | 3 (AWS, Azure, Google) |
+| **Git providers** | 5 (GitHub, GitLab, Gitea, Bitbucket, CodeCommit) |
+| **Infrastructure providers** | 2 (K8s, SSH) |
+| **Other providers** | 2 (Container Registry, Tower Agent) |
+| **Parallel agents spawned** | 4 |
+
+### Files Modified
+
+**All in `src/main/java/io/seqera/tower/cli/commands/credentials/providers/`**:
+1. AwsProvider.java (3 options)
+2. AzureProvider.java (4 options)
+3. GoogleProvider.java (1 option)
+4. GithubProvider.java (2 options)
+5. GitlabProvider.java (3 options)
+6. GiteaProvider.java (2 options)
+7. BitbucketProvider.java (2 options)
+8. CodeCommitProvider.java (2 options)
+9. K8sProvider.java (3 options)
+10. SshProvider.java (2 options)
+11. ContainerRegistryProvider.java (3 options)
+12. TwAgentProvider.java (2 options)
+
+**Total**: 12 files, 29 insertions(+), 29 deletions(-)
+
+### Success Criteria Met
+
+| Criterion | Target | Actual | Status |
+|-----------|--------|--------|--------|
+| **All providers enriched** | 12 | 12 | ✅ |
+| **Quality consistency** | High | Verified | ✅ |
+| **Provider-specific accuracy** | Yes | Verified | ✅ |
+| **No syntax errors** | Yes | Verified | ✅ |
+| **Security guidance included** | Yes | Verified | ✅ |
+| **Practical examples provided** | Yes | Verified | ✅ |
+
+### Key Achievements
+
+✅ **Complete credentials coverage**: All 12 provider types have enriched descriptions
+✅ **Consistent quality**: All descriptions follow OpenAPI-quality standards
+✅ **Security-focused**: Sensitive fields clearly marked with security guidance
+✅ **User-facing impact**: Commonly used CLI commands (adding credentials) now have comprehensive help text
+✅ **Token-efficient research**: Parallel agents gathered intelligence without excessive context usage
+
+### Lessons Learned
+
+1. **Pattern recognition**: Credentials followed exact same architecture as compute-envs (Provider mixin pattern)
+2. **Parallel research efficient**: 4 agents gathered comprehensive intelligence in single pass
+3. **OpenAPI quality baseline**: API schema descriptions provided excellent starting point
+4. **Security emphasis important**: Credential help text should emphasize secure handling
+
+---
+
+### Next Steps (Remaining Phase 3 Work)
 
 **Phase 3i: Additional Command Families** (Future):
 - Other commands not yet covered

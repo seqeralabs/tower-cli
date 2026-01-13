@@ -23,10 +23,10 @@ import picocli.CommandLine.Option;
 
 public class CodeCommitProvider extends AbstractGitProvider<CodeCommitSecurityKeys> {
 
-    @Option(names = {"--access-key"}, description = "CodeCommit AWS access key.", required = true)
+    @Option(names = {"--access-key"}, description = "AWS access key identifier for CodeCommit authentication. Part of AWS IAM user credentials with CodeCommit permissions.", required = true)
     public String accessKey;
 
-    @Option(names = {"--secret-key"}, description = "CodeCommit AWS secret key.", required = true)
+    @Option(names = {"--secret-key"}, description = "AWS secret access key for CodeCommit authentication. Part of AWS IAM user credentials with CodeCommit permissions. Keep this value secure.", required = true)
     public String secretKey;
 
     public CodeCommitProvider() {
