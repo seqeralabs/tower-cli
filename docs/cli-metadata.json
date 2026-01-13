@@ -1,14 +1,14 @@
 {
   "metadata": {
     "extractor_version": "1.0.0",
-    "source_dir": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java",
+    "source_dir": "../src/main/java",
     "total_commands": 161,
     "total_mixins": 22
   },
   "commands": {
     "io.seqera.tower.cli.Tower": {
       "name": "tw",
-      "description": "Nextflow Tower CLI.",
+      "description": "Seqera Platform CLI",
       "full_command": "tw",
       "parent": null,
       "subcommands": [
@@ -32,14 +32,14 @@
         "WorkspacesCmd",
         "SecretsCmd"
       ],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/Tower.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/Tower.java",
       "options": [
         {
           "names": [
             "-t",
             "--access-token"
           ],
-          "description": "Tower personal access token (TOWER_ACCESS_TOKEN).",
+          "description": "Seqera Platform personal access token (TOWER_ACCESS_TOKEN)",
           "required": false,
           "default_value": "${TOWER_ACCESS_TOKEN}",
           "arity": null,
@@ -51,7 +51,7 @@
             "-u",
             "--url"
           ],
-          "description": "Tower server API endpoint URL (TOWER_API_ENDPOINT) [default: 'api.cloud.seqera.io'].",
+          "description": "Seqera Platform API endpoint URL (TOWER_API_ENDPOINT) [default: 'api.cloud.seqera.io']",
           "required": false,
           "default_value": "${TOWER_API_ENDPOINT:-https://api.cloud.seqera.io}",
           "arity": null,
@@ -63,7 +63,7 @@
             "-o",
             "--output"
           ],
-          "description": "Show output in defined format (only the 'json' option is available at the moment).",
+          "description": "Show output in defined format (currently supports 'json')",
           "required": false,
           "default_value": "${TOWER_CLI_OUTPUT_FORMAT:-console}",
           "arity": null,
@@ -86,7 +86,7 @@
           "names": [
             "--insecure"
           ],
-          "description": "Explicitly allow to connect to a non-SSL secured Tower server (this is not recommended).",
+          "description": "Explicitly allow to connect to a non-SSL secured Seqera Platform server (not recommended)",
           "required": false,
           "default_value": null,
           "arity": null,
@@ -111,7 +111,7 @@
         "UpdateCmd",
         "UrlCmd"
       ],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/DatasetsCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/DatasetsCmd.java",
       "options": [],
       "parameters": [],
       "mixins": []
@@ -128,7 +128,7 @@
         "UpdateCmd",
         "LeaveCmd"
       ],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/MembersCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/MembersCmd.java",
       "options": [],
       "parameters": [],
       "mixins": []
@@ -147,7 +147,7 @@
         "DeleteCmd",
         "DumpCmd"
       ],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/RunsCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/RunsCmd.java",
       "options": [],
       "parameters": [],
       "mixins": []
@@ -165,7 +165,7 @@
         "ViewCmd",
         "LeaveCmd"
       ],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/WorkspacesCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/WorkspacesCmd.java",
       "options": [],
       "parameters": [],
       "mixins": []
@@ -176,7 +176,7 @@
       "full_command": "tw info",
       "parent": "tw",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/InfoCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/InfoCmd.java",
       "options": [],
       "parameters": [],
       "mixins": []
@@ -192,7 +192,7 @@
         "DeleteCmd",
         "MembersCmd"
       ],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/TeamsCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/TeamsCmd.java",
       "options": [],
       "parameters": [],
       "mixins": []
@@ -209,7 +209,7 @@
         "UpdateCmd",
         "ViewCmd"
       ],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/OrganizationsCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/OrganizationsCmd.java",
       "options": [],
       "parameters": [],
       "mixins": []
@@ -225,7 +225,7 @@
         "DeleteCmd",
         "ListCmd"
       ],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/CredentialsCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/CredentialsCmd.java",
       "options": [],
       "parameters": [],
       "mixins": []
@@ -245,7 +245,7 @@
         "ImportCmd",
         "LabelsCmd"
       ],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/PipelinesCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/PipelinesCmd.java",
       "options": [],
       "parameters": [],
       "mixins": []
@@ -256,7 +256,7 @@
       "full_command": "tw launch",
       "parent": "tw",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/LaunchCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/LaunchCmd.java",
       "options": [
         {
           "names": [
@@ -542,7 +542,7 @@
       "subcommands": [
         "ListCmd"
       ],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/CollaboratorsCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/CollaboratorsCmd.java",
       "options": [],
       "parameters": [],
       "mixins": []
@@ -559,7 +559,7 @@
         "DeleteCmd",
         "LeaveCmd"
       ],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/ParticipantsCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/ParticipantsCmd.java",
       "options": [],
       "parameters": [],
       "mixins": []
@@ -580,7 +580,7 @@
         "StopCmd",
         "DeleteCmd"
       ],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/StudiosCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/StudiosCmd.java",
       "options": [],
       "parameters": [],
       "mixins": []
@@ -598,7 +598,7 @@
         "UpdateCmd",
         "LabelsCmd"
       ],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/ActionsCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/ActionsCmd.java",
       "options": [],
       "parameters": [],
       "mixins": []
@@ -617,7 +617,7 @@
         "DownloadCmd",
         "UploadCmd"
       ],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/DataLinksCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/DataLinksCmd.java",
       "options": [],
       "parameters": [],
       "mixins": []
@@ -634,7 +634,7 @@
         "ViewCmd",
         "UpdateCmd"
       ],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/SecretsCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/SecretsCmd.java",
       "options": [],
       "parameters": [],
       "mixins": []
@@ -654,7 +654,7 @@
         "ImportCmd",
         "PrimaryCmd"
       ],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/ComputeEnvsCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/ComputeEnvsCmd.java",
       "options": [],
       "parameters": [],
       "mixins": []
@@ -665,7 +665,7 @@
       "full_command": "tw organizations add",
       "parent": "organizations",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/organizations/AddCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/organizations/AddCmd.java",
       "options": [
         {
           "names": [
@@ -753,7 +753,7 @@
       "full_command": "tw organizations delete",
       "parent": "organizations",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/organizations/DeleteCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/organizations/DeleteCmd.java",
       "options": [
         {
           "names": [
@@ -794,7 +794,7 @@
       "full_command": "tw organizations list",
       "parent": "organizations",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/organizations/ListCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/organizations/ListCmd.java",
       "options": [],
       "parameters": [],
       "mixins": []
@@ -805,7 +805,7 @@
       "full_command": "tw organizations update",
       "parent": "organizations",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/organizations/UpdateCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/organizations/UpdateCmd.java",
       "options": [
         {
           "names": [
@@ -909,7 +909,7 @@
       "full_command": "tw organizations view",
       "parent": "organizations",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/organizations/ViewCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/organizations/ViewCmd.java",
       "options": [
         {
           "names": [
@@ -950,7 +950,7 @@
       "full_command": "tw participants leave",
       "parent": "participants",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/participants/LeaveCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/participants/LeaveCmd.java",
       "options": [
         {
           "names": [
@@ -979,7 +979,7 @@
       "full_command": "tw participants add",
       "parent": "participants",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/participants/AddCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/participants/AddCmd.java",
       "options": [
         {
           "names": [
@@ -1043,7 +1043,7 @@
       "full_command": "tw participants delete",
       "parent": "participants",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/participants/DeleteCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/participants/DeleteCmd.java",
       "options": [
         {
           "names": [
@@ -1096,7 +1096,7 @@
       "full_command": "tw participants list",
       "parent": "participants",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/participants/ListCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/participants/ListCmd.java",
       "options": [
         {
           "names": [
@@ -1186,7 +1186,7 @@
       "full_command": "tw participants update",
       "parent": "participants",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/participants/UpdateCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/participants/UpdateCmd.java",
       "options": [
         {
           "names": [
@@ -1251,7 +1251,7 @@
       "full_command": "tw collaborators list",
       "parent": "collaborators",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/collaborators/ListCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/collaborators/ListCmd.java",
       "options": [
         {
           "names": [
@@ -1325,7 +1325,7 @@
       "full_command": "tw studios add-as-new",
       "parent": "studios",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/studios/AddAsNewCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/studios/AddAsNewCmd.java",
       "options": [
         {
           "names": [
@@ -1510,7 +1510,7 @@
       "full_command": "tw studios templates",
       "parent": "studios",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/studios/TemplatesCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/studios/TemplatesCmd.java",
       "options": [
         {
           "names": [
@@ -1550,7 +1550,7 @@
       "full_command": "tw studios start",
       "parent": "studios",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/studios/StartCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/studios/StartCmd.java",
       "options": [
         {
           "names": [
@@ -1688,7 +1688,7 @@
       "full_command": "tw studios add",
       "parent": "studios",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/studios/AddCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/studios/AddCmd.java",
       "options": [
         {
           "names": [
@@ -1886,7 +1886,7 @@
       "full_command": "tw studios delete",
       "parent": "studios",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/studios/DeleteCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/studios/DeleteCmd.java",
       "options": [
         {
           "names": [
@@ -1943,7 +1943,7 @@
       "full_command": "tw studios stop",
       "parent": "studios",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/studios/StopCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/studios/StopCmd.java",
       "options": [
         {
           "names": [
@@ -2011,7 +2011,7 @@
       "full_command": "tw studios list",
       "parent": "studios",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/studios/ListCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/studios/ListCmd.java",
       "options": [
         {
           "names": [
@@ -2093,7 +2093,7 @@
       "full_command": "tw studios view",
       "parent": "studios",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/studios/ViewCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/studios/ViewCmd.java",
       "options": [
         {
           "names": [
@@ -2150,7 +2150,7 @@
       "full_command": "tw studios checkpoints",
       "parent": "studios",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/studios/CheckpointsCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/studios/CheckpointsCmd.java",
       "options": [
         {
           "names": [
@@ -2256,7 +2256,7 @@
       "full_command": "tw secrets add",
       "parent": "secrets",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/secrets/AddCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/secrets/AddCmd.java",
       "options": [
         {
           "names": [
@@ -2320,7 +2320,7 @@
       "full_command": "tw secrets delete",
       "parent": "secrets",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/secrets/DeleteCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/secrets/DeleteCmd.java",
       "options": [
         {
           "names": [
@@ -2377,7 +2377,7 @@
       "full_command": "tw secrets list",
       "parent": "secrets",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/secrets/ListCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/secrets/ListCmd.java",
       "options": [
         {
           "names": [
@@ -2406,7 +2406,7 @@
       "full_command": "tw secrets update",
       "parent": "secrets",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/secrets/UpdateCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/secrets/UpdateCmd.java",
       "options": [
         {
           "names": [
@@ -2475,7 +2475,7 @@
       "full_command": "tw secrets view",
       "parent": "secrets",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/secrets/ViewCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/secrets/ViewCmd.java",
       "options": [
         {
           "names": [
@@ -2532,7 +2532,7 @@
       "full_command": "tw datasets add",
       "parent": "datasets",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/datasets/AddCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/datasets/AddCmd.java",
       "options": [
         {
           "names": [
@@ -2615,7 +2615,7 @@
       "full_command": "tw datasets download",
       "parent": "datasets",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/datasets/DownloadCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/datasets/DownloadCmd.java",
       "options": [
         {
           "names": [
@@ -2683,7 +2683,7 @@
       "full_command": "tw datasets delete",
       "parent": "datasets",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/datasets/DeleteCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/datasets/DeleteCmd.java",
       "options": [
         {
           "names": [
@@ -2740,7 +2740,7 @@
       "full_command": "tw datasets url",
       "parent": "datasets",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/datasets/UrlCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/datasets/UrlCmd.java",
       "options": [
         {
           "names": [
@@ -2808,7 +2808,7 @@
       "full_command": "tw datasets list",
       "parent": "datasets",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/datasets/ListCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/datasets/ListCmd.java",
       "options": [
         {
           "names": [
@@ -2849,7 +2849,7 @@
       "full_command": "tw datasets update",
       "parent": "datasets",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/datasets/UpdateCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/datasets/UpdateCmd.java",
       "options": [
         {
           "names": [
@@ -2954,7 +2954,7 @@
       "subcommands": [
         "VersionsCmd"
       ],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/datasets/ViewCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/datasets/ViewCmd.java",
       "options": [
         {
           "names": [
@@ -3011,7 +3011,7 @@
       "full_command": "tw labels update",
       "parent": "labels",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/labels/UpdateLabelsCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/labels/UpdateLabelsCmd.java",
       "options": [
         {
           "names": [
@@ -3081,7 +3081,7 @@
         "UpdateLabelsCmd",
         "DeleteLabelsCmd"
       ],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/labels/LabelsCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/labels/LabelsCmd.java",
       "options": [],
       "parameters": [],
       "mixins": []
@@ -3092,7 +3092,7 @@
       "full_command": "tw labels list",
       "parent": "labels",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/labels/ListLabelsCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/labels/ListLabelsCmd.java",
       "options": [
         {
           "names": [
@@ -3182,7 +3182,7 @@
       "full_command": "tw labels delete",
       "parent": "labels",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/labels/DeleteLabelsCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/labels/DeleteLabelsCmd.java",
       "options": [
         {
           "names": [
@@ -3223,7 +3223,7 @@
       "full_command": "tw labels add",
       "parent": "labels",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/labels/AddLabelsCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/labels/AddLabelsCmd.java",
       "options": [
         {
           "names": [
@@ -3276,7 +3276,7 @@
       "full_command": "tw pipelines add",
       "parent": "pipelines",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/pipelines/AddCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/pipelines/AddCmd.java",
       "options": [
         {
           "names": [
@@ -3523,7 +3523,7 @@
       "full_command": "tw pipelines labels",
       "parent": "pipelines",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/pipelines/LabelsCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/pipelines/LabelsCmd.java",
       "options": [
         {
           "names": [
@@ -3591,7 +3591,7 @@
       "full_command": "tw pipelines delete",
       "parent": "pipelines",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/pipelines/DeleteCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/pipelines/DeleteCmd.java",
       "options": [
         {
           "names": [
@@ -3648,7 +3648,7 @@
       "full_command": "tw pipelines list",
       "parent": "pipelines",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/pipelines/ListCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/pipelines/ListCmd.java",
       "options": [
         {
           "names": [
@@ -3741,7 +3741,7 @@
       "full_command": "tw pipelines update",
       "parent": "pipelines",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/pipelines/UpdateCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/pipelines/UpdateCmd.java",
       "options": [
         {
           "names": [
@@ -4003,7 +4003,7 @@
       "full_command": "tw pipelines import",
       "parent": "pipelines",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/pipelines/ImportCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/pipelines/ImportCmd.java",
       "options": [
         {
           "names": [
@@ -4075,7 +4075,7 @@
       "full_command": "tw pipelines export",
       "parent": "pipelines",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/pipelines/ExportCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/pipelines/ExportCmd.java",
       "options": [
         {
           "names": [
@@ -4140,7 +4140,7 @@
       "full_command": "tw pipelines view",
       "parent": "pipelines",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/pipelines/ViewCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/pipelines/ViewCmd.java",
       "options": [
         {
           "names": [
@@ -4197,7 +4197,7 @@
       "full_command": "tw workspaces leave",
       "parent": "workspaces",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/workspaces/LeaveCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/workspaces/LeaveCmd.java",
       "options": [
         {
           "names": [
@@ -4238,7 +4238,7 @@
       "full_command": "tw workspaces add",
       "parent": "workspaces",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/workspaces/AddCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/workspaces/AddCmd.java",
       "options": [
         {
           "names": [
@@ -4322,7 +4322,7 @@
       "full_command": "tw workspaces delete",
       "parent": "workspaces",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/workspaces/DeleteCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/workspaces/DeleteCmd.java",
       "options": [
         {
           "names": [
@@ -4363,7 +4363,7 @@
       "full_command": "tw workspaces list",
       "parent": "workspaces",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/workspaces/ListCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/workspaces/ListCmd.java",
       "options": [
         {
           "names": [
@@ -4388,7 +4388,7 @@
       "full_command": "tw workspaces update",
       "parent": "workspaces",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/workspaces/UpdateCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/workspaces/UpdateCmd.java",
       "options": [
         {
           "names": [
@@ -4447,7 +4447,7 @@
       "full_command": "tw workspaces view",
       "parent": "workspaces",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/workspaces/ViewCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/workspaces/ViewCmd.java",
       "options": [
         {
           "names": [
@@ -4491,7 +4491,7 @@
         "GetCmd",
         "SetCmd"
       ],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/PrimaryCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/PrimaryCmd.java",
       "options": [],
       "parameters": [],
       "mixins": []
@@ -4516,7 +4516,7 @@
         "AddAzureCmd",
         "AddSeqeraComputeCmd"
       ],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/AddCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/AddCmd.java",
       "options": [],
       "parameters": [],
       "mixins": []
@@ -4527,7 +4527,7 @@
       "full_command": "tw compute-envs delete",
       "parent": "compute-envs",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/DeleteCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/DeleteCmd.java",
       "options": [
         {
           "names": [
@@ -4584,7 +4584,7 @@
       "full_command": "tw compute-envs list",
       "parent": "compute-envs",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/ListCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/ListCmd.java",
       "options": [
         {
           "names": [
@@ -4613,7 +4613,7 @@
       "full_command": "tw compute-envs update",
       "parent": "compute-envs",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/UpdateCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/UpdateCmd.java",
       "options": [
         {
           "names": [
@@ -4681,7 +4681,7 @@
       "full_command": "tw compute-envs import",
       "parent": "compute-envs",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/ImportCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/ImportCmd.java",
       "options": [
         {
           "names": [
@@ -4712,7 +4712,7 @@
       "full_command": "tw compute-envs export",
       "parent": "compute-envs",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/ExportCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/ExportCmd.java",
       "options": [
         {
           "names": [
@@ -4777,7 +4777,7 @@
       "full_command": "tw compute-envs view",
       "parent": "compute-envs",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/ViewCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/ViewCmd.java",
       "options": [
         {
           "names": [
@@ -4837,7 +4837,7 @@
         "AddGitHubCmd",
         "AddTowerCmd"
       ],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/actions/AddCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/actions/AddCmd.java",
       "options": [],
       "parameters": [],
       "mixins": []
@@ -4848,7 +4848,7 @@
       "full_command": "tw actions labels",
       "parent": "actions",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/actions/LabelsCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/actions/LabelsCmd.java",
       "options": [
         {
           "names": [
@@ -4916,7 +4916,7 @@
       "full_command": "tw actions delete",
       "parent": "actions",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/actions/DeleteCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/actions/DeleteCmd.java",
       "options": [
         {
           "names": [
@@ -4973,7 +4973,7 @@
       "full_command": "tw actions list",
       "parent": "actions",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/actions/ListCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/actions/ListCmd.java",
       "options": [
         {
           "names": [
@@ -5006,7 +5006,7 @@
       "full_command": "tw actions update",
       "parent": "actions",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/actions/UpdateCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/actions/UpdateCmd.java",
       "options": [
         {
           "names": [
@@ -5257,7 +5257,7 @@
       "full_command": "tw actions view",
       "parent": "actions",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/actions/ViewCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/actions/ViewCmd.java",
       "options": [
         {
           "names": [
@@ -5317,7 +5317,7 @@
         "AddCmd",
         "DeleteCmd"
       ],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/teams/MembersCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/teams/MembersCmd.java",
       "options": [
         {
           "names": [
@@ -5353,7 +5353,7 @@
       "full_command": "tw teams add",
       "parent": "teams",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/teams/AddCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/teams/AddCmd.java",
       "options": [
         {
           "names": [
@@ -5412,7 +5412,7 @@
       "full_command": "tw teams delete",
       "parent": "teams",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/teams/DeleteCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/teams/DeleteCmd.java",
       "options": [
         {
           "names": [
@@ -5448,7 +5448,7 @@
       "full_command": "tw teams list",
       "parent": "teams",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/teams/ListCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/teams/ListCmd.java",
       "options": [
         {
           "names": [
@@ -5510,7 +5510,7 @@
       "full_command": "tw members leave",
       "parent": "members",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/members/LeaveCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/members/LeaveCmd.java",
       "options": [
         {
           "names": [
@@ -5534,7 +5534,7 @@
       "full_command": "tw members add",
       "parent": "members",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/members/AddCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/members/AddCmd.java",
       "options": [
         {
           "names": [
@@ -5570,7 +5570,7 @@
       "full_command": "tw members delete",
       "parent": "members",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/members/DeleteCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/members/DeleteCmd.java",
       "options": [
         {
           "names": [
@@ -5606,7 +5606,7 @@
       "full_command": "tw members list",
       "parent": "members",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/members/ListCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/members/ListCmd.java",
       "options": [
         {
           "names": [
@@ -5680,7 +5680,7 @@
       "full_command": "tw members update",
       "parent": "members",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/members/UpdateCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/members/UpdateCmd.java",
       "options": [
         {
           "names": [
@@ -5728,7 +5728,7 @@
       "full_command": "tw runs relaunch",
       "parent": "runs",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/runs/RelaunchCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/runs/RelaunchCmd.java",
       "options": [
         {
           "names": [
@@ -5985,7 +5985,7 @@
       "full_command": "tw runs labels",
       "parent": "runs",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/runs/LabelsCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/runs/LabelsCmd.java",
       "options": [
         {
           "names": [
@@ -6037,7 +6037,7 @@
       "full_command": "tw runs cancel",
       "parent": "runs",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/runs/CancelCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/runs/CancelCmd.java",
       "options": [
         {
           "names": [
@@ -6078,7 +6078,7 @@
       "full_command": "tw runs delete",
       "parent": "runs",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/runs/DeleteCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/runs/DeleteCmd.java",
       "options": [
         {
           "names": [
@@ -6130,7 +6130,7 @@
       "full_command": "tw runs list",
       "parent": "runs",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/runs/ListCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/runs/ListCmd.java",
       "options": [
         {
           "names": [
@@ -6212,7 +6212,7 @@
       "full_command": "tw runs dump",
       "parent": "runs",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/runs/DumpCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/runs/DumpCmd.java",
       "options": [
         {
           "names": [
@@ -6314,7 +6314,7 @@
         "TasksCmd",
         "TaskCmd"
       ],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/runs/ViewCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/runs/ViewCmd.java",
       "options": [
         {
           "names": [
@@ -6504,7 +6504,7 @@
         "AddAgentCmd",
         "AddContainerRegistryCmd"
       ],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/AddCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/AddCmd.java",
       "options": [],
       "parameters": [],
       "mixins": []
@@ -6515,7 +6515,7 @@
       "full_command": "tw credentials delete",
       "parent": "credentials",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/DeleteCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/DeleteCmd.java",
       "options": [
         {
           "names": [
@@ -6572,7 +6572,7 @@
       "full_command": "tw credentials list",
       "parent": "credentials",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/ListCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/ListCmd.java",
       "options": [
         {
           "names": [
@@ -6613,7 +6613,7 @@
         "UpdateContainerRegistryCmd",
         "UpdateAgentCmd"
       ],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/UpdateCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/UpdateCmd.java",
       "options": [],
       "parameters": [],
       "mixins": []
@@ -6621,10 +6621,10 @@
     "io.seqera.tower.cli.commands.credentials.update.UpdateGithubCmd": {
       "name": "github",
       "description": "Update Github credentials",
-      "full_command": "tw organizations update github",
+      "full_command": "tw credentials update github",
       "parent": "update",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateGithubCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateGithubCmd.java",
       "options": [],
       "parameters": [],
       "mixins": [
@@ -6637,10 +6637,10 @@
     "io.seqera.tower.cli.commands.credentials.update.UpdateGoogleCmd": {
       "name": "google",
       "description": "Update Google credentials",
-      "full_command": "tw organizations update google",
+      "full_command": "tw credentials update google",
       "parent": "update",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateGoogleCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateGoogleCmd.java",
       "options": [],
       "parameters": [],
       "mixins": [
@@ -6653,10 +6653,10 @@
     "io.seqera.tower.cli.commands.credentials.update.UpdateAwsCmd": {
       "name": "aws",
       "description": "Update AWS credentials",
-      "full_command": "tw organizations update aws",
+      "full_command": "tw credentials update aws",
       "parent": "update",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateAwsCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateAwsCmd.java",
       "options": [],
       "parameters": [],
       "mixins": [
@@ -6669,10 +6669,10 @@
     "io.seqera.tower.cli.commands.credentials.update.UpdateSshCmd": {
       "name": "ssh",
       "description": "Update SSH credentials",
-      "full_command": "tw organizations update ssh",
+      "full_command": "tw credentials update ssh",
       "parent": "update",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateSshCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateSshCmd.java",
       "options": [],
       "parameters": [],
       "mixins": [
@@ -6685,10 +6685,10 @@
     "io.seqera.tower.cli.commands.credentials.update.UpdateBitbucketCmd": {
       "name": "bitbucket",
       "description": "Update Bitbucket credentials",
-      "full_command": "tw organizations update bitbucket",
+      "full_command": "tw credentials update bitbucket",
       "parent": "update",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateBitbucketCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateBitbucketCmd.java",
       "options": [],
       "parameters": [],
       "mixins": [
@@ -6701,10 +6701,10 @@
     "io.seqera.tower.cli.commands.credentials.update.UpdateContainerRegistryCmd": {
       "name": "container-reg",
       "description": "Update Container Registry credentials",
-      "full_command": "tw organizations update container-reg",
+      "full_command": "tw credentials update container-reg",
       "parent": "update",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateContainerRegistryCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateContainerRegistryCmd.java",
       "options": [],
       "parameters": [],
       "mixins": [
@@ -6717,10 +6717,10 @@
     "io.seqera.tower.cli.commands.credentials.update.UpdateGitlabCmd": {
       "name": "gitlab",
       "description": "Update Gitlab credentials",
-      "full_command": "tw organizations update gitlab",
+      "full_command": "tw credentials update gitlab",
       "parent": "update",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateGitlabCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateGitlabCmd.java",
       "options": [],
       "parameters": [],
       "mixins": [
@@ -6733,10 +6733,10 @@
     "io.seqera.tower.cli.commands.credentials.update.UpdateAgentCmd": {
       "name": "agent",
       "description": "Update new Tower Agent credentials",
-      "full_command": "tw organizations update agent",
+      "full_command": "tw credentials update agent",
       "parent": "update",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateAgentCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateAgentCmd.java",
       "options": [],
       "parameters": [],
       "mixins": [
@@ -6749,10 +6749,10 @@
     "io.seqera.tower.cli.commands.credentials.update.UpdateAzureCmd": {
       "name": "azure",
       "description": "Update Azure credentials",
-      "full_command": "tw organizations update azure",
+      "full_command": "tw credentials update azure",
       "parent": "update",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateAzureCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateAzureCmd.java",
       "options": [],
       "parameters": [],
       "mixins": [
@@ -6765,10 +6765,10 @@
     "io.seqera.tower.cli.commands.credentials.update.UpdateK8sCmd": {
       "name": "k8s",
       "description": "Update Kubernetes credentials",
-      "full_command": "tw organizations update k8s",
+      "full_command": "tw credentials update k8s",
       "parent": "update",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateK8sCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateK8sCmd.java",
       "options": [],
       "parameters": [],
       "mixins": [
@@ -6781,10 +6781,10 @@
     "io.seqera.tower.cli.commands.credentials.update.UpdateCodeCommitCmd": {
       "name": "codecommit",
       "description": "Update CodeCommit credentials",
-      "full_command": "tw organizations update codecommit",
+      "full_command": "tw credentials update codecommit",
       "parent": "update",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateCodeCommitCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateCodeCommitCmd.java",
       "options": [],
       "parameters": [],
       "mixins": [
@@ -6797,10 +6797,10 @@
     "io.seqera.tower.cli.commands.credentials.add.AddAgentCmd": {
       "name": "agent",
       "description": "Add Tower Agent credentials",
-      "full_command": "tw organizations add agent",
+      "full_command": "tw credentials add agent",
       "parent": "add",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/add/AddAgentCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/add/AddAgentCmd.java",
       "options": [],
       "parameters": [],
       "mixins": [
@@ -6813,10 +6813,10 @@
     "io.seqera.tower.cli.commands.credentials.add.AddGiteaCmd": {
       "name": "gitea",
       "description": "Add Gitea credentials",
-      "full_command": "tw organizations add gitea",
+      "full_command": "tw credentials add gitea",
       "parent": "add",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/add/AddGiteaCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/add/AddGiteaCmd.java",
       "options": [],
       "parameters": [],
       "mixins": [
@@ -6829,10 +6829,10 @@
     "io.seqera.tower.cli.commands.credentials.add.AddGitlabCmd": {
       "name": "gitlab",
       "description": "Add Gitlab credentials",
-      "full_command": "tw organizations add gitlab",
+      "full_command": "tw credentials add gitlab",
       "parent": "add",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/add/AddGitlabCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/add/AddGitlabCmd.java",
       "options": [],
       "parameters": [],
       "mixins": [
@@ -6845,10 +6845,10 @@
     "io.seqera.tower.cli.commands.credentials.add.AddK8sCmd": {
       "name": "k8s",
       "description": "Add Kubernetes credentials",
-      "full_command": "tw organizations add k8s",
+      "full_command": "tw credentials add k8s",
       "parent": "add",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/add/AddK8sCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/add/AddK8sCmd.java",
       "options": [],
       "parameters": [],
       "mixins": [
@@ -6861,10 +6861,10 @@
     "io.seqera.tower.cli.commands.credentials.add.AddAzureCmd": {
       "name": "azure",
       "description": "Add Azure credentials",
-      "full_command": "tw organizations add azure",
+      "full_command": "tw credentials add azure",
       "parent": "add",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/add/AddAzureCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/add/AddAzureCmd.java",
       "options": [],
       "parameters": [],
       "mixins": [
@@ -6877,10 +6877,10 @@
     "io.seqera.tower.cli.commands.credentials.add.AddGoogleCmd": {
       "name": "google",
       "description": "Add Google credentials",
-      "full_command": "tw organizations add google",
+      "full_command": "tw credentials add google",
       "parent": "add",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/add/AddGoogleCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/add/AddGoogleCmd.java",
       "options": [],
       "parameters": [],
       "mixins": [
@@ -6893,10 +6893,10 @@
     "io.seqera.tower.cli.commands.credentials.add.AddSshCmd": {
       "name": "ssh",
       "description": "Add SSH credentials",
-      "full_command": "tw organizations add ssh",
+      "full_command": "tw credentials add ssh",
       "parent": "add",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/add/AddSshCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/add/AddSshCmd.java",
       "options": [],
       "parameters": [],
       "mixins": [
@@ -6909,10 +6909,10 @@
     "io.seqera.tower.cli.commands.credentials.add.AddGithubCmd": {
       "name": "github",
       "description": "Add Github credentials",
-      "full_command": "tw organizations add github",
+      "full_command": "tw credentials add github",
       "parent": "add",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/add/AddGithubCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/add/AddGithubCmd.java",
       "options": [],
       "parameters": [],
       "mixins": [
@@ -6925,10 +6925,10 @@
     "io.seqera.tower.cli.commands.credentials.add.AddBitbucketCmd": {
       "name": "bitbucket",
       "description": "Add Bitbucket credentials",
-      "full_command": "tw organizations add bitbucket",
+      "full_command": "tw credentials add bitbucket",
       "parent": "add",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/add/AddBitbucketCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/add/AddBitbucketCmd.java",
       "options": [],
       "parameters": [],
       "mixins": [
@@ -6941,10 +6941,10 @@
     "io.seqera.tower.cli.commands.credentials.add.AddContainerRegistryCmd": {
       "name": "container-reg",
       "description": "Add Container Registry credentials",
-      "full_command": "tw organizations add container-reg",
+      "full_command": "tw credentials add container-reg",
       "parent": "add",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/add/AddContainerRegistryCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/add/AddContainerRegistryCmd.java",
       "options": [],
       "parameters": [],
       "mixins": [
@@ -6957,10 +6957,10 @@
     "io.seqera.tower.cli.commands.credentials.add.AddAwsCmd": {
       "name": "aws",
       "description": "Add AWS credentials",
-      "full_command": "tw organizations add aws",
+      "full_command": "tw credentials add aws",
       "parent": "add",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/add/AddAwsCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/add/AddAwsCmd.java",
       "options": [],
       "parameters": [],
       "mixins": [
@@ -6973,10 +6973,10 @@
     "io.seqera.tower.cli.commands.credentials.add.AddCodeCommitCmd": {
       "name": "codecommit",
       "description": "Add CodeCommit credentials",
-      "full_command": "tw organizations add codecommit",
+      "full_command": "tw credentials add codecommit",
       "parent": "add",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/add/AddCodeCommitCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/add/AddCodeCommitCmd.java",
       "options": [],
       "parameters": [],
       "mixins": [
@@ -6989,10 +6989,10 @@
     "io.seqera.tower.cli.commands.runs.metrics.MetricsCmd": {
       "name": "metrics",
       "description": "Display pipeline run metrics",
-      "full_command": "tw organizations view metrics",
+      "full_command": "tw runs view metrics",
       "parent": "view",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/runs/metrics/MetricsCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/runs/metrics/MetricsCmd.java",
       "options": [
         {
           "names": [
@@ -7049,10 +7049,10 @@
     "io.seqera.tower.cli.commands.runs.tasks.TasksCmd": {
       "name": "tasks",
       "description": "Display pipeline run tasks",
-      "full_command": "tw organizations view tasks",
+      "full_command": "tw runs view tasks",
       "parent": "view",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/runs/tasks/TasksCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/runs/tasks/TasksCmd.java",
       "options": [
         {
           "names": [
@@ -7123,10 +7123,10 @@
     "io.seqera.tower.cli.commands.runs.tasks.TaskCmd": {
       "name": "task",
       "description": "Display pipeline run task details",
-      "full_command": "tw organizations view task",
+      "full_command": "tw runs view task",
       "parent": "view",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/runs/tasks/TaskCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/runs/tasks/TaskCmd.java",
       "options": [
         {
           "names": [
@@ -7179,10 +7179,10 @@
     "io.seqera.tower.cli.commands.runs.download.DownloadCmd": {
       "name": "download",
       "description": "Download pipeline run files",
-      "full_command": "tw organizations view download",
+      "full_command": "tw runs view download",
       "parent": "view",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/runs/download/DownloadCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/runs/download/DownloadCmd.java",
       "options": [
         {
           "names": [
@@ -7216,7 +7216,7 @@
       "full_command": "tw data-links upload",
       "parent": "data-links",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/data/links/UploadCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/data/links/UploadCmd.java",
       "options": [
         {
           "names": [
@@ -7316,7 +7316,7 @@
       "full_command": "tw data-links add",
       "parent": "data-links",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/data/links/AddCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/data/links/AddCmd.java",
       "options": [
         {
           "names": [
@@ -7405,7 +7405,7 @@
       "full_command": "tw data-links download",
       "parent": "data-links",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/data/links/DownloadCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/data/links/DownloadCmd.java",
       "options": [
         {
           "names": [
@@ -7505,7 +7505,7 @@
       "full_command": "tw data-links delete",
       "parent": "data-links",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/data/links/DeleteCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/data/links/DeleteCmd.java",
       "options": [
         {
           "names": [
@@ -7573,7 +7573,7 @@
       "full_command": "tw data-links list",
       "parent": "data-links",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/data/links/ListCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/data/links/ListCmd.java",
       "options": [
         {
           "names": [
@@ -7677,7 +7677,7 @@
       "full_command": "tw data-links update",
       "parent": "data-links",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/data/links/UpdateCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/data/links/UpdateCmd.java",
       "options": [
         {
           "names": [
@@ -7754,7 +7754,7 @@
       "full_command": "tw data-links browse",
       "parent": "data-links",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/data/links/BrowseCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/data/links/BrowseCmd.java",
       "options": [
         {
           "names": [
@@ -7878,10 +7878,10 @@
     "io.seqera.tower.cli.commands.teams.members.AddCmd": {
       "name": "add",
       "description": "Add a team member",
-      "full_command": "tw members add",
+      "full_command": "tw teams members add",
       "parent": "members",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/teams/members/AddCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/teams/members/AddCmd.java",
       "options": [
         {
           "names": [
@@ -7902,10 +7902,10 @@
     "io.seqera.tower.cli.commands.teams.members.DeleteCmd": {
       "name": "delete",
       "description": "Remove a team member",
-      "full_command": "tw members delete",
+      "full_command": "tw teams members delete",
       "parent": "members",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/teams/members/DeleteCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/teams/members/DeleteCmd.java",
       "options": [
         {
           "names": [
@@ -7926,10 +7926,10 @@
     "io.seqera.tower.cli.commands.actions.add.AddTowerCmd": {
       "name": "tower",
       "description": "Add a pipeline action triggered by Seqera Platform events",
-      "full_command": "tw organizations add tower",
+      "full_command": "tw actions add tower",
       "parent": "add",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/actions/add/AddTowerCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/actions/add/AddTowerCmd.java",
       "options": [],
       "parameters": [],
       "mixins": []
@@ -7937,10 +7937,10 @@
     "io.seqera.tower.cli.commands.actions.add.AddGitHubCmd": {
       "name": "github",
       "description": "Add a pipeline action triggered by GitHub events",
-      "full_command": "tw organizations add github",
+      "full_command": "tw actions add github",
       "parent": "add",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/actions/add/AddGitHubCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/actions/add/AddGitHubCmd.java",
       "options": [],
       "parameters": [],
       "mixins": []
@@ -7948,10 +7948,10 @@
     "io.seqera.tower.cli.commands.computeenvs.add.AddMoabCmd": {
       "name": "moab",
       "description": "Add new MOAB compute environment.",
-      "full_command": "tw organizations add moab",
+      "full_command": "tw compute-envs add moab",
       "parent": "add",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddMoabCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddMoabCmd.java",
       "options": [],
       "parameters": [],
       "mixins": [
@@ -7964,10 +7964,10 @@
     "io.seqera.tower.cli.commands.computeenvs.add.AddK8sCmd": {
       "name": "k8s",
       "description": "Add new Kubernetes compute environment.",
-      "full_command": "tw organizations add k8s",
+      "full_command": "tw compute-envs add k8s",
       "parent": "add",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddK8sCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddK8sCmd.java",
       "options": [],
       "parameters": [],
       "mixins": [
@@ -7980,10 +7980,10 @@
     "io.seqera.tower.cli.commands.computeenvs.add.AddGoogleBatchCmd": {
       "name": "google-batch",
       "description": "Add new Google Batch compute environment.",
-      "full_command": "tw organizations add google-batch",
+      "full_command": "tw compute-envs add google-batch",
       "parent": "add",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddGoogleBatchCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddGoogleBatchCmd.java",
       "options": [],
       "parameters": [],
       "mixins": [
@@ -7996,10 +7996,10 @@
     "io.seqera.tower.cli.commands.computeenvs.add.AddUgeCmd": {
       "name": "uge",
       "description": "Add new UNIVA grid engine compute environment.",
-      "full_command": "tw organizations add uge",
+      "full_command": "tw compute-envs add uge",
       "parent": "add",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddUgeCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddUgeCmd.java",
       "options": [],
       "parameters": [],
       "mixins": [
@@ -8012,10 +8012,10 @@
     "io.seqera.tower.cli.commands.computeenvs.add.AddGkeCmd": {
       "name": "gke",
       "description": "Add new Google GKE compute environment.",
-      "full_command": "tw organizations add gke",
+      "full_command": "tw compute-envs add gke",
       "parent": "add",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddGkeCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddGkeCmd.java",
       "options": [],
       "parameters": [],
       "mixins": [
@@ -8028,13 +8028,13 @@
     "io.seqera.tower.cli.commands.computeenvs.add.AddAzureCmd": {
       "name": "azure-batch",
       "description": "Add new Azure Batch compute environments.",
-      "full_command": "tw organizations add azure-batch",
+      "full_command": "tw compute-envs add azure-batch",
       "parent": "add",
       "subcommands": [
         "AddAzureForgeCmd",
         "AddAzureManualCmd"
       ],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddAzureCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddAzureCmd.java",
       "options": [],
       "parameters": [],
       "mixins": []
@@ -8042,10 +8042,10 @@
     "io.seqera.tower.cli.commands.computeenvs.add.AddSeqeraComputeCmd": {
       "name": "seqera-compute",
       "description": "Add new Seqera Compute environment.",
-      "full_command": "tw organizations add seqera-compute",
+      "full_command": "tw compute-envs add seqera-compute",
       "parent": "add",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddSeqeraComputeCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddSeqeraComputeCmd.java",
       "options": [],
       "parameters": [],
       "mixins": [
@@ -8058,10 +8058,10 @@
     "io.seqera.tower.cli.commands.computeenvs.add.AddLsfCmd": {
       "name": "lsf",
       "description": "Add new IBM LSF compute environment.",
-      "full_command": "tw organizations add lsf",
+      "full_command": "tw compute-envs add lsf",
       "parent": "add",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddLsfCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddLsfCmd.java",
       "options": [],
       "parameters": [],
       "mixins": [
@@ -8074,10 +8074,10 @@
     "io.seqera.tower.cli.commands.computeenvs.add.AddAltairCmd": {
       "name": "altair",
       "description": "Add new Altair PBS Pro compute environment.",
-      "full_command": "tw organizations add altair",
+      "full_command": "tw compute-envs add altair",
       "parent": "add",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddAltairCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddAltairCmd.java",
       "options": [],
       "parameters": [],
       "mixins": [
@@ -8090,10 +8090,10 @@
     "io.seqera.tower.cli.commands.computeenvs.add.AddEksCmd": {
       "name": "eks",
       "description": "Add new Amazon EKS compute environment.",
-      "full_command": "tw organizations add eks",
+      "full_command": "tw compute-envs add eks",
       "parent": "add",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddEksCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddEksCmd.java",
       "options": [],
       "parameters": [],
       "mixins": [
@@ -8106,13 +8106,13 @@
     "io.seqera.tower.cli.commands.computeenvs.add.AddAwsCmd": {
       "name": "aws-batch",
       "description": "Add new AWS Batch compute environment.",
-      "full_command": "tw organizations add aws-batch",
+      "full_command": "tw compute-envs add aws-batch",
       "parent": "add",
       "subcommands": [
         "AddAwsForgeCmd",
         "AddAwsManualCmd"
       ],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddAwsCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddAwsCmd.java",
       "options": [],
       "parameters": [],
       "mixins": []
@@ -8120,10 +8120,10 @@
     "io.seqera.tower.cli.commands.computeenvs.add.AddSlurmCmd": {
       "name": "slurm",
       "description": "Add new Slurm compute environment.",
-      "full_command": "tw organizations add slurm",
+      "full_command": "tw compute-envs add slurm",
       "parent": "add",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddSlurmCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddSlurmCmd.java",
       "options": [],
       "parameters": [],
       "mixins": [
@@ -8136,10 +8136,10 @@
     "io.seqera.tower.cli.commands.computeenvs.add.AddGoogleLifeSciencesCmd": {
       "name": "google-ls",
       "description": "Add new Google life sciences compute environment.",
-      "full_command": "tw organizations add google-ls",
+      "full_command": "tw compute-envs add google-ls",
       "parent": "add",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddGoogleLifeSciencesCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddGoogleLifeSciencesCmd.java",
       "options": [],
       "parameters": [],
       "mixins": [
@@ -8155,7 +8155,7 @@
       "full_command": "tw compute-envs primary get",
       "parent": "primary",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/primary/GetCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/primary/GetCmd.java",
       "options": [],
       "parameters": [],
       "mixins": []
@@ -8166,7 +8166,7 @@
       "full_command": "tw compute-envs primary set",
       "parent": "primary",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/primary/SetCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/primary/SetCmd.java",
       "options": [
         {
           "names": [
@@ -8204,10 +8204,10 @@
     "io.seqera.tower.cli.commands.computeenvs.add.azure.AddAzureManualCmd": {
       "name": "manual",
       "description": "Add new Azure Batch compute environment using an existing environment.",
-      "full_command": "tw organizations add azure-batch manual",
+      "full_command": "tw compute-envs add azure-batch manual",
       "parent": "azure-batch",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/add/azure/AddAzureManualCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/add/azure/AddAzureManualCmd.java",
       "options": [],
       "parameters": [],
       "mixins": [
@@ -8220,10 +8220,10 @@
     "io.seqera.tower.cli.commands.computeenvs.add.azure.AddAzureForgeCmd": {
       "name": "forge",
       "description": "Add new Azure Batch compute environment with automatic provisioning of compute resources.",
-      "full_command": "tw organizations add azure-batch forge",
+      "full_command": "tw compute-envs add azure-batch forge",
       "parent": "azure-batch",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/add/azure/AddAzureForgeCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/add/azure/AddAzureForgeCmd.java",
       "options": [],
       "parameters": [],
       "mixins": [
@@ -8236,10 +8236,10 @@
     "io.seqera.tower.cli.commands.computeenvs.add.aws.AddAwsForgeCmd": {
       "name": "forge",
       "description": "Add new AWS Batch compute environment with automatic provisioning of compute resources.",
-      "full_command": "tw organizations add aws-batch forge",
+      "full_command": "tw compute-envs add aws-batch forge",
       "parent": "aws-batch",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/add/aws/AddAwsForgeCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/add/aws/AddAwsForgeCmd.java",
       "options": [],
       "parameters": [],
       "mixins": [
@@ -8252,10 +8252,10 @@
     "io.seqera.tower.cli.commands.computeenvs.add.aws.AddAwsManualCmd": {
       "name": "manual",
       "description": "Add new AWS Batch compute environment using an existing environment.",
-      "full_command": "tw organizations add aws-batch manual",
+      "full_command": "tw compute-envs add aws-batch manual",
       "parent": "aws-batch",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/add/aws/AddAwsManualCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/add/aws/AddAwsManualCmd.java",
       "options": [],
       "parameters": [],
       "mixins": [
@@ -8268,10 +8268,10 @@
     "io.seqera.tower.cli.commands.datasets.versions.VersionsCmd": {
       "name": "versions",
       "description": "Display dataset versions.",
-      "full_command": "tw organizations view versions",
+      "full_command": "tw datasets view versions",
       "parent": "view",
       "subcommands": [],
-      "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/datasets/versions/VersionsCmd.java",
+      "source_file": "../src/main/java/io/seqera/tower/cli/commands/datasets/versions/VersionsCmd.java",
       "options": [],
       "parameters": [],
       "mixins": []
@@ -8279,7 +8279,7 @@
   },
   "hierarchy": {
     "name": "tw",
-    "description": "Nextflow Tower CLI.",
+    "description": "Seqera Platform CLI",
     "full_command": "tw",
     "parent": null,
     "subcommands": [
@@ -8303,14 +8303,14 @@
       "WorkspacesCmd",
       "SecretsCmd"
     ],
-    "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/Tower.java",
+    "source_file": "../src/main/java/io/seqera/tower/cli/Tower.java",
     "options": [
       {
         "names": [
           "-t",
           "--access-token"
         ],
-        "description": "Tower personal access token (TOWER_ACCESS_TOKEN).",
+        "description": "Seqera Platform personal access token (TOWER_ACCESS_TOKEN)",
         "required": false,
         "default_value": "${TOWER_ACCESS_TOKEN}",
         "arity": null,
@@ -8322,7 +8322,7 @@
           "-u",
           "--url"
         ],
-        "description": "Tower server API endpoint URL (TOWER_API_ENDPOINT) [default: 'api.cloud.seqera.io'].",
+        "description": "Seqera Platform API endpoint URL (TOWER_API_ENDPOINT) [default: 'api.cloud.seqera.io']",
         "required": false,
         "default_value": "${TOWER_API_ENDPOINT:-https://api.cloud.seqera.io}",
         "arity": null,
@@ -8334,7 +8334,7 @@
           "-o",
           "--output"
         ],
-        "description": "Show output in defined format (only the 'json' option is available at the moment).",
+        "description": "Show output in defined format (currently supports 'json')",
         "required": false,
         "default_value": "${TOWER_CLI_OUTPUT_FORMAT:-console}",
         "arity": null,
@@ -8357,7 +8357,7 @@
         "names": [
           "--insecure"
         ],
-        "description": "Explicitly allow to connect to a non-SSL secured Tower server (this is not recommended).",
+        "description": "Explicitly allow to connect to a non-SSL secured Seqera Platform server (not recommended)",
         "required": false,
         "default_value": null,
         "arity": null,
@@ -8381,7 +8381,7 @@
           "UpdateCmd",
           "LabelsCmd"
         ],
-        "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/ActionsCmd.java",
+        "source_file": "../src/main/java/io/seqera/tower/cli/commands/ActionsCmd.java",
         "options": [],
         "parameters": [],
         "mixins": [],
@@ -8392,7 +8392,7 @@
             "full_command": "tw actions list",
             "parent": "actions",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/actions/ListCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/actions/ListCmd.java",
             "options": [
               {
                 "names": [
@@ -8426,7 +8426,7 @@
             "full_command": "tw actions view",
             "parent": "actions",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/actions/ViewCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/actions/ViewCmd.java",
             "options": [
               {
                 "names": [
@@ -8484,7 +8484,7 @@
             "full_command": "tw actions delete",
             "parent": "actions",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/actions/DeleteCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/actions/DeleteCmd.java",
             "options": [
               {
                 "names": [
@@ -8545,7 +8545,7 @@
               "AddGitHubCmd",
               "AddTowerCmd"
             ],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/actions/AddCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/actions/AddCmd.java",
             "options": [],
             "parameters": [],
             "mixins": [],
@@ -8553,10 +8553,10 @@
               {
                 "name": "github",
                 "description": "Add a pipeline action triggered by GitHub events",
-                "full_command": "tw organizations add github",
+                "full_command": "tw actions add github",
                 "parent": "add",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/actions/add/AddGitHubCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/actions/add/AddGitHubCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [],
@@ -8565,10 +8565,10 @@
               {
                 "name": "tower",
                 "description": "Add a pipeline action triggered by Seqera Platform events",
-                "full_command": "tw organizations add tower",
+                "full_command": "tw actions add tower",
                 "parent": "add",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/actions/add/AddTowerCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/actions/add/AddTowerCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [],
@@ -8582,7 +8582,7 @@
             "full_command": "tw actions update",
             "parent": "actions",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/actions/UpdateCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/actions/UpdateCmd.java",
             "options": [
               {
                 "names": [
@@ -8834,7 +8834,7 @@
             "full_command": "tw actions labels",
             "parent": "actions",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/actions/LabelsCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/actions/LabelsCmd.java",
             "options": [
               {
                 "names": [
@@ -8907,7 +8907,7 @@
         "subcommands": [
           "ListCmd"
         ],
-        "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/CollaboratorsCmd.java",
+        "source_file": "../src/main/java/io/seqera/tower/cli/commands/CollaboratorsCmd.java",
         "options": [],
         "parameters": [],
         "mixins": [],
@@ -8918,7 +8918,7 @@
             "full_command": "tw collaborators list",
             "parent": "collaborators",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/collaborators/ListCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/collaborators/ListCmd.java",
             "options": [
               {
                 "names": [
@@ -9004,7 +9004,7 @@
           "ImportCmd",
           "PrimaryCmd"
         ],
-        "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/ComputeEnvsCmd.java",
+        "source_file": "../src/main/java/io/seqera/tower/cli/commands/ComputeEnvsCmd.java",
         "options": [],
         "parameters": [],
         "mixins": [],
@@ -9029,7 +9029,7 @@
               "AddAzureCmd",
               "AddSeqeraComputeCmd"
             ],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/AddCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/AddCmd.java",
             "options": [],
             "parameters": [],
             "mixins": [],
@@ -9037,10 +9037,10 @@
               {
                 "name": "k8s",
                 "description": "Add new Kubernetes compute environment.",
-                "full_command": "tw organizations add k8s",
+                "full_command": "tw compute-envs add k8s",
                 "parent": "add",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddK8sCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddK8sCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [
@@ -9054,13 +9054,13 @@
               {
                 "name": "aws-batch",
                 "description": "Add new AWS Batch compute environment.",
-                "full_command": "tw organizations add aws-batch",
+                "full_command": "tw compute-envs add aws-batch",
                 "parent": "add",
                 "subcommands": [
                   "AddAwsForgeCmd",
                   "AddAwsManualCmd"
                 ],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddAwsCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddAwsCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [],
@@ -9068,10 +9068,10 @@
                   {
                     "name": "forge",
                     "description": "Add new AWS Batch compute environment with automatic provisioning of compute resources.",
-                    "full_command": "tw organizations add aws-batch forge",
+                    "full_command": "tw compute-envs add aws-batch forge",
                     "parent": "aws-batch",
                     "subcommands": [],
-                    "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/add/aws/AddAwsForgeCmd.java",
+                    "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/add/aws/AddAwsForgeCmd.java",
                     "options": [],
                     "parameters": [],
                     "mixins": [
@@ -9085,10 +9085,10 @@
                   {
                     "name": "manual",
                     "description": "Add new AWS Batch compute environment using an existing environment.",
-                    "full_command": "tw organizations add aws-batch manual",
+                    "full_command": "tw compute-envs add aws-batch manual",
                     "parent": "aws-batch",
                     "subcommands": [],
-                    "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/add/aws/AddAwsManualCmd.java",
+                    "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/add/aws/AddAwsManualCmd.java",
                     "options": [],
                     "parameters": [],
                     "mixins": [
@@ -9104,10 +9104,10 @@
               {
                 "name": "eks",
                 "description": "Add new Amazon EKS compute environment.",
-                "full_command": "tw organizations add eks",
+                "full_command": "tw compute-envs add eks",
                 "parent": "add",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddEksCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddEksCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [
@@ -9121,10 +9121,10 @@
               {
                 "name": "slurm",
                 "description": "Add new Slurm compute environment.",
-                "full_command": "tw organizations add slurm",
+                "full_command": "tw compute-envs add slurm",
                 "parent": "add",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddSlurmCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddSlurmCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [
@@ -9138,10 +9138,10 @@
               {
                 "name": "lsf",
                 "description": "Add new IBM LSF compute environment.",
-                "full_command": "tw organizations add lsf",
+                "full_command": "tw compute-envs add lsf",
                 "parent": "add",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddLsfCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddLsfCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [
@@ -9155,10 +9155,10 @@
               {
                 "name": "uge",
                 "description": "Add new UNIVA grid engine compute environment.",
-                "full_command": "tw organizations add uge",
+                "full_command": "tw compute-envs add uge",
                 "parent": "add",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddUgeCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddUgeCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [
@@ -9172,10 +9172,10 @@
               {
                 "name": "altair",
                 "description": "Add new Altair PBS Pro compute environment.",
-                "full_command": "tw organizations add altair",
+                "full_command": "tw compute-envs add altair",
                 "parent": "add",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddAltairCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddAltairCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [
@@ -9189,10 +9189,10 @@
               {
                 "name": "moab",
                 "description": "Add new MOAB compute environment.",
-                "full_command": "tw organizations add moab",
+                "full_command": "tw compute-envs add moab",
                 "parent": "add",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddMoabCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddMoabCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [
@@ -9206,10 +9206,10 @@
               {
                 "name": "gke",
                 "description": "Add new Google GKE compute environment.",
-                "full_command": "tw organizations add gke",
+                "full_command": "tw compute-envs add gke",
                 "parent": "add",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddGkeCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddGkeCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [
@@ -9223,10 +9223,10 @@
               {
                 "name": "google-ls",
                 "description": "Add new Google life sciences compute environment.",
-                "full_command": "tw organizations add google-ls",
+                "full_command": "tw compute-envs add google-ls",
                 "parent": "add",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddGoogleLifeSciencesCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddGoogleLifeSciencesCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [
@@ -9240,10 +9240,10 @@
               {
                 "name": "google-batch",
                 "description": "Add new Google Batch compute environment.",
-                "full_command": "tw organizations add google-batch",
+                "full_command": "tw compute-envs add google-batch",
                 "parent": "add",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddGoogleBatchCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddGoogleBatchCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [
@@ -9257,13 +9257,13 @@
               {
                 "name": "azure-batch",
                 "description": "Add new Azure Batch compute environments.",
-                "full_command": "tw organizations add azure-batch",
+                "full_command": "tw compute-envs add azure-batch",
                 "parent": "add",
                 "subcommands": [
                   "AddAzureForgeCmd",
                   "AddAzureManualCmd"
                 ],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddAzureCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddAzureCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [],
@@ -9271,10 +9271,10 @@
                   {
                     "name": "forge",
                     "description": "Add new Azure Batch compute environment with automatic provisioning of compute resources.",
-                    "full_command": "tw organizations add azure-batch forge",
+                    "full_command": "tw compute-envs add azure-batch forge",
                     "parent": "azure-batch",
                     "subcommands": [],
-                    "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/add/azure/AddAzureForgeCmd.java",
+                    "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/add/azure/AddAzureForgeCmd.java",
                     "options": [],
                     "parameters": [],
                     "mixins": [
@@ -9288,10 +9288,10 @@
                   {
                     "name": "manual",
                     "description": "Add new Azure Batch compute environment using an existing environment.",
-                    "full_command": "tw organizations add azure-batch manual",
+                    "full_command": "tw compute-envs add azure-batch manual",
                     "parent": "azure-batch",
                     "subcommands": [],
-                    "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/add/azure/AddAzureManualCmd.java",
+                    "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/add/azure/AddAzureManualCmd.java",
                     "options": [],
                     "parameters": [],
                     "mixins": [
@@ -9307,10 +9307,10 @@
               {
                 "name": "seqera-compute",
                 "description": "Add new Seqera Compute environment.",
-                "full_command": "tw organizations add seqera-compute",
+                "full_command": "tw compute-envs add seqera-compute",
                 "parent": "add",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddSeqeraComputeCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddSeqeraComputeCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [
@@ -9329,7 +9329,7 @@
             "full_command": "tw compute-envs update",
             "parent": "compute-envs",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/UpdateCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/UpdateCmd.java",
             "options": [
               {
                 "names": [
@@ -9398,7 +9398,7 @@
             "full_command": "tw compute-envs delete",
             "parent": "compute-envs",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/DeleteCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/DeleteCmd.java",
             "options": [
               {
                 "names": [
@@ -9456,7 +9456,7 @@
             "full_command": "tw compute-envs view",
             "parent": "compute-envs",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/ViewCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/ViewCmd.java",
             "options": [
               {
                 "names": [
@@ -9514,7 +9514,7 @@
             "full_command": "tw compute-envs list",
             "parent": "compute-envs",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/ListCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/ListCmd.java",
             "options": [
               {
                 "names": [
@@ -9544,7 +9544,7 @@
             "full_command": "tw compute-envs export",
             "parent": "compute-envs",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/ExportCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/ExportCmd.java",
             "options": [
               {
                 "names": [
@@ -9610,7 +9610,7 @@
             "full_command": "tw compute-envs import",
             "parent": "compute-envs",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/ImportCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/ImportCmd.java",
             "options": [
               {
                 "names": [
@@ -9645,7 +9645,7 @@
               "GetCmd",
               "SetCmd"
             ],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/PrimaryCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/PrimaryCmd.java",
             "options": [],
             "parameters": [],
             "mixins": [],
@@ -9656,7 +9656,7 @@
                 "full_command": "tw compute-envs primary get",
                 "parent": "primary",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/primary/GetCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/primary/GetCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [],
@@ -9668,7 +9668,7 @@
                 "full_command": "tw compute-envs primary set",
                 "parent": "primary",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/computeenvs/primary/SetCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/computeenvs/primary/SetCmd.java",
                 "options": [
                   {
                     "names": [
@@ -9719,7 +9719,7 @@
           "DeleteCmd",
           "ListCmd"
         ],
-        "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/CredentialsCmd.java",
+        "source_file": "../src/main/java/io/seqera/tower/cli/commands/CredentialsCmd.java",
         "options": [],
         "parameters": [],
         "mixins": [],
@@ -9743,7 +9743,7 @@
               "AddAgentCmd",
               "AddContainerRegistryCmd"
             ],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/AddCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/AddCmd.java",
             "options": [],
             "parameters": [],
             "mixins": [],
@@ -9751,10 +9751,10 @@
               {
                 "name": "aws",
                 "description": "Add AWS credentials",
-                "full_command": "tw organizations add aws",
+                "full_command": "tw credentials add aws",
                 "parent": "add",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/add/AddAwsCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/add/AddAwsCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [
@@ -9768,10 +9768,10 @@
               {
                 "name": "codecommit",
                 "description": "Add CodeCommit credentials",
-                "full_command": "tw organizations add codecommit",
+                "full_command": "tw credentials add codecommit",
                 "parent": "add",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/add/AddCodeCommitCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/add/AddCodeCommitCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [
@@ -9785,10 +9785,10 @@
               {
                 "name": "google",
                 "description": "Add Google credentials",
-                "full_command": "tw organizations add google",
+                "full_command": "tw credentials add google",
                 "parent": "add",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/add/AddGoogleCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/add/AddGoogleCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [
@@ -9802,10 +9802,10 @@
               {
                 "name": "github",
                 "description": "Add Github credentials",
-                "full_command": "tw organizations add github",
+                "full_command": "tw credentials add github",
                 "parent": "add",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/add/AddGithubCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/add/AddGithubCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [
@@ -9819,10 +9819,10 @@
               {
                 "name": "gitlab",
                 "description": "Add Gitlab credentials",
-                "full_command": "tw organizations add gitlab",
+                "full_command": "tw credentials add gitlab",
                 "parent": "add",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/add/AddGitlabCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/add/AddGitlabCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [
@@ -9836,10 +9836,10 @@
               {
                 "name": "gitea",
                 "description": "Add Gitea credentials",
-                "full_command": "tw organizations add gitea",
+                "full_command": "tw credentials add gitea",
                 "parent": "add",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/add/AddGiteaCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/add/AddGiteaCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [
@@ -9853,10 +9853,10 @@
               {
                 "name": "bitbucket",
                 "description": "Add Bitbucket credentials",
-                "full_command": "tw organizations add bitbucket",
+                "full_command": "tw credentials add bitbucket",
                 "parent": "add",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/add/AddBitbucketCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/add/AddBitbucketCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [
@@ -9870,10 +9870,10 @@
               {
                 "name": "ssh",
                 "description": "Add SSH credentials",
-                "full_command": "tw organizations add ssh",
+                "full_command": "tw credentials add ssh",
                 "parent": "add",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/add/AddSshCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/add/AddSshCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [
@@ -9887,10 +9887,10 @@
               {
                 "name": "k8s",
                 "description": "Add Kubernetes credentials",
-                "full_command": "tw organizations add k8s",
+                "full_command": "tw credentials add k8s",
                 "parent": "add",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/add/AddK8sCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/add/AddK8sCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [
@@ -9904,10 +9904,10 @@
               {
                 "name": "azure",
                 "description": "Add Azure credentials",
-                "full_command": "tw organizations add azure",
+                "full_command": "tw credentials add azure",
                 "parent": "add",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/add/AddAzureCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/add/AddAzureCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [
@@ -9921,10 +9921,10 @@
               {
                 "name": "agent",
                 "description": "Add Tower Agent credentials",
-                "full_command": "tw organizations add agent",
+                "full_command": "tw credentials add agent",
                 "parent": "add",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/add/AddAgentCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/add/AddAgentCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [
@@ -9938,10 +9938,10 @@
               {
                 "name": "container-reg",
                 "description": "Add Container Registry credentials",
-                "full_command": "tw organizations add container-reg",
+                "full_command": "tw credentials add container-reg",
                 "parent": "add",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/add/AddContainerRegistryCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/add/AddContainerRegistryCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [
@@ -9972,7 +9972,7 @@
               "UpdateContainerRegistryCmd",
               "UpdateAgentCmd"
             ],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/UpdateCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/UpdateCmd.java",
             "options": [],
             "parameters": [],
             "mixins": [],
@@ -9980,10 +9980,10 @@
               {
                 "name": "aws",
                 "description": "Update AWS credentials",
-                "full_command": "tw organizations update aws",
+                "full_command": "tw credentials update aws",
                 "parent": "update",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateAwsCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateAwsCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [
@@ -9997,10 +9997,10 @@
               {
                 "name": "codecommit",
                 "description": "Update CodeCommit credentials",
-                "full_command": "tw organizations update codecommit",
+                "full_command": "tw credentials update codecommit",
                 "parent": "update",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateCodeCommitCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateCodeCommitCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [
@@ -10014,10 +10014,10 @@
               {
                 "name": "google",
                 "description": "Update Google credentials",
-                "full_command": "tw organizations update google",
+                "full_command": "tw credentials update google",
                 "parent": "update",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateGoogleCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateGoogleCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [
@@ -10031,10 +10031,10 @@
               {
                 "name": "github",
                 "description": "Update Github credentials",
-                "full_command": "tw organizations update github",
+                "full_command": "tw credentials update github",
                 "parent": "update",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateGithubCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateGithubCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [
@@ -10048,10 +10048,10 @@
               {
                 "name": "gitlab",
                 "description": "Update Gitlab credentials",
-                "full_command": "tw organizations update gitlab",
+                "full_command": "tw credentials update gitlab",
                 "parent": "update",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateGitlabCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateGitlabCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [
@@ -10065,10 +10065,10 @@
               {
                 "name": "bitbucket",
                 "description": "Update Bitbucket credentials",
-                "full_command": "tw organizations update bitbucket",
+                "full_command": "tw credentials update bitbucket",
                 "parent": "update",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateBitbucketCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateBitbucketCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [
@@ -10082,10 +10082,10 @@
               {
                 "name": "ssh",
                 "description": "Update SSH credentials",
-                "full_command": "tw organizations update ssh",
+                "full_command": "tw credentials update ssh",
                 "parent": "update",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateSshCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateSshCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [
@@ -10099,10 +10099,10 @@
               {
                 "name": "k8s",
                 "description": "Update Kubernetes credentials",
-                "full_command": "tw organizations update k8s",
+                "full_command": "tw credentials update k8s",
                 "parent": "update",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateK8sCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateK8sCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [
@@ -10116,10 +10116,10 @@
               {
                 "name": "azure",
                 "description": "Update Azure credentials",
-                "full_command": "tw organizations update azure",
+                "full_command": "tw credentials update azure",
                 "parent": "update",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateAzureCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateAzureCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [
@@ -10133,10 +10133,10 @@
               {
                 "name": "container-reg",
                 "description": "Update Container Registry credentials",
-                "full_command": "tw organizations update container-reg",
+                "full_command": "tw credentials update container-reg",
                 "parent": "update",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateContainerRegistryCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateContainerRegistryCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [
@@ -10150,10 +10150,10 @@
               {
                 "name": "agent",
                 "description": "Update new Tower Agent credentials",
-                "full_command": "tw organizations update agent",
+                "full_command": "tw credentials update agent",
                 "parent": "update",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateAgentCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/update/UpdateAgentCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [
@@ -10172,7 +10172,7 @@
             "full_command": "tw credentials delete",
             "parent": "credentials",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/DeleteCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/DeleteCmd.java",
             "options": [
               {
                 "names": [
@@ -10230,7 +10230,7 @@
             "full_command": "tw credentials list",
             "parent": "credentials",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/credentials/ListCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/credentials/ListCmd.java",
             "options": [
               {
                 "names": [
@@ -10270,7 +10270,7 @@
           "DownloadCmd",
           "UploadCmd"
         ],
-        "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/DataLinksCmd.java",
+        "source_file": "../src/main/java/io/seqera/tower/cli/commands/DataLinksCmd.java",
         "options": [],
         "parameters": [],
         "mixins": [],
@@ -10281,7 +10281,7 @@
             "full_command": "tw data-links list",
             "parent": "data-links",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/data/links/ListCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/data/links/ListCmd.java",
             "options": [
               {
                 "names": [
@@ -10386,7 +10386,7 @@
             "full_command": "tw data-links add",
             "parent": "data-links",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/data/links/AddCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/data/links/AddCmd.java",
             "options": [
               {
                 "names": [
@@ -10476,7 +10476,7 @@
             "full_command": "tw data-links delete",
             "parent": "data-links",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/data/links/DeleteCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/data/links/DeleteCmd.java",
             "options": [
               {
                 "names": [
@@ -10545,7 +10545,7 @@
             "full_command": "tw data-links update",
             "parent": "data-links",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/data/links/UpdateCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/data/links/UpdateCmd.java",
             "options": [
               {
                 "names": [
@@ -10623,7 +10623,7 @@
             "full_command": "tw data-links browse",
             "parent": "data-links",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/data/links/BrowseCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/data/links/BrowseCmd.java",
             "options": [
               {
                 "names": [
@@ -10751,7 +10751,7 @@
             "full_command": "tw data-links download",
             "parent": "data-links",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/data/links/DownloadCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/data/links/DownloadCmd.java",
             "options": [
               {
                 "names": [
@@ -10852,7 +10852,7 @@
             "full_command": "tw data-links upload",
             "parent": "data-links",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/data/links/UploadCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/data/links/UploadCmd.java",
             "options": [
               {
                 "names": [
@@ -10965,7 +10965,7 @@
           "StopCmd",
           "DeleteCmd"
         ],
-        "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/StudiosCmd.java",
+        "source_file": "../src/main/java/io/seqera/tower/cli/commands/StudiosCmd.java",
         "options": [],
         "parameters": [],
         "mixins": [],
@@ -10976,7 +10976,7 @@
             "full_command": "tw studios view",
             "parent": "studios",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/studios/ViewCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/studios/ViewCmd.java",
             "options": [
               {
                 "names": [
@@ -11034,7 +11034,7 @@
             "full_command": "tw studios list",
             "parent": "studios",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/studios/ListCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/studios/ListCmd.java",
             "options": [
               {
                 "names": [
@@ -11117,7 +11117,7 @@
             "full_command": "tw studios start",
             "parent": "studios",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/studios/StartCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/studios/StartCmd.java",
             "options": [
               {
                 "names": [
@@ -11256,7 +11256,7 @@
             "full_command": "tw studios add",
             "parent": "studios",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/studios/AddCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/studios/AddCmd.java",
             "options": [
               {
                 "names": [
@@ -11455,7 +11455,7 @@
             "full_command": "tw studios templates",
             "parent": "studios",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/studios/TemplatesCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/studios/TemplatesCmd.java",
             "options": [
               {
                 "names": [
@@ -11496,7 +11496,7 @@
             "full_command": "tw studios checkpoints",
             "parent": "studios",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/studios/CheckpointsCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/studios/CheckpointsCmd.java",
             "options": [
               {
                 "names": [
@@ -11603,7 +11603,7 @@
             "full_command": "tw studios add-as-new",
             "parent": "studios",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/studios/AddAsNewCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/studios/AddAsNewCmd.java",
             "options": [
               {
                 "names": [
@@ -11789,7 +11789,7 @@
             "full_command": "tw studios stop",
             "parent": "studios",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/studios/StopCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/studios/StopCmd.java",
             "options": [
               {
                 "names": [
@@ -11858,7 +11858,7 @@
             "full_command": "tw studios delete",
             "parent": "studios",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/studios/DeleteCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/studios/DeleteCmd.java",
             "options": [
               {
                 "names": [
@@ -11926,7 +11926,7 @@
           "UpdateCmd",
           "UrlCmd"
         ],
-        "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/DatasetsCmd.java",
+        "source_file": "../src/main/java/io/seqera/tower/cli/commands/DatasetsCmd.java",
         "options": [],
         "parameters": [],
         "mixins": [],
@@ -11937,7 +11937,7 @@
             "full_command": "tw datasets add",
             "parent": "datasets",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/datasets/AddCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/datasets/AddCmd.java",
             "options": [
               {
                 "names": [
@@ -12021,7 +12021,7 @@
             "full_command": "tw datasets delete",
             "parent": "datasets",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/datasets/DeleteCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/datasets/DeleteCmd.java",
             "options": [
               {
                 "names": [
@@ -12079,7 +12079,7 @@
             "full_command": "tw datasets download",
             "parent": "datasets",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/datasets/DownloadCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/datasets/DownloadCmd.java",
             "options": [
               {
                 "names": [
@@ -12148,7 +12148,7 @@
             "full_command": "tw datasets list",
             "parent": "datasets",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/datasets/ListCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/datasets/ListCmd.java",
             "options": [
               {
                 "names": [
@@ -12192,7 +12192,7 @@
             "subcommands": [
               "VersionsCmd"
             ],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/datasets/ViewCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/datasets/ViewCmd.java",
             "options": [
               {
                 "names": [
@@ -12246,10 +12246,10 @@
               {
                 "name": "versions",
                 "description": "Display dataset versions.",
-                "full_command": "tw organizations view versions",
+                "full_command": "tw datasets view versions",
                 "parent": "view",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/datasets/versions/VersionsCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/datasets/versions/VersionsCmd.java",
                 "options": [],
                 "parameters": [],
                 "mixins": [],
@@ -12263,7 +12263,7 @@
             "full_command": "tw datasets update",
             "parent": "datasets",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/datasets/UpdateCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/datasets/UpdateCmd.java",
             "options": [
               {
                 "names": [
@@ -12367,7 +12367,7 @@
             "full_command": "tw datasets url",
             "parent": "datasets",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/datasets/UrlCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/datasets/UrlCmd.java",
             "options": [
               {
                 "names": [
@@ -12438,7 +12438,7 @@
         "full_command": "tw info",
         "parent": "tw",
         "subcommands": [],
-        "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/InfoCmd.java",
+        "source_file": "../src/main/java/io/seqera/tower/cli/commands/InfoCmd.java",
         "options": [],
         "parameters": [],
         "mixins": [],
@@ -12455,7 +12455,7 @@
           "UpdateLabelsCmd",
           "DeleteLabelsCmd"
         ],
-        "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/labels/LabelsCmd.java",
+        "source_file": "../src/main/java/io/seqera/tower/cli/commands/labels/LabelsCmd.java",
         "options": [],
         "parameters": [],
         "mixins": [],
@@ -12466,7 +12466,7 @@
             "full_command": "tw labels add",
             "parent": "labels",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/labels/AddLabelsCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/labels/AddLabelsCmd.java",
             "options": [
               {
                 "names": [
@@ -12520,7 +12520,7 @@
             "full_command": "tw labels list",
             "parent": "labels",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/labels/ListLabelsCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/labels/ListLabelsCmd.java",
             "options": [
               {
                 "names": [
@@ -12611,7 +12611,7 @@
             "full_command": "tw labels update",
             "parent": "labels",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/labels/UpdateLabelsCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/labels/UpdateLabelsCmd.java",
             "options": [
               {
                 "names": [
@@ -12677,7 +12677,7 @@
             "full_command": "tw labels delete",
             "parent": "labels",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/labels/DeleteLabelsCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/labels/DeleteLabelsCmd.java",
             "options": [
               {
                 "names": [
@@ -12721,7 +12721,7 @@
         "full_command": "tw launch",
         "parent": "tw",
         "subcommands": [],
-        "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/LaunchCmd.java",
+        "source_file": "../src/main/java/io/seqera/tower/cli/commands/LaunchCmd.java",
         "options": [
           {
             "names": [
@@ -13012,7 +13012,7 @@
           "UpdateCmd",
           "LeaveCmd"
         ],
-        "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/MembersCmd.java",
+        "source_file": "../src/main/java/io/seqera/tower/cli/commands/MembersCmd.java",
         "options": [],
         "parameters": [],
         "mixins": [],
@@ -13023,7 +13023,7 @@
             "full_command": "tw members list",
             "parent": "members",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/members/ListCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/members/ListCmd.java",
             "options": [
               {
                 "names": [
@@ -13098,7 +13098,7 @@
             "full_command": "tw members add",
             "parent": "members",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/members/AddCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/members/AddCmd.java",
             "options": [
               {
                 "names": [
@@ -13135,7 +13135,7 @@
             "full_command": "tw members delete",
             "parent": "members",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/members/DeleteCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/members/DeleteCmd.java",
             "options": [
               {
                 "names": [
@@ -13172,7 +13172,7 @@
             "full_command": "tw members update",
             "parent": "members",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/members/UpdateCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/members/UpdateCmd.java",
             "options": [
               {
                 "names": [
@@ -13221,7 +13221,7 @@
             "full_command": "tw members leave",
             "parent": "members",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/members/LeaveCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/members/LeaveCmd.java",
             "options": [
               {
                 "names": [
@@ -13254,7 +13254,7 @@
           "UpdateCmd",
           "ViewCmd"
         ],
-        "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/OrganizationsCmd.java",
+        "source_file": "../src/main/java/io/seqera/tower/cli/commands/OrganizationsCmd.java",
         "options": [],
         "parameters": [],
         "mixins": [],
@@ -13265,7 +13265,7 @@
             "full_command": "tw organizations list",
             "parent": "organizations",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/organizations/ListCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/organizations/ListCmd.java",
             "options": [],
             "parameters": [],
             "mixins": [],
@@ -13277,7 +13277,7 @@
             "full_command": "tw organizations delete",
             "parent": "organizations",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/organizations/DeleteCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/organizations/DeleteCmd.java",
             "options": [
               {
                 "names": [
@@ -13319,7 +13319,7 @@
             "full_command": "tw organizations add",
             "parent": "organizations",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/organizations/AddCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/organizations/AddCmd.java",
             "options": [
               {
                 "names": [
@@ -13408,7 +13408,7 @@
             "full_command": "tw organizations update",
             "parent": "organizations",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/organizations/UpdateCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/organizations/UpdateCmd.java",
             "options": [
               {
                 "names": [
@@ -13513,7 +13513,7 @@
             "full_command": "tw organizations view",
             "parent": "organizations",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/organizations/ViewCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/organizations/ViewCmd.java",
             "options": [
               {
                 "names": [
@@ -13563,7 +13563,7 @@
           "DeleteCmd",
           "LeaveCmd"
         ],
-        "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/ParticipantsCmd.java",
+        "source_file": "../src/main/java/io/seqera/tower/cli/commands/ParticipantsCmd.java",
         "options": [],
         "parameters": [],
         "mixins": [],
@@ -13574,7 +13574,7 @@
             "full_command": "tw participants list",
             "parent": "participants",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/participants/ListCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/participants/ListCmd.java",
             "options": [
               {
                 "names": [
@@ -13665,7 +13665,7 @@
             "full_command": "tw participants add",
             "parent": "participants",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/participants/AddCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/participants/AddCmd.java",
             "options": [
               {
                 "names": [
@@ -13730,7 +13730,7 @@
             "full_command": "tw participants update",
             "parent": "participants",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/participants/UpdateCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/participants/UpdateCmd.java",
             "options": [
               {
                 "names": [
@@ -13796,7 +13796,7 @@
             "full_command": "tw participants delete",
             "parent": "participants",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/participants/DeleteCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/participants/DeleteCmd.java",
             "options": [
               {
                 "names": [
@@ -13850,7 +13850,7 @@
             "full_command": "tw participants leave",
             "parent": "participants",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/participants/LeaveCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/participants/LeaveCmd.java",
             "options": [
               {
                 "names": [
@@ -13891,7 +13891,7 @@
           "ImportCmd",
           "LabelsCmd"
         ],
-        "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/PipelinesCmd.java",
+        "source_file": "../src/main/java/io/seqera/tower/cli/commands/PipelinesCmd.java",
         "options": [],
         "parameters": [],
         "mixins": [],
@@ -13902,7 +13902,7 @@
             "full_command": "tw pipelines list",
             "parent": "pipelines",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/pipelines/ListCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/pipelines/ListCmd.java",
             "options": [
               {
                 "names": [
@@ -13996,7 +13996,7 @@
             "full_command": "tw pipelines add",
             "parent": "pipelines",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/pipelines/AddCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/pipelines/AddCmd.java",
             "options": [
               {
                 "names": [
@@ -14244,7 +14244,7 @@
             "full_command": "tw pipelines delete",
             "parent": "pipelines",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/pipelines/DeleteCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/pipelines/DeleteCmd.java",
             "options": [
               {
                 "names": [
@@ -14302,7 +14302,7 @@
             "full_command": "tw pipelines view",
             "parent": "pipelines",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/pipelines/ViewCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/pipelines/ViewCmd.java",
             "options": [
               {
                 "names": [
@@ -14360,7 +14360,7 @@
             "full_command": "tw pipelines update",
             "parent": "pipelines",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/pipelines/UpdateCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/pipelines/UpdateCmd.java",
             "options": [
               {
                 "names": [
@@ -14623,7 +14623,7 @@
             "full_command": "tw pipelines export",
             "parent": "pipelines",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/pipelines/ExportCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/pipelines/ExportCmd.java",
             "options": [
               {
                 "names": [
@@ -14689,7 +14689,7 @@
             "full_command": "tw pipelines import",
             "parent": "pipelines",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/pipelines/ImportCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/pipelines/ImportCmd.java",
             "options": [
               {
                 "names": [
@@ -14762,7 +14762,7 @@
             "full_command": "tw pipelines labels",
             "parent": "pipelines",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/pipelines/LabelsCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/pipelines/LabelsCmd.java",
             "options": [
               {
                 "names": [
@@ -14841,7 +14841,7 @@
           "DeleteCmd",
           "DumpCmd"
         ],
-        "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/RunsCmd.java",
+        "source_file": "../src/main/java/io/seqera/tower/cli/commands/RunsCmd.java",
         "options": [],
         "parameters": [],
         "mixins": [],
@@ -14857,7 +14857,7 @@
               "TasksCmd",
               "TaskCmd"
             ],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/runs/ViewCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/runs/ViewCmd.java",
             "options": [
               {
                 "names": [
@@ -15031,10 +15031,10 @@
               {
                 "name": "download",
                 "description": "Download pipeline run files",
-                "full_command": "tw organizations view download",
+                "full_command": "tw runs view download",
                 "parent": "view",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/runs/download/DownloadCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/runs/download/DownloadCmd.java",
                 "options": [
                   {
                     "names": [
@@ -15066,10 +15066,10 @@
               {
                 "name": "metrics",
                 "description": "Display pipeline run metrics",
-                "full_command": "tw organizations view metrics",
+                "full_command": "tw runs view metrics",
                 "parent": "view",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/runs/metrics/MetricsCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/runs/metrics/MetricsCmd.java",
                 "options": [
                   {
                     "names": [
@@ -15127,10 +15127,10 @@
               {
                 "name": "tasks",
                 "description": "Display pipeline run tasks",
-                "full_command": "tw organizations view tasks",
+                "full_command": "tw runs view tasks",
                 "parent": "view",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/runs/tasks/TasksCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/runs/tasks/TasksCmd.java",
                 "options": [
                   {
                     "names": [
@@ -15202,10 +15202,10 @@
               {
                 "name": "task",
                 "description": "Display pipeline run task details",
-                "full_command": "tw organizations view task",
+                "full_command": "tw runs view task",
                 "parent": "view",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/runs/tasks/TaskCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/runs/tasks/TaskCmd.java",
                 "options": [
                   {
                     "names": [
@@ -15264,7 +15264,7 @@
             "full_command": "tw runs list",
             "parent": "runs",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/runs/ListCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/runs/ListCmd.java",
             "options": [
               {
                 "names": [
@@ -15347,7 +15347,7 @@
             "full_command": "tw runs relaunch",
             "parent": "runs",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/runs/RelaunchCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/runs/RelaunchCmd.java",
             "options": [
               {
                 "names": [
@@ -15605,7 +15605,7 @@
             "full_command": "tw runs cancel",
             "parent": "runs",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/runs/CancelCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/runs/CancelCmd.java",
             "options": [
               {
                 "names": [
@@ -15647,7 +15647,7 @@
             "full_command": "tw runs labels",
             "parent": "runs",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/runs/LabelsCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/runs/LabelsCmd.java",
             "options": [
               {
                 "names": [
@@ -15700,7 +15700,7 @@
             "full_command": "tw runs delete",
             "parent": "runs",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/runs/DeleteCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/runs/DeleteCmd.java",
             "options": [
               {
                 "names": [
@@ -15753,7 +15753,7 @@
             "full_command": "tw runs dump",
             "parent": "runs",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/runs/DumpCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/runs/DumpCmd.java",
             "options": [
               {
                 "names": [
@@ -15858,7 +15858,7 @@
           "DeleteCmd",
           "MembersCmd"
         ],
-        "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/TeamsCmd.java",
+        "source_file": "../src/main/java/io/seqera/tower/cli/commands/TeamsCmd.java",
         "options": [],
         "parameters": [],
         "mixins": [],
@@ -15869,7 +15869,7 @@
             "full_command": "tw teams list",
             "parent": "teams",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/teams/ListCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/teams/ListCmd.java",
             "options": [
               {
                 "names": [
@@ -15932,7 +15932,7 @@
             "full_command": "tw teams add",
             "parent": "teams",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/teams/AddCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/teams/AddCmd.java",
             "options": [
               {
                 "names": [
@@ -15992,7 +15992,7 @@
             "full_command": "tw teams delete",
             "parent": "teams",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/teams/DeleteCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/teams/DeleteCmd.java",
             "options": [
               {
                 "names": [
@@ -16032,7 +16032,7 @@
               "AddCmd",
               "DeleteCmd"
             ],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/teams/MembersCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/teams/MembersCmd.java",
             "options": [
               {
                 "names": [
@@ -16065,10 +16065,10 @@
               {
                 "name": "add",
                 "description": "Add a team member",
-                "full_command": "tw members add",
+                "full_command": "tw teams members add",
                 "parent": "members",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/teams/members/AddCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/teams/members/AddCmd.java",
                 "options": [
                   {
                     "names": [
@@ -16090,10 +16090,10 @@
               {
                 "name": "delete",
                 "description": "Remove a team member",
-                "full_command": "tw members delete",
+                "full_command": "tw teams members delete",
                 "parent": "members",
                 "subcommands": [],
-                "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/teams/members/DeleteCmd.java",
+                "source_file": "../src/main/java/io/seqera/tower/cli/commands/teams/members/DeleteCmd.java",
                 "options": [
                   {
                     "names": [
@@ -16129,7 +16129,7 @@
           "ViewCmd",
           "LeaveCmd"
         ],
-        "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/WorkspacesCmd.java",
+        "source_file": "../src/main/java/io/seqera/tower/cli/commands/WorkspacesCmd.java",
         "options": [],
         "parameters": [],
         "mixins": [],
@@ -16140,7 +16140,7 @@
             "full_command": "tw workspaces list",
             "parent": "workspaces",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/workspaces/ListCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/workspaces/ListCmd.java",
             "options": [
               {
                 "names": [
@@ -16166,7 +16166,7 @@
             "full_command": "tw workspaces delete",
             "parent": "workspaces",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/workspaces/DeleteCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/workspaces/DeleteCmd.java",
             "options": [
               {
                 "names": [
@@ -16208,7 +16208,7 @@
             "full_command": "tw workspaces add",
             "parent": "workspaces",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/workspaces/AddCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/workspaces/AddCmd.java",
             "options": [
               {
                 "names": [
@@ -16293,7 +16293,7 @@
             "full_command": "tw workspaces update",
             "parent": "workspaces",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/workspaces/UpdateCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/workspaces/UpdateCmd.java",
             "options": [
               {
                 "names": [
@@ -16353,7 +16353,7 @@
             "full_command": "tw workspaces view",
             "parent": "workspaces",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/workspaces/ViewCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/workspaces/ViewCmd.java",
             "options": [
               {
                 "names": [
@@ -16395,7 +16395,7 @@
             "full_command": "tw workspaces leave",
             "parent": "workspaces",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/workspaces/LeaveCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/workspaces/LeaveCmd.java",
             "options": [
               {
                 "names": [
@@ -16445,7 +16445,7 @@
           "ViewCmd",
           "UpdateCmd"
         ],
-        "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/SecretsCmd.java",
+        "source_file": "../src/main/java/io/seqera/tower/cli/commands/SecretsCmd.java",
         "options": [],
         "parameters": [],
         "mixins": [],
@@ -16456,7 +16456,7 @@
             "full_command": "tw secrets list",
             "parent": "secrets",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/secrets/ListCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/secrets/ListCmd.java",
             "options": [
               {
                 "names": [
@@ -16486,7 +16486,7 @@
             "full_command": "tw secrets add",
             "parent": "secrets",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/secrets/AddCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/secrets/AddCmd.java",
             "options": [
               {
                 "names": [
@@ -16551,7 +16551,7 @@
             "full_command": "tw secrets delete",
             "parent": "secrets",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/secrets/DeleteCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/secrets/DeleteCmd.java",
             "options": [
               {
                 "names": [
@@ -16609,7 +16609,7 @@
             "full_command": "tw secrets view",
             "parent": "secrets",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/secrets/ViewCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/secrets/ViewCmd.java",
             "options": [
               {
                 "names": [
@@ -16667,7 +16667,7 @@
             "full_command": "tw secrets update",
             "parent": "secrets",
             "subcommands": [],
-            "source_file": "/Users/llewelyn-van-der-berg/Documents/GitHub/tower-cli/src/main/java/io/seqera/tower/cli/commands/secrets/UpdateCmd.java",
+            "source_file": "../src/main/java/io/seqera/tower/cli/commands/secrets/UpdateCmd.java",
             "options": [
               {
                 "names": [

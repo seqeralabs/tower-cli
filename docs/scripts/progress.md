@@ -209,14 +209,248 @@ python docs/scripts/extract-cli-metadata.py src/main/java > docs/cli-metadata.js
 - Updated cli-metadata.json with extracted metadata
 - Comprehensive PR description with examples
 
+---
+
+## 🔧 Phase 2.5: Metadata Review & OpenAPI Mapping Design (2026-01-13)
+
+### Session Overview
+
+Following the completion of Phase 2 (all 161 command descriptions improved), this session focused on:
+1. Reviewing and validating extracted metadata quality
+2. Fixing critical metadata extractor bugs
+3. Applying additional description improvements based on user feedback
+4. Designing and documenting the OpenAPI-to-CLI mapping strategy
+
+### Bug Fix: Metadata Extractor Parent Relationships
+
+**Issue Discovered**: Commands with shared names (e.g., "add", "view") were generating incorrect `full_command` paths due to ambiguous parent lookups.
+
+**Examples of Incorrect Paths**:
+- `tw organizations add moab` (should be `tw compute-envs add moab`)
+- `tw organizations view versions` (should be `tw datasets view versions`)
+
+**Root Cause**: The `get_full_command()` function stored parent relationships as command **names** (strings like "add") rather than **qualified class names**. When building paths, it would match the FIRST command with that name, which was alphabetically sorted and often wrong.
+
+**Solution Implemented** (3 changes to `extract-cli-metadata.py`):
+
+1. **Lines 444, 494**: Store qualified class name as parent
+   ```python
+   # Before: commands[qualified_subcommand].parent = cmd.name
+   # After:
+   commands[qualified_subcommand].parent = parent_qualified_name
+   ```
+
+2. **Lines 502-512**: Direct dict lookup instead of iteration
+   ```python
+   # Before: Loop through all commands checking if c.name == current.parent
+   # After:
+   parent_cmd = commands.get(current.parent)  # O(1) lookup
+   ```
+
+3. **Lines 600-606**: Convert back to simple names during serialization
+   ```python
+   # Convert qualified parent name back to simple command name for JSON
+   parent_name = None
+   if cmd.parent and cmd.parent in commands:
+       parent_name = commands[cmd.parent].name
+   ```
+
+**Results**:
+- ✅ All 161 commands now have correct `full_command` paths
+- ✅ 0 orphaned commands (except root "tw" - expected)
+- ✅ All compute-envs add provider subcommands fixed (17 commands)
+- ✅ Dataset versions command path corrected
+- ✅ Parent field in JSON still human-readable ("add" not "io.seqera.tower...")
+
+### Description Improvements Applied
+
+**User Feedback Items**:
+
+1. **Replace "Tower"/"Nextflow Tower" with "Seqera Platform"** (5 changes in `Tower.java`):
+   - Root command: "Nextflow Tower CLI" → "Seqera Platform CLI"
+   - `--access-token`: "Tower personal access token" → "Seqera Platform personal access token"
+   - `--url`: "Tower server API endpoint URL" → "Seqera Platform API endpoint URL"
+   - `--insecure`: "Tower server" → "Seqera Platform server"
+   - Note: Environment variable names (TOWER_ACCESS_TOKEN, etc.) remain unchanged for backward compatibility
+
+2. **Modernize JSON format description** (1 change in `Tower.java`):
+   - `--output`: "only the 'json' option is available at the moment" → "currently supports 'json'"
+
+3. **Contextual accuracy verified** (1 decision in `LaunchCmd.java`):
+   - Kept "defaults to primary compute environment" for `--compute-env` in launch context (appropriate)
+   - This is different from compute environment creation contexts where it wouldn't apply
+
+**Files Modified**:
+- `src/main/java/io/seqera/tower/cli/Tower.java` (6 description changes)
+- `docs/scripts/extract-cli-metadata.py` (3 bug fixes)
+- `docs/cli-metadata.json` (regenerated with all fixes)
+
+### OpenAPI Mapping Strategy Design
+
+**Challenge Identified**: CLI option descriptions could be significantly enhanced by reusing high-quality descriptions from the decorated OpenAPI spec.
+
+**Example**:
+- **Current CLI**: `--pre-run: Bash script that is executed...`
+- **OpenAPI**: `preRunScript: Add a script that executes in the nf-launch script prior to invoking Nextflow processes. See https://docs.seqera.io/platform-cloud/launch/advanced#pre-and-post-run-scripts`
+
+**Research Process** (Token-efficient agent approach):
+
+Spawned 4 specialized codebase agents in parallel to gather intelligence:
+
+1. **codebase-locator** (Agent: aa6fe66):
+   - Task: Find all Java command files with @Option annotations
+   - Output: Located 41 files across 10 command families (Launch, Pipelines, ComputeEnvs, Credentials, etc.)
+
+2. **codebase-analyzer - CLI** (Agent: a2e116d):
+   - Task: Extract all LaunchCmd option metadata
+   - Output: 21 options with field names, types, and current descriptions
+
+3. **codebase-analyzer - OpenAPI** (Agent: ad4b241):
+   - Task: Analyze WorkflowLaunchRequest schema in decorated OpenAPI spec
+   - Output: 27 API fields with enhanced descriptions, types, and documentation links
+
+4. **codebase-pattern-finder** (Agent: a025663):
+   - Task: Find naming patterns between CLI options and API fields
+   - Output: 12 distinct transformation patterns with confidence levels (direct mapping, id suffix, text suffix, etc.)
+
+**Artifacts Created**:
+
+1. **`cli-to-api-mapping.json`** (Mapping configuration file):
+   - Maps all 21 LaunchCmd options to WorkflowLaunchRequest fields
+   - Documents 4 transformation types: direct, file_to_text, name_to_id, objects_to_ids
+   - Defines 6 naming patterns with confidence levels (very_high, high, medium)
+   - Extensible to all command families
+   - **Format**: JSON configuration file, ~200 lines
+
+2. **`openapi-mapping-strategy.md`** (Complete design document):
+   - Architecture diagram showing full automation workflow
+   - 3 main components: Enhancement Script, Java Source Updater, Doc Generator
+   - Description adaptation rules (file path context, ID resolution, preserve links, defaults)
+   - 5-phase implementation plan (Setup → Expansion → CI/CD)
+   - CI/CD GitHub Action workflow specification
+   - Edge cases and considerations
+   - Success metrics
+   - **Format**: Comprehensive markdown, ~400 lines
+
+**Key Mapping Patterns Identified**:
+
+| Pattern | Example | Confidence | Usage |
+|---------|---------|------------|-------|
+| Direct mapping | `workDir → workDir` | Very High | Simple fields |
+| Id suffix | `computeEnv → computeEnvId` | Very High | Entity references |
+| Ids suffix | `labels → labelIds` | Very High | Entity lists |
+| Text suffix | `paramsFile → paramsText` | Very High | File content |
+| Script suffix | `preRunScript → preRunScript` | Very High | Script files |
+| Config prefix | `profile → configProfiles` | High | Profile lists |
+
+**Automation Workflow Designed**:
+```
+OpenAPI Spec → Enhancement Script → Enriched Metadata
+                                   ↓
+                        ┌──────────┴──────────┐
+                        ↓                     ↓
+              Update Java Source      Generate CLI Docs
+              (--help text)           (docs.seqera.io)
+```
+
+### Files Created This Session
+
+**New Files**:
+1. `docs/scripts/cli-to-api-mapping.json` - Mapping configuration (~200 lines)
+2. `docs/scripts/openapi-mapping-strategy.md` - Design document (~400 lines)
+
+**Modified Files**:
+1. `docs/scripts/extract-cli-metadata.py` - Bug fixes (3 locations)
+2. `src/main/java/io/seqera/tower/cli/Tower.java` - Description improvements (6 changes)
+3. `docs/cli-metadata.json` - Regenerated with all fixes (17,586 lines)
+
+### Design Decisions
+
+**Decision 1: Internal vs External Parent Representation**
+- **Problem**: Ambiguous parent lookups when using command names
+- **Solution**: Store qualified class names internally, convert to simple names during JSON serialization
+- **Benefit**: Unambiguous lookups (O(1) dict access) + human-readable output
+
+**Decision 2: Token-Efficient Agent Research**
+- **Problem**: Need comprehensive codebase analysis without consuming excessive context
+- **Solution**: Spawn 4 specialized agents in parallel, synthesize findings
+- **Benefit**: Saved ~50K tokens vs manual exploration
+
+**Decision 3: Mapping File Structure**
+- **Problem**: How to represent CLI→API relationships?
+- **Solution**: JSON configuration with transformation types and pattern documentation
+- **Benefit**: Extensible, version-controlled, supports multiple transformation types
+
+**Decision 4: OpenAPI Spec Source**
+- **Problem**: Where to get high-quality API descriptions?
+- **Solution**: Use `seqera-api-latest-decorated.yaml` from docs repo
+- **Benefit**: Single source of truth, already enhanced with documentation links
+
 ### Next Steps for Phase 3
 
-1. **Review PR** - Get team feedback on annotation improvements
-2. **Merge to master** - Once approved, merge Phase 2 work
-3. **Documentation Generator** - Create script to generate markdown docs from cli-metadata.json
-4. **Example Storage** - Design pattern for storing manual examples (similar to API overlay pattern)
-5. **Generate Docs** - Create per-command documentation pages
-6. **Split monolithic docs** - Break `commands.md` into per-subcommand pages
+**Phase 3a: OpenAPI Enhancement Implementation** (Recommended First):
+
+1. **Implement Enhancement Script** (`enrich-cli-metadata.py`):
+   - Parse OpenAPI YAML
+   - Apply mapping rules from `cli-to-api-mapping.json`
+   - Handle 4 transformation types
+   - Adapt descriptions for CLI context (file paths, defaults, etc.)
+   - Output `cli-metadata-enriched.json`
+
+2. **Test on LaunchCmd**:
+   - Run enhancement on 21 LaunchCmd options
+   - Compare original vs enriched descriptions
+   - Validate quality improvements
+   - Review API documentation links integration
+
+3. **Implement Java Source Updater** (`apply-descriptions.py`):
+   - Parse Java files
+   - Find @Option annotations by option name
+   - Update description attribute
+   - Preserve code formatting
+   - Write back to source files
+
+4. **Test Java Updates**:
+   - Apply to LaunchCmd.java
+   - Compile and test
+   - Run `tw launch --help` to verify output
+   - Ensure no syntax/formatting issues
+
+**Phase 3b: Expand Coverage**:
+
+1. Extend mapping to remaining command families (140+ options):
+   - ComputeEnvsCmd (all platforms: AWS, Azure, K8s, HPC schedulers)
+   - PipelinesCmd (add, update, export, import)
+   - CredentialsCmd (all providers: AWS, Azure, GitHub, GitLab, etc.)
+   - SecretsCmd, WorkspacesCmd, DatasetsCmd, ActionsCmd
+   - Document platform-specific mappings
+
+2. Handle edge cases:
+   - CLI-only options (no API equivalent)
+   - Divergent descriptions (different purposes)
+   - Missing API descriptions (fallback to CLI)
+
+**Phase 3c: Documentation Generation**:
+
+1. **Implement Doc Generator** (`generate-cli-docs.py`):
+   - Read `cli-metadata-enriched.json`
+   - Create per-command markdown pages
+   - Include examples from overlay pattern
+   - Generate docs.seqera.io structure
+
+2. **Set Up Examples Overlay**:
+   - Similar to API docs pattern
+   - Store curated examples separately
+   - Merge during generation
+
+**Phase 3d: CI/CD Automation**:
+
+1. Create GitHub Action workflow:
+   - Triggered on CLI releases
+   - Fetch latest OpenAPI spec from docs repo
+   - Run extraction → enrichment → generation
+   - Create PR to docs repo
+   - Flag new/changed options for review
 
 ---
 

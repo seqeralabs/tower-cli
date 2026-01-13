@@ -441,7 +441,7 @@ def build_command_tree(commands: dict) -> dict:
             if subcommand_class in parent_imports:
                 qualified_subcommand = parent_imports[subcommand_class]
                 if qualified_subcommand in commands:
-                    commands[qualified_subcommand].parent = cmd.name
+                    commands[qualified_subcommand].parent = parent_qualified_name
                     continue
 
             # PRIORITY 2: Try package-based heuristics
@@ -491,28 +491,24 @@ def build_command_tree(commands: dict) -> dict:
                 qualified_subcommand = subcommand_class
 
             if qualified_subcommand in commands:
-                commands[qualified_subcommand].parent = cmd.name
+                commands[qualified_subcommand].parent = parent_qualified_name
     
     # Build full command paths
     def get_full_command(cmd: Command, commands: dict) -> str:
         parts = [cmd.name]
         current = cmd
         visited = set()
-        
+
         while current.parent and current.parent not in visited:
             visited.add(current.parent)
-            # Find parent command
-            parent_cmd = None
-            for c in commands.values():
-                if c.name == current.parent:
-                    parent_cmd = c
-                    break
+            # Direct lookup using qualified class name
+            parent_cmd = commands.get(current.parent)
             if parent_cmd:
                 parts.insert(0, parent_cmd.name)
                 current = parent_cmd
             else:
                 break
-        
+
         return ' '.join(parts)
     
     for cmd in commands.values():
@@ -599,13 +595,21 @@ def resolve_mixins(commands: dict, mixins: dict) -> dict:
 def serialize_commands(commands: dict) -> dict:
     """Convert commands to a JSON-serializable format."""
     result = {}
-    
+
     for class_name, cmd in commands.items():
+        # Convert qualified parent name back to simple command name
+        parent_name = None
+        if cmd.parent and cmd.parent in commands:
+            parent_name = commands[cmd.parent].name
+        elif cmd.parent:
+            # Fallback if parent is not found (shouldn't happen)
+            parent_name = cmd.parent
+
         cmd_dict = {
             'name': cmd.name,
             'description': cmd.description,
             'full_command': cmd.full_command,
-            'parent': cmd.parent,
+            'parent': parent_name,
             'subcommands': cmd.subcommands,
             'source_file': cmd.source_file,
             'options': [asdict(opt) for opt in cmd.options],
@@ -613,7 +617,7 @@ def serialize_commands(commands: dict) -> dict:
             'mixins': [asdict(mixin) for mixin in cmd.mixins]
         }
         result[class_name] = cmd_dict
-    
+
     return result
 
 

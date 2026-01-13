@@ -1,0 +1,252 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "description": "Mapping between CLI command options and OpenAPI schema fields",
+    "source_openapi_spec": "seqera-api-latest-decorated.yaml",
+    "last_updated": "2026-01-13"
+  },
+  "mappings": {
+    "LaunchCmd": {
+      "description": "Launch workflow command - maps to WorkflowLaunchRequest schema",
+      "api_schema": "WorkflowLaunchRequest",
+      "options": {
+        "pipeline": {
+          "cli_option": "pipeline",
+          "cli_field": "pipeline",
+          "cli_type": "String",
+          "api_field": "pipeline",
+          "api_type": "string",
+          "transformation": "direct",
+          "description_source": "api"
+        },
+        "params-file": {
+          "cli_option": "--params-file",
+          "cli_field": "paramsFile",
+          "cli_type": "Path",
+          "api_field": "paramsText",
+          "api_type": "string",
+          "transformation": "file_to_text",
+          "description_source": "api",
+          "notes": "CLI accepts file path, API expects file content as string"
+        },
+        "compute-env": {
+          "cli_option": "-c, --compute-env",
+          "cli_field": "computeEnv",
+          "cli_type": "String",
+          "api_field": "computeEnvId",
+          "api_type": "string",
+          "transformation": "name_to_id",
+          "description_source": "api",
+          "notes": "CLI accepts name/reference, must be resolved to ID before API call"
+        },
+        "name": {
+          "cli_option": "-n, --name",
+          "cli_field": "name",
+          "cli_type": "String",
+          "api_field": "runName",
+          "api_type": "string",
+          "transformation": "direct",
+          "description_source": "api"
+        },
+        "work-dir": {
+          "cli_option": "--work-dir",
+          "cli_field": "workDir",
+          "cli_type": "String",
+          "api_field": "workDir",
+          "api_type": "string",
+          "transformation": "direct",
+          "description_source": "api"
+        },
+        "profile": {
+          "cli_option": "-p, --profile",
+          "cli_field": "profile",
+          "cli_type": "List<String>",
+          "api_field": "configProfiles",
+          "api_type": "array[string]",
+          "transformation": "direct",
+          "description_source": "api",
+          "notes": "CLI accepts comma-separated list"
+        },
+        "revision": {
+          "cli_option": "-r, --revision",
+          "cli_field": "revision",
+          "cli_type": "String",
+          "api_field": "revision",
+          "api_type": "string",
+          "transformation": "direct",
+          "description_source": "api"
+        },
+        "labels": {
+          "cli_option": "-l, --labels",
+          "cli_field": "labels",
+          "cli_type": "List<Label>",
+          "api_field": "labelIds",
+          "api_type": "array[integer]",
+          "transformation": "objects_to_ids",
+          "description_source": "api",
+          "notes": "CLI accepts label objects, must be resolved to IDs. Can create labels if they don't exist."
+        },
+        "launch-container": {
+          "cli_option": "--launch-container",
+          "cli_field": "launchContainer",
+          "cli_type": "String",
+          "api_field": "launchContainer",
+          "api_type": "string",
+          "transformation": "direct",
+          "description_source": "api"
+        },
+        "config": {
+          "cli_option": "--config",
+          "cli_field": "config",
+          "cli_type": "Path",
+          "api_field": "configText",
+          "api_type": "string",
+          "transformation": "file_to_text",
+          "description_source": "api",
+          "notes": "CLI accepts file path, API expects file content as string"
+        },
+        "pre-run": {
+          "cli_option": "--pre-run",
+          "cli_field": "preRunScript",
+          "cli_type": "Path",
+          "api_field": "preRunScript",
+          "api_type": "string",
+          "transformation": "file_to_text",
+          "description_source": "api",
+          "notes": "CLI accepts script file path, API expects script content as string"
+        },
+        "post-run": {
+          "cli_option": "--post-run",
+          "cli_field": "postRunScript",
+          "cli_type": "Path",
+          "api_field": "postRunScript",
+          "api_type": "string",
+          "transformation": "file_to_text",
+          "description_source": "api",
+          "notes": "CLI accepts script file path, API expects script content as string"
+        },
+        "pull-latest": {
+          "cli_option": "--pull-latest",
+          "cli_field": "pullLatest",
+          "cli_type": "Boolean",
+          "api_field": "pullLatest",
+          "api_type": "boolean",
+          "transformation": "direct",
+          "description_source": "api"
+        },
+        "stub-run": {
+          "cli_option": "--stub-run",
+          "cli_field": "stubRun",
+          "cli_type": "Boolean",
+          "api_field": "stubRun",
+          "api_type": "boolean",
+          "transformation": "direct",
+          "description_source": "api"
+        },
+        "main-script": {
+          "cli_option": "--main-script",
+          "cli_field": "mainScript",
+          "cli_type": "String",
+          "api_field": "mainScript",
+          "api_type": "string",
+          "transformation": "direct",
+          "description_source": "api"
+        },
+        "entry-name": {
+          "cli_option": "--entry-name",
+          "cli_field": "entryName",
+          "cli_type": "String",
+          "api_field": "entryName",
+          "api_type": "string",
+          "transformation": "direct",
+          "description_source": "api"
+        },
+        "schema-name": {
+          "cli_option": "--schema-name",
+          "cli_field": "schemaName",
+          "cli_type": "String",
+          "api_field": "schemaName",
+          "api_type": "string",
+          "transformation": "direct",
+          "description_source": "api"
+        },
+        "user-secrets": {
+          "cli_option": "--user-secrets",
+          "cli_field": "userSecrets",
+          "cli_type": "List<String>",
+          "api_field": "userSecrets",
+          "api_type": "array[string]",
+          "transformation": "direct",
+          "description_source": "api",
+          "notes": "CLI accepts comma-separated list"
+        },
+        "workspace-secrets": {
+          "cli_option": "--workspace-secrets",
+          "cli_field": "workspaceSecrets",
+          "cli_type": "List<String>",
+          "api_field": "workspaceSecrets",
+          "api_type": "array[string]",
+          "transformation": "direct",
+          "description_source": "api",
+          "notes": "CLI accepts comma-separated list"
+        },
+        "head-job-cpus": {
+          "cli_option": "--head-job-cpus",
+          "cli_field": "headJobCpus",
+          "cli_type": "Integer",
+          "api_field": "headJobCpus",
+          "api_type": "integer",
+          "transformation": "direct",
+          "description_source": "api"
+        },
+        "head-job-memory": {
+          "cli_option": "--head-job-memory",
+          "cli_field": "headJobMemoryMb",
+          "cli_type": "Integer",
+          "api_field": "headJobMemoryMb",
+          "api_type": "integer",
+          "transformation": "direct",
+          "description_source": "api"
+        }
+      }
+    }
+  },
+  "transformation_types": {
+    "direct": "CLI field maps directly to API field with same name and compatible type",
+    "file_to_text": "CLI accepts file path (Path), API expects file content (string). File must be read and content passed.",
+    "name_to_id": "CLI accepts human-readable name/reference, API expects entity ID. Must resolve via API lookup.",
+    "objects_to_ids": "CLI accepts object list, API expects ID list. Must resolve each object to its ID."
+  },
+  "patterns": {
+    "id_suffix": {
+      "description": "Add 'Id' suffix when CLI field references a single entity",
+      "examples": ["computeEnv → computeEnvId", "optimization → optimizationId"],
+      "confidence": "very_high"
+    },
+    "ids_suffix": {
+      "description": "Add 'Ids' suffix when CLI field references multiple entities",
+      "examples": ["labels → labelIds"],
+      "confidence": "very_high"
+    },
+    "text_suffix": {
+      "description": "Add 'Text' suffix when CLI accepts file path but API needs content",
+      "examples": ["paramsFile → paramsText", "config → configText"],
+      "confidence": "very_high"
+    },
+    "script_suffix": {
+      "description": "CLI field already includes 'Script' suffix, matches API field",
+      "examples": ["preRunScript → preRunScript", "postRunScript → postRunScript"],
+      "confidence": "very_high"
+    },
+    "config_prefix": {
+      "description": "Add 'config' prefix for profile/configuration lists",
+      "examples": ["profile → configProfiles"],
+      "confidence": "high"
+    },
+    "run_prefix": {
+      "description": "Add 'run' prefix for workflow run naming",
+      "examples": ["name → runName"],
+      "confidence": "high"
+    }
+  }
+}
