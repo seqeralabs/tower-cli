@@ -477,12 +477,6 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.computeenvs.add.AddGoogleLifeSciencesCmd",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"io.seqera.tower.cli.commands.computeenvs.add.AddK8sCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -682,23 +676,6 @@
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.GoogleCloudPlatform$AdvancedOptions",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenvs.platforms.GoogleLifeSciencesPlatform",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenvs.platforms.GoogleLifeSciencesPlatform$AdvancedOptions",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true
-},
-{
-  "name":"io.seqera.tower.cli.commands.computeenvs.platforms.GoogleLifeSciencesPlatform$Filestore",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.K8sPlatform",
@@ -3693,13 +3670,6 @@
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"arch","parameterTypes":["java.lang.String"] }, {"name":"equals","parameterTypes":["java.lang.Object"] }, {"name":"getArch","parameterTypes":[] }, {"name":"getId","parameterTypes":[] }, {"name":"hashCode","parameterTypes":[] }, {"name":"id","parameterTypes":["java.lang.String"] }, {"name":"setArch","parameterTypes":["java.lang.String"] }, {"name":"setId","parameterTypes":["java.lang.String"] }, {"name":"toIndentedString","parameterTypes":["java.lang.Object"] }, {"name":"toString","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.model.GoogleLifeSciencesConfig",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "allDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"addEnvironmentItem","parameterTypes":["io.seqera.tower.model.ConfigEnvVariable"] }, {"name":"addZonesItem","parameterTypes":["java.lang.String"] }, {"name":"bootDiskSizeGb","parameterTypes":["java.lang.Integer"] }, {"name":"copyImage","parameterTypes":["java.lang.String"] }, {"name":"debugMode","parameterTypes":["java.lang.Integer"] }, {"name":"environment","parameterTypes":["java.util.List"] }, {"name":"equals","parameterTypes":["java.lang.Object"] }, {"name":"getBootDiskSizeGb","parameterTypes":[] }, {"name":"getCopyImage","parameterTypes":[] }, {"name":"getDebugMode","parameterTypes":[] }, {"name":"getDiscriminator","parameterTypes":[] }, {"name":"getEnvironment","parameterTypes":[] }, {"name":"getHeadJobCpus","parameterTypes":[] }, {"name":"getHeadJobMemoryMb","parameterTypes":[] }, {"name":"getHeadJobOptions","parameterTypes":[] }, {"name":"getHostName","parameterTypes":[] }, {"name":"getLabels","parameterTypes":[] }, {"name":"getLaunchDir","parameterTypes":[] }, {"name":"getLocation","parameterTypes":[] }, {"name":"getMaxQueueSize","parameterTypes":[] }, {"name":"getNextflowConfig","parameterTypes":[] }, {"name":"getNfsMount","parameterTypes":[] }, {"name":"getNfsTarget","parameterTypes":[] }, {"name":"getPort","parameterTypes":[] }, {"name":"getPostRunScript","parameterTypes":[] }, {"name":"getPreRunScript","parameterTypes":[] }, {"name":"getPreemptible","parameterTypes":[] }, {"name":"getProjectId","parameterTypes":[] }, {"name":"getPropagateHeadJobOptions","parameterTypes":[] }, {"name":"getRegion","parameterTypes":[] }, {"name":"getSshDaemon","parameterTypes":[] }, {"name":"getSshImage","parameterTypes":[] }, {"name":"getUsePrivateAddress","parameterTypes":[] }, {"name":"getUserName","parameterTypes":[] }, {"name":"getWorkDir","parameterTypes":[] }, {"name":"getZones","parameterTypes":[] }, {"name":"hashCode","parameterTypes":[] }, {"name":"headJobCpus","parameterTypes":["java.lang.Integer"] }, {"name":"headJobMemoryMb","parameterTypes":["java.lang.Integer"] }, {"name":"headJobOptions","parameterTypes":["java.lang.String"] }, {"name":"hostName","parameterTypes":["java.lang.String"] }, {"name":"labels","parameterTypes":["java.util.Map"] }, {"name":"launchDir","parameterTypes":["java.lang.String"] }, {"name":"location","parameterTypes":["java.lang.String"] }, {"name":"maxQueueSize","parameterTypes":["java.lang.Integer"] }, {"name":"nextflowConfig","parameterTypes":["java.lang.String"] }, {"name":"nfsMount","parameterTypes":["java.lang.String"] }, {"name":"nfsTarget","parameterTypes":["java.lang.String"] }, {"name":"port","parameterTypes":["java.lang.Integer"] }, {"name":"postRunScript","parameterTypes":["java.lang.String"] }, {"name":"preRunScript","parameterTypes":["java.lang.String"] }, {"name":"preemptible","parameterTypes":["java.lang.Boolean"] }, {"name":"projectId","parameterTypes":["java.lang.String"] }, {"name":"propagateHeadJobOptions","parameterTypes":["java.lang.Boolean"] }, {"name":"putLabelsItem","parameterTypes":["java.lang.String","java.lang.String"] }, {"name":"region","parameterTypes":["java.lang.String"] }, {"name":"setBootDiskSizeGb","parameterTypes":["java.lang.Integer"] }, {"name":"setCopyImage","parameterTypes":["java.lang.String"] }, {"name":"setDebugMode","parameterTypes":["java.lang.Integer"] }, {"name":"setEnvironment","parameterTypes":["java.util.List"] }, {"name":"setHeadJobCpus","parameterTypes":["java.lang.Integer"] }, {"name":"setHeadJobMemoryMb","parameterTypes":["java.lang.Integer"] }, {"name":"setHeadJobOptions","parameterTypes":["java.lang.String"] }, {"name":"setHostName","parameterTypes":["java.lang.String"] }, {"name":"setLabels","parameterTypes":["java.util.Map"] }, {"name":"setLaunchDir","parameterTypes":["java.lang.String"] }, {"name":"setLocation","parameterTypes":["java.lang.String"] }, {"name":"setMaxQueueSize","parameterTypes":["java.lang.Integer"] }, {"name":"setNextflowConfig","parameterTypes":["java.lang.String"] }, {"name":"setNfsMount","parameterTypes":["java.lang.String"] }, {"name":"setNfsTarget","parameterTypes":["java.lang.String"] }, {"name":"setPort","parameterTypes":["java.lang.Integer"] }, {"name":"setPostRunScript","parameterTypes":["java.lang.String"] }, {"name":"setPreRunScript","parameterTypes":["java.lang.String"] }, {"name":"setPreemptible","parameterTypes":["java.lang.Boolean"] }, {"name":"setProjectId","parameterTypes":["java.lang.String"] }, {"name":"setPropagateHeadJobOptions","parameterTypes":["java.lang.Boolean"] }, {"name":"setRegion","parameterTypes":["java.lang.String"] }, {"name":"setSshDaemon","parameterTypes":["java.lang.Boolean"] }, {"name":"setSshImage","parameterTypes":["java.lang.String"] }, {"name":"setUsePrivateAddress","parameterTypes":["java.lang.Boolean"] }, {"name":"setUserName","parameterTypes":["java.lang.String"] }, {"name":"setWorkDir","parameterTypes":["java.lang.String"] }, {"name":"setZones","parameterTypes":["java.util.List"] }, {"name":"sshDaemon","parameterTypes":["java.lang.Boolean"] }, {"name":"sshImage","parameterTypes":["java.lang.String"] }, {"name":"toIndentedString","parameterTypes":["java.lang.Object"] }, {"name":"toString","parameterTypes":[] }, {"name":"usePrivateAddress","parameterTypes":["java.lang.Boolean"] }, {"name":"userName","parameterTypes":["java.lang.String"] }, {"name":"workDir","parameterTypes":["java.lang.String"] }, {"name":"zones","parameterTypes":["java.util.List"] }]
 },
 {
   "name":"io.seqera.tower.model.GooglePlatformMetainfo",
