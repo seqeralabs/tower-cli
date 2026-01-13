@@ -60,13 +60,19 @@ class JavaDescriptionUpdater:
         return self.stats
 
     def update_command(self, command_class_name: str) -> Dict:
-        """Update a specific command by class name."""
+        """Update a specific command by class name or fully qualified name."""
         # Find the command in metadata
         qualified_name = None
-        for qn, cmd_data in self.metadata.get("commands", {}).items():
-            if qn.endswith(f".{command_class_name}"):
-                qualified_name = qn
-                break
+
+        # First try exact match (fully qualified name)
+        if command_class_name in self.metadata.get("commands", {}):
+            qualified_name = command_class_name
+        else:
+            # Try matching by simple class name (suffix)
+            for qn, cmd_data in self.metadata.get("commands", {}).items():
+                if qn.endswith(f".{command_class_name}"):
+                    qualified_name = qn
+                    break
 
         if not qualified_name:
             raise ValueError(f"Command {command_class_name} not found in metadata")
@@ -184,10 +190,10 @@ class JavaDescriptionUpdater:
         # We need to match by the option names to find the right annotation
         names_pattern = self._build_names_pattern(names)
 
-        # Pattern to match @Option annotation with description
+        # Pattern to match @Option or @CommandLine.Option annotation with description
         # This handles both single-line and potential multi-line (though they're usually single-line)
         pattern = (
-            r'(@Option\s*\(\s*'              # @Option(
+            r'(@(?:CommandLine\.)?Option\s*\(\s*'    # @Option( or @CommandLine.Option(
             r'names\s*=\s*\{' + names_pattern + r'\}'  # names = {...}
             r'[^)]*?'                         # any other attributes before description
             r',?\s*description\s*=\s*'       # description =
