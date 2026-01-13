@@ -55,16 +55,16 @@ public class RelaunchCmd extends AbstractRunsCmd {
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
-    @Option(names = {"--pipeline"}, description = "Pipeline to launch")
+    @Option(names = {"--pipeline"}, description = "Override the pipeline to launch. Allows relaunching with a different pipeline repository URL while keeping other launch configuration settings.")
     public String pipeline;
 
-    @Option(names = {"--no-resume"}, description = "Do not resume the pipeline run")
+    @Option(names = {"--no-resume"}, description = "Start workflow execution from scratch instead of resuming from the last successful process. Use this to rerun the entire workflow without using cached results.")
     public boolean noResume;
 
-    @Option(names = {"-n", "--name"}, description = "Custom workflow run name")
+    @Option(names = {"-n", "--name"}, description = "Custom workflow run name. Overrides the automatically generated run name with a user-defined identifier.")
     public String name;
 
-    @Option(names = {"--launch-container"}, description = "Container to be used to run the Nextflow head job (BETA)")
+    @Option(names = {"--launch-container"}, description = "Container image for the Nextflow head job. Overrides the default launcher container. (BETA)")
     public String launchContainer;
 
     @Mixin

@@ -43,10 +43,10 @@ import java.util.stream.Stream;
 )
 public class TasksCmd extends AbstractRunsCmd {
 
-    @CommandLine.Option(names = {"-c", "--columns"}, split = ",", description = "Additional task columns to display: ${COMPLETION-CANDIDATES}")
+    @CommandLine.Option(names = {"-c", "--columns"}, split = ",", description = "Additional task columns to display beyond the default set. Available columns: taskId, process, tag, status, hash, exit, container, nativeId, submit, duration, realtime, pcpu, pmem, peakRss, peakVmem, rchar, wchar, volCtxt, invCtxt. Comma-separated list.")
     public List<TaskColumn> columns;
 
-    @CommandLine.Option(names = {"-f", "--filter"}, description = "Show only tasks with parameters starting with the given word")
+    @CommandLine.Option(names = {"-f", "--filter"}, description = "Filter tasks by name prefix. Shows only tasks with names starting with the specified string.")
     public String startsWith;
 
     @CommandLine.Mixin

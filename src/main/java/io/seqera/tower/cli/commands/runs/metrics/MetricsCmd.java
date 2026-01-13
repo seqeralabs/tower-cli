@@ -42,16 +42,16 @@ import java.util.Map;
 )
 public class MetricsCmd extends AbstractRunsCmd {
 
-    @CommandLine.Option(names = {"-f", "--filter"}, description = "Filter by process name")
+    @CommandLine.Option(names = {"-f", "--filter"}, description = "Filter metrics by process name. Shows statistics only for processes matching the specified name.")
     public String filter = "";
 
-    @CommandLine.Option(names = {"-t", "--type"}, split = ",", description = "Process metric types separated by comma: ${COMPLETION-CANDIDATES} (default: displays all)")
+    @CommandLine.Option(names = {"-t", "--type"}, split = ",", description = "Metric types to display: cpu, mem, time, io. Comma-separated list. Default: all types.")
     public List<MetricType> type;
 
-    @CommandLine.Option(names = {"-c", "--columns"}, split = ",", description = "Process metric columns to display: ${COMPLETION-CANDIDATES} (default: displays all)")
+    @CommandLine.Option(names = {"-c", "--columns"}, split = ",", description = "Statistical columns to display: min, q1, q2, q3, max, mean. Shows quartile distribution of resource usage. Default: all columns.")
     public List<MetricColumn> columns;
 
-    @CommandLine.Option(names = {"-v", "--view"}, description = "Metric table view mode: ${COMPLETION-CANDIDATES} (default: condensed)")
+    @CommandLine.Option(names = {"-v", "--view"}, description = "Table view format. Options: condensed (compact), extended (detailed). Default: condensed.")
     public MetricPreviewFormat view = MetricPreviewFormat.condensed;
 
     @CommandLine.ParentCommand

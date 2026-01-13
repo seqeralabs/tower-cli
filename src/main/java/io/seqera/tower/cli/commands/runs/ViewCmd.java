@@ -56,7 +56,7 @@ import static io.seqera.tower.cli.utils.FormatHelper.formatLabels;
 )
 public class ViewCmd extends AbstractRunsCmd {
 
-    @CommandLine.Option(names = {"-i", "--id"}, description = "Pipeline run identifier", required = true)
+    @CommandLine.Option(names = {"-i", "--id"}, description = "Pipeline run identifier. The unique workflow ID to display details for. Use additional flags to control which sections are shown.", required = true)
     public String id;
 
     @CommandLine.Mixin

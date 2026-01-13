@@ -28,7 +28,7 @@ import java.io.IOException;
 @CommandLine.Command(name = "labels", description = "Manage pipeline run labels")
 public class LabelsCmd extends AbstractPipelinesCmd {
 
-    @CommandLine.Option(names = {"-i", "-id"}, description = "Pipeline run identifier", required = true)
+    @CommandLine.Option(names = {"-i", "-id"}, description = "Pipeline run identifier. The unique workflow ID to manage labels for. Labels help organize and filter pipeline runs.", required = true)
     public String id;
 
     @CommandLine.Mixin

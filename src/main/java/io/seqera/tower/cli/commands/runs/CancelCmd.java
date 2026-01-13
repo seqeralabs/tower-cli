@@ -32,7 +32,7 @@ import java.io.IOException;
 )
 public class CancelCmd extends AbstractRunsCmd {
 
-    @CommandLine.Option(names = {"-i", "--id"}, description = "Pipeline run identifier", required = true)
+    @CommandLine.Option(names = {"-i", "--id"}, description = "Pipeline run identifier. The unique workflow ID to cancel. Running tasks will be terminated.", required = true)
     public String id;
 
     @CommandLine.Mixin

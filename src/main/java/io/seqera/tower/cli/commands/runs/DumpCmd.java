@@ -63,19 +63,19 @@ public class DumpCmd extends AbstractRunsCmd {
     @Option(names = {"-i", "-id"}, description = "Pipeline run identifier", required = true)
     public String id;
 
-    @Option(names = {"-o", "--output"}, description = "Output file to store the dump (supported formats: .tar.xz and .tar.gz)", required = true)
+    @Option(names = {"-o", "--output"}, description = "Output file path for the compressed archive. Supported formats: .tar.xz (smaller, slower) and .tar.gz (faster, larger).", required = true)
     Path outputFile;
 
-    @Option(names = {"--add-task-logs"}, description = "Add all task stdout, stderr and log files")
+    @Option(names = {"--add-task-logs"}, description = "Include individual task log files (stdout, stderr, .command.log) in the archive. Useful for detailed task-level troubleshooting.")
     public boolean addTaskLogs;
 
-    @Option(names = {"--add-fusion-logs"}, description = "Add all Fusion task logs")
+    @Option(names = {"--add-fusion-logs"}, description = "Include Fusion file system logs for tasks. Only applicable when workflow uses Fusion for cloud storage access.")
     public boolean addFusionLogs;
 
-    @Option(names = {"--only-failed"}, description = "Dump only failed tasks")
+    @Option(names = {"--only-failed"}, description = "Include only failed tasks in the dump. Reduces archive size by excluding successful task logs.")
     public boolean onlyFailed;
 
-    @Option(names = {"--silent"}, description = "Do not show download progress")
+    @Option(names = {"--silent"}, description = "Suppress download progress indicators. Useful for scripting or logging to files.")
     public boolean silent;
 
     @Mixin

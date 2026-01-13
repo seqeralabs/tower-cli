@@ -41,7 +41,7 @@ public class ListCmd extends AbstractRunsCmd {
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
-    @CommandLine.Option(names = {"-f", "--filter"}, description = "Show only pipeline runs matching the filter")
+    @CommandLine.Option(names = {"-f", "--filter"}, description = "Filter pipeline runs by run name. Performs case-insensitive substring matching on the runName field.")
     public String filter;
 
     @CommandLine.Mixin
