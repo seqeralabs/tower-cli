@@ -1091,6 +1091,172 @@ The 11 manually written descriptions should be added to the OpenAPI spec via an 
 
 ---
 
+## 🔍 Phase 3f: Compute-Envs Mapping Investigation (2026-01-13)
+
+### Overview
+
+Attempted to expand CLI-to-API mappings to compute-envs commands. Discovered architectural limitation in metadata extractor that requires enhancement before full compute-envs enrichment is possible.
+
+### Research Approach
+
+Used parallel agent-based research to gather comprehensive intelligence:
+
+**Agent 1: codebase-locator** (Agent: a3068e5)
+- Identified 75+ compute-envs command files across 14 platform types
+- Found 15 platforms: AWS Batch (Forge/Manual), Azure Batch (Forge/Manual), K8s, EKS, GKE, Slurm, LSF, UGE, Altair, Moab, Google Batch, Google Life Sciences, Seqera Compute
+- Located platform implementation classes where options are actually defined
+
+**Agent 2: codebase-analyzer - OpenAPI** (Agent: a4d9815)
+- Analyzed 90+ compute environment schemas in seqera-api-latest-decorated.yaml
+- Documented all properties, types, and descriptions for 15 platform configurations
+- Identified discriminator pattern: ComputeEnv_ComputeConfig_ → ComputeConfig → Platform-specific configs
+
+**Agent 3: codebase-analyzer - CLI** (Agent: aa12ddf)
+- Analyzed 161 commands in cli-metadata.json
+- Found 28 compute-envs commands total
+- Discovered that add commands have 0 options extracted (critical finding)
+
+**Agent 4: codebase-pattern-finder** (Agent: aa95490)
+- Identified 15 transformation patterns between CLI and API
+- Documented naming conventions: kebab-case → camelCase, id suffixes, text suffixes, etc.
+- Found 11 high-confidence patterns applicable to compute-envs
+
+### Mappings Created
+
+Added 3 platform mappings to `cli-to-api-mapping-extended.json`:
+
+1. **AddAwsManualCmd** (AWS Batch Manual) - 19 options mapped to AwsBatchConfig
+2. **AddK8sCmd** (Kubernetes) - 19 options mapped to K8sComputeConfig
+3. **AddSlurmCmd** (Slurm HPC) - 16 options mapped to SlurmComputeConfig
+
+**Total**: 54 new option mappings across 3 platforms
+
+### Critical Limitation Discovered
+
+**Issue**: Compute-envs add commands have **0 options extracted** by the metadata extractor.
+
+**Root Cause**: Options are defined in Platform implementation classes (e.g., `AwsBatchManualPlatform.java`, `K8sPlatform.java`), not directly in command classes with `@Option` annotations. The Platform classes are instantiated at runtime, so the static metadata extractor doesn't follow this pattern.
+
+**Evidence**:
+```
+Command: tw compute-envs add aws-batch manual
+  Key: io.seqera.tower.cli.commands.computeenvs.add.aws.AddAwsManualCmd
+  Options: 0 (should be 19+)
+
+Command: tw compute-envs add k8s
+  Key: io.seqera.tower.cli.commands.computeenvs.add.AddK8sCmd
+  Options: 0 (should be 19+)
+```
+
+**Commands That Do Work**:
+- `tw compute-envs update` - 4 options extracted correctly
+- `tw compute-envs list` - 1 option extracted correctly
+- `tw compute-envs delete` - 3 options extracted correctly
+
+These work because options are defined directly in the command class.
+
+### Workaround: Manual Enrichment Example
+
+To demonstrate the workflow works, manually enriched 10 option descriptions in `AwsBatchManualPlatform.java` using OpenAPI descriptions:
+
+**File Modified**: `src/main/java/io/seqera/tower/cli/commands/computeenvs/platforms/AwsBatchManualPlatform.java`
+
+**Options Enriched** (10 total):
+1. `--work-dir`: Added S3 bucket path requirements and example
+2. `--region`: Added region format and examples
+3. `--head-queue`: Clarified purpose and reliability requirements
+4. `--compute-queue`: Clarified Nextflow task submission and override behavior
+5. `--fusion-v2`: Simplified description, added dependency note
+6. `--wave`: Simplified description with capability focus
+7. `--fast-storage`: Clarified NVMe purpose and dependencies
+8. `--head-job-cpus`: Added orchestration context
+9. `--head-job-memory`: Added orchestration context
+10. `--head-job-role`: Added ARN format and security context
+11. `--compute-job-role`: Distinguished from head job role
+12. `--batch-execution-role`: Clarified ECS context and API permissions
+
+**Quality Improvements**:
+- Before: "Work directory."
+- After: "Nextflow work directory. Path where workflow intermediate files are stored. Must be an S3 bucket path (e.g., s3://your-bucket/work)."
+
+- Before: "Allow the use of NVMe instance storage to speed up I/O and disk access operations (requires Fusion v2)."
+- After: "Enable NVMe instance storage. Provides high-performance local storage for faster I/O operations. Requires Fusion file system."
+
+### Path Forward
+
+**Enhancement Required**: Update `extract-cli-metadata.py` to recognize Platform pattern
+
+**Proposed Solution**:
+1. Detect when a command class instantiates a Platform object
+2. Follow the Platform class reference
+3. Extract `@Option` annotations from Platform classes
+4. Merge with command-level options
+
+**Pattern to Recognize**:
+```java
+// In AddAwsManualCmd.java
+@CommandLine.Command(...)
+public class AddAwsManualCmd extends AbstractAddCmd {
+    @CommandLine.Mixin
+    public AwsBatchManualPlatform platform;  // <-- Follow this
+}
+
+// In AwsBatchManualPlatform.java
+public class AwsBatchManualPlatform extends AbstractPlatform<AwsBatchConfig> {
+    @Option(names = {"--work-dir"}, ...)  // <-- Extract these
+    public String workDir;
+}
+```
+
+**Estimated Impact**:
+- **200-250 options** in compute-envs add commands across 15 platforms
+- **Most commonly used CLI commands** (creating compute environments)
+- **Highest value** for enrichment due to complexity
+
+### Statistics
+
+| Metric | Count |
+|--------|-------|
+| **Agents spawned** | 4 (parallel research) |
+| **Platforms researched** | 15 |
+| **API schemas analyzed** | 90+ |
+| **CLI commands analyzed** | 161 |
+| **Transformation patterns identified** | 15 |
+| **Mappings created** | 3 platforms, 54 options |
+| **Manual enrichments applied** | 10 options (1 platform) |
+
+### Success Criteria Met
+
+✅ Parallel agent research successfully gathered comprehensive intelligence
+✅ Created valid mappings for 3 representative platforms
+✅ Documented 15 transformation patterns with confidence levels
+✅ Demonstrated enrichment workflow with manual example
+✅ Identified root cause of limitation with clear path forward
+
+### Evidence Files Created
+
+1. Agent outputs captured in parallel execution (4 agents)
+2. `cli-to-api-mapping-extended.json` - Updated with 3 platform mappings
+3. `AwsBatchManualPlatform.java` - 10 enriched descriptions (example)
+
+### Next Steps
+
+**Immediate** (This session):
+- Document findings ✅
+- Commit enriched AwsBatchManualPlatform.java as example
+
+**Short-term** (Follow-up PR):
+- Enhance `extract-cli-metadata.py` to handle Platform pattern
+- Re-extract CLI metadata with Platform options included
+- Run enrichment on all compute-envs add commands
+- Apply enriched descriptions to all 15 Platform class files
+
+**Long-term**:
+- Extend to other command families using similar patterns
+- Achieve 80% coverage of commonly used commands
+
+---
+
 ## 📝 Phase 4: Docs Generation (Future)
 
 1. Create doc generator script

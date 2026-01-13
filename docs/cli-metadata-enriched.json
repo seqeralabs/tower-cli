@@ -8622,7 +8622,7 @@
     }
   },
   "enrichment_stats": {
-    "commands_processed": 9,
+    "commands_processed": 12,
     "options_enriched": 57,
     "options_skipped": 24,
     "api_descriptions_not_found": 11,
