@@ -33,10 +33,10 @@ import java.io.IOException;
 )
 public class AddCmd extends AbstractMembersClass {
 
-    @CommandLine.Option(names = {"-u", "--user"}, description = "User email address", required = true)
+    @CommandLine.Option(names = {"-u", "--user"}, description = "User email address to invite. If the user doesn't have a Seqera Platform account, they will receive an invitation email to join the organization.", required = true)
     public String user;
 
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name or identifier", required = true)
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name or numeric ID. Specify either the unique organization name or the numeric organization ID returned by 'tw organizations list'.", required = true)
     public String organizationRef;
 
     @Override

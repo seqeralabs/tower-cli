@@ -33,10 +33,10 @@ import java.io.IOException;
 )
 public class ListCmd extends AbstractMembersClass {
 
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name or identifier", required = true)
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name or numeric ID. Specify either the unique organization name or the numeric organization ID returned by 'tw organizations list'.", required = true)
     public String organizationRef;
 
-    @CommandLine.Option(names = {"-f", "--filter"}, description = "Filter members by username prefix")
+    @CommandLine.Option(names = {"-f", "--filter"}, description = "Filter members by username prefix. Case-insensitive prefix matching on the username field (e.g., 'john' matches 'john.doe').")
     public String startsWith;
 
     @CommandLine.Mixin

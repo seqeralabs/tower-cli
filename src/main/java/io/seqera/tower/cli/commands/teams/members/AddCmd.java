@@ -36,7 +36,7 @@ import java.io.IOException;
 )
 public class AddCmd extends AbstractApiCmd {
 
-    @CommandLine.Option(names = {"-m", "--member"}, description = "Member username or email", required = true)
+    @CommandLine.Option(names = {"-m", "--member"}, description = "Member username or email address. The user must already be a member of the organization before being added to the team. Use either their platform username or email address.", required = true)
     public String userNameOrEmail;
 
     @CommandLine.ParentCommand

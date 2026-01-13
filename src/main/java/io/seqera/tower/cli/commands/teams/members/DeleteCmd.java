@@ -35,7 +35,7 @@ import java.io.IOException;
 )
 public class DeleteCmd extends AbstractApiCmd {
 
-    @CommandLine.Option(names = {"-m", "--member"}, description = "Member username to remove from team", required = true)
+    @CommandLine.Option(names = {"-m", "--member"}, description = "Member username to remove from team. Removes the user from this team but does not remove them from the organization. They will lose access to workspaces shared with this team.", required = true)
     public String username;
 
     @CommandLine.ParentCommand
