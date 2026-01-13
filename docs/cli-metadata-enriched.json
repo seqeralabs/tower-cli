@@ -3470,167 +3470,257 @@
             "-c",
             "--compute-env"
           ],
-          "description": "Compute environment name",
+          "description": "Compute environment identifier where the pipeline will run. Defaults to workspace primary compute environment if omitted. Provide the name or identifier.",
           "required": false,
           "default_value": null,
           "arity": null,
           "split": null,
-          "hidden": false
+          "hidden": false,
+          "api_source": {
+            "schema": "CreatePipelineRequest",
+            "field": "computeEnvId",
+            "original_description": "Compute environment identifier where the pipeline will run. Defaults to workspace primary compute environment if omitted.",
+            "transformation": "name_to_id"
+          }
         },
         {
           "names": [
             "--work-dir"
           ],
-          "description": "Path where pipeline scratch data is stored",
+          "description": "Work directory path where workflow intermediate files are stored. Defaults to compute environment work directory if omitted.",
           "required": false,
           "default_value": null,
           "arity": null,
           "split": null,
-          "hidden": false
+          "hidden": false,
+          "api_source": {
+            "schema": "CreatePipelineRequest",
+            "field": "workDir",
+            "original_description": "Work directory path where workflow intermediate files are stored. Defaults to compute environment work directory if omitted.",
+            "transformation": "direct"
+          }
         },
         {
           "names": [
             "-p",
             "--profile"
           ],
-          "description": "Comma-separated list of configuration profile names to use for this pipeline execution",
+          "description": "Array of Nextflow configuration profile names to apply.",
           "required": false,
           "default_value": null,
           "arity": null,
           "split": ",",
-          "hidden": false
+          "hidden": false,
+          "api_source": {
+            "schema": "CreatePipelineRequest",
+            "field": "configProfiles",
+            "original_description": "Array of Nextflow configuration profile names to apply.",
+            "transformation": "direct"
+          }
         },
         {
           "names": [
             "--params-file"
           ],
-          "description": "Pipeline parameters in either JSON or YML format",
+          "description": "Pipeline parameters in JSON or YAML format. Provide the path to a file containing the content.",
           "required": false,
           "default_value": null,
           "arity": null,
           "split": null,
-          "hidden": false
+          "hidden": false,
+          "api_source": {
+            "schema": "CreatePipelineRequest",
+            "field": "paramsText",
+            "original_description": "Pipeline parameters in JSON or YAML format.",
+            "transformation": "file_to_text"
+          }
         },
         {
           "names": [
             "--revision"
           ],
-          "description": "Git commit ID, tag, or branch name",
+          "description": "Git revision, branch, or tag to use.",
           "required": false,
           "default_value": null,
           "arity": null,
           "split": null,
-          "hidden": false
+          "hidden": false,
+          "api_source": {
+            "schema": "CreatePipelineRequest",
+            "field": "revision",
+            "original_description": "Git revision, branch, or tag to use.",
+            "transformation": "direct"
+          }
         },
         {
           "names": [
             "--config"
           ],
-          "description": "Path to a Nextflow config file (values defined here override the same values in the pipeline repository config file, and all configuration values specified in Platform pipeline or compute environment Nextflow config fields are ignored)",
+          "description": "Nextflow configuration as text (overrides config files). Provide the path to a file containing the content.",
           "required": false,
           "default_value": null,
           "arity": null,
           "split": null,
-          "hidden": false
+          "hidden": false,
+          "api_source": {
+            "schema": "CreatePipelineRequest",
+            "field": "configText",
+            "original_description": "Nextflow configuration as text (overrides config files).",
+            "transformation": "file_to_text"
+          }
         },
         {
           "names": [
             "--pre-run"
           ],
-          "description": "Bash script that is executed in the same environment where Nextflow runs just before the pipeline is launched",
+          "description": "Add a script that executes in the nf-launch script prior to invoking Nextflow processes. See: https://docs.seqera.io/platform-cloud/launch/advanced#pre-and-post-run-scripts. Provide the path to a file containing the content.",
           "required": false,
           "default_value": null,
           "arity": null,
           "split": null,
-          "hidden": false
+          "hidden": false,
+          "api_source": {
+            "schema": "CreatePipelineRequest",
+            "field": "preRunScript",
+            "original_description": "Add a script that executes in the nf-launch script prior to invoking Nextflow processes. See [Pre and post-run scripts](https://docs.seqera.io/platform-cloud/launch/advanced#pre-and-post-run-scripts).",
+            "transformation": "file_to_text"
+          }
         },
         {
           "names": [
             "--post-run"
           ],
-          "description": "Bash script that is executed in the same environment where Nextflow runs immediately after the pipeline completion",
+          "description": "Add a script that executes after all Nextflow processes have completed. See: https://docs.seqera.io/platform-cloud/launch/advanced#pre-and-post-run-scripts. Provide the path to a file containing the content.",
           "required": false,
           "default_value": null,
           "arity": null,
           "split": null,
-          "hidden": false
+          "hidden": false,
+          "api_source": {
+            "schema": "CreatePipelineRequest",
+            "field": "postRunScript",
+            "original_description": "Add a script that executes after all Nextflow processes have completed. See [Pre and post-run scripts](https://docs.seqera.io/platform-cloud/launch/advanced#pre-and-post-run-scripts).",
+            "transformation": "file_to_text"
+          }
         },
         {
           "names": [
             "--pull-latest"
           ],
-          "description": "Enable Nextflow to pull the latest repository version before running the pipeline",
+          "description": "Pull the latest version of the pipeline from the repository.",
           "required": false,
           "default_value": null,
           "arity": null,
           "split": null,
-          "hidden": false
+          "hidden": false,
+          "api_source": {
+            "schema": "CreatePipelineRequest",
+            "field": "pullLatest",
+            "original_description": "Pull the latest version of the pipeline from the repository.",
+            "transformation": "direct"
+          }
         },
         {
           "names": [
             "--stub-run"
           ],
-          "description": "Execute the workflow replacing process scripts with command stubs",
+          "description": "Execute a stub run for testing (processes return dummy results).",
           "required": false,
           "default_value": null,
           "arity": null,
           "split": null,
-          "hidden": false
+          "hidden": false,
+          "api_source": {
+            "schema": "CreatePipelineRequest",
+            "field": "stubRun",
+            "original_description": "Execute a stub run for testing (processes return dummy results).",
+            "transformation": "direct"
+          }
         },
         {
           "names": [
             "--main-script"
           ],
-          "description": "Pipeline main script file if different from main.nf",
+          "description": "Alternative main script filename. Default: `main.nf`.",
           "required": false,
           "default_value": null,
           "arity": null,
           "split": null,
-          "hidden": false
+          "hidden": false,
+          "api_source": {
+            "schema": "CreatePipelineRequest",
+            "field": "mainScript",
+            "original_description": "Alternative main script filename. Default: `main.nf`.",
+            "transformation": "direct"
+          }
         },
         {
           "names": [
             "--entry-name"
           ],
-          "description": "Main workflow name to be executed when using DSL2 syntax",
+          "description": "Workflow entry point name when using Nextflow DSL2.",
           "required": false,
           "default_value": null,
           "arity": null,
           "split": null,
-          "hidden": false
+          "hidden": false,
+          "api_source": {
+            "schema": "CreatePipelineRequest",
+            "field": "entryName",
+            "original_description": "Workflow entry point name when using Nextflow DSL2.",
+            "transformation": "direct"
+          }
         },
         {
           "names": [
             "--schema-name"
           ],
-          "description": "Schema name",
+          "description": "Name of the pipeline schema to use.",
           "required": false,
           "default_value": null,
           "arity": null,
           "split": null,
-          "hidden": false
+          "hidden": false,
+          "api_source": {
+            "schema": "CreatePipelineRequest",
+            "field": "schemaName",
+            "original_description": "Name of the pipeline schema to use.",
+            "transformation": "direct"
+          }
         },
         {
           "names": [
             "--user-secrets"
           ],
-          "description": "Pipeline secrets required by the pipeline execution that belong to the launching user personal context (user secrets take precedence over workspace secrets with the same name)",
+          "description": "Array of user secrets to make available to the pipeline.",
           "required": false,
           "default_value": null,
           "arity": null,
           "split": ",",
-          "hidden": false
+          "hidden": false,
+          "api_source": {
+            "schema": "CreatePipelineRequest",
+            "field": "userSecrets",
+            "original_description": "Array of user secrets to make available to the pipeline.",
+            "transformation": "direct"
+          }
         },
         {
           "names": [
             "--workspace-secrets"
           ],
-          "description": "Pipeline secrets required by the pipeline execution (these secrets must be defined in the launching workspace)",
+          "description": "Array of workspace secrets to make available to the pipeline.",
           "required": false,
           "default_value": null,
           "arity": null,
           "split": ",",
-          "hidden": false
+          "hidden": false,
+          "api_source": {
+            "schema": "CreatePipelineRequest",
+            "field": "workspaceSecrets",
+            "original_description": "Array of workspace secrets to make available to the pipeline.",
+            "transformation": "direct"
+          }
         }
       ],
       "parameters": [
@@ -5236,167 +5326,257 @@
             "-c",
             "--compute-env"
           ],
-          "description": "Compute environment name",
+          "description": "Compute environment identifier where the pipeline will run. Defaults to workspace primary compute environment if omitted. Provide the name or identifier.",
           "required": false,
           "default_value": null,
           "arity": null,
           "split": null,
-          "hidden": false
+          "hidden": false,
+          "api_source": {
+            "schema": "UpdateActionRequest",
+            "field": "computeEnvId",
+            "original_description": "Compute environment identifier where the pipeline will run. Defaults to workspace primary compute environment if omitted.",
+            "transformation": "name_to_id"
+          }
         },
         {
           "names": [
             "--work-dir"
           ],
-          "description": "Path where pipeline scratch data is stored",
+          "description": "Work directory path where workflow intermediate files are stored. Defaults to compute environment work directory if omitted.",
           "required": false,
           "default_value": null,
           "arity": null,
           "split": null,
-          "hidden": false
+          "hidden": false,
+          "api_source": {
+            "schema": "UpdateActionRequest",
+            "field": "workDir",
+            "original_description": "Work directory path where workflow intermediate files are stored. Defaults to compute environment work directory if omitted.",
+            "transformation": "direct"
+          }
         },
         {
           "names": [
             "-p",
             "--profile"
           ],
-          "description": "Comma-separated list of configuration profile names to use for this pipeline execution",
+          "description": "Array of Nextflow configuration profile names to apply.",
           "required": false,
           "default_value": null,
           "arity": null,
           "split": ",",
-          "hidden": false
+          "hidden": false,
+          "api_source": {
+            "schema": "UpdateActionRequest",
+            "field": "configProfiles",
+            "original_description": "Array of Nextflow configuration profile names to apply.",
+            "transformation": "direct"
+          }
         },
         {
           "names": [
             "--params-file"
           ],
-          "description": "Pipeline parameters in either JSON or YML format",
+          "description": "Pipeline parameters in JSON or YAML format. Provide the path to a file containing the content.",
           "required": false,
           "default_value": null,
           "arity": null,
           "split": null,
-          "hidden": false
+          "hidden": false,
+          "api_source": {
+            "schema": "UpdateActionRequest",
+            "field": "paramsText",
+            "original_description": "Pipeline parameters in JSON or YAML format.",
+            "transformation": "file_to_text"
+          }
         },
         {
           "names": [
             "--revision"
           ],
-          "description": "Git commit ID, tag, or branch name",
+          "description": "Git revision, branch, or tag to use.",
           "required": false,
           "default_value": null,
           "arity": null,
           "split": null,
-          "hidden": false
+          "hidden": false,
+          "api_source": {
+            "schema": "UpdateActionRequest",
+            "field": "revision",
+            "original_description": "Git revision, branch, or tag to use.",
+            "transformation": "direct"
+          }
         },
         {
           "names": [
             "--config"
           ],
-          "description": "Path to a Nextflow config file (values defined here override the same values in the pipeline repository config file, and all configuration values specified in Platform pipeline or compute environment Nextflow config fields are ignored)",
+          "description": "Nextflow configuration as text (overrides config files). Provide the path to a file containing the content.",
           "required": false,
           "default_value": null,
           "arity": null,
           "split": null,
-          "hidden": false
+          "hidden": false,
+          "api_source": {
+            "schema": "UpdateActionRequest",
+            "field": "configText",
+            "original_description": "Nextflow configuration as text (overrides config files).",
+            "transformation": "file_to_text"
+          }
         },
         {
           "names": [
             "--pre-run"
           ],
-          "description": "Bash script that is executed in the same environment where Nextflow runs just before the pipeline is launched",
+          "description": "Add a script that executes in the nf-launch script prior to invoking Nextflow processes. See: https://docs.seqera.io/platform-cloud/launch/advanced#pre-and-post-run-scripts. Provide the path to a file containing the content.",
           "required": false,
           "default_value": null,
           "arity": null,
           "split": null,
-          "hidden": false
+          "hidden": false,
+          "api_source": {
+            "schema": "UpdateActionRequest",
+            "field": "preRunScript",
+            "original_description": "Add a script that executes in the nf-launch script prior to invoking Nextflow processes. See [Pre and post-run scripts](https://docs.seqera.io/platform-cloud/launch/advanced#pre-and-post-run-scripts).",
+            "transformation": "file_to_text"
+          }
         },
         {
           "names": [
             "--post-run"
           ],
-          "description": "Bash script that is executed in the same environment where Nextflow runs immediately after the pipeline completion",
+          "description": "Add a script that executes after all Nextflow processes have completed. See: https://docs.seqera.io/platform-cloud/launch/advanced#pre-and-post-run-scripts. Provide the path to a file containing the content.",
           "required": false,
           "default_value": null,
           "arity": null,
           "split": null,
-          "hidden": false
+          "hidden": false,
+          "api_source": {
+            "schema": "UpdateActionRequest",
+            "field": "postRunScript",
+            "original_description": "Add a script that executes after all Nextflow processes have completed. See [Pre and post-run scripts](https://docs.seqera.io/platform-cloud/launch/advanced#pre-and-post-run-scripts).",
+            "transformation": "file_to_text"
+          }
         },
         {
           "names": [
             "--pull-latest"
           ],
-          "description": "Enable Nextflow to pull the latest repository version before running the pipeline",
+          "description": "Pull the latest version of the pipeline from the repository.",
           "required": false,
           "default_value": null,
           "arity": null,
           "split": null,
-          "hidden": false
+          "hidden": false,
+          "api_source": {
+            "schema": "UpdateActionRequest",
+            "field": "pullLatest",
+            "original_description": "Pull the latest version of the pipeline from the repository.",
+            "transformation": "direct"
+          }
         },
         {
           "names": [
             "--stub-run"
           ],
-          "description": "Execute the workflow replacing process scripts with command stubs",
+          "description": "Execute a stub run for testing (processes return dummy results).",
           "required": false,
           "default_value": null,
           "arity": null,
           "split": null,
-          "hidden": false
+          "hidden": false,
+          "api_source": {
+            "schema": "UpdateActionRequest",
+            "field": "stubRun",
+            "original_description": "Execute a stub run for testing (processes return dummy results).",
+            "transformation": "direct"
+          }
         },
         {
           "names": [
             "--main-script"
           ],
-          "description": "Pipeline main script file if different from main.nf",
+          "description": "Alternative main script filename. Default: `main.nf`.",
           "required": false,
           "default_value": null,
           "arity": null,
           "split": null,
-          "hidden": false
+          "hidden": false,
+          "api_source": {
+            "schema": "UpdateActionRequest",
+            "field": "mainScript",
+            "original_description": "Alternative main script filename. Default: `main.nf`.",
+            "transformation": "direct"
+          }
         },
         {
           "names": [
             "--entry-name"
           ],
-          "description": "Main workflow name to be executed when using DSL2 syntax",
+          "description": "Workflow entry point name when using Nextflow DSL2.",
           "required": false,
           "default_value": null,
           "arity": null,
           "split": null,
-          "hidden": false
+          "hidden": false,
+          "api_source": {
+            "schema": "UpdateActionRequest",
+            "field": "entryName",
+            "original_description": "Workflow entry point name when using Nextflow DSL2.",
+            "transformation": "direct"
+          }
         },
         {
           "names": [
             "--schema-name"
           ],
-          "description": "Schema name",
+          "description": "Name of the pipeline schema to use.",
           "required": false,
           "default_value": null,
           "arity": null,
           "split": null,
-          "hidden": false
+          "hidden": false,
+          "api_source": {
+            "schema": "UpdateActionRequest",
+            "field": "schemaName",
+            "original_description": "Name of the pipeline schema to use.",
+            "transformation": "direct"
+          }
         },
         {
           "names": [
             "--user-secrets"
           ],
-          "description": "Pipeline secrets required by the pipeline execution that belong to the launching user personal context (user secrets take precedence over workspace secrets with the same name)",
+          "description": "Array of user secrets to make available to the pipeline.",
           "required": false,
           "default_value": null,
           "arity": null,
           "split": ",",
-          "hidden": false
+          "hidden": false,
+          "api_source": {
+            "schema": "UpdateActionRequest",
+            "field": "userSecrets",
+            "original_description": "Array of user secrets to make available to the pipeline.",
+            "transformation": "direct"
+          }
         },
         {
           "names": [
             "--workspace-secrets"
           ],
-          "description": "Pipeline secrets required by the pipeline execution (these secrets must be defined in the launching workspace)",
+          "description": "Array of workspace secrets to make available to the pipeline.",
           "required": false,
           "default_value": null,
           "arity": null,
           "split": ",",
-          "hidden": false
+          "hidden": false,
+          "api_source": {
+            "schema": "UpdateActionRequest",
+            "field": "workspaceSecrets",
+            "original_description": "Array of workspace secrets to make available to the pipeline.",
+            "transformation": "direct"
+          }
         }
       ],
       "parameters": [],
@@ -8443,9 +8623,9 @@
   },
   "enrichment_stats": {
     "commands_processed": 9,
-    "options_enriched": 27,
+    "options_enriched": 57,
     "options_skipped": 24,
-    "api_descriptions_not_found": 41,
+    "api_descriptions_not_found": 11,
     "warnings": [
       "API description not found for CreatePipelineSecretRequest.name",
       "API description not found for CreatePipelineSecretRequest.value",
@@ -8454,40 +8634,10 @@
       "API description not found for CreateDatasetRequest.description",
       "API description not found for UpdateDatasetRequest.name",
       "API description not found for UpdateDatasetRequest.description",
-      "API description not found for CreatePipelineRequest.computeEnvId",
-      "API description not found for CreatePipelineRequest.workDir",
-      "API description not found for CreatePipelineRequest.configProfiles",
-      "API description not found for CreatePipelineRequest.paramsText",
-      "API description not found for CreatePipelineRequest.revision",
-      "API description not found for CreatePipelineRequest.configText",
-      "API description not found for CreatePipelineRequest.preRunScript",
-      "API description not found for CreatePipelineRequest.postRunScript",
-      "API description not found for CreatePipelineRequest.pullLatest",
-      "API description not found for CreatePipelineRequest.stubRun",
-      "API description not found for CreatePipelineRequest.mainScript",
-      "API description not found for CreatePipelineRequest.entryName",
-      "API description not found for CreatePipelineRequest.schemaName",
-      "API description not found for CreatePipelineRequest.userSecrets",
-      "API description not found for CreatePipelineRequest.workspaceSecrets",
       "API description not found for UpdateWorkspaceRequest.name",
       "API description not found for UpdateWorkspaceRequest.fullName",
       "API description not found for UpdateWorkspaceRequest.description",
-      "API description not found for UpdateActionRequest.name",
-      "API description not found for UpdateActionRequest.computeEnvId",
-      "API description not found for UpdateActionRequest.workDir",
-      "API description not found for UpdateActionRequest.configProfiles",
-      "API description not found for UpdateActionRequest.paramsText",
-      "API description not found for UpdateActionRequest.revision",
-      "API description not found for UpdateActionRequest.configText",
-      "API description not found for UpdateActionRequest.preRunScript",
-      "API description not found for UpdateActionRequest.postRunScript",
-      "API description not found for UpdateActionRequest.pullLatest",
-      "API description not found for UpdateActionRequest.stubRun",
-      "API description not found for UpdateActionRequest.mainScript",
-      "API description not found for UpdateActionRequest.entryName",
-      "API description not found for UpdateActionRequest.schemaName",
-      "API description not found for UpdateActionRequest.userSecrets",
-      "API description not found for UpdateActionRequest.workspaceSecrets"
+      "API description not found for UpdateActionRequest.name"
     ]
   }
 }

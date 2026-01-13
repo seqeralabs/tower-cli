@@ -165,8 +165,11 @@ class CLIMetadataEnricher:
             self.stats["options_skipped"] += 1
             return enriched_option
 
+        # Check for nested path (like "launch.workDir")
+        api_nested_path = option_mapping.get("api_nested_path")
+
         # Extract description from OpenAPI spec
-        api_description = self._get_api_description(api_schema_name, api_field)
+        api_description = self._get_api_description(api_schema_name, api_field, api_nested_path)
 
         if not api_description:
             self._add_warning(f"API description not found for {api_schema_name}.{api_field}")
@@ -193,13 +196,14 @@ class CLIMetadataEnricher:
         self.stats["options_enriched"] += 1
         return enriched_option
 
-    def _get_api_description(self, schema_name: str, field_name: str) -> Optional[str]:
+    def _get_api_description(self, schema_name: str, field_name: str, nested_path: Optional[str] = None) -> Optional[str]:
         """
-        Extract description from OpenAPI spec.
+        Extract description from OpenAPI spec, supporting nested paths and $ref following.
 
         Args:
-            schema_name: Name of the schema (e.g., "WorkflowLaunchRequest")
-            field_name: Name of the field (e.g., "preRunScript")
+            schema_name: Name of the schema (e.g., "WorkflowLaunchRequest" or "UpdateActionRequest")
+            field_name: Name of the field (e.g., "preRunScript" or "workDir")
+            nested_path: Optional nested path (e.g., "launch" to look in UpdateActionRequest.launch.$ref)
 
         Returns:
             Description string or None if not found
@@ -207,11 +211,29 @@ class CLIMetadataEnricher:
         try:
             schemas = self.openapi_spec.get("components", {}).get("schemas", {})
             schema = schemas.get(schema_name, {})
+
+            # If nested_path is provided, navigate to the nested object first
+            if nested_path:
+                properties = schema.get("properties", {})
+                nested_field = properties.get(nested_path, {})
+
+                # Check if the nested field has a $ref
+                if "$ref" in nested_field:
+                    # Follow the $ref (format: "#/components/schemas/SchemaName")
+                    ref_path = nested_field["$ref"]
+                    ref_schema_name = ref_path.split("/")[-1]
+                    schema = schemas.get(ref_schema_name, {})
+                else:
+                    # The nested field might be an inline object
+                    schema = nested_field
+
+            # Now get the field description from the (possibly referenced) schema
             properties = schema.get("properties", {})
             field = properties.get(field_name, {})
             return field.get("description")
         except (KeyError, AttributeError) as e:
-            self._add_warning(f"Error accessing {schema_name}.{field_name}: {e}")
+            path_str = f"{schema_name}.{nested_path}.{field_name}" if nested_path else f"{schema_name}.{field_name}"
+            self._add_warning(f"Error accessing {path_str}: {e}")
             return None
 
     def _adapt_description_for_cli(
