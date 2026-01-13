@@ -28,19 +28,19 @@ import java.util.List;
 
 public class GoogleLifeSciencesPlatform extends AbstractPlatform<GoogleLifeSciencesConfig> {
 
-    @Option(names = {"--work-dir"}, description = "Work directory.", required = true)
+    @Option(names = {"--work-dir"}, description = "Nextflow work directory. Path where workflow intermediate files are stored. Must be a Google Cloud Storage bucket path (e.g., gs://your-bucket/work).", required = true)
     public String workDir;
 
-    @Option(names = {"-r", "--region"}, description = "The region where the workload will be executed.", required = true)
+    @Option(names = {"-r", "--region"}, description = "Google Cloud region where the workload will be executed (e.g., us-central1, europe-west1).", required = true)
     public String region;
 
-    @Option(names = {"--zones"}, split = ",", description = "One or more zones where the workload will be executed. If specified, it has priority over the region setting.")
+    @Option(names = {"--zones"}, split = ",", description = "Google Cloud zones for workload execution. Comma-separated list. If specified, takes priority over region setting.")
     public List<String> zones;
 
-    @Option(names = {"--location"}, description = "The location where the job executions are deployed to Cloud Life Sciences API [default: same as the specified region/zone].")
+    @Option(names = {"--location"}, description = "Location where job executions are deployed to Cloud Life Sciences API. Default: same as specified region/zone.")
     public String location;
 
-    @Option(names = {"--preemptible"}, description = "Use preemptible virtual machines.")
+    @Option(names = {"--preemptible"}, description = "Use preemptible virtual machines. Enables cost-effective instances for compute workloads. Preemptible VMs may be interrupted when capacity is needed.")
     public Boolean preemptible;
 
     @ArgGroup(heading = "%nFilestore file system:%n", validate = false)
@@ -91,25 +91,25 @@ public class GoogleLifeSciencesPlatform extends AbstractPlatform<GoogleLifeScien
 
     public static class Filestore {
 
-        @Option(names = {"--nfs-target"}, description = "The Filestore instance IP address and share file name e.g. 1.2.3.4:/my_share_name.")
+        @Option(names = {"--nfs-target"}, description = "Google Cloud Filestore instance IP address and share name. Format: IP:SHARE_NAME (e.g., 10.0.0.1:/my_share).")
         public String nfsTarget;
 
-        @Option(names = {"--nfs-mount"}, description = "Specify the NFS mount path. It should be the same as the pipeline work directory or a parent path of it [default: pipeline work directory].")
+        @Option(names = {"--nfs-mount"}, description = "NFS mount path for the Filestore volume. Should be the same as or a parent directory of the pipeline work directory. Default: pipeline work directory.")
         public String nfsMount;
 
     }
 
     public static class AdvancedOptions {
-        @Option(names = {"--use-private-address"}, description = "Do not attach a public IP address to the VM. When enabled only Google internal services are accessible.")
+        @Option(names = {"--use-private-address"}, description = "Do not attach a public IP address to VM instances. When enabled, only Google internal services are accessible. Requires Cloud NAT for external access.")
         public Boolean usePrivateAddress;
 
-        @Option(names = {"--boot-disk-size"}, description = "Enter the boot disk size as GB.")
+        @Option(names = {"--boot-disk-size"}, description = "Boot disk size in GB. Controls the root volume size for compute instances. Default: 50 GB.")
         public Integer bootDiskSizeGb;
 
-        @Option(names = {"--head-job-cpus"}, description = "The number of CPUs to be allocated for the Nextflow runner job.")
+        @Option(names = {"--head-job-cpus"}, description = "Number of CPUs allocated to the Nextflow head job. Controls the compute resources for the main workflow orchestration process.")
         public Integer headJobCpus;
 
-        @Option(names = {"--head-job-memory"}, description = "The number of MiB of memory reserved for the Nextflow runner job (value should be a multiple of 256MiB and from 0.5 GB to 8 GB per CPU).")
+        @Option(names = {"--head-job-memory"}, description = "Memory allocation for the Nextflow head job in megabytes. Value must be a multiple of 256 MiB and from 0.5 GB to 8 GB per CPU.")
         public Integer headJobMemoryMb;
     }
 }
