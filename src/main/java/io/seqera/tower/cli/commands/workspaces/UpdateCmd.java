@@ -42,13 +42,13 @@ public class UpdateCmd extends AbstractWorkspaceCmd {
     @CommandLine.Option(names = {"-i", "--id"}, description = "Workspace identifier", required = true)
     public Long workspaceId;
 
-    @Option(names = {"--new-name"}, description = "Workspace new name")
+    @Option(names = {"--new-name"}, description = "Updated workspace name. Must be unique per workspace. Names consist of alphanumeric, hyphen, and underscore characters. Must be 2-40 characters.")
     public String workspaceNewName;
 
-    @Option(names = {"-f", "--fullName"}, description = "Workspace full name")
+    @Option(names = {"-f", "--fullName"}, description = "Updated full display name for the workspace. Maximum 100 characters.")
     public String workspaceFullName;
 
-    @Option(names = {"-d", "--description"}, description = "Workspace description")
+    @Option(names = {"-d", "--description"}, description = "Updated workspace description. Maximum 1000 characters.")
     public String description;
 
     @Override

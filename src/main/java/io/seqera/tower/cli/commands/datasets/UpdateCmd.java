@@ -38,10 +38,10 @@ public class UpdateCmd extends AbstractDatasetsCmd {
     @CommandLine.Mixin
     public DatasetRefOptions datasetRefOptions;
 
-    @CommandLine.Option(names = {"--new-name"}, description = "New name for the dataset")
+    @CommandLine.Option(names = {"--new-name"}, description = "Updated dataset name. Must be unique per workspace. Names consist of alphanumeric, hyphen, and underscore characters.")
     public String newName;
 
-    @CommandLine.Option(names = {"-d", "--description"}, description = "Dataset description")
+    @CommandLine.Option(names = {"-d", "--description"}, description = "Updated dataset description.")
     public String description;
 
     @CommandLine.Option(names = {"--header"}, description = "Treat first row as header")

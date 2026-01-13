@@ -37,7 +37,7 @@ public class UpdateCmd extends AbstractSecretsCmd {
 
     @Mixin
     public WorkspaceOptionalOptions workspace;
-    @Option(names = {"-v", "--value"}, description = "Secret value")
+    @Option(names = {"-v", "--value"}, description = "New secret value, to be stored securely. The secret is made available to pipeline executions at runtime.")
     public String value;
     @Mixin
     SecretRefOptions ref;

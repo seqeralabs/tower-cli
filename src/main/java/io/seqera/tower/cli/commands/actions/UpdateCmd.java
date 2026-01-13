@@ -45,7 +45,7 @@ public class UpdateCmd extends AbstractActionsCmd {
     @CommandLine.Option(names = {"-s", "--status"}, description = "Action status (pause or active)")
     public String status;
 
-    @CommandLine.Option(names = {"--new-name"}, description = "New name for the action")
+    @CommandLine.Option(names = {"--new-name"}, description = "Updated action name. Must be unique per workspace. Names consist of alphanumeric, hyphen, and underscore characters.")
     public String newName;
 
     @CommandLine.Mixin

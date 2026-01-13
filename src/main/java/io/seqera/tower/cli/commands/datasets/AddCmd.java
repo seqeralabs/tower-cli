@@ -37,10 +37,10 @@ import java.nio.file.Path;
 )
 public class AddCmd extends AbstractDatasetsCmd {
 
-    @CommandLine.Option(names = {"-n", "--name"}, description = "Dataset name", required = true)
+    @CommandLine.Option(names = {"-n", "--name"}, description = "Dataset name. Must be unique per workspace. Names consist of alphanumeric, hyphen, and underscore characters.", required = true)
     public String name;
 
-    @CommandLine.Option(names = {"-d", "--description"}, description = "Dataset description")
+    @CommandLine.Option(names = {"-d", "--description"}, description = "Optional dataset description.")
     public String description;
 
     @CommandLine.Option(names = {"--header"}, description = "Treat first row as header")

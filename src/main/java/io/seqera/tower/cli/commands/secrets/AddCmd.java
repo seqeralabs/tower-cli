@@ -37,13 +37,13 @@ import java.io.IOException;
 )
 public class AddCmd extends AbstractSecretsCmd {
 
-    @Option(names = {"-n", "--name"}, description = "Secret name", required = true)
+    @Option(names = {"-n", "--name"}, description = "Secret name. Must be unique per workspace. Names consist of alphanumeric, hyphen, and underscore characters.", required = true)
     public String name;
 
     @Mixin
     public WorkspaceOptionalOptions workspace;
 
-    @Option(names = {"-v", "--value"}, description = "Secret value")
+    @Option(names = {"-v", "--value"}, description = "Secret value, to be stored securely. The secret is made available to pipeline executions at runtime.")
     public String value;
 
     @CommandLine.Option(names = {"--overwrite"}, description = "Overwrite the secret if it already exists", defaultValue = "false")
