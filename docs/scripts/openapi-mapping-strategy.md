@@ -311,7 +311,7 @@ Provide the name or identifier of an existing compute environment. If omitted, d
 ### Phase 1: Initial Setup (Manual)
 
 1. ✅ Create `cli-to-api-mapping.json` (DONE)
-2. Port `seqera-api-latest-decorated.yaml` to this repo
+2. ✅ Port `seqera-api-latest-decorated.yaml` to this repo (DONE)
 3. Implement `enrich-cli-metadata.py`
 4. Test enrichment on LaunchCmd
 5. Implement `apply-descriptions.py`
