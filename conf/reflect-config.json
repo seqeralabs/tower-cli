@@ -6,6 +6,9 @@
   "name":"[C"
 },
 {
+  "name":"[Lcom.fasterxml.jackson.databind.deser.BeanDeserializerModifier;"
+},
+{
   "name":"[Lcom.fasterxml.jackson.databind.deser.Deserializers;"
 },
 {
@@ -81,6 +84,10 @@
 {
   "name":"com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector",
   "allDeclaredConstructors":true
+},
+{
+  "name":"com.fasterxml.jackson.module.jaxb.ser.DataHandlerJsonSerializer",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"com.sun.crypto.provider.AESCipher$General",
@@ -422,9 +429,21 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.computeenvs.add.AddAwsCloudCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.computeenvs.add.AddAwsCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.computeenvs.add.AddAzureCloudCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -447,6 +466,12 @@
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.add.AddGoogleBatchCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.computeenvs.add.AddGoogleCloudCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
@@ -580,6 +605,17 @@
   "allDeclaredMethods":true
 },
 {
+  "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AwsCloudPlatform",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AwsCloudPlatform$AdvancedOptions",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AzBatchForgePlatform",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -603,6 +639,17 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AzCloudPlatform",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AzCloudPlatform$AdvancedOptions",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.EksPlatform",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -622,6 +669,17 @@
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.GoogleBatchPlatform$AdvancedOptions",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"io.seqera.tower.cli.commands.computeenvs.platforms.GoogleCloudPlatform",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.computeenvs.platforms.GoogleCloudPlatform$AdvancedOptions",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true
 },
@@ -2524,6 +2582,7 @@
 },
 {
   "name":"io.seqera.tower.model.AwsCloudConfig",
+  "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"addAllowBucketsItem","parameterTypes":["java.lang.String"] }, {"name":"addEnvironmentItem","parameterTypes":["io.seqera.tower.model.ConfigEnvVariable"] }, {"name":"addForgedResourcesItem","parameterTypes":["java.util.Map"] }, {"name":"addSecurityGroupsItem","parameterTypes":["java.lang.String"] }, {"name":"allowBuckets","parameterTypes":["java.util.List"] }, {"name":"arm64Enabled","parameterTypes":["java.lang.Boolean"] }, {"name":"ebsBootSize","parameterTypes":["java.lang.Integer"] }, {"name":"ec2KeyPair","parameterTypes":["java.lang.String"] }, {"name":"environment","parameterTypes":["java.util.List"] }, {"name":"equals","parameterTypes":["java.lang.Object"] }, {"name":"forgedResources","parameterTypes":["java.util.List"] }, {"name":"fusion2Enabled","parameterTypes":["java.lang.Boolean"] }, {"name":"getAllowBuckets","parameterTypes":[] }, {"name":"getArm64Enabled","parameterTypes":[] }, {"name":"getDiscriminator","parameterTypes":[] }, {"name":"getEbsBootSize","parameterTypes":[] }, {"name":"getEc2KeyPair","parameterTypes":[] }, {"name":"getEnvironment","parameterTypes":[] }, {"name":"getForgedResources","parameterTypes":[] }, {"name":"getFusion2Enabled","parameterTypes":[] }, {"name":"getGpuEnabled","parameterTypes":[] }, {"name":"getHeadJobOptions","parameterTypes":[] }, {"name":"getHostName","parameterTypes":[] }, {"name":"getImageId","parameterTypes":[] }, {"name":"getInstanceProfileArn","parameterTypes":[] }, {"name":"getInstanceType","parameterTypes":[] }, {"name":"getLaunchDir","parameterTypes":[] }, {"name":"getLogGroup","parameterTypes":[] }, {"name":"getMaxQueueSize","parameterTypes":[] }, {"name":"getNextflowConfig","parameterTypes":[] }, {"name":"getPort","parameterTypes":[] }, {"name":"getPostRunScript","parameterTypes":[] }, {"name":"getPreRunScript","parameterTypes":[] }, {"name":"getPropagateHeadJobOptions","parameterTypes":[] }, {"name":"getRegion","parameterTypes":[] }, {"name":"getSecurityGroups","parameterTypes":[] }, {"name":"getSubnetId","parameterTypes":[] }, {"name":"getUserName","parameterTypes":[] }, {"name":"getWaveEnabled","parameterTypes":[] }, {"name":"getWorkDir","parameterTypes":[] }, {"name":"gpuEnabled","parameterTypes":["java.lang.Boolean"] }, {"name":"hashCode","parameterTypes":[] }, {"name":"headJobOptions","parameterTypes":["java.lang.String"] }, {"name":"hostName","parameterTypes":["java.lang.String"] }, {"name":"imageId","parameterTypes":["java.lang.String"] }, {"name":"instanceProfileArn","parameterTypes":["java.lang.String"] }, {"name":"instanceType","parameterTypes":["java.lang.String"] }, {"name":"launchDir","parameterTypes":["java.lang.String"] }, {"name":"logGroup","parameterTypes":["java.lang.String"] }, {"name":"maxQueueSize","parameterTypes":["java.lang.Integer"] }, {"name":"nextflowConfig","parameterTypes":["java.lang.String"] }, {"name":"port","parameterTypes":["java.lang.Integer"] }, {"name":"postRunScript","parameterTypes":["java.lang.String"] }, {"name":"preRunScript","parameterTypes":["java.lang.String"] }, {"name":"propagateHeadJobOptions","parameterTypes":["java.lang.Boolean"] }, {"name":"region","parameterTypes":["java.lang.String"] }, {"name":"securityGroups","parameterTypes":["java.util.List"] }, {"name":"setAllowBuckets","parameterTypes":["java.util.List"] }, {"name":"setArm64Enabled","parameterTypes":["java.lang.Boolean"] }, {"name":"setEbsBootSize","parameterTypes":["java.lang.Integer"] }, {"name":"setEc2KeyPair","parameterTypes":["java.lang.String"] }, {"name":"setEnvironment","parameterTypes":["java.util.List"] }, {"name":"setForgedResources","parameterTypes":["java.util.List"] }, {"name":"setFusion2Enabled","parameterTypes":["java.lang.Boolean"] }, {"name":"setGpuEnabled","parameterTypes":["java.lang.Boolean"] }, {"name":"setHeadJobOptions","parameterTypes":["java.lang.String"] }, {"name":"setHostName","parameterTypes":["java.lang.String"] }, {"name":"setImageId","parameterTypes":["java.lang.String"] }, {"name":"setInstanceProfileArn","parameterTypes":["java.lang.String"] }, {"name":"setInstanceType","parameterTypes":["java.lang.String"] }, {"name":"setLaunchDir","parameterTypes":["java.lang.String"] }, {"name":"setLogGroup","parameterTypes":["java.lang.String"] }, {"name":"setMaxQueueSize","parameterTypes":["java.lang.Integer"] }, {"name":"setNextflowConfig","parameterTypes":["java.lang.String"] }, {"name":"setPort","parameterTypes":["java.lang.Integer"] }, {"name":"setPostRunScript","parameterTypes":["java.lang.String"] }, {"name":"setPreRunScript","parameterTypes":["java.lang.String"] }, {"name":"setPropagateHeadJobOptions","parameterTypes":["java.lang.Boolean"] }, {"name":"setRegion","parameterTypes":["java.lang.String"] }, {"name":"setSecurityGroups","parameterTypes":["java.util.List"] }, {"name":"setSubnetId","parameterTypes":["java.lang.String"] }, {"name":"setUserName","parameterTypes":["java.lang.String"] }, {"name":"setWaveEnabled","parameterTypes":["java.lang.Boolean"] }, {"name":"setWorkDir","parameterTypes":["java.lang.String"] }, {"name":"subnetId","parameterTypes":["java.lang.String"] }, {"name":"toIndentedString","parameterTypes":["java.lang.Object"] }, {"name":"toString","parameterTypes":[] }, {"name":"userName","parameterTypes":["java.lang.String"] }, {"name":"waveEnabled","parameterTypes":["java.lang.Boolean"] }, {"name":"workDir","parameterTypes":["java.lang.String"] }]
@@ -4824,6 +4883,10 @@
   "queryAllDeclaredConstructors":true
 },
 {
+  "name":"java.lang.Class",
+  "methods":[{"name":"isRecord","parameterTypes":[] }]
+},
+{
   "name":"java.lang.Class[]"
 },
 {
@@ -5185,7 +5248,7 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"<init>","parameterTypes":["javax.inject.Provider","javax.inject.Provider"] }]
 },
 {
   "name":"org.glassfish.jersey.client.ClientAsyncExecutor",
@@ -5208,6 +5271,10 @@
 },
 {
   "name":"org.glassfish.jersey.inject.hk2.Hk2InjectionManagerFactory",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.glassfish.jersey.inject.hk2.Hk2Registrables",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -5240,7 +5307,7 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"<init>","parameterTypes":["javax.inject.Provider","javax.inject.Provider","javax.inject.Provider"] }]
 },
 {
   "name":"org.glassfish.jersey.internal.RuntimeDelegateImpl",
@@ -5267,7 +5334,10 @@
 },
 {
   "name":"org.glassfish.jersey.jackson.internal.DefaultJacksonJaxbJsonProvider",
-  "allDeclaredConstructors":true
+  "allDeclaredFields":true,
+  "allDeclaredConstructors":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":["javax.ws.rs.ext.Providers","javax.ws.rs.core.Configuration"] }, {"name":"findAndRegisterModules","parameterTypes":[] }]
 },
 {
   "name":"org.glassfish.jersey.jackson.internal.JacksonAutoDiscoverable",
@@ -5275,6 +5345,11 @@
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.glassfish.jersey.jackson.internal.JaxrsFeatureBag",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
 },
 {
   "name":"org.glassfish.jersey.jackson.internal.jackson.jaxrs.base.ProviderBase",
@@ -5312,7 +5387,7 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":["javax.ws.rs.ext.Providers"] }]
+  "methods":[{"name":"<init>","parameterTypes":["javax.ws.rs.ext.Providers"] }, {"name":"<init>","parameterTypes":["javax.ws.rs.ext.Providers","javax.inject.Provider"] }]
 },
 {
   "name":"org.glassfish.jersey.media.multipart.internal.MultiPartWriter",
@@ -5350,6 +5425,13 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.glassfish.jersey.message.internal.EnumMessageProvider",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {

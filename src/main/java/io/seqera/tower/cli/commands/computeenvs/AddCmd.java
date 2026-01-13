@@ -20,11 +20,14 @@ package io.seqera.tower.cli.commands.computeenvs;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.computeenvs.add.AddAltairCmd;
+import io.seqera.tower.cli.commands.computeenvs.add.AddAwsCloudCmd;
 import io.seqera.tower.cli.commands.computeenvs.add.AddAwsCmd;
+import io.seqera.tower.cli.commands.computeenvs.add.AddAzureCloudCmd;
 import io.seqera.tower.cli.commands.computeenvs.add.AddAzureCmd;
 import io.seqera.tower.cli.commands.computeenvs.add.AddEksCmd;
 import io.seqera.tower.cli.commands.computeenvs.add.AddGkeCmd;
 import io.seqera.tower.cli.commands.computeenvs.add.AddGoogleBatchCmd;
+import io.seqera.tower.cli.commands.computeenvs.add.AddGoogleCloudCmd;
 import io.seqera.tower.cli.commands.computeenvs.add.AddGoogleLifeSciencesCmd;
 import io.seqera.tower.cli.commands.computeenvs.add.AddK8sCmd;
 import io.seqera.tower.cli.commands.computeenvs.add.AddLsfCmd;
@@ -44,6 +47,7 @@ import java.io.IOException;
         subcommands = {
                 AddK8sCmd.class,
                 AddAwsCmd.class,
+                AddAwsCloudCmd.class,
                 AddEksCmd.class,
                 AddSlurmCmd.class,
                 AddLsfCmd.class,
@@ -53,7 +57,9 @@ import java.io.IOException;
                 AddGkeCmd.class,
                 AddGoogleLifeSciencesCmd.class,
                 AddGoogleBatchCmd.class,
+                AddGoogleCloudCmd.class,
                 AddAzureCmd.class,
+                AddAzureCloudCmd.class,
                 AddSeqeraComputeCmd.class
         }
 )
