@@ -62,7 +62,7 @@ public class LaunchCmd extends AbstractRootCmd {
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
-    @Option(names = {"--params-file"}, description = "Pipeline parameters in either JSON or YML format.")
+    @Option(names = {"--params-file"}, description = "Pipeline parameters in either JSON or YML format. Use '-' to read from stdin.")
     Path paramsFile;
 
     @Option(names = {"-c", "--compute-env"}, description = "Compute environment name [default: primary compute environment].")
@@ -258,13 +258,13 @@ public class LaunchCmd extends AbstractRootCmd {
 
     public static class AdvancedOptions {
 
-        @Option(names = {"--config"}, description = "Additional Nextflow config file.")
+        @Option(names = {"--config"}, description = "Additional Nextflow config file. Use '-' to read from stdin.")
         public Path config;
 
-        @Option(names = {"--pre-run"}, description = "Bash script that is executed in the same environment where Nextflow runs just before the pipeline is launched.")
+        @Option(names = {"--pre-run"}, description = "Bash script that is executed in the same environment where Nextflow runs just before the pipeline is launched. Use '-' to read from stdin.")
         public Path preRunScript;
 
-        @Option(names = {"--post-run"}, description = "Bash script that is executed in the same environment where Nextflow runs immediately after the pipeline completion.")
+        @Option(names = {"--post-run"}, description = "Bash script that is executed in the same environment where Nextflow runs immediately after the pipeline completion. Use '-' to read from stdin.")
         public Path postRunScript;
 
         @Option(names = {"--pull-latest"}, description = "Enable Nextflow to pull the latest repository version before running the pipeline.")
