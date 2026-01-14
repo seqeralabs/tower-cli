@@ -15,8 +15,6 @@
  *
  */
 
-
-
 package io.seqera.tower.cli.commands.studios;
 
 import io.seqera.tower.ApiException;
