@@ -1836,7 +1836,253 @@ Used parallel agent-based research for comprehensive analysis:
 
 ---
 
-## 📝 Phase 4: Docs Generation (Future)
+## ✅ Phase 4: CLI Examples Extraction (COMPLETE - 2026-01-15)
+
+### Overview
+
+Automated extraction of real CLI command examples from Java test files to provide comprehensive usage patterns for documentation.
+
+### What We Built
+
+**CLI Examples Extractor** (`docs/scripts/extract-cli-examples.py`)
+- Parses all `*CmdTest.java` files in test directory
+- Extracts `exec()` calls to identify command invocations
+- Captures command syntax, arguments, and test context
+- Identifies Response types for output formatting
+- Categorizes examples (success, error, edge_case)
+- Generates structured JSON output with metadata
+
+**Generated Output** (`docs/cli-examples.json`)
+- 208 total command examples extracted
+- 22 command families covered
+- 23 test files processed
+- Automatic categorization for filtering
+
+### Extraction Statistics
+
+| Metric | Result |
+|--------|--------|
+| **Total examples** | 208 |
+| **Success examples** | 151 (72.6%) |
+| **Error examples** | 41 (19.7%) |
+| **Edge case examples** | 16 (7.7%) |
+| **Command families** | 22 |
+| **Test files processed** | 23 |
+
+### Examples Per Family
+
+| Family | Count | Family | Count |
+|--------|-------|--------|-------|
+| pipelines | 24 | studios | 23 |
+| actions | 20 | runs | 16 |
+| compute-envs | 16 | organizations | 13 |
+| participants | 12 | datasets | 11 |
+| teams | 9 | members | 8 |
+| credentials | 8 | labels | 7 |
+| secrets | 6 | launch | 5 |
+| info | 4 | data-links | 3 |
+| team-members | 3 | metrics | 2 |
+| task | 2 | tasks | 1 |
+| collaborators | 1 | workspaces | 14 |
+
+### Key Features
+
+**Automatic Categorization:**
+```python
+# Success examples (default for docs)
+- category: "success"
+- Real-world command usage patterns
+- Expected successful outcomes
+
+# Error examples (troubleshooting guides)
+- category: "error"
+- Failed authentication, not found, invalid input
+- Useful for error handling documentation
+
+# Edge cases (special documentation)
+- category: "edge_case"
+- Empty lists, conflicting parameters, null values
+- Useful for edge case documentation
+```
+
+**Example Structure:**
+```json
+{
+  "command": "tw runs list --offset 1 --max 2",
+  "args": ["runs", "list", "--offset", "1", "--max", "2"],
+  "test_method": "testListWithOffset",
+  "test_file": "RunsCmdTest.java",
+  "test_class": "RunsCmdTest",
+  "command_family": "runs",
+  "line_number": 205,
+  "description": "List With Offset",
+  "has_format_param": false,
+  "response_type": null,
+  "category": "success"
+}
+```
+
+### Docs Repo Integration
+
+The CLI examples will be used by the docs repository for:
+
+1. **Reference Documentation Generation:**
+   - Filter `category == "success"` examples for standard docs
+   - Combine with enriched metadata from `cli-metadata.json`
+   - Generate comprehensive command reference pages
+
+2. **GitHub Actions Workflow:**
+   ```yaml
+   # In docs repo: .github/workflows/update-cli-docs.yml
+   - name: Fetch CLI metadata and examples
+     run: |
+       # Download from tower-cli release
+       curl -o cli-metadata.json ${{ github.event.client_payload.metadata_url }}
+       curl -o cli-examples.json https://raw.githubusercontent.com/seqera/tower-cli/${{ github.event.client_payload.release_tag }}/docs/cli-examples.json
+
+   - name: Generate documentation
+     run: |
+       python scripts/generate-cli-docs.py \
+         --metadata cli-metadata.json \
+         --examples cli-examples.json \
+         --filter-category success \
+         --output-dir platform/cli/commands
+   ```
+
+3. **Filtering Strategy:**
+   ```python
+   # Docs generator script on docs repo side
+   def load_examples(examples_file, category=None):
+       data = json.load(open(examples_file))
+       examples = data['examples']
+
+       # Filter by category if specified
+       if category:
+           if isinstance(category, list):
+               examples = [ex for ex in examples if ex['category'] in category]
+           else:
+               examples = [ex for ex in examples if ex['category'] == category]
+
+       return examples
+
+   # Usage for standard documentation
+   success_examples = load_examples('cli-examples.json', category='success')
+
+   # Usage for troubleshooting guide
+   error_examples = load_examples('cli-examples.json', category='error')
+
+   # Usage for edge cases documentation
+   edge_examples = load_examples('cli-examples.json', category='edge_case')
+   ```
+
+### Example Command Invocations
+
+**Pagination patterns:**
+```bash
+tw runs list --offset 1 --max 2
+tw runs list --page 1 --max 2
+tw pipelines list --offset 1 --max 2
+tw teams list -o organization1 --offset 1 --max 2
+```
+
+**CRUD operations:**
+```bash
+tw runs delete -i 5dAZoXrcmZXRO4
+tw runs cancel -i 5dAZoXrcmZXRO4
+tw runs view -i 5mDfiUtqyptDib
+tw runs relaunch -i 5mDfiUtqyptDib
+tw organizations view -n organization1
+tw organizations add -n sample-organization -f "sample organization"
+```
+
+**Workspace/organization scoped:**
+```bash
+tw studios list -w 75887156211589
+tw participants list -w 75887156211589
+tw members list -o organization1
+tw teams list -o organization1
+```
+
+### Files Created
+
+1. **`docs/scripts/extract-cli-examples.py`** (400+ lines)
+   - Main extractor implementation
+   - Test file parser with regex matching
+   - Category inference based on test method names
+   - Structured JSON output generation
+
+2. **`docs/cli-examples.json`** (~15KB)
+   - Complete examples dataset
+   - 208 categorized command invocations
+   - Metadata for filtering and grouping
+
+3. **`.github/workflows/trigger-docs-release-update.yml`**
+   - Tower-CLI workflow to notify docs repo on releases
+   - Sends repository dispatch with CLI version and metadata URLs
+
+### Usage
+
+```bash
+# Extract all examples
+python docs/scripts/extract-cli-examples.py src/test/java -o docs/cli-examples.json
+
+# Print summary statistics
+python docs/scripts/extract-cli-examples.py src/test/java --summary
+
+# Extract from specific test directory
+python docs/scripts/extract-cli-examples.py src/test/java/io/seqera/tower/cli/runs
+```
+
+### Benefits
+
+1. **Always in sync**: Examples extracted from actual test code that validates CLI behavior
+2. **Comprehensive coverage**: 208 real-world usage patterns across 22 command families
+3. **Automatic updates**: Re-extraction captures new examples when tests are added
+4. **Flexible filtering**: Category system enables different documentation purposes
+5. **Structured data**: JSON format easy to consume by docs generators
+6. **Version tracking**: Committed to repo for change history
+
+### Design Decisions
+
+**Why extract from test files?**
+- Tests contain real, validated command invocations
+- Test assertions guarantee commands work as documented
+- Coverage across all major command families
+- Includes realistic parameter values and IDs
+- Automatically updated when tests are added/modified
+
+**Why categorize examples?**
+- Standard docs should show success cases only
+- Error examples valuable for troubleshooting guides
+- Edge cases useful for comprehensive documentation
+- Filtering on docs side provides maximum flexibility
+- Preserves complete dataset for future use
+
+**Why separate from metadata extraction?**
+- Different concerns: structure vs. usage
+- Examples require test infrastructure (MockServer)
+- Metadata extraction can run without tests
+- Both datasets valuable independently
+- Combined use provides comprehensive documentation
+
+### Next Phase: Docs Repo Implementation
+
+With both `cli-metadata.json` and `cli-examples.json` now available from tower-cli releases, the docs repository can:
+
+1. **Receive release notifications** via repository dispatch
+2. **Fetch both JSON files** from tower-cli release tag
+3. **Generate reference documentation** combining:
+   - Command structure and options from metadata
+   - Real usage examples from test extraction
+   - Manual content from overlay files (conceptual info, tutorials)
+4. **Create automated PR** with updated CLI documentation
+5. **Track changes** across CLI versions
+
+See `.github/workflows/trigger-docs-release-update.yml` for tower-cli integration.
+
+---
+
+## 📝 Phase 5a: Docs Repo Generator (Future)
 
 1. Create doc generator script
 2. Store manual examples separately (like API overlay pattern)
@@ -1845,7 +2091,7 @@ Used parallel agent-based research for comprehensive analysis:
 
 ---
 
-## 🤖 Phase 4: Release Automation (Future)
+## 🤖 Phase 5b: Release Automation (Future)
 
 1. GitHub Action triggered on tower-cli releases
 2. Compare metadata with previous version
