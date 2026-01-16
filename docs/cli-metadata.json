@@ -2,7 +2,7 @@
   "metadata": {
     "extractor_version": "1.0.0",
     "source_dir": "src/main/java",
-    "total_commands": 161,
+    "total_commands": 163,
     "total_mixins": 22
   },
   "commands": {
@@ -4504,6 +4504,7 @@
       "subcommands": [
         "AddK8sCmd",
         "AddAwsCmd",
+        "AddAwsCloudCmd",
         "AddEksCmd",
         "AddSlurmCmd",
         "AddLsfCmd",
@@ -4511,9 +4512,10 @@
         "AddAltairCmd",
         "AddMoabCmd",
         "AddGkeCmd",
-        "AddGoogleLifeSciencesCmd",
         "AddGoogleBatchCmd",
+        "AddGoogleCloudCmd",
         "AddAzureCmd",
+        "AddAzureCloudCmd",
         "AddSeqeraComputeCmd"
       ],
       "source_file": "src/main/java/io/seqera/tower/cli/commands/computeenvs/AddCmd.java",
@@ -7977,6 +7979,22 @@
         }
       ]
     },
+    "io.seqera.tower.cli.commands.computeenvs.add.AddGoogleCloudCmd": {
+      "name": "google-cloud",
+      "description": "Add new Google Cloud compute environment.",
+      "full_command": "tw compute-envs add google-cloud",
+      "parent": "add",
+      "subcommands": [],
+      "source_file": "src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddGoogleCloudCmd.java",
+      "options": [],
+      "parameters": [],
+      "mixins": [
+        {
+          "class_name": "GoogleCloudPlatform",
+          "field_name": "platform"
+        }
+      ]
+    },
     "io.seqera.tower.cli.commands.computeenvs.add.AddGoogleBatchCmd": {
       "name": "google-batch",
       "description": "Add new Google Batch compute environment.",
@@ -8087,6 +8105,22 @@
         }
       ]
     },
+    "io.seqera.tower.cli.commands.computeenvs.add.AddAzureCloudCmd": {
+      "name": "azure-cloud",
+      "description": "Add new Azure Cloud compute environment.",
+      "full_command": "tw compute-envs add azure-cloud",
+      "parent": "add",
+      "subcommands": [],
+      "source_file": "src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddAzureCloudCmd.java",
+      "options": [],
+      "parameters": [],
+      "mixins": [
+        {
+          "class_name": "AzCloudPlatform",
+          "field_name": "platform"
+        }
+      ]
+    },
     "io.seqera.tower.cli.commands.computeenvs.add.AddEksCmd": {
       "name": "eks",
       "description": "Add new Amazon EKS compute environment.",
@@ -8133,18 +8167,18 @@
         }
       ]
     },
-    "io.seqera.tower.cli.commands.computeenvs.add.AddGoogleLifeSciencesCmd": {
-      "name": "google-ls",
-      "description": "Add new Google life sciences compute environment.",
-      "full_command": "tw compute-envs add google-ls",
+    "io.seqera.tower.cli.commands.computeenvs.add.AddAwsCloudCmd": {
+      "name": "aws-cloud",
+      "description": "Add new AWS Cloud compute environment.",
+      "full_command": "tw compute-envs add aws-cloud",
       "parent": "add",
       "subcommands": [],
-      "source_file": "src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddGoogleLifeSciencesCmd.java",
+      "source_file": "src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddAwsCloudCmd.java",
       "options": [],
       "parameters": [],
       "mixins": [
         {
-          "class_name": "GoogleLifeSciencesPlatform",
+          "class_name": "AwsCloudPlatform",
           "field_name": "platform"
         }
       ]
@@ -9017,6 +9051,7 @@
             "subcommands": [
               "AddK8sCmd",
               "AddAwsCmd",
+              "AddAwsCloudCmd",
               "AddEksCmd",
               "AddSlurmCmd",
               "AddLsfCmd",
@@ -9024,9 +9059,10 @@
               "AddAltairCmd",
               "AddMoabCmd",
               "AddGkeCmd",
-              "AddGoogleLifeSciencesCmd",
               "AddGoogleBatchCmd",
+              "AddGoogleCloudCmd",
               "AddAzureCmd",
+              "AddAzureCloudCmd",
               "AddSeqeraComputeCmd"
             ],
             "source_file": "src/main/java/io/seqera/tower/cli/commands/computeenvs/AddCmd.java",
@@ -9100,6 +9136,23 @@
                     "children": []
                   }
                 ]
+              },
+              {
+                "name": "aws-cloud",
+                "description": "Add new AWS Cloud compute environment.",
+                "full_command": "tw compute-envs add aws-cloud",
+                "parent": "add",
+                "subcommands": [],
+                "source_file": "src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddAwsCloudCmd.java",
+                "options": [],
+                "parameters": [],
+                "mixins": [
+                  {
+                    "class_name": "AwsCloudPlatform",
+                    "field_name": "platform"
+                  }
+                ],
+                "children": []
               },
               {
                 "name": "eks",
@@ -9221,23 +9274,6 @@
                 "children": []
               },
               {
-                "name": "google-ls",
-                "description": "Add new Google life sciences compute environment.",
-                "full_command": "tw compute-envs add google-ls",
-                "parent": "add",
-                "subcommands": [],
-                "source_file": "src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddGoogleLifeSciencesCmd.java",
-                "options": [],
-                "parameters": [],
-                "mixins": [
-                  {
-                    "class_name": "GoogleLifeSciencesPlatform",
-                    "field_name": "platform"
-                  }
-                ],
-                "children": []
-              },
-              {
                 "name": "google-batch",
                 "description": "Add new Google Batch compute environment.",
                 "full_command": "tw compute-envs add google-batch",
@@ -9249,6 +9285,23 @@
                 "mixins": [
                   {
                     "class_name": "GoogleBatchPlatform",
+                    "field_name": "platform"
+                  }
+                ],
+                "children": []
+              },
+              {
+                "name": "google-cloud",
+                "description": "Add new Google Cloud compute environment.",
+                "full_command": "tw compute-envs add google-cloud",
+                "parent": "add",
+                "subcommands": [],
+                "source_file": "src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddGoogleCloudCmd.java",
+                "options": [],
+                "parameters": [],
+                "mixins": [
+                  {
+                    "class_name": "GoogleCloudPlatform",
                     "field_name": "platform"
                   }
                 ],
@@ -9303,6 +9356,23 @@
                     "children": []
                   }
                 ]
+              },
+              {
+                "name": "azure-cloud",
+                "description": "Add new Azure Cloud compute environment.",
+                "full_command": "tw compute-envs add azure-cloud",
+                "parent": "add",
+                "subcommands": [],
+                "source_file": "src/main/java/io/seqera/tower/cli/commands/computeenvs/add/AddAzureCloudCmd.java",
+                "options": [],
+                "parameters": [],
+                "mixins": [
+                  {
+                    "class_name": "AzCloudPlatform",
+                    "field_name": "platform"
+                  }
+                ],
+                "children": []
               },
               {
                 "name": "seqera-compute",
