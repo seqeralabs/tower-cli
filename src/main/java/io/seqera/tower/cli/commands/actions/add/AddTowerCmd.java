@@ -22,7 +22,7 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "tower",
-        description = "Add a Tower action."
+        description = "Add a pipeline action triggered by Seqera Platform events"
 )
 public class AddTowerCmd extends AbstractAddCmd {
     @Override

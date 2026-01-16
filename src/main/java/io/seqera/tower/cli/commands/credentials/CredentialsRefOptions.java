@@ -26,10 +26,10 @@ public class CredentialsRefOptions {
 
     public static class CredentialsRef {
 
-        @CommandLine.Option(names = {"-i", "--id"}, description = "Credentials unique id.")
+        @CommandLine.Option(names = {"-i", "--id"}, description = "Credentials unique identifier")
         public String credentialsId;
 
-        @CommandLine.Option(names = {"-n", "--name"}, description = "Credentials name.")
+        @CommandLine.Option(names = {"-n", "--name"}, description = "Credentials name")
         public String credentialsName;
     }
 }

@@ -29,14 +29,14 @@ import java.util.List;
 
 @CommandLine.Command(
         name = "list",
-        description = "List all workspace datasets."
+        description = "List datasets"
 )
 public class ListCmd extends AbstractDatasetsCmd {
 
     @CommandLine.Mixin
     public WorkspaceRequiredOptions workspace;
 
-    @CommandLine.Option(names = {"-f", "--filter"}, description = "Show only datasets which name contains the given word.")
+    @CommandLine.Option(names = {"-f", "--filter"}, description = "Filter datasets by name substring")
     public String filter;
 
     @Override

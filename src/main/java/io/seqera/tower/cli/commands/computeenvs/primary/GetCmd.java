@@ -27,7 +27,7 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "get",
-        description = "Gets a workspace primary compute environment."
+        description = "Get the primary compute environment."
 )
 public class GetCmd extends AbstractComputeEnvsPrimaryCmd {
 

@@ -23,7 +23,7 @@ import picocli.CommandLine.Command;
 
 @Command(
         name = "secrets",
-        description = "Manage workspace secrets.",
+        description = "Manage secrets",
         subcommands = {
                 ListCmd.class,
                 AddCmd.class,

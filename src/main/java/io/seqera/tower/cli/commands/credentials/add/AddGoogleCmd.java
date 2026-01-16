@@ -24,7 +24,7 @@ import picocli.CommandLine.Mixin;
 
 @Command(
         name = "google",
-        description = "Add new Google workspace credentials."
+        description = "Add Google credentials"
 )
 public class AddGoogleCmd extends AbstractAddCmd {
 

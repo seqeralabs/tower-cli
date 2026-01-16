@@ -24,7 +24,7 @@ import picocli.CommandLine.Command;
 
 @Command(
         name = "labels",
-        description = "Manage labels.",
+        description = "Manage workspace labels",
         subcommands = {
                 AddLabelsCmd.class,
                 ListLabelsCmd.class,

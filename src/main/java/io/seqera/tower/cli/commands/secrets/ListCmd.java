@@ -31,7 +31,7 @@ import java.io.IOException;
 
 @Command(
         name = "list",
-        description = "List workspace secrets."
+        description = "List secrets"
 )
 public class ListCmd extends AbstractPipelinesCmd {
 

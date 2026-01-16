@@ -54,7 +54,7 @@ import static picocli.AutoComplete.GenerateCompletion;
 
 @Command(
         name = "tw",
-        description = "Nextflow Tower CLI.",
+        description = "Seqera Platform CLI",
         subcommands = {
                 ActionsCmd.class,
                 CollaboratorsCmd.class,
@@ -81,19 +81,19 @@ public class Tower extends AbstractCmd {
     @Spec
     public CommandSpec spec;
 
-    @Option(names = {"-t", "--access-token"}, description = "Tower personal access token (TOWER_ACCESS_TOKEN).", defaultValue = "${TOWER_ACCESS_TOKEN}")
+    @Option(names = {"-t", "--access-token"}, description = "Seqera Platform personal access token (TOWER_ACCESS_TOKEN)", defaultValue = "${TOWER_ACCESS_TOKEN}")
     public String token;
 
-    @Option(names = {"-u", "--url"}, description = "Tower server API endpoint URL (TOWER_API_ENDPOINT) [default: 'api.cloud.seqera.io'].", defaultValue = "${TOWER_API_ENDPOINT:-https://api.cloud.seqera.io}")
+    @Option(names = {"-u", "--url"}, description = "Seqera Platform API endpoint URL (TOWER_API_ENDPOINT) [default: 'api.cloud.seqera.io']", defaultValue = "${TOWER_API_ENDPOINT:-https://api.cloud.seqera.io}")
     public String url;
 
-    @Option(names = {"-o", "--output"}, description = "Show output in defined format (only the 'json' option is available at the moment).", defaultValue = "${TOWER_CLI_OUTPUT_FORMAT:-console}")
+    @Option(names = {"-o", "--output"}, description = "Show output in defined format (currently supports 'json')", defaultValue = "${TOWER_CLI_OUTPUT_FORMAT:-console}")
     public OutputType output;
 
     @Option(names = {"-v", "--verbose"}, description = "Show HTTP request/response logs at stderr.")
     public boolean verbose;
 
-    @Option(names = {"--insecure"}, description = "Explicitly allow to connect to a non-SSL secured Tower server (this is not recommended).")
+    @Option(names = {"--insecure"}, description = "Explicitly allow to connect to a non-SSL secured Seqera Platform server (not recommended)")
     public boolean insecure;
 
     public Tower() {

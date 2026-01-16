@@ -43,14 +43,14 @@ import java.util.stream.Collectors;
 
 @CommandLine.Command(
         name = "add",
-        description = "Add new studio."
+        description = "Add a studio"
 )
 public class AddCmd extends AbstractStudiosCmd{
 
     @CommandLine.Option(names = {"-n", "--name"}, description = "Studio name.", required = true)
     public String name;
 
-    @CommandLine.Option(names = {"-d", "--description"}, description = "Studio description.")
+    @CommandLine.Option(names = {"-d", "--description"}, description = "Studio description")
     public String description;
 
     @CommandLine.Mixin
@@ -59,22 +59,22 @@ public class AddCmd extends AbstractStudiosCmd{
     @CommandLine.Mixin
     public StudioTemplateOptions templateOptions;
 
-    @CommandLine.Option(names = {"--conda-env-yml", "--conda-env-yaml"}, description = "Path to a YAML env file with Conda packages to be installed in the Studio environment.")
+    @CommandLine.Option(names = {"--conda-env-yml", "--conda-env-yaml"}, description = "Path to a YAML env file with Conda packages to be installed in the studio environment")
     public Path condaEnv;
 
-    @CommandLine.Option(names = {"-c", "--compute-env"}, description = "Compute environment name.", required = true)
+    @CommandLine.Option(names = {"-c", "--compute-env"}, description = "Compute environment name", required = true)
     public String computeEnv;
 
     @CommandLine.Mixin
     public StudioConfigurationOptions studioConfigOptions;
 
-    @CommandLine.Option(names = {"-a", "--auto-start"}, description = "Create Studio and start it immediately, defaults to false.", defaultValue = "false")
+    @CommandLine.Option(names = {"-a", "--auto-start"}, description = "Create studio and start it immediately (default: false)", defaultValue = "false")
     public Boolean autoStart;
 
-    @CommandLine.Option(names = {"--private"}, description = "Create a private studio that only you can access/manage.", defaultValue = "false")
+    @CommandLine.Option(names = {"--private"}, description = "Create a private studio that only you can access or manage (default: false)", defaultValue = "false")
     public Boolean isPrivate;
 
-    @CommandLine.Option(names = {"--labels"}, description = "Comma-separated list of labels.", split = ",", converter = Label.StudioResourceLabelsConverter.class)
+    @CommandLine.Option(names = {"--labels"}, description = "Comma-separated list of labels", split = ",", converter = Label.StudioResourceLabelsConverter.class)
     public List<Label> labels;
 
     @CommandLine.Option(names = {"--wait"}, description = "Wait until Studio is in RUNNING status. Valid options: ${COMPLETION-CANDIDATES}.")

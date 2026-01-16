@@ -27,10 +27,10 @@ import java.nio.file.Path;
 
 public class SshProvider extends AbstractProvider<SSHSecurityKeys> {
 
-    @Option(names = {"-k", "--key"}, description = "SSH private key file.", required = true)
+    @Option(names = {"-k", "--key"}, description = "Path to SSH private key file for authentication. Supports RSA, DSA, ECDSA, and Ed25519 key formats.", required = true)
     public Path serviceAccountKey;
 
-    @Option(names = {"-p", "--passphrase"}, description = "Passphrase associated with the private key.", arity = "0..1", interactive = true)
+    @Option(names = {"-p", "--passphrase"}, description = "Passphrase for encrypted SSH private key. Leave empty if the private key is not encrypted.", arity = "0..1", interactive = true)
     public String passphrase;
 
     public SshProvider() {

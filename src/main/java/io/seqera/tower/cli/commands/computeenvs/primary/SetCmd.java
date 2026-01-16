@@ -28,7 +28,7 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "set",
-        description = "Sets a workspace compute environment as primary."
+        description = "Set a compute environment as primary."
 )
 public class SetCmd extends AbstractComputeEnvsPrimaryCmd {
 

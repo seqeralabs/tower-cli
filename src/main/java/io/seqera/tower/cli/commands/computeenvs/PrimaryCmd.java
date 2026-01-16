@@ -28,7 +28,7 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "primary",
-        description = "Sets or gets a primary compute environment within current workspace.",
+        description = "Manage the primary compute environment.",
         subcommands = {
                 GetCmd.class,
                 SetCmd.class,

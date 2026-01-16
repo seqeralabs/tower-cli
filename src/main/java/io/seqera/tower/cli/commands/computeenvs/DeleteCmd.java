@@ -28,7 +28,7 @@ import picocli.CommandLine.Command;
 
 @Command(
         name = "delete",
-        description = "Delete compute environment."
+        description = "Delete a compute environment."
 )
 public class DeleteCmd extends AbstractComputeEnvCmd {
 

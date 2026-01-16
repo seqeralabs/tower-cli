@@ -25,10 +25,10 @@ import java.io.IOException;
 
 public class GithubProvider extends AbstractGitProvider<GitHubSecurityKeys> {
 
-    @Option(names = {"-u", "--username"}, description = "Github username.", required = true)
+    @Option(names = {"-u", "--username"}, description = "GitHub username for repository authentication.", required = true)
     public String userName;
 
-    @Option(names = {"-p", "--password"}, description = "Github account password or access token (recommended).", arity = "0..1", interactive = true, required = true)
+    @Option(names = {"-p", "--password"}, description = "GitHub password or personal access token. Use of personal access tokens is recommended for security. Generate tokens at Settings > Developer settings > Personal access tokens.", arity = "0..1", interactive = true, required = true)
     public String password;
 
     public GithubProvider() {

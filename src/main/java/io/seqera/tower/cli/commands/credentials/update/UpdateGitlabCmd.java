@@ -24,7 +24,7 @@ import picocli.CommandLine.Mixin;
 
 @Command(
         name = "gitlab",
-        description = "Update Gitlab workspace credentials."
+        description = "Update Gitlab credentials"
 )
 public class UpdateGitlabCmd extends AbstractUpdateCmd {
 

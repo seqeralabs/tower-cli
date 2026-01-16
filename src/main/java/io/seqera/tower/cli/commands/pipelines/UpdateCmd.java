@@ -41,7 +41,7 @@ import static io.seqera.tower.cli.utils.ModelHelper.removeEmptyValues;
 
 @Command(
         name = "update",
-        description = "Update a workspace pipeline."
+        description = "Update a pipeline"
 )
 public class UpdateCmd extends AbstractPipelinesCmd {
 
@@ -51,16 +51,16 @@ public class UpdateCmd extends AbstractPipelinesCmd {
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
-    @Option(names = {"-d", "--description"}, description = "Pipeline description.")
+    @Option(names = {"-d", "--description"}, description = "Pipeline description")
     public String description;
 
-    @Option(names = {"--new-name"}, description = "Pipeline new name.")
+    @Option(names = {"--new-name"}, description = "Pipeline new name")
     public String newName;
 
     @Mixin
     public LaunchOptions opts;
 
-    @Option(names = {"--pipeline"}, description = "Nextflow pipeline URL.")
+    @Option(names = {"--pipeline"}, description = "Nextflow pipeline URL")
     public String pipeline;
 
     @Override

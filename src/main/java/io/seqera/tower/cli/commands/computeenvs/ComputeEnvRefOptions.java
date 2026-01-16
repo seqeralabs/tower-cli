@@ -26,7 +26,7 @@ public class ComputeEnvRefOptions {
 
     public static class ComputeEnvRef {
 
-        @CommandLine.Option(names = {"-i", "--id"}, description = "Compute environment unique id.")
+        @CommandLine.Option(names = {"-i", "--id"}, description = "Compute environment unique identifier.")
         public String computeEnvId;
 
         @CommandLine.Option(names = {"-n", "--name"}, description = "Compute environment name.")

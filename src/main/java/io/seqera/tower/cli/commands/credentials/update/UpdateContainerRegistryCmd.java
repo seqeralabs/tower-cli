@@ -24,7 +24,7 @@ import picocli.CommandLine.Mixin;
 
 @Command(
         name = "container-reg",
-        description = "Update Container Registry workspace credentials."
+        description = "Update Container Registry credentials"
 )
 public class UpdateContainerRegistryCmd extends AbstractUpdateCmd {
 

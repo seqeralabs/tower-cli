@@ -33,7 +33,7 @@ import java.io.IOException;
 
 @Command(
         name = "checkpoints",
-        description = "List checkpoints for a studio."
+        description = "List studio checkpoints"
 )
 public class CheckpointsCmd extends AbstractStudiosCmd {
 

@@ -34,49 +34,49 @@ import java.util.List;
 
 public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
 
-    @Option(names = {"--work-dir"}, description = "Work directory.", required = true)
+    @Option(names = {"--work-dir"}, description = "Nextflow work directory. Path where workflow intermediate files are stored. Must be an S3 bucket path (e.g., s3://your-bucket/work).", required = true)
     public String workDir;
 
-    @Option(names = {"-r", "--region"}, description = "AWS region.", required = true)
+    @Option(names = {"-r", "--region"}, description = "AWS region where compute resources will be created (e.g., us-east-1, eu-west-1).", required = true)
     public String region;
 
-    @Option(names = {"--max-cpus"}, description = "The maximum number of CPUs provisioned in this environment.", required = true)
+    @Option(names = {"--max-cpus"}, description = "Maximum CPUs provisioned by Batch Forge. Defines the upper limit for auto-scaling compute capacity.", required = true)
     public Integer maxCpus;
 
-    @Option(names = {"--provisioning-model"}, description = "VMs provisioning model. 'EC2' deploys uninterruptible Ec2 instances. 'SPOT' uses interruptible Ec2 instances.", required = true, defaultValue = "SPOT")
+    @Option(names = {"--provisioning-model"}, description = "Instance provisioning model. EC2 uses on-demand instances for reliability. SPOT uses interruptible instances for cost savings. Default: SPOT.", required = true, defaultValue = "SPOT")
     public TypeEnum provisioningModel;
 
-    @Option(names = {"--no-ebs-auto-scale"}, description = "Disable the provisioning of EBS auto-expandable disk.")
+    @Option(names = {"--no-ebs-auto-scale"}, description = "Disable EBS auto-expandable disk provisioning. When disabled, instances use fixed-size storage volumes.")
     public boolean noEbsAutoScale;
 
     @Option(names = {"--fusion"}, description = "DEPRECATED - Use '--fusion-v2' instead.")
     public boolean fusion;
 
-    @Option(names = {"--fusion-v2"}, description = "With Fusion v2 enabled, S3 buckets specified in the Pipeline work directory and Allowed S3 Buckets fields will be accessible in the compute nodes storage (requires Wave containers service).")
+    @Option(names = {"--fusion-v2"}, description = "Enable Fusion file system. Provides native access to S3 storage with low-latency I/O. Requires Wave containers. Default: false.")
     public boolean fusionV2;
 
-    @Option(names = {"--wave"}, description = "Allow access to private container repositories and the provisioning of containers in your Nextflow pipelines via the Wave containers service.")
+    @Option(names = {"--wave"}, description = "Enable Wave containers. Allows access to private container repositories and on-demand container provisioning. Default: false.")
     public boolean wave;
 
-    @Option(names = {"--fast-storage"}, description = "Allow the use of NVMe instance storage to speed up I/O and disk access operations (requires Fusion v2).")
+    @Option(names = {"--fast-storage"}, description = "Enable NVMe instance storage. Provides high-performance local storage for faster I/O operations. Requires Fusion file system.")
     public boolean fastStorage;
 
-    @Option(names = {"--snapshots"}, description = "Allows Fusion to automatically restore a job when it is interrupted by a spot reclamation")
+    @Option(names = {"--snapshots"}, description = "Enable Fusion Snapshots. Automatically restores jobs interrupted by spot instance reclamation. Requires Fusion file system.")
     public boolean snapshots;
 
-    @Option(names = {"--fargate"}, description = "Run the Nextflow head job using the Fargate container service (requires Fusion v2 and Spot provisioning model).")
+    @Option(names = {"--fargate"}, description = "Run Nextflow head job on Fargate. Enables serverless container execution for the orchestration process. Requires Fusion v2 and Spot provisioning model.")
     public boolean fargate;
 
-    @Option(names = {"--gpu"}, description = "Deploys GPU enabled Ec2 instances.")
+    @Option(names = {"--gpu"}, description = "Enable GPU instances. Provisions GPU-enabled EC2 instances for compute-intensive workloads requiring hardware acceleration.")
     public boolean gpu;
 
-    @Option(names = {"--allow-buckets"}, split = ",", paramLabel = "<bucket>", description = "Comma-separated list of S3 buckets or paths other than pipeline work directory that should be granted read-write permission from this environment.")
+    @Option(names = {"--allow-buckets"}, split = ",", paramLabel = "<bucket>", description = "Additional S3 buckets for read-write access. Comma-separated list of S3 bucket paths beyond the work directory. Format: s3://bucket-name or s3://bucket-name/path.")
     public List<String> allowBuckets;
 
-    @Option(names = "--preserve-resources", description = "Enable this if you want to preserve the Batch compute resources created by Tower independently from the lifecycle of this compute environment.")
+    @Option(names = "--preserve-resources", description = "Preserve Batch Forge resources on deletion. Keeps AWS Batch compute environments and related resources when the compute environment is deleted from Seqera Platform.")
     public boolean preserveResources;
 
-    @Option(names = {"--ecs-config"}, description = "Path to ECS agent configuration file - custom configuration for the ECS agent parameters used by AWS Batch. This is appended to the /etc/ecs/ecs.config file in each cluster node.")
+    @Option(names = {"--ecs-config"}, description = "Custom ECS agent configuration file. Appends custom parameters to /etc/ecs/ecs.config on each cluster node. Provide path to configuration file.")
     public Path ecsConfig;
 
     @ArgGroup(heading = "%nEFS filesystem options:%n", validate = false)
@@ -217,54 +217,54 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
     }
 
     public static class AdvancedOptions {
-        @Option(names = {"--instance-types"}, split = ",", paramLabel = "<type>", description = "Specify the instance types to be used to carry out the computation. You can specify one or more family or instance type. The option 'optimal' chooses the best fit of M4, C4, and R4 instance types available in the region.")
+        @Option(names = {"--instance-types"}, split = ",", paramLabel = "<type>", description = "EC2 instance types for compute resources. Comma-separated list of instance families or types. Use 'optimal' for automatic selection of M4, C4, and R4 instances.")
         public List<String> instanceTypes;
 
-        @Option(names = {"--alloc-strategy"}, description = "Allocation Strategies allow you to choose how Batch launches instances on your behalf. AWS recommends BEST_FIT_PROGRESSIVE for On-Demand CEs and SPOT_CAPACITY_OPTIMIZED for Spot CEs.")
+        @Option(names = {"--alloc-strategy"}, description = "Instance allocation strategy. Controls how AWS Batch launches instances. BEST_FIT_PROGRESSIVE recommended for On-Demand. SPOT_CAPACITY_OPTIMIZED recommended for Spot instances.")
         public AllocStrategyEnum allocStrategy;
 
-        @Option(names = {"--vpc-id"}, description = "VPC identifier.")
+        @Option(names = {"--vpc-id"}, description = "VPC identifier. The Virtual Private Cloud where compute resources will be deployed.")
         public String vpcId;
 
-        @Option(names = {"--subnets"}, split = ",", paramLabel = "<subnet>", description = "Comma-separated list of one or more subnets in your VPC that can be used to isolate the EC2 resources from each other or from the Internet.")
+        @Option(names = {"--subnets"}, split = ",", paramLabel = "<subnet>", description = "VPC subnets for compute resources. Comma-separated list of subnet IDs for network isolation and internet access control.")
         public List<String> subnets;
 
-        @Option(names = {"--security-groups"}, split = ",", paramLabel = "<group>", description = "Comma-separated list of one or more security groups that defines a set of firewall rules to control the traffic for your EC2 compute nodes.")
+        @Option(names = {"--security-groups"}, split = ",", paramLabel = "<group>", description = "Security group IDs for network access control. Comma-separated list defining firewall rules for EC2 compute nodes.")
         public List<String> securityGroups;
 
-        @Option(names = {"--ami-id"}, description = "Ths option allows you to use your own AMI. Note however it must be an AWS Linux-2 ECS-optimised image and meet the compute resource AMI specification [default: latest approved version of the Amazon ECS-optimized AMI].")
+        @Option(names = {"--ami-id"}, description = "Custom AMI identifier. Must be AWS Linux 2 ECS-optimized image meeting compute resource specifications. Default: latest approved Amazon ECS-optimized AMI.")
         public String amiId;
 
-        @Option(names = {"--key-pair"}, description = "The EC2 key pair to be installed in the compute nodes to access via SSH.")
+        @Option(names = {"--key-pair"}, description = "EC2 key pair name for SSH access. Enables remote access to compute nodes for debugging and maintenance.")
         public String keyPair;
 
-        @Option(names = {"--min-cpus"}, description = "The minimum number of CPUs provisioned in this environment that will remain active and you will be billed regardless of whether you are running any workloads.")
+        @Option(names = {"--min-cpus"}, description = "Minimum CPUs to keep provisioned. These CPUs remain active continuously and incur costs regardless of workload activity. Default: 0.")
         public Integer minCpus;
 
-        @Option(names = {"--boot-disk-size"}, description = "Enter the boot disk size as GB.")
+        @Option(names = {"--boot-disk-size"}, description = "Boot disk size in GB. Controls the root volume size for EC2 instances. Default: 50 GB.")
         public Integer bootDiskSizeGb;
 
-        @Option(names = {"--head-job-cpus"}, description = "The number of CPUs to be allocated for the Nextflow runner job.")
+        @Option(names = {"--head-job-cpus"}, description = "Number of CPUs allocated to the Nextflow head job. Controls the compute resources for the main workflow orchestration process.")
         public Integer headJobCpus;
 
-        @Option(names = {"--head-job-memory"}, description = "The number of MiB of memory reserved for the Nextflow runner job.")
+        @Option(names = {"--head-job-memory"}, description = "Memory allocation for the Nextflow head job in megabytes. Determines available memory for workflow orchestration.")
         public Integer headJobMemoryMb;
 
-        @Option(names = {"--head-job-role"}, description = "IAM role to fine-grained control permissions for the Nextflow runner job.")
+        @Option(names = {"--head-job-role"}, description = "IAM role ARN to grant fine-grained permissions to the Nextflow head job. Enables secure access to AWS resources.")
         public String headJobRole;
 
-        @Option(names = {"--compute-job-role"}, description = "IAM role to fine-grained control permissions for jobs submitted by Nextflow.")
+        @Option(names = {"--compute-job-role"}, description = "IAM role ARN to grant fine-grained permissions to Nextflow compute jobs. Controls access for individual pipeline tasks.")
         public String computeJobRole;
-        @Option(names = {"--batch-execution-role"}, description = "The execution role grants the Amazon ECS container used by Batch the permission to make API calls on your behalf.")
+        @Option(names = {"--batch-execution-role"}, description = "IAM role ARN for ECS task execution. Grants Amazon ECS containers permission to make AWS API calls on your behalf.")
         public String batchExecutionRole;
 
-        @Option(names = {"--ebs-blocksize"}, description = "This field controls the initial size of the EBS auto-expandable volume. New blocks of the same size are added as necessary when the volume is running out of free space [default: 50 GB].")
+        @Option(names = {"--ebs-blocksize"}, description = "Initial EBS auto-expandable volume size in GB. Additional blocks of this size are added automatically when storage runs low. Default: 50 GB.")
         public Integer ebsBlockSize;
 
-        @Option(names = {"--bid-percentage"}, description = "The maximum percentage that a Spot Instance price can be when compared with the On-Demand price for that instance type before instances are launched. For example, if your maximum percentage is 20%%, then the Spot price must be less than 20%% of the current On-Demand price for that Amazon EC2 instance. You always pay the lowest (market) price and never more than your maximum percentage [default: 100%% of the On-Demand price].")
+        @Option(names = {"--bid-percentage"}, description = "Maximum Spot instance price as percentage of On-Demand price. Controls cost ceiling for Spot instances. You pay the market price up to this maximum. Default: 100%%.")
         public Integer bidPercentage;
 
-        @Option(names = {"--cli-path"}, description = "Nextflow requires the AWS CLI installed in the Ec2 instances. Use this field to specify the path.")
+        @Option(names = {"--cli-path"}, description = "AWS CLI installation path on EC2 instances. Specify custom path if AWS CLI is installed in non-standard location.")
         public String cliPath;
 
     }

@@ -29,7 +29,7 @@ import java.io.IOException;
 
 @Command(
         name = "list",
-        description = "List all workspace credentials."
+        description = "List workspace credentials"
 )
 public class ListCmd extends AbstractCredentialsCmd {
 

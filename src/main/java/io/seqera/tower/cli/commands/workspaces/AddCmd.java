@@ -33,26 +33,26 @@ import java.io.IOException;
 
 @Command(
         name = "add",
-        description = "Add a new organization workspace."
+        description = "Add a workspace"
 )
 public class AddCmd extends AbstractWorkspaceCmd {
 
-    @CommandLine.Option(names = {"-o", "--org", "--organization"}, description = "The workspace organization name.", required = true)
+    @CommandLine.Option(names = {"-o", "--org", "--organization"}, description = "Workspace organization name", required = true)
     public String organizationName;
 
-    @CommandLine.Option(names = {"-n", "--name"}, description = "The workspace short name. Only alphanumeric, dash and underscore characters are allowed.", required = true)
+    @CommandLine.Option(names = {"-n", "--name"}, description = "Unique workspace name within the organization. Must be 2-40 characters, start and end with alphanumeric characters, and can contain hyphens or underscores between characters.", required = true)
     public String workspaceName;
 
-    @CommandLine.Option(names = {"-f", "--full-name"}, description = "The workspace full name.", required = true)
+    @CommandLine.Option(names = {"-f", "--full-name"}, description = "Full display name for the workspace. Maximum 100 characters.", required = true)
     public String workspaceFullName;
 
-    @CommandLine.Option(names = {"-d", "--description"}, description = "The workspace description.")
+    @CommandLine.Option(names = {"-d", "--description"}, description = "Optional description of the workspace. Maximum 1000 characters.")
     public String description;
 
-    @CommandLine.Option(names = {"-v", "--visibility"}, description = "The workspace visibility. Valid options PRIVATE, SHARED [default: PRIVATE].")
+    @CommandLine.Option(names = {"-v", "--visibility"}, description = "Workspace visibility setting. Accepts `PRIVATE` (only participants can access) or `SHARED` (all organization members can view).")
     public String visibility = "PRIVATE";
 
-    @CommandLine.Option(names = {"--overwrite"}, description = "Overwrite the workspace if it already exists.", defaultValue = "false")
+    @CommandLine.Option(names = {"--overwrite"}, description = "Overwrite the workspace if it already exists", defaultValue = "false")
     public Boolean overwrite;
 
     @Override

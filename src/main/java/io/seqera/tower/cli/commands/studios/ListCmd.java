@@ -37,7 +37,7 @@ import java.util.List;
 
 @Command(
         name = "list",
-        description = "List workspace studios."
+        description = "List studios"
 )
 public class ListCmd extends AbstractStudiosCmd {
 

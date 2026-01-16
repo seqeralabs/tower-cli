@@ -25,11 +25,11 @@ import java.io.IOException;
 
 public class GiteaProvider extends AbstractGitProvider<GiteaSecurityKeys> {
 
-    @Option(names = {"-u", "--username"}, description = "Gitea username.", required = true)
+    @Option(names = {"-u", "--username"}, description = "Gitea username for repository authentication.", required = true)
     public String userName;
 
     // NOTE: setting 'arity' + 'interactive' allows both passing value as param and prompting user for input
-    @Option(names = {"-p", "--password"}, description = "Gitea account password.", arity = "0..1", interactive = true, required = true)
+    @Option(names = {"-p", "--password"}, description = "Gitea account password or access token. For security, consider using access tokens. Generate tokens in Gitea Settings > Applications.", arity = "0..1", interactive = true, required = true)
     public String password;
 
     public GiteaProvider() {

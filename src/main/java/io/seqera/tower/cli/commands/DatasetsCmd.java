@@ -29,7 +29,7 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "datasets",
-        description = "Manage datasets.",
+        description = "Manage datasets",
         subcommands = {
                 AddCmd.class,
                 DeleteCmd.class,

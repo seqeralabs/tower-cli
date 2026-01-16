@@ -27,7 +27,7 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "view",
-        description = "Describe organization details."
+        description = "View organization details"
 )
 public class ViewCmd extends AbstractOrganizationsCmd {
 
