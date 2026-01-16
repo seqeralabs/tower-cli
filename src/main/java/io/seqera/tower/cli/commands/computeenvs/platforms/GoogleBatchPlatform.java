@@ -68,7 +68,9 @@ public class GoogleBatchPlatform extends AbstractPlatform<GoogleBatchConfig> {
                 .bootDiskSizeGb(adv.bootDiskSizeGb)
                 .headJobCpus(adv.headJobCpus)
                 .headJobMemoryMb(adv.headJobMemoryMb)
-                .serviceAccount(adv.serviceAccountEmail);
+                .serviceAccount(adv.serviceAccountEmail)
+                .headJobInstanceTemplate(adv.headJobInstanceTemplate)
+                .computeJobsInstanceTemplate(adv.computeJobInstanceTemplate);
         }
 
         // Common
@@ -97,5 +99,10 @@ public class GoogleBatchPlatform extends AbstractPlatform<GoogleBatchConfig> {
         @Option(names = {"--service-account-email"}, description = "The service account email address used when deploying pipeline executions with this compute environment.")
         public String serviceAccountEmail;
 
+        @Option(names = {"--head-job-template"}, description = "The name or fully qualified reference of the instance template to use for the head job.")
+        public String headJobInstanceTemplate;
+
+        @Option(names = {"--compute-job-template"}, description = "The name or fully qualified reference of the instance template to use for the compute jobs.")
+        public String computeJobInstanceTemplate;
     }
 }
