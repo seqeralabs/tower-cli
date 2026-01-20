@@ -94,7 +94,7 @@ class RunsCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testDeleteNotFound(MockServerClient mock) {
+    void testDeleteForbidden(MockServerClient mock) {
         mock.when(
                 request().withMethod("DELETE").withPath("/workflow/5dAZoXrcmZXRO4"), exactly(1)
         ).respond(
@@ -122,7 +122,7 @@ class RunsCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testCancelNotFound(MockServerClient mock) {
+    void testCancelForbidden(MockServerClient mock) {
         mock.when(
                 request().withMethod("POST").withPath("/workflow/5dAZoXrcmZXRO4/cancel"), exactly(1)
         ).respond(
@@ -483,7 +483,7 @@ class RunsCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testViewNotFound(MockServerClient mock) {
+    void testViewForbidden(MockServerClient mock) {
         mock.when(
                 request().withMethod("GET").withPath("/workflow/5dAZoXrcmZXRO4"), exactly(1)
         ).respond(

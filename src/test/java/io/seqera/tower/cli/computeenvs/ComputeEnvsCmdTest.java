@@ -96,7 +96,7 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testDeleteNotFound(MockServerClient mock) {
+    void testDeleteForbidden(MockServerClient mock) {
         mock.when(
                 request().withMethod("DELETE").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ3"), exactly(1)
         ).respond(
@@ -253,7 +253,7 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testViewNotFound(MockServerClient mock) {
+    void testViewForbidden(MockServerClient mock) {
 
         mock.when(
                 request().withMethod("GET").withPath("/compute-envs/isnEDBLvHDAIteOEF44or"), exactly(1)

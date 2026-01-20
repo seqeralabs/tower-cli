@@ -65,7 +65,7 @@ class CredentialsCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testDeleteNotFound(MockServerClient mock) {
+    void testDeleteForbidden(MockServerClient mock) {
         mock.when(
                 request().withMethod("DELETE").withPath("/credentials/1cz5A8cuBkB5iKKiCwJCFU"), exactly(1)
         ).respond(
