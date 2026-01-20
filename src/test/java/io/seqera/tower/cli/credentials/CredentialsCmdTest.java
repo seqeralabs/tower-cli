@@ -69,12 +69,12 @@ class CredentialsCmdTest extends BaseCmdTest {
         mock.when(
                 request().withMethod("DELETE").withPath("/credentials/1cz5A8cuBkB5iKKiCwJCFU"), exactly(1)
         ).respond(
-                response().withStatusCode(403)
+                response().withStatusCode(403).withBody("{\"message\":\"Forbidden\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         ExecOut out = exec(mock, "credentials", "delete", "-i", "1cz5A8cuBkB5iKKiCwJCFU");
 
-        assertEquals(errorMessage(out.app, new CredentialsNotFoundException("1cz5A8cuBkB5iKKiCwJCFU", USER_WORKSPACE_NAME)), out.stdErr);
+        assertEquals(errorMessage(out.app, new ApiException(403, "", null, "{\"message\":\"Forbidden\"}")), out.stdErr);
         assertEquals("", out.stdOut);
         assertEquals(1, out.exitCode);
     }

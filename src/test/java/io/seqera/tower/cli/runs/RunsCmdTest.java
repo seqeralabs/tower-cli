@@ -98,12 +98,12 @@ class RunsCmdTest extends BaseCmdTest {
         mock.when(
                 request().withMethod("DELETE").withPath("/workflow/5dAZoXrcmZXRO4"), exactly(1)
         ).respond(
-                response().withStatusCode(403)
+                response().withStatusCode(403).withBody("{\"message\":\"Forbidden\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         ExecOut out = exec(mock, "runs", "delete", "-i", "5dAZoXrcmZXRO4");
 
-        assertEquals(errorMessage(out.app, new RunNotFoundException("5dAZoXrcmZXRO4", USER_WORKSPACE_NAME)), out.stdErr);
+        assertEquals(errorMessage(out.app, new ApiException(403, "", null, "{\"message\":\"Forbidden\"}")), out.stdErr);
         assertEquals("", out.stdOut);
         assertEquals(1, out.exitCode);
     }
@@ -126,12 +126,12 @@ class RunsCmdTest extends BaseCmdTest {
         mock.when(
                 request().withMethod("POST").withPath("/workflow/5dAZoXrcmZXRO4/cancel"), exactly(1)
         ).respond(
-                response().withStatusCode(403)
+                response().withStatusCode(403).withBody("{\"message\":\"Forbidden\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         ExecOut out = exec(mock, "runs", "cancel", "-i", "5dAZoXrcmZXRO4");
 
-        assertEquals(errorMessage(out.app, new RunNotFoundException("5dAZoXrcmZXRO4", USER_WORKSPACE_NAME)), out.stdErr);
+        assertEquals(errorMessage(out.app, new ApiException(403, "", null, "{\"message\":\"Forbidden\"}")), out.stdErr);
         assertEquals("", out.stdOut);
         assertEquals(1, out.exitCode);
     }
@@ -487,12 +487,12 @@ class RunsCmdTest extends BaseCmdTest {
         mock.when(
                 request().withMethod("GET").withPath("/workflow/5dAZoXrcmZXRO4"), exactly(1)
         ).respond(
-                response().withStatusCode(403)
+                response().withStatusCode(403).withBody("{\"message\":\"Forbidden\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         ExecOut out = exec(mock, "runs", "view", "-i", "5dAZoXrcmZXRO4");
 
-        assertEquals(errorMessage(out.app, new RunNotFoundException("5dAZoXrcmZXRO4", USER_WORKSPACE_NAME)), out.stdErr);
+        assertEquals(errorMessage(out.app, new ApiException(403, "", null, "{\"message\":\"Forbidden\"}")), out.stdErr);
         assertEquals("", out.stdOut);
         assertEquals(1, out.exitCode);
     }

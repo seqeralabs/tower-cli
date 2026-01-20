@@ -111,12 +111,12 @@ class AwsProviderTest extends BaseCmdTest {
         mock.when(
                 request().withMethod("GET").withPath("/credentials/kfKx9xRgzpIIZrbCMOcU5"), exactly(1)
         ).respond(
-                response().withStatusCode(403)
+                response().withStatusCode(403).withBody("{\"message\":\"Forbidden\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         ExecOut out = exec(mock, "credentials", "update", "aws", "-i", "kfKx9xRgzpIIZrbCMOcU5", "-r", "changeAssumeRole");
 
-        assertEquals(errorMessage(out.app, new CredentialsNotFoundException("kfKx9xRgzpIIZrbCMOcU5", USER_WORKSPACE_NAME)), out.stdErr);
+        assertEquals(errorMessage(out.app, new ApiException(403, "", null, "{\"message\":\"Forbidden\"}")), out.stdErr);
         assertEquals("", out.stdOut);
         assertEquals(1, out.exitCode);
     }

@@ -77,24 +77,17 @@ public class AddAsNewCmd extends AbstractStudiosCmd{
     protected Response exec() throws ApiException {
         Long wspId = workspaceId(workspace.workspace);
 
-        try {
-            String parentStudioSessionId = getParentStudioSessionId(parentStudioRefOptions, wspId);
-            DataStudioDto parentStudio = studiosApi().describeDataStudio(parentStudioSessionId, wspId);
-            if (parentStudio == null) {
-                throw new TowerException(String.format("Parent Studio %s not found at %s workspace", parentStudioSessionId, wspId));
-            }
-
-            DataStudioCreateRequest request = prepareRequest(parentStudio, parentCheckpointId, wspId);
-            DataStudioCreateResponse response = studiosApi().createDataStudio(request, wspId, autoStart);
-            DataStudioDto studioDto = response.getStudio();
-            assert studioDto != null;
-            return new StudiosCreated(studioDto.getSessionId(), wspId, workspaceRef(wspId), baseWorkspaceUrl(wspId), autoStart);
-        } catch (ApiException e) {
-            if (e.getCode() == 403) {
-                throw new TowerException(String.format("User not entitled to create studio at %s workspace", wspId));
-            }
-            throw e;
+        String parentStudioSessionId = getParentStudioSessionId(parentStudioRefOptions, wspId);
+        DataStudioDto parentStudio = studiosApi().describeDataStudio(parentStudioSessionId, wspId);
+        if (parentStudio == null) {
+            throw new TowerException(String.format("Parent Studio %s not found at %s workspace", parentStudioSessionId, wspId));
         }
+
+        DataStudioCreateRequest request = prepareRequest(parentStudio, parentCheckpointId, wspId);
+        DataStudioCreateResponse response = studiosApi().createDataStudio(request, wspId, autoStart);
+        DataStudioDto studioDto = response.getStudio();
+        assert studioDto != null;
+        return new StudiosCreated(studioDto.getSessionId(), wspId, workspaceRef(wspId), baseWorkspaceUrl(wspId), autoStart);
     }
 
     DataStudioCreateRequest prepareRequest(DataStudioDto parentDataStudio, String parentCheckpointId, Long wspId) throws ApiException {
