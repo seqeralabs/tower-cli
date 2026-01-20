@@ -19,7 +19,6 @@ package io.seqera.tower.cli.commands.computeenvs;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
-import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.computeenvs.ComputeEnvDeleted;
 import io.seqera.tower.model.ComputeEnvResponseDto;
@@ -59,16 +58,8 @@ public class DeleteCmd extends AbstractComputeEnvCmd {
             id = computeEnv.getId();
         }
 
-        try {
-            computeEnvsApi().deleteComputeEnv(id, wspId, null);
-            return new ComputeEnvDeleted(id, workspaceRef(wspId), wspId);
-        } catch (ApiException e) {
-            if (e.getCode() == 403) {
-                // Customize the forbidden message
-                throw new ComputeEnvNotFoundException(id, workspaceRef(wspId));
-            }
-            throw e;
-        }
+        computeEnvsApi().deleteComputeEnv(id, wspId, null);
+        return new ComputeEnvDeleted(id, workspaceRef(wspId), wspId);
     }
 
     @Override

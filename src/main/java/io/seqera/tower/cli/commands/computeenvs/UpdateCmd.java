@@ -18,7 +18,6 @@ package io.seqera.tower.cli.commands.computeenvs;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
-import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
 import io.seqera.tower.cli.exceptions.InvalidResponseException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.computeenvs.ComputeEnvUpdated;
@@ -73,20 +72,7 @@ public class UpdateCmd extends AbstractComputeEnvCmd {
 
     }
 
-    private ComputeEnvResponseDto describeCE(ComputeEnvRefOptions computeEnvRefOptions, Long wspId) throws ComputeEnvNotFoundException, ApiException {
-        try {
-            return fetchComputeEnv(computeEnvRefOptions, wspId);
-
-        } catch (ApiException e) {
-            if (e.getCode() == 403) {
-                String ref = computeEnvRefOptions.computeEnv.computeEnvId != null
-                        ? computeEnvRefOptions.computeEnv.computeEnvId
-                        : computeEnvRefOptions.computeEnv.computeEnvName;
-                // Customize the forbidden message
-                throw new ComputeEnvNotFoundException(ref, workspaceRef(wspId));
-            }
-
-            throw e;
-        }
+    private ComputeEnvResponseDto describeCE(ComputeEnvRefOptions computeEnvRefOptions, Long wspId) throws ApiException {
+        return fetchComputeEnv(computeEnvRefOptions, wspId);
     }
 }
