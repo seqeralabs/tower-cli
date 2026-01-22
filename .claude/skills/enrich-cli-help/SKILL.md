@@ -25,7 +25,7 @@ Use this skill when:
 
 ## Core Workflow
 
-The enrichment process follows a proven 4-phase workflow that has been successfully applied to compute-envs, credentials, runs, and organizations/teams/members command families.
+The enrichment process follows a proven 4-phase workflow that has been successfully applied to all command families.
 
 ### Phase 1: Parallel Agent Research
 
