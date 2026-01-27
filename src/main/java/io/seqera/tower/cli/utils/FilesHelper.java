@@ -17,10 +17,12 @@
 
 package io.seqera.tower.cli.utils;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -33,7 +35,24 @@ public class FilesHelper {
         if (path == null) {
             return null;
         }
+
+        // Check if path represents stdin (conventionally "-")
+        if (path.toString().equals("-")) {
+            return readFromStdin();
+        }
+
         return Files.readString(path);
+    }
+
+    private static String readFromStdin() throws IOException {
+        StringBuilder content = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                content.append(line).append(System.lineSeparator());
+            }
+        }
+        return content.toString();
     }
 
     public static void saveString(String fileName, String text) {

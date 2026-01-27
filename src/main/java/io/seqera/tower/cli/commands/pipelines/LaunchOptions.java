@@ -33,19 +33,19 @@ public class LaunchOptions {
     @Option(names = {"-p", "--profile"}, split = ",", description = "Comma-separated list of one or more configuration profile names you want to use for this pipeline execution.")
     public List<String> profile;
 
-    @Option(names = {"--params-file"}, description = "Pipeline parameters in either JSON or YML format.")
+    @Option(names = {"--params-file"}, description = "Pipeline parameters in either JSON or YML format. Use '-' to read from stdin.")
     public Path paramsFile;
 
     @Option(names = {"--revision"}, description = "A valid repository commit Id, tag or branch name.")
     public String revision;
 
-    @Option(names = {"--config"}, description = "Path to a Nextflow config file. Values defined here override the same values in the pipeline repository config file, and all configuration values specified in Platform pipeline or compute environment Nextflow config fields are ignored.")
+    @Option(names = {"--config"}, description = "Path to a Nextflow config file. Values defined here override the same values in the pipeline repository config file, and all configuration values specified in Platform pipeline or compute environment Nextflow config fields are ignored. Use '-' to read from stdin.")
     public Path config;
 
-    @Option(names = {"--pre-run"}, description = "Bash script that is executed in the same environment where Nextflow runs just before the pipeline is launched.")
+    @Option(names = {"--pre-run"}, description = "Bash script that is executed in the same environment where Nextflow runs just before the pipeline is launched. Use '-' to read from stdin.")
     public Path preRunScript;
 
-    @Option(names = {"--post-run"}, description = "Bash script that is executed in the same environment where Nextflow runs immediately after the pipeline completion.")
+    @Option(names = {"--post-run"}, description = "Bash script that is executed in the same environment where Nextflow runs immediately after the pipeline completion. Use '-' to read from stdin.")
     public Path postRunScript;
 
     @Option(names = {"--pull-latest"}, description = "Enable Nextflow to pull the latest repository version before running the pipeline.")
