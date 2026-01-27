@@ -31,11 +31,11 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "update",
-        description = "Update labels."
+        description = "Update a label"
 )
 public class UpdateLabelsCmd extends AbstractLabelsCmd {
 
-    @CommandLine.Option(names = {"-i", "--id"}, description = "Label ID", required = true)
+    @CommandLine.Option(names = {"-i", "--id"}, description = "Label identifier", required = true)
     public Long labelId;
 
     @CommandLine.ArgGroup(exclusive = false, multiplicity = "1",heading = "Update: at least one of the following options must be provided.\n")
@@ -45,10 +45,10 @@ public class UpdateLabelsCmd extends AbstractLabelsCmd {
     public WorkspaceOptionalOptions workspaceRef;
 
     static class UpdateOptions {
-        @CommandLine.Option(names = {"-n", "--name"}, description = "Label name.")
+        @CommandLine.Option(names = {"-n", "--name"}, description = "Label name")
         public String labelName;
 
-        @CommandLine.Option(names = {"-v", "--value"}, description = "Label value.")
+        @CommandLine.Option(names = {"-v", "--value"}, description = "Label value")
         public String labelValue;
     }
 

@@ -33,26 +33,26 @@ import java.util.Objects;
 
 @CommandLine.Command(
         name = "add",
-        description = "Add custom data-link."
+        description = "Add a data link"
 )
 public class AddCmd extends AbstractApiCmd {
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
-    @CommandLine.Option(names = {"-n", "--name"}, description = "Data link name.", required = true)
+    @CommandLine.Option(names = {"-n", "--name"}, description = "Data link name", required = true)
     public String name;
 
-    @CommandLine.Option(names = {"-d", "--description"}, description = "Data link description.")
+    @CommandLine.Option(names = {"-d", "--description"}, description = "Data link description")
     public String description;
 
-    @CommandLine.Option(names = {"-u", "--uri"}, description = "Data link uri.", required = true)
+    @CommandLine.Option(names = {"-u", "--uri"}, description = "Data link URI", required = true)
     public String url;
 
-    @CommandLine.Option(names = {"-p", "--provider"}, description = "Data link provider. [aws, azure, google]", required = true)
+    @CommandLine.Option(names = {"-p", "--provider"}, description = "Cloud provider: aws, azure, or google", required = true)
     public DataLinkProvider provider;
 
-    @CommandLine.Option(names = {"-c", "--credentials"}, description = "Credentials identifier.")
+    @CommandLine.Option(names = {"-c", "--credentials"}, description = "Credentials identifier")
     public String credentialsRef;
 
 

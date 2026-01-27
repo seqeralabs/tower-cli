@@ -31,23 +31,23 @@ import java.nio.file.Path;
 
 @CommandLine.Command(
         name = "update",
-        description = "Update a workspace dataset."
+        description = "Update a dataset"
 )
 public class UpdateCmd extends AbstractDatasetsCmd {
 
     @CommandLine.Mixin
     public DatasetRefOptions datasetRefOptions;
 
-    @CommandLine.Option(names = {"--new-name"}, description = "Dataset new name.")
+    @CommandLine.Option(names = {"--new-name"}, description = "Updated dataset name. Must be unique per workspace. Names consist of alphanumeric, hyphen, and underscore characters.")
     public String newName;
 
-    @CommandLine.Option(names = {"-d", "--description"}, description = "Dataset description.")
+    @CommandLine.Option(names = {"-d", "--description"}, description = "Updated dataset description.")
     public String description;
 
-    @CommandLine.Option(names = {"--header"}, description = "Set first row as a header.")
+    @CommandLine.Option(names = {"--header"}, description = "Treat first row as header")
     public boolean header = false;
 
-    @CommandLine.Option(names = {"-f", "--file"}, description = "Data file to upload.")
+    @CommandLine.Option(names = {"-f", "--file"}, description = "Data file to upload")
     Path fileName = null;
 
     @CommandLine.Mixin

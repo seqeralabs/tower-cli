@@ -28,22 +28,22 @@ import java.io.IOException;
 
 public class EksPlatform extends AbstractPlatform<EksComputeConfig> {
 
-    @Option(names = {"--work-dir"}, description = "Work directory.", required = true)
+    @Option(names = {"--work-dir"}, description = "Nextflow work directory. Path where workflow intermediate files are stored on the shared storage.", required = true)
     public String workDir;
 
-    @Option(names = {"-r", "--region"}, description = "AWS region.", required = true)
+    @Option(names = {"-r", "--region"}, description = "AWS region where the EKS cluster is deployed (e.g., us-east-1, eu-west-1).", required = true)
     public String region;
 
-    @Option(names = {"--cluster-name"}, description = "The AWS EKS cluster name.", required = true)
+    @Option(names = {"--cluster-name"}, description = "Name of the AWS EKS (Elastic Kubernetes Service) cluster for workflow execution.", required = true)
     public String clusterName;
 
-    @Option(names = {"--namespace"}, description = "Namespace.", required = true)
+    @Option(names = {"--namespace"}, description = "Kubernetes namespace for workflow execution. Isolates resources within the cluster. Default: default.", required = true)
     public String namespace;
 
-    @Option(names = {"--head-account"}, description = "Head service account.", required = true)
+    @Option(names = {"--head-account"}, description = "Kubernetes service account for connecting to the cluster. Used by the Nextflow head job to authenticate with the Kubernetes API.", required = true)
     public String headAccount;
 
-    @Option(names = {"--storage-claim"}, description = "Storage claim name.")
+    @Option(names = {"--storage-claim"}, description = "PersistentVolumeClaim name for scratch storage. Must support ReadWriteMany access mode for shared workflow data.")
     public String storageClaim;
 
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)

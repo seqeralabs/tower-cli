@@ -27,7 +27,7 @@ import java.nio.file.Path;
 
 public class GoogleProvider extends AbstractProvider<GoogleSecurityKeys> {
 
-    @Option(names = {"-k", "--key"}, description = "JSON file with the service account key.", required = true)
+    @Option(names = {"-k", "--key"}, description = "Path to JSON file containing Google Cloud service account key. Download from Google Cloud Console IAM & Admin > Service Accounts.", required = true)
     public Path serviceAccountKey;
 
     public GoogleProvider() {

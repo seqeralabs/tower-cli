@@ -30,7 +30,7 @@ import picocli.CommandLine.Command;
 
 @Command(
         name = "pipelines",
-        description = "Manage workspace pipeline launchpad.",
+        description = "Manage pipelines",
         subcommands = {
                 ListCmd.class,
                 AddCmd.class,

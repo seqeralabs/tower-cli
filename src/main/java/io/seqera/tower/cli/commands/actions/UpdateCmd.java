@@ -35,17 +35,17 @@ import java.util.Objects;
 
 @CommandLine.Command(
         name = "update",
-        description = "Update a Pipeline Action."
+        description = "Update a pipeline action"
 )
 public class UpdateCmd extends AbstractActionsCmd {
 
     @CommandLine.Mixin
     ActionRefOptions actionRefOptions;
 
-    @CommandLine.Option(names = {"-s", "--status"}, description = "Action status (pause or active).")
+    @CommandLine.Option(names = {"-s", "--status"}, description = "Action status (pause or active)")
     public String status;
 
-    @CommandLine.Option(names = {"--new-name"}, description = "Action new name.")
+    @CommandLine.Option(names = {"--new-name"}, description = "Updated action name. Must be unique per workspace. Names consist of alphanumeric, hyphen, and underscore characters.")
     public String newName;
 
     @CommandLine.Mixin

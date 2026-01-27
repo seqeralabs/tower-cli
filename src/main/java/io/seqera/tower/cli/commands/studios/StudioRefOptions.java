@@ -25,10 +25,10 @@ public class StudioRefOptions {
     public StudioRef studio;
 
     public static class StudioRef {
-        @CommandLine.Option(names = {"-i", "--id"}, description = "Studio session ID.")
+        @CommandLine.Option(names = {"-i", "--id"}, description = "Studio session identifier")
         public String sessionId;
 
-        @CommandLine.Option(names = {"-n", "--name"}, description = "Studio name.")
+        @CommandLine.Option(names = {"-n", "--name"}, description = "Studio name")
         public String studioName;
     }
 

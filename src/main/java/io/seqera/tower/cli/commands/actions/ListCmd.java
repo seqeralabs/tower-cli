@@ -31,7 +31,7 @@ import java.util.List;
 
 @CommandLine.Command(
         name = "list",
-        description = "List the available Pipeline Actions for the authenticated user or given workspace."
+        description = "List pipeline actions"
 )
 public class ListCmd extends AbstractActionsCmd {
 

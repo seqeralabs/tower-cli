@@ -29,7 +29,7 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "delete",
-        description = "Delete label"
+        description = "Delete a label"
 )
 public class DeleteLabelsCmd extends AbstractLabelsCmd {
 

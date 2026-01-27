@@ -25,16 +25,16 @@ import java.io.IOException;
 
 public class AzureProvider extends AbstractProvider<AzureSecurityKeys> {
 
-    @Option(names = {"--batch-key"}, description = "Azure batch account key.", required = true)
+    @Option(names = {"--batch-key"}, description = "Azure Batch account access key. Used for authentication to Azure Batch service for compute resource management.", required = true)
     public String batchKey;
 
-    @Option(names = {"--batch-name"}, description = "Azure batch account name.", required = true)
+    @Option(names = {"--batch-name"}, description = "Azure Batch account name. The name of the Azure Batch account used for workflow execution.", required = true)
     public String batchName;
 
-    @Option(names = {"--storage-key"}, description = "Azure blob storage account key.", required = true)
+    @Option(names = {"--storage-key"}, description = "Azure Storage account access key. Used for authentication to Azure Blob Storage for workflow data storage.", required = true)
     public String storageKey;
 
-    @Option(names = {"--storage-name"}, description = "Azure blob storage account name.", required = true)
+    @Option(names = {"--storage-name"}, description = "Azure Storage account name. The name of the Azure Storage account used for workflow data and logs.", required = true)
     public String storageName;
 
     public AzureProvider() {

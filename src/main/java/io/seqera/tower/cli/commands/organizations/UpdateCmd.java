@@ -29,17 +29,17 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "update",
-        description = "Update organization details."
+        description = "Update an organization"
 )
 public class UpdateCmd extends AbstractOrganizationsCmd {
 
     @CommandLine.Mixin
     OrganizationRefOptions organizationRefOptions;
 
-    @CommandLine.Option(names = {"--new-name"}, description = "Organization new name.")
+    @CommandLine.Option(names = {"--new-name"}, description = "New unique name for the organization. Changes the organization's identifier. Must be unique across Seqera Platform. Updates URLs and API references.")
     public String newName;
 
-    @CommandLine.Option(names = {"-f", "--full-name"}, description = "Organization full name.")
+    @CommandLine.Option(names = {"-f", "--full-name"}, description = "New display name for the organization. The full, human-readable name shown in the UI. Can contain spaces and special characters.")
     public String fullName;
 
     @CommandLine.Mixin

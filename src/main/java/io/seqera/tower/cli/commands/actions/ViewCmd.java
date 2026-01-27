@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 
 @CommandLine.Command(
         name = "view",
-        description = "Describe an existing Pipeline Action."
+        description = "View pipeline action details"
 )
 public class ViewCmd extends AbstractActionsCmd {
 

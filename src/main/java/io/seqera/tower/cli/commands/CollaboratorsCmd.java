@@ -22,7 +22,7 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "collaborators",
-        description = "Manage organization collaborators.",
+        description = "Manage organization collaborators",
         subcommands = {
                 ListCmd.class,
         }

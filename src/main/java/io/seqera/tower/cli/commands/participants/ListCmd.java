@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 
 @CommandLine.Command(
         name = "list",
-        description = "List workspace participants."
+        description = "List workspace participants"
 )
 public class ListCmd extends AbstractParticipantsCmd {
 

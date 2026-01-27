@@ -27,7 +27,7 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "delete",
-        description = "Delete custom data-link."
+        description = "Delete a data link"
 )
 public class DeleteCmd extends AbstractDataLinksCmd {
 

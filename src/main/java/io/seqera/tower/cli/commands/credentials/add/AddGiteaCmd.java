@@ -24,7 +24,7 @@ import picocli.CommandLine.Mixin;
 
 @Command(
         name = "gitea",
-        description = "Add new Gitea workspace credentials."
+        description = "Add Gitea credentials"
 )
 public class AddGiteaCmd extends AbstractAddCmd {
 

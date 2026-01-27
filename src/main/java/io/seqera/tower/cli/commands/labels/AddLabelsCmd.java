@@ -32,11 +32,11 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "add",
-        description = "Add new label"
+        description = "Add a label"
 )
 public class AddLabelsCmd extends AbstractLabelsCmd {
 
-    @CommandLine.Option(names = {"-n", "--name"}, description = "Label name.", required = true)
+    @CommandLine.Option(names = {"-n", "--name"}, description = "Label name", required = true)
     public String labelName;
 
     @CommandLine.Mixin

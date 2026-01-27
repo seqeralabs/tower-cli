@@ -26,10 +26,10 @@ public class PipelineRefOptions {
 
     public static class PipelineRef {
 
-        @CommandLine.Option(names = {"-i", "--id"}, description = "Pipeline unique id.")
+        @CommandLine.Option(names = {"-i", "--id"}, description = "Pipeline identifier")
         public Long pipelineId;
 
-        @CommandLine.Option(names = {"-n", "--name"}, description = "Pipeline name.")
+        @CommandLine.Option(names = {"-n", "--name"}, description = "Pipeline name")
         public String pipelineName;
     }
 }

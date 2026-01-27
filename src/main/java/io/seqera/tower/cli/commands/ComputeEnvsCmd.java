@@ -30,7 +30,7 @@ import picocli.CommandLine.Command;
 
 @Command(
         name = "compute-envs",
-        description = "Manage workspace compute environments.",
+        description = "Manage compute environments.",
         subcommands = {
                 AddCmd.class,
                 UpdateCmd.class,
