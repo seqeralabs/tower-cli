@@ -20,7 +20,6 @@ package io.seqera.tower.cli.commands.studios;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.exceptions.StudioNotFoundException;
-import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.studios.StudioStopSubmitted;
 import io.seqera.tower.model.DataStudioStatus;
@@ -57,9 +56,6 @@ public class StopCmd extends AbstractStudiosCmd {
         } catch (ApiException e) {
             if (e.getCode() == 404) {
                 throw new StudioNotFoundException(studioRefOptions.getStudioIdentifier(), workspace.workspace);
-            }
-            if (e.getCode() == 403) {
-                throw new TowerException(String.format("User not entitled to view studio '%s' at %s workspace", studioRefOptions.getStudioIdentifier(), workspace.workspace));
             }
             throw e;
         }

@@ -68,129 +68,119 @@ public class ViewCmd extends AbstractRunsCmd {
     protected Response exec() throws ApiException {
         Long wspId = workspaceId(workspace.workspace);
 
-        try {
-            String workspaceRef = workspaceRef(wspId);
-            DescribeWorkflowResponse workflowResponse = workflowsApi().describeWorkflow(id, wspId, List.of(WorkflowQueryAttribute.labels));
-            
-            if (workflowResponse == null) {
-                throw new RunNotFoundException(id, workspaceRef(wspId));
-            }
+        String workspaceRef = workspaceRef(wspId);
+        DescribeWorkflowResponse workflowResponse = workflowsApi().describeWorkflow(id, wspId, List.of(WorkflowQueryAttribute.labels));
 
-            Workflow workflow = workflowResponse.getWorkflow();
-            WorkflowLoad workflowLoad = workflowLoadByWorkflowId(wspId, id);
-
-            DescribeWorkflowLaunchResponse wfLaunch = workflowsApi().describeWorkflowLaunch(workflow.getId(), wspId);
-            ComputeEnvComputeConfig computeEnv = wfLaunch.getLaunch() != null ? wfLaunch.getLaunch().getComputeEnv() : null;
-
-            ProgressData progress = null;
-            if (opts.processes || opts.stats || opts.load || opts.utilization) {
-                progress = workflowsApi().describeWorkflowProgress(id, wspId).getProgress();
-            }
-
-            Map<String, Object> general = new LinkedHashMap<>();
-            general.put("id", workflow.getId());
-            general.put("operationId", workflowResponse.getJobInfo() != null ? workflowResponse.getJobInfo().getOperationId() : null);
-            general.put("runName", workflow.getRunName());
-            general.put("startingDate", workflow.getStart());
-            general.put("commitId", workflow.getCommitId());
-            general.put("sessionId", workflow.getSessionId());
-            general.put("username", workflow.getUserName());
-            general.put("workdir", workflow.getWorkDir());
-            general.put("container", workflow.getContainer());
-            general.put("executors", workflowLoad.getExecutors() != null ? String.join(", ", workflowLoad.getExecutors()) : null);
-            general.put("computeEnv", computeEnv == null ? '-' : computeEnv.getName());
-            general.put("nextflowVersion", workflow.getNextflow() != null ? workflow.getNextflow().getVersion() : null);
-            general.put("status", workflow.getStatus());
-            general.put("labels", formatLabels(workflowResponse.getLabels()));
-
-            List<String> configFiles = new ArrayList<>();
-            String configText = null;
-            if (opts.config) {
-                configFiles = workflow.getConfigFiles();
-                configText = workflow.getConfigText();
-            }
-
-            Map<String, Object> params = new HashMap<String, Object>();
-            if (opts.params) {
-                params = workflow.getParams();
-            }
-
-            String command = null;
-            if (opts.command) {
-                command = workflow.getCommandLine();
-            }
-
-            Map<String, Object> status = new HashMap<>();
-            if (opts.status) {
-                status.put("pending", workflowLoad.getPending());
-                status.put("submitted", workflowLoad.getSubmitted());
-                status.put("running", workflowLoad.getRunning());
-                status.put("cached", workflowLoad.getCached());
-                status.put("succeeded", workflowLoad.getSucceeded());
-                status.put("failed", workflowLoad.getFailed());
-            }
-
-            final List<Map<String, Object>> processes = new ArrayList<>();
-            if (opts.processes) {
-                progress.getProcessesProgress().forEach(it -> {
-                    Map<String, Object> data = new HashMap<>();
-                    data.put("name", it.getProcess());
-                    data.put("completedTasks", it.getSucceeded() + it.getCached());
-                    data.put("totalTasks", it.getPending() + it.getRunning() + it.getCached() + it.getSubmitted() + it.getSucceeded() + it.getFailed());
-
-                    processes.add(data);
-                });
-            }
-
-            Map<String, Object> stats = new HashMap<>();
-            if (opts.stats) {
-                if( workflow.getDuration() != null )
-                    stats.put("wallTime", TimeUnit.MILLISECONDS.toSeconds(workflow.getDuration()) / 60D);
-                if(progress.getWorkflowProgress() != null) {
-                    stats.put("cpuTime", TimeUnit.MILLISECONDS.toMinutes(progress.getWorkflowProgress().getCpuTime()) / 60D);
-                    stats.put("totalMemory", progress.getWorkflowProgress().getMemoryRss() / 1024 / 1024 / 1024D);
-                    stats.put("read", progress.getWorkflowProgress().getReadBytes() / 1024 / 1024 / 1024D);
-                    stats.put("write", progress.getWorkflowProgress().getWriteBytes() / 1024 / 1024 / 1024D);
-                    stats.put("cost", progress.getWorkflowProgress().getCost());
-                }
-            }
-
-            Map<String, Object> load = new HashMap<>();
-            if (opts.load && progress.getWorkflowProgress() != null) {
-                load.put("peakCpus", progress.getWorkflowProgress().getPeakCpus());
-                load.put("loadCpus", progress.getWorkflowProgress().getLoadCpus());
-                load.put("peakTasks", progress.getWorkflowProgress().getPeakTasks());
-                load.put("loadTasks", progress.getWorkflowProgress().getLoadTasks());
-            }
-
-            Map<String, Object> utilization = new HashMap<>();
-            if (opts.utilization && progress.getWorkflowProgress() != null) {
-                utilization.put("memoryEfficiency", progress.getWorkflowProgress().getMemoryEfficiency());
-                utilization.put("cpuEfficiency", progress.getWorkflowProgress().getCpuEfficiency());
-            }
-
-            return new RunView(
-                    workspaceRef,
-                    general,
-                    configFiles,
-                    configText,
-                    params,
-                    command,
-                    status,
-                    processes,
-                    stats,
-                    load,
-                    utilization,
-                    baseWorkspaceUrl(wspId)
-            );
-
-        } catch (ApiException e) {
-            if (e.getCode() == 403) {
-                // Customize the forbidden message
-                throw new RunNotFoundException(id, workspaceRef(wspId));
-            }
-
-            throw e;
+        if (workflowResponse == null) {
+            throw new RunNotFoundException(id, workspaceRef(wspId));
         }
+
+        Workflow workflow = workflowResponse.getWorkflow();
+        WorkflowLoad workflowLoad = workflowLoadByWorkflowId(wspId, id);
+
+        DescribeWorkflowLaunchResponse wfLaunch = workflowsApi().describeWorkflowLaunch(workflow.getId(), wspId);
+        ComputeEnvComputeConfig computeEnv = wfLaunch.getLaunch() != null ? wfLaunch.getLaunch().getComputeEnv() : null;
+
+        ProgressData progress = null;
+        if (opts.processes || opts.stats || opts.load || opts.utilization) {
+            progress = workflowsApi().describeWorkflowProgress(id, wspId).getProgress();
+        }
+
+        Map<String, Object> general = new LinkedHashMap<>();
+        general.put("id", workflow.getId());
+        general.put("operationId", workflowResponse.getJobInfo() != null ? workflowResponse.getJobInfo().getOperationId() : null);
+        general.put("runName", workflow.getRunName());
+        general.put("startingDate", workflow.getStart());
+        general.put("commitId", workflow.getCommitId());
+        general.put("sessionId", workflow.getSessionId());
+        general.put("username", workflow.getUserName());
+        general.put("workdir", workflow.getWorkDir());
+        general.put("container", workflow.getContainer());
+        general.put("executors", workflowLoad.getExecutors() != null ? String.join(", ", workflowLoad.getExecutors()) : null);
+        general.put("computeEnv", computeEnv == null ? '-' : computeEnv.getName());
+        general.put("nextflowVersion", workflow.getNextflow() != null ? workflow.getNextflow().getVersion() : null);
+        general.put("status", workflow.getStatus());
+        general.put("labels", formatLabels(workflowResponse.getLabels()));
+
+        List<String> configFiles = new ArrayList<>();
+        String configText = null;
+        if (opts.config) {
+            configFiles = workflow.getConfigFiles();
+            configText = workflow.getConfigText();
+        }
+
+        Map<String, Object> params = new HashMap<String, Object>();
+        if (opts.params) {
+            params = workflow.getParams();
+        }
+
+        String command = null;
+        if (opts.command) {
+            command = workflow.getCommandLine();
+        }
+
+        Map<String, Object> status = new HashMap<>();
+        if (opts.status) {
+            status.put("pending", workflowLoad.getPending());
+            status.put("submitted", workflowLoad.getSubmitted());
+            status.put("running", workflowLoad.getRunning());
+            status.put("cached", workflowLoad.getCached());
+            status.put("succeeded", workflowLoad.getSucceeded());
+            status.put("failed", workflowLoad.getFailed());
+        }
+
+        final List<Map<String, Object>> processes = new ArrayList<>();
+        if (opts.processes) {
+            progress.getProcessesProgress().forEach(it -> {
+                Map<String, Object> data = new HashMap<>();
+                data.put("name", it.getProcess());
+                data.put("completedTasks", it.getSucceeded() + it.getCached());
+                data.put("totalTasks", it.getPending() + it.getRunning() + it.getCached() + it.getSubmitted() + it.getSucceeded() + it.getFailed());
+
+                processes.add(data);
+            });
+        }
+
+        Map<String, Object> stats = new HashMap<>();
+        if (opts.stats) {
+            if( workflow.getDuration() != null )
+                stats.put("wallTime", TimeUnit.MILLISECONDS.toSeconds(workflow.getDuration()) / 60D);
+            if(progress.getWorkflowProgress() != null) {
+                stats.put("cpuTime", TimeUnit.MILLISECONDS.toMinutes(progress.getWorkflowProgress().getCpuTime()) / 60D);
+                stats.put("totalMemory", progress.getWorkflowProgress().getMemoryRss() / 1024 / 1024 / 1024D);
+                stats.put("read", progress.getWorkflowProgress().getReadBytes() / 1024 / 1024 / 1024D);
+                stats.put("write", progress.getWorkflowProgress().getWriteBytes() / 1024 / 1024 / 1024D);
+                stats.put("cost", progress.getWorkflowProgress().getCost());
+            }
+        }
+
+        Map<String, Object> load = new HashMap<>();
+        if (opts.load && progress.getWorkflowProgress() != null) {
+            load.put("peakCpus", progress.getWorkflowProgress().getPeakCpus());
+            load.put("loadCpus", progress.getWorkflowProgress().getLoadCpus());
+            load.put("peakTasks", progress.getWorkflowProgress().getPeakTasks());
+            load.put("loadTasks", progress.getWorkflowProgress().getLoadTasks());
+        }
+
+        Map<String, Object> utilization = new HashMap<>();
+        if (opts.utilization && progress.getWorkflowProgress() != null) {
+            utilization.put("memoryEfficiency", progress.getWorkflowProgress().getMemoryEfficiency());
+            utilization.put("cpuEfficiency", progress.getWorkflowProgress().getCpuEfficiency());
+        }
+
+        return new RunView(
+                workspaceRef,
+                general,
+                configFiles,
+                configText,
+                params,
+                command,
+                status,
+                processes,
+                stats,
+                load,
+                utilization,
+                baseWorkspaceUrl(wspId)
+        );
     }
 }

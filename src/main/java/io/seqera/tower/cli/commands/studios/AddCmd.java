@@ -84,19 +84,12 @@ public class AddCmd extends AbstractStudiosCmd{
     protected Response exec() throws ApiException {
         Long wspId = workspaceId(workspace.workspace);
 
-        try {
-            templateValidation(templateOptions, condaEnv, wspId);
-            DataStudioCreateRequest request = prepareRequest(wspId);
-            DataStudioCreateResponse response = studiosApi().createDataStudio(request, wspId, autoStart);
-            DataStudioDto studioDto = response.getStudio();
-            assert studioDto != null;
-            return new StudiosCreated(studioDto.getSessionId(), wspId, workspaceRef(wspId), baseWorkspaceUrl(wspId), autoStart);
-        } catch (ApiException e) {
-            if (e.getCode() == 403) {
-                throw new TowerException(String.format("User not entitled to create studio at %s workspace", wspId));
-            }
-            throw e;
-        }
+        templateValidation(templateOptions, condaEnv, wspId);
+        DataStudioCreateRequest request = prepareRequest(wspId);
+        DataStudioCreateResponse response = studiosApi().createDataStudio(request, wspId, autoStart);
+        DataStudioDto studioDto = response.getStudio();
+        assert studioDto != null;
+        return new StudiosCreated(studioDto.getSessionId(), wspId, workspaceRef(wspId), baseWorkspaceUrl(wspId), autoStart);
     }
 
     private void templateValidation(StudioTemplateOptions templateOptions, Path condaEnv, Long wspId) throws ApiException {
