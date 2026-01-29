@@ -27,19 +27,19 @@ import java.io.IOException;
 
 public class GoogleBatchPlatform extends AbstractPlatform<GoogleBatchConfig> {
 
-    @Option(names = {"--work-dir"}, description = "Work directory.", required = true)
+    @Option(names = {"--work-dir"}, description = "Nextflow work directory. Path where workflow intermediate files are stored. Must be a Google Cloud Storage bucket path (e.g., gs://your-bucket/work).", required = true)
     public String workDir;
 
-    @Option(names = {"-l", "--location"}, description = "The location where the job executions are deployed to Google Batch API.", required = true)
+    @Option(names = {"-l", "--location"}, description = "Google Cloud region where job executions are deployed to Google Batch API (e.g., us-central1, europe-west1).", required = true)
     public String location;
 
-    @Option(names = {"--spot"}, description = "Use Spot virtual machines.")
+    @Option(names = {"--spot"}, description = "Use Spot virtual machines. Enables cost-effective preemptible instances for compute workloads. Spot VMs may be interrupted when capacity is needed.")
     public Boolean spot;
 
-    @Option(names = {"--fusion-v2"}, description = "With Fusion v2 enabled, S3 buckets specified in the Pipeline work directory and Allowed S3 Buckets fields will be accessible in the compute nodes storage (requires Wave containers service).")
+    @Option(names = {"--fusion-v2"}, description = "Enable Fusion file system. Provides native access to Google Cloud Storage with low-latency I/O. Requires Wave containers.")
     public boolean fusionV2;
 
-    @Option(names = {"--wave"}, description = "Allow access to private container repositories and the provisioning of containers in your Nextflow pipelines via the Wave containers service.")
+    @Option(names = {"--wave"}, description = "Enable Wave containers. Allows access to private container repositories and on-demand container provisioning.")
     public boolean wave;
 
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
@@ -84,25 +84,25 @@ public class GoogleBatchPlatform extends AbstractPlatform<GoogleBatchConfig> {
     }
 
     public static class AdvancedOptions {
-        @Option(names = {"--use-private-address"}, description = "Do not attach a public IP address to the VM. When enabled only Google internal services are accessible.")
+        @Option(names = {"--use-private-address"}, description = "Do not attach a public IP address to VM instances. When enabled, only Google internal services are accessible. Requires Cloud NAT for external access.")
         public Boolean usePrivateAddress;
 
-        @Option(names = {"--boot-disk-size"}, description = "Enter the boot disk size as GB.")
+        @Option(names = {"--boot-disk-size"}, description = "Boot disk size in GB. Controls the root volume size for compute instances. If absent, Platform defaults to 50 GB.")
         public Integer bootDiskSizeGb;
 
-        @Option(names = {"--head-job-cpus"}, description = "The number of CPUs to be allocated for the Nextflow runner job.")
+        @Option(names = {"--head-job-cpus"}, description = "Number of CPUs allocated to the Nextflow head job. Controls the compute resources for the main workflow orchestration process.")
         public Integer headJobCpus;
 
-        @Option(names = {"--head-job-memory"}, description = "The number of MiB of memory reserved for the Nextflow runner job (value should be a multiple of 256MiB and from 0.5 GB to 8 GB per CPU).")
+        @Option(names = {"--head-job-memory"}, description = "Memory allocation for the Nextflow head job in megabytes. Value must be a multiple of 256 MiB and from 0.5 GB to 8 GB per CPU.")
         public Integer headJobMemoryMb;
 
-        @Option(names = {"--service-account-email"}, description = "The service account email address used when deploying pipeline executions with this compute environment.")
+        @Option(names = {"--service-account-email"}, description = "Google Cloud service account email for pipeline execution. Grants fine-grained IAM permissions to Nextflow jobs.")
         public String serviceAccountEmail;
 
-        @Option(names = {"--head-job-template"}, description = "The name or fully qualified reference of the instance template to use for the head job.")
+        @Option(names = {"--head-job-template"}, description = "Google Compute Engine instance template for the Nextflow head job. Specify either the template name (if in the same project) or the fully qualified reference (projects/PROJECT_ID/global/instanceTemplates/TEMPLATE_NAME).")
         public String headJobInstanceTemplate;
 
-        @Option(names = {"--compute-job-template"}, description = "The name or fully qualified reference of the instance template to use for the compute jobs.")
+        @Option(names = {"--compute-job-template"}, description = "Google Compute Engine instance template for pipeline compute jobs. Specify either the template name (if in the same project) or the fully qualified reference (projects/PROJECT_ID/global/instanceTemplates/TEMPLATE_NAME).")
         public String computeJobInstanceTemplate;
     }
 }

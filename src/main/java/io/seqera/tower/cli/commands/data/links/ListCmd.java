@@ -33,7 +33,7 @@ import java.util.List;
 
 @Command(
         name = "list",
-        description = "List data-links."
+        description = "List data links"
 )
 public class ListCmd extends AbstractDataLinksCmd {
 
@@ -43,13 +43,13 @@ public class ListCmd extends AbstractDataLinksCmd {
     @CommandLine.Mixin
     public PaginationOptions paginationOptions;
 
-    @CommandLine.Option(names = {"-c", "--credentials"}, description = "Credentials identifier.")
+    @CommandLine.Option(names = {"-c", "--credentials"}, description = "Credentials identifier")
     public String credentialsRef;
 
-    @CommandLine.Option(names = {"--wait"}, description = "When present program will wait till all data links are fetched to cache.")
+    @CommandLine.Option(names = {"--wait"}, description = "Wait for all data links to be fetched to cache")
     public boolean wait;
 
-    @CommandLine.Option(names = {"--visibility"}, description = "Show  only data links that are [hidden, visible, all]. When not present all will be shown.")
+    @CommandLine.Option(names = {"--visibility"}, description = "Filter by visibility: hidden, visible, or all")
     public Visibility visibilityOption;
 
     // Search params

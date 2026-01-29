@@ -27,7 +27,7 @@ import picocli.CommandLine.Mixin;
 
 @Command(
         name = "view",
-        description = "View secret details."
+        description = "View secret details"
 )
 public class ViewCmd extends AbstractSecretsCmd {
 

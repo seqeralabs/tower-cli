@@ -27,13 +27,13 @@ import java.io.IOException;
 
 public class GoogleCloudPlatform extends AbstractPlatform<GoogleCloudConfig> {
 
-    @Option(names = {"--work-dir"}, description = "Work directory.", required = true)
+    @Option(names = {"--work-dir"}, description = "Nextflow work directory. Path where workflow intermediate files are stored. Must be a Google Cloud Storage bucket path (e.g., gs://your-bucket/work). Credentials must have read-write access.", required = true)
     public String workDir;
 
-    @Option(names = {"-r", "--region"}, description = "Google Cloud region.", required = true)
+    @Option(names = {"-r", "--region"}, description = "Google Cloud region where compute instances will be launched (e.g., us-central1, europe-west1).", required = true)
     public String region;
 
-    @Option(names = {"-z", "--zone"}, description = "Google Cloud zone within the region.", required = true)
+    @Option(names = {"-z", "--zone"}, description = "Google Cloud zone within the region (e.g., us-central1-a). If omitted, defaults to the first zone alphabetically in the region.", required = true)
     public String zone;
 
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
@@ -76,19 +76,19 @@ public class GoogleCloudPlatform extends AbstractPlatform<GoogleCloudConfig> {
     }
 
     public static class AdvancedOptions {
-        @Option(names = {"--arm64"}, description = "Use ARM64 (Axion) based instances.")
+        @Option(names = {"--arm64"}, description = "Enable ARM64 (Axion) architecture instances to run compute jobs. Provides efficient compute for compatible workloads.")
         public Boolean arm64Enabled;
 
-        @Option(names = {"--boot-disk-size"}, description = "Boot disk size in GB.")
+        @Option(names = {"--boot-disk-size"}, description = "Boot disk size in GB for Compute Engine instances. Uses pd-standard disk type. If absent, Platform defaults to 50 GB.")
         public Integer bootDiskSizeGb;
 
-        @Option(names = {"--gpu"}, description = "Enable GPU-enabled instances.")
+        @Option(names = {"--gpu"}, description = "Enable GPU-enabled instances for compute jobs. When enabled, Deep Learning VM base images with CUDA are automatically selected.")
         public Boolean gpuEnabled;
 
-        @Option(names = {"--image-id"}, description = "Image ID for the Compute Engine instance.")
+        @Option(names = {"--image-id"}, description = "Image ID defining the operating system and pre-installed software for Compute Engine instances. Supports Ubuntu LTS Google public images. For GPU instances, Deep Learning VM base images with CUDA are automatically selected.")
         public String imageId;
 
-        @Option(names = {"--instance-type"}, description = "Compute Engine machine type.")
+        @Option(names = {"--instance-type"}, description = "Compute Engine machine type (e.g., n1-standard-1, n2-standard-2). If omitted, a default machine type is used.")
         public String instanceType;
     }
 }

@@ -39,10 +39,10 @@ public class ListLabelsCmd extends AbstractLabelsCmd {
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspaceOptionalOptions;
 
-    @CommandLine.Option(names = {"-t", "--type"}, description = "Label type (normal|resource|all).", defaultValue = "all")
+    @CommandLine.Option(names = {"-t", "--type"}, description = "Label type: normal, resource, or all (default: all)", defaultValue = "all")
     public LabelType labelType;
 
-    @CommandLine.Option(names = {"-f", "--filter"}, description = "Show only labels that contain the given word.")
+    @CommandLine.Option(names = {"-f", "--filter"}, description = "Filter labels by substring")
     @Nullable
     public String filter;
 

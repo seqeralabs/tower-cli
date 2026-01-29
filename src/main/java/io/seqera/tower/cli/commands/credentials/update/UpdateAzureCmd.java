@@ -24,7 +24,7 @@ import picocli.CommandLine.Mixin;
 
 @Command(
         name = "azure",
-        description = "Update Azure workspace credentials."
+        description = "Update Azure credentials"
 )
 public class UpdateAzureCmd extends AbstractUpdateCmd {
 

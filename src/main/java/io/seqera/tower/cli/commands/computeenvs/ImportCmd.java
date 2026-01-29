@@ -36,13 +36,13 @@ import java.util.stream.Collectors;
 
 @CommandLine.Command(
         name = "import",
-        description = "Add a compute environment from file content."
+        description = "Import a compute environment configuration from a JSON file."
 )
 public class ImportCmd extends AbstractAddCmd {
-    @CommandLine.Option(names = {"--overwrite"}, description = "Overwrite the compute env if it already exists.", defaultValue = "false")
+    @CommandLine.Option(names = {"--overwrite"}, description = "Overwrite the compute environment if it already exists.", defaultValue = "false")
     public Boolean overwrite;
 
-    @CommandLine.Parameters(index = "0", paramLabel = "FILENAME", description = "File name to import.", arity = "1")
+    @CommandLine.Parameters(index = "0", paramLabel = "FILENAME", description = "File path containing the compute environment configuration.", arity = "1")
     Path fileName = null;
 
     @Override

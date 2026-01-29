@@ -27,10 +27,10 @@ public class SecretRefOptions {
 
     public static class SecretRef {
 
-        @Option(names = {"-i", "--id"}, description = "Secret unique id.")
+        @Option(names = {"-i", "--id"}, description = "Secret identifier")
         public Long id;
 
-        @Option(names = {"-n", "--name"}, description = "Secret name.")
+        @Option(names = {"-n", "--name"}, description = "Secret name")
         public String name;
     }
 }

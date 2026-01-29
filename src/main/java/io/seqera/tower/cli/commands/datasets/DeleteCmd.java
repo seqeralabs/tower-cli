@@ -29,7 +29,7 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "delete",
-        description = "Delete a workspace dataset."
+        description = "Delete a dataset"
 )
 public class DeleteCmd extends AbstractDatasetsCmd {
 

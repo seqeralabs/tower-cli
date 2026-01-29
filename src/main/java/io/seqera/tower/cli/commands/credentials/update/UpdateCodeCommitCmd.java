@@ -25,7 +25,7 @@ import static picocli.CommandLine.Mixin;
 
 @Command(
         name = "codecommit",
-        description = "Update CodeCommit workspace credentials."
+        description = "Update CodeCommit credentials"
 )
 public class UpdateCodeCommitCmd extends AbstractUpdateCmd {
 

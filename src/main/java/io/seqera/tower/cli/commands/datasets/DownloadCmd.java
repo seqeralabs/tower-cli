@@ -30,14 +30,14 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "download",
-        description = "Download dataset."
+        description = "Download a dataset"
 )
 public class DownloadCmd extends AbstractDatasetsCmd {
 
     @CommandLine.Mixin
     public DatasetRefOptions datasetRefOptions;
 
-    @CommandLine.Option(names = {"--dataset-version"}, description = "Dataset version to obtain file from.")
+    @CommandLine.Option(names = {"--dataset-version"}, description = "Dataset version to download")
     public Long version;
 
     @CommandLine.Mixin

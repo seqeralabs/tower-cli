@@ -46,7 +46,7 @@ import java.util.List;
 
 @CommandLine.Command(
         name = "download",
-        description = "Download content of data-link."
+        description = "Download data link contents"
 )
 public class DownloadCmd extends AbstractDataLinksCmd {
 
@@ -56,13 +56,13 @@ public class DownloadCmd extends AbstractDataLinksCmd {
     @CommandLine.Mixin
     public DataLinkRefOptions dataLinkRefOptions;
 
-    @CommandLine.Option(names = {"-c", "--credentials"}, description = "Credentials identifier.", required = true)
+    @CommandLine.Option(names = {"-c", "--credentials"}, description = "Credentials identifier", required = true)
     public String credentialsRef;
 
-    @CommandLine.Option(names = {"-o", "--output-dir"}, description = "Output directory.")
+    @CommandLine.Option(names = {"-o", "--output-dir"}, description = "Output directory for downloaded files")
     public String outputDir;
 
-    @CommandLine.Parameters(arity = "1..*", description = "Paths to files or directories to download.")
+    @CommandLine.Parameters(arity = "1..*", description = "Paths to files or directories to download")
     private List<String> paths;
 
     @Override

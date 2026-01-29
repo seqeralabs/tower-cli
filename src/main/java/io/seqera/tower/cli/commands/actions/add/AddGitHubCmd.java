@@ -22,7 +22,7 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "github",
-        description = "Add a GitHub action."
+        description = "Add a pipeline action triggered by GitHub events"
 )
 public class AddGitHubCmd extends AbstractAddCmd {
     @Override

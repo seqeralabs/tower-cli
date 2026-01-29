@@ -24,7 +24,7 @@ import picocli.CommandLine.Mixin;
 
 @Command(
         name = "agent",
-        description = "Update new Tower Agent workspace credentials."
+        description = "Update new Tower Agent credentials"
 )
 public class UpdateAgentCmd extends AbstractUpdateCmd {
 

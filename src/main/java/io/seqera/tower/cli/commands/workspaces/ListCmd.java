@@ -33,11 +33,11 @@ import java.util.stream.Collectors;
 
 @Command(
         name = "list",
-        description = "List user workspaces."
+        description = "List workspaces"
 )
 public class ListCmd extends AbstractWorkspaceCmd {
 
-    @CommandLine.Option(names = {"-o", "--org", "--organization"}, description = "The workspace organization name.")
+    @CommandLine.Option(names = {"-o", "--org", "--organization"}, description = "Workspace organization name")
     public String organizationName;
 
     @Override

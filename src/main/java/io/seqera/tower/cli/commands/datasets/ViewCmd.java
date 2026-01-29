@@ -29,7 +29,7 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "view",
-        description = "View a workspace dataset.",
+        description = "View dataset details",
         subcommands = {
                 VersionsCmd.class,
         }

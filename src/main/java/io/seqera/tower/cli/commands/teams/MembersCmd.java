@@ -32,7 +32,7 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "members",
-        description = "List all team members.",
+        description = "List team members",
         subcommands = {
                 AddCmd.class,
                 DeleteCmd.class,
@@ -40,10 +40,10 @@ import java.io.IOException;
 )
 public class MembersCmd extends AbstractTeamsCmd {
 
-    @CommandLine.Option(names = {"-t", "--team"}, description = "Team name.", required = true)
+    @CommandLine.Option(names = {"-t", "--team"}, description = "Team name. The unique team identifier within the organization. Lists all members who belong to this team.", required = true)
     public String teamName;
 
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name or identifier.", required = true)
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name or numeric ID. Specify either the unique organization name or the numeric organization ID returned by 'tw organizations list'.", required = true)
     public String organizationRef;
 
     @Override

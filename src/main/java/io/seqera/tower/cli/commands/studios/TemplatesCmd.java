@@ -26,7 +26,7 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "templates",
-        description = "List available Studio templates."
+        description = "List available studio templates"
 )
 public class TemplatesCmd extends AbstractStudiosCmd {
 

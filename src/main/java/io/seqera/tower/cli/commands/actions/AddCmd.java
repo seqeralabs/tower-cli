@@ -28,7 +28,7 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "add",
-        description = "Add a new Pipeline Action.",
+        description = "Add a pipeline action",
         subcommands = {
                 AddGitHubCmd.class,
                 AddTowerCmd.class

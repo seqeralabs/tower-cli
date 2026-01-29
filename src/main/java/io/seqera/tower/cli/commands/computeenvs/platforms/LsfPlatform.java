@@ -27,25 +27,25 @@ import java.io.IOException;
 
 public class LsfPlatform extends AbstractPlatform<LsfComputeConfig> {
 
-    @Option(names = {"--work-dir"}, description = "Work directory.", required = true)
+    @Option(names = {"--work-dir"}, description = "Nextflow work directory on the cluster's shared file system. Must be an absolute path accessible from all compute nodes.", required = true)
     public String workDir;
 
-    @Option(names = {"-u", "--user-name"}, description = "The username on the cluster used to launch the pipeline execution.")
+    @Option(names = {"-u", "--user-name"}, description = "Username for SSH connection to the HPC cluster. Used to authenticate and launch pipeline execution on the head node.")
     public String userName;
 
-    @Option(names = {"-H", "--host-name"}, description = "The pipeline execution is launched by connecting via SSH to the hostname specified. This usually is the cluster login node. Local IP addresses e.g. 127.*, 172.*, 192.*, etc. are not allowed, use a fully qualified hostname instead.")
+    @Option(names = {"-H", "--host-name"}, description = "Hostname or IP address of the HPC head node for SSH connection. Typically the cluster login node. Must be a fully qualified hostname, not a local IP address.")
     public String hostName;
 
-    @Option(names = {"-p", "--port"}, description = "Port number for the login connection.")
+    @Option(names = {"-p", "--port"}, description = "SSH port for cluster connection. If absent, Platform defaults to port 22.")
     public Integer port;
 
-    @Option(names = {"-q", "--head-queue"}, description = "The name of the queue on the cluster used to launch the execution of the Nextflow pipeline.", required = true)
+    @Option(names = {"-q", "--head-queue"}, description = "LSF queue for launching the Nextflow head job. The queue where the main workflow orchestration process runs.", required = true)
     public String headQueue;
 
-    @Option(names = {"--compute-queue"}, description = "The name of queue on the cluster to which pipeline jobs are submitted. This queue can be overridden by the pipeline configuration.")
+    @Option(names = {"--compute-queue"}, description = "LSF queue for pipeline task submission. Nextflow submits individual jobs to this queue. Can be overridden in pipeline configuration.")
     public String computeQueue;
 
-    @Option(names = {"--launch-dir"}, description = "The directory where Nextflow runs. It must be an absolute directory and the user should have read-write access permissions to it [default: pipeline work directory].")
+    @Option(names = {"--launch-dir"}, description = "Directory where Nextflow executes. Must be an absolute path with read-write permissions (if absent, Platform defaults to the pipeline work directory).")
     public String launchDir;
 
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
@@ -94,19 +94,19 @@ public class LsfPlatform extends AbstractPlatform<LsfComputeConfig> {
     }
 
     public static class AdvancedOptions {
-        @Option(names = {"--max-queue-size"}, description = "This option limits the number of jobs Nextflow can submit to the Slurm queue at the same time [default: 100].")
+        @Option(names = {"--max-queue-size"}, description = "Maximum number of jobs Nextflow can submit simultaneously to the LSF queue. Controls job submission rate. If absent, Platform defaults to 100.")
         public Integer maxQueueSize;
 
-        @Option(names = {"--head-job-options"}, description = "Slurm submit options for the Nextflow head job. These options are added to the 'sbatch' command run by Tower to launch the pipeline execution.")
+        @Option(names = {"--head-job-options"}, description = "Additional submit options for the Nextflow head job. Appended to the bsub command for the main orchestration process.")
         public String headJobOptions;
 
-        @Option(names = {"--unit-for-limits"}, description = "This option defines the unit used by your LSF cluster for memory limits. It should match the attribute LSF_UNIT_FOR_LIMITS setting in your lsf.conf file.")
+        @Option(names = {"--unit-for-limits"}, description = "Memory limit unit for LSF cluster. Must match LSF_UNIT_FOR_LIMITS in lsf.conf configuration file.")
         public String unitForLimits;
 
-        @Option(names = {"--per-job-mem-limit"}, description = "Whether the memory limit is interpreted as per-job or per-process. It should match the attribute LSB_JOB_MEMLIMIT in your lsf.conf file.")
+        @Option(names = {"--per-job-mem-limit"}, description = "Memory limit interpretation: per-job or per-process. Must match LSB_JOB_MEMLIMIT in lsf.conf configuration file.")
         public Boolean perJobMemLimit;
 
-        @Option(names = {"--per-task-reserve"}, description = "Whether the memory reservation is made on job tasks instead of per-host. It should match the attribute RESOURCE_RESERVE_PER_TASK in your lsf.conf file.")
+        @Option(names = {"--per-task-reserve"}, description = "Memory reservation mode: per-task or per-host. Must match RESOURCE_RESERVE_PER_TASK in lsf.conf configuration file.")
         public Boolean perTaskReserve;
 
     }

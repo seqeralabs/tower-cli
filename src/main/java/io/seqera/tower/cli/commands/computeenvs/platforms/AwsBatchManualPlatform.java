@@ -28,25 +28,25 @@ import java.io.IOException;
 
 public class AwsBatchManualPlatform extends AbstractPlatform<AwsBatchConfig> {
 
-    @Option(names = {"--work-dir"}, description = "Work directory.", required = true)
+    @Option(names = {"--work-dir"}, description = "Nextflow work directory. Path where workflow intermediate files are stored. Must be an S3 bucket path (e.g., s3://your-bucket/work).", required = true)
     public String workDir;
 
-    @Option(names = {"-r", "--region"}, description = "AWS region.", required = true)
+    @Option(names = {"-r", "--region"}, description = "AWS region where compute resources will be created (e.g., us-east-1, eu-west-1).", required = true)
     public String region;
 
-    @Option(names = {"--head-queue"}, description = "The Batch queue that will run the Nextflow application. A queue that does not use spot instances is expected.", required = true)
+    @Option(names = {"--head-queue"}, description = "AWS Batch queue for the Nextflow head job. Should use on-demand instances for reliability.", required = true)
     public String headQueue;
 
-    @Option(names = {"--compute-queue"}, description = "The default Batch queue to which Nextflow will submit jobs. This can be overwritten via Nextflow config.", required = true)
+    @Option(names = {"--compute-queue"}, description = "AWS Batch compute queue for running pipeline jobs. Nextflow submits tasks to this queue. Can be overridden in pipeline config.", required = true)
     public String computeQueue;
 
-    @Option(names = {"--fusion-v2"}, description = "With Fusion v2 enabled, S3 buckets specified in the Pipeline work directory and Allowed S3 Buckets fields will be accessible in the compute nodes storage (requires Wave containers service).")
+    @Option(names = {"--fusion-v2"}, description = "Enable Fusion file system. Provides native access to S3 storage with low-latency I/O. Requires Wave containers.")
     public boolean fusionV2;
 
-    @Option(names = {"--wave"}, description = "Allow access to private container repositories and the provisioning of containers in your Nextflow pipelines via the Wave containers service.")
+    @Option(names = {"--wave"}, description = "Enable Wave containers. Allows access to private container repositories and on-demand container provisioning.")
     public boolean wave;
 
-    @Option(names = {"--fast-storage"}, description = "Allow the use of NVMe instance storage to speed up I/O and disk access operations (requires Fusion v2).")
+    @Option(names = {"--fast-storage"}, description = "Enable NVMe instance storage. Provides high-performance local storage for faster I/O operations. Requires Fusion file system.")
     public boolean fastStorage;
 
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
@@ -109,19 +109,19 @@ public class AwsBatchManualPlatform extends AbstractPlatform<AwsBatchConfig> {
     }
 
     public static class AdvancedOptions {
-        @Option(names = {"--head-job-cpus"}, description = "The number of CPUs to be allocated for the Nextflow runner job.")
+        @Option(names = {"--head-job-cpus"}, description = "Number of CPUs allocated to the Nextflow head job. Controls the compute resources for the main workflow orchestration process.")
         public Integer headJobCpus;
 
-        @Option(names = {"--head-job-memory"}, description = "The number of MiB of memory reserved for the Nextflow runner job.")
+        @Option(names = {"--head-job-memory"}, description = "Memory allocation for the Nextflow head job in megabytes. Determines available memory for workflow orchestration.")
         public Integer headJobMemoryMb;
 
-        @Option(names = {"--head-job-role"}, description = "IAM role to fine-grained control permissions for the Nextflow runner job.")
+        @Option(names = {"--head-job-role"}, description = "IAM role ARN to grant fine-grained permissions to the Nextflow head job. Enables secure access to AWS resources.")
         public String headJobRole;
 
-        @Option(names = {"--compute-job-role"}, description = "IAM role to fine-grained control permissions for jobs submitted by Nextflow.")
+        @Option(names = {"--compute-job-role"}, description = "IAM role ARN to grant fine-grained permissions to Nextflow compute jobs. Controls access for individual pipeline tasks.")
         public String computeJobRole;
 
-        @Option(names = {"--batch-execution-role"}, description = "The execution role grants the Amazon ECS container used by Batch the permission to make API calls on your behalf.")
+        @Option(names = {"--batch-execution-role"}, description = "IAM role ARN for ECS task execution. Grants Amazon ECS containers permission to make AWS API calls on your behalf.")
         public String batchExecutionRole;
 
         @Option(names = {"--cli-path"}, description = "Nextflow requires the AWS CLI installed in the Ec2 instances. Use this field to specify the path.")

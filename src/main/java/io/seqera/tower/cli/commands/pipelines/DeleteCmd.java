@@ -29,7 +29,7 @@ import java.io.IOException;
 
 @Command(
         name = "delete",
-        description = "Delete a workspace pipeline."
+        description = "Remove a pipeline"
 )
 public class DeleteCmd extends AbstractPipelinesCmd {
 

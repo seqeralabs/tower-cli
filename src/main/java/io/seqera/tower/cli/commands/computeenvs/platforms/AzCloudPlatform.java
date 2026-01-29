@@ -27,13 +27,13 @@ import java.io.IOException;
 
 public class AzCloudPlatform extends AbstractPlatform<AzCloudConfig> {
 
-    @Option(names = {"--work-dir"}, description = "Work directory.", required = true)
+    @Option(names = {"--work-dir"}, description = "Nextflow work directory. Path where workflow intermediate files are stored. Must be an Azure Blob Storage path (e.g., az://your-container/work). Credentials must have read-write access.", required = true)
     public String workDir;
 
-    @Option(names = {"-r", "--region"}, description = "Azure region.", required = true)
+    @Option(names = {"-r", "--region"}, description = "Azure region where virtual machines will be deployed (e.g., eastus, westeurope).", required = true)
     public String region;
 
-    @Option(names = {"--resource-group"}, description = "Azure resource group name.", required = true)
+    @Option(names = {"--resource-group"}, description = "Azure resource group for organizing and managing virtual machines. The resource group must already exist in the subscription.", required = true)
     public String resourceGroup;
 
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
@@ -80,31 +80,31 @@ public class AzCloudPlatform extends AbstractPlatform<AzCloudConfig> {
     }
 
     public static class AdvancedOptions {
-        @Option(names = {"--data-collection-endpoint"}, description = "Data collection endpoint URL.")
+        @Option(names = {"--data-collection-endpoint"}, description = "Azure Monitor data collection endpoint URL for log ingestion. Used to route logs to Log Analytics workspace.")
         public String dataCollectionEndpoint;
 
-        @Option(names = {"--data-collection-rule-id"}, description = "Data collection rule ID.")
+        @Option(names = {"--data-collection-rule-id"}, description = "Azure Monitor data collection rule ID. Defines how logs are processed and routed to destination workspaces.")
         public String dataCollectionRuleId;
 
-        @Option(names = {"--instance-type"}, description = "Azure virtual machine type.")
+        @Option(names = {"--instance-type"}, description = "Azure virtual machine size (e.g., Standard_D2s_v3, Standard_E4s_v3). If omitted, a default VM size is used.")
         public String instanceType;
 
-        @Option(names = {"--log-table-name"}, description = "Log Analytics table name.")
+        @Option(names = {"--log-table-name"}, description = "Custom table name in Log Analytics workspace for storing compute environment logs. Enables organized log management.")
         public String logTableName;
 
-        @Option(names = {"--log-workspace-id"}, description = "Log Analytics workspace ID.")
+        @Option(names = {"--log-workspace-id"}, description = "Azure Log Analytics workspace ID for monitoring compute environment activity and logs.")
         public String logWorkspaceId;
 
-        @Option(names = {"--managed-identity-client-id"}, description = "Managed identity client ID.")
+        @Option(names = {"--managed-identity-client-id"}, description = "User-assigned managed identity client ID for authentication. Used with managed identity resource ID for VM access control.")
         public String managedIdentityClientId;
 
-        @Option(names = {"--managed-identity-id"}, description = "Managed identity resource ID.")
+        @Option(names = {"--managed-identity-id"}, description = "User-assigned managed identity resource ID. Provides VMs with Azure resource access without storing credentials.")
         public String managedIdentityId;
 
-        @Option(names = {"--network-id"}, description = "Azure virtual network ID.")
+        @Option(names = {"--network-id"}, description = "Azure virtual network resource ID. Defines the network where VMs will be deployed for network isolation and connectivity.")
         public String networkId;
 
-        @Option(names = {"--subscription-id"}, description = "Azure subscription ID.")
+        @Option(names = {"--subscription-id"}, description = "Azure subscription ID where resources will be created. Used to specify the billing and access control boundary.")
         public String subscriptionId;
     }
 }

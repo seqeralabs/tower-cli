@@ -27,7 +27,7 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "actions",
-        description = "Manage actions.",
+        description = "Manage pipeline actions",
         subcommands = {
                 ListCmd.class,
                 ViewCmd.class,

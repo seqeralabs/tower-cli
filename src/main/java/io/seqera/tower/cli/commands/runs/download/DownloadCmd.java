@@ -31,14 +31,14 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "download",
-        description = "Download a pipeline's run related files."
+        description = "Download pipeline run files"
 )
 public class DownloadCmd extends AbstractRunsCmd {
 
-    @CommandLine.Option(names = {"--type"}, description = "File type to download. Options are stdout, log, stderr (for tasks only) and timeline (workflow only) (default is stdout).", defaultValue = "stdout")
+    @CommandLine.Option(names = {"--type"}, description = "Type of file to download. Options: 'stdout' (standard output), 'log' (Nextflow log), 'stderr' (standard error, tasks only), 'timeline' (execution timeline HTML, workflow only). Default: stdout.", defaultValue = "stdout")
     public RunDownloadFileType type;
 
-    @CommandLine.Option(names = {"-t"}, description = "Task identifier.")
+    @CommandLine.Option(names = {"-t"}, description = "Task numeric identifier. When specified, downloads task-specific files (.command.out, .command.err, .command.log). When omitted, downloads workflow-level files (nextflow.log, timeline.html).")
     public Long task;
 
     @CommandLine.ParentCommand

@@ -26,11 +26,11 @@ public class DataLinkRefOptions {
 
     public static class DataLinkRef {
 
-        @CommandLine.Option(names = {"-i","--id"}, description = "Data link id.")
+        @CommandLine.Option(names = {"-i","--id"}, description = "Data link identifier")
         public String dataLinkId;
-        @CommandLine.Option(names = {"-n", "--name"}, description = "Data link name (e.g. my-custom-data-link-name).")
+        @CommandLine.Option(names = {"-n", "--name"}, description = "Data link name")
         public String dataLinkName;
-        @CommandLine.Option(names = {"--uri"}, description = "Data link URI (e.g. s3://another-bucket).")
+        @CommandLine.Option(names = {"--uri"}, description = "Data link URI (e.g., s3://bucket-name)")
         public String dataLinkUri;
 
     }

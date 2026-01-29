@@ -33,7 +33,7 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "export",
-        description = "Export a workspace pipeline for further creation."
+        description = "Export a pipeline"
 )
 public class ExportCmd extends AbstractPipelinesCmd {
 
@@ -43,7 +43,7 @@ public class ExportCmd extends AbstractPipelinesCmd {
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
-    @CommandLine.Parameters(index = "0", paramLabel = "FILENAME", description = "File name to export.", arity = "0..1")
+    @CommandLine.Parameters(index = "0", paramLabel = "FILENAME", description = "File name to export", arity = "0..1")
     String fileName = null;
 
     @Override

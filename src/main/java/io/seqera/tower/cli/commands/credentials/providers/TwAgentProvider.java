@@ -25,10 +25,10 @@ import java.io.IOException;
 
 public class TwAgentProvider extends AbstractProvider<AgentSecurityKeys> {
 
-    @Option(names = {"--connection-id"}, description = "Connection identifier.", required = true)
+    @Option(names = {"--connection-id"}, description = "Seqera Platform Agent connection identifier. Unique identifier for the agent connection used to execute workflows.", required = true)
     public String connectionId;
 
-    @Option(names = {"--work-dir"}, description = "Default work directory", defaultValue = "$TW_AGENT_WORK")
+    @Option(names = {"--work-dir"}, description = "Default work directory path for workflow execution on the agent. Must be accessible to the agent process. Default: $TW_AGENT_WORK.", defaultValue = "$TW_AGENT_WORK")
     public String workDir;
 
     public TwAgentProvider() {

@@ -40,11 +40,11 @@ import static io.seqera.tower.cli.utils.ModelHelper.removeEmptyValues;
 
 @Command(
         name = "add",
-        description = "Add a workspace pipeline."
+        description = "Add a pipeline"
 )
 public class AddCmd extends AbstractPipelinesCmd {
 
-    @Option(names = {"-n", "--name"}, description = "Pipeline name.", required = true)
+    @Option(names = {"-n", "--name"}, description = "Pipeline name. Must be unique within the workspace.", required = true)
     public String name;
 
     @CommandLine.Mixin
@@ -53,7 +53,7 @@ public class AddCmd extends AbstractPipelinesCmd {
     @Option(names = {"-d", "--description"}, description = "Pipeline description.")
     public String description;
 
-    @Parameters(index = "0", paramLabel = "PIPELINE_URL", description = "Nextflow pipeline URL.", arity = "1")
+    @Parameters(index = "0", paramLabel = "PIPELINE_URL", description = "Nextflow pipeline URL", arity = "1")
     public String pipeline;
 
     @Mixin

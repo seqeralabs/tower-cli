@@ -26,10 +26,10 @@ public class DatasetRefOptions {
 
     public static class DatasetRef {
 
-        @CommandLine.Option(names = {"-i", "--id"}, description = "Dataset unique id.")
+        @CommandLine.Option(names = {"-i", "--id"}, description = "Dataset unique identifier")
         public String datasetId;
 
-        @CommandLine.Option(names = {"-n", "--name"}, description = "Dataset name.")
+        @CommandLine.Option(names = {"-n", "--name"}, description = "Dataset name")
         public String datasetName;
     }
 }

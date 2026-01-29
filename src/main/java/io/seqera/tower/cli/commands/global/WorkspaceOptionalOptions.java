@@ -20,7 +20,7 @@ package io.seqera.tower.cli.commands.global;
 import picocli.CommandLine;
 
 public class WorkspaceOptionalOptions {
-    public static final String DESCRIPTION = "Workspace numeric identifier (TOWER_WORKSPACE_ID as default) or workspace reference as OrganizationName/WorkspaceName.";
+    public static final String DESCRIPTION = "Workspace numeric identifier or reference in OrganizationName/WorkspaceName format (defaults to TOWER_WORKSPACE_ID environment variable)";
     public static final String DEFAULT_VALUE = "${TOWER_WORKSPACE_ID}";
 
     @CommandLine.Option(names = {"-w", "--workspace"}, description = DESCRIPTION, defaultValue = DEFAULT_VALUE)

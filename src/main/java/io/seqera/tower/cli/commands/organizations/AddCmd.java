@@ -30,20 +30,20 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "add",
-        description = "Add a new organization."
+        description = "Add an organization"
 )
 public class AddCmd extends AbstractOrganizationsCmd {
 
-    @CommandLine.Option(names = {"-n", "--name"}, description = "Organization name.", required = true)
+    @CommandLine.Option(names = {"-n", "--name"}, description = "Organization unique name. Must be unique across Seqera Platform. Used as the organization identifier in URLs and API calls. Cannot be changed after creation without --new-name.", required = true)
     public String name;
 
-    @CommandLine.Option(names = {"-f", "--full-name"}, description = "Organization full name.", required = true)
+    @CommandLine.Option(names = {"-f", "--full-name"}, description = "Organization display name. The full, human-readable name for the organization shown in the UI. Can contain spaces and special characters.", required = true)
     public String fullName;
 
     @CommandLine.Mixin
     OrganizationsOptions opts;
 
-    @CommandLine.Option(names = {"--overwrite"}, description = "Overwrite the organization if it already exists.", defaultValue = "false")
+    @CommandLine.Option(names = {"--overwrite"}, description = "Overwrite existing organization. If an organization with this name already exists, delete it first before creating the new one. Use with caution as this permanently deletes the existing organization and all associated data.", defaultValue = "false")
     public Boolean overwrite;
 
     @Override

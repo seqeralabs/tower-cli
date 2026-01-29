@@ -29,14 +29,14 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "url",
-        description = "Obtain a dataset url."
+        description = "Get dataset URL"
 )
 public class UrlCmd extends AbstractDatasetsCmd {
 
     @CommandLine.Mixin
     public DatasetRefOptions datasetRefOptions;
 
-    @CommandLine.Option(names = {"--dataset-version"}, description = "Dataset version to obtain URL from.")
+    @CommandLine.Option(names = {"--dataset-version"}, description = "Dataset version for URL")
     public Long version;
 
     @CommandLine.Mixin

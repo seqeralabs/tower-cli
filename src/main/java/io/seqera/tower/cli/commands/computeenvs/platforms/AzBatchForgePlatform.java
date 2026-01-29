@@ -35,31 +35,31 @@ import java.util.Map;
 
 public class AzBatchForgePlatform extends AbstractPlatform<AzBatchConfig> {
 
-    @Option(names = {"--work-dir"}, description = "Work directory.", required = true)
+    @Option(names = {"--work-dir"}, description = "Nextflow work directory. Path where workflow intermediate files are stored. Must be an Azure Blob Storage path.", required = true)
     public String workDir;
 
-    @Option(names = {"-l", "--location"}, description = "The Azure location where the workload will be deployed.", required = true)
+    @Option(names = {"-l", "--location"}, description = "Azure region where compute resources will be deployed (e.g., eastus, westeurope).", required = true)
     public String location;
 
-    @Option(names = {"--vm-type"}, description = "Specify the virtual machine type used by this pool. It must be a valid Azure Batch VM type [default: Standard_D4_v3].")
+    @Option(names = {"--vm-type"}, description = "Azure VM size for compute pool. Must be a valid Azure Batch VM type. If absent, Platform defaults to Standard_D4_v3.")
     public String vmType;
 
-    @Option(names = {"--vm-count"}, description = "The number of virtual machines in this pool. When autoscaling feature is enabled, this option represents the maximum number of virtual machines to which the pool can grow and automatically scales to zero when unused.", required = true)
+    @Option(names = {"--vm-count"}, description = "Number of VMs in the Batch pool. With autoscaling enabled, this is the maximum capacity. Pool scales to zero when unused.", required = true)
     public Integer vmCount;
 
-    @Option(names = {"--no-auto-scale"}, description = "Disable pool autoscaling which automatically adjust the pool size depending the number submitted jobs and scale to zero when the pool is unused.")
+    @Option(names = {"--no-auto-scale"}, description = "Disable pool autoscaling. When disabled, pool maintains fixed VM count and does not scale based on workload.")
     public boolean noAutoScale;
 
-    @Option(names = {"--preserve-resources"}, description = "Enable this if you want to preserve the Batch compute pool created by Tower independently from the lifecycle of this compute environment.")
+    @Option(names = {"--preserve-resources"}, description = "Preserve Azure Batch pool resources on deletion. Keeps the compute pool and related resources when the compute environment is deleted from Seqera Platform.")
     public boolean preserveResources;
 
-    @Option(names = {"--registry-credentials"}, split = ",", paramLabel = "<credential_name>", description = "Comma-separated list of container registry credentials name.")
+    @Option(names = {"--registry-credentials"}, split = ",", paramLabel = "<credential_name>", description = "Container registry credentials for private registries. Comma-separated list of credential names to access private Docker registries.")
     public List<String> registryCredentials;
 
-    @Option(names = {"--fusion-v2"}, description = "With Fusion v2 enabled, Azure blob containers specified in the pipeline work directory and blob containers within the Azure storage account will be accessible in the compute nodes storage (requires Wave containers service).")
+    @Option(names = {"--fusion-v2"}, description = "Enable Fusion file system. Provides native access to Azure Blob Storage with low-latency I/O. Requires Wave containers.")
     public boolean fusionV2;
 
-    @Option(names = {"--wave"}, description = "Allow access to private container repositories and the provisioning of containers in your Nextflow pipelines via the Wave containers service.")
+    @Option(names = {"--wave"}, description = "Enable Wave containers. Allows access to private container repositories and on-demand container provisioning.")
     public boolean wave;
 
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
@@ -126,10 +126,10 @@ public class AzBatchForgePlatform extends AbstractPlatform<AzBatchConfig> {
 
     public static class AdvancedOptions {
 
-        @Option(names = {"--jobs-cleanup"}, description = "Enable the automatic deletion of Batch jobs created by the pipeline execution (ON_SUCCESS, ALWAYS, NEVER).")
+        @Option(names = {"--jobs-cleanup"}, description = "Automatic deletion of Azure Batch jobs after pipeline execution. ON_SUCCESS deletes only successful jobs. ALWAYS deletes all jobs. NEVER keeps all jobs.")
         public JobCleanupPolicy jobsCleanup;
 
-        @Option(names = {"--token-duration"}, description = "The duration of the shared access signature token created by Nextflow when the 'sasToken' option is not specified [default: 12h].")
+        @Option(names = {"--token-duration"}, description = "Duration of the SAS (shared access signature) token for Azure Blob Storage access. If absent, Platform defaults to 12h.")
         public String tokenDuration;
 
     }

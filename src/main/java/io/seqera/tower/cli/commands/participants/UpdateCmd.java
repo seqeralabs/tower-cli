@@ -31,7 +31,7 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "update",
-        description = "Update a participant role."
+        description = "Update a participant role"
 )
 public class UpdateCmd extends AbstractParticipantsCmd {
 

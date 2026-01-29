@@ -29,22 +29,22 @@ import java.nio.file.Path;
 
 public class K8sPlatform extends AbstractPlatform<K8sComputeConfig> {
 
-    @Option(names = {"--work-dir"}, description = "Work directory.", required = true)
+    @Option(names = {"--work-dir"}, description = "Nextflow work directory. Path where workflow intermediate files are stored on the shared storage.", required = true)
     public String workDir;
 
-    @Option(names = {"-s", "--server"}, description = "Master server.", required = true)
+    @Option(names = {"-s", "--server"}, description = "Kubernetes control plane URL. The API server endpoint for cluster communication (e.g., https://your-k8s-host.com).", required = true)
     public String server;
 
-    @Option(names = {"--namespace"}, description = "Namespace.", required = true)
+    @Option(names = {"--namespace"}, description = "Kubernetes namespace for workflow execution. Isolates resources within the cluster.", required = true)
     public String namespace;
 
-    @Option(names = {"--ssl-cert"}, description = "SSL certificate.", required = true)
+    @Option(names = {"--ssl-cert"}, description = "SSL certificate to authenticate the connection. Provide path to certificate file for secure cluster communication.", required = true)
     public Path sslCert;
 
-    @Option(names = {"--head-account"}, description = "Head service account.", required = true)
+    @Option(names = {"--head-account"}, description = "Kubernetes service account for connecting to the cluster. Used by the Nextflow head job to authenticate with the Kubernetes API.", required = true)
     public String headAccount;
 
-    @Option(names = {"--storage-claim"}, description = "Storage claim name.", required = true)
+    @Option(names = {"--storage-claim"}, description = "PersistentVolumeClaim name for scratch storage. Must support ReadWriteMany access mode for shared workflow data.", required = true)
     public String storageClaim;
 
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
@@ -86,19 +86,19 @@ public class K8sPlatform extends AbstractPlatform<K8sComputeConfig> {
     }
 
     public static class AdvancedOptions {
-        @Option(names = {"--storage-mount"}, description = "Storage mount path.")
+        @Option(names = {"--storage-mount"}, description = "Mount path for the PersistentVolumeClaim. Directory where the storage is mounted in containers. If absent, Platform defaults to /scratch.")
         public String storageMount;
 
-        @Option(names = {"--compute-account"}, description = "Compute service account.")
+        @Option(names = {"--compute-account"}, description = "Kubernetes service account for Nextflow-submitted pipeline jobs. Controls permissions for individual task pods. If absent, Platform defaults to default.")
         public String computeAccount;
 
-        @Option(names = "--pod-cleanup", description = "Pod cleanup policy (ON_SUCCESS, ALWAYS, NEVER).")
+        @Option(names = "--pod-cleanup", description = "Pod cleanup policy after job completion. ON_SUCCESS removes pods only on success. ALWAYS removes all pods. NEVER keeps all pods.")
         public PodCleanupPolicy podCleanup;
 
-        @Option(names = {"--head-pod-spec"}, description = "Custom head pod specs file.")
+        @Option(names = {"--head-pod-spec"}, description = "Custom PodSpec YAML for the Nextflow head job pod. Provide path to YAML file with custom pod configuration.")
         public Path headPodSpec;
 
-        @Option(names = {"--service-pod-spec"}, description = "Custom service pod specs file.")
+        @Option(names = {"--service-pod-spec"}, description = "Custom PodSpec YAML for the compute environment service pod. Provide path to YAML file with custom pod configuration.")
         public Path servicePodSpec;
     }
 }

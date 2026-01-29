@@ -26,10 +26,10 @@ public class OrganizationRefOptions {
 
     public static class OrganizationRef {
 
-        @CommandLine.Option(names = {"-i", "--id"}, description = "Organization unique id.")
+        @CommandLine.Option(names = {"-i", "--id"}, description = "Organization numeric identifier. The unique ID assigned when the organization was created.")
         public Long organizationId;
 
-        @CommandLine.Option(names = {"-n", "--name"}, description = "Organization name.")
+        @CommandLine.Option(names = {"-n", "--name"}, description = "Organization name. The unique organization name used as a human-readable identifier.")
         public String organizationName;
     }
 }

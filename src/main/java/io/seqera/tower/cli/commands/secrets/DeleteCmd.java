@@ -29,7 +29,7 @@ import java.io.IOException;
 
 @Command(
         name = "delete",
-        description = "Delete a workspace secret."
+        description = "Delete a secret"
 )
 public class DeleteCmd extends AbstractSecretsCmd {
 

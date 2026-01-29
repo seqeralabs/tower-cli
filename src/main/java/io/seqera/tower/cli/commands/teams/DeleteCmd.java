@@ -26,14 +26,14 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "delete",
-        description = "Delete an organization team."
+        description = "Delete a team"
 )
 public class DeleteCmd extends AbstractTeamsCmd {
 
-    @CommandLine.Option(names = {"-i", "--id"}, description = "Team identifier.", required = true)
+    @CommandLine.Option(names = {"-i", "--id"}, description = "Team numeric identifier. The unique ID assigned when the team was created. Find team IDs using 'tw teams list'.", required = true)
     public Long teamId;
 
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name or identifier.", required = true)
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name or numeric ID. Specify either the unique organization name or the numeric organization ID returned by 'tw organizations list'.", required = true)
     public String organizationRef;
 
     @Override

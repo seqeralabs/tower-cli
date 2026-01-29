@@ -21,12 +21,12 @@ import picocli.CommandLine;
 
 public class OrganizationsOptions {
 
-    @CommandLine.Option(names = {"-d", "--description"}, description = "Organization description.")
+    @CommandLine.Option(names = {"-d", "--description"}, description = "Organization description. Free-text description providing context about the organization's purpose, team, or projects.")
     public String description;
 
-    @CommandLine.Option(names = {"-l", "--location"}, description = "Organization location.")
+    @CommandLine.Option(names = {"-l", "--location"}, description = "Organization location. Geographic location or region where the organization is based (e.g., 'San Francisco, CA' or 'EU').")
     public String location;
 
-    @CommandLine.Option(names = {"-w", "--website"}, description = "Organization website URL.")
+    @CommandLine.Option(names = {"-w", "--website"}, description = "Organization website URL. Public website or documentation site for the organization. Must be a valid URL (e.g., https://example.com).")
     public String website;
 }

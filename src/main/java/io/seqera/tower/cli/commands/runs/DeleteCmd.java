@@ -28,14 +28,14 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "delete",
-        description = "Delete a pipeline execution."
+        description = "Delete a pipeline run"
 )
 public class DeleteCmd extends AbstractRunsCmd {
 
-    @CommandLine.Option(names = {"-i", "-id"}, description = "Pipeline run identifier.", required = true)
+    @CommandLine.Option(names = {"-i", "-id"}, description = "Pipeline run identifier. The unique workflow ID to delete. Deletes the run record and associated metadata from Seqera Platform.", required = true)
     public String id;
 
-    @CommandLine.Option(names = {"--force"}, description = "Force the deletion even if any workflows are active")
+    @CommandLine.Option(names = {"--force"}, description = "Force deletion of active workflows. By default, only completed workflows can be deleted. Use this flag to delete running or pending workflows.")
     public boolean force = false;
 
     @CommandLine.Mixin

@@ -29,7 +29,7 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "delete",
-        description = "Delete a Pipeline Action."
+        description = "Delete a pipeline action"
 )
 public class DeleteCmd extends AbstractActionsCmd {
 

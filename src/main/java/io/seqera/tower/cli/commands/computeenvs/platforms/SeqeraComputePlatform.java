@@ -33,7 +33,7 @@ public class SeqeraComputePlatform extends AbstractPlatform<SeqeraComputeConfig>
     @CommandLine.Option(names = {"-r", "--region"}, description = "AWS region.", required = true)
     public String region;
 
-    @CommandLine.Option(names = {"--instance-type-size"}, description = "Size of Data Studios instance (SMALL, MEDIUM, LARGE). Free-tier organizations are limited to SMALL.")
+    @CommandLine.Option(names = {"--instance-type-size"}, description = "Studios instance size, controlling compute resources and capabilities. Options: ${COMPLETION-CANDIDATES}. Free-tier organizations are limited to SMALL.")
     public SeqeraComputeCloudInstanceTypeSize instanceTypeSize;
 
     public SeqeraComputePlatform() {
