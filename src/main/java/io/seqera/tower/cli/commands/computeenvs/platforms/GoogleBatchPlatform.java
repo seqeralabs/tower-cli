@@ -99,10 +99,10 @@ public class GoogleBatchPlatform extends AbstractPlatform<GoogleBatchConfig> {
         @Option(names = {"--service-account-email"}, description = "Google Cloud service account email for pipeline execution. Grants fine-grained IAM permissions to Nextflow jobs.")
         public String serviceAccountEmail;
 
-        @Option(names = {"--head-job-template"}, description = "The name or fully qualified reference of the instance template to use for the head job.")
+        @Option(names = {"--head-job-template"}, description = "Google Compute Engine instance template for the Nextflow head job. Specify either the template name (if in the same project) or the fully qualified reference (projects/PROJECT_ID/global/instanceTemplates/TEMPLATE_NAME).")
         public String headJobInstanceTemplate;
 
-        @Option(names = {"--compute-job-template"}, description = "The name or fully qualified reference of the instance template to use for the compute jobs.")
+        @Option(names = {"--compute-job-template"}, description = "Google Compute Engine instance template for pipeline compute jobs. Specify either the template name (if in the same project) or the fully qualified reference (projects/PROJECT_ID/global/instanceTemplates/TEMPLATE_NAME).")
         public String computeJobInstanceTemplate;
     }
 }
