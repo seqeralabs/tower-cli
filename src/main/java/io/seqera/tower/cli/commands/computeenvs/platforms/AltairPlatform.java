@@ -45,7 +45,7 @@ public class AltairPlatform extends AbstractPlatform<AltairPbsComputeConfig> {
     @Option(names = {"--compute-queue"}, description = "Altair PBS queue for pipeline task submission. Nextflow submits individual jobs to this queue. Can be overridden in pipeline configuration.")
     public String computeQueue;
 
-    @Option(names = {"--launch-dir"}, description = "Directory where Nextflow executes. Must be an absolute path with read-write permissions (if absent, Platform defaults to the Pipeline work directory).")
+    @Option(names = {"--launch-dir"}, description = "Directory where Nextflow executes. Must be an absolute path with read-write permissions (if absent, Platform defaults to the pipeline work directory).")
     public String launchDir;
 
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)

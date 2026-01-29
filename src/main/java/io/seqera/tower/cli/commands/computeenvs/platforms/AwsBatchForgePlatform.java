@@ -232,7 +232,7 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
         @Option(names = {"--security-groups"}, split = ",", paramLabel = "<group>", description = "Security group IDs for network access control. Comma-separated list defining firewall rules for EC2 compute nodes.")
         public List<String> securityGroups;
 
-        @Option(names = {"--ami-id"}, description = "Custom AMI identifier. Must be AWS Linux 2 ECS-optimized image meeting compute resource specifications. Default: latest approved Amazon ECS-optimized AMI.")
+        @Option(names = {"--ami-id"}, description = "Custom AMI identifier. Must be AWS Linux 2 ECS-optimized image meeting compute resource specifications. If absent, Platform defaults to latest approved Amazon ECS-optimized AMI.")
         public String amiId;
 
         @Option(names = {"--key-pair"}, description = "EC2 key pair name for SSH access. Enables remote access to compute nodes for debugging and maintenance.")

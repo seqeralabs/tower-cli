@@ -83,7 +83,7 @@ public class AwsCloudPlatform extends AbstractPlatform<AwsCloudConfig> {
         @Option(names = {"--arm64"}, description = "Enable ARM64 (Graviton) architecture EC2 instances to run compute jobs. Provides cost-effective compute with comparable performance to x86.")
         public Boolean arm64Enabled;
 
-        @Option(names = {"--boot-disk-size"}, description = "EC2 instance boot disk size in GB. Controls the root volume size for compute instances. Default: 50 GB gp3 volume.")
+        @Option(names = {"--boot-disk-size"}, description = "EC2 instance boot disk size in GB. Controls the root volume size for compute instances. If absent, Platform defaults to 50 GB gp3 volume.")
         public Integer ebsBootSize;
 
         @Option(names = {"--ec2-key-pair"}, description = "EC2 key pair name for SSH access to running instances. The key pair must already exist in the specified region.")
