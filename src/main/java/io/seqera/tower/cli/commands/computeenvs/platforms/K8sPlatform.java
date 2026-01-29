@@ -89,7 +89,7 @@ public class K8sPlatform extends AbstractPlatform<K8sComputeConfig> {
         @Option(names = {"--storage-mount"}, description = "Mount path for the PersistentVolumeClaim. Directory where the storage is mounted in containers. If absent, Platform defaults to /scratch.")
         public String storageMount;
 
-        @Option(names = {"--compute-account"}, description = "Kubernetes service account for Nextflow-submitted pipeline jobs. Controls permissions for individual task pods. Default: default.")
+        @Option(names = {"--compute-account"}, description = "Kubernetes service account for Nextflow-submitted pipeline jobs. Controls permissions for individual task pods. If absent, Platform defaults to default.")
         public String computeAccount;
 
         @Option(names = "--pod-cleanup", description = "Pod cleanup policy after job completion. ON_SUCCESS removes pods only on success. ALWAYS removes all pods. NEVER keeps all pods.")
