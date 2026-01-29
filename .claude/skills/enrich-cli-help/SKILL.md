@@ -149,6 +149,67 @@ Systematically enrich option descriptions following quality standards.
    - Use standard descriptions for common options across commands
    - Example: "Organization name or numeric ID. Specify either the unique organization name or the numeric organization ID returned by 'tw organizations list'."
    - Maintain terminology consistency (workspace not work-space, Fusion not fusion)
+   - Use lowercase "pipeline" except at sentence start
+
+6. **Default Value Handling**
+
+   **CRITICAL: Different default handling for CLI vs Platform defaults**
+
+   **Rule 1: CLI-enforced defaults (has `defaultValue` annotation)**
+   ```java
+   // CLI sets the default value
+   @Option(names = {"--type"}, description = "File type. Default: stdout.", defaultValue = "stdout")
+   public String type;
+   ```
+   - Use pattern: `"Description. Default: <value>."`
+   - The CLI sets this value if the user doesn't specify it
+   - Example: "File type. Default: stdout."
+
+   **Rule 2: Platform-enforced defaults (NO `defaultValue` annotation)**
+   ```java
+   // CLI passes null, Platform sets the default
+   @Option(names = {"--port"}, description = "SSH port for cluster connection.")
+   public Integer port;
+   ```
+   - Use pattern: `"Description. If absent, Platform defaults to <value>."`
+   - The CLI passes `null` and Platform backend sets the default
+   - Example: "SSH port for cluster connection. If absent, Platform defaults to port 22."
+
+   **Rule 3: Boolean flags (always no `defaultValue`)**
+   ```java
+   @Option(names = {"--fusion-v2"}, description = "Enable Fusion file system.")
+   public boolean fusionV2;
+   ```
+   - Do NOT add "Default: false" to boolean flag descriptions
+   - Boolean flags are false by default (picocli behavior)
+   - Example: "Enable Fusion file system. Provides native access to S3 storage."
+
+   **Rule 4: Required fields (has `required = true`)**
+   ```java
+   @Option(names = {"--namespace"}, description = "Kubernetes namespace.", required = true)
+   public String namespace;
+   ```
+   - Do NOT add default value to description
+   - Required fields have no defaults - user must provide them
+   - Contradictory to show a default for a required field
+
+   **Rule 5: Using ${COMPLETION-CANDIDATES} for enum values**
+   ```java
+   @Option(names = {"--type"}, description = "Metric types: ${COMPLETION-CANDIDATES}.")
+   public List<MetricType> type;
+   ```
+   - Use `${COMPLETION-CANDIDATES}` instead of listing enum values manually
+   - Picocli automatically populates this with enum values from the field type
+   - Maintains itself when enum values change in code
+   - Example: "Metric types: ${COMPLETION-CANDIDATES}. Comma-separated list."
+
+   **Verification Checklist**:
+   - [ ] Check Java annotation for `defaultValue` attribute
+   - [ ] If `defaultValue` present → use "Default: X"
+   - [ ] If no `defaultValue` and OpenAPI has default → use "If absent, Platform defaults to X"
+   - [ ] If boolean flag → omit default mention
+   - [ ] If `required = true` → omit default mention
+   - [ ] If enum type → consider using `${COMPLETION-CANDIDATES}`
 
 **Enrichment Process**:
 
@@ -342,6 +403,39 @@ public Boolean overwrite;
 ```java
 @CommandLine.Option(names = {"--show-details"}, description = "Display additional [specific details]. Shows [what details include].")
 public boolean showDetails;
+```
+
+**Default Values - CLI-enforced (has `defaultValue`)**:
+```java
+// Correct - CLI sets the default
+@CommandLine.Option(names = {"--type"}, description = "Type of file to download. Options: 'stdout' (standard output), 'log' (Nextflow log), 'stderr' (standard error, tasks only), 'timeline' (execution timeline HTML, workflow only). Default: stdout.", defaultValue = "stdout")
+public String type;
+
+@CommandLine.Option(names = {"--provisioning-model"}, description = "Instance provisioning model. EC2 uses on-demand instances for reliability. SPOT uses interruptible instances for cost savings. Default: SPOT.", required = true, defaultValue = "SPOT")
+public TypeEnum provisioningModel;
+```
+
+**Default Values - Platform-enforced (NO `defaultValue`)**:
+```java
+// Correct - Platform backend sets the default
+@CommandLine.Option(names = {"-p", "--port"}, description = "SSH port for cluster connection. If absent, Platform defaults to port 22.")
+public Integer port;
+
+@CommandLine.Option(names = {"--boot-disk-size"}, description = "Boot disk size in GB. Controls the root volume size for compute instances. If absent, Platform defaults to 50 GB.")
+public Integer bootDiskSizeGb;
+
+@CommandLine.Option(names = {"--instance-type"}, description = "Compute Engine machine type (e.g., n1-standard-1, n2-standard-2). If omitted, a default machine type is used.")
+public String instanceType;
+```
+
+**Enum Options with ${COMPLETION-CANDIDATES}**:
+```java
+// Correct - uses dynamic placeholder instead of manual list
+@CommandLine.Option(names = {"-t", "--type"}, split = ",", description = "Metric types to display: ${COMPLETION-CANDIDATES}. Comma-separated list. Displays all types if absent.")
+public List<MetricType> type;
+
+@CommandLine.Option(names = {"--wait"}, description = "Wait until workflow reaches specified status: ${COMPLETION-CANDIDATES}")
+public WorkflowStatus wait;
 ```
 
 ### OpenAPI Schema Integration
