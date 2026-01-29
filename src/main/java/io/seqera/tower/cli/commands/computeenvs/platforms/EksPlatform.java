@@ -37,7 +37,7 @@ public class EksPlatform extends AbstractPlatform<EksComputeConfig> {
     @Option(names = {"--cluster-name"}, description = "Name of the AWS EKS (Elastic Kubernetes Service) cluster for workflow execution.", required = true)
     public String clusterName;
 
-    @Option(names = {"--namespace"}, description = "Kubernetes namespace for workflow execution. Isolates resources within the cluster. Default: default.", required = true)
+    @Option(names = {"--namespace"}, description = "Kubernetes namespace for workflow execution. Isolates resources within the cluster.", required = true)
     public String namespace;
 
     @Option(names = {"--head-account"}, description = "Kubernetes service account for connecting to the cluster. Used by the Nextflow head job to authenticate with the Kubernetes API.", required = true)

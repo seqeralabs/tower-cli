@@ -40,10 +40,10 @@ public class AwsBatchManualPlatform extends AbstractPlatform<AwsBatchConfig> {
     @Option(names = {"--compute-queue"}, description = "AWS Batch compute queue for running pipeline jobs. Nextflow submits tasks to this queue. Can be overridden in pipeline config.", required = true)
     public String computeQueue;
 
-    @Option(names = {"--fusion-v2"}, description = "Enable Fusion file system. Provides native access to S3 storage with low-latency I/O. Requires Wave containers. Default: false.")
+    @Option(names = {"--fusion-v2"}, description = "Enable Fusion file system. Provides native access to S3 storage with low-latency I/O. Requires Wave containers.")
     public boolean fusionV2;
 
-    @Option(names = {"--wave"}, description = "Enable Wave containers. Allows access to private container repositories and on-demand container provisioning. Default: false.")
+    @Option(names = {"--wave"}, description = "Enable Wave containers. Allows access to private container repositories and on-demand container provisioning.")
     public boolean wave;
 
     @Option(names = {"--fast-storage"}, description = "Enable NVMe instance storage. Provides high-performance local storage for faster I/O operations. Requires Fusion file system.")

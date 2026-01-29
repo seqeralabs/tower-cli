@@ -36,7 +36,7 @@ public class AltairPlatform extends AbstractPlatform<AltairPbsComputeConfig> {
     @Option(names = {"-H", "--host-name"}, description = "Hostname or IP address of the HPC head node for SSH connection. Typically the cluster login node. Must be a fully qualified hostname, not a local IP address.")
     public String hostName;
 
-    @Option(names = {"-p", "--port"}, description = "SSH port for cluster connection. Default: 22.")
+    @Option(names = {"-p", "--port"}, description = "SSH port for cluster connection. If absent, Platform defaults to port 22.")
     public Integer port;
 
     @Option(names = {"-q", "--head-queue"}, description = "Altair PBS queue for launching the Nextflow head job. The queue where the main workflow orchestration process runs.", required = true)
@@ -45,7 +45,7 @@ public class AltairPlatform extends AbstractPlatform<AltairPbsComputeConfig> {
     @Option(names = {"--compute-queue"}, description = "Altair PBS queue for pipeline task submission. Nextflow submits individual jobs to this queue. Can be overridden in pipeline configuration.")
     public String computeQueue;
 
-    @Option(names = {"--launch-dir"}, description = "Directory where Nextflow executes. Must be an absolute path with read-write permissions. Default: work directory.")
+    @Option(names = {"--launch-dir"}, description = "Directory where Nextflow executes. Must be an absolute path with read-write permissions (if absent, Platform defaults to the Pipeline work directory).")
     public String launchDir;
 
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
@@ -90,7 +90,7 @@ public class AltairPlatform extends AbstractPlatform<AltairPbsComputeConfig> {
     }
 
     public static class AdvancedOptions {
-        @Option(names = {"--max-queue-size"}, description = "Maximum number of jobs Nextflow can submit simultaneously to the Altair PBS queue. Controls job submission rate. Default: 100.")
+        @Option(names = {"--max-queue-size"}, description = "Maximum number of jobs Nextflow can submit simultaneously to the Altair PBS queue. Controls job submission rate. If absent, Platform defaults to 100.")
         public Integer maxQueueSize;
 
         @Option(names = {"--head-job-options"}, description = "Additional submit options for the Nextflow head job. Appended to the submit command for the main orchestration process.")

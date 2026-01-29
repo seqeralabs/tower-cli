@@ -52,10 +52,10 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
     @Option(names = {"--fusion"}, description = "DEPRECATED - Use '--fusion-v2' instead.")
     public boolean fusion;
 
-    @Option(names = {"--fusion-v2"}, description = "Enable Fusion file system. Provides native access to S3 storage with low-latency I/O. Requires Wave containers. Default: false.")
+    @Option(names = {"--fusion-v2"}, description = "Enable Fusion file system. Provides native access to S3 storage with low-latency I/O. Requires Wave containers.")
     public boolean fusionV2;
 
-    @Option(names = {"--wave"}, description = "Enable Wave containers. Allows access to private container repositories and on-demand container provisioning. Default: false.")
+    @Option(names = {"--wave"}, description = "Enable Wave containers. Allows access to private container repositories and on-demand container provisioning.")
     public boolean wave;
 
     @Option(names = {"--fast-storage"}, description = "Enable NVMe instance storage. Provides high-performance local storage for faster I/O operations. Requires Fusion file system.")
@@ -238,10 +238,10 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
         @Option(names = {"--key-pair"}, description = "EC2 key pair name for SSH access. Enables remote access to compute nodes for debugging and maintenance.")
         public String keyPair;
 
-        @Option(names = {"--min-cpus"}, description = "Minimum CPUs to keep provisioned. These CPUs remain active continuously and incur costs regardless of workload activity. Default: 0.")
+        @Option(names = {"--min-cpus"}, description = "Minimum CPUs to keep provisioned. These CPUs remain active continuously and incur costs regardless of workload activity. If absent, Platform defaults to 0.")
         public Integer minCpus;
 
-        @Option(names = {"--boot-disk-size"}, description = "Boot disk size in GB. Controls the root volume size for EC2 instances. Default: 50 GB.")
+        @Option(names = {"--boot-disk-size"}, description = "Boot disk size in GB. Controls the root volume size for EC2 instances. If absent, Platform defaults to 50 GB.")
         public Integer bootDiskSizeGb;
 
         @Option(names = {"--head-job-cpus"}, description = "Number of CPUs allocated to the Nextflow head job. Controls the compute resources for the main workflow orchestration process.")
@@ -258,10 +258,10 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
         @Option(names = {"--batch-execution-role"}, description = "IAM role ARN for ECS task execution. Grants Amazon ECS containers permission to make AWS API calls on your behalf.")
         public String batchExecutionRole;
 
-        @Option(names = {"--ebs-blocksize"}, description = "Initial EBS auto-expandable volume size in GB. Additional blocks of this size are added automatically when storage runs low. Default: 50 GB.")
+        @Option(names = {"--ebs-blocksize"}, description = "Initial EBS auto-expandable volume size in GB. Additional blocks of this size are added automatically when storage runs low. If absent, Platform defaults to 50 GB.")
         public Integer ebsBlockSize;
 
-        @Option(names = {"--bid-percentage"}, description = "Maximum Spot instance price as percentage of On-Demand price. Controls cost ceiling for Spot instances. You pay the market price up to this maximum. Default: 100%%.")
+        @Option(names = {"--bid-percentage"}, description = "Maximum Spot instance price as percentage of On-Demand price. Controls cost ceiling for Spot instances. You pay the market price up to this maximum. If absent, Platform defaults to 100%.")
         public Integer bidPercentage;
 
         @Option(names = {"--cli-path"}, description = "AWS CLI installation path on EC2 instances. Specify custom path if AWS CLI is installed in non-standard location.")

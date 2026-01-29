@@ -41,7 +41,7 @@ public class AzBatchForgePlatform extends AbstractPlatform<AzBatchConfig> {
     @Option(names = {"-l", "--location"}, description = "Azure region where compute resources will be deployed (e.g., eastus, westeurope).", required = true)
     public String location;
 
-    @Option(names = {"--vm-type"}, description = "Azure VM size for compute pool. Must be a valid Azure Batch VM type. Default: Standard_D4_v3.")
+    @Option(names = {"--vm-type"}, description = "Azure VM size for compute pool. Must be a valid Azure Batch VM type. If absent, Platform defaults to Standard_D4_v3.")
     public String vmType;
 
     @Option(names = {"--vm-count"}, description = "Number of VMs in the Batch pool. With autoscaling enabled, this is the maximum capacity. Pool scales to zero when unused.", required = true)
@@ -56,10 +56,10 @@ public class AzBatchForgePlatform extends AbstractPlatform<AzBatchConfig> {
     @Option(names = {"--registry-credentials"}, split = ",", paramLabel = "<credential_name>", description = "Container registry credentials for private registries. Comma-separated list of credential names to access private Docker registries.")
     public List<String> registryCredentials;
 
-    @Option(names = {"--fusion-v2"}, description = "Enable Fusion file system. Provides native access to Azure Blob Storage with low-latency I/O. Requires Wave containers. Default: false.")
+    @Option(names = {"--fusion-v2"}, description = "Enable Fusion file system. Provides native access to Azure Blob Storage with low-latency I/O. Requires Wave containers.")
     public boolean fusionV2;
 
-    @Option(names = {"--wave"}, description = "Enable Wave containers. Allows access to private container repositories and on-demand container provisioning. Default: false.")
+    @Option(names = {"--wave"}, description = "Enable Wave containers. Allows access to private container repositories and on-demand container provisioning.")
     public boolean wave;
 
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
@@ -129,7 +129,7 @@ public class AzBatchForgePlatform extends AbstractPlatform<AzBatchConfig> {
         @Option(names = {"--jobs-cleanup"}, description = "Automatic deletion of Azure Batch jobs after pipeline execution. ON_SUCCESS deletes only successful jobs. ALWAYS deletes all jobs. NEVER keeps all jobs.")
         public JobCleanupPolicy jobsCleanup;
 
-        @Option(names = {"--token-duration"}, description = "Duration of the SAS (shared access signature) token for Azure Blob Storage access. Default: 12h.")
+        @Option(names = {"--token-duration"}, description = "Duration of the SAS (shared access signature) token for Azure Blob Storage access. If absent, Platform defaults to 12h.")
         public String tokenDuration;
 
     }

@@ -35,7 +35,7 @@ public class K8sPlatform extends AbstractPlatform<K8sComputeConfig> {
     @Option(names = {"-s", "--server"}, description = "Kubernetes control plane URL. The API server endpoint for cluster communication (e.g., https://your-k8s-host.com).", required = true)
     public String server;
 
-    @Option(names = {"--namespace"}, description = "Kubernetes namespace for workflow execution. Isolates resources within the cluster. Default: default.", required = true)
+    @Option(names = {"--namespace"}, description = "Kubernetes namespace for workflow execution. Isolates resources within the cluster.", required = true)
     public String namespace;
 
     @Option(names = {"--ssl-cert"}, description = "SSL certificate to authenticate the connection. Provide path to certificate file for secure cluster communication.", required = true)
@@ -86,7 +86,7 @@ public class K8sPlatform extends AbstractPlatform<K8sComputeConfig> {
     }
 
     public static class AdvancedOptions {
-        @Option(names = {"--storage-mount"}, description = "Mount path for the PersistentVolumeClaim. Directory where the storage is mounted in containers. Default: /scratch.")
+        @Option(names = {"--storage-mount"}, description = "Mount path for the PersistentVolumeClaim. Directory where the storage is mounted in containers. If absent, Platform defaults to /scratch.")
         public String storageMount;
 
         @Option(names = {"--compute-account"}, description = "Kubernetes service account for Nextflow-submitted pipeline jobs. Controls permissions for individual task pods. Default: default.")

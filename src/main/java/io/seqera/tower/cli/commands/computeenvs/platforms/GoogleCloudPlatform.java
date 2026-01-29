@@ -79,7 +79,7 @@ public class GoogleCloudPlatform extends AbstractPlatform<GoogleCloudConfig> {
         @Option(names = {"--arm64"}, description = "Enable ARM64 (Axion) architecture instances to run compute jobs. Provides efficient compute for compatible workloads.")
         public Boolean arm64Enabled;
 
-        @Option(names = {"--boot-disk-size"}, description = "Boot disk size in GB for Compute Engine instances. Uses pd-standard disk type. Default: 50 GB.")
+        @Option(names = {"--boot-disk-size"}, description = "Boot disk size in GB for Compute Engine instances. Uses pd-standard disk type. If absent, Platform defaults to 50 GB.")
         public Integer bootDiskSizeGb;
 
         @Option(names = {"--gpu"}, description = "Enable GPU-enabled instances for compute jobs. When enabled, Deep Learning VM base images with CUDA are automatically selected.")

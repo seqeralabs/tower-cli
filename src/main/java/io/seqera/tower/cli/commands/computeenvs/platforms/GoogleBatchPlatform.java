@@ -36,10 +36,10 @@ public class GoogleBatchPlatform extends AbstractPlatform<GoogleBatchConfig> {
     @Option(names = {"--spot"}, description = "Use Spot virtual machines. Enables cost-effective preemptible instances for compute workloads. Spot VMs may be interrupted when capacity is needed.")
     public Boolean spot;
 
-    @Option(names = {"--fusion-v2"}, description = "Enable Fusion file system. Provides native access to Google Cloud Storage with low-latency I/O. Requires Wave containers. Default: false.")
+    @Option(names = {"--fusion-v2"}, description = "Enable Fusion file system. Provides native access to Google Cloud Storage with low-latency I/O. Requires Wave containers.")
     public boolean fusionV2;
 
-    @Option(names = {"--wave"}, description = "Enable Wave containers. Allows access to private container repositories and on-demand container provisioning. Default: false.")
+    @Option(names = {"--wave"}, description = "Enable Wave containers. Allows access to private container repositories and on-demand container provisioning.")
     public boolean wave;
 
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
@@ -85,7 +85,7 @@ public class GoogleBatchPlatform extends AbstractPlatform<GoogleBatchConfig> {
         @Option(names = {"--use-private-address"}, description = "Do not attach a public IP address to VM instances. When enabled, only Google internal services are accessible. Requires Cloud NAT for external access.")
         public Boolean usePrivateAddress;
 
-        @Option(names = {"--boot-disk-size"}, description = "Boot disk size in GB. Controls the root volume size for compute instances. Default: 50 GB.")
+        @Option(names = {"--boot-disk-size"}, description = "Boot disk size in GB. Controls the root volume size for compute instances. If absent, Platform defaults to 50 GB.")
         public Integer bootDiskSizeGb;
 
         @Option(names = {"--head-job-cpus"}, description = "Number of CPUs allocated to the Nextflow head job. Controls the compute resources for the main workflow orchestration process.")
