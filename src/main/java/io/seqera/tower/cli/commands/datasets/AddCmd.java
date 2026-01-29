@@ -43,7 +43,7 @@ public class AddCmd extends AbstractDatasetsCmd {
     @CommandLine.Option(names = {"-d", "--description"}, description = "Optional dataset description.")
     public String description;
 
-    @CommandLine.Option(names = {"--header"}, description = "Treat first row as header")
+    @CommandLine.Option(names = {"--header"}, description = "Treat first row as header. Default: false.")
     public boolean header = false;
 
     @CommandLine.Parameters(index = "0", paramLabel = "FILENAME", description = "Data file to upload", arity = "1")

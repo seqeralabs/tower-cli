@@ -48,7 +48,7 @@ public class ImportCmd extends AbstractPipelinesCmd {
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
-    @CommandLine.Option(names = {"-c", "--compute-env"}, description = "Compute environment name (defaults to value defined in JSON environment file)")
+    @CommandLine.Option(names = {"-c", "--compute-env"}, description = "Compute environment name (defaults to value defined in JSON compute environment file)")
     public String computeEnv;
 
     @CommandLine.Option(names = {"--overwrite"}, description = "Overwrite the pipeline if it already exists.", defaultValue = "false")

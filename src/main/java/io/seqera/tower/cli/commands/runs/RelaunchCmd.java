@@ -64,7 +64,7 @@ public class RelaunchCmd extends AbstractRunsCmd {
     @Option(names = {"-n", "--name"}, description = "Custom workflow run name. Overrides the automatically generated run name with a user-defined identifier.")
     public String name;
 
-    @Option(names = {"--launch-container"}, description = "Container image for the Nextflow head job. Overrides the default launcher container. (BETA)")
+    @Option(names = {"--launch-container"}, description = "Container image for the Nextflow head job. Overrides the default launcher container.")
     public String launchContainer;
 
     @Mixin

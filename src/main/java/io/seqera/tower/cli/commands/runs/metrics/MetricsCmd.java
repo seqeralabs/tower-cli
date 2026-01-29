@@ -45,10 +45,10 @@ public class MetricsCmd extends AbstractRunsCmd {
     @CommandLine.Option(names = {"-f", "--filter"}, description = "Filter metrics by process name. Shows statistics only for processes matching the specified name.")
     public String filter = "";
 
-    @CommandLine.Option(names = {"-t", "--type"}, split = ",", description = "Metric types to display: cpu, mem, time, io. Comma-separated list. Default: all types.")
+    @CommandLine.Option(names = {"-t", "--type"}, split = ",", description = "Metric types to display: ${COMPLETION-CANDIDATES}. Comma-separated list. Displays all types if absent.")
     public List<MetricType> type;
 
-    @CommandLine.Option(names = {"-c", "--columns"}, split = ",", description = "Statistical columns to display: min, q1, q2, q3, max, mean. Shows quartile distribution of resource usage. Default: all columns.")
+    @CommandLine.Option(names = {"-c", "--columns"}, split = ",", description = "Statistical columns to display: ${COMPLETION-CANDIDATES}. Shows quartile distribution of resource usage. Displays all columns if absent.")
     public List<MetricColumn> columns;
 
     @CommandLine.Option(names = {"-v", "--view"}, description = "Table view format. Options: condensed (compact), extended (detailed). Default: condensed.")

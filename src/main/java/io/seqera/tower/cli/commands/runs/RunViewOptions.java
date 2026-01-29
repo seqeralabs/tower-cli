@@ -30,7 +30,7 @@ public class RunViewOptions {
     @CommandLine.Option(names = {"--command"}, description = "Display the Nextflow run command used to execute this workflow.")
     public boolean command = false;
 
-    @CommandLine.Option(names = {"--status"}, description = "Display current workflow execution status (SUBMITTED, RUNNING, SUCCEEDED, FAILED, CANCELLED).")
+    @CommandLine.Option(names = {"--status"}, description = "Display current workflow execution status.")
     public boolean status = false;
 
     @CommandLine.Option(names = {"--processes"}, description = "Display per-process execution progress showing pending, running, succeeded, failed, and cached task counts.")
@@ -39,7 +39,7 @@ public class RunViewOptions {
     @CommandLine.Option(names = {"--stats"}, description = "Display workflow execution statistics including compute time, task counts, success/failure percentages, and cached task efficiency.")
     public boolean stats = false;
 
-    @CommandLine.Option(names = {"--load"}, description = "Display real-time resource usage including active tasks, CPU cores, memory consumption, and I/O metrics.")
+    @CommandLine.Option(names = {"--load"}, description = "Display real-time resource usage metrics.")
     public boolean load = false;
 
     @CommandLine.Option(names = {"--utilization"}, description = "Display resource efficiency metrics showing CPU and memory utilization percentages across workflow execution.")
