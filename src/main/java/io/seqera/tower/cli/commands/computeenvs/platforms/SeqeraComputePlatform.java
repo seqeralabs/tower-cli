@@ -19,6 +19,7 @@ package io.seqera.tower.cli.commands.computeenvs.platforms;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.model.ComputeEnvComputeConfig.PlatformEnum;
+import io.seqera.tower.model.SeqeraComputeCloudInstanceTypeSize;
 import io.seqera.tower.model.SeqeraComputeConfig;
 import picocli.CommandLine;
 
@@ -31,6 +32,9 @@ public class SeqeraComputePlatform extends AbstractPlatform<SeqeraComputeConfig>
 
     @CommandLine.Option(names = {"-r", "--region"}, description = "AWS region.", required = true)
     public String region;
+
+    @CommandLine.Option(names = {"--instance-type-size"}, description = "Size of Data Studios instance (SMALL, MEDIUM, LARGE). Free-tier organizations are limited to SMALL.")
+    public SeqeraComputeCloudInstanceTypeSize instanceTypeSize;
 
     public SeqeraComputePlatform() {
         super(PlatformEnum.SEQERACOMPUTE_PLATFORM);
@@ -45,6 +49,10 @@ public class SeqeraComputePlatform extends AbstractPlatform<SeqeraComputeConfig>
         // be overridden.
 
         config.region(region);
+
+        if (instanceTypeSize != null) {
+            config.instanceTypeSize(instanceTypeSize);
+        }
 
         // Common
         config.preRunScript(preRunScriptString())
