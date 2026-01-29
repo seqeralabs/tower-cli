@@ -19,7 +19,6 @@ package io.seqera.tower.cli.commands.runs;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
-import io.seqera.tower.cli.exceptions.RunNotFoundException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.runs.RunDeleted;
 import picocli.CommandLine;
@@ -45,15 +44,7 @@ public class DeleteCmd extends AbstractRunsCmd {
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
         
-        try {
-            workflowsApi().deleteWorkflow(id, wspId, force);
-
-            return new RunDeleted(id, workspaceRef(wspId));
-        } catch (ApiException e) {
-            if (e.getCode() == 403) {
-                throw new RunNotFoundException(id, workspaceRef(wspId));
-            }
-            throw e;
-        }
+        workflowsApi().deleteWorkflow(id, wspId, force);
+        return new RunDeleted(id, workspaceRef(wspId));
     }
 }

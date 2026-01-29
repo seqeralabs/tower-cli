@@ -96,16 +96,16 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testDeleteNotFound(MockServerClient mock) {
+    void testDeleteForbidden(MockServerClient mock) {
         mock.when(
                 request().withMethod("DELETE").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ3"), exactly(1)
         ).respond(
-                response().withStatusCode(403)
+                response().withStatusCode(403).withBody("{\"message\":\"Forbidden\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         ExecOut out = exec(mock, "compute-envs", "delete", "-i", "vYOK4vn7spw7bHHWBDXZ3");
 
-        assertEquals(errorMessage(out.app, new ComputeEnvNotFoundException("vYOK4vn7spw7bHHWBDXZ3", USER_WORKSPACE_NAME)), out.stdErr);
+        assertEquals(errorMessage(out.app, new ApiException(403, "", null, "{\"message\":\"Forbidden\"}")), out.stdErr);
         assertEquals("", out.stdOut);
         assertEquals(1, out.exitCode);
     }
@@ -253,17 +253,17 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testViewNotFound(MockServerClient mock) {
+    void testViewForbidden(MockServerClient mock) {
 
         mock.when(
                 request().withMethod("GET").withPath("/compute-envs/isnEDBLvHDAIteOEF44or"), exactly(1)
         ).respond(
-                response().withStatusCode(403)
+                response().withStatusCode(403).withBody("{\"message\":\"Forbidden\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         ExecOut out = exec(mock, "compute-envs", "view", "-i", "isnEDBLvHDAIteOEF44or");
 
-        assertEquals(errorMessage(out.app, new TowerException(String.format("Compute environment '%s' not found at user workspace", "isnEDBLvHDAIteOEF44or"))), out.stdErr);
+        assertEquals(errorMessage(out.app, new ApiException(403, "", null, "{\"message\":\"Forbidden\"}")), out.stdErr);
         assertEquals("", out.stdOut);
         assertEquals(1, out.exitCode);
     }
