@@ -19,7 +19,6 @@ package io.seqera.tower.cli.commands.studios;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
-import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.studios.StudiosTemplatesList;
 import picocli.CommandLine;
@@ -40,13 +39,6 @@ public class TemplatesCmd extends AbstractStudiosCmd {
     protected Response exec() throws ApiException {
         Long wspId = workspaceId(workspace.workspace);
 
-        try {
-            return new StudiosTemplatesList(fetchStudioTemplates(wspId, max));
-        } catch (ApiException e) {
-            if (e.getCode() == 403) {
-                throw new TowerException("User not entitled to list studio templates");
-            }
-            throw e;
-        }
+        return new StudiosTemplatesList(fetchStudioTemplates(wspId, max));
     }
 }
