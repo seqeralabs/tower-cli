@@ -23,10 +23,9 @@ import io.seqera.tower.cli.exceptions.InvalidResponseException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.pipelines.PipelinesUpdated;
 import io.seqera.tower.cli.utils.FilesHelper;
-import io.seqera.tower.model.Launch;
+import io.seqera.tower.model.LaunchDbDto;
 import io.seqera.tower.model.PipelineDbDto;
 import io.seqera.tower.model.UpdatePipelineRequest;
-import io.seqera.tower.model.UpdatePipelineResponse;
 import io.seqera.tower.model.WorkflowLaunchRequest;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -88,8 +87,7 @@ public class UpdateCmd extends AbstractPipelinesCmd {
         }
 
         Long sourceWorkspaceId = sourceWorkspaceId(wspId, pipe);
-        Launch launch = pipelinesApi().describePipelineLaunch(id, wspId, sourceWorkspaceId).getLaunch();
-
+        LaunchDbDto launch = pipelinesApi().describePipelineLaunch(id, wspId, sourceWorkspaceId, null).getLaunch();
         // Retrieve the provided computeEnv or use the primary if not provided
         String ceId = null;
         if (opts.computeEnv != null) {

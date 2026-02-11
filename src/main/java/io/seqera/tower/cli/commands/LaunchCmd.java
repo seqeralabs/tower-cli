@@ -25,7 +25,7 @@ import io.seqera.tower.cli.exceptions.InvalidResponseException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.runs.RunSubmited;
 import io.seqera.tower.model.ComputeEnvResponseDto;
-import io.seqera.tower.model.Launch;
+import io.seqera.tower.model.LaunchDbDto;
 import io.seqera.tower.model.ListPipelinesResponse;
 import io.seqera.tower.model.PipelineDbDto;
 import io.seqera.tower.model.SubmitWorkflowLaunchRequest;
@@ -175,7 +175,7 @@ public class LaunchCmd extends AbstractRootCmd {
 
         Long sourceWorkspaceId = sourceWorkspaceId(wspId, pipe);
 
-        Launch launch = pipelinesApi().describePipelineLaunch(pipe.getPipelineId(), wspId, sourceWorkspaceId).getLaunch();
+        LaunchDbDto launch = pipelinesApi().describePipelineLaunch(pipe.getPipelineId(), wspId, sourceWorkspaceId, null).getLaunch();
 
         WorkflowLaunchRequest launchRequest = createLaunchRequest(launch);
         if (computeEnv != null) {
