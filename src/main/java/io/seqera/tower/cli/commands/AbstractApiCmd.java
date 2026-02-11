@@ -165,6 +165,12 @@ public abstract class AbstractApiCmd extends AbstractCmd {
             client.setBasePath(app().url);
             client.setBearerToken(app().token);
 
+            // FIXME: Remove once PLAT-4625 is resolved (Platform returns exit as String).
+            client.getJSON().getMapper().addMixIn(
+                    io.seqera.tower.model.Task.class,
+                    io.seqera.tower.cli.utils.TaskExitMixin.class
+            );
+
             // Set HTTP Agent header
             Properties props = getCliProperties();
             client.setUserAgent(String.format("tw/%s (%s)", props.get("version"), props.get("platform")));
