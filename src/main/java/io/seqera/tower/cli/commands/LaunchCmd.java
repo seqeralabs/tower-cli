@@ -80,6 +80,9 @@ public class LaunchCmd extends AbstractRootCmd {
     @Option(names = {"-r", "--revision"}, description = "Git revision, branch, or tag to use.")
     String revision;
 
+    @Option(names = {"--commit-id"}, description = "Specific Git commit hash to pin the pipeline execution to.")
+    String commitId;
+
     @Option(names = {"--wait"}, description = "Wait until workflow reaches specified status: ${COMPLETION-CANDIDATES}")
     public WorkflowStatus wait;
 
@@ -133,6 +136,7 @@ public class LaunchCmd extends AbstractRootCmd {
                 .pipeline(base.getPipeline())
                 .workDir(coalesce(workDir, base.getWorkDir()))
                 .revision(coalesce(revision, base.getRevision()))
+                .commitId(coalesce(commitId, base.getCommitId()))
                 .configProfiles(coalesce(profile, base.getConfigProfiles()))
                 .userSecrets(coalesce(removeEmptyValues(adv().userSecrets), base.getUserSecrets()))
                 .workspaceSecrets(coalesce(removeEmptyValues(adv().workspaceSecrets), base.getWorkspaceSecrets()))

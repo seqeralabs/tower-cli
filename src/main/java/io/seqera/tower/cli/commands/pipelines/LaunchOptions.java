@@ -39,6 +39,9 @@ public class LaunchOptions {
     @Option(names = {"--revision"}, description = "Git revision, branch, or tag to use.")
     public String revision;
 
+    @Option(names = {"--commit-id"}, description = "Specific Git commit hash to pin the pipeline execution to.")
+    public String commitId;
+
     @Option(names = {"--config"}, description = "Nextflow configuration as text (overrides config files). Provide the path to a file containing the content.")
     public Path config;
 
