@@ -26,7 +26,7 @@ import io.seqera.tower.model.DescribeLaunchResponse;
 import io.seqera.tower.model.DescribeWorkflowLaunchResponse;
 import io.seqera.tower.model.DescribeWorkflowResponse;
 import io.seqera.tower.model.GetProgressResponse;
-import io.seqera.tower.model.Launch;
+import io.seqera.tower.model.LaunchDbDto;
 import io.seqera.tower.model.WorkflowLoad;
 import io.seqera.tower.model.WorkflowQueryAttribute;
 import picocli.CommandLine.Command;
@@ -62,7 +62,7 @@ abstract public class AbstractRunsCmd extends AbstractApiCmd {
         return wfLaunchResponse;
     }
 
-    protected Launch launchById(Long workspaceId, String id) throws ApiException {
+    protected LaunchDbDto launchById(Long workspaceId, String id) throws ApiException {
         DescribeLaunchResponse launchResponse = launchApi().describeLaunch(id, workspaceId);
 
         if (launchResponse == null) {

@@ -41,7 +41,7 @@ import io.seqera.tower.cli.utils.ModelHelper;
 import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.model.ComputeEnvComputeConfig;
 import io.seqera.tower.model.CreatePipelineRequest;
-import io.seqera.tower.model.Launch;
+import io.seqera.tower.model.LaunchDbDto;
 import io.seqera.tower.model.PipelineDbDto;
 import io.seqera.tower.model.WorkflowLaunchRequest;
 import org.apache.commons.lang3.StringUtils;
@@ -622,7 +622,7 @@ class PipelinesCmdTest extends BaseCmdTest {
         assertEquals(StringUtils.chop(new PipelinesView(
                         USER_WORKSPACE_NAME,
                         new PipelineDbDto().pipelineId(213164477645856L).name("sleep_one_minute").repository("https://github.com/pditommaso/nf-sleep"),
-                        new Launch()
+                        new LaunchDbDto()
                                 .id("aB5VzZ5MGKnnAh6xsiKAV")
                                 .pipeline("https://github.com/pditommaso/nf-sleep")
                                 .workDir("$TW_AGENT_WORK")
@@ -723,7 +723,7 @@ class PipelinesCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(mock, "pipelines", "export", "-n", "sleep");
 
-        WorkflowLaunchRequest workflowLaunchRequest = ModelHelper.createLaunchRequest(parseJson(new String(loadResource("launch"), StandardCharsets.UTF_8), Launch.class));
+        WorkflowLaunchRequest workflowLaunchRequest = ModelHelper.createLaunchRequest(parseJson(new String(loadResource("launch"), StandardCharsets.UTF_8), LaunchDbDto.class));
         PipelineDbDto pipeline = parseJson(new String(loadResource("pipelines_sleep"), StandardCharsets.UTF_8), PipelineDbDto.class);
 
         CreatePipelineRequest createPipelineRequest = new CreatePipelineRequest();

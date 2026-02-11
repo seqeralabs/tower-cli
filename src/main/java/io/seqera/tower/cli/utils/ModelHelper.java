@@ -17,7 +17,7 @@
 
 package io.seqera.tower.cli.utils;
 
-import io.seqera.tower.model.Launch;
+import io.seqera.tower.model.LaunchDbDto;
 import io.seqera.tower.model.WorkflowLaunchRequest;
 
 import java.util.List;
@@ -28,7 +28,7 @@ public class ModelHelper {
     private ModelHelper() {
     }
 
-    public static WorkflowLaunchRequest createLaunchRequest(Launch launch) {
+    public static WorkflowLaunchRequest createLaunchRequest(LaunchDbDto launch) {
         return new WorkflowLaunchRequest()
                 .id(launch.getId())
                 .computeEnvId(launch.getComputeEnv() != null ? launch.getComputeEnv().getId() : null)
