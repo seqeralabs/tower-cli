@@ -106,6 +106,7 @@ public class RelaunchCmd extends AbstractRunsCmd {
                 .mainScript(coalesce(opts.mainScript, launch.getMainScript()))
                 .entryName(coalesce(opts.entryName,  launch.getEntryName()))
                 .schemaName(coalesce(opts.schemaName, launch.getSchemaName()))
+                .pipelineSchemaId(coalesce(opts.pipelineSchemaId, launch.getPipelineSchemaId()))
                 .userSecrets(coalesce(removeEmptyValues(opts.userSecrets), launch.getUserSecrets()))
                 .workspaceSecrets(coalesce(removeEmptyValues(opts.workspaceSecrets), launch.getWorkspaceSecrets()))
                 .resume(!noResume)

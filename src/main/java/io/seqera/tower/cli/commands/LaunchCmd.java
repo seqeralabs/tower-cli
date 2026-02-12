@@ -144,6 +144,7 @@ public class LaunchCmd extends AbstractRootCmd {
                 .mainScript(coalesce(adv().mainScript, base.getMainScript()))
                 .entryName(coalesce(adv().entryName, base.getEntryName()))
                 .schemaName(coalesce(adv().schemaName, base.getSchemaName()))
+                .pipelineSchemaId(coalesce(adv().pipelineSchemaId, base.getPipelineSchemaId()))
                 .pullLatest(coalesce(adv().pullLatest, base.getPullLatest()))
                 .stubRun(coalesce(adv().stubRun, base.getStubRun()))
                 .optimizationId(coalesce(adv().disableOptimization, false) ? null : base.getOptimizationId())
@@ -281,6 +282,9 @@ public class LaunchCmd extends AbstractRootCmd {
 
         @Option(names = {"--schema-name"}, description = "Name of the pipeline schema to use.")
         public String schemaName;
+
+        @Option(names = {"--pipeline-schema-id"}, description = "Pipeline schema identifier to use.")
+        public Long pipelineSchemaId;
 
         @Option(names = {"--user-secrets"}, split = ",", description = "Array of user secrets to make available to the pipeline.")
         public List<String> userSecrets;

@@ -109,6 +109,7 @@ public class AddCmd extends AbstractPipelinesCmd {
                                 .mainScript(opts.mainScript)
                                 .entryName(opts.entryName)
                                 .schemaName(opts.schemaName)
+                                .pipelineSchemaId(opts.pipelineSchemaId)
                                 .userSecrets(removeEmptyValues(opts.userSecrets))
                                 .workspaceSecrets(removeEmptyValues(opts.workspaceSecrets))
                         )

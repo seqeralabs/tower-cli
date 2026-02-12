@@ -197,6 +197,7 @@ class LaunchCmdTest extends BaseCmdTest {
                                 "mainScript":"alternate.nf",
                                 "entryName":"dsl2",
                                 "schemaName":"my_schema.json",
+                                "pipelineSchemaId":56789,
                                 "pullLatest":true,
                                 "stubRun":true
                             }}"""
@@ -216,7 +217,7 @@ class LaunchCmdTest extends BaseCmdTest {
         ExecOut out = exec(mock, "launch", "sarek", "-p", "test,docker", "-r", "develop", "--work-dir", "/my_work_dir",
                 "--config", tempFile("extra_config", "nextflow", "config"), "--pull-latest", "--stub-run",
                 "--pre-run", tempFile("pre_run_me", "pre", "sh"), "--post-run", tempFile("post_run_me", "post", "sh"),
-                "--main-script", "alternate.nf", "--entry-name", "dsl2", "--schema-name", "my_schema.json", "--disable-optimization");
+                "--main-script", "alternate.nf", "--entry-name", "dsl2", "--schema-name", "my_schema.json", "--pipeline-schema-id", "56789", "--disable-optimization");
 
         // Assert results
         assertEquals("", out.stdErr);

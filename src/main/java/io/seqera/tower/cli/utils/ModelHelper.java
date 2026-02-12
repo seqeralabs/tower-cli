@@ -47,6 +47,7 @@ public class ModelHelper {
                 .mainScript(launch.getMainScript())
                 .entryName(launch.getEntryName())
                 .schemaName(launch.getSchemaName())
+                .pipelineSchemaId(launch.getPipelineSchemaId())
                 .resume(launch.getResume())
                 .pullLatest(launch.getPullLatest())
                 .stubRun(launch.getStubRun())
