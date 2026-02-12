@@ -21,7 +21,6 @@ import io.seqera.tower.cli.commands.AbstractApiCmd;
 import picocli.CommandLine.Command;
 
 
-
 @Command
 public abstract class AbstractPipelineSchemasCmd extends AbstractApiCmd {
 
@@ -29,5 +28,3 @@ public abstract class AbstractPipelineSchemasCmd extends AbstractApiCmd {
     }
 
 }
-
-
