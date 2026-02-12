@@ -77,7 +77,7 @@ public class LaunchCmd extends AbstractRootCmd {
     @Option(names = {"-p", "--profile"}, split = ",", description = "Array of Nextflow configuration profile names to apply.")
     List<String> profile;
 
-    @Option(names = {"-r", "--revision"}, description = "Git revision, branch, or tag to use.")
+    @Option(names = {"-r", "--revision"}, description = "Git revision, branch, or tag to use. Use --commit-id to pin to a specific commit within the revision.")
     String revision;
 
     @Option(names = {"--commit-id"}, description = "Specific Git commit hash to pin the pipeline execution to.")
