@@ -96,6 +96,7 @@ public class AddCmd extends AbstractPipelinesCmd {
                                 .computeEnvId(ce != null ? ce.getId() : null)
                                 .pipeline(pipeline)
                                 .revision(opts.revision)
+                                .commitId(opts.commitId)
                                 .workDir(workDirValue)
                                 .configProfiles(opts.profile)
                                 .paramsText(FilesHelper.readString(opts.paramsFile))

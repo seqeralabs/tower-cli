@@ -85,6 +85,7 @@
     "pipeline": "https://github.com/grananda/nextflow-hello",
     "workDir": "s3://nextflow-ci/julio",
     "revision": "main",
+    "commitId": "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2",
     "sessionId": "722eae42-f9e7-4631-9e9b-d77ed473071e",
     "configProfiles": [],
     "configText": null,

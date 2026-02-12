@@ -29,9 +29,9 @@ import io.seqera.tower.model.ComputeEnvResponseDto;
 import io.seqera.tower.model.DescribeWorkflowLaunchResponse;
 import io.seqera.tower.model.SubmitWorkflowLaunchRequest;
 import io.seqera.tower.model.SubmitWorkflowLaunchResponse;
-import io.seqera.tower.model.Workflow;
 import io.seqera.tower.model.WorkflowLaunchRequest;
 import io.seqera.tower.model.WorkflowLaunchResponse;
+import io.seqera.tower.model.WorkflowMaxDbDto;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
@@ -78,7 +78,7 @@ public class RelaunchCmd extends AbstractRunsCmd {
             throw new TowerException("Not allowed to change '--work-dir' option when resuming. Use '--no-resume' if you want to relaunch into a different working directory without resuming.");
         }
 
-        Workflow workflow = workflowById(wspId, id, NO_WORKFLOW_ATTRIBUTES).getWorkflow();
+        WorkflowMaxDbDto workflow = workflowById(wspId, id, NO_WORKFLOW_ATTRIBUTES).getWorkflow();
         WorkflowLaunchResponse launch = workflowLaunchResponse(workflow.getId(), wspId);
 
         ComputeEnvResponseDto ce = null;

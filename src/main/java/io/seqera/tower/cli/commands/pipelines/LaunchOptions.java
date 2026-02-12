@@ -36,8 +36,11 @@ public class LaunchOptions {
     @Option(names = {"--params-file"}, description = "Pipeline parameters in JSON or YAML format. Provide the path to a file containing the content.")
     public Path paramsFile;
 
-    @Option(names = {"--revision"}, description = "Git revision, branch, or tag to use.")
+    @Option(names = {"--revision"}, description = "Git revision, branch, or tag to use. Use --commit-id to pin to a specific commit within the revision.")
     public String revision;
+
+    @Option(names = {"--commit-id"}, description = "Specific Git commit hash to pin the pipeline execution to.")
+    public String commitId;
 
     @Option(names = {"--config"}, description = "Nextflow configuration as text (overrides config files). Provide the path to a file containing the content.")
     public Path config;

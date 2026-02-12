@@ -19,7 +19,6 @@ package io.seqera.tower.cli.commands.runs;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.ApiException;
-import io.seqera.tower.JSON;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
@@ -31,13 +30,13 @@ import io.seqera.tower.cli.utils.TarFileHelper;
 import io.seqera.tower.model.DescribeTaskResponse;
 import io.seqera.tower.model.DescribeWorkflowLaunchResponse;
 import io.seqera.tower.model.DescribeWorkflowResponse;
-import io.seqera.tower.model.Launch;
+import io.seqera.tower.model.LaunchDbDto;
 import io.seqera.tower.model.ListTasksResponse;
 import io.seqera.tower.model.ServiceInfo;
 import io.seqera.tower.model.Task;
 import io.seqera.tower.model.TaskStatus;
-import io.seqera.tower.model.Workflow;
 import io.seqera.tower.model.WorkflowLoad;
+import io.seqera.tower.model.WorkflowMaxDbDto;
 import io.seqera.tower.model.WorkflowMetrics;
 import io.seqera.tower.model.WorkflowQueryAttribute;
 import picocli.CommandLine.Command;
@@ -146,7 +145,7 @@ public class DumpCmd extends AbstractRunsCmd {
 
         // General workflow info (including labels)
 
-        Workflow workflow = getWorkflowDescription(workspaceId).getWorkflow();
+        WorkflowMaxDbDto workflow = getWorkflowDescription(workspaceId).getWorkflow();
         if (workflow == null) {
             throw new TowerException("Unknown workflow");
         }
@@ -208,7 +207,7 @@ public class DumpCmd extends AbstractRunsCmd {
         if (launchId == null) { // nextflow-run workflow, no launch entity available
             return null;
         }
-        Launch launch = launchById(workspaceId, launchId);
+        LaunchDbDto launch = launchById(workspaceId, launchId);
         return JsonHelper.prettyJson(launch);
     }
 
