@@ -59,6 +59,9 @@ public class UpdateCmd extends AbstractPipelinesCmd {
     @Mixin
     public LaunchOptions opts;
 
+    @Option(names = {"--pipeline-schema-id"}, description = "Pipeline schema identifier to use.")
+    public Long pipelineSchemaId;
+
     @Option(names = {"--pipeline"}, description = "Nextflow pipeline URL")
     public String pipeline;
 
@@ -119,7 +122,7 @@ public class UpdateCmd extends AbstractPipelinesCmd {
                         .mainScript(coalesce(opts.mainScript, launch.getMainScript()))
                         .entryName(coalesce(opts.entryName, launch.getEntryName()))
                         .schemaName(coalesce(opts.schemaName, launch.getSchemaName()))
-                        .pipelineSchemaId(coalesce(opts.pipelineSchemaId, launch.getPipelineSchemaId()))
+                        .pipelineSchemaId(coalesce(pipelineSchemaId, launch.getPipelineSchemaId()))
                         .userSecrets(coalesce(removeEmptyValues(opts.userSecrets), launch.getUserSecrets()))
                         .workspaceSecrets(coalesce(removeEmptyValues(opts.workspaceSecrets), launch.getWorkspaceSecrets()))
                 );
