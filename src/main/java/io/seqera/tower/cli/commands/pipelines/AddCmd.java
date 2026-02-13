@@ -59,6 +59,9 @@ public class AddCmd extends AbstractPipelinesCmd {
     @Mixin
     public LabelsOptionalOptions labels;
 
+    @Option(names = {"--pipeline-schema-id"}, description = "Pipeline schema identifier to use.")
+    public Long pipelineSchemaId;
+
     @Mixin
     public LaunchOptions opts;
 
@@ -109,6 +112,7 @@ public class AddCmd extends AbstractPipelinesCmd {
                                 .mainScript(opts.mainScript)
                                 .entryName(opts.entryName)
                                 .schemaName(opts.schemaName)
+                                .pipelineSchemaId(pipelineSchemaId)
                                 .userSecrets(removeEmptyValues(opts.userSecrets))
                                 .workspaceSecrets(removeEmptyValues(opts.workspaceSecrets))
                         )

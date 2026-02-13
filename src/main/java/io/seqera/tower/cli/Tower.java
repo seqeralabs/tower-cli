@@ -35,6 +35,7 @@ import io.seqera.tower.cli.commands.MembersCmd;
 import io.seqera.tower.cli.commands.OrganizationsCmd;
 import io.seqera.tower.cli.commands.ParticipantsCmd;
 import io.seqera.tower.cli.commands.PipelinesCmd;
+import io.seqera.tower.cli.commands.PipelineSchemasCmd;
 import io.seqera.tower.cli.commands.RunsCmd;
 import io.seqera.tower.cli.commands.SecretsCmd;
 import io.seqera.tower.cli.commands.TeamsCmd;
@@ -71,6 +72,7 @@ import static picocli.AutoComplete.GenerateCompletion;
                 OrganizationsCmd.class,
                 ParticipantsCmd.class,
                 PipelinesCmd.class,
+                PipelineSchemasCmd.class,
                 RunsCmd.class,
                 TeamsCmd.class,
                 WorkspacesCmd.class,
