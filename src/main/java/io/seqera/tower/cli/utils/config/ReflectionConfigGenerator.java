@@ -30,7 +30,7 @@ import java.lang.reflect.*;
  * <a href="https://www.graalvm.org/jdk21/reference-manual/native-image/metadata/AutomaticMetadataCollection/#tracing-agent">...</a>
  *
  * This is a utility class that uses reflection to make calls to all classes in the Tower SDK model package,
- * CLI command classes, and CLI response classes, in order to capture reflection metadata for GraalVM native image.
+ * in order to capture methods reflection metadata of any new fields/classes in Tower SDK.
  * Execute this class with the GraalVM tracing agent (see Gradle task 'runReflectionConfigGenerator').
  *
  */
@@ -64,21 +64,9 @@ public class ReflectionConfigGenerator {
             ctor.setAccessible(true);
             try {
                 Object instance = ctor.newInstance(new Object[ctor.getParameterCount()]);
-                accessAllFields(aClass, instance);
                 invokeAllInstanceMethods(aClass, instance);
             } catch (Throwable t) {
                 System.out.println("Error invoking constructor of class '" + aClass.getName() + "': " + t);
-            }
-        }
-    }
-
-    private static void accessAllFields(Class<?> aClass, Object instance) {
-        for (Field field : aClass.getDeclaredFields()) {
-            try {
-                field.setAccessible(true);
-                field.get(instance);
-            } catch (Throwable t) {
-                System.out.println("Error accessing field '" + field.getName() + "' of class '" + aClass.getName() + "': " + t);
             }
         }
     }
