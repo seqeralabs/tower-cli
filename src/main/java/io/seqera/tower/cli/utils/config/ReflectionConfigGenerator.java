@@ -37,12 +37,10 @@ import java.lang.reflect.*;
 public class ReflectionConfigGenerator {
 
     private static final String TOWER_MODEL_PACKAGE = "io.seqera.tower.model";
-    private static final String CLI_COMMANDS_PACKAGE = "io.seqera.tower.cli.commands";
-    private static final String CLI_RESPONSES_PACKAGE = "io.seqera.tower.cli.responses";
 
     public static void main(String[] args) {
         try (ScanResult scanResult = new ClassGraph()
-                .acceptPackages(TOWER_MODEL_PACKAGE, CLI_COMMANDS_PACKAGE, CLI_RESPONSES_PACKAGE)
+                .acceptPackages(TOWER_MODEL_PACKAGE)
                 .enableClassInfo()
                 .scan()
         ) {

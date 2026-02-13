@@ -5,12 +5,6 @@
     },
     {
       "includeClasses": "io.seqera.tower.model.**"
-    },
-    {
-      "includeClasses": "io.seqera.tower.cli.commands.**"
-    },
-    {
-      "includeClasses": "io.seqera.tower.cli.responses.**"
     }
   ]
 }
