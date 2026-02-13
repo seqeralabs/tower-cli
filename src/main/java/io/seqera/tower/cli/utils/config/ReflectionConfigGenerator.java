@@ -66,9 +66,21 @@ public class ReflectionConfigGenerator {
             ctor.setAccessible(true);
             try {
                 Object instance = ctor.newInstance(new Object[ctor.getParameterCount()]);
+                accessAllFields(aClass, instance);
                 invokeAllInstanceMethods(aClass, instance);
             } catch (Throwable t) {
                 System.out.println("Error invoking constructor of class '" + aClass.getName() + "': " + t);
+            }
+        }
+    }
+
+    private static void accessAllFields(Class<?> aClass, Object instance) {
+        for (Field field : aClass.getDeclaredFields()) {
+            try {
+                field.setAccessible(true);
+                field.get(instance);
+            } catch (Throwable t) {
+                System.out.println("Error accessing field '" + field.getName() + "' of class '" + aClass.getName() + "': " + t);
             }
         }
     }

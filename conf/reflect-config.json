@@ -2755,9 +2755,9 @@
 },
 {
   "name":"io.seqera.tower.cli.responses.pipelineschemas.PipelineSchemasAdded",
-  "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.Long"] }, {"name":"toString","parameterTypes":[] }]
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
 },
 {
   "name":"io.seqera.tower.cli.responses.runs.RunCanceled",
