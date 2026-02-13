@@ -151,429 +151,525 @@
 {
   "name":"io.seqera.tower.cli.commands.AbstractApiCmd",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.AbstractCmd",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.AbstractRootCmd",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.ActionsCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.CollaboratorsCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.ComputeEnvsCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.CredentialsCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.DataLinksCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.DatasetsCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.InfoCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.LaunchCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"adv","parameterTypes":[] }, {"name":"checkWorkflowStatus","parameterTypes":["java.lang.String","java.lang.Long"] }, {"name":"exec","parameterTypes":[] }, {"name":"lambda$onBeforeExit$0","parameterTypes":["io.seqera.tower.cli.responses.runs.RunSubmited"] }, {"name":"obtainLabelIDs","parameterTypes":["java.lang.Long"] }, {"name":"onBeforeExit","parameterTypes":["int","io.seqera.tower.cli.responses.Response"] }, {"name":"runNextflowPipeline","parameterTypes":["java.lang.Long"] }, {"name":"runTowerPipeline","parameterTypes":["java.lang.Long"] }, {"name":"submitWorkflow","parameterTypes":["io.seqera.tower.model.WorkflowLaunchRequest","java.lang.Long","java.lang.Long"] }, {"name":"updateLaunchRequest","parameterTypes":["io.seqera.tower.model.WorkflowLaunchRequest"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.LaunchCmd$AdvancedOptions",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.MembersCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.OrganizationsCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.ParticipantsCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.PipelineSchemasCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.PipelinesCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.RunsCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.SecretsCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.StudiosCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.TeamsCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.WorkspacesCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.actions.AbstractActionsCmd",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.actions.ActionRefOptions",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.actions.ActionRefOptions$ActionRef",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.actions.ActionsLabelsManager",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["io.seqera.tower.api.LabelsApi"] }, {"name":"append","parameterTypes":["io.seqera.tower.model.AssociateActionLabelsRequest","java.lang.Long"] }, {"name":"append","parameterTypes":["java.lang.Object","java.lang.Long"] }, {"name":"apply","parameterTypes":["io.seqera.tower.model.AssociateActionLabelsRequest","java.lang.Long"] }, {"name":"apply","parameterTypes":["java.lang.Object","java.lang.Long"] }, {"name":"getRequest","parameterTypes":["java.util.List","java.lang.Object"] }, {"name":"getRequest","parameterTypes":["java.util.List","java.lang.String"] }, {"name":"remove","parameterTypes":["io.seqera.tower.model.AssociateActionLabelsRequest","java.lang.Long"] }, {"name":"remove","parameterTypes":["java.lang.Object","java.lang.Long"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.actions.AddCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.actions.DeleteCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.actions.LabelsCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.actions.ListCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.actions.UpdateCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.actions.ViewCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.actions.add.AbstractAddCmd",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.actions.add.AddGitHubCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getSource","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.actions.add.AddTowerCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getSource","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.collaborators.AbstractCollaboratorsCmd",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.collaborators.ListCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.AbstractComputeEnvCmd",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.AddCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.ComputeEnvRefOptions",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.ComputeEnvRefOptions$ComputeEnvRef",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.DeleteCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.ExportCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.ImportCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }, {"name":"getPlatform","parameterTypes":[] }, {"name":"lambda$exec$0","parameterTypes":["io.seqera.tower.model.LabelDbDto"] }, {"name":"tryDeleteCE","parameterTypes":["java.lang.String","java.lang.Long"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.ListCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.PrimaryCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.UpdateCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"describeCE","parameterTypes":["io.seqera.tower.cli.commands.computeenvs.ComputeEnvRefOptions","java.lang.Long"] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.ViewCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.add.AbstractAddCmd",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.add.AddAltairCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getPlatform","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.add.AddAwsCloudCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getPlatform","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.add.AddAwsCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.add.AddAzureCloudCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getPlatform","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.add.AddAzureCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.add.AddEksCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getPlatform","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.add.AddGkeCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getPlatform","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.add.AddGoogleBatchCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getPlatform","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.add.AddGoogleCloudCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getPlatform","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.add.AddK8sCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getPlatform","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.add.AddLsfCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getPlatform","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.add.AddMoabCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getPlatform","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.add.AddSeqeraComputeCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getPlatform","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.add.AddSlurmCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getPlatform","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.add.AddUgeCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getPlatform","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.add.aws.AddAwsForgeCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getPlatform","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.add.aws.AddAwsManualCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getPlatform","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.add.azure.AddAzureForgeCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getPlatform","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.add.azure.AddAzureManualCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getPlatform","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AbstractPlatform",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["io.seqera.tower.model.ComputeEnvComputeConfig$PlatformEnum"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AbstractPlatform$Environment",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AbstractPlatform$StagingOptions",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AltairPlatform",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"adv","parameterTypes":[] }, {"name":"computeConfig","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AltairPlatform$AdvancedOptions",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AwsBatchForgePlatform",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"adv","parameterTypes":[] }, {"name":"buildForge","parameterTypes":[] }, {"name":"clean","parameterTypes":["io.seqera.tower.model.AwsBatchConfig"] }, {"name":"computeConfig","parameterTypes":[] }, {"name":"isFusionV2Enabled","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AwsBatchForgePlatform$AdvancedOptions",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AwsBatchForgePlatform$EfsFileSystem",
@@ -591,524 +687,677 @@
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AwsBatchManualPlatform",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"adv","parameterTypes":[] }, {"name":"clean","parameterTypes":["io.seqera.tower.model.AwsBatchConfig"] }, {"name":"computeConfig","parameterTypes":[] }, {"name":"isFusionV2Enabled","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AwsBatchManualPlatform$AdvancedOptions",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AwsCloudPlatform",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"computeConfig","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AwsCloudPlatform$AdvancedOptions",
   "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AzBatchForgePlatform",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"computeConfig","parameterTypes":["java.lang.Long","io.seqera.tower.api.CredentialsApi"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AzBatchForgePlatform$AdvancedOptions",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AzBatchManualPlatform",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"computeConfig","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AzBatchManualPlatform$AdvancedOptions",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AzCloudPlatform",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"computeConfig","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AzCloudPlatform$AdvancedOptions",
   "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.EksPlatform",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"adv","parameterTypes":[] }, {"name":"computeConfig","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.GkePlatform",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"adv","parameterTypes":[] }, {"name":"computeConfig","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.GoogleBatchPlatform",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"computeConfig","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.GoogleBatchPlatform$AdvancedOptions",
   "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.GoogleCloudPlatform",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"computeConfig","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.GoogleCloudPlatform$AdvancedOptions",
   "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.K8sPlatform",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"adv","parameterTypes":[] }, {"name":"computeConfig","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.K8sPlatform$AdvancedOptions",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.LsfPlatform",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"adv","parameterTypes":[] }, {"name":"computeConfig","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.LsfPlatform$AdvancedOptions",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.MoabPlatform",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"adv","parameterTypes":[] }, {"name":"computeConfig","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.MoabPlatform$AdvancedOptions",
   "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.computeenvs.platforms.Platform",
+  "queryAllDeclaredConstructors":true
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.SeqeraComputePlatform",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"computeConfig","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.SlurmPlatform",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"adv","parameterTypes":[] }, {"name":"computeConfig","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.SlurmPlatform$AdvancedOptions",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.UnivaPlatform",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"adv","parameterTypes":[] }, {"name":"computeConfig","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.UnivaPlatform$AdvancedOptions",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.primary.AbstractComputeEnvsPrimaryCmd",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.primary.GetCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.primary.SetCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.AbstractCredentialsCmd",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.AddCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.CredentialsRefOptions",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.CredentialsRefOptions$CredentialsRef",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.DeleteCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.ListCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.UpdateCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.add.AbstractAddCmd",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.add.AddAgentCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getProvider","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.add.AddAwsCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getProvider","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.add.AddAzureCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getProvider","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.add.AddBitbucketCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getProvider","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.add.AddCodeCommitCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getProvider","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.add.AddContainerRegistryCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getProvider","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.add.AddGiteaCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getProvider","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.add.AddGithubCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getProvider","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.add.AddGitlabCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getProvider","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.add.AddGoogleCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getProvider","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.add.AddK8sCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getProvider","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.add.AddSshCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getProvider","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.providers.AbstractGitProvider",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["io.seqera.tower.model.Credentials$ProviderEnum"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.providers.AbstractProvider",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["io.seqera.tower.model.Credentials$ProviderEnum"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.providers.AwsProvider",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"securityKeys","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.providers.AwsProvider$Keys",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.providers.AzureProvider",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"securityKeys","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.providers.BitbucketProvider",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"securityKeys","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.providers.CodeCommitProvider",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"securityKeys","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.providers.ContainerRegistryProvider",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"securityKeys","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.credentials.providers.CredentialsProvider",
+  "queryAllDeclaredConstructors":true
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.providers.GiteaProvider",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"securityKeys","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.providers.GithubProvider",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"securityKeys","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.providers.GitlabProvider",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"securityKeys","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.providers.GoogleProvider",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"securityKeys","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.providers.K8sProvider",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"securityKeys","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.providers.K8sProvider$ClientCerts",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.providers.K8sProvider$Keys",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.providers.SshProvider",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"securityKeys","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.providers.TwAgentProvider",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"securityKeys","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.update.AbstractUpdateCmd",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.update.UpdateAgentCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getProvider","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.update.UpdateAwsCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getProvider","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.update.UpdateAzureCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getProvider","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.update.UpdateBitbucketCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getProvider","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.update.UpdateCodeCommitCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getProvider","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.update.UpdateContainerRegistryCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getProvider","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.update.UpdateGithubCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getProvider","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.update.UpdateGitlabCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getProvider","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.update.UpdateGoogleCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getProvider","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.update.UpdateK8sCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getProvider","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.credentials.update.UpdateSshCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getProvider","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.data.links.AbstractDataLinksCmd",
   "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getDataLink","parameterTypes":["io.seqera.tower.cli.commands.data.links.DataLinkRefOptions","java.lang.Long","java.lang.String"] }, {"name":"getDataLinkId","parameterTypes":["io.seqera.tower.cli.commands.data.links.DataLinkRefOptions","java.lang.Long"] }, {"name":"getDataLinkId","parameterTypes":["io.seqera.tower.cli.commands.data.links.DataLinkRefOptions","java.lang.Long","java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.data.links.AddCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"addDataLink","parameterTypes":["java.lang.Long","java.lang.String","java.lang.String","java.lang.String","java.lang.String","java.lang.String"] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.data.links.BrowseCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.data.links.DataLinkRefOptions",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.data.links.DataLinkRefOptions$DataLinkRef",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.data.links.DataLinkService",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["io.seqera.tower.api.DataLinksApi","io.seqera.tower.cli.Tower"] }, {"name":"checkDataLinksFetchStatus","parameterTypes":["java.lang.Long","java.lang.String"] }, {"name":"checkIfResultIncomplete","parameterTypes":["java.lang.Long","java.lang.String","boolean"] }, {"name":"getDataLink","parameterTypes":["io.seqera.tower.cli.commands.data.links.DataLinkRefOptions$DataLinkRef","java.lang.Long","java.lang.String"] }, {"name":"getDataLinkById","parameterTypes":["java.lang.String","java.lang.Long","java.lang.String"] }, {"name":"getDataLinkByName","parameterTypes":["java.lang.Long","java.lang.String","java.lang.String"] }, {"name":"getDataLinkByResourceRef","parameterTypes":["java.lang.Long","java.lang.String","java.lang.String"] }, {"name":"getDataLinkBySearchAndFindExactMatch","parameterTypes":["java.lang.Long","java.lang.String","java.lang.String","java.util.function.Predicate"] }, {"name":"getDataLinkIds","parameterTypes":["io.seqera.tower.cli.commands.studios.DataLinkRefOptions$DataLinkRef","java.lang.Long"] }, {"name":"getDataLinksBySearchCriteria","parameterTypes":["java.lang.Long","java.lang.String","java.lang.String"] }, {"name":"getResourceRefKeywordParam","parameterTypes":["java.lang.String"] }, {"name":"lambda$getDataLinkByName$3","parameterTypes":["java.lang.String","io.seqera.tower.model.DataLinkDto"] }, {"name":"lambda$getDataLinkByResourceRef$4","parameterTypes":["java.lang.String","io.seqera.tower.model.DataLinkDto"] }, {"name":"lambda$getDataLinkIds$1","parameterTypes":["java.lang.Long","java.lang.String"] }, {"name":"lambda$getDataLinkIds$2","parameterTypes":["java.lang.Long","java.lang.String"] }, {"name":"lambda$waitForDoneStatus$0","parameterTypes":["java.lang.Long","java.lang.String"] }, {"name":"waitForDoneStatus","parameterTypes":["java.lang.Long","java.lang.String","boolean"] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.data.links.DataLinkService$DataLinksFetchStatus",
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"$values","parameterTypes":[] }, {"name":"valueOf","parameterTypes":["java.lang.String"] }, {"name":"values","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.data.links.DeleteCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.data.links.DownloadCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"downloadFile","parameterTypes":["java.lang.String","java.lang.String","java.lang.String","java.lang.Long","java.nio.file.Path"] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.data.links.ListCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"appendParameter","parameterTypes":["java.lang.StringBuilder","java.lang.String","java.lang.String"] }, {"name":"buildSearch","parameterTypes":["java.lang.String","java.lang.String","java.lang.String","java.lang.String"] }, {"name":"exec","parameterTypes":[] }, {"name":"formatProviders","parameterTypes":["java.util.List"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.data.links.SearchOption",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.data.links.UpdateCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }, {"name":"updateDataLink","parameterTypes":["java.lang.Long","java.lang.String","java.lang.String","java.lang.String","java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.data.links.UploadCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"checkFilesValidForUpload","parameterTypes":[] }, {"name":"countFilesInDirectoryAndCheckFileSize","parameterTypes":["java.io.File"] }, {"name":"createUploadStrategy","parameterTypes":["io.seqera.tower.model.DataLinkProvider","java.lang.String","java.lang.String","java.lang.Long","java.lang.String","java.lang.String"] }, {"name":"exec","parameterTypes":[] }, {"name":"uploadDirectory","parameterTypes":["java.io.File","java.io.File","java.lang.String","java.lang.String","java.lang.String","java.lang.Long","io.seqera.tower.model.DataLinkProvider"] }, {"name":"uploadFile","parameterTypes":["java.io.File","java.lang.String","java.lang.String","java.lang.String","java.lang.Long","io.seqera.tower.model.DataLinkProvider"] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.data.links.upload.AbstractProviderUploader",
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.data.links.upload.AwsUploader",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String","java.lang.Long","java.lang.String","java.lang.String","io.seqera.tower.api.DataLinksApi"] }, {"name":"abortUpload","parameterTypes":["io.seqera.tower.model.DataLinkMultiPartUploadResponse"] }, {"name":"finalizeUpload","parameterTypes":["io.seqera.tower.model.DataLinkMultiPartUploadResponse","boolean","java.util.List"] }, {"name":"uploadFile","parameterTypes":["java.io.File","io.seqera.tower.model.DataLinkMultiPartUploadResponse","io.seqera.tower.cli.utils.progress.ProgressTracker"] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.data.links.upload.AzureUploader",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"abortUpload","parameterTypes":["io.seqera.tower.model.DataLinkMultiPartUploadResponse"] }, {"name":"buildBlockList","parameterTypes":["java.util.List"] }, {"name":"extractBlockId","parameterTypes":["java.lang.String"] }, {"name":"finalizeUpload","parameterTypes":["java.util.List","java.net.http.HttpClient"] }, {"name":"getFinalizeUrl","parameterTypes":["java.lang.String"] }, {"name":"uploadFile","parameterTypes":["java.io.File","io.seqera.tower.model.DataLinkMultiPartUploadResponse","io.seqera.tower.cli.utils.progress.ProgressTracker"] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.data.links.upload.CloudProviderUploader",
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.commands.data.links.upload.GoogleUploader",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"abortUpload","parameterTypes":["io.seqera.tower.model.DataLinkMultiPartUploadResponse"] }, {"name":"uploadFile","parameterTypes":["java.io.File","io.seqera.tower.model.DataLinkMultiPartUploadResponse","io.seqera.tower.cli.utils.progress.ProgressTracker"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.data.studios.AbstractStudiosCmd",
@@ -1136,162 +1385,239 @@
 {
   "name":"io.seqera.tower.cli.commands.datasets.AbstractDatasetsCmd",
   "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.datasets.AddCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }, {"name":"tryDeleteDataset","parameterTypes":["java.lang.String","java.lang.Long"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.datasets.DatasetRefOptions",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.datasets.DatasetRefOptions$DatasetRef",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.datasets.DeleteCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.datasets.DownloadCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.datasets.ListCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.datasets.UpdateCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.datasets.UrlCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.datasets.ViewCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.datasets.versions.VersionsCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.enums.OutputType",
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"$values","parameterTypes":[] }, {"name":"valueOf","parameterTypes":["java.lang.String"] }, {"name":"values","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.global.OrgAndWorkspace",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.global.OrganizationOption",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.global.PaginationOptions",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getMax","parameterTypes":["io.seqera.tower.cli.commands.global.PaginationOptions"] }, {"name":"getOffset","parameterTypes":["io.seqera.tower.cli.commands.global.PaginationOptions","java.lang.Integer"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.global.PaginationOptions$Pageable",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.global.PaginationOptions$Sizeable",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.global.ShowLabelsOption",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.global.WorkspaceRequiredOptions",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.labels.AbstractLabelsCmd",
   "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.labels.AddLabelsCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.labels.BaseLabelsManager",
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["io.seqera.tower.api.LabelsApi","java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.labels.DeleteLabelsCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.labels.Label",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String"] }, {"name":"getType","parameterTypes":[] }, {"name":"matches","parameterTypes":["java.lang.String","java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.labels.Label$LabelConverter",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"convert","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.labels.Label$ResourceLabelsConverter",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"convert","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.labels.Label$StudioResourceLabelsConverter",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"convert","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.labels.LabelsCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.labels.LabelsFinder",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["io.seqera.tower.api.LabelsApi"] }, {"name":"createLabel","parameterTypes":["java.lang.Long","io.seqera.tower.cli.commands.labels.Label"] }, {"name":"fetchOrCreateLabelId","parameterTypes":["java.lang.Long","io.seqera.tower.cli.commands.labels.Label","io.seqera.tower.cli.commands.labels.LabelsFinder$NotFoundLabelBehavior"] }, {"name":"findLabelsIds","parameterTypes":["java.lang.Long","java.util.List","io.seqera.tower.cli.commands.labels.LabelsFinder$NotFoundLabelBehavior"] }, {"name":"lambda$fetchOrCreateLabelId$1","parameterTypes":["io.seqera.tower.cli.commands.labels.Label","io.seqera.tower.model.LabelDbDto"] }, {"name":"lambda$findLabelsIds$0","parameterTypes":["java.lang.Long","io.seqera.tower.cli.commands.labels.LabelsFinder$NotFoundLabelBehavior","io.seqera.tower.cli.commands.labels.Label"] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.labels.LabelsFinder$NotFoundLabelBehavior",
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"$values","parameterTypes":[] }, {"name":"valueOf","parameterTypes":["java.lang.String"] }, {"name":"values","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.labels.LabelsOptionalOptions",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.labels.LabelsSubcmdOptions",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getLabels","parameterTypes":[] }, {"name":"getNoCreate","parameterTypes":[] }, {"name":"getOperation","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.labels.LabelsSubcmdOptions$Operation",
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"$values","parameterTypes":[] }, {"name":"valueOf","parameterTypes":["java.lang.String"] }, {"name":"values","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.labels.ListLabelsCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.labels.UpdateLabelsCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.labels.UpdateLabelsCmd$UpdateOptions",
@@ -1302,406 +1628,533 @@
 {
   "name":"io.seqera.tower.cli.commands.members.AbstractMembersClass",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.members.AddCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.members.DeleteCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.members.LeaveCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.members.ListCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.members.UpdateCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.organizations.AbstractOrganizationsCmd",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"deleteOrgById","parameterTypes":["java.lang.Long"] }, {"name":"deleteOrgByName","parameterTypes":["java.lang.String"] }, {"name":"fetchOrganization","parameterTypes":["io.seqera.tower.cli.commands.organizations.OrganizationRefOptions"] }, {"name":"lambda$organizationByName$0","parameterTypes":["java.lang.String","io.seqera.tower.model.OrgAndWorkspaceDto"] }, {"name":"organizationByName","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.organizations.AddCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }, {"name":"tryDeleteOrg","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.organizations.DeleteCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.organizations.ListCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }, {"name":"lambda$exec$0","parameterTypes":["io.seqera.tower.model.OrgAndWorkspaceDto"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.organizations.OrganizationRefOptions",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.organizations.OrganizationRefOptions$OrganizationRef",
   "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.organizations.OrganizationsOptions",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.organizations.UpdateCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.organizations.ViewCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.participants.AbstractParticipantsCmd",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"deleteParticipantByNameAndType","parameterTypes":["java.lang.Long","java.lang.String","io.seqera.tower.model.ParticipantType"] }, {"name":"findOrganizationCollaboratorByName","parameterTypes":["java.lang.Long","java.lang.String"] }, {"name":"findOrganizationMemberByName","parameterTypes":["java.lang.Long","java.lang.String"] }, {"name":"findOrganizationTeamByName","parameterTypes":["java.lang.Long","java.lang.String"] }, {"name":"findWorkspaceParticipant","parameterTypes":["java.lang.Long","java.lang.Long","java.lang.String","io.seqera.tower.model.ParticipantType"] }, {"name":"lambda$findOrganizationTeamByName$0","parameterTypes":["java.lang.String","io.seqera.tower.model.TeamDbDto"] }, {"name":"lambda$findWorkspaceParticipant$1","parameterTypes":["io.seqera.tower.model.ParticipantType","io.seqera.tower.model.ParticipantResponseDto"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.participants.AddCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }, {"name":"tryDeleteParticipant","parameterTypes":["java.lang.Long","java.lang.String","io.seqera.tower.model.ParticipantType"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.participants.DeleteCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.participants.LeaveCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.participants.ListCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }, {"name":"lambda$exec$0","parameterTypes":["io.seqera.tower.model.ParticipantResponseDto"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.participants.UpdateCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.pipelines.AbstractPipelinesCmd",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.pipelines.AddCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"attachLabels","parameterTypes":["java.lang.Long","java.lang.Long"] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.pipelines.DeleteCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.pipelines.ExportCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.pipelines.ImportCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"deletePipeline","parameterTypes":["java.lang.String","java.lang.Long"] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.pipelines.LabelsCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.pipelines.LaunchOptions",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.pipelines.ListCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.pipelines.PipelineRefOptions",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.pipelines.PipelineRefOptions$PipelineRef",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.pipelines.PipelineVisibility",
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"$values","parameterTypes":[] }, {"name":"toString","parameterTypes":[] }, {"name":"valueOf","parameterTypes":["java.lang.String"] }, {"name":"values","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.pipelines.PipelinesLabelsManager",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["io.seqera.tower.api.LabelsApi"] }, {"name":"append","parameterTypes":["io.seqera.tower.model.AssociatePipelineLabelsRequest","java.lang.Long"] }, {"name":"append","parameterTypes":["java.lang.Object","java.lang.Long"] }, {"name":"apply","parameterTypes":["io.seqera.tower.model.AssociatePipelineLabelsRequest","java.lang.Long"] }, {"name":"apply","parameterTypes":["java.lang.Object","java.lang.Long"] }, {"name":"getRequest","parameterTypes":["java.util.List","java.lang.Long"] }, {"name":"getRequest","parameterTypes":["java.util.List","java.lang.Object"] }, {"name":"remove","parameterTypes":["io.seqera.tower.model.AssociatePipelineLabelsRequest","java.lang.Long"] }, {"name":"remove","parameterTypes":["java.lang.Object","java.lang.Long"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.pipelines.UpdateCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.pipelines.ViewCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.pipelineschemas.AbstractPipelineSchemasCmd",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.pipelineschemas.AddCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.runs.AbstractRunsCmd",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.runs.CancelCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.runs.DeleteCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.runs.DumpCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"addTaskLog","parameterTypes":["io.seqera.tower.cli.utils.TarFileHelper$TarFileAppender","java.lang.Long","java.lang.String","java.lang.Long","java.lang.String"] }, {"name":"collectNfLog","parameterTypes":["java.lang.Long"] }, {"name":"collectTowerInfo","parameterTypes":[] }, {"name":"collectWorkflowInfo","parameterTypes":["java.lang.Long"] }, {"name":"collectWorkflowLaunch","parameterTypes":["java.lang.Long"] }, {"name":"collectWorkflowLoad","parameterTypes":["java.lang.Long"] }, {"name":"collectWorkflowMetadata","parameterTypes":["java.lang.Long"] }, {"name":"collectWorkflowMetrics","parameterTypes":["java.lang.Long"] }, {"name":"collectWorkflowTaskLogs","parameterTypes":["io.seqera.tower.cli.utils.TarFileHelper$TarFileAppender","java.lang.Long"] }, {"name":"collectWorkflowTasks","parameterTypes":["java.lang.Long"] }, {"name":"exec","parameterTypes":[] }, {"name":"generateUrl","parameterTypes":["java.lang.Long","java.lang.String","java.lang.String"] }, {"name":"getWorkflowDescription","parameterTypes":["java.lang.Long"] }, {"name":"getWorkflowLaunchDescription","parameterTypes":["java.lang.Long"] }, {"name":"getWorkflowTasks","parameterTypes":["java.lang.Long","java.lang.String"] }, {"name":"lambda$collectWorkflowTaskLogs$0","parameterTypes":["io.seqera.tower.model.Task"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.runs.LabelsCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.runs.ListCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.runs.RelaunchCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }, {"name":"selectWorkDir","parameterTypes":["boolean","java.lang.String","java.lang.String","java.lang.String"] }, {"name":"workflowLaunchResponse","parameterTypes":["java.lang.String","java.lang.Long"] }, {"name":"workflowWatchUrl","parameterTypes":["java.lang.String","java.lang.Long"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.runs.RunViewOptions",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.runs.RunsLabelsManager",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["io.seqera.tower.api.LabelsApi"] }, {"name":"append","parameterTypes":["io.seqera.tower.model.AssociateWorkflowLabelsRequest","java.lang.Long"] }, {"name":"append","parameterTypes":["java.lang.Object","java.lang.Long"] }, {"name":"apply","parameterTypes":["io.seqera.tower.model.AssociateWorkflowLabelsRequest","java.lang.Long"] }, {"name":"apply","parameterTypes":["java.lang.Object","java.lang.Long"] }, {"name":"getRequest","parameterTypes":["java.util.List","java.lang.Object"] }, {"name":"getRequest","parameterTypes":["java.util.List","java.lang.String"] }, {"name":"remove","parameterTypes":["io.seqera.tower.model.AssociateWorkflowLabelsRequest","java.lang.Long"] }, {"name":"remove","parameterTypes":["java.lang.Object","java.lang.Long"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.runs.ViewCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }, {"name":"lambda$exec$0","parameterTypes":["java.util.List","io.seqera.tower.model.ProcessLoad"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.runs.download.DownloadCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.runs.download.enums.RunDownloadFileType",
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"$values","parameterTypes":[] }, {"name":"valueOf","parameterTypes":["java.lang.String"] }, {"name":"values","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.runs.metrics.MetricsCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }, {"name":"lambda$exec$0","parameterTypes":["java.util.List","io.seqera.tower.model.WorkflowMetrics"] }, {"name":"lambda$exec$1","parameterTypes":["java.util.List","io.seqera.tower.model.WorkflowMetrics"] }, {"name":"lambda$exec$2","parameterTypes":["java.util.List","io.seqera.tower.model.WorkflowMetrics"] }, {"name":"lambda$exec$3","parameterTypes":["java.util.List","io.seqera.tower.model.WorkflowMetrics"] }, {"name":"lambda$processColumns$4","parameterTypes":["java.util.Map","java.util.Map","io.seqera.tower.cli.commands.runs.metrics.enums.MetricColumn"] }, {"name":"processColumns","parameterTypes":["io.seqera.tower.model.ResourceData"] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.runs.metrics.enums.MetricColumn",
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"$values","parameterTypes":[] }, {"name":"valueOf","parameterTypes":["java.lang.String"] }, {"name":"values","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.runs.metrics.enums.MetricPreviewFormat",
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"$values","parameterTypes":[] }, {"name":"valueOf","parameterTypes":["java.lang.String"] }, {"name":"values","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.runs.metrics.enums.MetricType",
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"$values","parameterTypes":[] }, {"name":"valueOf","parameterTypes":["java.lang.String"] }, {"name":"values","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.runs.metrics.model.Metric",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","io.seqera.tower.model.ResourceData"] }, {"name":"of","parameterTypes":["java.lang.String","io.seqera.tower.model.ResourceData"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.runs.tasks.TaskCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }, {"name":"parseExecutionTimeData","parameterTypes":["io.seqera.tower.model.Task"] }, {"name":"parseGeneralData","parameterTypes":["io.seqera.tower.model.Task"] }, {"name":"parseResourcesRequestedData","parameterTypes":["io.seqera.tower.model.Task"] }, {"name":"parseResourcesUsageData","parameterTypes":["io.seqera.tower.model.Task"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.runs.tasks.TasksCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }, {"name":"lambda$exec$0","parameterTypes":["io.seqera.tower.cli.commands.runs.tasks.enums.TaskColumn"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.runs.tasks.enums.TaskColumn",
   "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"$values","parameterTypes":[] }, {"name":"compose","parameterTypes":["java.util.function.Function","java.util.function.Function"] }, {"name":"getDescription","parameterTypes":[] }, {"name":"getObject","parameterTypes":[] }, {"name":"getPrettyPrint","parameterTypes":[] }, {"name":"isFixed","parameterTypes":[] }, {"name":"valueOf","parameterTypes":["java.lang.String"] }, {"name":"values","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.secrets.AbstractSecretsCmd",
   "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.secrets.AddCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }, {"name":"tryDeleteSecret","parameterTypes":["java.lang.String","java.lang.Long"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.secrets.DeleteCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.secrets.ListCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.secrets.SecretRefOptions",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.secrets.SecretRefOptions$SecretRef",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.secrets.UpdateCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.secrets.ViewCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.studios.AbstractStudiosCmd",
   "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"access$000","parameterTypes":["io.seqera.tower.cli.commands.studios.AbstractStudiosCmd"] }, {"name":"checkStudioStatus","parameterTypes":["java.lang.String","java.lang.Long"] }, {"name":"fetchStudio","parameterTypes":["io.seqera.tower.cli.commands.studios.StudioRefOptions","java.lang.Long"] }, {"name":"fetchStudioTemplates","parameterTypes":["java.lang.Long"] }, {"name":"fetchStudioTemplates","parameterTypes":["java.lang.Long","java.lang.Integer"] }, {"name":"getLabelIds","parameterTypes":["java.util.List","java.lang.Long"] }, {"name":"getMountDataIds","parameterTypes":["io.seqera.tower.cli.commands.studios.StudioConfigurationOptions","io.seqera.tower.model.DataStudioConfiguration","java.lang.Long"] }, {"name":"getParentStudioSessionId","parameterTypes":["io.seqera.tower.cli.commands.studios.ParentStudioRefOptions","java.lang.Long"] }, {"name":"getSessionId","parameterTypes":["io.seqera.tower.cli.commands.studios.StudioRefOptions","java.lang.Long"] }, {"name":"getStudioById","parameterTypes":["java.lang.Long","java.lang.String"] }, {"name":"getStudioByName","parameterTypes":["java.lang.Long","java.lang.String"] }, {"name":"lambda$getStudioByName$0","parameterTypes":["java.lang.String","io.seqera.tower.model.DataStudioDto"] }, {"name":"lambda$getStudioByName$1","parameterTypes":["java.lang.String","java.lang.Long"] }, {"name":"lambda$onBeforeExit$2","parameterTypes":["java.lang.String","java.lang.Long"] }, {"name":"onBeforeExit","parameterTypes":["int","java.lang.String","java.lang.Long","io.seqera.tower.model.DataStudioStatus"] }, {"name":"studioConfigurationFrom","parameterTypes":["java.lang.Long","io.seqera.tower.cli.commands.studios.StudioConfigurationOptions","java.lang.String"] }, {"name":"studioConfigurationFrom","parameterTypes":["java.lang.Long","io.seqera.tower.model.DataStudioDto","io.seqera.tower.cli.commands.studios.StudioConfigurationOptions"] }, {"name":"studioConfigurationFrom","parameterTypes":["java.lang.Long","io.seqera.tower.model.DataStudioDto","io.seqera.tower.cli.commands.studios.StudioConfigurationOptions","java.lang.String"] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.studios.AbstractStudiosCmd$ProgressStepMessageSupplier",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["io.seqera.tower.cli.commands.studios.AbstractStudiosCmd","java.lang.String","java.lang.Long"] }, {"name":"get","parameterTypes":[] }, {"name":"lambda$get$0","parameterTypes":["io.seqera.tower.model.DataStudioProgressStep"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.studios.AddAsNewCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }, {"name":"onBeforeExit","parameterTypes":["int","io.seqera.tower.cli.responses.Response"] }, {"name":"prepareRequest","parameterTypes":["io.seqera.tower.model.DataStudioDto","java.lang.String","java.lang.Long"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.studios.AddCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"checkIfTemplateIsAvailable","parameterTypes":["java.lang.String","java.lang.Long"] }, {"name":"exec","parameterTypes":[] }, {"name":"lambda$checkIfTemplateIsAvailable$0","parameterTypes":["java.lang.String","io.seqera.tower.model.DataStudioTemplate"] }, {"name":"onBeforeExit","parameterTypes":["int","io.seqera.tower.cli.responses.Response"] }, {"name":"prepareRequest","parameterTypes":["java.lang.Long"] }, {"name":"setDefaults","parameterTypes":["io.seqera.tower.model.DataStudioConfiguration"] }, {"name":"templateValidation","parameterTypes":["io.seqera.tower.cli.commands.studios.StudioTemplateOptions","java.nio.file.Path","java.lang.Long"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.studios.CheckpointsCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.studios.DataLinkRefOptions",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.studios.DataLinkRefOptions$DataLinkRef",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getMountDataIds","parameterTypes":[] }, {"name":"getMountDataNames","parameterTypes":[] }, {"name":"getMountDataUris","parameterTypes":[] }, {"name":"validate","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.studios.DeleteCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.studios.ListCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.studios.ParentStudioRefOptions",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.studios.ParentStudioRefOptions$ParentStudioRef",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.studios.StartCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }, {"name":"getStartRequestWithOverridesApplied","parameterTypes":["io.seqera.tower.model.DataStudioDto"] }, {"name":"onBeforeExit","parameterTypes":["int","io.seqera.tower.cli.responses.Response"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.studios.StopCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }, {"name":"onBeforeExit","parameterTypes":["int","io.seqera.tower.cli.responses.Response"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.studios.StudioCheckpointRefOptions",
@@ -1719,136 +2172,161 @@
   "name":"io.seqera.tower.cli.commands.studios.StudioConfigurationOptions",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.studios.StudioRefOptions",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getStudioIdentifier","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.studios.StudioRefOptions$StudioRef",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.studios.StudioTemplateOptions",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getTemplate","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.studios.StudioTemplateOptions$StudioTemplate",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.studios.TemplatesCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.studios.ViewCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.teams.AbstractTeamsCmd",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.teams.AddCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }, {"name":"tryDeleteTeam","parameterTypes":["java.lang.Long","java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.teams.DeleteCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.teams.ListCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.teams.MembersCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.teams.members.AddCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.teams.members.DeleteCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.workspaces.AbstractWorkspaceCmd",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.workspaces.AddCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }, {"name":"parseVisibility","parameterTypes":[] }, {"name":"tryDeleteWsp","parameterTypes":["java.lang.Long","java.lang.Long"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.workspaces.DeleteCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.workspaces.LeaveCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.workspaces.ListCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }, {"name":"lambda$exec$0","parameterTypes":["io.seqera.tower.model.OrgAndWorkspaceDto"] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.workspaces.UpdateCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.workspaces.ViewCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"exec","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.workspaces.WorkspaceRefOptions",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.workspaces.WorkspaceRefOptions$WorkspaceRef",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1862,498 +2340,665 @@
   "name":"io.seqera.tower.cli.responses.CredentialsAdded",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String","java.lang.String","java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.CredentialsDeleted",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.CredentialsList",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.util.List","java.lang.String"] }, {"name":"lambda$toString$0","parameterTypes":["io.seqera.tower.cli.utils.TableList","io.seqera.tower.model.Credentials"] }, {"name":"toString","parameterTypes":["java.io.PrintWriter"] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.CredentialsUpdated",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String","java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.InfoResponse",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["int","int","int","java.util.Map"] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.Response",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.actions.ActionAdd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String","java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.actions.ActionUpdate",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String","java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.actions.ActionsDelete",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.actions.ActionsList",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.util.List","java.lang.String","java.lang.String","boolean"] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.actions.ActionsView",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["io.seqera.tower.model.ActionResponseDto","java.lang.String"] }, {"name":"toString","parameterTypes":["java.io.PrintWriter"] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.collaborators.CollaboratorsList",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.Long","java.util.List","io.seqera.tower.cli.utils.PaginationInfo"] }, {"name":"lambda$toString$0","parameterTypes":["io.seqera.tower.cli.utils.TableList","io.seqera.tower.model.MemberDbDto"] }, {"name":"toString","parameterTypes":["java.io.PrintWriter"] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.computeenvs.ComputeEnvAdded",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String","java.lang.String","java.lang.Long","java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.computeenvs.ComputeEnvDeleted",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.computeenvs.ComputeEnvExport",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.computeenvs.ComputeEnvList",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.util.List","java.lang.String"] }, {"name":"lambda$toString$0","parameterTypes":["io.seqera.tower.cli.utils.TableList","io.seqera.tower.model.ListComputeEnvsResponseEntry"] }, {"name":"toString","parameterTypes":["java.io.PrintWriter"] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.computeenvs.ComputeEnvUpdated",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.responses.computeenvs.ComputeEnvView",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String","io.seqera.tower.model.ComputeEnvResponseDto","java.lang.String"] }, {"name":"getJSON","parameterTypes":[] }, {"name":"toString","parameterTypes":["java.io.PrintWriter"] }]
+},
+{
+  "name":"io.seqera.tower.cli.responses.computeenvs.ComputeEnvsPrimaryGet",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","io.seqera.tower.model.ComputeEnvResponseDto"] }, {"name":"getJSON","parameterTypes":[] }, {"name":"toString","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.responses.computeenvs.ComputeEnvsPrimarySet",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","io.seqera.tower.model.ComputeEnvResponseDto"] }, {"name":"getJSON","parameterTypes":[] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.data.DataLinkContentList",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["io.seqera.tower.model.DataLinkDto","java.lang.String","java.util.List","java.lang.String"] }, {"name":"lambda$toString$0","parameterTypes":["io.seqera.tower.cli.utils.TableList","io.seqera.tower.model.DataLinkItem"] }, {"name":"toString","parameterTypes":["java.io.PrintWriter"] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.data.DataLinkDeleted",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.Long"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.data.DataLinkFileTransferResult",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.util.List","io.seqera.tower.cli.responses.data.DataLinkFileTransferResult$FileTransferDirection"] }, {"name":"donwloaded","parameterTypes":["java.util.List"] }, {"name":"lambda$toString$0","parameterTypes":["io.seqera.tower.cli.utils.TableList","io.seqera.tower.cli.responses.data.DataLinkFileTransferResult$SimplePathInfo"] }, {"name":"toString","parameterTypes":["java.io.PrintWriter"] }, {"name":"uploaded","parameterTypes":["java.util.List"] }]
+},
+{
+  "name":"io.seqera.tower.cli.responses.data.DataLinkFileTransferResult$FileTransferDirection",
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"$values","parameterTypes":[] }, {"name":"valueOf","parameterTypes":["java.lang.String"] }, {"name":"values","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.data.DataLinkFileTransferResult$SimplePathInfo",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"<init>","parameterTypes":["io.seqera.tower.model.DataLinkItemType","java.lang.String","int"] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.data.DataLinkView",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["io.seqera.tower.model.DataLinkDto","java.lang.String"] }, {"name":"toString","parameterTypes":["java.io.PrintWriter"] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.data.DataLinksList",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.util.List","boolean","io.seqera.tower.cli.utils.PaginationInfo"] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.datasets.DatasetCreate",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String","java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.datasets.DatasetDelete",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.responses.datasets.DatasetDownload",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.io.File","java.lang.String"] }, {"name":"getJSON","parameterTypes":[] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.datasets.DatasetList",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.util.List","java.lang.String"] }, {"name":"lambda$toString$0","parameterTypes":["io.seqera.tower.cli.utils.TableList","io.seqera.tower.model.DatasetDto"] }, {"name":"toString","parameterTypes":["java.io.PrintWriter"] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.datasets.DatasetUpdate",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String","java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.datasets.DatasetUrl",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String","java.lang.String"] }, {"name":"toString","parameterTypes":["java.io.PrintWriter"] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.datasets.DatasetVersionsList",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.util.List","java.lang.String","java.lang.String"] }, {"name":"lambda$toString$0","parameterTypes":["io.seqera.tower.cli.utils.TableList","io.seqera.tower.model.DatasetVersionDto"] }, {"name":"toString","parameterTypes":["java.io.PrintWriter"] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.datasets.DatasetView",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["io.seqera.tower.model.DatasetDto","java.lang.String"] }, {"name":"toString","parameterTypes":["java.io.PrintWriter"] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.labels.DeleteLabelsResponse",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.Long","java.lang.Long"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.labels.LabelAdded",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.Long","java.lang.String","java.lang.Boolean","java.lang.String","java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.labels.LabelUpdated",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.Long","java.lang.String","java.lang.String","java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.labels.ListLabelsCmdResponse",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.Long","io.seqera.tower.model.LabelType","java.util.List","io.seqera.tower.cli.utils.PaginationInfo"] }, {"name":"lambda$toString$0","parameterTypes":["io.seqera.tower.cli.utils.TableList","io.seqera.tower.model.LabelDbDto"] }, {"name":"toString","parameterTypes":["java.io.PrintWriter"] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.labels.ManageLabels",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String","java.lang.String","java.lang.Long"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.members.MembersAdded",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","io.seqera.tower.model.MemberDbDto"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.members.MembersDeleted",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.members.MembersLeave",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.members.MembersList",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.util.List"] }, {"name":"lambda$toString$0","parameterTypes":["io.seqera.tower.cli.utils.TableList","io.seqera.tower.model.MemberDbDto"] }, {"name":"toString","parameterTypes":["java.io.PrintWriter"] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.members.MembersUpdate",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String","java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.responses.organizations.OrganizationsAdded",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["io.seqera.tower.model.OrganizationDbDto"] }, {"name":"getJSON","parameterTypes":[] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.organizations.OrganizationsDeleted",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.organizations.OrganizationsList",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.util.List","java.lang.String"] }, {"name":"lambda$toString$0","parameterTypes":["io.seqera.tower.cli.utils.TableList","io.seqera.tower.model.OrgAndWorkspaceDto"] }, {"name":"toString","parameterTypes":["java.io.PrintWriter"] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.organizations.OrganizationsUpdated",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.Long","java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.responses.organizations.OrganizationsView",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["io.seqera.tower.model.OrganizationDbDto","java.lang.String"] }, {"name":"getJSON","parameterTypes":[] }, {"name":"toString","parameterTypes":["java.io.PrintWriter"] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.participants.ParticipantAdded",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["io.seqera.tower.model.ParticipantResponseDto","java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.participants.ParticipantDeleted",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.participants.ParticipantLeft",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.participants.ParticipantUpdated",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String","java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.participants.ParticipantsList",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String","java.util.List","io.seqera.tower.cli.utils.PaginationInfo"] }, {"name":"lambda$toString$0","parameterTypes":["io.seqera.tower.cli.utils.TableList","io.seqera.tower.model.ParticipantResponseDto"] }, {"name":"toString","parameterTypes":["java.io.PrintWriter"] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.pipelines.PipelinesAdded",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.responses.pipelines.PipelinesDeleted",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.pipelines.PipelinesExport",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.pipelines.PipelinesList",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.util.List","java.lang.String","boolean","io.seqera.tower.cli.utils.PaginationInfo"] }]
+},
+{
+  "name":"io.seqera.tower.cli.responses.pipelines.PipelinesUpdated",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.pipelines.PipelinesView",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","io.seqera.tower.model.PipelineDbDto","io.seqera.tower.model.LaunchDbDto","java.lang.String"] }, {"name":"toString","parameterTypes":["java.io.PrintWriter"] }]
+},
+{
+  "name":"io.seqera.tower.cli.responses.pipelineschemas.PipelineSchemasAdded",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.Long"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.runs.RunCanceled",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.runs.RunDeleted",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.runs.RunDump",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String","java.nio.file.Path"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.runs.RunFileDownloaded",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.io.File","io.seqera.tower.cli.commands.runs.download.enums.RunDownloadFileType"] }, {"name":"getJSON","parameterTypes":[] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.runs.RunList",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.util.List","java.lang.String","boolean","io.seqera.tower.cli.utils.PaginationInfo"] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.runs.RunSubmited",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.Long","java.lang.String","java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.responses.runs.RunView",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.util.Map","java.util.List","java.lang.String","java.util.Map","java.lang.String","java.util.Map","java.util.List","java.util.Map","java.util.Map","java.util.Map","java.lang.String"] }, {"name":"getJSON","parameterTypes":[] }, {"name":"lambda$toString$0","parameterTypes":["io.seqera.tower.cli.utils.TableList","java.lang.String"] }, {"name":"lambda$toString$1","parameterTypes":["io.seqera.tower.cli.utils.TableList","java.util.Map"] }, {"name":"toString","parameterTypes":["java.io.PrintWriter"] }]
+},
+{
+  "name":"io.seqera.tower.cli.responses.runs.RunViewMetrics",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.util.List","java.util.List","java.util.List","java.util.List","java.util.List","io.seqera.tower.cli.commands.runs.metrics.enums.MetricPreviewFormat"] }, {"name":"getJSON","parameterTypes":[] }, {"name":"lambda$processDataReducedTable$4","parameterTypes":["java.util.List","java.util.List"] }, {"name":"lambda$processDataReducedTable$5","parameterTypes":["java.util.List","io.seqera.tower.cli.utils.TableList","java.lang.String","java.lang.Object"] }, {"name":"lambda$processDataReducedTable$6","parameterTypes":["java.util.List","io.seqera.tower.cli.utils.TableList","java.util.Map"] }, {"name":"lambda$processExpandedDataTable$0","parameterTypes":["java.util.List","java.util.function.Function","java.lang.String","java.lang.Number"] }, {"name":"lambda$processExpandedDataTable$1","parameterTypes":["java.lang.String","io.seqera.tower.cli.utils.TableList","java.lang.String","java.lang.Object"] }, {"name":"lambda$processExpandedDataTable$2","parameterTypes":["io.seqera.tower.cli.utils.TableList","java.lang.String","java.lang.Object"] }, {"name":"lambda$processExpandedDataTable$3","parameterTypes":["io.seqera.tower.cli.utils.TableList","java.util.Map"] }, {"name":"lambda$summarizeDataBlocks$7","parameterTypes":["java.util.Map","java.util.Map$Entry"] }, {"name":"processDataReducedTable","parameterTypes":["java.util.List","java.io.PrintWriter","java.util.List"] }, {"name":"processExpandedDataTable","parameterTypes":["java.util.List","java.io.PrintWriter","java.util.List"] }, {"name":"summarizeDataBlocks","parameterTypes":["java.util.Map"] }, {"name":"toString","parameterTypes":["java.io.PrintWriter"] }]
+},
+{
+  "name":"io.seqera.tower.cli.responses.runs.tasks.TaskView",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.util.Map","java.lang.String","java.lang.String","java.util.Map","java.util.Map","java.util.Map"] }, {"name":"getJSON","parameterTypes":[] }, {"name":"toString","parameterTypes":["java.io.PrintWriter"] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.runs.tasks.TasksView",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.util.List","java.util.List","io.seqera.tower.cli.utils.PaginationInfo"] }, {"name":"getJSON","parameterTypes":[] }, {"name":"lambda$getJSON$0","parameterTypes":["io.seqera.tower.model.Task","io.seqera.tower.cli.commands.runs.tasks.enums.TaskColumn"] }, {"name":"lambda$getJSON$1","parameterTypes":["io.seqera.tower.model.Task","io.seqera.tower.cli.commands.runs.tasks.enums.TaskColumn"] }, {"name":"lambda$getJSON$2","parameterTypes":["io.seqera.tower.model.Task"] }, {"name":"lambda$toString$3","parameterTypes":["io.seqera.tower.model.Task","io.seqera.tower.cli.commands.runs.tasks.enums.TaskColumn"] }, {"name":"lambda$toString$4","parameterTypes":["java.util.List","io.seqera.tower.model.Task"] }, {"name":"lambda$toString$5","parameterTypes":["io.seqera.tower.cli.utils.TableList","java.util.List"] }, {"name":"toString","parameterTypes":["java.io.PrintWriter"] }]
+},
+{
+  "name":"io.seqera.tower.cli.responses.runs.utils.MetricFormatMapper",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"getFormatTransformer","parameterTypes":["java.lang.String"] }, {"name":"getPadding","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.secrets.SecretAdded",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.Long","java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.secrets.SecretDeleted",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["io.seqera.tower.model.PipelineSecret","java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.secrets.SecretUpdated",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.secrets.SecretView",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","io.seqera.tower.model.PipelineSecret"] }, {"name":"toString","parameterTypes":["java.io.PrintWriter"] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.secrets.SecretsList",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.util.List"] }, {"name":"lambda$toString$0","parameterTypes":["io.seqera.tower.cli.utils.TableList","io.seqera.tower.model.PipelineSecret"] }, {"name":"toString","parameterTypes":["java.io.PrintWriter"] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.studios.StudioCheckpointsList",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String","java.util.List","io.seqera.tower.cli.utils.PaginationInfo"] }, {"name":"lambda$toString$0","parameterTypes":["io.seqera.tower.cli.utils.TableList","io.seqera.tower.model.DataStudioCheckpointDto"] }, {"name":"toString","parameterTypes":["java.io.PrintWriter"] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.studios.StudioDeleted",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.studios.StudioStartSubmitted",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String","java.lang.Long","java.lang.String","java.lang.String","java.lang.Boolean"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.studios.StudioStopSubmitted",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String","java.lang.Long","java.lang.String","java.lang.Boolean"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.studios.StudiosCreated",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.Long","java.lang.String","java.lang.String","boolean"] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.studios.StudiosList",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.util.List","boolean","io.seqera.tower.cli.utils.PaginationInfo"] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.studios.StudiosTemplatesList",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.util.List"] }, {"name":"lambda$toString$0","parameterTypes":["io.seqera.tower.cli.utils.TableList","io.seqera.tower.model.DataStudioTemplate"] }, {"name":"toString","parameterTypes":["java.io.PrintWriter"] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.studios.StudiosView",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["io.seqera.tower.model.DataStudioDto","java.lang.String"] }, {"name":"toString","parameterTypes":["java.io.PrintWriter"] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.teams.TeamAdded",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.teams.TeamDeleted",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.teams.TeamsList",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.util.List","java.lang.String","io.seqera.tower.cli.utils.PaginationInfo"] }, {"name":"lambda$toString$0","parameterTypes":["io.seqera.tower.cli.utils.TableList","io.seqera.tower.model.TeamDbDto"] }, {"name":"toString","parameterTypes":["java.io.PrintWriter"] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.teams.members.TeamMemberDeleted",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.teams.members.TeamMembersAdd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","io.seqera.tower.model.MemberDbDto"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.teams.members.TeamMembersList",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.util.List"] }, {"name":"lambda$toString$0","parameterTypes":["io.seqera.tower.cli.utils.TableList","io.seqera.tower.model.MemberDbDto"] }, {"name":"toString","parameterTypes":["java.io.PrintWriter"] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.workspaces.WorkspaceAdded",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String","io.seqera.tower.model.Visibility"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.workspaces.WorkspaceDeleted",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.workspaces.WorkspaceList",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
-  "allDeclaredConstructors":true
+  "allDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.util.List","java.lang.String"] }, {"name":"lambda$toString$0","parameterTypes":["io.seqera.tower.cli.utils.TableList","io.seqera.tower.model.OrgAndWorkspaceDto"] }, {"name":"toString","parameterTypes":["java.io.PrintWriter"] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.workspaces.WorkspaceUpdated",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String","io.seqera.tower.model.Visibility"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.responses.workspaces.WorkspaceView",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":["io.seqera.tower.model.Workspace"] }, {"name":"toString","parameterTypes":["java.io.PrintWriter"] }]
 },
 {
   "name":"io.seqera.tower.cli.shared.ComputeEnvExportFormat",
