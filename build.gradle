@@ -98,11 +98,21 @@ compileJava {
 
 application {
     mainClass.set('io.seqera.tower.cli.Tower')
-    // This doesn't work on M1
-    applicationDefaultJvmArgs = ["-agentlib:native-image-agent=config-merge-dir=conf/"]
 }
 
-task runReflectionConfigGenerator(type: JavaExec) {
+run {
+    // Pass CLI arguments via: `./gradlew run --args='arg1 arg2'`, or via: `./gradlew run -Pargs='arg1 arg2'`
+    if (project.hasProperty('args')) {
+        args project.args.split('\\s+')
+    }
+
+    // Run with GraalVM Tracing Agent enabled
+    if (System.getProperty('tracing-agent')?.toBoolean()) {
+        jvmArgs = ["-agentlib:native-image-agent=access-filter-file=conf/access-filter-file.json,config-merge-dir=conf/"]
+    }
+}
+
+tasks.register('runReflectionConfigGenerator', JavaExec) {
     group = 'build'
     description = 'Run ReflectionConfigGenerator for Tower SDK with native-image-agent'
     classpath = sourceSets.main.runtimeClasspath
