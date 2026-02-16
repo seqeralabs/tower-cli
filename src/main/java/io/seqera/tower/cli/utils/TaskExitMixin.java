@@ -27,7 +27,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
  * while the SDK model declares it as {@code Integer}. This mixin narrows the
  * workaround to only the affected field.
  *
- * FIXME: Remove once PLAT-4625 is resolved (Platform returns exit as Integer).
+ * FIXME: Workaround for Platform versions before 26.x. Remove once those versions are phased out (see #578).
  */
 public abstract class TaskExitMixin {
 
