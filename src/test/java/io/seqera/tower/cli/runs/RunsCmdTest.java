@@ -50,7 +50,6 @@ import io.seqera.tower.model.ListWorkflowsResponseListWorkflowsElement;
 import io.seqera.tower.model.ServiceInfo;
 import io.seqera.tower.model.ServiceInfoResponse;
 import io.seqera.tower.model.Task;
-import io.seqera.tower.model.Workflow;
 import io.seqera.tower.model.WorkflowLoad;
 import io.seqera.tower.model.WorkflowMaxDbDto;
 import io.seqera.tower.model.WorkflowMetrics;
@@ -360,8 +359,7 @@ class RunsCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "runs", "view", "-i", "5mDfiUtqyptDib");
 
-        // TODO: evaluate refactoring this to a WorkflowMaxDbDto
-        Workflow workflow = parseJson("""
+        WorkflowMaxDbDto workflow = parseJson("""
                 {
                     "id": "5mDfiUtqyptDib",
                     "submit": "2021-09-22T05:45:44Z",
@@ -409,7 +407,7 @@ class RunsCmdTest extends BaseCmdTest {
                     "outFile": null,
                     "operationId": null,
                     "ownerId": 9
-                  }""", Workflow.class);
+                  }""", WorkflowMaxDbDto.class);
 
         WorkflowLoad workflowLoad = parseJson("""
                 {
