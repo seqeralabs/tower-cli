@@ -84,4 +84,21 @@ public class TaskCmdTest extends BaseCmdTest {
         assertEquals(StringUtils.chop(new TaskView(general, command, environment, times, resources, usage).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
+
+    // FIXME: Workaround for Platform versions before 26.x returning exit as String. Remove once those versions are phased out (see #578).
+    // Verifies that the task view command does not fail when the API returns the exit code as a string ("0") instead of an integer (0).
+    // The deserialization logic is tested in detail by TaskExitMixinTest.
+    @Test
+    void testTaskDetailWithExitAsString(MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/workflow/5J9pBnWd6uoC3w/task/1"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("runs/task_detail_exit_as_string")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock,"runs", "view", "-i", "5J9pBnWd6uoC3w", "task", "-t", "1");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+    }
 }
