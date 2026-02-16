@@ -212,7 +212,25 @@ class PipelinesCmdTest extends BaseCmdTest {
                                 "}" +
                             "}")), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"pipeline\":{\"pipelineId\":217997727159863,\"name\":\"sleep_one_minute\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/pditommaso/nf-sleep\",\"userId\":4,\"userName\":\"jordi\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null}}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody("{" +
+                        "\"pipeline\":{" +
+                            "\"pipelineId\":217997727159863," +
+                            "\"name\":\"sleep_one_minute\"," +
+                            "\"description\":null," +
+                            "\"icon\":null," +
+                            "\"repository\":\"https://github.com/pditommaso/nf-sleep\"," +
+                            "\"commitId\":\"a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2\"," +
+                            "\"userId\":4," +
+                            "\"userName\":\"jordi\"," +
+                            "\"userFirstName\":null," +
+                            "\"userLastName\":null," +
+                            "\"orgId\":null," +
+                            "\"orgName\":null," +
+                            "\"workspaceId\":null," +
+                            "\"workspaceName\":null," +
+                            "\"visibility\":null" +
+                        "}" +
+                    "}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         ExecOut out = exec(mock, "pipelines", "update", "-n", "sleep_one_minute", "--commit-id", "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2");
@@ -377,7 +395,25 @@ class PipelinesCmdTest extends BaseCmdTest {
                                 "}" +
                             "}")), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"pipeline\":{\"pipelineId\":18388134856008,\"name\":\"sleep_one_minute\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/pditommaso/nf-sleep\",\"userId\":4,\"userName\":\"jordi\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null}}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody("{" +
+                        "\"pipeline\":{" +
+                            "\"pipelineId\":18388134856008," +
+                            "\"name\":\"sleep_one_minute\"," +
+                            "\"description\":null," +
+                            "\"icon\":null," +
+                            "\"repository\":\"https://github.com/pditommaso/nf-sleep\"," +
+                            "\"commitId\":\"a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2\"," +
+                            "\"userId\":4," +
+                            "\"userName\":\"jordi\"," +
+                            "\"userFirstName\":null," +
+                            "\"userLastName\":null," +
+                            "\"orgId\":null," +
+                            "\"orgName\":null," +
+                            "\"workspaceId\":null," +
+                            "\"workspaceName\":null," +
+                            "\"visibility\":null" +
+                        "}" +
+                    "}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         ExecOut out = exec(mock, "pipelines", "add", "-n", "sleep_one_minute", "--commit-id", "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2", "https://github.com/pditommaso/nf-sleep");
