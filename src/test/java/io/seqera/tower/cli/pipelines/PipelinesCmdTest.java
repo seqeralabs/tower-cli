@@ -188,7 +188,25 @@ class PipelinesCmdTest extends BaseCmdTest {
         mock.when(
                 request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "\"sleep_one_minute\""), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"pipelines\":[{\"pipelineId\":217997727159863,\"name\":\"sleep_one_minute\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/pditommaso/nf-sleep\",\"userId\":4,\"userName\":\"jordi\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null}],\"totalSize\":1}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody("{" +
+                        "\"pipelines\":[{" +
+                            "\"pipelineId\":217997727159863," +
+                            "\"name\":\"sleep_one_minute\"," +
+                            "\"description\":null," +
+                            "\"icon\":null," +
+                            "\"repository\":\"https://github.com/pditommaso/nf-sleep\"," +
+                            "\"userId\":4," +
+                            "\"userName\":\"jordi\"," +
+                            "\"userFirstName\":null," +
+                            "\"userLastName\":null," +
+                            "\"orgId\":null," +
+                            "\"orgName\":null," +
+                            "\"workspaceId\":null," +
+                            "\"workspaceName\":null," +
+                            "\"visibility\":null" +
+                        "}]," +
+                        "\"totalSize\":1" +
+                    "}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
@@ -353,9 +371,35 @@ class PipelinesCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/pipelines").withBody("{\"name\":\"sleep_one_minute\",\"launch\":{\"computeEnvId\":\"vYOK4vn7spw7bHHWBDXZ2\",\"pipeline\":\"https://github.com/pditommaso/nf-sleep\",\"workDir\":\"s3://nextflow-ci/jordeu\",\"paramsText\":\"timeout: 60\\n\"}}"), exactly(1)
+                request().withMethod("POST").withPath("/pipelines")
+                        .withBody("{" +
+                                "\"name\":\"sleep_one_minute\"," +
+                                "\"launch\":{" +
+                                    "\"computeEnvId\":\"vYOK4vn7spw7bHHWBDXZ2\"," +
+                                    "\"pipeline\":\"https://github.com/pditommaso/nf-sleep\"," +
+                                    "\"workDir\":\"s3://nextflow-ci/jordeu\"," +
+                                    "\"paramsText\":\"timeout: 60\\n\"" +
+                                "}" +
+                            "}"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"pipeline\":{\"pipelineId\":18388134856008,\"name\":\"sleep_one_minute\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/pditommaso/nf-sleep\",\"userId\":4,\"userName\":\"jordi\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null}}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody("{" +
+                        "\"pipeline\":{" +
+                            "\"pipelineId\":18388134856008," +
+                            "\"name\":\"sleep_one_minute\"," +
+                            "\"description\":null," +
+                            "\"icon\":null," +
+                            "\"repository\":\"https://github.com/pditommaso/nf-sleep\"," +
+                            "\"userId\":4," +
+                            "\"userName\":\"jordi\"," +
+                            "\"userFirstName\":null," +
+                            "\"userLastName\":null," +
+                            "\"orgId\":null," +
+                            "\"orgName\":null," +
+                            "\"workspaceId\":null," +
+                            "\"workspaceName\":null," +
+                            "\"visibility\":null" +
+                        "}" +
+                    "}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         ExecOut out = exec(mock, "pipelines", "add", "-n", "sleep_one_minute", "--params-file", tempFile("timeout: 60\n", "params", ".yml"), "https://github.com/pditommaso/nf-sleep");
@@ -933,7 +977,19 @@ class PipelinesCmdTest extends BaseCmdTest {
         mock.when(
                 request().withMethod("GET").withPath("/compute-envs"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"isnEDBLvHDAIteOEF44ow\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":null,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody("{" +
+                        "\"computeEnvs\":[{" +
+                            "\"id\":\"isnEDBLvHDAIteOEF44ow\"," +
+                            "\"name\":\"demo\"," +
+                            "\"platform\":\"aws-batch\"," +
+                            "\"status\":\"AVAILABLE\"," +
+                            "\"message\":null," +
+                            "\"lastUsed\":null," +
+                            "\"primary\":null," +
+                            "\"workspaceName\":null," +
+                            "\"visibility\":null" +
+                        "}]" +
+                    "}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
