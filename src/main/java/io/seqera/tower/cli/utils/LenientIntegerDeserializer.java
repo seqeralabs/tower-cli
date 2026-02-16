@@ -32,7 +32,7 @@ import java.io.IOException;
  * {@code ALLOW_COERCION_OF_SCALARS} globally, so this deserializer is applied
  * only to the specific field via a Jackson mixin.
  *
- * FIXME: Remove once PLAT-4625 is resolved (Platform returns exit as Integer).
+ * FIXME: Workaround for Platform versions before 26.x. Remove once those versions are phased out (see #578).
  */
 public class LenientIntegerDeserializer extends StdDeserializer<Integer> {
 
