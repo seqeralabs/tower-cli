@@ -181,6 +181,84 @@ class PipelinesCmdTest extends BaseCmdTest {
     }
 
     @Test
+    void testUpdateWithCommitId(MockServerClient mock) {
+
+        mock.reset();
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "\"sleep_one_minute\""), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{" +
+                        "\"pipelines\":[{" +
+                            "\"pipelineId\":217997727159863," +
+                            "\"name\":\"sleep_one_minute\"," +
+                            "\"description\":null," +
+                            "\"icon\":null," +
+                            "\"repository\":\"https://github.com/pditommaso/nf-sleep\"," +
+                            "\"userId\":4," +
+                            "\"userName\":\"jordi\"," +
+                            "\"userFirstName\":null," +
+                            "\"userLastName\":null," +
+                            "\"orgId\":null," +
+                            "\"orgName\":null," +
+                            "\"workspaceId\":null," +
+                            "\"workspaceName\":null," +
+                            "\"visibility\":null" +
+                        "}]," +
+                        "\"totalSize\":1" +
+                    "}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines/217997727159863/launch"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("pipelines_update")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("PUT").withPath("/pipelines/217997727159863")
+                        .withBody(json("{" +
+                                "\"name\":\"sleep_one_minute\"," +
+                                "\"launch\":{" +
+                                    "\"computeEnvId\":\"vYOK4vn7spw7bHHWBDXZ2\"," +
+                                    "\"pipeline\":\"https://github.com/pditommaso/nf-sleep\"," +
+                                    "\"commitId\":\"a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2\"," +
+                                    "\"workDir\":\"s3://nextflow-ci/jordeu\"," +
+                                    "\"paramsText\":\"timeout: 60\\n\"," +
+                                    "\"pullLatest\":false," +
+                                    "\"stubRun\":false" +
+                                "}" +
+                            "}")), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{" +
+                        "\"pipeline\":{" +
+                            "\"pipelineId\":217997727159863," +
+                            "\"name\":\"sleep_one_minute\"," +
+                            "\"description\":null," +
+                            "\"icon\":null," +
+                            "\"repository\":\"https://github.com/pditommaso/nf-sleep\"," +
+                            "\"commitId\":\"a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2\"," +
+                            "\"userId\":4," +
+                            "\"userName\":\"jordi\"," +
+                            "\"userFirstName\":null," +
+                            "\"userLastName\":null," +
+                            "\"orgId\":null," +
+                            "\"orgName\":null," +
+                            "\"workspaceId\":null," +
+                            "\"workspaceName\":null," +
+                            "\"visibility\":null" +
+                        "}" +
+                    "}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "pipelines", "update", "-n", "sleep_one_minute", "--commit-id", "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2");
+
+        assertEquals("", out.stdErr);
+        assertEquals(new PipelinesUpdated(USER_WORKSPACE_NAME, "sleep_one_minute").toString(), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
     void testUpdatePipelineInvalidName(MockServerClient mock) {
 
         mock.reset();
@@ -293,9 +371,35 @@ class PipelinesCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/pipelines").withBody("{\"name\":\"sleep_one_minute\",\"launch\":{\"computeEnvId\":\"vYOK4vn7spw7bHHWBDXZ2\",\"pipeline\":\"https://github.com/pditommaso/nf-sleep\",\"workDir\":\"s3://nextflow-ci/jordeu\",\"paramsText\":\"timeout: 60\\n\"}}"), exactly(1)
+                request().withMethod("POST").withPath("/pipelines")
+                        .withBody("{" +
+                                "\"name\":\"sleep_one_minute\"," +
+                                "\"launch\":{" +
+                                    "\"computeEnvId\":\"vYOK4vn7spw7bHHWBDXZ2\"," +
+                                    "\"pipeline\":\"https://github.com/pditommaso/nf-sleep\"," +
+                                    "\"workDir\":\"s3://nextflow-ci/jordeu\"," +
+                                    "\"paramsText\":\"timeout: 60\\n\"" +
+                                "}" +
+                            "}"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"pipeline\":{\"pipelineId\":18388134856008,\"name\":\"sleep_one_minute\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/pditommaso/nf-sleep\",\"userId\":4,\"userName\":\"jordi\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null}}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody("{" +
+                        "\"pipeline\":{" +
+                            "\"pipelineId\":18388134856008," +
+                            "\"name\":\"sleep_one_minute\"," +
+                            "\"description\":null," +
+                            "\"icon\":null," +
+                            "\"repository\":\"https://github.com/pditommaso/nf-sleep\"," +
+                            "\"userId\":4," +
+                            "\"userName\":\"jordi\"," +
+                            "\"userFirstName\":null," +
+                            "\"userLastName\":null," +
+                            "\"orgId\":null," +
+                            "\"orgName\":null," +
+                            "\"workspaceId\":null," +
+                            "\"workspaceName\":null," +
+                            "\"visibility\":null" +
+                        "}" +
+                    "}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         ExecOut out = exec(mock, "pipelines", "add", "-n", "sleep_one_minute", "--params-file", tempFile("timeout: 60\n", "params", ".yml"), "https://github.com/pditommaso/nf-sleep");
@@ -304,6 +408,75 @@ class PipelinesCmdTest extends BaseCmdTest {
         assertEquals(new PipelinesAdded(USER_WORKSPACE_NAME, "sleep_one_minute").toString(), out.stdOut);
         assertEquals(0, out.exitCode);
 
+    }
+
+    @Test
+    void testAddWithCommitId(MockServerClient mock) throws IOException {
+
+        mock.reset();
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs").withQueryStringParameter("status", "AVAILABLE"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{" +
+                        "\"computeEnvs\":[{" +
+                            "\"id\":\"vYOK4vn7spw7bHHWBDXZ2\"," +
+                            "\"name\":\"demo\"," +
+                            "\"platform\":\"aws-batch\"," +
+                            "\"status\":\"AVAILABLE\"," +
+                            "\"message\":null," +
+                            "\"lastUsed\":null," +
+                            "\"primary\":true," +
+                            "\"workspaceName\":null," +
+                            "\"visibility\":null" +
+                        "}]" +
+                    "}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/pipelines")
+                        .withBody(json("{" +
+                                "\"name\":\"sleep_one_minute\"," +
+                                "\"launch\":{" +
+                                    "\"computeEnvId\":\"vYOK4vn7spw7bHHWBDXZ2\"," +
+                                    "\"pipeline\":\"https://github.com/pditommaso/nf-sleep\"," +
+                                    "\"commitId\":\"a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2\"," +
+                                    "\"workDir\":\"s3://nextflow-ci/jordeu\"" +
+                                "}" +
+                            "}")), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{" +
+                        "\"pipeline\":{" +
+                            "\"pipelineId\":18388134856008," +
+                            "\"name\":\"sleep_one_minute\"," +
+                            "\"description\":null," +
+                            "\"icon\":null," +
+                            "\"repository\":\"https://github.com/pditommaso/nf-sleep\"," +
+                            "\"commitId\":\"a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2\"," +
+                            "\"userId\":4," +
+                            "\"userName\":\"jordi\"," +
+                            "\"userFirstName\":null," +
+                            "\"userLastName\":null," +
+                            "\"orgId\":null," +
+                            "\"orgName\":null," +
+                            "\"workspaceId\":null," +
+                            "\"workspaceName\":null," +
+                            "\"visibility\":null" +
+                        "}" +
+                    "}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "pipelines", "add", "-n", "sleep_one_minute", "--commit-id", "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2", "https://github.com/pditommaso/nf-sleep");
+
+        assertEquals("", out.stdErr);
+        assertEquals(new PipelinesAdded(USER_WORKSPACE_NAME, "sleep_one_minute").toString(), out.stdOut);
+        assertEquals(0, out.exitCode);
     }
 
     @Test
@@ -802,6 +975,65 @@ class PipelinesCmdTest extends BaseCmdTest {
         );
 
         ExecOut out = exec(mock, "pipelines", "import", tempFile(new String(loadResource("pipelines_add"), StandardCharsets.UTF_8), "data", ".json"), "-n", "pipelineNew", "-c", "demo");
+
+        assertEquals("", out.stdErr);
+        assertEquals(new PipelinesAdded(USER_WORKSPACE_NAME, "pipelineNew").toString(), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testImportWithCommitId(MockServerClient mock) throws IOException {
+
+        mock.reset();
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{" +
+                        "\"computeEnvs\":[{" +
+                            "\"id\":\"isnEDBLvHDAIteOEF44ow\"," +
+                            "\"name\":\"demo\"," +
+                            "\"platform\":\"aws-batch\"," +
+                            "\"status\":\"AVAILABLE\"," +
+                            "\"message\":null," +
+                            "\"lastUsed\":null," +
+                            "\"primary\":null," +
+                            "\"workspaceName\":null," +
+                            "\"visibility\":null" +
+                        "}]" +
+                    "}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/isnEDBLvHDAIteOEF44ow"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_env_view")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/pipelines")
+                        .withBody(json("{" +
+                                "\"name\":\"pipelineNew\"," +
+                                "\"launch\":{" +
+                                    "\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"," +
+                                    "\"pipeline\":\"https://github.com/grananda/nextflow-hello\"," +
+                                    "\"workDir\":\"s3://nextflow-ci/julio\"," +
+                                    "\"revision\":\"main\"," +
+                                    "\"commitId\":\"a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2\"," +
+                                    "\"resume\":false," +
+                                    "\"pullLatest\":false," +
+                                    "\"stubRun\":false" +
+                                "}" +
+                            "}"))
+                        .withContentType(MediaType.APPLICATION_JSON), exactly(1)
+        ).respond(
+                response()
+                        .withStatusCode(200)
+                        .withBody(loadResource("pipelines_add_response"))
+                        .withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "pipelines", "import", tempFile(new String(loadResource("pipelines_add_commit_id"), StandardCharsets.UTF_8), "data", ".json"), "-n", "pipelineNew");
 
         assertEquals("", out.stdErr);
         assertEquals(new PipelinesAdded(USER_WORKSPACE_NAME, "pipelineNew").toString(), out.stdOut);
