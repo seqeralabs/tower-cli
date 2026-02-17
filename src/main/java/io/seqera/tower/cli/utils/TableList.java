@@ -76,7 +76,7 @@ public class TableList {
     }
 
     public TableList sortBy(int column) {
-        return this.compareWith((o1, o2) -> o1[column].compareTo(o2[column]));
+        return this.compareWith(Comparator.comparing(o -> o[column]));
     }
 
     /**
