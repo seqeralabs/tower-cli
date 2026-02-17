@@ -44,14 +44,14 @@ import io.seqera.tower.model.DescribeWorkflowLaunchResponse;
 import io.seqera.tower.model.DescribeWorkflowResponse;
 import io.seqera.tower.model.GetProgressResponse;
 import io.seqera.tower.model.GetWorkflowMetricsResponse;
-import io.seqera.tower.model.Launch;
+import io.seqera.tower.model.LaunchDbDto;
 import io.seqera.tower.model.ListTasksResponse;
 import io.seqera.tower.model.ListWorkflowsResponseListWorkflowsElement;
 import io.seqera.tower.model.ServiceInfo;
 import io.seqera.tower.model.ServiceInfoResponse;
 import io.seqera.tower.model.Task;
-import io.seqera.tower.model.Workflow;
 import io.seqera.tower.model.WorkflowLoad;
+import io.seqera.tower.model.WorkflowMaxDbDto;
 import io.seqera.tower.model.WorkflowMetrics;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -359,7 +359,7 @@ class RunsCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "runs", "view", "-i", "5mDfiUtqyptDib");
 
-        Workflow workflow = parseJson("""
+        WorkflowMaxDbDto workflow = parseJson("""
                 {
                     "id": "5mDfiUtqyptDib",
                     "submit": "2021-09-22T05:45:44Z",
@@ -407,7 +407,7 @@ class RunsCmdTest extends BaseCmdTest {
                     "outFile": null,
                     "operationId": null,
                     "ownerId": 9
-                  }""", Workflow.class);
+                  }""", WorkflowMaxDbDto.class);
 
         WorkflowLoad workflowLoad = parseJson("""
                 {
@@ -705,7 +705,7 @@ class RunsCmdTest extends BaseCmdTest {
 
         // workflow.json
         {
-            Workflow actual = fromJSON(workflowJsonContent.get(), Workflow.class);
+            WorkflowMaxDbDto actual = fromJSON(workflowJsonContent.get(), WorkflowMaxDbDto.class);
             assertEquals(sampleDescribeWorkflow.getWorkflow(), actual);
         }
 
@@ -727,7 +727,7 @@ class RunsCmdTest extends BaseCmdTest {
 
         // workflow-launch.json
         {
-            Launch actual = fromJSON(wfLaunchJsonContent.get(), Launch.class);
+            LaunchDbDto actual = fromJSON(wfLaunchJsonContent.get(), LaunchDbDto.class);
             assertEquals(sampleLaunch.getLaunch(), actual);
         }
 

@@ -23,7 +23,7 @@ import io.seqera.tower.JSON;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.ModelHelper;
 import io.seqera.tower.cli.utils.TableList;
-import io.seqera.tower.model.Launch;
+import io.seqera.tower.model.LaunchDbDto;
 import io.seqera.tower.model.PipelineDbDto;
 import io.seqera.tower.model.WorkflowLaunchRequest;
 
@@ -36,12 +36,12 @@ public class PipelinesView extends Response {
 
     public final String workspaceRef;
     public final PipelineDbDto info;
-    public final Launch launch;
+    public final LaunchDbDto launch;
 
     @JsonIgnore
     private final String baseWorkspaceUrl;
 
-    public PipelinesView(String workspaceRef, PipelineDbDto info, Launch launch, String baseWorkspaceUrl) {
+    public PipelinesView(String workspaceRef, PipelineDbDto info, LaunchDbDto launch, String baseWorkspaceUrl) {
         this.workspaceRef = workspaceRef;
         this.info = info;
         this.launch = launch;

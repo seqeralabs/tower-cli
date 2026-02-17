@@ -3,6 +3,10 @@
   "includes":[{
     "pattern":"\\QMETA-INF/build-info.properties\\E"
   }, {
+    "pattern":"\\QMETA-INF/services/ch.qos.logback.classic.spi.Configurator\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/com.fasterxml.jackson.databind.Module\\E"
+  }, {
     "pattern":"\\QMETA-INF/services/java.lang.System$LoggerFinder\\E"
   }, {
     "pattern":"\\QMETA-INF/services/java.net.spi.InetAddressResolverProvider\\E"
@@ -19,13 +23,21 @@
   }, {
     "pattern":"\\QMETA-INF/services/javax.ws.rs.client.ClientBuilder\\E"
   }, {
+    "pattern":"\\QMETA-INF/services/javax.ws.rs.core.Feature\\E"
+  }, {
     "pattern":"\\QMETA-INF/services/javax.ws.rs.ext.RuntimeDelegate\\E"
   }, {
+    "pattern":"\\QMETA-INF/services/javax.xml.parsers.SAXParserFactory\\E"
+  }, {
     "pattern":"\\QMETA-INF/services/org.glassfish.hk2.extension.ServiceLocatorGenerator\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/org.glassfish.jersey.client.spi.ClientBuilderListener\\E"
   }, {
     "pattern":"\\QMETA-INF/services/org.glassfish.jersey.client.spi.ConnectorProvider\\E"
   }, {
     "pattern":"\\QMETA-INF/services/org.glassfish.jersey.client.spi.DefaultSslContextProvider\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/org.glassfish.jersey.innate.inject.spi.ExternalRegistrables\\E"
   }, {
     "pattern":"\\QMETA-INF/services/org.glassfish.jersey.internal.inject.InjectionManagerFactory\\E"
   }, {
@@ -33,11 +45,19 @@
   }, {
     "pattern":"\\QMETA-INF/services/org.glassfish.jersey.internal.spi.ForcedAutoDiscoverable\\E"
   }, {
+    "pattern":"\\QMETA-INF/services/org.glassfish.jersey.spi.ComponentProvider\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/org.glassfish.jersey.spi.ExternalConfigurationProvider\\E"
+  }, {
     "pattern":"\\QMETA-INF/services/org.glassfish.jersey.spi.HeaderDelegateProvider\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/org.slf4j.spi.SLF4JServiceProvider\\E"
   }, {
     "pattern":"\\Qjersey-multipart-config.properties\\E"
   }, {
     "pattern":"\\Qjndi.properties\\E"
+  }, {
+    "pattern":"\\Qlogback.xml\\E"
   }, {
     "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt67b/nfc.nrm\\E"
   }, {
@@ -58,6 +78,9 @@
     "pattern":"java.base:\\Qsun/text/resources/LineBreakIteratorData\\E"
   }]},
   "bundles":[{
+    "name":"jsv-messages",
+    "locales":["und"]
+  }, {
     "name":"org.glassfish.jersey.client.internal.localization",
     "locales":["und"]
   }, {

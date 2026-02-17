@@ -165,6 +165,12 @@ public abstract class AbstractApiCmd extends AbstractCmd {
             client.setBasePath(app().url);
             client.setBearerToken(app().token);
 
+            // FIXME: Workaround for Platform versions before 26.x returning exit as String. Remove once those versions are phased out (see #578).
+            client.getJSON().getMapper().addMixIn(
+                    io.seqera.tower.model.Task.class,
+                    io.seqera.tower.cli.utils.TaskExitMixin.class
+            );
+
             // Set HTTP Agent header
             Properties props = getCliProperties();
             client.setUserAgent(String.format("tw/%s (%s)", props.get("version"), props.get("platform")));
