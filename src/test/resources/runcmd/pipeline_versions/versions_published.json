@@ -1,0 +1,45 @@
+{
+  "versions" : [
+    {
+      "pipelineId" : 188439584587120,
+      "name" : "TestVersioningInUserWsp",
+      "repository" : "https://github.com/nextflow-io/hello",
+      "userId" : 1,
+      "userName" : "jaime-munoz",
+      "version" : {
+        "id" : "7TnlaOKANkiDIdDqOO2kCs",
+        "creatorUserId" : 1,
+        "creatorUserName" : "jaime-munoz",
+        "creatorFirstName" : null,
+        "creatorLastName" : null,
+        "creatorAvatarUrl" : null,
+        "name" : "TestVersioningInUserWsp-1",
+        "dateCreated" : "2026-02-17T17:43:32Z",
+        "lastUpdated" : "2026-02-17T17:43:32Z",
+        "hash" : "JHY1OjIzYjNmYmVkN2NhZTU4Y2U0NDk1ZjA2MDY4YWRlOTE2MzJlMWFkMjlhY2RkNjY0NDM0MzFlMzY3NGEzNTBmNWMyOTIxMjhhMjNiMDMxMWU2ZjY2MmY4OTQ2OGVjOTRlMGNjMDVkNThkYTc2OGE2ZjVhNDlmY2JhZjY3YjNjYzY1",
+        "isDefault" : true
+      }
+    },
+    {
+      "pipelineId" : 188439584587120,
+      "name" : "TestVersioningInUserWsp",
+      "repository" : "https://github.com/nextflow-io/hello",
+      "userId" : 1,
+      "userName" : "jaime-munoz",
+      "version" : {
+        "id" : "a48GJwfXIUUPIakcwFeue",
+        "creatorUserId" : 1,
+        "creatorUserName" : "jaime-munoz",
+        "creatorFirstName" : null,
+        "creatorLastName" : null,
+        "creatorAvatarUrl" : null,
+        "name" : "TestVersioningInUserWsp-2",
+        "dateCreated" : "2026-02-17T18:27:39Z",
+        "lastUpdated" : "2026-02-17T18:27:39Z",
+        "hash" : "JHY1OjU1MmEyZDEzZDI1MjA1MjJlNzc4MjdkM2M3ZmM2ZjdiMzhhYmMwNWEwZjNjYWM4MjlmYjI3MzU0MjNkNWI5YWQyNWVmYWFjNjQyNjUzNWQ5OGNlOTA5MWY1OTI3Yzg1OTk4MzAyYWM2ZTk1MzNhYzJmMjQzNGJiZTBkNjQ3MTg1",
+        "isDefault" : false
+      }
+    }
+  ],
+  "totalSize" : 2
+}
