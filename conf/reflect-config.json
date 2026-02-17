@@ -2404,6 +2404,15 @@
   "methods":[{"name":"getLabels","parameterTypes":[] }, {"name":"getOrganizationId","parameterTypes":[] }, {"name":"getOrganizationName","parameterTypes":[] }, {"name":"getPipelineId","parameterTypes":[] }, {"name":"getRunUrl","parameterTypes":[] }, {"name":"getUserId","parameterTypes":[] }, {"name":"getWorkspaceId","parameterTypes":[] }, {"name":"getWorkspaceName","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.utils.LenientIntegerDeserializer",
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.utils.TaskExitMixin",
+  "allDeclaredMethods":true
+},
+{
   "name":"io.seqera.tower.cli.utils.VersionProvider",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
