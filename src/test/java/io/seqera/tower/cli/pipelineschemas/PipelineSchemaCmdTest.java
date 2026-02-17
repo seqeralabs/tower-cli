@@ -97,6 +97,6 @@ public class PipelineSchemaCmdTest extends BaseCmdTest {
         ExecOut out = exec(mock, "pipeline-schemas", "add", "-c", "/nonexistent/path/schema.json");
         assertEquals(1, out.exitCode);
         assertEquals("", out.stdOut);
-        assertEquals(errorMessage(out.app, new java.nio.file.NoSuchFileException("/nonexistent/path/schema.json")), out.stdErr);
+        assertEquals(errorMessage(out.app, new java.nio.file.NoSuchFileException(java.nio.file.Path.of("/nonexistent/path/schema.json").toString())), out.stdErr);
     }
 }
