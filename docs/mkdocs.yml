@@ -1,0 +1,127 @@
+site_name: 'Tower CLI command line reference'
+site_author: Seqera Labs
+repo_name: tower-cli
+repo_url: https://github.com/seqeralabs/tower-cli
+
+site_dir: public
+
+plugins:
+  - search
+
+theme:
+  language: en
+  name: material
+  custom_dir: overrides
+  palette:
+    scheme: default
+    primary: white
+  favicon: _favicons/favicon.ico
+  logo: _logos/nf-tower-icon-black.svg
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - search.share
+  font: false
+  icon:
+    admonition:
+      note: fontawesome/solid/sticky-note
+      abstract: fontawesome/solid/book
+      info: fontawesome/solid/info-circle
+      tip: fontawesome/solid/bullhorn
+      success: fontawesome/solid/check
+      question: fontawesome/solid/question-circle
+      warning: fontawesome/solid/exclamation-triangle
+      failure: fontawesome/solid/bomb
+      danger: fontawesome/solid/skull
+      bug: fontawesome/solid/robot
+      example: fontawesome/solid/flask
+      quote: fontawesome/solid/quote-left
+
+extra_css:
+  - stylesheets/fonts.css
+  - stylesheets/overrides.css
+  - stylesheets/extra.css  # 2022-04-01 Added by Graham to get more space above bullets.
+
+
+extra:
+  homepage: /
+  version:
+    provider: mike
+
+markdown_extensions:
+    - toc:
+        permalink: "#"
+    - attr_list
+    - admonition
+    - pymdownx.superfences
+    - pymdownx.highlight:
+        linenums: true
+    - pymdownx.snippets
+    - pymdownx.emoji:
+        emoji_index: !!python/name:materialx.emoji.twemoji
+        emoji_generator: !!python/name:materialx.emoji.to_svg
+
+nav:
+    - 'Home': 'tw.xml.md'
+    - 'Actions':
+      - 'Add':
+        - 'Github': 'tw-actions-add-github.xml.md'
+        - 'Tower': 'tw-actions-add-tower.xml.md'
+    - 'Core Concepts': 'core-concepts/definitions.md'
+    - 'Users & Workspaces':
+      - 'Overview': 'orgs-and-teams/overview.md'
+      - 'Organizations': 'orgs-and-teams/organizations.md'
+      - 'Workspace Management': 'orgs-and-teams/workspace-management.md'
+      - 'Shared Workspaces' : 'orgs-and-teams/shared-workspaces.md'
+    - 'Launching Pipelines':
+      - 'Launchpad': 'launch/launchpad.md'
+      - 'Launch Form': 'launch/launch.md'
+      - 'Advanced Options': 'launch/advanced.md'
+      - 'Relaunch': 'launch/relaunch.md'
+      - 'Notifications': 'launch/notifications.md'
+    - 'Monitoring Pipelines':
+      - 'Overview': 'monitoring/overview.md'
+      - 'Execution details & logs': 'monitoring/execution.md'
+      - 'Summary & status': 'monitoring/summary.md'
+      - 'Processes': 'monitoring/processes.md'
+      - 'Aggregate stats & load': 'monitoring/aggregate_stats.md'
+      - 'Tasks & metrics': 'monitoring/tasks.md'
+      # - 'Sharing pipelines': 'monitoring/sharing.md'
+    - 'Compute Environments':
+      - 'Overview': 'compute-envs/overview.md'
+      - 'AWS Batch': 'compute-envs/aws-batch.md'
+      - 'Azure Batch': 'compute-envs/azure-batch.md'
+      - 'Google Cloud Life Sciences': 'compute-envs/google-cloud.md'
+      - 'Altair Grid Engine': 'compute-envs/altair-grid-engine.md'
+      - 'Altair PBS Pro': 'compute-envs/altair-pbs-pro.md'
+      - 'IBM LSF': 'compute-envs/lsf.md'
+      - 'Slurm': 'compute-envs/slurm.md'
+      - 'Kubernetes': 'compute-envs/k8s.md'
+      - 'Amazon EKS': 'compute-envs/eks.md'
+      - 'Google GKE': 'compute-envs/gke.md'
+    - 'Credentials':
+      - 'Overview': 'credentials/overview.md'
+    - 'Datasets': 'datasets/overview.md'
+    - 'Pipeline Secrets': 'secrets/overview.md'
+    - 'Pipeline Reports': 'reports/overview.md'
+    - 'Git Integration':
+      - 'Overview': 'git/overview.md'
+      - 'Private Git repositories': 'git/private_repositories.md'
+      - 'Public Git repositories': 'git/public_repositories.md'
+    - 'Automation':
+      - 'Pipeline Actions': 'pipeline-actions/pipeline-actions.md'
+    - 'Pipeline Schema': 'pipeline-schema/overview.md'
+    - 'Installation':
+      - 'System deployment': 'installation/system-deployment.md'
+    - 'CLI': 'cli.md'
+    - 'API':
+      - 'Overview': 'api/overview.md'
+      - 'Endpoints': 'api/endpoints.md'
+      - 'OpenAPI schema': 'api/openapi.md'
+    #- 'Functionality Matrix': 'functionality_matrix.md'
+    - 'Frequently asked questions' : faqs.md
+
+copyright: Copyright &copy; 2019 - 2022 Seqera Labs, S.L.
