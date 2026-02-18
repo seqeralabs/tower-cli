@@ -84,6 +84,7 @@
   "pipeline": "https://github.com/pditommaso/nf-sleep",
   "workDir": "s3://nextflow-ci/jordeu",
   "revision": null,
+  "commitId": null,
   "configText": null,
   "paramsText": "timeout: 60\n",
   "preRunScript": null,

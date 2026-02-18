@@ -35,6 +35,7 @@ public class ModelHelper {
                 .pipeline(launch.getPipeline())
                 .workDir(launch.getWorkDir())
                 .revision(launch.getRevision())
+                .commitId(launch.getCommitId())
                 .sessionId(launch.getSessionId())
                 .configProfiles(launch.getConfigProfiles())
                 .userSecrets(launch.getUserSecrets())

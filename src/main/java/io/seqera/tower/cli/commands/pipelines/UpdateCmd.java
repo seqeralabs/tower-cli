@@ -109,6 +109,7 @@ public class UpdateCmd extends AbstractPipelinesCmd {
                         .computeEnvId(ceId)
                         .pipeline(coalesce(pipeline, launch.getPipeline()))
                         .revision(coalesce(opts.revision, launch.getRevision()))
+                        .commitId(opts.commitId)
                         .workDir(coalesce(opts.workDir, launch.getWorkDir()))
                         .configProfiles(coalesce(opts.profile, launch.getConfigProfiles()))
                         .paramsText(coalesce(FilesHelper.readString(opts.paramsFile), launch.getParamsText()))
