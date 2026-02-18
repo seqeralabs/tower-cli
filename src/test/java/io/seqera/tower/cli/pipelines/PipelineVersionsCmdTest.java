@@ -419,7 +419,7 @@ class PipelineVersionsCmdTest extends BaseCmdTest {
         mockManageVersion(mock, "{\"name\":\"new-version-name\"}");
 
         ExecOut out = exec(format, mock, "pipelines", "versions", "update", "-i", PIPELINE_ID.toString(),
-                "--version-id", VERSION_ID_V1, "--version-name", "new-version-name");
+                "--version-id", VERSION_ID_V1, "--new-name", "new-version-name");
 
         assertOutput(format, out, new UpdatePipelineVersionCmdResponse(null, PIPELINE_ID, PIPELINE_NAME, VERSION_ID_V1));
     }
@@ -432,22 +432,7 @@ class PipelineVersionsCmdTest extends BaseCmdTest {
         mockManageVersion(mock, "{\"isDefault\":true}");
 
         ExecOut out = exec(mock, "pipelines", "versions", "update", "-i", PIPELINE_ID.toString(),
-                "--version-id", VERSION_ID_V1, "--set-default", "true");
-
-        assertEquals("", out.stdErr);
-        assertEquals(0, out.exitCode);
-        assertEquals(new UpdatePipelineVersionCmdResponse(null, PIPELINE_ID, PIPELINE_NAME, VERSION_ID_V1).toString(), out.stdOut);
-    }
-
-    @Test
-    void testUpdateVersionUnsetDefault(MockServerClient mock) {
-
-        mock.reset();
-        mockPipelineDescribe(mock);
-        mockManageVersion(mock, "{\"isDefault\":false}");
-
-        ExecOut out = exec(mock, "pipelines", "versions", "update", "-i", PIPELINE_ID.toString(),
-                "--version-id", VERSION_ID_V1, "--set-default", "false");
+                "--version-id", VERSION_ID_V1, "--set-default");
 
         assertEquals("", out.stdErr);
         assertEquals(0, out.exitCode);
@@ -463,7 +448,35 @@ class PipelineVersionsCmdTest extends BaseCmdTest {
         mockManageVersion(mock, "{\"name\":\"renamed-version\"}");
 
         ExecOut out = exec(mock, "pipelines", "versions", "update", "-n", PIPELINE_NAME,
-                "--version-id", VERSION_ID_V1, "--version-name", "renamed-version");
+                "--version-id", VERSION_ID_V1, "--new-name", "renamed-version");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        assertEquals(new UpdatePipelineVersionCmdResponse(null, PIPELINE_ID, PIPELINE_NAME, VERSION_ID_V1).toString(), out.stdOut);
+    }
+
+    @Test
+    void testUpdateVersionByVersionName(MockServerClient mock) {
+
+        mock.reset();
+        mockPipelineDescribe(mock);
+
+        // Mock versions list endpoint for version name resolution
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines/" + PIPELINE_ID + "/versions")
+                        .withQueryStringParameter("search", "TestVersioningInUserWsp-1")
+                        .withQueryStringParameter("isPublished", "true"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+                        .withBody(loadResource("pipeline_versions/versions_published"))
+                        .withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mockManageVersion(mock, "{\"name\":\"renamed\"}");
+
+        ExecOut out = exec(mock, "pipelines", "versions", "update", "-i", PIPELINE_ID.toString(),
+                "--version-name", "TestVersioningInUserWsp-1", "--new-name", "renamed");
 
         assertEquals("", out.stdErr);
         assertEquals(0, out.exitCode);
@@ -487,7 +500,7 @@ class PipelineVersionsCmdTest extends BaseCmdTest {
         );
 
         ExecOut out = exec(mock, "pipelines", "versions", "update", "-i", PIPELINE_ID.toString(),
-                "--version-id", VERSION_ID_V1, "--version-name", "!invalid!");
+                "--version-id", VERSION_ID_V1, "--new-name", "!invalid!");
 
         assertEquals(1, out.exitCode);
         assertEquals("", out.stdOut);
@@ -510,7 +523,7 @@ class PipelineVersionsCmdTest extends BaseCmdTest {
         );
 
         ExecOut out = exec(mock, "pipelines", "versions", "update", "-n", "nonexistent",
-                "--version-id", VERSION_ID_V1, "--version-name", "new-name");
+                "--version-id", VERSION_ID_V1, "--new-name", "new-name");
 
         assertEquals(errorMessage(out.app, new PipelineNotFoundException("\"nonexistent\"", USER_WORKSPACE_NAME)), out.stdErr);
         assertEquals("", out.stdOut);

@@ -24,14 +24,10 @@ import io.seqera.tower.cli.commands.pipelines.PipelineRefOptions;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.pipelines.versions.ViewPipelineVersionCmdResponse;
-import io.seqera.tower.model.ListPipelineVersionsResponse;
 import io.seqera.tower.model.PipelineDbDto;
 import io.seqera.tower.model.PipelineVersionFullInfoDto;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
-
-import java.util.Objects;
-import java.util.function.Predicate;
 
 @Command(
         name = "view",
@@ -45,16 +41,8 @@ public class ViewCmd extends AbstractPipelinesCmd {
     @CommandLine.Mixin
     WorkspaceOptionalOptions workspaceOptions;
 
-    @CommandLine.ArgGroup(multiplicity = "1")
-    public VersionRef versionRef;
-
-    public static class VersionRef {
-        @CommandLine.Option(names = {"--version-id"}, description = "Pipeline version identifier")
-        public String versionId;
-
-        @CommandLine.Option(names = {"--version-name"}, description = "Pipeline version name")
-        public String versionName;
-    }
+    @CommandLine.Mixin
+    VersionRefOptions versionRefOptions;
 
     @Override
     protected Response exec() throws ApiException {
@@ -66,35 +54,13 @@ public class ViewCmd extends AbstractPipelinesCmd {
             throwPipelineNotFoundException(pipelineRefOptions, wspId);
         }
 
-        PipelineVersionFullInfoDto version = findVersionByRef(pipeline.getPipelineId(), wspId, versionRef);
+        PipelineVersionFullInfoDto version = findVersionByRef(pipeline.getPipelineId(), wspId, versionRefOptions.versionRef);
 
         if (version == null) {
-            String ref = versionRef.versionId != null ? versionRef.versionId : versionRef.versionName;
+            String ref = versionRefOptions.versionRef.versionId != null ? versionRefOptions.versionRef.versionId : versionRefOptions.versionRef.versionName;
             throw new TowerException(String.format("Pipeline version '%s' not found", ref));
         }
 
         return new ViewPipelineVersionCmdResponse(workspaceOptions.workspace, pipeline.getPipelineId(), pipeline.getName(), version);
-    }
-
-    private PipelineVersionFullInfoDto findVersionByRef(Long pipelineId, Long wspId, VersionRef ref) throws ApiException {
-        String search = ref.versionName;
-        Boolean isPublished = ref.versionName != null ? true : null;
-        Predicate<PipelineVersionFullInfoDto> matcher = ref.versionId != null
-                ? v -> ref.versionId.equals(v.getId())
-                : v -> ref.versionName.equals(v.getName());
-
-        ListPipelineVersionsResponse response = pipelineVersionsApi()
-                .listPipelineVersions(pipelineId, wspId, null, null, search, isPublished);
-
-        if (response.getVersions() == null) {
-            throw new TowerException("No versions available for the pipeline, check if Pipeline versioning feature is enabled for the workspace");
-        }
-
-        return response.getVersions().stream()
-                .map(PipelineDbDto::getVersion)
-                .filter(Objects::nonNull)
-                .filter(matcher)
-                .findFirst()
-                .orElse(null);
     }
 }

@@ -26,6 +26,7 @@ import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.pipelines.versions.UpdatePipelineVersionCmdResponse;
 import io.seqera.tower.cli.utils.ResponseHelper;
 import io.seqera.tower.model.PipelineDbDto;
+import io.seqera.tower.model.PipelineVersionFullInfoDto;
 import io.seqera.tower.model.PipelineVersionManageRequest;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -42,18 +43,18 @@ public class UpdateCmd extends AbstractPipelinesCmd {
     @CommandLine.Mixin
     WorkspaceOptionalOptions workspaceOptions;
 
-    @CommandLine.Option(names = {"--version-id"}, description = "Pipeline version identifier", required = true)
-    public String versionId;
+    @CommandLine.Mixin
+    VersionRefOptions versionRefOptions;
 
     @CommandLine.ArgGroup(exclusive = false, multiplicity = "1",
             heading = "%nUpdate options (at least one required):%n")
     public UpdateOptions updateOptions;
 
     public static class UpdateOptions {
-        @CommandLine.Option(names = {"--version-name"}, description = "New name for the pipeline version")
+        @CommandLine.Option(names = {"--new-name"}, description = "New name for the pipeline version")
         public String name;
 
-        @CommandLine.Option(names = {"--set-default"}, description = "Set (true) or unset (false) this version as the default", arity = "1")
+        @CommandLine.Option(names = {"--set-default"}, description = "Set this version as the default")
         public Boolean isDefault;
     }
 
@@ -67,6 +68,8 @@ public class UpdateCmd extends AbstractPipelinesCmd {
             throwPipelineNotFoundException(pipelineRefOptions, wspId);
         }
 
+        String resolvedVersionId = resolveVersionId(pipeline.getPipelineId(), wspId);
+
         PipelineVersionManageRequest request = new PipelineVersionManageRequest()
                 .name(updateOptions.name)
                 .isDefault(updateOptions.isDefault);
@@ -74,7 +77,7 @@ public class UpdateCmd extends AbstractPipelinesCmd {
         try {
             pipelineVersionsApi().managePipelineVersion(
                     pipeline.getPipelineId(),
-                    versionId,
+                    resolvedVersionId,
                     request,
                     wspId
             );
@@ -83,10 +86,22 @@ public class UpdateCmd extends AbstractPipelinesCmd {
                 throw new TowerException(String.format("Invalid version name '%s': %s", updateOptions.name, ResponseHelper.decodeMessage(e)));
             }
             throw new TowerException(
-                    String.format("Unable to update pipeline version '%s': %s", versionId, ResponseHelper.decodeMessage(e))
+                    String.format("Unable to update pipeline version '%s': %s", resolvedVersionId, ResponseHelper.decodeMessage(e))
             );
         }
 
-        return new UpdatePipelineVersionCmdResponse(workspaceOptions.workspace, pipeline.getPipelineId(), pipeline.getName(), versionId);
+        return new UpdatePipelineVersionCmdResponse(workspaceOptions.workspace, pipeline.getPipelineId(), pipeline.getName(), resolvedVersionId);
+    }
+
+    private String resolveVersionId(Long pipelineId, Long wspId) throws ApiException {
+        if (versionRefOptions.versionRef.versionId != null) {
+            return versionRefOptions.versionRef.versionId;
+        }
+
+        PipelineVersionFullInfoDto version = findVersionByRef(pipelineId, wspId, versionRefOptions.versionRef);
+        if (version == null) {
+            throw new TowerException(String.format("Pipeline version '%s' not found", versionRefOptions.versionRef.versionName));
+        }
+        return version.getId();
     }
 }
