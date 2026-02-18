@@ -63,6 +63,13 @@ public abstract class AbstractPipelinesCmd extends AbstractApiCmd {
         return pipelinesApi().describePipeline(pipelineId, List.of(attributes), wspId, null).getPipeline();
     }
 
+    protected void throwPipelineNotFoundException(PipelineRefOptions pipelineRefOptions, Long wspId) throws ApiException, PipelineNotFoundException {
+        if (pipelineRefOptions.pipeline.pipelineId != null) {
+            throw new PipelineNotFoundException(pipelineRefOptions.pipeline.pipelineId, workspaceRef(wspId));
+        }
+        throw new PipelineNotFoundException(pipelineRefOptions.pipeline.pipelineName, workspaceRef(wspId));
+    }
+
     private static String quotePipelineName(String pipelineName) {
 
         if (pipelineName == null) return null;

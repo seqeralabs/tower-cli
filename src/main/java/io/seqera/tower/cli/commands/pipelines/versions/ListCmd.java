@@ -96,11 +96,4 @@ public class ListCmd extends AbstractPipelinesCmd {
 
         return new ListPipelineVersionsCmdResponse(workspaceOptions.workspace, pipeline.getPipelineId(), pipeline.getName(), versions, PaginationInfo.from(offset, max), showFullHash);
     }
-
-    private void throwPipelineNotFoundException(PipelineRefOptions pipelineRefOptions, Long wspId) throws ApiException, PipelineNotFoundException {
-        if (pipelineRefOptions.pipeline.pipelineId != null) {
-            throw new PipelineNotFoundException(pipelineRefOptions.pipeline.pipelineId, workspaceRef(wspId));
-        }
-        throw new PipelineNotFoundException(pipelineRefOptions.pipeline.pipelineName, workspaceRef(wspId));
-    }
 }
