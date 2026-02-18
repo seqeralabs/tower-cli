@@ -88,7 +88,7 @@ class PipelinesCmdTest extends BaseCmdTest {
 
         mock.when(
                 request().withMethod("PUT").withPath("/pipelines/217997727159863")
-                        .withBody(json("{\"description\":\"Sleep one minute and exit\",\"name\":\"sleep_one_minute\",\"launch\":{\"computeEnvId\":\"vYOK4vn7spw7bHHWBDXZ2\",\"pipeline\":\"https://github.com/pditommaso/nf-sleep\",\"workDir\":\"s3://nextflow-ci/jordeu\",\"paramsText\":\"timeout: 60\\n\",\"pullLatest\":false,\"stubRun\":false}}")), exactly(1)
+                        .withBody(json("{\"description\":\"Sleep one minute and exit\",\"name\":\"sleep_one_minute\",\"launch\":{\"computeEnvId\":\"vYOK4vn7spw7bHHWBDXZ2\",\"pipeline\":\"https://github.com/pditommaso/nf-sleep\",\"workDir\":\"s3://nextflow-ci/jordeu\",\"paramsText\":\"timeout: 60\\n\",\"pipelineSchemaId\":56789,\"pullLatest\":false,\"stubRun\":false}}")), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"pipeline\":{\"pipelineId\":217997727159863,\"name\":\"sleep_one_minute\",\"description\":\"Sleep one minute and exit\",\"icon\":null,\"repository\":\"https://github.com/pditommaso/nf-sleep\",\"userId\":4,\"userName\":\"jordi\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null}}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -378,7 +378,8 @@ class PipelinesCmdTest extends BaseCmdTest {
                                     "\"computeEnvId\":\"vYOK4vn7spw7bHHWBDXZ2\"," +
                                     "\"pipeline\":\"https://github.com/pditommaso/nf-sleep\"," +
                                     "\"workDir\":\"s3://nextflow-ci/jordeu\"," +
-                                    "\"paramsText\":\"timeout: 60\\n\"" +
+                                    "\"paramsText\":\"timeout: 60\\n\"," +
+                                    "\"pipelineSchemaId\":56789" +
                                 "}" +
                             "}"), exactly(1)
         ).respond(
@@ -402,7 +403,7 @@ class PipelinesCmdTest extends BaseCmdTest {
                     "}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "pipelines", "add", "-n", "sleep_one_minute", "--params-file", tempFile("timeout: 60\n", "params", ".yml"), "https://github.com/pditommaso/nf-sleep");
+        ExecOut out = exec(mock, "pipelines", "add", "-n", "sleep_one_minute", "--params-file", tempFile("timeout: 60\n", "params", ".yml"), "--pipeline-schema-id", "56789", "https://github.com/pditommaso/nf-sleep");
 
         assertEquals("", out.stdErr);
         assertEquals(new PipelinesAdded(USER_WORKSPACE_NAME, "sleep_one_minute").toString(), out.stdOut);

@@ -236,6 +236,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.PipelineSchemasCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.PipelinesCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -562,7 +568,8 @@
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AltairPlatform$AdvancedOptions",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AwsBatchForgePlatform",
@@ -573,7 +580,8 @@
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AwsBatchForgePlatform$AdvancedOptions",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AwsBatchForgePlatform$EfsFileSystem",
@@ -596,7 +604,8 @@
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AwsBatchManualPlatform$AdvancedOptions",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AwsCloudPlatform",
@@ -607,7 +616,8 @@
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AwsCloudPlatform$AdvancedOptions",
   "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AzBatchForgePlatform",
@@ -618,7 +628,8 @@
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AzBatchForgePlatform$AdvancedOptions",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AzBatchManualPlatform",
@@ -641,7 +652,8 @@
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AzCloudPlatform$AdvancedOptions",
   "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.EksPlatform",
@@ -664,7 +676,8 @@
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.GoogleBatchPlatform$AdvancedOptions",
   "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.GoogleCloudPlatform",
@@ -675,7 +688,8 @@
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.GoogleCloudPlatform$AdvancedOptions",
   "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.K8sPlatform",
@@ -698,7 +712,8 @@
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.LsfPlatform$AdvancedOptions",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.MoabPlatform",
@@ -709,7 +724,8 @@
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.MoabPlatform$AdvancedOptions",
   "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.SeqeraComputePlatform",
@@ -726,7 +742,8 @@
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.SlurmPlatform$AdvancedOptions",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.UnivaPlatform",
@@ -737,7 +754,8 @@
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.UnivaPlatform$AdvancedOptions",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true
+  "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.computeenvs.primary.AbstractComputeEnvsPrimaryCmd",
@@ -1366,7 +1384,8 @@
 {
   "name":"io.seqera.tower.cli.commands.organizations.OrganizationRefOptions$OrganizationRef",
   "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.organizations.OrganizationsOptions",
@@ -1490,6 +1509,17 @@
   "name":"io.seqera.tower.cli.commands.pipelines.ViewCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.pipelineschemas.AbstractPipelineSchemasCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
+  "name":"io.seqera.tower.cli.commands.pipelineschemas.AddCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1967,6 +1997,11 @@
   "queryAllDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.cli.responses.data.DataLinkFileTransferResult$FileTransferDirection",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true
+},
+{
   "name":"io.seqera.tower.cli.responses.data.DataLinkFileTransferResult$SimplePathInfo",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -2154,6 +2189,12 @@
 },
 {
   "name":"io.seqera.tower.cli.responses.pipelines.PipelinesView",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.pipelineschemas.PipelineSchemasAdded",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true
@@ -2933,12 +2974,14 @@
 },
 {
   "name":"io.seqera.tower.model.CreatePipelineSchemaRequest",
+  "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"content","parameterTypes":["java.lang.String"] }, {"name":"equals","parameterTypes":["java.lang.Object"] }, {"name":"getContent","parameterTypes":[] }, {"name":"hashCode","parameterTypes":[] }, {"name":"setContent","parameterTypes":["java.lang.String"] }, {"name":"toIndentedString","parameterTypes":["java.lang.Object"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.CreatePipelineSchemaResponse",
+  "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"equals","parameterTypes":["java.lang.Object"] }, {"name":"getPipelineSchema","parameterTypes":[] }, {"name":"hashCode","parameterTypes":[] }, {"name":"pipelineSchema","parameterTypes":["io.seqera.tower.model.PipelineSchemaDbDto"] }, {"name":"setPipelineSchema","parameterTypes":["io.seqera.tower.model.PipelineSchemaDbDto"] }, {"name":"toIndentedString","parameterTypes":["java.lang.Object"] }, {"name":"toString","parameterTypes":[] }]
@@ -4282,6 +4325,7 @@
 },
 {
   "name":"io.seqera.tower.model.PipelineSchemaDbDto",
+  "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"content","parameterTypes":["java.lang.String"] }, {"name":"equals","parameterTypes":["java.lang.Object"] }, {"name":"getContent","parameterTypes":[] }, {"name":"getId","parameterTypes":[] }, {"name":"hashCode","parameterTypes":[] }, {"name":"id","parameterTypes":["java.lang.Long"] }, {"name":"setContent","parameterTypes":["java.lang.String"] }, {"name":"setId","parameterTypes":["java.lang.Long"] }, {"name":"toIndentedString","parameterTypes":["java.lang.Object"] }, {"name":"toString","parameterTypes":[] }]
