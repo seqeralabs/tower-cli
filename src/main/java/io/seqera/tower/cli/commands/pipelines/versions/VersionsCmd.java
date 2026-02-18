@@ -26,6 +26,8 @@ import picocli.CommandLine;
         description = "Manage pipeline versions",
         subcommands = {
                 ListCmd.class,
+                ViewCmd.class,
+                UpdateCmd.class,
         }
 )
 public class VersionsCmd extends AbstractRootCmd {

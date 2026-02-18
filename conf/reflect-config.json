@@ -2177,6 +2177,18 @@
   "queryAllDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.cli.responses.pipelines.versions.PipelineVersionUpdated",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.pipelines.versions.ViewPipelineVersionCmdResponse",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.cli.responses.runs.RunCanceled",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
