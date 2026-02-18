@@ -26,7 +26,6 @@ import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.pipelines.versions.UpdatePipelineVersionCmdResponse;
 import io.seqera.tower.cli.utils.ResponseHelper;
 import io.seqera.tower.model.PipelineDbDto;
-import io.seqera.tower.model.PipelineVersionFullInfoDto;
 import io.seqera.tower.model.PipelineVersionManageRequest;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -68,7 +67,7 @@ public class UpdateCmd extends AbstractPipelinesCmd {
             throwPipelineNotFoundException(pipelineRefOptions, wspId);
         }
 
-        String resolvedVersionId = resolveVersionId(pipeline.getPipelineId(), wspId);
+        String resolvedVersionId = resolvePipelineVersionId(pipeline.getPipelineId(), wspId, versionRefOptions.versionRef);
 
         PipelineVersionManageRequest request = new PipelineVersionManageRequest()
                 .name(updateOptions.name)
@@ -91,17 +90,5 @@ public class UpdateCmd extends AbstractPipelinesCmd {
         }
 
         return new UpdatePipelineVersionCmdResponse(workspaceOptions.workspace, pipeline.getPipelineId(), pipeline.getName(), resolvedVersionId);
-    }
-
-    private String resolveVersionId(Long pipelineId, Long wspId) throws ApiException {
-        if (versionRefOptions.versionRef.versionId != null) {
-            return versionRefOptions.versionRef.versionId;
-        }
-
-        PipelineVersionFullInfoDto version = findVersionByRef(pipelineId, wspId, versionRefOptions.versionRef);
-        if (version == null) {
-            throw new TowerException(String.format("Pipeline version '%s' not found", versionRefOptions.versionRef.versionName));
-        }
-        return version.getId();
     }
 }

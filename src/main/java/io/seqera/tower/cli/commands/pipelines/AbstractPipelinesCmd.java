@@ -19,20 +19,14 @@ package io.seqera.tower.cli.commands.pipelines;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
-import io.seqera.tower.cli.commands.pipelines.versions.VersionRefOptions;
 import io.seqera.tower.cli.exceptions.MultiplePipelinesFoundException;
 import io.seqera.tower.cli.exceptions.PipelineNotFoundException;
-import io.seqera.tower.cli.exceptions.TowerException;
-import io.seqera.tower.model.ListPipelineVersionsResponse;
 import io.seqera.tower.model.ListPipelinesResponse;
 import io.seqera.tower.model.PipelineDbDto;
 import io.seqera.tower.model.PipelineQueryAttribute;
-import io.seqera.tower.model.PipelineVersionFullInfoDto;
 import picocli.CommandLine.Command;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.function.Predicate;
 
 @Command
 public abstract class AbstractPipelinesCmd extends AbstractApiCmd {
@@ -74,28 +68,6 @@ public abstract class AbstractPipelinesCmd extends AbstractApiCmd {
             throw new PipelineNotFoundException(pipelineRefOptions.pipeline.pipelineId, workspaceRef(wspId));
         }
         throw new PipelineNotFoundException(pipelineRefOptions.pipeline.pipelineName, workspaceRef(wspId));
-    }
-
-    protected PipelineVersionFullInfoDto findVersionByRef(Long pipelineId, Long wspId, VersionRefOptions.VersionRef ref) throws ApiException {
-        String search = ref.versionName;
-        Boolean isPublished = ref.versionName != null ? true : null;
-        Predicate<PipelineVersionFullInfoDto> matcher = ref.versionId != null
-                ? v -> ref.versionId.equals(v.getId())
-                : v -> ref.versionName.equals(v.getName());
-
-        ListPipelineVersionsResponse response = pipelineVersionsApi()
-                .listPipelineVersions(pipelineId, wspId, null, null, search, isPublished);
-
-        if (response.getVersions() == null) {
-            throw new TowerException("No versions available for the pipeline, check if Pipeline versioning feature is enabled for the workspace");
-        }
-
-        return response.getVersions().stream()
-                .map(PipelineDbDto::getVersion)
-                .filter(Objects::nonNull)
-                .filter(matcher)
-                .findFirst()
-                .orElse(null);
     }
 
     private static String quotePipelineName(String pipelineName) {

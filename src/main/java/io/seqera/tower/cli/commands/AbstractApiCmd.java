@@ -44,6 +44,7 @@ import io.seqera.tower.api.WorkspacesApi;
 import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.commands.labels.Label;
 import io.seqera.tower.cli.commands.labels.LabelsFinder;
+import io.seqera.tower.cli.commands.pipelines.versions.VersionRefOptions;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
 import io.seqera.tower.cli.exceptions.InvalidWorkspaceParameterException;
 import io.seqera.tower.cli.exceptions.MissingTowerAccessTokenException;
@@ -60,10 +61,12 @@ import io.seqera.tower.model.ComputeEnvResponseDto;
 import io.seqera.tower.model.Credentials;
 import io.seqera.tower.model.DataStudioQueryAttribute;
 import io.seqera.tower.model.ListComputeEnvsResponseEntry;
+import io.seqera.tower.model.ListPipelineVersionsResponse;
 import io.seqera.tower.model.ListWorkspacesAndOrgResponse;
 import io.seqera.tower.model.OrgAndWorkspaceDto;
 import io.seqera.tower.model.PipelineDbDto;
 import io.seqera.tower.model.PipelineQueryAttribute;
+import io.seqera.tower.model.PipelineVersionFullInfoDto;
 import io.seqera.tower.model.UserResponseDto;
 import io.seqera.tower.model.WorkflowQueryAttribute;
 import org.glassfish.jersey.CommonProperties;
@@ -83,6 +86,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.function.Predicate;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -578,6 +582,39 @@ public abstract class AbstractApiCmd extends AbstractCmd {
             return USER_WORKSPACE_NAME;
         }
         return buildWorkspaceRef(orgName(workspaceId), workspaceName(workspaceId));
+    }
+
+    protected PipelineVersionFullInfoDto findPipelineVersionByRef(Long pipelineId, Long wspId, VersionRefOptions.VersionRef ref) throws ApiException {
+        String search = ref.versionName;
+        Boolean isPublished = ref.versionName != null ? true : null;
+        Predicate<PipelineVersionFullInfoDto> matcher = ref.versionId != null
+                ? v -> ref.versionId.equals(v.getId())
+                : v -> ref.versionName.equals(v.getName());
+
+        ListPipelineVersionsResponse response = pipelineVersionsApi()
+                .listPipelineVersions(pipelineId, wspId, null, null, search, isPublished);
+
+        if (response.getVersions() == null) {
+            throw new TowerException("No versions available for the pipeline, check if Pipeline versioning feature is enabled for the workspace");
+        }
+
+        return response.getVersions().stream()
+                .map(PipelineDbDto::getVersion)
+                .filter(Objects::nonNull)
+                .filter(matcher)
+                .findFirst()
+                .orElse(null);
+    }
+
+    protected String resolvePipelineVersionId(Long pipelineId, Long wspId, VersionRefOptions.VersionRef versionRef) throws ApiException {
+        if (versionRef == null) return null;
+        if (versionRef.versionId != null) return versionRef.versionId;
+
+        PipelineVersionFullInfoDto version = findPipelineVersionByRef(pipelineId, wspId, versionRef);
+        if (version == null) {
+            throw new TowerException(String.format("Pipeline version '%s' not found", versionRef.versionName));
+        }
+        return version.getId();
     }
 
     protected Long sourceWorkspaceId(Long currentWorkspace, PipelineDbDto pipeline) {

@@ -54,7 +54,7 @@ public class ViewCmd extends AbstractPipelinesCmd {
             throwPipelineNotFoundException(pipelineRefOptions, wspId);
         }
 
-        PipelineVersionFullInfoDto version = findVersionByRef(pipeline.getPipelineId(), wspId, versionRefOptions.versionRef);
+        PipelineVersionFullInfoDto version = findPipelineVersionByRef(pipeline.getPipelineId(), wspId, versionRefOptions.versionRef);
 
         if (version == null) {
             String ref = versionRefOptions.versionRef.versionId != null ? versionRefOptions.versionRef.versionId : versionRefOptions.versionRef.versionName;
