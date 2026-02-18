@@ -22,6 +22,8 @@ import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.PipelineNotFoundException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.pipelines.versions.ListPipelineVersionsCmdResponse;
+import io.seqera.tower.cli.responses.pipelines.versions.UpdatePipelineVersionCmdResponse;
+import io.seqera.tower.cli.responses.pipelines.versions.ViewPipelineVersionCmdResponse;
 import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.model.PipelineVersionFullInfoDto;
 import org.junit.jupiter.api.Test;
@@ -39,6 +41,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
+import static org.mockserver.model.JsonBody.json;
 
 class PipelineVersionsCmdTest extends BaseCmdTest {
 
@@ -48,6 +51,8 @@ class PipelineVersionsCmdTest extends BaseCmdTest {
     private static final String HASH_V1 = "JHY1OjIzYjNmYmVkN2NhZTU4Y2U0NDk1ZjA2MDY4YWRlOTE2MzJlMWFkMjlhY2RkNjY0NDM0MzFlMzY3NGEzNTBmNWMyOTIxMjhhMjNiMDMxMWU2ZjY2MmY4OTQ2OGVjOTRlMGNjMDVkNThkYTc2OGE2ZjVhNDlmY2JhZjY3YjNjYzY1";
     private static final String HASH_V2 = "JHY1OjU1MmEyZDEzZDI1MjA1MjJlNzc4MjdkM2M3ZmM2ZjdiMzhhYmMwNWEwZjNjYWM4MjlmYjI3MzU0MjNkNWI5YWQyNWVmYWFjNjQyNjUzNWQ5OGNlOTA5MWY1OTI3Yzg1OTk4MzAyYWM2ZTk1MzNhYzJmMjQzNGJiZTBkNjQ3MTg1";
     private static final String HASH_DRAFT = "JHY1OjdlYmZmODY1MzUwMWRmNjJlMDc0YjIwNGY4MTExYTIwNzRmNTU2MzFjZjg4YTA1ODk1ZTAwMTM1NWUzMGQzZjZmOGQ4MGRhMTY5NTFmNTc3NWViMGYwYWYyZDM4NTBiYzZhZTcwODU3YTkyZWIyOGFiNjA2M2I4N2I4MWQ5MTlh";
+
+    private static final String VERSION_ID_V1 = "7TnlaOKANkiDIdDqOO2kCs";
 
     private List<PipelineVersionFullInfoDto> allVersions() {
         return List.of(
@@ -138,6 +143,20 @@ class PipelineVersionsCmdTest extends BaseCmdTest {
                         .withContentType(MediaType.APPLICATION_JSON)
         );
     }
+
+    private void mockManageVersion(MockServerClient mock, String expectedBody) {
+        mock.when(
+                request().withMethod("PUT").withPath("/pipelines/" + PIPELINE_ID + "/versions/" + VERSION_ID_V1 + "/manage")
+                        .withBody(json(expectedBody)),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+    }
+
+    // --- List command tests ---
+    // GET-only: no request body to verify. Path and query parameter matching (search, isPublished, max, offset)
+    // in the mocks below is sufficient to assert the CLI sends the correct parameters to the server.
 
     @ParameterizedTest
     @EnumSource(OutputType.class)
@@ -309,5 +328,192 @@ class PipelineVersionsCmdTest extends BaseCmdTest {
                 null, PIPELINE_ID, PIPELINE_NAME,
                 allVersions(), PaginationInfo.from((Integer) null, (Integer) null), true
         ).toString()), out.stdOut);
+    }
+
+    // --- View command tests ---
+    // GET-only: no request body to verify. Path and query parameter matching (search, isPublished)
+    // in the mocks below is sufficient to assert the CLI sends the correct parameters to the server.
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testViewVersionById(OutputType format, MockServerClient mock) {
+
+        mock.reset();
+        mockPipelineDescribe(mock);
+        mockVersionsList(mock);
+
+        ExecOut out = exec(format, mock, "pipelines", "versions", "view", "-i", PIPELINE_ID.toString(), "--version-id", VERSION_ID_V1);
+
+        assertOutput(format, out, new ViewPipelineVersionCmdResponse(
+                null, PIPELINE_ID, PIPELINE_NAME, allVersions().get(0)
+        ));
+    }
+
+    @Test
+    void testViewVersionByName(MockServerClient mock) {
+
+        mock.reset();
+        mockPipelineSearchByName(mock);
+        mockPipelineDescribe(mock);
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines/" + PIPELINE_ID + "/versions")
+                        .withQueryStringParameter("search", "TestVersioningInUserWsp-2")
+                        .withQueryStringParameter("isPublished", "true"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+                        .withBody(loadResource("pipeline_versions/versions_published"))
+                        .withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "pipelines", "versions", "view", "-n", PIPELINE_NAME, "--version-name", "TestVersioningInUserWsp-2");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        assertEquals(chop(new ViewPipelineVersionCmdResponse(
+                null, PIPELINE_ID, PIPELINE_NAME, publishedVersions().get(1)
+        ).toString()), out.stdOut);
+    }
+
+    @Test
+    void testViewVersionNotFound(MockServerClient mock) {
+
+        mock.reset();
+        mockPipelineDescribe(mock);
+        mockVersionsList(mock);
+
+        ExecOut out = exec(mock, "pipelines", "versions", "view", "-i", PIPELINE_ID.toString(), "--version-id", "nonexistent");
+
+        assertEquals(errorMessage(out.app, new TowerException("Pipeline version 'nonexistent' not found")), out.stdErr);
+        assertEquals("", out.stdOut);
+        assertEquals(1, out.exitCode);
+    }
+
+    @Test
+    void testViewDraftVersionById(MockServerClient mock) {
+
+        mock.reset();
+        mockPipelineDescribe(mock);
+        mockVersionsList(mock);
+
+        ExecOut out = exec(mock, "pipelines", "versions", "view", "-i", PIPELINE_ID.toString(), "--version-id", "7KtabH1PaW1IBPYUdzVcXh");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        assertEquals(chop(new ViewPipelineVersionCmdResponse(
+                null, PIPELINE_ID, PIPELINE_NAME, allVersions().get(2)
+        ).toString()), out.stdOut);
+    }
+
+    // --- Update command tests ---
+    // PUT requests: body verification via json() matcher ensures the CLI serializes the correct
+    // PipelineVersionManageRequest fields (name, isDefault) for each combination of CLI flags.
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testUpdateVersionName(OutputType format, MockServerClient mock) {
+
+        mock.reset();
+        mockPipelineDescribe(mock);
+        mockManageVersion(mock, "{\"name\":\"new-version-name\"}");
+
+        ExecOut out = exec(format, mock, "pipelines", "versions", "update", "-i", PIPELINE_ID.toString(),
+                "--version-id", VERSION_ID_V1, "--version-name", "new-version-name");
+
+        assertOutput(format, out, new UpdatePipelineVersionCmdResponse(null, PIPELINE_ID, PIPELINE_NAME, VERSION_ID_V1));
+    }
+
+    @Test
+    void testUpdateVersionSetDefault(MockServerClient mock) {
+
+        mock.reset();
+        mockPipelineDescribe(mock);
+        mockManageVersion(mock, "{\"isDefault\":true}");
+
+        ExecOut out = exec(mock, "pipelines", "versions", "update", "-i", PIPELINE_ID.toString(),
+                "--version-id", VERSION_ID_V1, "--set-default", "true");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        assertEquals(new UpdatePipelineVersionCmdResponse(null, PIPELINE_ID, PIPELINE_NAME, VERSION_ID_V1).toString(), out.stdOut);
+    }
+
+    @Test
+    void testUpdateVersionUnsetDefault(MockServerClient mock) {
+
+        mock.reset();
+        mockPipelineDescribe(mock);
+        mockManageVersion(mock, "{\"isDefault\":false}");
+
+        ExecOut out = exec(mock, "pipelines", "versions", "update", "-i", PIPELINE_ID.toString(),
+                "--version-id", VERSION_ID_V1, "--set-default", "false");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        assertEquals(new UpdatePipelineVersionCmdResponse(null, PIPELINE_ID, PIPELINE_NAME, VERSION_ID_V1).toString(), out.stdOut);
+    }
+
+    @Test
+    void testUpdateVersionByPipelineName(MockServerClient mock) {
+
+        mock.reset();
+        mockPipelineSearchByName(mock);
+        mockPipelineDescribe(mock);
+        mockManageVersion(mock, "{\"name\":\"renamed-version\"}");
+
+        ExecOut out = exec(mock, "pipelines", "versions", "update", "-n", PIPELINE_NAME,
+                "--version-id", VERSION_ID_V1, "--version-name", "renamed-version");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        assertEquals(new UpdatePipelineVersionCmdResponse(null, PIPELINE_ID, PIPELINE_NAME, VERSION_ID_V1).toString(), out.stdOut);
+    }
+
+    @Test
+    void testUpdateVersionInvalidName(MockServerClient mock) {
+
+        mock.reset();
+        mockPipelineDescribe(mock);
+
+        mock.when(
+                request().withMethod("PUT").withPath("/pipelines/" + PIPELINE_ID + "/versions/" + VERSION_ID_V1 + "/manage")
+                        .withBody(json("{\"name\":\"!invalid!\"}")),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(400)
+                        .withBody("{\"message\":\"Invalid pipeline version name: must match pattern [a-zA-Z\\\\d][-._a-zA-Z\\\\d]{1,108}\"}")
+                        .withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "pipelines", "versions", "update", "-i", PIPELINE_ID.toString(),
+                "--version-id", VERSION_ID_V1, "--version-name", "!invalid!");
+
+        assertEquals(1, out.exitCode);
+        assertEquals("", out.stdOut);
+    }
+
+    @Test
+    void testUpdateVersionPipelineNotFound(MockServerClient mock) {
+
+        mock.reset();
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines")
+                        .withQueryStringParameter("search", "\"nonexistent\"")
+                        .withQueryStringParameter("visibility", "all"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+                        .withBody("{\"pipelines\":[],\"totalSize\":0}")
+                        .withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "pipelines", "versions", "update", "-n", "nonexistent",
+                "--version-id", VERSION_ID_V1, "--version-name", "new-name");
+
+        assertEquals(errorMessage(out.app, new PipelineNotFoundException("\"nonexistent\"", USER_WORKSPACE_NAME)), out.stdErr);
+        assertEquals("", out.stdOut);
+        assertEquals(1, out.exitCode);
     }
 }
