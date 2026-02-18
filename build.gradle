@@ -120,6 +120,15 @@ tasks.register('runReflectionConfigGenerator', JavaExec) {
     jvmArgs = ["-agentlib:native-image-agent=access-filter-file=conf/access-filter-file.json,config-merge-dir=conf/"]
 }
 
+task extractCliMetadata(type: JavaExec) {
+    group = 'documentation'
+    description = 'Extract CLI metadata using Java reflection (deterministic, includes resolved mixins)'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'io.seqera.tower.cli.utils.metadata.CliMetadataExtractor'
+    args = [file('docs/cli-metadata.json').absolutePath]
+    dependsOn classes
+}
+
 shadowJar {
     archiveBaseName.set('tw')
     archiveClassifier.set('')
