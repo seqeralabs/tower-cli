@@ -378,8 +378,8 @@ class PipelinesCmdTest extends BaseCmdTest {
                                     "\"computeEnvId\":\"vYOK4vn7spw7bHHWBDXZ2\"," +
                                     "\"pipeline\":\"https://github.com/pditommaso/nf-sleep\"," +
                                     "\"workDir\":\"s3://nextflow-ci/jordeu\"," +
-                                    "\"paramsText\":\"timeout: 60\\n\"" +
-                                    "\"pipelineSchemaId\":56789\"" +
+                                    "\"paramsText\":\"timeout: 60\\n\"," +
+                                    "\"pipelineSchemaId\":56789" +
                                 "}" +
                             "}"), exactly(1)
         ).respond(
