@@ -20,11 +20,13 @@ package io.seqera.tower.cli.commands.pipelines;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.commands.pipelines.versions.VersionRefOptions;
+import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.pipelines.PipelinesView;
 import io.seqera.tower.model.LaunchDbDto;
 import io.seqera.tower.model.PipelineDbDto;
 import io.seqera.tower.model.PipelineQueryAttribute;
+import io.seqera.tower.model.PipelineVersionFullInfoDto;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
@@ -49,8 +51,22 @@ public class ViewCmd extends AbstractPipelinesCmd {
         Long wspId = workspaceId(workspace.workspace);
         PipelineDbDto pipeline = fetchPipeline(pipelineRefOptions, wspId, PipelineQueryAttribute.labels);
         Long sourceWorkspaceId = sourceWorkspaceId(wspId, pipeline);
-        String versionId = resolvePipelineVersionId(pipeline.getPipelineId(), wspId, versionRef);
+
+        PipelineVersionFullInfoDto version = null;
+        String versionId = null;
+        if (versionRef != null) {
+            version = findPipelineVersionByRef(pipeline.getPipelineId(), wspId, versionRef);
+            if (version != null) {
+                versionId = version.getId();
+            } else if (versionRef.versionId != null) {
+                // Pass the ID through even if not found in the list (let the API handle it)
+                versionId = versionRef.versionId;
+            } else {
+                throw new TowerException(String.format("Pipeline version '%s' not found", versionRef.versionName));
+            }
+        }
+
         LaunchDbDto launch = pipelinesApi().describePipelineLaunch(pipeline.getPipelineId(), wspId, sourceWorkspaceId, versionId).getLaunch();
-        return new PipelinesView(workspaceRef(wspId), pipeline, launch, baseWorkspaceUrl(wspId));
+        return new PipelinesView(workspaceRef(wspId), pipeline, launch, version, baseWorkspaceUrl(wspId));
     }
 }
