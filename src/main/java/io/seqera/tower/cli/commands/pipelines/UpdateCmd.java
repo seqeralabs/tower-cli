@@ -19,13 +19,16 @@ package io.seqera.tower.cli.commands.pipelines;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
+import io.seqera.tower.cli.commands.pipelines.versions.VersionRefOptions;
 import io.seqera.tower.cli.exceptions.InvalidResponseException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.pipelines.PipelinesUpdated;
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.LaunchDbDto;
 import io.seqera.tower.model.PipelineDbDto;
+import io.seqera.tower.model.PipelineVersionFullInfoDto;
 import io.seqera.tower.model.UpdatePipelineRequest;
+import io.seqera.tower.model.UpdatePipelineResponse;
 import io.seqera.tower.model.WorkflowLaunchRequest;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -62,6 +65,10 @@ public class UpdateCmd extends AbstractPipelinesCmd {
     @Option(names = {"--pipeline"}, description = "Nextflow pipeline URL")
     public String pipeline;
 
+    // Explicit "0..1" for clarity — contrasts with the required "1" in VersionRefOptions. @Mixin won't work here as it would lose mutual exclusivity.
+    @CommandLine.ArgGroup(multiplicity = "0..1")
+    public VersionRefOptions.VersionRef versionRef;
+
     @Override
     protected Response exec() throws ApiException, IOException {
 
@@ -86,8 +93,9 @@ public class UpdateCmd extends AbstractPipelinesCmd {
             }
         }
 
+        String versionId = resolvePipelineVersionId(pipe.getPipelineId(), wspId, versionRef);
         Long sourceWorkspaceId = sourceWorkspaceId(wspId, pipe);
-        LaunchDbDto launch = pipelinesApi().describePipelineLaunch(id, wspId, sourceWorkspaceId, null).getLaunch();
+        LaunchDbDto launch = pipelinesApi().describePipelineLaunch(id, wspId, sourceWorkspaceId, versionId).getLaunch();
         // Retrieve the provided computeEnv or use the primary if not provided
         String ceId = null;
         if (opts.computeEnv != null) {
@@ -124,8 +132,39 @@ public class UpdateCmd extends AbstractPipelinesCmd {
                         .workspaceSecrets(coalesce(removeEmptyValues(opts.workspaceSecrets), launch.getWorkspaceSecrets()))
                 );
 
-        pipelinesApi().updatePipeline(pipe.getPipelineId(), updateReq, wspId);
+        // NOTE: The server automatically creates a new draft version when versionable fields change.
+        // Non-versionable fields are updated in place.
+        // The (Web) frontend detects versionable changes client-side and opens a modal to let the
+        // user publish the draft with a name. For the CLI, we must manage the draft version afterward.
 
-        return new PipelinesUpdated(workspaceRef(wspId), pipe.getName());
+        UpdatePipelineResponse response;
+        if (versionId != null) {
+            response = pipelineVersionsApi().updatePipelineVersion(pipe.getPipelineId(), versionId, updateReq, wspId);
+        } else {
+            response = pipelinesApi().updatePipeline(pipe.getPipelineId(), updateReq, wspId);
+        }
+
+        String draftVersionId = detectNewDraftVersionId(response, versionId);
+        return new PipelinesUpdated(workspaceRef(wspId), pipe.getName(), draftVersionId);
+    }
+
+    /**
+     * Detects if the server auto-created a new draft version because versionable fields changed.
+     * A draft version has no name and its ID differs from the version we targeted.
+     */
+    private String detectNewDraftVersionId(UpdatePipelineResponse response, String requestedVersionId) {
+        if (response == null || response.getPipeline() == null) {
+            return null;
+        }
+        PipelineVersionFullInfoDto version = response.getPipeline().getVersion();
+        if (version == null) {
+            return null;
+        }
+        boolean isDraft = version.getName() == null;
+        boolean isDifferentVersion = !version.getId().equals(requestedVersionId);
+        if (isDraft && isDifferentVersion) {
+            return version.getId();
+        }
+        return null;
     }
 }
