@@ -23,6 +23,7 @@ package io.seqera.tower.cli;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.InvalidResponseException;
+import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.runs.RunSubmited;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -587,6 +588,165 @@ class LaunchCmdTest extends BaseCmdTest {
 
         // Assert results
         assertOutput(format, out, new RunSubmited("35aLiS0bIM5efd", null, baseUserUrl(mock, "jordi"), USER_WORKSPACE_NAME));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testSubmitLaunchpadPipelineWithVersionId(OutputType format, MockServerClient mock) {
+
+        // Create server expectation
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("pipelines_sarek")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines/250911634275687/launch")
+                        .withQueryStringParameter("versionId", "ver789"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("pipeline_launch_describe")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/workflow/launch")
+                        .withBody(json("""
+                            {
+                                "launch":{
+                                    "id":"5nmCvXcarkvv8tELMF4KyY",
+                                    "computeEnvId":"4X7YrYJp9B1d1DUpfur7DS",
+                                    "pipeline":"https://github.com/nf-core/sarek",
+                                    "workDir":"/efs",
+                                    "pullLatest":false,
+                                    "stubRun":false,
+                                    "optimizationId": "rOYdwTnmTaRCJjUq",
+                                    "optimizationTargets": "cpus, memory"
+                                }
+                            }"""
+                        )),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workflow_launch")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // Run the command
+        ExecOut out = exec(format, mock, "launch", "sarek", "--version-id", "ver789");
+
+        // Assert results
+        assertOutput(format, out, new RunSubmited("35aLiS0bIM5efd", null, baseUserUrl(mock, "jordi"), USER_WORKSPACE_NAME));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testSubmitLaunchpadPipelineWithVersionName(OutputType format, MockServerClient mock) {
+
+        // Create server expectation
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("pipelines_sarek")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // Mock version name resolution via versions list
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines/250911634275687/versions")
+                        .withQueryStringParameter("search", "release-1.0")
+                        .withQueryStringParameter("isPublished", "true"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("""
+                        {
+                            "versions": [{
+                                "pipelineId": 250911634275687,
+                                "name": "sarek",
+                                "repository": "https://github.com/nf-core/sarek",
+                                "userId": 1,
+                                "userName": "user",
+                                "version": {
+                                    "id": "resolvedVerId",
+                                    "name": "release-1.0",
+                                    "dateCreated": "2023-05-15T13:59:19Z",
+                                    "lastUpdated": "2023-05-15T13:59:19Z",
+                                    "isDefault": false
+                                }
+                            }],
+                            "totalSize": 1
+                        }""").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines/250911634275687/launch")
+                        .withQueryStringParameter("versionId", "resolvedVerId"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("pipeline_launch_describe")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/workflow/launch")
+                        .withBody(json("""
+                            {
+                                "launch":{
+                                    "id":"5nmCvXcarkvv8tELMF4KyY",
+                                    "computeEnvId":"4X7YrYJp9B1d1DUpfur7DS",
+                                    "pipeline":"https://github.com/nf-core/sarek",
+                                    "workDir":"/efs",
+                                    "pullLatest":false,
+                                    "stubRun":false,
+                                    "optimizationId": "rOYdwTnmTaRCJjUq",
+                                    "optimizationTargets": "cpus, memory"
+                                }
+                            }"""
+                        )),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workflow_launch")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // Run the command
+        ExecOut out = exec(format, mock, "launch", "sarek", "--version-name", "release-1.0");
+
+        // Assert results
+        assertOutput(format, out, new RunSubmited("35aLiS0bIM5efd", null, baseUserUrl(mock, "jordi"), USER_WORKSPACE_NAME));
+    }
+
+    @Test
+    void testSubmitLaunchpadPipelineWithVersionNameNotFound(MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("pipelines_sarek")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // Version name resolution returns no matching versions
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines/250911634275687/versions")
+                        .withQueryStringParameter("search", "nonexistent")
+                        .withQueryStringParameter("isPublished", "true"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("""
+                        {
+                            "versions": [],
+                            "totalSize": 0
+                        }""").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "launch", "sarek", "--version-name", "nonexistent");
+
+        assertEquals(errorMessage(out.app, new TowerException("Pipeline version 'nonexistent' not found")), out.stdErr);
+        assertEquals("", out.stdOut);
+        assertEquals(1, out.exitCode);
     }
 
 }
