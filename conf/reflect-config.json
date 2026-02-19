@@ -1451,12 +1451,6 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.pipelines.labels.LabelsCmd",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"io.seqera.tower.cli.commands.pipelines.LaunchOptions",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1490,6 +1484,12 @@
   "name":"io.seqera.tower.cli.commands.pipelines.ViewCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.pipelines.labels.LabelsCmd",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2219,7 +2219,7 @@
   "queryAllDeclaredConstructors":true
 },
 {
-  "name":"io.seqera.tower.cli.responses.pipelines.versions.PipelineVersionUpdated",
+  "name":"io.seqera.tower.cli.responses.pipelines.versions.UpdatePipelineVersionCmdResponse",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true
