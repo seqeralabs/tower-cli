@@ -26,9 +26,12 @@ import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.pipelines.PipelinesExport;
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.cli.utils.ModelHelper;
+import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.model.CreatePipelineRequest;
+import io.seqera.tower.model.CreatePipelineVersionRequest;
 import io.seqera.tower.model.LaunchDbDto;
 import io.seqera.tower.model.PipelineDbDto;
+import io.seqera.tower.model.PipelineVersionFullInfoDto;
 import io.seqera.tower.model.WorkflowLaunchRequest;
 import picocli.CommandLine;
 
@@ -56,7 +59,20 @@ public class ExportCmd extends AbstractPipelinesCmd {
         Long wspId = workspaceId(workspace.workspace);
         PipelineDbDto pipeline = fetchPipeline(pipelineRefOptions, wspId);
         Long sourceWorkspaceId = sourceWorkspaceId(wspId, pipeline);
-        String versionId = resolvePipelineVersionId(pipeline.getPipelineId(), wspId, versionRef);
+
+        PipelineVersionFullInfoDto version = null;
+        String versionId = null;
+        if (versionRef != null) {
+            version = findPipelineVersionByRef(pipeline.getPipelineId(), wspId, versionRef);
+            if (version != null) {
+                versionId = version.getId();
+            } else if (versionRef.versionId != null) {
+                versionId = versionRef.versionId;
+            } else {
+                throw new TowerException(String.format("Pipeline version '%s' not found", versionRef.versionName));
+            }
+        }
+
         LaunchDbDto launch = pipelinesApi().describePipelineLaunch(pipeline.getPipelineId(), wspId, sourceWorkspaceId, versionId).getLaunch();
 
         WorkflowLaunchRequest workflowLaunchRequest = ModelHelper.createLaunchRequest(launch);
@@ -65,6 +81,9 @@ public class ExportCmd extends AbstractPipelinesCmd {
         createPipelineRequest.setDescription(pipeline.getDescription());
         createPipelineRequest.setIcon(pipeline.getIcon());
         createPipelineRequest.setLaunch(workflowLaunchRequest);
+        if (version != null && version.getName() != null) {
+            createPipelineRequest.setVersion(new CreatePipelineVersionRequest().name(version.getName()));
+        }
 
         String configOutput = "";
 
