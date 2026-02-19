@@ -62,6 +62,7 @@ import static io.seqera.tower.cli.commands.AbstractApiCmd.buildWorkspaceRef;
 import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
 import static org.apache.commons.lang3.StringUtils.chop;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
@@ -1746,6 +1747,28 @@ class PipelinesCmdTest extends BaseCmdTest {
                         }""").withContentType(MediaType.APPLICATION_JSON)
         );
 
+        // Mock version resolution via versions list (findPipelineVersionByRef)
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines/213164477645856/versions"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("""
+                        {
+                            "versions": [{
+                                "pipelineId": 213164477645856,
+                                "name": "sleep_one_minute",
+                                "version": {
+                                    "id": "7TnlaOKANkiDIdDqOO2kCs",
+                                    "name": "v1.0",
+                                    "hash": "abc123hash",
+                                    "dateCreated": "2023-05-15T13:59:19Z",
+                                    "lastUpdated": "2023-05-15T13:59:19Z",
+                                    "isDefault": true
+                                }
+                            }],
+                            "totalSize": 1
+                        }""").withContentType(MediaType.APPLICATION_JSON)
+        );
+
         mock.when(
                 request().withMethod("GET").withPath("/pipelines/213164477645856/launch")
                         .withQueryStringParameter("versionId", "7TnlaOKANkiDIdDqOO2kCs"), exactly(1)
@@ -1786,6 +1809,10 @@ class PipelinesCmdTest extends BaseCmdTest {
 
         assertEquals("", out.stdErr);
         assertEquals(0, out.exitCode);
+        assertTrue(out.stdOut.contains("Version Name"), "Output should contain version name row");
+        assertTrue(out.stdOut.contains("v1.0"), "Output should contain version name value");
+        assertTrue(out.stdOut.contains("Version Is Default"), "Output should contain version default row");
+        assertTrue(out.stdOut.contains("abc123hash"), "Output should contain version hash");
     }
 
     @Test
@@ -1845,6 +1872,7 @@ class PipelinesCmdTest extends BaseCmdTest {
                                 "version": {
                                     "id": "7TnlaOKANkiDIdDqOO2kCs",
                                     "name": "v1.0",
+                                    "hash": "def456hash",
                                     "dateCreated": "2023-05-15T13:59:19Z",
                                     "lastUpdated": "2023-05-15T13:59:19Z",
                                     "isDefault": true
@@ -1894,6 +1922,9 @@ class PipelinesCmdTest extends BaseCmdTest {
 
         assertEquals("", out.stdErr);
         assertEquals(0, out.exitCode);
+        assertTrue(out.stdOut.contains("Version Name"), "Output should contain version name row");
+        assertTrue(out.stdOut.contains("v1.0"), "Output should contain version name value");
+        assertTrue(out.stdOut.contains("def456hash"), "Output should contain version hash");
     }
 
     @Test
@@ -1976,6 +2007,28 @@ class PipelinesCmdTest extends BaseCmdTest {
                                 }""")
         );
 
+        // Mock version resolution via versions list (findPipelineVersionByRef)
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines/183522618315672/versions"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("""
+                        {
+                            "versions": [{
+                                "pipelineId": 183522618315672,
+                                "name": "sleep_one_minute",
+                                "version": {
+                                    "id": "abc123",
+                                    "name": "v1.0",
+                                    "hash": "exporthash",
+                                    "dateCreated": "2023-05-15T13:59:19Z",
+                                    "lastUpdated": "2023-05-15T13:59:19Z",
+                                    "isDefault": true
+                                }
+                            }],
+                            "totalSize": 1
+                        }""").withContentType(MediaType.APPLICATION_JSON)
+        );
+
         mock.when(
                 request().withMethod("GET").withPath("/pipelines/183522618315672/launch")
                         .withQueryStringParameter("versionId", "abc123"), exactly(1)
@@ -1987,6 +2040,8 @@ class PipelinesCmdTest extends BaseCmdTest {
 
         assertEquals("", out.stdErr);
         assertEquals(0, out.exitCode);
+        assertTrue(out.stdOut.contains("\"version\""), "Exported JSON should contain version field");
+        assertTrue(out.stdOut.contains("\"v1.0\""), "Exported JSON should contain version name");
     }
 
     @Test
