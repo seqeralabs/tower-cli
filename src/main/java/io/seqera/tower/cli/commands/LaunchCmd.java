@@ -21,6 +21,7 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.commands.labels.Label;
+import io.seqera.tower.cli.commands.pipelines.versions.VersionRefOptions;
 import io.seqera.tower.cli.exceptions.InvalidResponseException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.runs.RunSubmited;
@@ -82,6 +83,10 @@ public class LaunchCmd extends AbstractRootCmd {
 
     @Option(names = {"--commit-id"}, description = "Specific Git commit hash to pin the pipeline execution to.")
     String commitId;
+
+    // Explicit "0..1" for clarity — contrasts with the required "1" in VersionRefOptions. @Mixin won't work here as it would lose mutual exclusivity.
+    @ArgGroup(multiplicity = "0..1")
+    VersionRefOptions.VersionRef versionRef;
 
     @Option(names = {"--wait"}, description = "Wait until workflow reaches specified status: ${COMPLETION-CANDIDATES}")
     public WorkflowStatus wait;
@@ -178,8 +183,9 @@ public class LaunchCmd extends AbstractRootCmd {
         }
 
         Long sourceWorkspaceId = sourceWorkspaceId(wspId, pipe);
+        String versionId = resolvePipelineVersionId(pipe.getPipelineId(), wspId, versionRef);
 
-        LaunchDbDto launch = pipelinesApi().describePipelineLaunch(pipe.getPipelineId(), wspId, sourceWorkspaceId, null).getLaunch();
+        LaunchDbDto launch = pipelinesApi().describePipelineLaunch(pipe.getPipelineId(), wspId, sourceWorkspaceId, versionId).getLaunch();
 
         WorkflowLaunchRequest launchRequest = createLaunchRequest(launch);
         if (computeEnv != null) {
