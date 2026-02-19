@@ -1451,7 +1451,7 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.pipelines.LabelsCmd",
+  "name":"io.seqera.tower.cli.commands.pipelines.labels.LabelsCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]

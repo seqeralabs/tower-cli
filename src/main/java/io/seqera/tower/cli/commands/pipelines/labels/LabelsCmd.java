@@ -15,10 +15,12 @@
  *
  */
 
-package io.seqera.tower.cli.commands.pipelines;
+package io.seqera.tower.cli.commands.pipelines.labels;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.labels.LabelsSubcmdOptions;
+import io.seqera.tower.cli.commands.pipelines.AbstractPipelinesCmd;
+import io.seqera.tower.cli.commands.pipelines.PipelineRefOptions;
 import io.seqera.tower.cli.responses.Response;
 import picocli.CommandLine;
 

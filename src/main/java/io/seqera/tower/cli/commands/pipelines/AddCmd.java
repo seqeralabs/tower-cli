@@ -20,6 +20,7 @@ package io.seqera.tower.cli.commands.pipelines;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.commands.labels.LabelsOptionalOptions;
+import io.seqera.tower.cli.commands.pipelines.labels.PipelinesLabelsManager;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.pipelines.PipelinesAdded;
