@@ -93,6 +93,7 @@
     "mainScript": null,
     "entryName": null,
     "schemaName": null,
+    "pipelineSchemaId": 56789,
     "resume": false,
     "pullLatest": false,
     "stubRun": false,

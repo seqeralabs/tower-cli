@@ -1,0 +1,6 @@
+{
+  "pipelineSchema": {
+    "id": 98765,
+    "content": "{\"type\":\"object\",\"properties\":{\"input\":{\"type\":\"string\"}}}"
+  }
+}

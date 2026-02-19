@@ -26,11 +26,13 @@ import java.lang.reflect.*;
 
 /**
  * The GraalVM reflection metadata generation relies on code paths being executed with the tracing agent
- * to dynamically capture various execution paths and update the reflect-config.json.
+ * to dynamically capture various execution paths and update the `reflect-config.json`.
  * <a href="https://www.graalvm.org/jdk21/reference-manual/native-image/metadata/AutomaticMetadataCollection/#tracing-agent">...</a>
  *
- * This is a utility class that uses reflection to make calls to all classes in the Tower SDK model package,
- * in order to capture methods reflection metadata of any new fields/classes in Tower SDK.
+ * This is a utility class that uses reflection to make calls to constructor and methods of all classes in the Tower SDK model package,
+ * in order to capture reflection metadata of any new fields/classes in Tower SDK.
+ * Some constructors or methods may not be captured as their execution will fail due to unmet pre-conditions (e.g. non-nullable arguments).
+ *
  * Execute this class with the GraalVM tracing agent (see Gradle task 'runReflectionConfigGenerator').
  *
  */
