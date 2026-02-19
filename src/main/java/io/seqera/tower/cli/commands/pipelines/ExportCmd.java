@@ -21,6 +21,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.JSON;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
+import io.seqera.tower.cli.commands.pipelines.versions.VersionRefOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.pipelines.PipelinesExport;
 import io.seqera.tower.cli.utils.FilesHelper;
@@ -43,6 +44,10 @@ public class ExportCmd extends AbstractPipelinesCmd {
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
+    // Explicit "0..1" for clarity — contrasts with the required "1" in VersionRefOptions. @Mixin won't work here as it would lose mutual exclusivity.
+    @CommandLine.ArgGroup(multiplicity = "0..1")
+    public VersionRefOptions.VersionRef versionRef;
+
     @CommandLine.Parameters(index = "0", paramLabel = "FILENAME", description = "File name to export", arity = "0..1")
     String fileName = null;
 
@@ -51,7 +56,8 @@ public class ExportCmd extends AbstractPipelinesCmd {
         Long wspId = workspaceId(workspace.workspace);
         PipelineDbDto pipeline = fetchPipeline(pipelineRefOptions, wspId);
         Long sourceWorkspaceId = sourceWorkspaceId(wspId, pipeline);
-        LaunchDbDto launch = pipelinesApi().describePipelineLaunch(pipeline.getPipelineId(), wspId, sourceWorkspaceId, null).getLaunch();
+        String versionId = resolvePipelineVersionId(pipeline.getPipelineId(), wspId, versionRef);
+        LaunchDbDto launch = pipelinesApi().describePipelineLaunch(pipeline.getPipelineId(), wspId, sourceWorkspaceId, versionId).getLaunch();
 
         WorkflowLaunchRequest workflowLaunchRequest = ModelHelper.createLaunchRequest(launch);
 
