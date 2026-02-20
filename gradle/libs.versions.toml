@@ -2,7 +2,7 @@
 classgraphVersion = "4.8.180"
 commonsCompressVersion = "1.28.0"
 commonsIoVersion = "2.21.0"
-graalvmNativeVersion = "0.11.1"
+graalvmNativeVersion = "0.10.6"
 jakartaAnnotationVersion = "3.0.0"
 javaxAnnotationVersion = "1.3.2"
 jerseyVersion = "2.47"
