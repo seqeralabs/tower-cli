@@ -65,74 +65,13 @@ license {
     exclude 'conf/**'
 }
 
-task buildInfo {
-    doLast {
-        def version = rootProject.file('VERSION').text.trim()
-        def versionApi = rootProject.file('VERSION-API').readLines().get(0).trim()
-        def commitId = System.env.getOrDefault("GITHUB_SHA", "unknown").substring(0,7)
-        def platform = System.env.getOrDefault("PLATFORM", "java")
-        def info = """\
-                    version=${version}
-                    versionApi=${versionApi}
-                    commitId=${commitId}
-                    platform=${platform}
-                """.stripIndent().toString()
-        def f = file("src/main/resources/META-INF/build-info.properties")
-        f.parentFile.mkdirs()
-        f.text = info
-    }
+application {
+    mainClass.set('io.seqera.tower.cli.Tower')
 }
 
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
-    }
-}
-
-compileJava {
-    sourceCompatibility = JavaVersion.toVersion("11")
-    targetCompatibility = JavaVersion.toVersion("11")
-    options.compilerArgs += ["-Aproject=${project.name}"]
-    dependsOn buildInfo
-}
-
-application {
-    mainClass.set('io.seqera.tower.cli.Tower')
-}
-
-run {
-    // Pass CLI arguments via: `./gradlew run --args='arg1 arg2'`, or via: `./gradlew run -Pargs='arg1 arg2'`
-    if (project.hasProperty('args')) {
-        args project.args.split('\\s+')
-    }
-
-    // Run with GraalVM Tracing Agent enabled
-    if (System.getProperty('tracing-agent')?.toBoolean()) {
-        jvmArgs = ["-agentlib:native-image-agent=access-filter-file=conf/access-filter-file.json,config-merge-dir=conf/"]
-    }
-}
-
-tasks.register('runReflectionConfigGenerator', JavaExec) {
-    group = 'build'
-    description = 'Run ReflectionConfigGenerator for Tower SDK with native-image-agent'
-    classpath = sourceSets.main.runtimeClasspath
-    mainClass = 'io.seqera.tower.cli.utils.config.ReflectionConfigGenerator'
-    jvmArgs = ["-agentlib:native-image-agent=access-filter-file=conf/access-filter-file.json,config-merge-dir=conf/"]
-}
-
-shadowJar {
-    archiveBaseName.set('tw')
-    archiveClassifier.set('')
-    archiveVersion.set('')
-}
-
-test {
-    // Use junit platform for unit tests
-    useJUnitPlatform()
-    dependsOn checkLicenses
-    // Run tests with GraalVM Tracing Agent enabled
-    if (System.getProperty('tracing-agent')?.toBoolean()) {
-        jvmArgs = ["-agentlib:native-image-agent=access-filter-file=conf/access-filter-file.json,config-merge-dir=conf/"]
     }
 }
 
@@ -166,10 +105,70 @@ graalvmNative {
     }
 }
 
-configurations.all {
+configurations.configureEach {
     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }
 
-jacocoTestReport {
-    dependsOn test // tests are required to run before generating the report
+tasks.register('buildInfo') {
+    doLast {
+        def version = rootProject.file('VERSION').text.trim()
+        def versionApi = rootProject.file('VERSION-API').readLines().get(0).trim()
+        def commitId = System.env.getOrDefault("GITHUB_SHA", "unknown").substring(0, 7)
+        def platform = System.env.getOrDefault("PLATFORM", "java")
+        def info = """\
+                    version=${version}
+                    versionApi=${versionApi}
+                    commitId=${commitId}
+                    platform=${platform}
+                """.stripIndent().toString()
+        def f = file("src/main/resources/META-INF/build-info.properties")
+        f.parentFile.mkdirs()
+        f.text = info
+    }
+}
+
+tasks.named('compileJava') {
+    options.release = 11
+    options.compilerArgs += ["-Aproject=${project.name}"]
+    dependsOn tasks.named('buildInfo')
+}
+
+tasks.named('run') {
+    // Pass CLI arguments via: `./gradlew run --args='arg1 arg2'`, or via: `./gradlew run -Pargs='arg1 arg2'`
+    if (project.hasProperty('args')) {
+        args project.args.split('\\s+')
+    }
+
+    // Run with GraalVM Tracing Agent enabled
+    if (System.getProperty('tracing-agent')?.toBoolean()) {
+        jvmArgs = ["-agentlib:native-image-agent=access-filter-file=conf/access-filter-file.json,config-merge-dir=conf/"]
+    }
+}
+
+tasks.register('runReflectionConfigGenerator', JavaExec) {
+    group = 'build'
+    description = 'Run ReflectionConfigGenerator for Tower SDK with native-image-agent'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'io.seqera.tower.cli.utils.config.ReflectionConfigGenerator'
+    jvmArgs = ["-agentlib:native-image-agent=access-filter-file=conf/access-filter-file.json,config-merge-dir=conf/"]
+}
+
+tasks.named('shadowJar') {
+    archiveBaseName.set('tw')
+    archiveClassifier.set('')
+    archiveVersion.set('')
+}
+
+tasks.named('test') {
+    // Use junit platform for unit tests
+    useJUnitPlatform()
+    dependsOn tasks.named('checkLicenses')
+    // Run tests with GraalVM Tracing Agent enabled
+    if (System.getProperty('tracing-agent')?.toBoolean()) {
+        jvmArgs = ["-agentlib:native-image-agent=access-filter-file=conf/access-filter-file.json,config-merge-dir=conf/"]
+    }
+}
+
+tasks.named('jacocoTestReport') {
+    dependsOn tasks.named('test') // tests are required to run before generating the report
 }
