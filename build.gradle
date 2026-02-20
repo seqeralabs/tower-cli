@@ -2,9 +2,9 @@ plugins {
     id 'java'
     id 'application'
     id 'jacoco'
-    id 'org.cadixdev.licenser' version '0.6.1'
-    id 'org.graalvm.buildtools.native' version '0.10.6'
-    id 'com.gradleup.shadow' version '8.3.9'
+    alias(libs.plugins.cadixdevLicenser)
+    alias(libs.plugins.graalvmNative)
+    alias(libs.plugins.shadow)
 }
 
 // define these in the `gradle.properties` file
@@ -23,34 +23,34 @@ repositories {
 }
 
 dependencies {
-    implementation 'javax.annotation:javax.annotation-api:1.3.2'
-    implementation 'jakarta.annotation:jakarta.annotation-api:3.0.0'
-    implementation 'org.slf4j:slf4j-api:1.7.36'
-    implementation 'ch.qos.logback:logback-core:1.5.25'
-    implementation 'ch.qos.logback:logback-classic:1.5.25'
+    implementation(libs.javaxAnnotation)
+    implementation(libs.jakartaAnnotation)
+    implementation(libs.slf4jApi)
+    implementation(libs.logbackCore)
+    implementation(libs.logbackClassic)
 
-    implementation 'io.seqera.tower:tower-java-sdk:1.107.0'
+    implementation(libs.towerJavaSdk)
     // Upgrade transitive Jersey client dependencies to non-vulnerable 2.x version
-    implementation "org.glassfish.jersey.core:jersey-client:2.47"
-    implementation "org.glassfish.jersey.media:jersey-media-multipart:2.47"
-    implementation "org.glassfish.jersey.media:jersey-media-json-jackson:2.47"
-    implementation "org.glassfish.jersey.inject:jersey-hk2:2.47"
+    implementation(libs.jerseyClient)
+    implementation(libs.jerseyMediaMultipart)
+    implementation(libs.jerseyMediaJsonJackson)
+    implementation(libs.jerseyHk2)
 
-    implementation 'info.picocli:picocli:4.6.3'
-    implementation 'org.apache.commons:commons-compress:1.28.0'
-    implementation 'org.tukaani:xz:1.9'
-    implementation 'io.github.classgraph:classgraph:4.8.165'
-    annotationProcessor 'info.picocli:picocli-codegen:4.6.3'
+    implementation(libs.picocli)
+    implementation(libs.commonsCompress)
+    implementation(libs.xz)
+    implementation(libs.classgraph)
+    annotationProcessor(libs.picocliCodegen)
 
-    testImplementation 'org.mock-server:mockserver-client-java:5.15.0'
-    testImplementation 'org.mock-server:mockserver-netty:5.15.0'
-    testImplementation 'org.mock-server:mockserver-junit-jupiter:5.15.0'
+    testImplementation(libs.mockserverClientJava)
+    testImplementation(libs.mockserverNetty)
+    testImplementation(libs.mockserverJunitJupiter)
     // Upgrade transitive mock-server dependencies to non-vulnerable 2.x version
-    testImplementation 'commons-io:commons-io:2.20.0'
+    testImplementation(libs.commonsIo)
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
-    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.8.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    testImplementation(libs.junitJupiterApi)
+    testImplementation(libs.junitJupiterParams)
+    testRuntimeOnly(libs.junitJupiterEngine)
 
 }
 

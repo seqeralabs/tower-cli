@@ -1,0 +1,48 @@
+[versions]
+classgraphVersion = "4.8.165"
+commonsCompressVersion = "1.28.0"
+commonsIoVersion = "2.20.0"
+foojayResolverVersion = "0.7.0"
+graalvmNativeVersion = "0.10.6"
+jakartaAnnotationVersion = "3.0.0"
+javaxAnnotationVersion = "1.3.2"
+jerseyVersion = "2.47"
+junitVersion = "5.8.2"
+licenserVersion = "0.6.1"
+logbackVersion = "1.5.25"
+mockserverVersion = "5.15.0"
+picocliVersion = "4.6.3"
+shadowVersion = "8.3.9"
+slf4jVersion = "1.7.36"
+towerJavaSdkVersion = "1.107.0"
+xzVersion = "1.9"
+
+[libraries]
+classgraph = { group = "io.github.classgraph", name = "classgraph", version.ref = "classgraphVersion" }
+commonsCompress = { group = "org.apache.commons", name = "commons-compress", version.ref = "commonsCompressVersion" }
+commonsIo = { group = "commons-io", name = "commons-io", version.ref = "commonsIoVersion" }
+jakartaAnnotation = { group = "jakarta.annotation", name = "jakarta.annotation-api", version.ref = "jakartaAnnotationVersion" }
+javaxAnnotation = { group = "javax.annotation", name = "javax.annotation-api", version.ref = "javaxAnnotationVersion" }
+jerseyClient = { group = "org.glassfish.jersey.core", name = "jersey-client", version.ref = "jerseyVersion" }
+jerseyHk2 = { group = "org.glassfish.jersey.inject", name = "jersey-hk2", version.ref = "jerseyVersion" }
+jerseyMediaJsonJackson = { group = "org.glassfish.jersey.media", name = "jersey-media-json-jackson", version.ref = "jerseyVersion" }
+jerseyMediaMultipart = { group = "org.glassfish.jersey.media", name = "jersey-media-multipart", version.ref = "jerseyVersion" }
+junitJupiterApi = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junitVersion" }
+junitJupiterEngine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", version.ref = "junitVersion" }
+junitJupiterParams = { group = "org.junit.jupiter", name = "junit-jupiter-params", version.ref = "junitVersion" }
+logbackClassic = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logbackVersion" }
+logbackCore = { group = "ch.qos.logback", name = "logback-core", version.ref = "logbackVersion" }
+mockserverClientJava = { group = "org.mock-server", name = "mockserver-client-java", version.ref = "mockserverVersion" }
+mockserverJunitJupiter = { group = "org.mock-server", name = "mockserver-junit-jupiter", version.ref = "mockserverVersion" }
+mockserverNetty = { group = "org.mock-server", name = "mockserver-netty", version.ref = "mockserverVersion" }
+picocli = { group = "info.picocli", name = "picocli", version.ref = "picocliVersion" }
+picocliCodegen = { group = "info.picocli", name = "picocli-codegen", version.ref = "picocliVersion" }
+slf4jApi = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4jVersion" }
+towerJavaSdk = { group = "io.seqera.tower", name = "tower-java-sdk", version.ref = "towerJavaSdkVersion" }
+xz = { group = "org.tukaani", name = "xz", version.ref = "xzVersion" }
+
+[plugins]
+cadixdevLicenser = { id = "org.cadixdev.licenser", version.ref = "licenserVersion" }
+foojayResolver = { id = "org.gradle.toolchains.foojay-resolver-convention", version.ref = "foojayResolverVersion" }
+graalvmNative = { id = "org.graalvm.buildtools.native", version.ref = "graalvmNativeVersion" }
+shadow = { id = "com.gradleup.shadow", version.ref = "shadowVersion" }
