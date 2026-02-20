@@ -29,6 +29,7 @@ jerseyMediaMultipart = { group = "org.glassfish.jersey.media", name = "jersey-me
 junitJupiterApi = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junitVersion" }
 junitJupiterEngine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", version.ref = "junitVersion" }
 junitJupiterParams = { group = "org.junit.jupiter", name = "junit-jupiter-params", version.ref = "junitVersion" }
+junitPlatformLauncher = { group = "org.junit.platform", name = "junit-platform-launcher" }
 logbackClassic = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logbackVersion" }
 logbackCore = { group = "ch.qos.logback", name = "logback-core", version.ref = "logbackVersion" }
 mockserverClientJava = { group = "org.mock-server", name = "mockserver-client-java", version.ref = "mockserverVersion" }
