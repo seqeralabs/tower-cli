@@ -2,7 +2,6 @@
 classgraphVersion = "4.8.180"
 commonsCompressVersion = "1.28.0"
 commonsIoVersion = "2.21.0"
-foojayResolverVersion = "1.0.0"
 graalvmNativeVersion = "0.11.1"
 jakartaAnnotationVersion = "3.0.0"
 javaxAnnotationVersion = "1.3.2"
@@ -43,6 +42,5 @@ xz = { group = "org.tukaani", name = "xz", version.ref = "xzVersion" }
 
 [plugins]
 cadixdevLicenser = { id = "org.cadixdev.licenser", version.ref = "licenserVersion" }
-foojayResolver = { id = "org.gradle.toolchains.foojay-resolver-convention", version.ref = "foojayResolverVersion" }
 graalvmNative = { id = "org.graalvm.buildtools.native", version.ref = "graalvmNativeVersion" }
 shadow = { id = "com.gradleup.shadow", version.ref = "shadowVersion" }
