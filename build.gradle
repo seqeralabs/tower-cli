@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'application'
     id 'jacoco'
-    alias(libs.plugins.cadixdevLicenser)
+    alias(libs.plugins.yumiLicenser)
     alias(libs.plugins.graalvmNative)
     alias(libs.plugins.shadow)
 }
@@ -55,14 +55,11 @@ dependencies {
 }
 
 license {
-    header = project.file('HEADER.txt')
-    properties {
-        name = 'Seqera'
-        year = '2021-2023'
-    }
-    exclude '**/*.properties'
-    exclude 'gradlew'
-    exclude 'conf/**'
+    rule(file('HEADER.txt'))
+    exclude('**/*.properties')
+    exclude('**/*.xml')
+    exclude('gradlew')
+    exclude('conf/**')
 }
 
 application {

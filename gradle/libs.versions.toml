@@ -7,7 +7,7 @@ jakartaAnnotationVersion = "3.0.0"
 javaxAnnotationVersion = "1.3.2"
 jerseyVersion = "2.47"
 junitVersion = "5.12.2"
-licenserVersion = "0.6.1"
+licenserVersion = "2.2.2"
 logbackVersion = "1.5.32"
 mockserverVersion = "5.15.0"
 picocliVersion = "4.7.7"
@@ -41,6 +41,6 @@ towerJavaSdk = { group = "io.seqera.tower", name = "tower-java-sdk", version.ref
 xz = { group = "org.tukaani", name = "xz", version.ref = "xzVersion" }
 
 [plugins]
-cadixdevLicenser = { id = "org.cadixdev.licenser", version.ref = "licenserVersion" }
+yumiLicenser = { id = "dev.yumi.gradle.licenser", version.ref = "licenserVersion" }
 graalvmNative = { id = "org.graalvm.buildtools.native", version.ref = "graalvmNativeVersion" }
 shadow = { id = "com.gradleup.shadow", version.ref = "shadowVersion" }
