@@ -125,7 +125,7 @@ tasks.register('buildInfo') {
 }
 
 tasks.named('compileJava') {
-    options.release = 11
+    options.release = 21
     options.compilerArgs += ["-Aproject=${project.name}"]
     dependsOn tasks.named('buildInfo')
 }
