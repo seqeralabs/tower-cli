@@ -66,11 +66,12 @@ public class ListPipelineVersionsCmdResponse extends Response {
             return;
         }
 
-        TableList table = new TableList(out, 5, "Name", "IsDefault", "Hash", "Creator", "Created At");
+        TableList table = new TableList(out, 6, "ID", "Name", "IsDefault", "Hash", "Creator", "Created At");
 
         versions.stream()
                 .sorted(Comparator.comparing(PipelineVersionFullInfoDto::getDateCreated))
                 .forEach(version -> table.addRow(
+                        version.getId(),
                         version.getName(),
                         version.getIsDefault() ? "yes" : "no",
                         showFullHash ? version.getHash() : FormatHelper.formatLargeStringWithEllipsis(version.getHash(), 40),
