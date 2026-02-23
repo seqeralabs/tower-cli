@@ -25,22 +25,31 @@ public class PipelinesUpdated extends Response {
     public final String workspaceRef;
     public final String pipelineName;
     @Nullable
+    public final String newVersionName;
+    @Nullable
     public final String draftVersionId;
 
     public PipelinesUpdated(String workspaceRef, String pipelineName) {
-        this(workspaceRef, pipelineName, null);
+        this(workspaceRef, pipelineName, null, null);
     }
 
-    public PipelinesUpdated(String workspaceRef, String pipelineName, @Nullable String draftVersionId) {
+    public PipelinesUpdated(String workspaceRef, String pipelineName, @Nullable String newVersionName) {
+        this(workspaceRef, pipelineName, newVersionName, null);
+    }
+
+    public PipelinesUpdated(String workspaceRef, String pipelineName, @Nullable String newVersionName, @Nullable String draftVersionId) {
         this.workspaceRef = workspaceRef;
         this.pipelineName = pipelineName;
+        this.newVersionName = newVersionName;
         this.draftVersionId = draftVersionId;
     }
 
     @Override
     public String toString() {
         String msg = String.format("%n  @|yellow Pipeline '%s' updated at %s workspace|@", pipelineName, workspaceRef);
-        if (draftVersionId != null) {
+        if (newVersionName != null) {
+            msg += String.format("%n  @|yellow New version '%s' created and set as default, available in the Launchpad.|@", newVersionName);
+        } else if (draftVersionId != null) {
             msg += String.format("%n  @|yellow New draft version '%s' created. Use 'tw pipelines versions' to manage it.|@", draftVersionId);
         }
         return ansi(msg + String.format("%n"));
