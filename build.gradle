@@ -2,9 +2,9 @@ plugins {
     id 'java'
     id 'application'
     id 'jacoco'
-    id 'org.cadixdev.licenser' version '0.6.1'
-    id 'org.graalvm.buildtools.native' version '0.10.6'
-    id 'com.gradleup.shadow' version '8.3.9'
+    alias(libs.plugins.yumiLicenser)
+    alias(libs.plugins.graalvmNative)
+    alias(libs.plugins.shadow)
 }
 
 // define these in the `gradle.properties` file
@@ -23,116 +23,53 @@ repositories {
 }
 
 dependencies {
-    implementation 'javax.annotation:javax.annotation-api:1.3.2'
-    implementation 'jakarta.annotation:jakarta.annotation-api:3.0.0'
-    implementation 'org.slf4j:slf4j-api:1.7.36'
-    implementation 'ch.qos.logback:logback-core:1.5.25'
-    implementation 'ch.qos.logback:logback-classic:1.5.25'
+    implementation(libs.javaxAnnotation)
+    implementation(libs.jakartaAnnotation)
+    implementation(libs.slf4jApi)
+    implementation(libs.logbackCore)
+    implementation(libs.logbackClassic)
 
-    implementation 'io.seqera.tower:tower-java-sdk:1.107.0'
+    implementation(libs.towerJavaSdk)
     // Upgrade transitive Jersey client dependencies to non-vulnerable 2.x version
-    implementation "org.glassfish.jersey.core:jersey-client:2.47"
-    implementation "org.glassfish.jersey.media:jersey-media-multipart:2.47"
-    implementation "org.glassfish.jersey.media:jersey-media-json-jackson:2.47"
-    implementation "org.glassfish.jersey.inject:jersey-hk2:2.47"
+    implementation(libs.jerseyClient)
+    implementation(libs.jerseyMediaMultipart)
+    implementation(libs.jerseyMediaJsonJackson)
+    implementation(libs.jerseyHk2)
 
-    implementation 'info.picocli:picocli:4.6.3'
-    implementation 'org.apache.commons:commons-compress:1.28.0'
-    implementation 'org.tukaani:xz:1.9'
-    implementation 'io.github.classgraph:classgraph:4.8.165'
-    annotationProcessor 'info.picocli:picocli-codegen:4.6.3'
+    implementation(libs.picocli)
+    implementation(libs.commonsCompress)
+    implementation(libs.xz)
+    implementation(libs.classgraph)
+    annotationProcessor(libs.picocliCodegen)
 
-    testImplementation 'org.mock-server:mockserver-client-java:5.15.0'
-    testImplementation 'org.mock-server:mockserver-netty:5.15.0'
-    testImplementation 'org.mock-server:mockserver-junit-jupiter:5.15.0'
+    testImplementation(libs.mockserverClientJava)
+    testImplementation(libs.mockserverNetty)
+    testImplementation(libs.mockserverJunitJupiter)
     // Upgrade transitive mock-server dependencies to non-vulnerable 2.x version
-    testImplementation 'commons-io:commons-io:2.20.0'
+    testImplementation(libs.commonsIo)
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
-    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.8.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    testImplementation(libs.junitJupiterApi)
+    testImplementation(libs.junitJupiterParams)
+    testRuntimeOnly(libs.junitJupiterEngine)
+    testRuntimeOnly(libs.junitPlatformLauncher)
 
 }
 
 license {
-    header = project.file('HEADER.txt')
-    properties {
-        name = 'Seqera'
-        year = '2021-2023'
-    }
-    exclude '**/*.properties'
-    exclude 'gradlew'
-    exclude 'conf/**'
-}
-
-task buildInfo {
-    doLast {
-        def version = rootProject.file('VERSION').text.trim()
-        def versionApi = rootProject.file('VERSION-API').readLines().get(0).trim()
-        def commitId = System.env.getOrDefault("GITHUB_SHA", "unknown").substring(0,7)
-        def platform = System.env.getOrDefault("PLATFORM", "java")
-        def info = """\
-                    version=${version}
-                    versionApi=${versionApi}
-                    commitId=${commitId}
-                    platform=${platform}
-                """.stripIndent().toString()
-        def f = file("src/main/resources/META-INF/build-info.properties")
-        f.parentFile.mkdirs()
-        f.text = info
-    }
-}
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
-    }
-}
-
-compileJava {
-    sourceCompatibility = JavaVersion.toVersion("11")
-    targetCompatibility = JavaVersion.toVersion("11")
-    options.compilerArgs += ["-Aproject=${project.name}"]
-    dependsOn buildInfo
+    rule(file('HEADER.txt'))
+    exclude('**/*.properties')
+    exclude('**/*.xml')
+    exclude('gradlew')
+    exclude('conf/**')
 }
 
 application {
     mainClass.set('io.seqera.tower.cli.Tower')
 }
 
-run {
-    // Pass CLI arguments via: `./gradlew run --args='arg1 arg2'`, or via: `./gradlew run -Pargs='arg1 arg2'`
-    if (project.hasProperty('args')) {
-        args project.args.split('\\s+')
-    }
-
-    // Run with GraalVM Tracing Agent enabled
-    if (System.getProperty('tracing-agent')?.toBoolean()) {
-        jvmArgs = ["-agentlib:native-image-agent=access-filter-file=conf/access-filter-file.json,config-merge-dir=conf/"]
-    }
-}
-
-tasks.register('runReflectionConfigGenerator', JavaExec) {
-    group = 'build'
-    description = 'Run ReflectionConfigGenerator for Tower SDK with native-image-agent'
-    classpath = sourceSets.main.runtimeClasspath
-    mainClass = 'io.seqera.tower.cli.utils.config.ReflectionConfigGenerator'
-    jvmArgs = ["-agentlib:native-image-agent=access-filter-file=conf/access-filter-file.json,config-merge-dir=conf/"]
-}
-
-shadowJar {
-    archiveBaseName.set('tw')
-    archiveClassifier.set('')
-    archiveVersion.set('')
-}
-
-test {
-    // Use junit platform for unit tests
-    useJUnitPlatform()
-    dependsOn checkLicenses
-    // Run tests with GraalVM Tracing Agent enabled
-    if (System.getProperty('tracing-agent')?.toBoolean()) {
-        jvmArgs = ["-agentlib:native-image-agent=access-filter-file=conf/access-filter-file.json,config-merge-dir=conf/"]
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
@@ -166,10 +103,70 @@ graalvmNative {
     }
 }
 
-configurations.all {
+configurations.configureEach {
     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }
 
-jacocoTestReport {
-    dependsOn test // tests are required to run before generating the report
+tasks.register('buildInfo') {
+    doLast {
+        def version = rootProject.file('VERSION').text.trim()
+        def versionApi = rootProject.file('VERSION-API').readLines().get(0).trim()
+        def commitId = System.env.getOrDefault("GITHUB_SHA", "unknown").substring(0, 7)
+        def platform = System.env.getOrDefault("PLATFORM", "java")
+        def info = """\
+                    version=${version}
+                    versionApi=${versionApi}
+                    commitId=${commitId}
+                    platform=${platform}
+                """.stripIndent().toString()
+        def f = file("src/main/resources/META-INF/build-info.properties")
+        f.parentFile.mkdirs()
+        f.text = info
+    }
+}
+
+tasks.named('compileJava') {
+    options.release = 21
+    options.compilerArgs += ["-Aproject=${project.name}"]
+    dependsOn tasks.named('buildInfo')
+}
+
+tasks.named('run') {
+    // Pass CLI arguments via: `./gradlew run --args='arg1 arg2'`, or via: `./gradlew run -Pargs='arg1 arg2'`
+    if (project.hasProperty('args')) {
+        args project.args.split('\\s+')
+    }
+
+    // Run with GraalVM Tracing Agent enabled
+    if (System.getProperty('tracing-agent')?.toBoolean()) {
+        jvmArgs = ["-agentlib:native-image-agent=access-filter-file=conf/access-filter-file.json,config-merge-dir=conf/"]
+    }
+}
+
+tasks.register('runReflectionConfigGenerator', JavaExec) {
+    group = 'build'
+    description = 'Run ReflectionConfigGenerator for Tower SDK with native-image-agent'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'io.seqera.tower.cli.utils.config.ReflectionConfigGenerator'
+    jvmArgs = ["-agentlib:native-image-agent=access-filter-file=conf/access-filter-file.json,config-merge-dir=conf/"]
+}
+
+tasks.named('shadowJar') {
+    archiveBaseName.set('tw')
+    archiveClassifier.set('')
+    archiveVersion.set('')
+}
+
+tasks.named('test') {
+    // Use junit platform for unit tests
+    useJUnitPlatform()
+    dependsOn tasks.named('checkLicenses')
+    // Run tests with GraalVM Tracing Agent enabled
+    if (System.getProperty('tracing-agent')?.toBoolean()) {
+        jvmArgs = ["-agentlib:native-image-agent=access-filter-file=conf/access-filter-file.json,config-merge-dir=conf/"]
+    }
+}
+
+tasks.named('jacocoTestReport') {
+    dependsOn tasks.named('test') // tests are required to run before generating the report
 }
