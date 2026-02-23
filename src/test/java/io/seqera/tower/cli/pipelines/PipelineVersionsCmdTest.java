@@ -155,8 +155,6 @@ class PipelineVersionsCmdTest extends BaseCmdTest {
     }
 
     // --- List command tests ---
-    // GET-only: no request body to verify. Path and query parameter matching (search, isPublished, max, offset)
-    // in the mocks below is sufficient to assert the CLI sends the correct parameters to the server.
 
     @ParameterizedTest
     @EnumSource(OutputType.class)
@@ -331,8 +329,6 @@ class PipelineVersionsCmdTest extends BaseCmdTest {
     }
 
     // --- View command tests ---
-    // GET-only: no request body to verify. Path and query parameter matching (search, isPublished)
-    // in the mocks below is sufficient to assert the CLI sends the correct parameters to the server.
 
     @ParameterizedTest
     @EnumSource(OutputType.class)
@@ -407,8 +403,6 @@ class PipelineVersionsCmdTest extends BaseCmdTest {
     }
 
     // --- Update command tests ---
-    // PUT requests: body verification via json() matcher ensures the CLI serializes the correct
-    // PipelineVersionManageRequest fields (name, isDefault) for each combination of CLI flags.
 
     @ParameterizedTest
     @EnumSource(OutputType.class)
