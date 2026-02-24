@@ -8,6 +8,6 @@ build
 
 # Location for unshared files
 .user/
-
+.DS_Store
 
 *.iml

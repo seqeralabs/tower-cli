@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli;
@@ -57,7 +56,7 @@ public class InfoCmdTest extends BaseCmdTest {
         Map<String, String> opts = new HashMap<>();
         opts.put("cliVersion", getCliVersion() );
         opts.put("cliApiVersion", getCliApiVersion());
-        opts.put("towerApiVersion", "1.98.0");
+        opts.put("towerApiVersion", "1.109.0");
         opts.put("towerVersion", "22.3.0-torricelli");
         opts.put("towerApiEndpoint", "http://localhost:"+mock.getPort());
         opts.put("userName", "jordi");
@@ -87,7 +86,7 @@ public class InfoCmdTest extends BaseCmdTest {
         Map<String, String> opts = new HashMap<>();
         opts.put("cliVersion", getCliVersion() );
         opts.put("cliApiVersion", getCliApiVersion());
-        opts.put("towerApiVersion", "1.98.0");
+        opts.put("towerApiVersion", "1.109.0");
         opts.put("towerVersion", "22.3.0-torricelli");
         opts.put("towerApiEndpoint", "http://localhost:"+mock.getPort());
         opts.put("userName", null);
