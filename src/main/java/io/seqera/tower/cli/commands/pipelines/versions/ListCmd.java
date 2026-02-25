@@ -49,7 +49,7 @@ public class ListCmd extends AbstractPipelinesCmd {
     @CommandLine.Mixin
     WorkspaceOptionalOptions workspaceOptions;
 
-    @CommandLine.Option(names = {"-f", "--filter"}, description = "Search pipeline versions by name. Supports special keywords like 'is:default' or 'is:draft'.")
+    @CommandLine.Option(names = {"-f", "--filter"}, description = "Search pipeline versions by name prefix. Also supports keyword filters: versionName, versionId, versionHash. Multiple filters can be combined e.g. 'myPipeline versionName:<name> versionHash:<hash>'.")
     public String filter;
 
     @CommandLine.Option(names = {"--is-published"}, description = "Show only published pipeline versions if true, draft versions only if false, all versions by default")

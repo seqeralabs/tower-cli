@@ -240,6 +240,30 @@ class PipelineVersionsCmdTest extends BaseCmdTest {
     }
 
     @Test
+    void testListVersionsWithMultipleFilterKeywords(MockServerClient mock) {
+
+        mock.reset();
+        mockPipelineDescribe(mock);
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines/" + PIPELINE_ID + "/versions")
+                        .withQueryStringParameter("search", "TestVersioningInUserWsp versionHash:" + HASH_V1)
+                        .withQueryStringParameter("isPublished", "true"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+                        .withBody(loadResource("pipeline_versions/versions_published"))
+                        .withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "pipelines", "versions", "list", "-i", PIPELINE_ID.toString(),
+                "-f", "TestVersioningInUserWsp versionHash:" + HASH_V1);
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
     void testListVersionsWithPagination(MockServerClient mock) {
 
         mock.reset();
