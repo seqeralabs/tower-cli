@@ -81,11 +81,8 @@ public class UpdateCmd extends AbstractPipelinesCmd {
                     wspId
             );
         } catch (ApiException e) {
-            if (e.getCode() == 400) {
-                throw new TowerException(String.format("Invalid version name '%s': %s", updateOptions.name, ResponseHelper.decodeMessage(e)));
-            }
             throw new TowerException(
-                    String.format("Unable to update pipeline version '%s': %s", resolvedVersionId, ResponseHelper.decodeMessage(e))
+                    String.format("Unable to manage pipeline version '%s': %s", resolvedVersionId, ResponseHelper.decodeMessage(e))
             );
         }
 
