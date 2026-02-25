@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.PipelineNotFoundException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.pipelines.versions.ListPipelineVersionsCmdResponse;
-import io.seqera.tower.cli.responses.pipelines.versions.UpdatePipelineVersionCmdResponse;
+import io.seqera.tower.cli.responses.pipelines.versions.ManagePipelineVersionCmdResponse;
 import io.seqera.tower.cli.responses.pipelines.versions.ViewPipelineVersionCmdResponse;
 import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.model.PipelineVersionFullInfoDto;
@@ -402,7 +402,7 @@ class PipelineVersionsCmdTest extends BaseCmdTest {
         ).toString()), out.stdOut);
     }
 
-    // --- Update command tests ---
+    // --- Manage command tests ---
 
     @ParameterizedTest
     @EnumSource(OutputType.class)
@@ -412,10 +412,10 @@ class PipelineVersionsCmdTest extends BaseCmdTest {
         mockPipelineDescribe(mock);
         mockManageVersion(mock, "{\"name\":\"new-version-name\"}");
 
-        ExecOut out = exec(format, mock, "pipelines", "versions", "update", "-i", PIPELINE_ID.toString(),
+        ExecOut out = exec(format, mock, "pipelines", "versions", "manage", "-i", PIPELINE_ID.toString(),
                 "--version-id", VERSION_ID_V1, "--new-name", "new-version-name");
 
-        assertOutput(format, out, new UpdatePipelineVersionCmdResponse(null, PIPELINE_ID, PIPELINE_NAME, VERSION_ID_V1));
+        assertOutput(format, out, new ManagePipelineVersionCmdResponse(null, PIPELINE_ID, PIPELINE_NAME, VERSION_ID_V1));
     }
 
     @Test
@@ -425,12 +425,12 @@ class PipelineVersionsCmdTest extends BaseCmdTest {
         mockPipelineDescribe(mock);
         mockManageVersion(mock, "{\"isDefault\":true}");
 
-        ExecOut out = exec(mock, "pipelines", "versions", "update", "-i", PIPELINE_ID.toString(),
+        ExecOut out = exec(mock, "pipelines", "versions", "manage", "-i", PIPELINE_ID.toString(),
                 "--version-id", VERSION_ID_V1, "--set-default");
 
         assertEquals("", out.stdErr);
         assertEquals(0, out.exitCode);
-        assertEquals(new UpdatePipelineVersionCmdResponse(null, PIPELINE_ID, PIPELINE_NAME, VERSION_ID_V1).toString(), out.stdOut);
+        assertEquals(new ManagePipelineVersionCmdResponse(null, PIPELINE_ID, PIPELINE_NAME, VERSION_ID_V1).toString(), out.stdOut);
     }
 
     @Test
@@ -441,12 +441,12 @@ class PipelineVersionsCmdTest extends BaseCmdTest {
         mockPipelineDescribe(mock);
         mockManageVersion(mock, "{\"name\":\"renamed-version\"}");
 
-        ExecOut out = exec(mock, "pipelines", "versions", "update", "-n", PIPELINE_NAME,
+        ExecOut out = exec(mock, "pipelines", "versions", "manage", "-n", PIPELINE_NAME,
                 "--version-id", VERSION_ID_V1, "--new-name", "renamed-version");
 
         assertEquals("", out.stdErr);
         assertEquals(0, out.exitCode);
-        assertEquals(new UpdatePipelineVersionCmdResponse(null, PIPELINE_ID, PIPELINE_NAME, VERSION_ID_V1).toString(), out.stdOut);
+        assertEquals(new ManagePipelineVersionCmdResponse(null, PIPELINE_ID, PIPELINE_NAME, VERSION_ID_V1).toString(), out.stdOut);
     }
 
     @Test
@@ -469,12 +469,12 @@ class PipelineVersionsCmdTest extends BaseCmdTest {
 
         mockManageVersion(mock, "{\"name\":\"renamed\"}");
 
-        ExecOut out = exec(mock, "pipelines", "versions", "update", "-i", PIPELINE_ID.toString(),
+        ExecOut out = exec(mock, "pipelines", "versions", "manage", "-i", PIPELINE_ID.toString(),
                 "--version-name", "TestVersioningInUserWsp-1", "--new-name", "renamed");
 
         assertEquals("", out.stdErr);
         assertEquals(0, out.exitCode);
-        assertEquals(new UpdatePipelineVersionCmdResponse(null, PIPELINE_ID, PIPELINE_NAME, VERSION_ID_V1).toString(), out.stdOut);
+        assertEquals(new ManagePipelineVersionCmdResponse(null, PIPELINE_ID, PIPELINE_NAME, VERSION_ID_V1).toString(), out.stdOut);
     }
 
     @Test
@@ -493,7 +493,7 @@ class PipelineVersionsCmdTest extends BaseCmdTest {
                         .withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "pipelines", "versions", "update", "-i", PIPELINE_ID.toString(),
+        ExecOut out = exec(mock, "pipelines", "versions", "manage", "-i", PIPELINE_ID.toString(),
                 "--version-id", VERSION_ID_V1, "--new-name", "!invalid!");
 
         assertEquals(1, out.exitCode);
@@ -516,7 +516,7 @@ class PipelineVersionsCmdTest extends BaseCmdTest {
                         .withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "pipelines", "versions", "update", "-n", "nonexistent",
+        ExecOut out = exec(mock, "pipelines", "versions", "manage", "-n", "nonexistent",
                 "--version-id", VERSION_ID_V1, "--new-name", "new-name");
 
         assertEquals(errorMessage(out.app, new PipelineNotFoundException("\"nonexistent\"", USER_WORKSPACE_NAME)), out.stdErr);

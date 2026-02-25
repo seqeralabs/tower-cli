@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import io.seqera.tower.cli.commands.pipelines.AbstractPipelinesCmd;
 import io.seqera.tower.cli.commands.pipelines.PipelineRefOptions;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.cli.responses.pipelines.versions.UpdatePipelineVersionCmdResponse;
+import io.seqera.tower.cli.responses.pipelines.versions.ManagePipelineVersionCmdResponse;
 import io.seqera.tower.cli.utils.ResponseHelper;
 import io.seqera.tower.model.PipelineDbDto;
 import io.seqera.tower.model.PipelineVersionManageRequest;
@@ -31,10 +31,10 @@ import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
 @Command(
-        name = "update",
-        description = "Update a pipeline version name or default flag"
+        name = "manage",
+        description = "Manage a pipeline version name or default version status"
 )
-public class UpdateCmd extends AbstractPipelinesCmd {
+public class ManageCmd extends AbstractPipelinesCmd {
 
     @CommandLine.Mixin
     PipelineRefOptions pipelineRefOptions;
@@ -46,10 +46,10 @@ public class UpdateCmd extends AbstractPipelinesCmd {
     VersionRefOptions versionRefOptions;
 
     @CommandLine.ArgGroup(exclusive = false, multiplicity = "1",
-            heading = "%nUpdate options (at least one required):%n")
-    public UpdateOptions updateOptions;
+            heading = "%nManage options (at least one required):%n")
+    public ManageOptions manageOptions;
 
-    public static class UpdateOptions {
+    public static class ManageOptions {
         @CommandLine.Option(names = {"--new-name"}, description = "New name for the pipeline version")
         public String name;
 
@@ -70,8 +70,8 @@ public class UpdateCmd extends AbstractPipelinesCmd {
         String resolvedVersionId = resolvePipelineVersionId(pipeline.getPipelineId(), wspId, versionRefOptions.versionRef);
 
         PipelineVersionManageRequest request = new PipelineVersionManageRequest()
-                .name(updateOptions.name)
-                .isDefault(updateOptions.isDefault);
+                .name(manageOptions.name)
+                .isDefault(manageOptions.isDefault);
 
         try {
             pipelineVersionsApi().managePipelineVersion(
@@ -86,6 +86,6 @@ public class UpdateCmd extends AbstractPipelinesCmd {
             );
         }
 
-        return new UpdatePipelineVersionCmdResponse(workspaceOptions.workspace, pipeline.getPipelineId(), pipeline.getName(), resolvedVersionId);
+        return new ManagePipelineVersionCmdResponse(workspaceOptions.workspace, pipeline.getPipelineId(), pipeline.getName(), resolvedVersionId);
     }
 }

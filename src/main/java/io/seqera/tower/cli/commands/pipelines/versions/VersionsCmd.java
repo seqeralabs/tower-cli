@@ -27,7 +27,7 @@ import picocli.CommandLine;
         subcommands = {
                 ListCmd.class,
                 ViewCmd.class,
-                UpdateCmd.class,
+                ManageCmd.class,
         }
 )
 public class VersionsCmd extends AbstractRootCmd {

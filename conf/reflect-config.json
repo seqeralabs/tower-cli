@@ -2254,7 +2254,7 @@
   "queryAllDeclaredConstructors":true
 },
 {
-  "name":"io.seqera.tower.cli.responses.pipelines.versions.UpdatePipelineVersionCmdResponse",
+  "name":"io.seqera.tower.cli.responses.pipelines.versions.ManagePipelineVersionCmdResponse",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true
