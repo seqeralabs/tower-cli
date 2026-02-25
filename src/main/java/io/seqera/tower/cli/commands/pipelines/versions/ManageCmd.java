@@ -63,10 +63,6 @@ public class ManageCmd extends AbstractPipelinesCmd {
         Long wspId = workspaceId(workspaceOptions.workspace);
         PipelineDbDto pipeline = fetchPipeline(pipelineRefOptions, wspId);
 
-        if (pipeline == null) {
-            throwPipelineNotFoundException(pipelineRefOptions, wspId);
-        }
-
         String resolvedVersionId = resolvePipelineVersionId(pipeline.getPipelineId(), wspId, versionRefOptions.versionRef);
 
         PipelineVersionManageRequest request = new PipelineVersionManageRequest()

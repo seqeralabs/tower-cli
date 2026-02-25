@@ -224,8 +224,7 @@ class PipelineVersionsCmdTest extends BaseCmdTest {
 
         mock.when(
                 request().withMethod("GET").withPath("/pipelines/" + PIPELINE_ID + "/versions")
-                        .withQueryStringParameter("search", "TestVersioningInUserWsp-1")
-                        .withQueryStringParameter("isPublished", "true"),
+                        .withQueryStringParameter("search", "TestVersioningInUserWsp-1"),
                 exactly(1)
         ).respond(
                 response().withStatusCode(200)
@@ -247,8 +246,7 @@ class PipelineVersionsCmdTest extends BaseCmdTest {
 
         mock.when(
                 request().withMethod("GET").withPath("/pipelines/" + PIPELINE_ID + "/versions")
-                        .withQueryStringParameter("search", "TestVersioningInUserWsp versionHash:" + HASH_V1)
-                        .withQueryStringParameter("isPublished", "true"),
+                        .withQueryStringParameter("search", "TestVersioningInUserWsp versionHash:" + HASH_V1),
                 exactly(1)
         ).respond(
                 response().withStatusCode(200)

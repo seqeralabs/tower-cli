@@ -50,10 +50,6 @@ public class ViewCmd extends AbstractPipelinesCmd {
         Long wspId = workspaceId(workspaceOptions.workspace);
         PipelineDbDto pipeline = fetchPipeline(pipelineRefOptions, wspId);
 
-        if (pipeline == null) {
-            throwPipelineNotFoundException(pipelineRefOptions, wspId);
-        }
-
         PipelineVersionFullInfoDto version = findPipelineVersionByRef(pipeline.getPipelineId(), wspId, versionRefOptions.versionRef);
 
         if (version == null) {

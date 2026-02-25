@@ -22,7 +22,6 @@ import io.seqera.tower.cli.commands.global.PaginationOptions;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.commands.pipelines.AbstractPipelinesCmd;
 import io.seqera.tower.cli.commands.pipelines.PipelineRefOptions;
-import io.seqera.tower.cli.exceptions.PipelineNotFoundException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.pipelines.versions.ListPipelineVersionsCmdResponse;
@@ -67,15 +66,8 @@ public class ListCmd extends AbstractPipelinesCmd {
         Long wspId = workspaceId(workspaceOptions.workspace);
         PipelineDbDto pipeline = fetchPipeline(pipelineRefOptions, wspId);
 
-        if (pipeline == null) throwPipelineNotFoundException(pipelineRefOptions, wspId);
-
         Integer max = PaginationOptions.getMax(paginationOptions);
         Integer offset = PaginationOptions.getOffset(paginationOptions, max);
-
-        // you can only filter by name versions with a name attached (published versions)
-        if (filter != null) {
-            isPublishedOption = true;
-        }
 
         ListPipelineVersionsResponse response = pipelineVersionsApi().listPipelineVersions(
                 pipeline.getPipelineId(),
