@@ -16,6 +16,7 @@
 
 package io.seqera.tower.cli.commands.credentials.providers;
 
+import io.seqera.tower.model.AwsCredentialsMode;
 import io.seqera.tower.model.AwsSecurityKeys;
 import io.seqera.tower.model.Credentials.ProviderEnum;
 import picocli.CommandLine.ArgGroup;
@@ -25,8 +26,15 @@ public class AwsProvider extends AbstractProvider<AwsSecurityKeys> {
 
     @ArgGroup(exclusive = false)
     public Keys keys;
+
     @Option(names = {"-r", "--assume-role-arn"}, description = "IAM role ARN to assume for accessing AWS resources. Allows cross-account access or privilege elevation. Must be a fully qualified ARN (e.g., arn:aws:iam::123456789012:role/RoleName).")
     String assumeRoleArn;
+
+    @Option(names = {"--mode"}, description = "AWS credential mode: 'keys' (access key + secret key) or 'role' (IAM role only). Default: keys.")
+    String mode;
+
+    @Option(names = {"--generate-external-id"}, description = "Generate a platform-managed External ID for the credential (used with IAM role ARN).", defaultValue = "false")
+    boolean generateExternalId;
 
     public AwsProvider() {
         super(ProviderEnum.AWS);
@@ -34,7 +42,14 @@ public class AwsProvider extends AbstractProvider<AwsSecurityKeys> {
 
     @Override
     public AwsSecurityKeys securityKeys() {
+        validate();
+
         AwsSecurityKeys result = new AwsSecurityKeys();
+
+        if (getMode() != null) {
+            result.mode(getMode());
+        }
+
         if (keys != null) {
             result.accessKey(keys.accessKey).secretKey(keys.secretKey);
         }
@@ -44,6 +59,45 @@ public class AwsProvider extends AbstractProvider<AwsSecurityKeys> {
         }
 
         return result;
+    }
+
+    @Override
+    public Boolean useExternalId() {
+        AwsCredentialsMode m = getMode();
+        if (m == AwsCredentialsMode.role) {
+            return true;
+        }
+        if (generateExternalId && assumeRoleArn != null) {
+            return true;
+        }
+        return null;
+    }
+
+    private AwsCredentialsMode getMode() {
+        if (mode == null) {
+            return null;
+        }
+        switch (mode.toLowerCase()) {
+            case "keys":
+                return AwsCredentialsMode.keys;
+            case "role":
+                return AwsCredentialsMode.role;
+            default:
+                throw new IllegalArgumentException(String.format("Invalid AWS credential mode '%s'. Allowed values: 'keys', 'role'.", mode));
+        }
+    }
+
+    private void validate() {
+        AwsCredentialsMode m = getMode();
+
+        if (m == AwsCredentialsMode.role) {
+            if (keys != null && (keys.accessKey != null || keys.secretKey != null)) {
+                throw new IllegalArgumentException("Options '--access-key' and '--secret-key' cannot be used with '--mode=role'. Role mode uses IAM role assumption without static credentials.");
+            }
+            if (assumeRoleArn == null) {
+                throw new IllegalArgumentException("Option '--assume-role-arn' is required when using '--mode=role'.");
+            }
+        }
     }
 
     public static class Keys {

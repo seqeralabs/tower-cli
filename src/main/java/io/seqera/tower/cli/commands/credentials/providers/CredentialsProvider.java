@@ -28,4 +28,8 @@ public interface CredentialsProvider {
     ProviderEnum type();
 
     SecurityKeys securityKeys() throws IOException, ApiException;
+
+    default Boolean useExternalId() {
+        return null;
+    }
 }

@@ -33,6 +33,7 @@ import org.mockserver.model.MediaType;
 
 import static io.seqera.tower.cli.commands.AbstractApiCmd.USER_WORKSPACE_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
@@ -82,6 +83,80 @@ class AwsProviderTest extends BaseCmdTest {
 
     @ParameterizedTest
     @EnumSource(OutputType.class)
+    void testAddWithExplicitKeysMode(OutputType format, MockServerClient mock) {
+
+        mock.when(
+                request()
+                        .withMethod("POST")
+                        .withPath("/credentials")
+                        .withBody(json("{\"credentials\":{\"keys\":{\"mode\":\"keys\",\"accessKey\":\"access_key\",\"secretKey\":\"secret_key\"},\"name\":\"aws-keys\",\"provider\":\"aws\"}}")),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentialsId\":\"2cz5A8cuBkB5iJliCwJCFU\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "credentials", "add", "aws", "-n", "aws-keys", "--mode=keys", "-a", "access_key", "-s", "secret_key");
+        assertOutput(format, out, new CredentialsAdded("AWS", "2cz5A8cuBkB5iJliCwJCFU", "aws-keys", USER_WORKSPACE_NAME));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAddWithRoleMode(OutputType format, MockServerClient mock) {
+
+        mock.when(
+                request()
+                        .withMethod("POST")
+                        .withPath("/credentials")
+                        .withQueryStringParameter("useExternalId", "true")
+                        .withBody(json("{\"credentials\":{\"keys\":{\"mode\":\"role\",\"assumeRoleArn\":\"arn:aws:iam::123456789012:role/MyRole\"},\"name\":\"aws-role\",\"provider\":\"aws\"}}")),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentialsId\":\"3cz5A8cuBkB5iJliCwJCFU\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "credentials", "add", "aws", "-n", "aws-role", "--mode=role", "-r", "arn:aws:iam::123456789012:role/MyRole");
+        assertOutput(format, out, new CredentialsAdded("AWS", "3cz5A8cuBkB5iJliCwJCFU", "aws-role", USER_WORKSPACE_NAME));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAddKeysModeWithGenerateExternalId(OutputType format, MockServerClient mock) {
+
+        mock.when(
+                request()
+                        .withMethod("POST")
+                        .withPath("/credentials")
+                        .withQueryStringParameter("useExternalId", "true")
+                        .withBody(json("{\"credentials\":{\"keys\":{\"accessKey\":\"access_key\",\"secretKey\":\"secret_key\",\"assumeRoleArn\":\"arn_role\"},\"name\":\"aws-ext\",\"provider\":\"aws\"}}")),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentialsId\":\"4cz5A8cuBkB5iJliCwJCFU\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "credentials", "add", "aws", "-n", "aws-ext", "-a", "access_key", "-s", "secret_key", "-r", "arn_role", "--generate-external-id");
+        assertOutput(format, out, new CredentialsAdded("AWS", "4cz5A8cuBkB5iJliCwJCFU", "aws-ext", USER_WORKSPACE_NAME));
+    }
+
+    @Test
+    void testAddRoleModeRejectsAccessKeys(MockServerClient mock) {
+
+        ExecOut out = exec(mock, "credentials", "add", "aws", "-n", "aws-role-bad", "--mode=role", "-a", "access_key", "-s", "secret_key", "-r", "arn_role");
+
+        assertTrue(out.stdErr.contains("'--access-key' and '--secret-key' cannot be used with '--mode=role'"), "Expected error about access keys not allowed in role mode, got: " + out.stdErr);
+        assertEquals(1, out.exitCode);
+    }
+
+    @Test
+    void testAddRoleModeRequiresAssumeRoleArn(MockServerClient mock) {
+
+        ExecOut out = exec(mock, "credentials", "add", "aws", "-n", "aws-role-bad", "--mode=role");
+
+        assertTrue(out.stdErr.contains("'--assume-role-arn' is required when using '--mode=role'"), "Expected error about missing assume-role-arn, got: " + out.stdErr);
+        assertEquals(1, out.exitCode);
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
     void testUpdate(OutputType format, MockServerClient mock) {
 
         mock.when(
@@ -101,6 +176,55 @@ class AwsProviderTest extends BaseCmdTest {
         );
 
         ExecOut out = exec(format, mock, "credentials", "update", "aws", "-i", "kfKx9xRgzpIIZrbCMOcU4", "-r", "changeAssumeRole");
+        assertOutput(format, out, new CredentialsUpdated("AWS", "aws", USER_WORKSPACE_NAME));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testUpdateWithRoleMode(OutputType format, MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/credentials/kfKx9xRgzpIIZrbCMOcU4"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":{\"id\":\"kfKx9xRgzpIIZrbCMOcU4\",\"name\":\"aws\",\"description\":null,\"discriminator\":\"aws\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-06T15:16:52Z\",\"dateCreated\":\"2021-09-03T13:23:37Z\",\"lastUpdated\":\"2021-09-03T13:23:37Z\"}}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request()
+                        .withMethod("PUT")
+                        .withPath("/credentials/kfKx9xRgzpIIZrbCMOcU4")
+                        .withQueryStringParameter("useExternalId", "true")
+                        .withBody(json("{\"credentials\":{\"keys\":{\"mode\":\"role\",\"assumeRoleArn\":\"arn:aws:iam::123456789012:role/NewRole\"},\"id\":\"kfKx9xRgzpIIZrbCMOcU4\",\"name\":\"aws\",\"provider\":\"aws\"}}"))
+                        .withContentType(MediaType.APPLICATION_JSON)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(format, mock, "credentials", "update", "aws", "-i", "kfKx9xRgzpIIZrbCMOcU4", "--mode=role", "-r", "arn:aws:iam::123456789012:role/NewRole");
+        assertOutput(format, out, new CredentialsUpdated("AWS", "aws", USER_WORKSPACE_NAME));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testUpdateWithKeysMode(OutputType format, MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/credentials/kfKx9xRgzpIIZrbCMOcU4"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":{\"id\":\"kfKx9xRgzpIIZrbCMOcU4\",\"name\":\"aws\",\"description\":null,\"discriminator\":\"aws\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-06T15:16:52Z\",\"dateCreated\":\"2021-09-03T13:23:37Z\",\"lastUpdated\":\"2021-09-03T13:23:37Z\"}}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request()
+                        .withMethod("PUT")
+                        .withPath("/credentials/kfKx9xRgzpIIZrbCMOcU4")
+                        .withBody(json("{\"credentials\":{\"keys\":{\"mode\":\"keys\",\"accessKey\":\"new_key\",\"secretKey\":\"new_secret\"},\"id\":\"kfKx9xRgzpIIZrbCMOcU4\",\"name\":\"aws\",\"provider\":\"aws\"}}"))
+                        .withContentType(MediaType.APPLICATION_JSON)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(format, mock, "credentials", "update", "aws", "-i", "kfKx9xRgzpIIZrbCMOcU4", "--mode=keys", "-a", "new_key", "-s", "new_secret");
         assertOutput(format, out, new CredentialsUpdated("AWS", "aws", USER_WORKSPACE_NAME));
     }
 
