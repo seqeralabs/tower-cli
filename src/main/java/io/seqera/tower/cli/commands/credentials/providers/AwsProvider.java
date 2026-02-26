@@ -63,8 +63,8 @@ public class AwsProvider extends AbstractProvider<AwsSecurityKeys> {
 
     @Override
     public Boolean useExternalId() {
-        AwsCredentialsMode m = getMode();
-        if (m == AwsCredentialsMode.role) {
+        AwsCredentialsMode mode = getMode();
+        if (mode == AwsCredentialsMode.role) {
             return true;
         }
         if (generateExternalId && assumeRoleArn != null) {
@@ -77,20 +77,17 @@ public class AwsProvider extends AbstractProvider<AwsSecurityKeys> {
         if (mode == null) {
             return null;
         }
-        switch (mode.toLowerCase()) {
-            case "keys":
-                return AwsCredentialsMode.keys;
-            case "role":
-                return AwsCredentialsMode.role;
-            default:
-                throw new IllegalArgumentException(String.format("Invalid AWS credential mode '%s'. Allowed values: 'keys', 'role'.", mode));
-        }
+        return switch (mode.toLowerCase()) {
+            case "keys" -> AwsCredentialsMode.keys;
+            case "role" -> AwsCredentialsMode.role;
+            default -> throw new IllegalArgumentException(String.format("Invalid AWS credential mode '%s'. Allowed values: 'keys', 'role'.", mode));
+        };
     }
 
     private void validate() {
-        AwsCredentialsMode m = getMode();
+        AwsCredentialsMode mode = getMode();
 
-        if (m == AwsCredentialsMode.role) {
+        if (mode == AwsCredentialsMode.role) {
             if (keys != null && (keys.accessKey != null || keys.secretKey != null)) {
                 throw new IllegalArgumentException("Options '--access-key' and '--secret-key' cannot be used with '--mode=role'. Role mode uses IAM role assumption without static credentials.");
             }
