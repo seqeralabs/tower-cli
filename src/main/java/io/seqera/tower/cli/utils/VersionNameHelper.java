@@ -44,7 +44,7 @@ public class VersionNameHelper {
      * Strips trailing -{number}, increments (or starts at 1).
      * E.g., "pipeline-3" → "pipeline-4", "rnaseq" → "rnaseq-1"
      */
-    public static String generateNextVersionName(String baseName) {
+    protected static String generateNextVersionName(String baseName) {
         if (baseName == null || baseName.isEmpty()) {
             return baseName;
         }
