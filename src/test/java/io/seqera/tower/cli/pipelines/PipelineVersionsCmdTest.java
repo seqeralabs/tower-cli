@@ -20,10 +20,8 @@ package io.seqera.tower.cli.pipelines;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.PipelineNotFoundException;
-import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.pipelines.versions.ListPipelineVersionsCmdResponse;
 import io.seqera.tower.cli.responses.pipelines.versions.ManagePipelineVersionCmdResponse;
-import io.seqera.tower.cli.responses.pipelines.versions.ViewPipelineVersionCmdResponse;
 import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.model.PipelineVersionFullInfoDto;
 import org.junit.jupiter.api.Test;
@@ -325,80 +323,6 @@ class PipelineVersionsCmdTest extends BaseCmdTest {
         assertEquals(chop(new ListPipelineVersionsCmdResponse(
                 null, PIPELINE_ID, PIPELINE_NAME,
                 allVersions(), PaginationInfo.from((Integer) null, (Integer) null), true
-        ).toString()), out.stdOut);
-    }
-
-    // --- View command tests ---
-
-    @ParameterizedTest
-    @EnumSource(OutputType.class)
-    void testViewVersionById(OutputType format, MockServerClient mock) {
-
-        mock.reset();
-        mockPipelineDescribe(mock);
-        mockVersionsList(mock);
-
-        ExecOut out = exec(format, mock, "pipelines", "versions", "view", "-i", PIPELINE_ID.toString(), "--version-id", VERSION_ID_V1);
-
-        assertOutput(format, out, new ViewPipelineVersionCmdResponse(
-                null, PIPELINE_ID, PIPELINE_NAME, allVersions().get(0)
-        ));
-    }
-
-    @Test
-    void testViewVersionByName(MockServerClient mock) {
-
-        mock.reset();
-        mockPipelineSearchByName(mock);
-        mockPipelineDescribe(mock);
-
-        mock.when(
-                request().withMethod("GET").withPath("/pipelines/" + PIPELINE_ID + "/versions")
-                        .withQueryStringParameter("search", "TestVersioningInUserWsp-2")
-                        .withQueryStringParameter("isPublished", "true"),
-                exactly(1)
-        ).respond(
-                response().withStatusCode(200)
-                        .withBody(loadResource("pipeline_versions/versions_published"))
-                        .withContentType(MediaType.APPLICATION_JSON)
-        );
-
-        ExecOut out = exec(mock, "pipelines", "versions", "view", "-n", PIPELINE_NAME, "--version-name", "TestVersioningInUserWsp-2");
-
-        assertEquals("", out.stdErr);
-        assertEquals(0, out.exitCode);
-        assertEquals(chop(new ViewPipelineVersionCmdResponse(
-                null, PIPELINE_ID, PIPELINE_NAME, publishedVersions().get(1)
-        ).toString()), out.stdOut);
-    }
-
-    @Test
-    void testViewVersionNotFound(MockServerClient mock) {
-
-        mock.reset();
-        mockPipelineDescribe(mock);
-        mockVersionsList(mock);
-
-        ExecOut out = exec(mock, "pipelines", "versions", "view", "-i", PIPELINE_ID.toString(), "--version-id", "nonexistent");
-
-        assertEquals(errorMessage(out.app, new TowerException("Pipeline version 'nonexistent' not found")), out.stdErr);
-        assertEquals("", out.stdOut);
-        assertEquals(1, out.exitCode);
-    }
-
-    @Test
-    void testViewDraftVersionById(MockServerClient mock) {
-
-        mock.reset();
-        mockPipelineDescribe(mock);
-        mockVersionsList(mock);
-
-        ExecOut out = exec(mock, "pipelines", "versions", "view", "-i", PIPELINE_ID.toString(), "--version-id", "7KtabH1PaW1IBPYUdzVcXh");
-
-        assertEquals("", out.stdErr);
-        assertEquals(0, out.exitCode);
-        assertEquals(chop(new ViewPipelineVersionCmdResponse(
-                null, PIPELINE_ID, PIPELINE_NAME, allVersions().get(2)
         ).toString()), out.stdOut);
     }
 

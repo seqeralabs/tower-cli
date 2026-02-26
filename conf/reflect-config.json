@@ -2260,12 +2260,6 @@
   "queryAllDeclaredConstructors":true
 },
 {
-  "name":"io.seqera.tower.cli.responses.pipelines.versions.ViewPipelineVersionCmdResponse",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllDeclaredConstructors":true
-},
-{
   "name":"io.seqera.tower.cli.responses.pipelineschemas.PipelineSchemasAdded",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,

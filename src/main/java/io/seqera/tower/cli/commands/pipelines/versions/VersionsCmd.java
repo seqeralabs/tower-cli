@@ -26,7 +26,6 @@ import picocli.CommandLine;
         description = "Manage pipeline versions",
         subcommands = {
                 ListCmd.class,
-                ViewCmd.class,
                 ManageCmd.class,
         }
 )
