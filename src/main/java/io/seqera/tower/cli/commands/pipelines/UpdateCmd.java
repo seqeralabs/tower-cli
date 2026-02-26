@@ -118,7 +118,7 @@ public class UpdateCmd extends AbstractPipelinesCmd {
         //  - Server already named it (fixed API) → just report it.
         //  - Unnamed draft + --allow-draft       → report draft ID, let user manage it manually.
         //  - Unnamed draft (default behavior)    → auto-generate a name, assign it, and promote to default
-        //    (mirrors the frontend naming algorithm from version-name-resolver.ts).
+        //    (mirrors the frontend auto-naming algorithm).
         return handleVersioningResult(response, target, pipe, wspId);
     }
 
@@ -272,7 +272,7 @@ public class UpdateCmd extends AbstractPipelinesCmd {
 
     /**
      * Names an unnamed draft version and promotes it to default. This mirrors the frontend's
-     * behavior in version-name-resolver.ts: derive an incremental name from the current default
+     * behavior: derive an incremental name from the current default
      * version name, validate it against the server (to avoid collisions), and assign it.
      */
     private String autoNameAndPromote(
