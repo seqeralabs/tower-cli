@@ -155,6 +155,15 @@ class AwsProviderTest extends BaseCmdTest {
         assertEquals(1, out.exitCode);
     }
 
+    @Test
+    void testAddGenerateExternalIdRequiresAssumeRoleArn(MockServerClient mock) {
+
+        ExecOut out = exec(mock, "credentials", "add", "aws", "-n", "aws-ext-bad", "-a", "access_key", "-s", "secret_key", "--generate-external-id");
+
+        assertTrue(out.stdErr.contains("'--generate-external-id' requires '--assume-role-arn'"), "Expected error about missing assume-role-arn for generate-external-id, got: " + out.stdErr);
+        assertEquals(1, out.exitCode);
+    }
+
     @ParameterizedTest
     @EnumSource(OutputType.class)
     void testUpdate(OutputType format, MockServerClient mock) {

@@ -95,6 +95,10 @@ public class AwsProvider extends AbstractProvider<AwsSecurityKeys> {
                 throw new IllegalArgumentException("Option '--assume-role-arn' is required when using '--mode=role'.");
             }
         }
+
+        if (generateExternalId && mode != AwsCredentialsMode.role && assumeRoleArn == null) {
+            throw new IllegalArgumentException("Option '--generate-external-id' requires '--assume-role-arn' to be specified.");
+        }
     }
 
     public static class Keys {
