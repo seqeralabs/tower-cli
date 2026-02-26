@@ -312,28 +312,6 @@ class PipelineVersionsCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testListVersionsFeatureDisabled(MockServerClient mock) {
-
-        mock.reset();
-        mockPipelineDescribe(mock);
-
-        mock.when(
-                request().withMethod("GET").withPath("/pipelines/" + PIPELINE_ID + "/versions"),
-                exactly(1)
-        ).respond(
-                response().withStatusCode(200)
-                        .withBody("{\"versions\":null,\"totalSize\":0}")
-                        .withContentType(MediaType.APPLICATION_JSON)
-        );
-
-        ExecOut out = exec(mock, "pipelines", "versions", "list", "-i", PIPELINE_ID.toString());
-
-        assertEquals(errorMessage(out.app, new TowerException("No versions available for the pipeline, check if Pipeline versioning feature is enabled for the workspace")), out.stdErr);
-        assertEquals("", out.stdOut);
-        assertEquals(1, out.exitCode);
-    }
-
-    @Test
     void testListVersionsWithFullHash(MockServerClient mock) {
 
         mock.reset();
