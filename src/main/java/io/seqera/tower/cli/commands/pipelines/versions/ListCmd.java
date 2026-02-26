@@ -77,10 +77,6 @@ public class ListCmd extends AbstractPipelinesCmd {
                 isPublishedOption
         );
 
-        if (response.getVersions() == null) {
-            throw new TowerException("No versions available for the pipeline, check if Pipeline versioning feature is enabled for the workspace");
-        }
-
         List<PipelineVersionFullInfoDto> versions = response.getVersions().stream()
                 .map(PipelineDbDto::getVersion)
                 .filter(Objects::nonNull)
