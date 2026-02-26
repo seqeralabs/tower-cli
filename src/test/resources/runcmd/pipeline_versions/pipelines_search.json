@@ -1,0 +1,21 @@
+{
+  "pipelines" : [
+    {
+      "pipelineId" : 188439584587120,
+      "name" : "TestVersioningInUserWsp",
+      "description" : null,
+      "icon" : null,
+      "repository" : "https://github.com/nextflow-io/hello",
+      "userId" : 1,
+      "userName" : "jaime-munoz",
+      "userFirstName" : null,
+      "userLastName" : null,
+      "orgId" : null,
+      "orgName" : null,
+      "workspaceId" : null,
+      "workspaceName" : null,
+      "visibility" : null
+    }
+  ],
+  "totalSize" : 1
+}

@@ -1,0 +1,87 @@
+/*
+ * Copyright 2021-2026, Seqera.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package io.seqera.tower.cli.commands.pipelines.versions;
+
+import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
+import io.seqera.tower.cli.commands.pipelines.AbstractPipelinesCmd;
+import io.seqera.tower.cli.commands.pipelines.PipelineRefOptions;
+import io.seqera.tower.cli.exceptions.TowerException;
+import io.seqera.tower.cli.responses.Response;
+import io.seqera.tower.cli.responses.pipelines.versions.ManagePipelineVersionCmdResponse;
+import io.seqera.tower.cli.utils.ResponseHelper;
+import io.seqera.tower.model.PipelineDbDto;
+import io.seqera.tower.model.PipelineVersionManageRequest;
+import picocli.CommandLine;
+import picocli.CommandLine.Command;
+
+@Command(
+        name = "manage",
+        description = "Manage a pipeline version name or default version status"
+)
+public class ManageCmd extends AbstractPipelinesCmd {
+
+    @CommandLine.Mixin
+    PipelineRefOptions pipelineRefOptions;
+
+    @CommandLine.Mixin
+    WorkspaceOptionalOptions workspaceOptions;
+
+    @CommandLine.Mixin
+    VersionRefOptions versionRefOptions;
+
+    @CommandLine.ArgGroup(exclusive = false, multiplicity = "1",
+            heading = "%nManage options (at least one required):%n")
+    public ManageOptions manageOptions;
+
+    public static class ManageOptions {
+        @CommandLine.Option(names = {"--new-name"}, description = "New name for the pipeline version")
+        public String name;
+
+        @CommandLine.Option(names = {"--set-default"}, description = "Set this version as the default")
+        public Boolean isDefault;
+    }
+
+    @Override
+    protected Response exec() throws ApiException {
+
+        Long wspId = workspaceId(workspaceOptions.workspace);
+        PipelineDbDto pipeline = fetchPipeline(pipelineRefOptions, wspId);
+
+        String resolvedVersionId = resolvePipelineVersionId(pipeline.getPipelineId(), wspId, versionRefOptions.versionRef);
+
+        PipelineVersionManageRequest request = new PipelineVersionManageRequest()
+                .name(manageOptions.name)
+                .isDefault(manageOptions.isDefault);
+
+        try {
+            pipelineVersionsApi().managePipelineVersion(
+                    pipeline.getPipelineId(),
+                    resolvedVersionId,
+                    request,
+                    wspId
+            );
+        } catch (ApiException e) {
+            throw new TowerException(
+                    String.format("Unable to manage pipeline version '%s': %s", resolvedVersionId, ResponseHelper.decodeMessage(e))
+            );
+        }
+
+        return new ManagePipelineVersionCmdResponse(workspaceOptions.workspace, pipeline.getPipelineId(), pipeline.getName(), resolvedVersionId);
+    }
+}

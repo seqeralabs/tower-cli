@@ -350,4 +350,17 @@ public class FormatHelper {
         return text.length() > maxLength ? text.substring(0, maxLength) + "..." : text;
     }
 
+    public static String formatLargeStringWithEllipsis(String largeString, int maxLength) {
+        if (largeString == null) {
+            return "NA";
+        }
+        if (largeString.length() <= maxLength) {
+            return largeString;
+        }
+        int remaining = maxLength - 3; // reserve space for "..."
+        int head = (remaining + 1) / 2;
+        int tail = remaining / 2;
+        return largeString.substring(0, head) + "..." + largeString.substring(largeString.length() - tail);
+    }
+
 }

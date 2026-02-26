@@ -19,12 +19,16 @@ package io.seqera.tower.cli.commands.pipelines;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.commands.labels.LabelsOptionalOptions;
+import io.seqera.tower.cli.commands.pipelines.labels.PipelinesLabelsManager;
+import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.pipelines.PipelinesAdded;
 import io.seqera.tower.cli.utils.FilesHelper;
+import io.seqera.tower.cli.utils.ResponseHelper;
 import io.seqera.tower.model.ComputeEnvResponseDto;
 import io.seqera.tower.model.CreatePipelineRequest;
 import io.seqera.tower.model.CreatePipelineResponse;
+import io.seqera.tower.model.CreatePipelineVersionRequest;
 import io.seqera.tower.model.Visibility;
 import io.seqera.tower.model.WorkflowLaunchRequest;
 import picocli.CommandLine;
@@ -55,6 +59,9 @@ public class AddCmd extends AbstractPipelinesCmd {
     @Parameters(index = "0", paramLabel = "PIPELINE_URL", description = "Nextflow pipeline URL", arity = "1")
     public String pipeline;
 
+    @Option(names = {"--version-name"}, description = "Initial pipeline version name.")
+    public String versionName;
+
     @Mixin
     public LabelsOptionalOptions labels;
 
@@ -77,7 +84,7 @@ public class AddCmd extends AbstractPipelinesCmd {
         // Retrieve the provided computeEnv or use the primary if not provided
         ComputeEnvResponseDto ce = opts.computeEnv != null ? computeEnvByRef(wspId, opts.computeEnv) : null;
 
-        // By default use primary compute environment at private workspaces
+        // By default, use primary compute environment at private workspaces
         if (ce == null && visibility == Visibility.PRIVATE) {
             ce = primaryComputeEnv(wspId);
             if (ce == null) {
@@ -90,36 +97,46 @@ public class AddCmd extends AbstractPipelinesCmd {
         String preRunScriptValue = opts.preRunScript == null && ce != null ? ce.getConfig().getPreRunScript() : FilesHelper.readString(opts.preRunScript);
         String postRunScriptValue = opts.postRunScript == null && ce != null ? ce.getConfig().getPostRunScript() : FilesHelper.readString(opts.postRunScript);
 
-        CreatePipelineResponse response = pipelinesApi().createPipeline(
-                new CreatePipelineRequest()
-                        .name(name)
-                        .description(description)
-                        .launch(new WorkflowLaunchRequest()
-                                .computeEnvId(ce != null ? ce.getId() : null)
-                                .pipeline(pipeline)
-                                .revision(opts.revision)
-                                .commitId(opts.commitId)
-                                .workDir(workDirValue)
-                                .configProfiles(opts.profile)
-                                .paramsText(FilesHelper.readString(opts.paramsFile))
+        CreatePipelineResponse response;
+        try {
+            response = pipelinesApi().createPipeline(
+                    new CreatePipelineRequest()
+                            .name(name)
+                            .description(description)
+                            .version(versionName != null ? new CreatePipelineVersionRequest().name(versionName) : null)
+                            .launch(new WorkflowLaunchRequest()
+                                    .computeEnvId(ce != null ? ce.getId() : null)
+                                    .pipeline(pipeline)
+                                    .revision(opts.revision)
+                                    .commitId(opts.commitId)
+                                    .workDir(workDirValue)
+                                    .configProfiles(opts.profile)
+                                    .paramsText(FilesHelper.readString(opts.paramsFile))
 
-                                // Advanced options
-                                .configText(FilesHelper.readString(opts.config))
-                                .preRunScript(preRunScriptValue)
-                                .postRunScript(postRunScriptValue)
-                                .pullLatest(opts.pullLatest)
-                                .stubRun(opts.stubRun)
-                                .mainScript(opts.mainScript)
-                                .entryName(opts.entryName)
-                                .schemaName(opts.schemaName)
-                                .pipelineSchemaId(pipelineSchemaId)
-                                .userSecrets(removeEmptyValues(opts.userSecrets))
-                                .workspaceSecrets(removeEmptyValues(opts.workspaceSecrets))
-                        )
-                , wspId
-        );
+                                    // Advanced options
+                                    .configText(FilesHelper.readString(opts.config))
+                                    .preRunScript(preRunScriptValue)
+                                    .postRunScript(postRunScriptValue)
+                                    .pullLatest(opts.pullLatest)
+                                    .stubRun(opts.stubRun)
+                                    .mainScript(opts.mainScript)
+                                    .entryName(opts.entryName)
+                                    .schemaName(opts.schemaName)
+                                    .pipelineSchemaId(pipelineSchemaId)
+                                    .userSecrets(removeEmptyValues(opts.userSecrets))
+                                    .workspaceSecrets(removeEmptyValues(opts.workspaceSecrets))
+                            )
+                    , wspId
+            );
+        } catch (ApiException e) {
+            throw new TowerException(String.format("Unable to add pipeline '%s': %s", name, ResponseHelper.decodeMessage(e)));
+        }
 
-        attachLabels(wspId,response.getPipeline().getPipelineId());
+        try {
+            attachLabels(wspId, response.getPipeline().getPipelineId());
+        } catch (ApiException e) {
+            throw new TowerException(String.format("Pipeline '%s' was created but failed to add labels: %s", name, ResponseHelper.decodeMessage(e)));
+        }
 
         return new PipelinesAdded(workspaceRef(wspId), response.getPipeline().getName());
     }

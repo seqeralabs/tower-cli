@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.seqera.tower.cli.commands.pipelines;
+package io.seqera.tower.cli.commands.pipelines.labels;
 
 import java.util.List;
 
