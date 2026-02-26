@@ -51,9 +51,10 @@ public class ViewCmd extends AbstractPipelinesCmd {
         PipelineDbDto pipeline = fetchPipeline(pipelineRefOptions, wspId, PipelineQueryAttribute.labels);
         Long sourceWorkspaceId = sourceWorkspaceId(wspId, pipeline);
 
-        PipelineVersionFullInfoDto version = null;
-        String versionId = null;
+        PipelineVersionFullInfoDto version;
+        String versionId;
         if (versionRef != null) {
+            // User explicitly targeted a version via --version-id or --version-name
             version = findPipelineVersionByRef(pipeline.getPipelineId(), wspId, versionRef);
             if (version != null) {
                 versionId = version.getId();
@@ -63,6 +64,10 @@ public class ViewCmd extends AbstractPipelinesCmd {
             } else {
                 throw new TowerException(String.format("Pipeline version '%s' not found", versionRef.versionName));
             }
+        } else {
+            // No explicit version — describePipeline already returns the default version
+            version = pipeline.getVersion();
+            versionId = version.getId();
         }
 
         LaunchDbDto launch = pipelinesApi().describePipelineLaunch(pipeline.getPipelineId(), wspId, sourceWorkspaceId, versionId).getLaunch();

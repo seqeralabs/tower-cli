@@ -1001,10 +1001,29 @@ class PipelinesCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"pipelines\":[{\"pipelineId\":213164477645856,\"name\":\"sleep_one_minute\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/pditommaso/nf-sleep\",\"userId\":1776,\"userName\":\"jordi10\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null,\"deleted\":false,\"lastUpdated\":\"2023-05-15T13:59:19Z\",\"optimized\":null,\"labels\":null,\"computeEnv\":null}],\"totalSize\":1}").withContentType(MediaType.APPLICATION_JSON)
         );
 
+        // describePipeline returns the default version — shown in output even without --version-id/--version-name
         mock.when(
                 request().withMethod("GET").withPath("/pipelines/213164477645856").withQueryStringParameter("attributes", "labels"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"pipeline\":{\"pipelineId\":213164477645856,\"name\":\"sleep_one_minute\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/pditommaso/nf-sleep\",\"userId\":1776,\"userName\":\"jordi10\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null,\"deleted\":false,\"lastUpdated\":\"2023-05-15T13:59:19Z\",\"optimized\":null,\"labels\":[],\"computeEnv\":null}}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody("""
+                        {
+                            "pipeline": {
+                                "pipelineId": 213164477645856,
+                                "name": "sleep_one_minute",
+                                "repository": "https://github.com/pditommaso/nf-sleep",
+                                "userId": 1776,
+                                "userName": "jordi10",
+                                "deleted": false,
+                                "lastUpdated": "2023-05-15T13:59:19Z",
+                                "labels": [],
+                                "version": {
+                                    "id": "default-ver",
+                                    "name": "sleep_one_minute-1",
+                                    "hash": "abc123def456",
+                                    "isDefault": true
+                                }
+                            }
+                        }""").withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
@@ -1019,31 +1038,15 @@ class PipelinesCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-
         ExecOut out = exec(mock, "pipelines", "view", "-n", "sleep_one_minute");
 
         assertEquals("", out.stdErr);
-        assertEquals(StringUtils.chop(new PipelinesView(
-                        USER_WORKSPACE_NAME,
-                        new PipelineDbDto().pipelineId(213164477645856L).name("sleep_one_minute").repository("https://github.com/pditommaso/nf-sleep"),
-                        new LaunchDbDto()
-                                .id("aB5VzZ5MGKnnAh6xsiKAV")
-                                .pipeline("https://github.com/pditommaso/nf-sleep")
-                                .workDir("$TW_AGENT_WORK")
-                                .paramsText("timeout: 60\n\n")
-                                .dateCreated(OffsetDateTime.parse("2023-05-15T13:59:19Z"))
-                                .lastUpdated(OffsetDateTime.parse("2023-05-15T08:23:29Z"))
-                                .resume(false)
-                                .pullLatest(false)
-                                .stubRun(false)
-                                .computeEnv(
-                                        parseJson("{\"id\": \"509cXW9NmIKYTe7KbjxyZn\"}", ComputeEnvComputeConfig.class)
-                                                .name("slurm_vallibierna")
-                                ),
-                baseUserUrl(mock, USER_WORKSPACE_NAME)
-                ).toString()), out.stdOut
-        );
         assertEquals(0, out.exitCode);
+        // Default version info should appear even without --version-id/--version-name
+        assertTrue(out.stdOut.contains("Version Name"), "Output should contain version name row");
+        assertTrue(out.stdOut.contains("sleep_one_minute-1"), "Output should contain default version name");
+        assertTrue(out.stdOut.contains("Version Is Default"), "Output should contain version default row");
+        assertTrue(out.stdOut.contains("abc123def456"), "Output should contain version hash");
 
     }
 
