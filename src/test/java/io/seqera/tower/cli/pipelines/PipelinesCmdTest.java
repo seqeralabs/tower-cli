@@ -80,12 +80,23 @@ class PipelinesCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody("{\"pipelines\":[{\"pipelineId\":217997727159863,\"name\":\"sleep_one_minute\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/pditommaso/nf-sleep\",\"userId\":4,\"userName\":\"jordi\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null}],\"totalSize\":1}").withContentType(MediaType.APPLICATION_JSON)
         );
 
+        // describePipeline returns the default version on pipe.getVersion()
         mock.when(
-                request().withMethod("GET").withPath("/pipelines/217997727159863/versions")
-                        .withQueryStringParameter("isPublished", "true"), exactly(1)
+                request().withMethod("GET").withPath("/pipelines/217997727159863"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("""
-                        {"versions":[{"pipelineId":217997727159863,"name":"sleep_one_minute","version":{"id":"default-ver","name":"sleep_one_minute-1","isDefault":true}}],"totalSize":1}""").withContentType(MediaType.APPLICATION_JSON)
+                        {
+                            "pipeline": {
+                                "pipelineId": 217997727159863,
+                                "name": "sleep_one_minute",
+                                "repository": "https://github.com/pditommaso/nf-sleep",
+                                "version": {
+                                    "id": "default-ver",
+                                    "name": "sleep_one_minute-1",
+                                    "isDefault": true
+                                }
+                            }
+                        }""").withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
@@ -121,11 +132,21 @@ class PipelinesCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("GET").withPath("/pipelines/217997727159863/versions")
-                        .withQueryStringParameter("isPublished", "true"), exactly(1)
+                request().withMethod("GET").withPath("/pipelines/217997727159863"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("""
-                        {"versions":[{"pipelineId":217997727159863,"name":"sleep_one_minute","version":{"id":"default-ver","name":"sleep_one_minute-1","isDefault":true}}],"totalSize":1}""").withContentType(MediaType.APPLICATION_JSON)
+                        {
+                            "pipeline": {
+                                "pipelineId": 217997727159863,
+                                "name": "sleep_one_minute",
+                                "repository": "https://github.com/pditommaso/nf-sleep",
+                                "version": {
+                                    "id": "default-ver",
+                                    "name": "sleep_one_minute-1",
+                                    "isDefault": true
+                                }
+                            }
+                        }""").withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
@@ -173,17 +194,27 @@ class PipelinesCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("GET").withPath("/pipelines/validate").withQueryStringParameter("name", "sleepOneMinute")
+                request().withMethod("GET").withPath("/pipelines/217997727159863")
         ).respond(
-                response().withStatusCode(204)
+                response().withStatusCode(200).withBody("""
+                        {
+                            "pipeline": {
+                                "pipelineId": 217997727159863,
+                                "name": "sleep_one_minute",
+                                "repository": "https://github.com/pditommaso/nf-sleep",
+                                "version": {
+                                    "id": "default-ver",
+                                    "name": "sleep_one_minute-1",
+                                    "isDefault": true
+                                }
+                            }
+                        }""").withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
-                request().withMethod("GET").withPath("/pipelines/217997727159863/versions")
-                        .withQueryStringParameter("isPublished", "true"), exactly(1)
+                request().withMethod("GET").withPath("/pipelines/validate").withQueryStringParameter("name", "sleepOneMinute")
         ).respond(
-                response().withStatusCode(200).withBody("""
-                        {"versions":[{"pipelineId":217997727159863,"name":"sleep_one_minute","version":{"id":"default-ver","name":"sleep_one_minute-1","isDefault":true}}],"totalSize":1}""").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(204)
         );
 
         mock.when(
@@ -222,11 +253,21 @@ class PipelinesCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("GET").withPath("/pipelines/217997727159863/versions")
-                        .withQueryStringParameter("isPublished", "true"), exactly(1)
+                request().withMethod("GET").withPath("/pipelines/217997727159863"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("""
-                        {"versions":[{"pipelineId":217997727159863,"name":"sleep_one_minute","version":{"id":"default-ver","name":"sleep_one_minute-1","isDefault":true}}],"totalSize":1}""").withContentType(MediaType.APPLICATION_JSON)
+                        {
+                            "pipeline": {
+                                "pipelineId": 217997727159863,
+                                "name": "sleep_one_minute",
+                                "repository": "https://github.com/pditommaso/nf-sleep",
+                                "version": {
+                                    "id": "default-ver",
+                                    "name": "sleep_one_minute-1",
+                                    "isDefault": true
+                                }
+                            }
+                        }""").withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
@@ -261,6 +302,24 @@ class PipelinesCmdTest extends BaseCmdTest {
                 request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "\"sleep_one_minute\"")
         ).respond(
                 response().withStatusCode(200).withBody("{\"pipelines\":[{\"pipelineId\":217997727159863,\"name\":\"sleep_one_minute\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/pditommaso/nf-sleep\",\"userId\":4,\"userName\":\"jordi\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null}],\"totalSize\":1}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines/217997727159863")
+        ).respond(
+                response().withStatusCode(200).withBody("""
+                        {
+                            "pipeline": {
+                                "pipelineId": 217997727159863,
+                                "name": "sleep_one_minute",
+                                "repository": "https://github.com/pditommaso/nf-sleep",
+                                "version": {
+                                    "id": "default-ver",
+                                    "name": "sleep_one_minute-1",
+                                    "isDefault": true
+                                }
+                            }
+                        }""").withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
@@ -304,17 +363,7 @@ class PipelinesCmdTest extends BaseCmdTest {
         ).respond(
                 response().withStatusCode(200)
                         .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody("{\"pipeline\":{\"pipelineId\":68359275903286,\"name\":\"hello-pipeline\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/nextflow-io/hello\",\"userId\":312,\"userName\":\"user\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":44406019030987,\"orgName\":\"test-cli-org\",\"workspaceId\":59563405657242,\"workspaceName\":\"SharedWS\",\"visibility\":\"SHARED\",\"deleted\":false,\"lastUpdated\":\"2024-11-12T13:27:32Z\",\"optimizationId\":null,\"optimizationTargets\":null,\"optimizationStatus\":null,\"labels\":null,\"computeEnv\":null}}\n")
-        );
-
-        mock.when(
-                request().withMethod("GET").withPath("/pipelines/68359275903286/versions")
-                        .withQueryStringParameter("workspaceId", "59563405657242")
-                        .withQueryStringParameter("isPublished", "true"), exactly(1)
-        ).respond(
-                response().withStatusCode(200)
-                        .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody("{\"versions\":[{\"pipelineId\":68359275903286,\"name\":\"hello-pipeline\",\"version\":{\"id\":\"default-ver\",\"name\":\"hello-pipeline-1\",\"isDefault\":true}}],\"totalSize\":1}")
+                        .withBody("{\"pipeline\":{\"pipelineId\":68359275903286,\"name\":\"hello-pipeline\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/nextflow-io/hello\",\"userId\":312,\"userName\":\"user\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":44406019030987,\"orgName\":\"test-cli-org\",\"workspaceId\":59563405657242,\"workspaceName\":\"SharedWS\",\"visibility\":\"SHARED\",\"deleted\":false,\"lastUpdated\":\"2024-11-12T13:27:32Z\",\"optimizationId\":null,\"optimizationTargets\":null,\"optimizationStatus\":null,\"labels\":null,\"computeEnv\":null,\"version\":{\"id\":\"default-ver\",\"name\":\"hello-pipeline-1\",\"isDefault\":true}}}\n")
         );
 
         mock.when(
@@ -2101,23 +2150,22 @@ class PipelinesCmdTest extends BaseCmdTest {
                         }""").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        // Resolve default version (always fetched now)
+        // describePipeline returns the default version on pipe.getVersion()
         mock.when(
-                request().withMethod("GET").withPath("/pipelines/217997727159863/versions")
-                        .withQueryStringParameter("isPublished", "true"), exactly(1)
+                request().withMethod("GET").withPath("/pipelines/217997727159863"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("""
                         {
-                            "versions": [{
+                            "pipeline": {
                                 "pipelineId": 217997727159863,
                                 "name": "sleep_one_minute",
+                                "repository": "https://github.com/pditommaso/nf-sleep",
                                 "version": {
                                     "id": "ver123",
                                     "name": "sleep_one_minute-1",
                                     "isDefault": true
                                 }
-                            }],
-                            "totalSize": 1
+                            }
                         }""").withContentType(MediaType.APPLICATION_JSON)
         );
 
@@ -2174,23 +2222,21 @@ class PipelinesCmdTest extends BaseCmdTest {
                         }""").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        // Resolve default version (always fetched now)
         mock.when(
-                request().withMethod("GET").withPath("/pipelines/217997727159863/versions")
-                        .withQueryStringParameter("isPublished", "true"), exactly(1)
+                request().withMethod("GET").withPath("/pipelines/217997727159863"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("""
                         {
-                            "versions": [{
+                            "pipeline": {
                                 "pipelineId": 217997727159863,
                                 "name": "sleep_one_minute",
+                                "repository": "https://github.com/pditommaso/nf-sleep",
                                 "version": {
                                     "id": "default-ver",
                                     "name": "sleep_one_minute-1",
                                     "isDefault": true
                                 }
-                            }],
-                            "totalSize": 1
+                            }
                         }""").withContentType(MediaType.APPLICATION_JSON)
         );
 
@@ -2273,23 +2319,21 @@ class PipelinesCmdTest extends BaseCmdTest {
                         }""").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        // Resolve default version (always fetched now)
         mock.when(
-                request().withMethod("GET").withPath("/pipelines/217997727159863/versions")
-                        .withQueryStringParameter("isPublished", "true"), exactly(1)
+                request().withMethod("GET").withPath("/pipelines/217997727159863"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("""
                         {
-                            "versions": [{
+                            "pipeline": {
                                 "pipelineId": 217997727159863,
                                 "name": "sleep_one_minute",
+                                "repository": "https://github.com/pditommaso/nf-sleep",
                                 "version": {
                                     "id": "default-ver",
                                     "name": "sleep_one_minute-1",
                                     "isDefault": true
                                 }
-                            }],
-                            "totalSize": 1
+                            }
                         }""").withContentType(MediaType.APPLICATION_JSON)
         );
 
@@ -2332,23 +2376,22 @@ class PipelinesCmdTest extends BaseCmdTest {
                         }""").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        // Resolve default version ID + provide default version name for auto-naming
+        // describePipeline returns the default version — its name is used for auto-naming
         mock.when(
-                request().withMethod("GET").withPath("/pipelines/217997727159863/versions")
-                        .withQueryStringParameter("isPublished", "true"), exactly(1)
+                request().withMethod("GET").withPath("/pipelines/217997727159863"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("""
                         {
-                            "versions": [{
+                            "pipeline": {
                                 "pipelineId": 217997727159863,
                                 "name": "sleep_one_minute",
+                                "repository": "https://github.com/pditommaso/nf-sleep",
                                 "version": {
                                     "id": "default-ver",
                                     "name": "sleep_one_minute-1",
                                     "isDefault": true
                                 }
-                            }],
-                            "totalSize": 1
+                            }
                         }""").withContentType(MediaType.APPLICATION_JSON)
         );
 
@@ -2419,23 +2462,21 @@ class PipelinesCmdTest extends BaseCmdTest {
                         }""").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        // Resolve default version ID
         mock.when(
-                request().withMethod("GET").withPath("/pipelines/217997727159863/versions")
-                        .withQueryStringParameter("isPublished", "true"), exactly(1)
+                request().withMethod("GET").withPath("/pipelines/217997727159863"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("""
                         {
-                            "versions": [{
+                            "pipeline": {
                                 "pipelineId": 217997727159863,
                                 "name": "sleep_one_minute",
+                                "repository": "https://github.com/pditommaso/nf-sleep",
                                 "version": {
                                     "id": "default-ver",
                                     "name": "sleep_one_minute-1",
                                     "isDefault": true
                                 }
-                            }],
-                            "totalSize": 1
+                            }
                         }""").withContentType(MediaType.APPLICATION_JSON)
         );
 
@@ -2493,6 +2534,25 @@ class PipelinesCmdTest extends BaseCmdTest {
                         }""").withContentType(MediaType.APPLICATION_JSON)
         );
 
+        // describePipeline returns default version name "sleep_one_minute-3" for auto-naming
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines/217997727159863"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("""
+                        {
+                            "pipeline": {
+                                "pipelineId": 217997727159863,
+                                "name": "sleep_one_minute",
+                                "repository": "https://github.com/pditommaso/nf-sleep",
+                                "version": {
+                                    "id": "ver123",
+                                    "name": "sleep_one_minute-3",
+                                    "isDefault": true
+                                }
+                            }
+                        }""").withContentType(MediaType.APPLICATION_JSON)
+        );
+
         mock.when(
                 request().withMethod("GET").withPath("/pipelines/217997727159863/launch")
                         .withQueryStringParameter("versionId", "ver123"), exactly(1)
@@ -2515,26 +2575,6 @@ class PipelinesCmdTest extends BaseCmdTest {
                                     "isDefault": false
                                 }
                             }
-                        }""").withContentType(MediaType.APPLICATION_JSON)
-        );
-
-        // Mock listPipelineVersions to return a default version
-        mock.when(
-                request().withMethod("GET").withPath("/pipelines/217997727159863/versions")
-                        .withQueryStringParameter("isPublished", "true"), exactly(1)
-        ).respond(
-                response().withStatusCode(200).withBody("""
-                        {
-                            "versions": [{
-                                "pipelineId": 217997727159863,
-                                "name": "sleep_one_minute",
-                                "version": {
-                                    "id": "ver123",
-                                    "name": "sleep_one_minute-3",
-                                    "isDefault": true
-                                }
-                            }],
-                            "totalSize": 1
                         }""").withContentType(MediaType.APPLICATION_JSON)
         );
 
@@ -2579,23 +2619,21 @@ class PipelinesCmdTest extends BaseCmdTest {
                         }""").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        // Resolve default version (always fetched now)
         mock.when(
-                request().withMethod("GET").withPath("/pipelines/217997727159863/versions")
-                        .withQueryStringParameter("isPublished", "true"), exactly(1)
+                request().withMethod("GET").withPath("/pipelines/217997727159863"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("""
                         {
-                            "versions": [{
+                            "pipeline": {
                                 "pipelineId": 217997727159863,
                                 "name": "sleep_one_minute",
+                                "repository": "https://github.com/pditommaso/nf-sleep",
                                 "version": {
                                     "id": "ver123",
                                     "name": "sleep_one_minute-3",
                                     "isDefault": true
                                 }
-                            }],
-                            "totalSize": 1
+                            }
                         }""").withContentType(MediaType.APPLICATION_JSON)
         );
 
@@ -2654,23 +2692,21 @@ class PipelinesCmdTest extends BaseCmdTest {
                         }""").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        // Resolve default version (always fetched now)
         mock.when(
-                request().withMethod("GET").withPath("/pipelines/217997727159863/versions")
-                        .withQueryStringParameter("isPublished", "true"), exactly(1)
+                request().withMethod("GET").withPath("/pipelines/217997727159863"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("""
                         {
-                            "versions": [{
+                            "pipeline": {
                                 "pipelineId": 217997727159863,
                                 "name": "sleep_one_minute",
+                                "repository": "https://github.com/pditommaso/nf-sleep",
                                 "version": {
                                     "id": "ver123",
                                     "name": "v1.0",
                                     "isDefault": true
                                 }
-                            }],
-                            "totalSize": 1
+                            }
                         }""").withContentType(MediaType.APPLICATION_JSON)
         );
 

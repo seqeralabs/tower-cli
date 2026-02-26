@@ -25,7 +25,6 @@ import io.seqera.tower.cli.responses.pipelines.PipelinesUpdated;
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.cli.utils.VersionNameHelper;
 import io.seqera.tower.model.LaunchDbDto;
-import io.seqera.tower.model.ListPipelineVersionsResponse;
 import io.seqera.tower.model.PipelineDbDto;
 import io.seqera.tower.model.PipelineVersionFullInfoDto;
 import io.seqera.tower.model.PipelineVersionManageRequest;
@@ -38,7 +37,6 @@ import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Option;
 
 import java.io.IOException;
-import java.util.Collections;
 
 import static io.seqera.tower.cli.utils.ModelHelper.coalesce;
 import static io.seqera.tower.cli.utils.ModelHelper.removeEmptyValues;
@@ -82,8 +80,8 @@ public class UpdateCmd extends AbstractPipelinesCmd {
 
         Long wspId = workspaceId(workspace.workspace);
 
-        // Resolve the pipeline by --id or --name so we have its metadata (name, description, etc.)
-        PipelineDbDto pipe = fetchPipeline(wspId);
+        // Fetch uses describePipeline, which returns the default version on pipe.getVersion()
+        PipelineDbDto pipe = fetchPipeline(pipelineRefOptions, wspId);
 
         // If the user wants to rename the pipeline (--new-name), validate early before making any
         // changes. The server checks uniqueness within the workspace/org scope.
@@ -124,11 +122,10 @@ public class UpdateCmd extends AbstractPipelinesCmd {
     // --- Pipeline resolution ---
 
     private PipelineDbDto fetchPipeline(Long wspId) throws ApiException {
-        if (pipelineRefOptions.pipeline.pipelineId != null) {
-            Long id = pipelineRefOptions.pipeline.pipelineId;
-            return pipelinesApi().describePipeline(id, Collections.emptyList(), wspId, null).getPipeline();
-        }
-        return pipelineByName(wspId, pipelineRefOptions.pipeline.pipelineName);
+        // Always go through describePipeline (not just the search/list endpoint) because
+        // describePipeline returns the default version on pipe.getVersion() — we need it
+        // later for auto-naming. The parent's fetchPipeline resolves name→id first if needed.
+        return fetchPipeline(pipelineRefOptions, wspId);
     }
 
     private void validateNewName(String newName, Long wspId) throws ApiException {
@@ -159,18 +156,20 @@ public class UpdateCmd extends AbstractPipelinesCmd {
     }
 
     private VersionTarget resolveVersionTarget(PipelineDbDto pipe, Long wspId) throws ApiException {
-        // Always fetch the default version eagerly — we need its name for auto-naming if a draft
-        // is created, regardless of whether we're updating the default or a user-specified version.
-        PipelineVersionFullInfoDto defaultVersion = fetchDefaultVersion(pipe.getPipelineId(), wspId);
+        // describePipeline (called without a versionId) already returns the default version
+        // on pipe.getVersion() — no need for a separate listPipelineVersions call.
+        // We need the default version's name for auto-naming if a draft is created later.
+        PipelineVersionFullInfoDto defaultVersion = pipe.getVersion();
+        String defaultVersionName = defaultVersion.getName();
 
         if (versionRef != null) {
             // User explicitly targeted a version via --version-id or --version-name
             String versionId = resolvePipelineVersionId(pipe.getPipelineId(), wspId, versionRef);
-            return new VersionTarget(versionId, defaultVersion.getName());
+            return new VersionTarget(versionId, defaultVersionName);
         }
 
         // No explicit version — target the default version
-        return new VersionTarget(defaultVersion.getId(), defaultVersion.getName());
+        return new VersionTarget(defaultVersion.getId(), defaultVersionName);
     }
 
     // --- Launch and request building ---
@@ -297,16 +296,4 @@ public class UpdateCmd extends AbstractPipelinesCmd {
         return version.getId().equals(requestedVersionId) ? null : version;
     }
 
-    private PipelineVersionFullInfoDto fetchDefaultVersion(Long pipelineId, Long wspId) throws ApiException {
-        // Query published versions and find the one marked as default. We use the published filter
-        // because draft versions should not be considered as the "current default" for naming.
-        ListPipelineVersionsResponse versionsResponse = pipelineVersionsApi()
-                .listPipelineVersions(pipelineId, wspId, null, null, null, true);
-        if (versionsResponse.getVersions() == null) return null;
-        return versionsResponse.getVersions().stream()
-                .map(PipelineDbDto::getVersion)
-                .filter(v -> v != null && Boolean.TRUE.equals(v.getIsDefault()))
-                .findFirst()
-                .orElse(null);
-    }
 }
