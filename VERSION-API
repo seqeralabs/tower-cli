@@ -1,4 +1,4 @@
-1.109.0
+1.114.0
 // Only first line of this file is read
 // This version should be bumped to the minimum version where dependent API changes were introduced
 // But never higher then the current Platform API Version deployed in Cloud Production: https://cloud.seqera.io/api/service-info
