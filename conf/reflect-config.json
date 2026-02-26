@@ -1548,18 +1548,6 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"io.seqera.tower.cli.commands.pipelines.versions.ViewCmd",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"io.seqera.tower.cli.commands.pipelines.versions.ViewCmd$VersionRef",
-  "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"io.seqera.tower.cli.commands.pipelineschemas.AbstractPipelineSchemasCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true
