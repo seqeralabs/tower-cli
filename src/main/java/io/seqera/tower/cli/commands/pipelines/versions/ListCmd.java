@@ -22,7 +22,6 @@ import io.seqera.tower.cli.commands.global.PaginationOptions;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.commands.pipelines.AbstractPipelinesCmd;
 import io.seqera.tower.cli.commands.pipelines.PipelineRefOptions;
-import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.pipelines.versions.ListPipelineVersionsCmdResponse;
 import io.seqera.tower.cli.utils.PaginationInfo;

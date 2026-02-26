@@ -20,7 +20,6 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.commands.pipelines.versions.VersionRefOptions;
 import io.seqera.tower.cli.exceptions.InvalidResponseException;
-import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.pipelines.PipelinesUpdated;
 import io.seqera.tower.cli.utils.FilesHelper;
@@ -162,22 +161,16 @@ public class UpdateCmd extends AbstractPipelinesCmd {
     private VersionTarget resolveVersionTarget(PipelineDbDto pipe, Long wspId) throws ApiException {
         // Always fetch the default version eagerly — we need its name for auto-naming if a draft
         // is created, regardless of whether we're updating the default or a user-specified version.
-        // Falls back to the pipeline name if no default version exists yet.
         PipelineVersionFullInfoDto defaultVersion = fetchDefaultVersion(pipe.getPipelineId(), wspId);
-        String defaultVersionName = defaultVersion != null ? defaultVersion.getName() : pipe.getName();
 
         if (versionRef != null) {
             // User explicitly targeted a version via --version-id or --version-name
             String versionId = resolvePipelineVersionId(pipe.getPipelineId(), wspId, versionRef);
-            return new VersionTarget(versionId, defaultVersionName);
+            return new VersionTarget(versionId, defaultVersion.getName());
         }
 
-        // No explicit version — target the default. Every pipeline should have one, but guard
-        // against edge cases (e.g. pipeline just created, no versions published yet).
-        if (defaultVersion == null) {
-            throw new TowerException(String.format("No default version found for pipeline '%s'", pipe.getName()));
-        }
-        return new VersionTarget(defaultVersion.getId(), defaultVersionName);
+        // No explicit version — target the default version
+        return new VersionTarget(defaultVersion.getId(), defaultVersion.getName());
     }
 
     // --- Launch and request building ---
