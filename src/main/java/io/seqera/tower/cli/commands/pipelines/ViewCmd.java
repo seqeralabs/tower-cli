@@ -18,11 +18,14 @@ package io.seqera.tower.cli.commands.pipelines;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
+import io.seqera.tower.cli.commands.pipelines.versions.VersionRefOptions;
+import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.pipelines.PipelinesView;
 import io.seqera.tower.model.LaunchDbDto;
 import io.seqera.tower.model.PipelineDbDto;
 import io.seqera.tower.model.PipelineQueryAttribute;
+import io.seqera.tower.model.PipelineVersionFullInfoDto;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
@@ -38,12 +41,36 @@ public class ViewCmd extends AbstractPipelinesCmd {
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
+    // Explicit "0..1" for clarity — contrasts with the required "1" in VersionRefOptions. @Mixin won't work here as it would lose mutual exclusivity.
+    @CommandLine.ArgGroup(multiplicity = "0..1")
+    public VersionRefOptions.VersionRef versionRef;
+
     @Override
     protected Response exec() throws ApiException {
         Long wspId = workspaceId(workspace.workspace);
         PipelineDbDto pipeline = fetchPipeline(pipelineRefOptions, wspId, PipelineQueryAttribute.labels);
         Long sourceWorkspaceId = sourceWorkspaceId(wspId, pipeline);
-        LaunchDbDto launch = pipelinesApi().describePipelineLaunch(pipeline.getPipelineId(), wspId, sourceWorkspaceId, null).getLaunch();
-        return new PipelinesView(workspaceRef(wspId), pipeline, launch, baseWorkspaceUrl(wspId));
+
+        PipelineVersionFullInfoDto version;
+        String versionId;
+        if (versionRef != null) {
+            // User explicitly targeted a version via --version-id or --version-name
+            version = findPipelineVersionByRef(pipeline.getPipelineId(), wspId, versionRef);
+            if (version != null) {
+                versionId = version.getId();
+            } else if (versionRef.versionId != null) {
+                // Pass the ID through even if not found in the list (let the API handle it)
+                versionId = versionRef.versionId;
+            } else {
+                throw new TowerException(String.format("Pipeline version '%s' not found", versionRef.versionName));
+            }
+        } else {
+            // No explicit version — describePipeline already returns the default version
+            version = pipeline.getVersion();
+            versionId = version.getId();
+        }
+
+        LaunchDbDto launch = pipelinesApi().describePipelineLaunch(pipeline.getPipelineId(), wspId, sourceWorkspaceId, versionId).getLaunch();
+        return new PipelinesView(workspaceRef(wspId), pipeline, launch, version, baseWorkspaceUrl(wspId));
     }
 }
