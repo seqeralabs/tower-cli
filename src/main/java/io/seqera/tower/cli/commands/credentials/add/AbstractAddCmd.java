@@ -58,7 +58,7 @@ public abstract class AbstractAddCmd<T extends SecurityKeys> extends AbstractCre
 
         if (overwrite) tryDeleteCredentials(name, wspId);
 
-        CreateCredentialsResponse resp = credentialsApi().createCredentials(new CreateCredentialsRequest().credentials(specs), wspId);
+        CreateCredentialsResponse resp = credentialsApi().createCredentials(new CreateCredentialsRequest().credentials(specs), wspId, null);
 
         return new CredentialsAdded(getProvider().type().name(), resp.getCredentialsId(), name, workspaceRef(wspId));
     }
