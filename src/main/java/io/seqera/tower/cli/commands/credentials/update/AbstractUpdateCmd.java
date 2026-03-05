@@ -76,7 +76,7 @@ public abstract class AbstractUpdateCmd extends AbstractCredentialsCmd {
                 .provider(getProvider().type())
                 .id(creds.getId());
 
-        credentialsApi().updateCredentials(creds.getId(), new UpdateCredentialsRequest().credentials(specs), wspId);
+        credentialsApi().updateCredentials(creds.getId(), new UpdateCredentialsRequest().credentials(specs), wspId, getProvider().useExternalId());
 
         return new CredentialsUpdated(getProvider().type().name(), name, workspaceRef(wspId));
     }
