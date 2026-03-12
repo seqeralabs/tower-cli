@@ -88,8 +88,9 @@ public class DownloadCmd extends AbstractDataLinksCmd {
                 pathInfo.add(new DataLinkFileTransferResult.SimplePathInfo(DataLinkItemType.FILE, path, 1));
             }
             else {
-                // Download each file for that prefix
+                // Download each file for that prefix (skip folder entries which end with '/')
                 for (DataLinkSimpleItem item : browseTreeResponse.getItems()) {
+                    if (item.getPath().endsWith("/")) continue;
 
                     Path targetPath = outputDir == null
                             ? Paths.get(item.getPath())
