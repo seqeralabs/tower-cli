@@ -41,9 +41,7 @@
 - [ ] Documentation updated (if applicable)
 - [ ] No new warnings generated
 - [ ] Tests pass locally
-- [ ] **CLI metadata updated** (if CLI commands/options were added/modified)
-  - [ ] Ran `./gradlew extractCliMetadata` to regenerate `docs/cli-metadata.json`
-  - [ ] Committed the updated metadata file
+- [ ] Ran `./gradlew extractCliMetadata` if this PR changes the metadata extractor or release metadata workflow
 
 ## Related Issues
 

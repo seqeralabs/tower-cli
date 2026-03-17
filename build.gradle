@@ -112,11 +112,15 @@ task runReflectionConfigGenerator(type: JavaExec) {
 
 task extractCliMetadata(type: JavaExec) {
     group = 'documentation'
-    description = 'Extract CLI metadata using Java reflection (deterministic, includes resolved mixins)'
+    description = 'Extract CLI metadata from the source tree using picocli metadata inspection'
     classpath = sourceSets.main.runtimeClasspath
     mainClass = 'io.seqera.tower.cli.utils.metadata.CliMetadataExtractor'
-    args = [file('docs/cli-metadata.json').absolutePath]
+    args = [file('build/cli-metadata/cli-metadata.json').absolutePath]
+    outputs.file(file('build/cli-metadata/cli-metadata.json'))
     dependsOn classes
+    doFirst {
+        file('build/cli-metadata').mkdirs()
+    }
 }
 
 shadowJar {

@@ -355,12 +355,41 @@ jobs:
             echo "VERSION=$VERSION"
             echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
 
+      - name: Generate CLI metadata artifact
+        run: ./gradlew extractCliMetadata
+        env:
+          GITHUB_USERNAME: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Run JReleaser
         uses: jreleaser/release-action@v2
         env:
           JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           JRELEASER_HOMEBREW_GITHUB_TOKEN: ${{secrets.GH_JRELEASER_TOKEN}}
           JRELEASER_PROJECT_VERSION: ${{ steps.version.outputs.VERSION }}
+
+      - name: Upload CLI metadata to GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release upload "v${{ steps.version.outputs.VERSION }}" build/cli-metadata/cli-metadata.json --clobber
+
+      - name: Dispatch docs update
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.DOCS_REPO_PAT }}
+          repository: seqera/docs
+          event-type: cli-release
+          client-payload: |
+            {
+              "cli_version": "${{ steps.version.outputs.VERSION }}",
+              "release_tag": "v${{ steps.version.outputs.VERSION }}",
+              "release_url": "https://github.com/${{ github.repository }}/releases/tag/v${{ steps.version.outputs.VERSION }}",
+              "metadata_url": "https://github.com/${{ github.repository }}/releases/download/v${{ steps.version.outputs.VERSION }}/cli-metadata.json",
+              "metadata_exists": true,
+              "repository": "${{ github.repository }}",
+              "sender": "${{ github.actor }}"
+            }
 
       - name: JReleaser release output
         if: always()
