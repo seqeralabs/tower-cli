@@ -612,6 +612,10 @@ public class DataLinksCmdTest extends BaseCmdTest {
                                          {
                                              "path": "directory/subdirectory/filename2.txt",
                                              "size": 106421
+                                         },
+                                         {
+                                             "path": "directory/empty-dir/",
+                                             "size": 0
                                          }
                                  ]
                              }"""
