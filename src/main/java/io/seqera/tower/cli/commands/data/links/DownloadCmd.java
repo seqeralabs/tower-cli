@@ -99,7 +99,8 @@ public class DownloadCmd extends AbstractDataLinksCmd {
 
                     downloadFile(item.getPath(), id, credId, wspId, targetPath);
                 }
-                pathInfo.add(new DataLinkFileTransferResult.SimplePathInfo(DataLinkItemType.FOLDER, path, browseTreeResponse.getItems().size()));
+                long fileCount = browseTreeResponse.getItems().stream().filter(i -> !i.getPath().endsWith("/")).count();
+                pathInfo.add(new DataLinkFileTransferResult.SimplePathInfo(DataLinkItemType.FOLDER, path, (int) fileCount));
             }
 
         }
