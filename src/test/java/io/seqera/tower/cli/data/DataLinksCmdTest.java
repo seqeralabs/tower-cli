@@ -683,9 +683,16 @@ public class DataLinksCmdTest extends BaseCmdTest {
 
         assertOutput(format, out, DataLinkFileTransferResult.donwloaded(List.of(new DataLinkFileTransferResult.SimplePathInfo(DataLinkItemType.FOLDER, "directory/", 2))));
 
-        // verify the API has been polled additionally for the status
+        // verify files were downloaded
         mock.verify(request().withMethod("GET").withPath("/download/directory/"+filename1), VerificationTimes.exactly(1));
         mock.verify(request().withMethod("GET").withPath("/download/directory/subdirectory/"+filename2), VerificationTimes.exactly(1));
+
+        // verify folder entry was not attempted to be downloaded
+        mock.verify(
+                request().withMethod("GET").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/generate-download-url")
+                        .withQueryStringParameter("filePath", "directory/empty-dir/"),
+                VerificationTimes.exactly(0)
+        );
 
         Path outputPath1 = tempDir().resolve("directory/"+filename1);
         Path outputPath2 = tempDir().resolve("directory/subdirectory/"+filename2);
