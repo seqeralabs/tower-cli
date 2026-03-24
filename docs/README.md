@@ -53,8 +53,7 @@ The metadata file is a release artifact, similar to the CLI binaries.
 At release time the build pipeline:
 1. runs `./gradlew extractCliMetadata`
 2. produces `build/cli-metadata/cli-metadata.json`
-3. uploads that file to the GitHub release assets
-4. dispatches the docs workflow with the release asset URL
+3. lets JReleaser publish that file to the GitHub release assets
 
 Downstream consumers should fetch metadata from the release assets rather than from a tracked repository file.
 
@@ -70,6 +69,18 @@ If the build fails with `Username must not be null!`, configure GitHub credentia
 # In ~/.gradle/gradle.properties
 github.packages.user=your-github-username
 github.packages.token=your-github-token
+```
+
+You can also inline credentials for a one-off run:
+
+```bash
+GITHUB_USERNAME=<username> GITHUB_TOKEN=<token> ./gradlew extractCliMetadata
+```
+
+or
+
+```bash
+GITHUB_USERNAME=<username> GITHUB_TOKEN=$(cat gh_token.txt) ./gradlew extractCliMetadata
 ```
 
 ### Commands missing from output
@@ -90,7 +101,7 @@ Check for:
 
 - **Java extractor:** `src/main/java/io/seqera/tower/cli/utils/metadata/CliMetadataExtractor.java`
 - **Gradle task:** `extractCliMetadata` in `build.gradle`
-- **PR template:** `.github/pull_request_template.md`
 - **Release workflow:** `.github/workflows/build.yml`
+- **JReleaser config:** `jreleaser.yml`
 - **Claude Code skill:** `.claude/skills/enrich-cli-help/SKILL.md`
 - **CLI documentation:** https://docs.seqera.io/platform/latest/cli/overview

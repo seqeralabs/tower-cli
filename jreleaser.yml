@@ -75,6 +75,10 @@ release:
         - search: ' \[skip ci\]'
         - search: ' \[release\]'
 
+files:
+  artifacts:
+    - path: "build/cli-metadata/cli-metadata.json"
+
 distributions:
   tw:
     type: FLAT_BINARY
