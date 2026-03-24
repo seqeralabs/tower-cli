@@ -10,7 +10,7 @@ jobs:
   notify:
     runs-on: tower-cli
     steps:
-        - uses: jenschelkopf/issue-label-notification-action@1.3
+        - uses: jenschelkopf/issue-label-notification-action@f7d2363e5efa18b8aeea671ca8093e183ae8f218 # ratchet:jenschelkopf/issue-label-notification-action@1.3
           with:
             recipients:
               squad-core=@squad-core
