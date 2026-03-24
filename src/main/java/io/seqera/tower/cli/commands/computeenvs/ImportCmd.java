@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.computeenvs;
@@ -36,13 +35,13 @@ import java.util.stream.Collectors;
 
 @CommandLine.Command(
         name = "import",
-        description = "Add a compute environment from file content."
+        description = "Import a compute environment configuration from a JSON file."
 )
 public class ImportCmd extends AbstractAddCmd {
-    @CommandLine.Option(names = {"--overwrite"}, description = "Overwrite the compute env if it already exists.", defaultValue = "false")
+    @CommandLine.Option(names = {"--overwrite"}, description = "Overwrite the compute environment if it already exists.", defaultValue = "false")
     public Boolean overwrite;
 
-    @CommandLine.Parameters(index = "0", paramLabel = "FILENAME", description = "File name to import.", arity = "1")
+    @CommandLine.Parameters(index = "0", paramLabel = "FILENAME", description = "File path containing the compute environment configuration.", arity = "1")
     Path fileName = null;
 
     @Override

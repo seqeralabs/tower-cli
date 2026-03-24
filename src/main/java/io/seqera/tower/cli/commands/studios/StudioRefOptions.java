@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.studios;
@@ -25,10 +24,10 @@ public class StudioRefOptions {
     public StudioRef studio;
 
     public static class StudioRef {
-        @CommandLine.Option(names = {"-i", "--id"}, description = "Studio session ID.")
+        @CommandLine.Option(names = {"-i", "--id"}, description = "Studio session identifier")
         public String sessionId;
 
-        @CommandLine.Option(names = {"-n", "--name"}, description = "Studio name.")
+        @CommandLine.Option(names = {"-n", "--name"}, description = "Studio name")
         public String studioName;
     }
 

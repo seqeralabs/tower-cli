@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands;
@@ -21,16 +20,17 @@ import io.seqera.tower.cli.commands.pipelines.AddCmd;
 import io.seqera.tower.cli.commands.pipelines.DeleteCmd;
 import io.seqera.tower.cli.commands.pipelines.ExportCmd;
 import io.seqera.tower.cli.commands.pipelines.ImportCmd;
-import io.seqera.tower.cli.commands.pipelines.LabelsCmd;
+import io.seqera.tower.cli.commands.pipelines.labels.LabelsCmd;
 import io.seqera.tower.cli.commands.pipelines.ListCmd;
 import io.seqera.tower.cli.commands.pipelines.UpdateCmd;
 import io.seqera.tower.cli.commands.pipelines.ViewCmd;
+import io.seqera.tower.cli.commands.pipelines.versions.VersionsCmd;
 import picocli.CommandLine.Command;
 
 
 @Command(
         name = "pipelines",
-        description = "Manage workspace pipeline launchpad.",
+        description = "Manage pipelines",
         subcommands = {
                 ListCmd.class,
                 AddCmd.class,
@@ -40,6 +40,7 @@ import picocli.CommandLine.Command;
                 ExportCmd.class,
                 ImportCmd.class,
                 LabelsCmd.class,
+                VersionsCmd.class
         }
 )
 public class PipelinesCmd extends AbstractRootCmd {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.credentials.providers;
@@ -51,7 +50,7 @@ public class K8sProvider extends AbstractProvider<K8sSecurityKeys> {
 
     public static class Keys {
 
-        @Option(names = {"-t", "--token"}, description = "Service account token.")
+        @Option(names = {"-t", "--token"}, description = "Kubernetes service account token for authentication. Alternative to certificate-based authentication.")
         public String token;
 
         @ArgGroup(exclusive = false)
@@ -60,10 +59,10 @@ public class K8sProvider extends AbstractProvider<K8sSecurityKeys> {
 
     public static class ClientCerts {
 
-        @Option(names = {"-c", "--certificate"}, description = "Client certificate file.")
+        @Option(names = {"-c", "--certificate"}, description = "Path to Kubernetes client certificate file (PEM format). Used with private key for certificate-based authentication.")
         public Path certificate;
 
-        @Option(names = {"-k", "--private-key"}, description = "Client key file.")
+        @Option(names = {"-k", "--private-key"}, description = "Path to Kubernetes client private key file (PEM format). Used with certificate for certificate-based authentication.")
         public Path privateKey;
     }
 }

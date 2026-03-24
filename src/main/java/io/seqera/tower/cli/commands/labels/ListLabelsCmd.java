@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.labels;
@@ -39,10 +38,10 @@ public class ListLabelsCmd extends AbstractLabelsCmd {
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspaceOptionalOptions;
 
-    @CommandLine.Option(names = {"-t", "--type"}, description = "Label type (normal|resource|all).", defaultValue = "all")
+    @CommandLine.Option(names = {"-t", "--type"}, description = "Label type: normal, resource, or all (default: all)", defaultValue = "all")
     public LabelType labelType;
 
-    @CommandLine.Option(names = {"-f", "--filter"}, description = "Show only labels that contain the given word.")
+    @CommandLine.Option(names = {"-f", "--filter"}, description = "Filter labels by substring")
     @Nullable
     public String filter;
 

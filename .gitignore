@@ -9,6 +9,7 @@ docs/cli-metadata.json
 
 # Location for unshared files
 .user/
+.DS_Store
 
 
 *.iml

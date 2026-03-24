@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.data.links;
@@ -26,11 +25,11 @@ public class DataLinkRefOptions {
 
     public static class DataLinkRef {
 
-        @CommandLine.Option(names = {"-i","--id"}, description = "Data link id.")
+        @CommandLine.Option(names = {"-i","--id"}, description = "Data link identifier")
         public String dataLinkId;
-        @CommandLine.Option(names = {"-n", "--name"}, description = "Data link name (e.g. my-custom-data-link-name).")
+        @CommandLine.Option(names = {"-n", "--name"}, description = "Data link name")
         public String dataLinkName;
-        @CommandLine.Option(names = {"--uri"}, description = "Data link URI (e.g. s3://another-bucket).")
+        @CommandLine.Option(names = {"--uri"}, description = "Data link URI (e.g., s3://bucket-name)")
         public String dataLinkUri;
 
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.datasets;
@@ -31,23 +30,23 @@ import java.nio.file.Path;
 
 @CommandLine.Command(
         name = "update",
-        description = "Update a workspace dataset."
+        description = "Update a dataset"
 )
 public class UpdateCmd extends AbstractDatasetsCmd {
 
     @CommandLine.Mixin
     public DatasetRefOptions datasetRefOptions;
 
-    @CommandLine.Option(names = {"--new-name"}, description = "Dataset new name.")
+    @CommandLine.Option(names = {"--new-name"}, description = "Updated dataset name. Must be unique per workspace. Names consist of alphanumeric, hyphen, and underscore characters.")
     public String newName;
 
-    @CommandLine.Option(names = {"-d", "--description"}, description = "Dataset description.")
+    @CommandLine.Option(names = {"-d", "--description"}, description = "Updated dataset description.")
     public String description;
 
-    @CommandLine.Option(names = {"--header"}, description = "Set first row as a header.")
+    @CommandLine.Option(names = {"--header"}, description = "Treat first row as header")
     public boolean header = false;
 
-    @CommandLine.Option(names = {"-f", "--file"}, description = "Data file to upload.")
+    @CommandLine.Option(names = {"-f", "--file"}, description = "Data file to upload")
     Path fileName = null;
 
     @CommandLine.Mixin

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.credentials.providers;
@@ -25,13 +24,13 @@ import java.io.IOException;
 
 public class GitlabProvider extends AbstractGitProvider<GitLabSecurityKeys> {
 
-    @Option(names = {"-u", "--username"}, description = "Gitlab username.", required = true)
+    @Option(names = {"-u", "--username"}, description = "GitLab username for repository authentication.", required = true)
     public String userName;
 
-    @Option(names = {"-p", "--password"}, description = "Gitlab account password or access token (recommended).", arity = "0..1", interactive = true, required = true)
+    @Option(names = {"-p", "--password"}, description = "GitLab account password. Use of personal access tokens (--token) is recommended for security.", arity = "0..1", interactive = true, required = true)
     public String password;
 
-    @Option(names = {"-t", "--token"}, description = "Gitlab account access token.", arity = "0..1", required = true, interactive = true)
+    @Option(names = {"-t", "--token"}, description = "GitLab personal access token. Recommended authentication method. Generate tokens at User Settings > Access Tokens with appropriate scopes (api, read_repository, write_repository).", arity = "0..1", required = true, interactive = true)
     public String accessToken;
 
     public GitlabProvider() {

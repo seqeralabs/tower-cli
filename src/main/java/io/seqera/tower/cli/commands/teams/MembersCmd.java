@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.teams;
@@ -32,7 +31,7 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "members",
-        description = "List all team members.",
+        description = "List team members",
         subcommands = {
                 AddCmd.class,
                 DeleteCmd.class,
@@ -40,10 +39,10 @@ import java.io.IOException;
 )
 public class MembersCmd extends AbstractTeamsCmd {
 
-    @CommandLine.Option(names = {"-t", "--team"}, description = "Team name.", required = true)
+    @CommandLine.Option(names = {"-t", "--team"}, description = "Team name. The unique team identifier within the organization. Lists all members who belong to this team.", required = true)
     public String teamName;
 
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name or identifier.", required = true)
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name or numeric ID. Specify either the unique organization name or the numeric organization ID returned by 'tw organizations list'.", required = true)
     public String organizationRef;
 
     @Override

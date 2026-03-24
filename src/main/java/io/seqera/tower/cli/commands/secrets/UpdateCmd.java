@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.secrets;
@@ -31,13 +30,13 @@ import java.io.IOException;
 
 @Command(
         name = "update",
-        description = "Update a workspace secret."
+        description = "Update a secret"
 )
 public class UpdateCmd extends AbstractSecretsCmd {
 
     @Mixin
     public WorkspaceOptionalOptions workspace;
-    @Option(names = {"-v", "--value"}, description = "Secret value.")
+    @Option(names = {"-v", "--value"}, description = "New secret value, to be stored securely. The secret is made available to pipeline executions at runtime.")
     public String value;
     @Mixin
     SecretRefOptions ref;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.credentials.providers;
@@ -25,10 +24,10 @@ import java.io.IOException;
 
 public class BitbucketProvider extends AbstractGitProvider<BitBucketSecurityKeys> {
 
-    @Option(names = {"-u", "--username"}, description = "Bitbucket username.", required = true)
+    @Option(names = {"-u", "--username"}, description = "Bitbucket username for repository authentication.", required = true)
     public String userName;
 
-    @Option(names = {"-p", "--password"}, description = "Bitbucket App password.", arity = "0..1", interactive = true, required = true)
+    @Option(names = {"-p", "--password"}, description = "Bitbucket app password or access token. App passwords are recommended for API access. Create app passwords in Bitbucket Settings > Personal settings > App passwords.", arity = "0..1", interactive = true, required = true)
     public String password;
 
     public BitbucketProvider() {

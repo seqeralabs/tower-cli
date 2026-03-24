@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.runs;
@@ -26,7 +25,7 @@ import io.seqera.tower.model.DescribeLaunchResponse;
 import io.seqera.tower.model.DescribeWorkflowLaunchResponse;
 import io.seqera.tower.model.DescribeWorkflowResponse;
 import io.seqera.tower.model.GetProgressResponse;
-import io.seqera.tower.model.Launch;
+import io.seqera.tower.model.LaunchDbDto;
 import io.seqera.tower.model.WorkflowLoad;
 import io.seqera.tower.model.WorkflowQueryAttribute;
 import picocli.CommandLine.Command;
@@ -62,7 +61,7 @@ abstract public class AbstractRunsCmd extends AbstractApiCmd {
         return wfLaunchResponse;
     }
 
-    protected Launch launchById(Long workspaceId, String id) throws ApiException {
+    protected LaunchDbDto launchById(Long workspaceId, String id) throws ApiException {
         DescribeLaunchResponse launchResponse = launchApi().describeLaunch(id, workspaceId);
 
         if (launchResponse == null) {

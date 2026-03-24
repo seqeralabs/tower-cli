@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.credentials.providers;
@@ -23,10 +22,10 @@ import picocli.CommandLine.Option;
 
 public class CodeCommitProvider extends AbstractGitProvider<CodeCommitSecurityKeys> {
 
-    @Option(names = {"--access-key"}, description = "CodeCommit AWS access key.", required = true)
+    @Option(names = {"--access-key"}, description = "AWS access key identifier for CodeCommit authentication. Part of AWS IAM user credentials with CodeCommit permissions.", required = true)
     public String accessKey;
 
-    @Option(names = {"--secret-key"}, description = "CodeCommit AWS secret key.", required = true)
+    @Option(names = {"--secret-key"}, description = "AWS secret access key for CodeCommit authentication. Part of AWS IAM user credentials with CodeCommit permissions. Keep this value secure.", required = true)
     public String secretKey;
 
     public CodeCommitProvider() {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands;
@@ -29,7 +28,9 @@ import io.seqera.tower.api.Ga4ghApi;
 import io.seqera.tower.api.LabelsApi;
 import io.seqera.tower.api.LaunchApi;
 import io.seqera.tower.api.OrgsApi;
+import io.seqera.tower.api.PipelineSchemasApi;
 import io.seqera.tower.api.PipelineSecretsApi;
+import io.seqera.tower.api.PipelineVersionsApi;
 import io.seqera.tower.api.PipelinesApi;
 import io.seqera.tower.api.PlatformsApi;
 import io.seqera.tower.api.ServiceInfoApi;
@@ -43,6 +44,7 @@ import io.seqera.tower.api.WorkspacesApi;
 import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.commands.labels.Label;
 import io.seqera.tower.cli.commands.labels.LabelsFinder;
+import io.seqera.tower.cli.commands.pipelines.versions.VersionRefOptions;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
 import io.seqera.tower.cli.exceptions.InvalidWorkspaceParameterException;
 import io.seqera.tower.cli.exceptions.MissingTowerAccessTokenException;
@@ -59,10 +61,12 @@ import io.seqera.tower.model.ComputeEnvResponseDto;
 import io.seqera.tower.model.Credentials;
 import io.seqera.tower.model.DataStudioQueryAttribute;
 import io.seqera.tower.model.ListComputeEnvsResponseEntry;
+import io.seqera.tower.model.ListPipelineVersionsResponse;
 import io.seqera.tower.model.ListWorkspacesAndOrgResponse;
 import io.seqera.tower.model.OrgAndWorkspaceDto;
 import io.seqera.tower.model.PipelineDbDto;
 import io.seqera.tower.model.PipelineQueryAttribute;
+import io.seqera.tower.model.PipelineVersionFullInfoDto;
 import io.seqera.tower.model.UserResponseDto;
 import io.seqera.tower.model.WorkflowQueryAttribute;
 import org.glassfish.jersey.CommonProperties;
@@ -82,6 +86,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.function.Predicate;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -113,7 +118,9 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     private LaunchApi launchApi;
     private OrgsApi orgsApi;
     private PipelinesApi pipelinesApi;
+    private PipelineSchemasApi pipelineSchemasApi;
     private PipelineSecretsApi pipelineSecretsApi;
+    private PipelineVersionsApi pipelineVersionsApi;
     private PlatformsApi platformsApi;
     private ServiceInfoApi serviceInfoApi;
     private StudiosApi studiosApi;
@@ -164,6 +171,12 @@ public abstract class AbstractApiCmd extends AbstractCmd {
             client.setServerIndex(null);
             client.setBasePath(app().url);
             client.setBearerToken(app().token);
+
+            // FIXME: Workaround for Platform versions before 26.x returning exit as String. Remove once those versions are phased out (see #578).
+            client.getJSON().getMapper().addMixIn(
+                    io.seqera.tower.model.Task.class,
+                    io.seqera.tower.cli.utils.TaskExitMixin.class
+            );
 
             // Set HTTP Agent header
             Properties props = getCliProperties();
@@ -219,8 +232,16 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         return pipelineSecretsApi == null ? new PipelineSecretsApi(apiClient()) : pipelineSecretsApi;
     }
 
+    protected PipelineSchemasApi pipelineSchemasApi() throws ApiException {
+        return pipelineSchemasApi == null ? new PipelineSchemasApi(apiClient()) : pipelineSchemasApi;
+    }
+
     protected PipelinesApi pipelinesApi() throws ApiException {
         return pipelinesApi == null ? new PipelinesApi(apiClient()) : pipelinesApi;
+    }
+
+    protected PipelineVersionsApi pipelineVersionsApi() throws ApiException {
+        return pipelineVersionsApi == null ? new PipelineVersionsApi(apiClient()) : pipelineVersionsApi;
     }
 
     protected PlatformsApi platformsApi() throws ApiException {
@@ -566,6 +587,39 @@ public abstract class AbstractApiCmd extends AbstractCmd {
             return USER_WORKSPACE_NAME;
         }
         return buildWorkspaceRef(orgName(workspaceId), workspaceName(workspaceId));
+    }
+
+    protected PipelineVersionFullInfoDto findPipelineVersionByRef(Long pipelineId, Long wspId, VersionRefOptions.VersionRef ref) throws ApiException {
+        String search = ref.versionName;
+        Boolean isPublished = ref.versionName != null ? true : null;
+        Predicate<PipelineVersionFullInfoDto> matcher = ref.versionId != null
+                ? v -> ref.versionId.equals(v.getId())
+                : v -> ref.versionName.equals(v.getName());
+
+        ListPipelineVersionsResponse response = pipelineVersionsApi()
+                .listPipelineVersions(pipelineId, wspId, null, null, search, isPublished);
+
+        if (response.getVersions() == null) {
+            throw new TowerException("No versions available for the pipeline, check if Pipeline versioning feature is enabled for the workspace");
+        }
+
+        return response.getVersions().stream()
+                .map(PipelineDbDto::getVersion)
+                .filter(Objects::nonNull)
+                .filter(matcher)
+                .findFirst()
+                .orElse(null);
+    }
+
+    protected String resolvePipelineVersionId(Long pipelineId, Long wspId, VersionRefOptions.VersionRef versionRef) throws ApiException {
+        if (versionRef == null) return null;
+        if (versionRef.versionId != null) return versionRef.versionId;
+
+        PipelineVersionFullInfoDto version = findPipelineVersionByRef(pipelineId, wspId, versionRef);
+        if (version == null) {
+            throw new TowerException(String.format("Pipeline version '%s' not found", versionRef.versionName));
+        }
+        return version.getId();
     }
 
     protected Long sourceWorkspaceId(Long currentWorkspace, PipelineDbDto pipeline) {

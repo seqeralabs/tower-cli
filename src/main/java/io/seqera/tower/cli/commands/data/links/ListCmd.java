@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.data.links;
@@ -33,7 +32,7 @@ import java.util.List;
 
 @Command(
         name = "list",
-        description = "List data-links."
+        description = "List data links"
 )
 public class ListCmd extends AbstractDataLinksCmd {
 
@@ -43,13 +42,13 @@ public class ListCmd extends AbstractDataLinksCmd {
     @CommandLine.Mixin
     public PaginationOptions paginationOptions;
 
-    @CommandLine.Option(names = {"-c", "--credentials"}, description = "Credentials identifier.")
+    @CommandLine.Option(names = {"-c", "--credentials"}, description = "Credentials identifier")
     public String credentialsRef;
 
-    @CommandLine.Option(names = {"--wait"}, description = "When present program will wait till all data links are fetched to cache.")
+    @CommandLine.Option(names = {"--wait"}, description = "Wait for all data links to be fetched to cache")
     public boolean wait;
 
-    @CommandLine.Option(names = {"--visibility"}, description = "Show  only data links that are [hidden, visible, all]. When not present all will be shown.")
+    @CommandLine.Option(names = {"--visibility"}, description = "Filter by visibility: hidden, visible, or all")
     public Visibility visibilityOption;
 
     // Search params

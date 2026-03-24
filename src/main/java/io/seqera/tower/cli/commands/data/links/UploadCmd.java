@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.data.links;
@@ -43,7 +42,7 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "upload",
-        description = "Upload content to data-link."
+        description = "Upload files to a data link"
 )
 public class UploadCmd extends AbstractDataLinksCmd {
 
@@ -57,13 +56,13 @@ public class UploadCmd extends AbstractDataLinksCmd {
     @CommandLine.Mixin
     public DataLinkRefOptions dataLinkRefOptions;
 
-    @CommandLine.Option(names = {"-c", "--credentials"}, description = "Credentials identifier.", required = true)
+    @CommandLine.Option(names = {"-c", "--credentials"}, description = "Credentials identifier", required = true)
     public String credentialsRef;
 
-    @CommandLine.Option(names = {"-o", "--output-dir"}, description = "Output directory.")
+    @CommandLine.Option(names = {"-o", "--output-dir"}, description = "Destination directory in the data link")
     public String outputDir;
 
-    @CommandLine.Parameters(arity = "1..*", description = "Paths to files or directories to upload.")
+    @CommandLine.Parameters(arity = "1..*", description = "Paths to files or directories to upload")
     private List<String> paths;
 
     @Override

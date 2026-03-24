@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.members;
@@ -27,11 +26,11 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "leave",
-        description = "Leave an organization."
+        description = "Leave an organization"
 )
 public class LeaveCmd extends AbstractMembersClass {
 
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name or identifier.", required = true)
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name or numeric ID to leave. Removes yourself from the organization and all associated teams and workspaces. Cannot be undone except by another member re-inviting you.", required = true)
     public String organizationRef;
 
     @Override

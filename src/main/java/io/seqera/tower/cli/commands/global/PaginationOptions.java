@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.global;
@@ -33,15 +32,15 @@ public class PaginationOptions {
     public Sizeable sizeable;
 
     public static class Pageable {
-        @CommandLine.Option(names = {"--page"}, description = "Pages to display [default: 1].")
+        @CommandLine.Option(names = {"--page"}, description = "Page number for paginated results (default: 1)")
         public Integer page;
 
-        @CommandLine.Option(names = {"--offset"}, description = "Rows record offset [default: 0].")
+        @CommandLine.Option(names = {"--offset"}, description = "Row offset for paginated results (default: 0)")
         public Integer offset;
     }
 
     public static class Sizeable {
-        @CommandLine.Option(names = {"--max"}, description = "Maximum number of records to display [default: " + MAX + "].")
+        @CommandLine.Option(names = {"--max"}, description = "Maximum number of records to display (default: " + MAX + ")")
         public Integer max;
     }
 

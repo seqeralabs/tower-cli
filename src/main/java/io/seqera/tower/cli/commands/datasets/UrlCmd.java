@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.datasets;
@@ -29,14 +28,14 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "url",
-        description = "Obtain a dataset url."
+        description = "Get dataset URL"
 )
 public class UrlCmd extends AbstractDatasetsCmd {
 
     @CommandLine.Mixin
     public DatasetRefOptions datasetRefOptions;
 
-    @CommandLine.Option(names = {"--dataset-version"}, description = "Dataset version to obtain URL from.")
+    @CommandLine.Option(names = {"--dataset-version"}, description = "Dataset version for URL")
     public Long version;
 
     @CommandLine.Mixin

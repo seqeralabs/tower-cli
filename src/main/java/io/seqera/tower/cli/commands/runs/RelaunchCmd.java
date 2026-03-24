@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.runs;
@@ -29,9 +28,9 @@ import io.seqera.tower.model.ComputeEnvResponseDto;
 import io.seqera.tower.model.DescribeWorkflowLaunchResponse;
 import io.seqera.tower.model.SubmitWorkflowLaunchRequest;
 import io.seqera.tower.model.SubmitWorkflowLaunchResponse;
-import io.seqera.tower.model.Workflow;
 import io.seqera.tower.model.WorkflowLaunchRequest;
 import io.seqera.tower.model.WorkflowLaunchResponse;
+import io.seqera.tower.model.WorkflowMaxDbDto;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
@@ -45,26 +44,26 @@ import static io.seqera.tower.cli.utils.ModelHelper.removeEmptyValues;
 
 @Command(
         name = "relaunch",
-        description = "Add a pipeline run."
+        description = "Relaunch a pipeline run"
 )
 public class RelaunchCmd extends AbstractRunsCmd {
 
-    @Option(names = {"-i", "--id"}, description = "Pipeline run id to relaunch.", required = true)
+    @Option(names = {"-i", "--id"}, description = "Pipeline run identifier to relaunch", required = true)
     public String id;
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
-    @Option(names = {"--pipeline"}, description = "Pipeline to launch.")
+    @Option(names = {"--pipeline"}, description = "Override the pipeline to launch. Allows relaunching with a different pipeline repository URL while keeping other launch configuration settings.")
     public String pipeline;
 
-    @Option(names = {"--no-resume"}, description = "Do not resume the pipeline run.")
+    @Option(names = {"--no-resume"}, description = "Start workflow execution from scratch instead of resuming from the last successful process. Use this to rerun the entire workflow without using cached results.")
     public boolean noResume;
 
-    @Option(names = {"-n", "--name"}, description = "Custom workflow run name")
+    @Option(names = {"-n", "--name"}, description = "Custom workflow run name. Overrides the automatically generated run name with a user-defined identifier.")
     public String name;
 
-    @Option(names = {"--launch-container"}, description = "Container to be used to run the nextflow head job (BETA).")
+    @Option(names = {"--launch-container"}, description = "Container image for the Nextflow head job. Overrides the default launcher container.")
     public String launchContainer;
 
     @Mixin
@@ -78,7 +77,7 @@ public class RelaunchCmd extends AbstractRunsCmd {
             throw new TowerException("Not allowed to change '--work-dir' option when resuming. Use '--no-resume' if you want to relaunch into a different working directory without resuming.");
         }
 
-        Workflow workflow = workflowById(wspId, id, NO_WORKFLOW_ATTRIBUTES).getWorkflow();
+        WorkflowMaxDbDto workflow = workflowById(wspId, id, NO_WORKFLOW_ATTRIBUTES).getWorkflow();
         WorkflowLaunchResponse launch = workflowLaunchResponse(workflow.getId(), wspId);
 
         ComputeEnvResponseDto ce = null;

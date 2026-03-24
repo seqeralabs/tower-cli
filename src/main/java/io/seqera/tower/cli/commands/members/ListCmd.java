@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.members;
@@ -29,14 +28,14 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "list",
-        description = "List all the teams in a given organization."
+        description = "List organization members"
 )
 public class ListCmd extends AbstractMembersClass {
 
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name or identifier.", required = true)
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name or numeric ID. Specify either the unique organization name or the numeric organization ID returned by 'tw organizations list'.", required = true)
     public String organizationRef;
 
-    @CommandLine.Option(names = {"-f", "--filter"}, description = "Only show members with usernames that start with the given word.")
+    @CommandLine.Option(names = {"-f", "--filter"}, description = "Filter members by username prefix. Case-insensitive prefix matching on the username field (e.g., 'john' matches 'john.doe').")
     public String startsWith;
 
     @CommandLine.Mixin

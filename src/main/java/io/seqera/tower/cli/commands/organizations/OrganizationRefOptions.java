@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.organizations;
@@ -26,10 +25,10 @@ public class OrganizationRefOptions {
 
     public static class OrganizationRef {
 
-        @CommandLine.Option(names = {"-i", "--id"}, description = "Organization unique id.")
+        @CommandLine.Option(names = {"-i", "--id"}, description = "Organization numeric identifier. The unique ID assigned when the organization was created.")
         public Long organizationId;
 
-        @CommandLine.Option(names = {"-n", "--name"}, description = "Organization name.")
+        @CommandLine.Option(names = {"-n", "--name"}, description = "Organization name. The unique organization name used as a human-readable identifier.")
         public String organizationName;
     }
 }

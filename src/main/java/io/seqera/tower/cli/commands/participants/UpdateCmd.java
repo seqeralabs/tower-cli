@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.participants;
@@ -24,14 +23,13 @@ import io.seqera.tower.cli.responses.participants.ParticipantUpdated;
 import io.seqera.tower.model.ParticipantResponseDto;
 import io.seqera.tower.model.ParticipantType;
 import io.seqera.tower.model.UpdateParticipantRoleRequest;
-import io.seqera.tower.cli.commands.enums.WspRole;
 import picocli.CommandLine;
 
 import java.io.IOException;
 
 @CommandLine.Command(
         name = "update",
-        description = "Update a participant role."
+        description = "Update a participant role"
 )
 public class UpdateCmd extends AbstractParticipantsCmd {
 
@@ -41,8 +39,8 @@ public class UpdateCmd extends AbstractParticipantsCmd {
     @CommandLine.Option(names = {"-t", "--type"}, description = "Type of participant (MEMBER, COLLABORATOR or TEAM).", required = true)
     public ParticipantType type;
 
-    @CommandLine.Option(names = {"-r", "--role"}, description = "Workspace participant role (OWNER, ADMIN, MAINTAIN, LAUNCH, CONNECT or VIEW).", required = true)
-    public WspRole role;
+    @CommandLine.Option(names = {"-r", "--role"}, description = "Workspace participant role name: predefined (OWNER, ADMIN, MAINTAIN, LAUNCH, CONNECT, VIEW) or custom.", required = true)
+    public String role;
 
     @CommandLine.Mixin
     public WorkspaceRequiredOptions workspace;
@@ -54,10 +52,10 @@ public class UpdateCmd extends AbstractParticipantsCmd {
         ParticipantResponseDto participant = findWorkspaceParticipant(orgId(wspId), wspId, name, type);
 
         UpdateParticipantRoleRequest request = new UpdateParticipantRoleRequest();
-        request.setRole(role.toString());
+        request.setRole(role);
 
         workspacesApi().updateWorkspaceParticipantRole(orgId(wspId), wspId, participant.getParticipantId(), request);
 
-        return new ParticipantUpdated(workspaceName(wspId), name, role.toString());
+        return new ParticipantUpdated(workspaceName(wspId), name, role);
     }
 }

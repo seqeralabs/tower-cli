@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.computeenvs.platforms;
@@ -33,7 +32,7 @@ public class SeqeraComputePlatform extends AbstractPlatform<SeqeraComputeConfig>
     @CommandLine.Option(names = {"-r", "--region"}, description = "AWS region.", required = true)
     public String region;
 
-    @CommandLine.Option(names = {"--instance-type-size"}, description = "Size of Data Studios instance (SMALL, MEDIUM, LARGE). Free-tier organizations are limited to SMALL.")
+    @CommandLine.Option(names = {"--instance-type-size"}, description = "Studios instance size, controlling compute resources and capabilities. Options: ${COMPLETION-CANDIDATES}. Free-tier organizations are limited to SMALL.")
     public SeqeraComputeCloudInstanceTypeSize instanceTypeSize;
 
     public SeqeraComputePlatform() {

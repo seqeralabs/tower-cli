@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.members;
@@ -28,14 +27,14 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "delete",
-        description = "Delete an organization member."
+        description = "Remove an organization member"
 )
 public class DeleteCmd extends AbstractMembersClass{
 
-    @CommandLine.Option(names = {"-u", "--user"}, description = "Username or email to delete from organization members.", required = true)
+    @CommandLine.Option(names = {"-u", "--user"}, description = "Username or email address of the member to remove. Removes the user from the organization and all associated teams and workspaces. Use 'tw members leave' to remove yourself.", required = true)
     public String user;
 
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name or identifier.", required = true)
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name or numeric ID. Specify either the unique organization name or the numeric organization ID returned by 'tw organizations list'.", required = true)
     public String organizationRef;
 
     @Override

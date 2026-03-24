@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.utils;
@@ -349,6 +348,19 @@ public class FormatHelper {
         var text = description.trim().replace("\n", " ").replace("\r", " ");
         // cap the description length if too long
         return text.length() > maxLength ? text.substring(0, maxLength) + "..." : text;
+    }
+
+    public static String formatLargeStringWithEllipsis(String largeString, int maxLength) {
+        if (largeString == null) {
+            return "NA";
+        }
+        if (largeString.length() <= maxLength) {
+            return largeString;
+        }
+        int remaining = maxLength - 3; // reserve space for "..."
+        int head = (remaining + 1) / 2;
+        int tail = remaining / 2;
+        return largeString.substring(0, head) + "..." + largeString.substring(largeString.length() - tail);
     }
 
 }

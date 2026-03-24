@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.workspaces;
@@ -26,10 +25,10 @@ public class WorkspaceRefOptions {
 
     public static class WorkspaceRef {
 
-        @CommandLine.Option(names = {"-i", "--id"}, description = "Workspace unique ID.")
+        @CommandLine.Option(names = {"-i", "--id"}, description = "Workspace identifier")
         public Long workspaceId;
 
-        @CommandLine.Option(names = {"-n", "--name"}, description = "Workspace namespace in the form of organizationName/workspaceName.")
+        @CommandLine.Option(names = {"-n", "--name"}, description = "Workspace namespace in OrganizationName/WorkspaceName format")
         public String workspaceName;
     }
 }

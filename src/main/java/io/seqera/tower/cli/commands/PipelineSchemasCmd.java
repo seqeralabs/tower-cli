@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,21 +12,21 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
-package io.seqera.tower.cli.commands.enums;
+package io.seqera.tower.cli.commands;
 
-/**
- * Predefined workspace roles.
- */
-public enum WspRole {
+import io.seqera.tower.cli.commands.pipelineschemas.AddCmd;
 
-    owner,
-    admin,
-    maintain,
-    launch,
-    connect,
-    view
+import picocli.CommandLine.Command;
 
+
+@Command(
+        name = "pipeline-schemas",
+        description = "Manage pipeline schemas",
+        subcommands = {
+                AddCmd.class,
+        }
+)
+public class PipelineSchemasCmd extends AbstractRootCmd {
 }

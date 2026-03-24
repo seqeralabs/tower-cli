@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.computeenvs;
@@ -34,7 +33,7 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "export",
-        description = "Export compute environment for further creation."
+        description = "Export compute environment configuration as a JSON file."
 )
 public class ExportCmd extends AbstractComputeEnvCmd {
 
@@ -44,7 +43,7 @@ public class ExportCmd extends AbstractComputeEnvCmd {
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
-    @CommandLine.Parameters(index = "0", paramLabel = "FILENAME", description = "File name to export.", arity = "0..1")
+    @CommandLine.Parameters(index = "0", paramLabel = "FILENAME", description = "File name and path for the exported compute environment configuration.", arity = "0..1")
     String fileName = null;
 
     @Override

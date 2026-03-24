@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.runs;
@@ -30,8 +29,8 @@ import io.seqera.tower.model.ComputeEnvComputeConfig;
 import io.seqera.tower.model.DescribeWorkflowLaunchResponse;
 import io.seqera.tower.model.DescribeWorkflowResponse;
 import io.seqera.tower.model.ProgressData;
-import io.seqera.tower.model.Workflow;
 import io.seqera.tower.model.WorkflowLoad;
+import io.seqera.tower.model.WorkflowMaxDbDto;
 import io.seqera.tower.model.WorkflowQueryAttribute;
 import picocli.CommandLine;
 
@@ -46,7 +45,7 @@ import static io.seqera.tower.cli.utils.FormatHelper.formatLabels;
 
 @CommandLine.Command(
         name = "view",
-        description = "View pipeline's runs.",
+        description = "View pipeline run details",
         subcommands = {
                 DownloadCmd.class,
                 MetricsCmd.class,
@@ -56,7 +55,7 @@ import static io.seqera.tower.cli.utils.FormatHelper.formatLabels;
 )
 public class ViewCmd extends AbstractRunsCmd {
 
-    @CommandLine.Option(names = {"-i", "--id"}, description = "Pipeline run identifier.", required = true)
+    @CommandLine.Option(names = {"-i", "--id"}, description = "Pipeline run identifier. The unique workflow ID to display details for. Use additional flags to control which sections are shown.", required = true)
     public String id;
 
     @CommandLine.Mixin
@@ -76,7 +75,7 @@ public class ViewCmd extends AbstractRunsCmd {
                 throw new RunNotFoundException(id, workspaceRef(wspId));
             }
 
-            Workflow workflow = workflowResponse.getWorkflow();
+            WorkflowMaxDbDto workflow = workflowResponse.getWorkflow();
             WorkflowLoad workflowLoad = workflowLoadByWorkflowId(wspId, id);
 
             DescribeWorkflowLaunchResponse wfLaunch = workflowsApi().describeWorkflowLaunch(workflow.getId(), wspId);

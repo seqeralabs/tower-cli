@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.credentials.providers;
@@ -25,10 +24,10 @@ import java.io.IOException;
 
 public class TwAgentProvider extends AbstractProvider<AgentSecurityKeys> {
 
-    @Option(names = {"--connection-id"}, description = "Connection identifier.", required = true)
+    @Option(names = {"--connection-id"}, description = "Seqera Platform Agent connection identifier. Unique identifier for the agent connection used to execute workflows.", required = true)
     public String connectionId;
 
-    @Option(names = {"--work-dir"}, description = "Default work directory", defaultValue = "$TW_AGENT_WORK")
+    @Option(names = {"--work-dir"}, description = "Default work directory path for workflow execution on the agent. Must be accessible to the agent process. Default: $TW_AGENT_WORK.", defaultValue = "$TW_AGENT_WORK")
     public String workDir;
 
     public TwAgentProvider() {

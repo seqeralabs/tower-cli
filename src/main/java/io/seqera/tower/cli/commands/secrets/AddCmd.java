@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.secrets;
@@ -33,20 +32,20 @@ import java.io.IOException;
 
 @Command(
         name = "add",
-        description = "Add a workspace secret."
+        description = "Add a secret"
 )
 public class AddCmd extends AbstractSecretsCmd {
 
-    @Option(names = {"-n", "--name"}, description = "Secret name.", required = true)
+    @Option(names = {"-n", "--name"}, description = "Secret name. Must be unique per workspace. Names consist of alphanumeric, hyphen, and underscore characters.", required = true)
     public String name;
 
     @Mixin
     public WorkspaceOptionalOptions workspace;
 
-    @Option(names = {"-v", "--value"}, description = "Secret value.")
+    @Option(names = {"-v", "--value"}, description = "Secret value, to be stored securely. The secret is made available to pipeline executions at runtime.")
     public String value;
 
-    @CommandLine.Option(names = {"--overwrite"}, description = "Overwrite the secret if it already exists.", defaultValue = "false")
+    @CommandLine.Option(names = {"--overwrite"}, description = "Overwrite the secret if it already exists", defaultValue = "false")
     public Boolean overwrite;
 
     @Override

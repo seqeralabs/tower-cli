@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.teams;
@@ -31,20 +30,20 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "add",
-        description = "Add a new organization team."
+        description = "Add a team"
 )
 public class AddCmd extends AbstractTeamsCmd {
 
-    @CommandLine.Option(names = {"-n", "--name"}, description = "Team name.", required = true)
+    @CommandLine.Option(names = {"-n", "--name"}, description = "Team name. The unique identifier for the team within the organization. Used to reference the team in commands and workspace permissions.", required = true)
     public String teamName;
 
-    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name or identifier.", required = true)
+    @CommandLine.Option(names = {"-o", "--organization"}, description = "Organization name or numeric ID. Specify either the unique organization name or the numeric organization ID returned by 'tw organizations list'.", required = true)
     public String organizationRef;
 
-    @CommandLine.Option(names = {"-d", "--description"}, description = "Team description.")
+    @CommandLine.Option(names = {"-d", "--description"}, description = "Team description. Free-text description providing context about the team's purpose, members, or project scope.")
     public String teamDescription;
 
-    @CommandLine.Option(names = {"--overwrite"}, description = "Overwrite the team if it already exists.", defaultValue = "false")
+    @CommandLine.Option(names = {"--overwrite"}, description = "Overwrite existing team. If a team with this name already exists in the organization, delete it first before creating the new one. Use with caution as this removes all team members and permissions.", defaultValue = "false")
     public Boolean overwrite;
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,11 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.credentials.providers;
 
+import io.seqera.tower.model.AwsCredentialsMode;
 import io.seqera.tower.model.AwsSecurityKeys;
 import io.seqera.tower.model.Credentials.ProviderEnum;
 import picocli.CommandLine.ArgGroup;
@@ -26,8 +26,15 @@ public class AwsProvider extends AbstractProvider<AwsSecurityKeys> {
 
     @ArgGroup(exclusive = false)
     public Keys keys;
-    @Option(names = {"-r", "--assume-role-arn"}, description = "The IAM role to access the AWS resources. It should be a fully qualified AWS role ARN.")
+
+    @Option(names = {"-r", "--assume-role-arn"}, description = "IAM role ARN to assume for accessing AWS resources. Allows cross-account access or privilege elevation. Must be a fully qualified ARN (e.g., arn:aws:iam::123456789012:role/RoleName).")
     String assumeRoleArn;
+
+    @Option(names = {"--mode"}, description = "AWS credential mode: 'keys' (access key + secret key) or 'role' (IAM role only). Default: keys.")
+    String mode;
+
+    @Option(names = {"--generate-external-id"}, description = "Generate a platform-managed External ID for the credential (used with IAM role ARN).", defaultValue = "false")
+    boolean generateExternalId;
 
     public AwsProvider() {
         super(ProviderEnum.AWS);
@@ -35,7 +42,14 @@ public class AwsProvider extends AbstractProvider<AwsSecurityKeys> {
 
     @Override
     public AwsSecurityKeys securityKeys() {
+        validate();
+
         AwsSecurityKeys result = new AwsSecurityKeys();
+
+        if (getMode() != null) {
+            result.mode(getMode());
+        }
+
         if (keys != null) {
             result.accessKey(keys.accessKey).secretKey(keys.secretKey);
         }
@@ -47,12 +61,52 @@ public class AwsProvider extends AbstractProvider<AwsSecurityKeys> {
         return result;
     }
 
+    @Override
+    public Boolean useExternalId() {
+        AwsCredentialsMode mode = getMode();
+        if (mode == AwsCredentialsMode.role) {
+            return true;
+        }
+        if (generateExternalId && assumeRoleArn != null) {
+            return true;
+        }
+        return null;
+    }
+
+    private AwsCredentialsMode getMode() {
+        if (mode == null) {
+            return null;
+        }
+        return switch (mode.toLowerCase()) {
+            case "keys" -> AwsCredentialsMode.keys;
+            case "role" -> AwsCredentialsMode.role;
+            default -> throw new IllegalArgumentException(String.format("Invalid AWS credential mode '%s'. Allowed values: 'keys', 'role'.", mode));
+        };
+    }
+
+    private void validate() {
+        AwsCredentialsMode mode = getMode();
+
+        if (mode == AwsCredentialsMode.role) {
+            if (keys != null && (keys.accessKey != null || keys.secretKey != null)) {
+                throw new IllegalArgumentException("Options '--access-key' and '--secret-key' cannot be used with '--mode=role'. Role mode uses IAM role assumption without static credentials.");
+            }
+            if (assumeRoleArn == null) {
+                throw new IllegalArgumentException("Option '--assume-role-arn' is required when using '--mode=role'.");
+            }
+        }
+
+        if (generateExternalId && mode != AwsCredentialsMode.role && assumeRoleArn == null) {
+            throw new IllegalArgumentException("Option '--generate-external-id' requires '--assume-role-arn' to be specified.");
+        }
+    }
+
     public static class Keys {
 
-        @Option(names = {"-a", "--access-key"}, description = "The AWS access key required to access the desired service.")
+        @Option(names = {"-a", "--access-key"}, description = "AWS access key identifier. Part of AWS IAM credentials used for programmatic access to AWS services.")
         String accessKey;
 
-        @Option(names = {"-s", "--secret-key"}, description = "The AWS secret key required to access the desired service.")
+        @Option(names = {"-s", "--secret-key"}, description = "AWS secret access key. Part of AWS IAM credentials used for programmatic access to AWS services. Keep this value secure.")
         String secretKey;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.studios;
@@ -39,7 +38,7 @@ import java.util.Objects;
 
 @CommandLine.Command(
         name = "add-as-new",
-        description = "Add a new studio from an existing one."
+        description = "Add a studio from an existing one"
 )
 public class AddAsNewCmd extends AbstractStudiosCmd{
 
@@ -52,7 +51,7 @@ public class AddAsNewCmd extends AbstractStudiosCmd{
     @CommandLine.Option(names = {"-n", "--name"}, description = "Studio name.", required = true)
     public String name;
 
-    @CommandLine.Option(names = {"-d", "--description"}, description = "Studio description.")
+    @CommandLine.Option(names = {"-d", "--description"}, description = "Studio description")
     public String description;
 
     @CommandLine.Mixin
@@ -61,13 +60,13 @@ public class AddAsNewCmd extends AbstractStudiosCmd{
     @CommandLine.Mixin
     public StudioConfigurationOptions studioConfigOptions;
 
-    @CommandLine.Option(names = {"-a", "--auto-start"}, description = "Create Studio and start it immediately, defaults to false.", defaultValue = "false")
+    @CommandLine.Option(names = {"-a", "--auto-start"}, description = "Create studio and start it immediately (default: false)", defaultValue = "false")
     public Boolean autoStart;
 
-    @CommandLine.Option(names = {"--private"}, description = "Create a private studio that only you can access/manage.", defaultValue = "false")
+    @CommandLine.Option(names = {"--private"}, description = "Create a private studio that only you can access or manage (default: false)", defaultValue = "false")
     public Boolean isPrivate;
 
-    @CommandLine.Option(names = {"--labels"}, description = "Comma-separated list of labels.", split = ",", converter = Label.StudioResourceLabelsConverter.class)
+    @CommandLine.Option(names = {"--labels"}, description = "Comma-separated list of labels", split = ",", converter = Label.StudioResourceLabelsConverter.class)
     public List<Label> labels;
 
     @CommandLine.Option(names = {"--wait"}, description = "Wait until Studio is in RUNNING status. Valid options: ${COMPLETION-CANDIDATES}.")

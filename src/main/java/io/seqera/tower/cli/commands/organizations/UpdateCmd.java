@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.organizations;
@@ -29,17 +28,17 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "update",
-        description = "Update organization details."
+        description = "Update an organization"
 )
 public class UpdateCmd extends AbstractOrganizationsCmd {
 
     @CommandLine.Mixin
     OrganizationRefOptions organizationRefOptions;
 
-    @CommandLine.Option(names = {"--new-name"}, description = "Organization new name.")
+    @CommandLine.Option(names = {"--new-name"}, description = "New unique name for the organization. Changes the organization's identifier. Must be unique across Seqera Platform. Updates URLs and API references.")
     public String newName;
 
-    @CommandLine.Option(names = {"-f", "--full-name"}, description = "Organization full name.")
+    @CommandLine.Option(names = {"-f", "--full-name"}, description = "New display name for the organization. The full, human-readable name shown in the UI. Can contain spaces and special characters.")
     public String fullName;
 
     @CommandLine.Mixin

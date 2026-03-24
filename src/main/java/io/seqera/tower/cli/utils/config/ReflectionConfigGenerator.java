@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.utils.config;
@@ -26,11 +25,13 @@ import java.lang.reflect.*;
 
 /**
  * The GraalVM reflection metadata generation relies on code paths being executed with the tracing agent
- * to dynamically capture various execution paths and update the reflect-config.json.
+ * to dynamically capture various execution paths and update the `reflect-config.json`.
  * <a href="https://www.graalvm.org/jdk21/reference-manual/native-image/metadata/AutomaticMetadataCollection/#tracing-agent">...</a>
  *
- * This is a utility class that uses reflection to make calls to all classes in the Tower SDK model package,
- * in order to capture methods reflection metadata of any new fields/classes in Tower SDK.
+ * This is a utility class that uses reflection to make calls to constructor and methods of all classes in the Tower SDK model package,
+ * in order to capture reflection metadata of any new fields/classes in Tower SDK.
+ * Some constructors or methods may not be captured as their execution will fail due to unmet pre-conditions (e.g. non-nullable arguments).
+ *
  * Execute this class with the GraalVM tracing agent (see Gradle task 'runReflectionConfigGenerator').
  *
  */

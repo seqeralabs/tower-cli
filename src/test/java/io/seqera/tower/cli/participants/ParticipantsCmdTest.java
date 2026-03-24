@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.participants;
@@ -28,7 +27,6 @@ import io.seqera.tower.cli.responses.participants.ParticipantUpdated;
 import io.seqera.tower.cli.responses.participants.ParticipantsList;
 import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.model.ParticipantResponseDto;
-import io.seqera.tower.cli.commands.enums.WspRole;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -547,8 +545,8 @@ class ParticipantsCmdTest extends BaseCmdTest {
                 response().withStatusCode(204)
         );
 
-        ExecOut out = exec(format, mock, "participants", "update", "-w", "75887156211589", "-n", "julio", "-r", "OWNER", "-t", "MEMBER");
-        assertOutput(format, out, new ParticipantUpdated("workspace1", "julio", WspRole.owner.toString()));
+        ExecOut out = exec(format, mock, "participants", "update", "-w", "75887156211589", "-n", "julio", "-r", "owner", "-t", "MEMBER");
+        assertOutput(format, out, new ParticipantUpdated("workspace1", "julio", "owner"));
     }
 
     @Test
@@ -577,10 +575,10 @@ class ParticipantsCmdTest extends BaseCmdTest {
                 response().withStatusCode(204)
         );
 
-        ExecOut out = exec(mock, "participants", "update", "-w", "75887156211589", "-n", "julio", "-r", "OWNER", "-t", "TEAM");
+        ExecOut out = exec(mock, "participants", "update", "-w", "75887156211589", "-n", "julio", "-r", "my-role", "-t", "TEAM");
 
         assertEquals("", out.stdErr);
-        assertEquals(new ParticipantUpdated("workspace1", "julio", WspRole.owner.toString()).toString(), out.stdOut);
+        assertEquals(new ParticipantUpdated("workspace1", "julio", "my-role").toString(), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

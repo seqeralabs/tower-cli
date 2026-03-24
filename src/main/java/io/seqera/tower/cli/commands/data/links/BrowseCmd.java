@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.data.links;
@@ -29,7 +28,7 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "browse",
-        description = "Browse content of data-link."
+        description = "Browse data link contents"
 )
 public class BrowseCmd extends AbstractDataLinksCmd {
 
@@ -39,19 +38,19 @@ public class BrowseCmd extends AbstractDataLinksCmd {
     @CommandLine.Mixin
     public DataLinkRefOptions dataLinkRefOptions;
 
-    @CommandLine.Option(names = {"-c", "--credentials"}, description = "Credentials identifier.")
+    @CommandLine.Option(names = {"-c", "--credentials"}, description = "Credentials identifier")
     public String credentialsRef;
 
-    @CommandLine.Option(names = {"-p", "--path"}, description = "Path to the folder to browse.")
+    @CommandLine.Option(names = {"-p", "--path"}, description = "Path to browse within the data link")
     public String path;
 
-    @CommandLine.Option(names = {"-f", "--filter"}, description = "Filter files with the given prefix.")
+    @CommandLine.Option(names = {"-f", "--filter"}, description = "Filter results by prefix")
     public String startsWith;
 
-    @CommandLine.Option(names = {"-t", "--token"}, description = "Next page token to fetch next page.")
+    @CommandLine.Option(names = {"-t", "--token"}, description = "Next page token for pagination")
     public String nextPageToken;
 
-    @CommandLine.Option(names = {"--page"}, description = "Pages to display [default: null].")
+    @CommandLine.Option(names = {"--page"}, description = "Page number to display")
     public Integer page;
 
     @Override

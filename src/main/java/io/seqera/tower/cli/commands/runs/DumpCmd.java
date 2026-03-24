@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,14 +12,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.runs;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.ApiException;
-import io.seqera.tower.JSON;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
@@ -31,13 +29,13 @@ import io.seqera.tower.cli.utils.TarFileHelper;
 import io.seqera.tower.model.DescribeTaskResponse;
 import io.seqera.tower.model.DescribeWorkflowLaunchResponse;
 import io.seqera.tower.model.DescribeWorkflowResponse;
-import io.seqera.tower.model.Launch;
+import io.seqera.tower.model.LaunchDbDto;
 import io.seqera.tower.model.ListTasksResponse;
 import io.seqera.tower.model.ServiceInfo;
 import io.seqera.tower.model.Task;
 import io.seqera.tower.model.TaskStatus;
-import io.seqera.tower.model.Workflow;
 import io.seqera.tower.model.WorkflowLoad;
+import io.seqera.tower.model.WorkflowMaxDbDto;
 import io.seqera.tower.model.WorkflowMetrics;
 import io.seqera.tower.model.WorkflowQueryAttribute;
 import picocli.CommandLine.Command;
@@ -60,22 +58,22 @@ public class DumpCmd extends AbstractRunsCmd {
 
     public static final List<String> SUPPORTED_FILE_FORMATS = List.of(".tar.xz", ".tar.gz");
 
-    @Option(names = {"-i", "-id"}, description = "Pipeline run identifier.", required = true)
+    @Option(names = {"-i", "-id"}, description = "Pipeline run identifier", required = true)
     public String id;
 
-    @Option(names = {"-o", "--output"}, description = "Output file to store the dump. (supported formats: .tar.xz and .tar.gz)", required = true)
+    @Option(names = {"-o", "--output"}, description = "Output file path for the compressed archive. Supported formats: .tar.xz (smaller, slower) and .tar.gz (faster, larger).", required = true)
     Path outputFile;
 
-    @Option(names = {"--add-task-logs"}, description = "Add all task stdout, stderr and log files.")
+    @Option(names = {"--add-task-logs"}, description = "Include individual task log files (stdout, stderr, .command.log) in the archive. Useful for detailed task-level troubleshooting.")
     public boolean addTaskLogs;
 
-    @Option(names = {"--add-fusion-logs"}, description = "Add all Fusion task logs.")
+    @Option(names = {"--add-fusion-logs"}, description = "Include Fusion file system logs for tasks. Only applicable when workflow uses Fusion for cloud storage access.")
     public boolean addFusionLogs;
 
-    @Option(names = {"--only-failed"}, description = "Dump only failed tasks.")
+    @Option(names = {"--only-failed"}, description = "Include only failed tasks in the dump. Reduces archive size by excluding successful task logs.")
     public boolean onlyFailed;
 
-    @Option(names = {"--silent"}, description = "Do not show download progress.")
+    @Option(names = {"--silent"}, description = "Suppress download progress indicators. Useful for scripting or logging to files.")
     public boolean silent;
 
     @Mixin
@@ -146,7 +144,7 @@ public class DumpCmd extends AbstractRunsCmd {
 
         // General workflow info (including labels)
 
-        Workflow workflow = getWorkflowDescription(workspaceId).getWorkflow();
+        WorkflowMaxDbDto workflow = getWorkflowDescription(workspaceId).getWorkflow();
         if (workflow == null) {
             throw new TowerException("Unknown workflow");
         }
@@ -208,7 +206,7 @@ public class DumpCmd extends AbstractRunsCmd {
         if (launchId == null) { // nextflow-run workflow, no launch entity available
             return null;
         }
-        Launch launch = launchById(workspaceId, launchId);
+        LaunchDbDto launch = launchById(workspaceId, launchId);
         return JsonHelper.prettyJson(launch);
     }
 

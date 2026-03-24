@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.pipelines;
@@ -38,23 +37,23 @@ import static io.seqera.tower.cli.utils.ModelHelper.coalesce;
 
 @CommandLine.Command(
         name = "import",
-        description = "Add a workspace pipeline from file content."
+        description = "Add a pipeline from file content"
 )
 public class ImportCmd extends AbstractPipelinesCmd {
 
-    @CommandLine.Option(names = {"-n", "--name"}, description = "Pipeline name.", required = true)
+    @CommandLine.Option(names = {"-n", "--name"}, description = "Pipeline name", required = true)
     public String name;
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
-    @CommandLine.Option(names = {"-c", "--compute-env"}, description = "Compute environment name [default: as defined in json environment file].")
+    @CommandLine.Option(names = {"-c", "--compute-env"}, description = "Compute environment name (defaults to value defined in JSON compute environment file)")
     public String computeEnv;
 
     @CommandLine.Option(names = {"--overwrite"}, description = "Overwrite the pipeline if it already exists.", defaultValue = "false")
     public Boolean overwrite;
 
-    @CommandLine.Parameters(index = "0", paramLabel = "FILENAME", description = "File name to import.", arity = "1")
+    @CommandLine.Parameters(index = "0", paramLabel = "FILENAME", description = "File name to import", arity = "1")
     Path fileName = null;
 
     @Override

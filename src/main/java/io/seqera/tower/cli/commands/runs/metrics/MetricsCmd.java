@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.runs.metrics;
@@ -38,20 +37,20 @@ import java.util.Map;
 
 @CommandLine.Command(
         name = "metrics",
-        description = "Display pipeline's run metrics."
+        description = "Display pipeline run metrics"
 )
 public class MetricsCmd extends AbstractRunsCmd {
 
-    @CommandLine.Option(names = {"-f", "--filter"}, description = "Filters by process name.")
+    @CommandLine.Option(names = {"-f", "--filter"}, description = "Filter metrics by process name. Shows statistics only for processes matching the specified name.")
     public String filter = "";
 
-    @CommandLine.Option(names = {"-t", "--type"}, split = ",", description = "Process metric types separated by comma: ${COMPLETION-CANDIDATES} [default: displays all].")
+    @CommandLine.Option(names = {"-t", "--type"}, split = ",", description = "Metric types to display: ${COMPLETION-CANDIDATES}. Comma-separated list. Displays all types if absent.")
     public List<MetricType> type;
 
-    @CommandLine.Option(names = {"-c", "--columns"}, split = ",", description = "Process metric columns to display: ${COMPLETION-CANDIDATES} [default: displays all].")
+    @CommandLine.Option(names = {"-c", "--columns"}, split = ",", description = "Statistical columns to display: ${COMPLETION-CANDIDATES}. Shows quartile distribution of resource usage. Displays all columns if absent.")
     public List<MetricColumn> columns;
 
-    @CommandLine.Option(names = {"-v", "--view"}, description = "Metric table view mode: ${COMPLETION-CANDIDATES} [default: condensed].")
+    @CommandLine.Option(names = {"-v", "--view"}, description = "Table view format. Options: condensed (compact), extended (detailed). Default: condensed.")
     public MetricPreviewFormat view = MetricPreviewFormat.condensed;
 
     @CommandLine.ParentCommand

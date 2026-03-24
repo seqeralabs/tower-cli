@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,12 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.utils;
 
-import io.seqera.tower.model.Launch;
+import io.seqera.tower.model.LaunchDbDto;
 import io.seqera.tower.model.WorkflowLaunchRequest;
 
 import java.util.List;
@@ -28,13 +27,14 @@ public class ModelHelper {
     private ModelHelper() {
     }
 
-    public static WorkflowLaunchRequest createLaunchRequest(Launch launch) {
+    public static WorkflowLaunchRequest createLaunchRequest(LaunchDbDto launch) {
         return new WorkflowLaunchRequest()
                 .id(launch.getId())
                 .computeEnvId(launch.getComputeEnv() != null ? launch.getComputeEnv().getId() : null)
                 .pipeline(launch.getPipeline())
                 .workDir(launch.getWorkDir())
                 .revision(launch.getRevision())
+                .commitId(launch.getCommitId())
                 .sessionId(launch.getSessionId())
                 .configProfiles(launch.getConfigProfiles())
                 .userSecrets(launch.getUserSecrets())
@@ -47,6 +47,7 @@ public class ModelHelper {
                 .mainScript(launch.getMainScript())
                 .entryName(launch.getEntryName())
                 .schemaName(launch.getSchemaName())
+                .pipelineSchemaId(launch.getPipelineSchemaId())
                 .resume(launch.getResume())
                 .pullLatest(launch.getPullLatest())
                 .stubRun(launch.getStubRun())

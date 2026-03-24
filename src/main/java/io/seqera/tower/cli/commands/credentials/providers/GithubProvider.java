@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.credentials.providers;
@@ -25,10 +24,10 @@ import java.io.IOException;
 
 public class GithubProvider extends AbstractGitProvider<GitHubSecurityKeys> {
 
-    @Option(names = {"-u", "--username"}, description = "Github username.", required = true)
+    @Option(names = {"-u", "--username"}, description = "GitHub username for repository authentication.", required = true)
     public String userName;
 
-    @Option(names = {"-p", "--password"}, description = "Github account password or access token (recommended).", arity = "0..1", interactive = true, required = true)
+    @Option(names = {"-p", "--password"}, description = "GitHub password or personal access token. Use of personal access tokens is recommended for security. Generate tokens at Settings > Developer settings > Personal access tokens.", arity = "0..1", interactive = true, required = true)
     public String password;
 
     public GithubProvider() {

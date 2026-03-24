@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.actions;
@@ -35,17 +34,17 @@ import java.util.Objects;
 
 @CommandLine.Command(
         name = "update",
-        description = "Update a Pipeline Action."
+        description = "Update a pipeline action"
 )
 public class UpdateCmd extends AbstractActionsCmd {
 
     @CommandLine.Mixin
     ActionRefOptions actionRefOptions;
 
-    @CommandLine.Option(names = {"-s", "--status"}, description = "Action status (pause or active).")
+    @CommandLine.Option(names = {"-s", "--status"}, description = "Action status (pause or active)")
     public String status;
 
-    @CommandLine.Option(names = {"--new-name"}, description = "Action new name.")
+    @CommandLine.Option(names = {"--new-name"}, description = "Updated action name. Must be unique per workspace. Names consist of alphanumeric, hyphen, and underscore characters.")
     public String newName;
 
     @CommandLine.Mixin

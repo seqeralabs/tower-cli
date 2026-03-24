@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.runs.tasks;
@@ -39,14 +38,14 @@ import java.util.stream.Stream;
 
 @CommandLine.Command(
         name = "tasks",
-        description = "Display pipeline's run tasks."
+        description = "Display pipeline run tasks"
 )
 public class TasksCmd extends AbstractRunsCmd {
 
-    @CommandLine.Option(names = {"-c", "--columns"}, split = ",", description = "Additional task columns to display: ${COMPLETION-CANDIDATES}")
+    @CommandLine.Option(names = {"-c", "--columns"}, split = ",", description = "Additional task columns to display beyond the default set. Available columns: ${COMPLETION-CANDIDATES}. Comma-separated list.")
     public List<TaskColumn> columns;
 
-    @CommandLine.Option(names = {"-f", "--filter"}, description = "Only show task with parameters that start with the given word")
+    @CommandLine.Option(names = {"-f", "--filter"}, description = "Filter tasks by name prefix. Shows only tasks with names starting with the specified string.")
     public String startsWith;
 
     @CommandLine.Mixin

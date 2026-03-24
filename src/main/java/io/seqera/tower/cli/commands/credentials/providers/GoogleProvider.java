@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.credentials.providers;
@@ -27,7 +26,7 @@ import java.nio.file.Path;
 
 public class GoogleProvider extends AbstractProvider<GoogleSecurityKeys> {
 
-    @Option(names = {"-k", "--key"}, description = "JSON file with the service account key.", required = true)
+    @Option(names = {"-k", "--key"}, description = "Path to JSON file containing Google Cloud service account key. Download from Google Cloud Console IAM & Admin > Service Accounts.", required = true)
     public Path serviceAccountKey;
 
     public GoogleProvider() {

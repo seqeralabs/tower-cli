@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.datasets;
@@ -29,14 +28,14 @@ import java.util.List;
 
 @CommandLine.Command(
         name = "list",
-        description = "List all workspace datasets."
+        description = "List datasets"
 )
 public class ListCmd extends AbstractDatasetsCmd {
 
     @CommandLine.Mixin
     public WorkspaceRequiredOptions workspace;
 
-    @CommandLine.Option(names = {"-f", "--filter"}, description = "Show only datasets which name contains the given word.")
+    @CommandLine.Option(names = {"-f", "--filter"}, description = "Filter datasets by name substring")
     public String filter;
 
     @Override

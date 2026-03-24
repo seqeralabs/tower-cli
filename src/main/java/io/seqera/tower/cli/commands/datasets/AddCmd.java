@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.datasets;
@@ -33,26 +32,26 @@ import java.nio.file.Path;
 
 @CommandLine.Command(
         name = "add",
-        description = "Create a workspace dataset."
+        description = "Add a dataset"
 )
 public class AddCmd extends AbstractDatasetsCmd {
 
-    @CommandLine.Option(names = {"-n", "--name"}, description = "Dataset name.", required = true)
+    @CommandLine.Option(names = {"-n", "--name"}, description = "Dataset name. Must be unique per workspace. Names consist of alphanumeric, hyphen, and underscore characters.", required = true)
     public String name;
 
-    @CommandLine.Option(names = {"-d", "--description"}, description = "Dataset description.")
+    @CommandLine.Option(names = {"-d", "--description"}, description = "Optional dataset description.")
     public String description;
 
-    @CommandLine.Option(names = {"--header"}, description = "Set first row as a header.")
+    @CommandLine.Option(names = {"--header"}, description = "Treat first row as header. Default: false.")
     public boolean header = false;
 
-    @CommandLine.Parameters(index = "0", paramLabel = "FILENAME", description = "Data file to upload.", arity = "1")
+    @CommandLine.Parameters(index = "0", paramLabel = "FILENAME", description = "Data file to upload", arity = "1")
     Path fileName = null;
 
     @CommandLine.Mixin
     public WorkspaceRequiredOptions workspace;
 
-    @CommandLine.Option(names = {"--overwrite"}, description = "Overwrite the dataset if it already exists.", defaultValue = "false")
+    @CommandLine.Option(names = {"--overwrite"}, description = "Overwrite the dataset if it already exists", defaultValue = "false")
     public Boolean overwrite;
 
     @Override

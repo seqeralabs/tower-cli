@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.pipelines;
@@ -35,7 +34,7 @@ import java.util.List;
 
 @Command(
         name = "list",
-        description = "List workspace pipelines."
+        description = "List pipelines"
 )
 public class ListCmd extends AbstractPipelinesCmd {
 
@@ -45,7 +44,7 @@ public class ListCmd extends AbstractPipelinesCmd {
     @CommandLine.Mixin
     public ShowLabelsOption showLabelsOption;
 
-    @CommandLine.Option(names = {"-f", "--filter"}, description = "Show only pipelines that contain the given word.")
+    @CommandLine.Option(names = {"-f", "--filter"}, description = "Show only pipelines that contain the given word")
     public String filter;
 
     @CommandLine.Option(names = {"--visibility"}, description = "Show pipelines: ${COMPLETION-CANDIDATES} [default: private].", defaultValue = "private")

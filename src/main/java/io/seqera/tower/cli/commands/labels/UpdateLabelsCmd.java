@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023, Seqera.
+ * Copyright 2021-2026, Seqera.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package io.seqera.tower.cli.commands.labels;
@@ -31,11 +30,11 @@ import java.io.IOException;
 
 @CommandLine.Command(
         name = "update",
-        description = "Update labels."
+        description = "Update a label"
 )
 public class UpdateLabelsCmd extends AbstractLabelsCmd {
 
-    @CommandLine.Option(names = {"-i", "--id"}, description = "Label ID", required = true)
+    @CommandLine.Option(names = {"-i", "--id"}, description = "Label identifier", required = true)
     public Long labelId;
 
     @CommandLine.ArgGroup(exclusive = false, multiplicity = "1",heading = "Update: at least one of the following options must be provided.\n")
@@ -45,10 +44,10 @@ public class UpdateLabelsCmd extends AbstractLabelsCmd {
     public WorkspaceOptionalOptions workspaceRef;
 
     static class UpdateOptions {
-        @CommandLine.Option(names = {"-n", "--name"}, description = "Label name.")
+        @CommandLine.Option(names = {"-n", "--name"}, description = "Label name")
         public String labelName;
 
-        @CommandLine.Option(names = {"-v", "--value"}, description = "Label value.")
+        @CommandLine.Option(names = {"-v", "--value"}, description = "Label value")
         public String labelValue;
     }
 
