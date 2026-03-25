@@ -355,6 +355,12 @@ jobs:
             echo "VERSION=$VERSION"
             echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
 
+      - name: Generate CLI metadata artifact
+        run: ./gradlew extractCliMetadata
+        env:
+          GITHUB_USERNAME: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Run JReleaser
         uses: jreleaser/release-action@90ac653bb9c79d11179e65d81499f3f34527dcd5 # ratchet:jreleaser/release-action@2.5.0
         env:
