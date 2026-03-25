@@ -11,8 +11,8 @@ jobs:
   dependency-submission:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - uses: graalvm/setup-graalvm@v1
+    - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # ratchet:actions/checkout@v4
+    - uses: graalvm/setup-graalvm@03e8abf916fd0e281b2efe7b2da3378bb0a1d085 # ratchet:graalvm/setup-graalvm@v1
       with:
         java-version: '21'
         distribution: 'graalvm'
@@ -21,7 +21,7 @@ jobs:
 
 
     - name: Generate and submit dependency graph for tower-cli
-      uses: gradle/actions/dependency-submission@v4
+      uses: gradle/actions/dependency-submission@ed408507eac070d1f99cc633dbcf757c94c7933a # ratchet:gradle/actions/dependency-submission@v4
       with:
         dependency-resolution-task: ":dependencies"
         additional-arguments: "--configuration runtimeClasspath"
