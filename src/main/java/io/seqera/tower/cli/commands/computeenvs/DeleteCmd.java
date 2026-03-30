@@ -96,9 +96,7 @@ public class DeleteCmd extends AbstractComputeEnvCmd {
                 }
 
                 if (status == ComputeEnvStatus.ERRORED) {
-                    if (showProgress) {
-                        app().getOut().println();
-                    }
+                    app().getErr().println("ERROR: Compute environment disposal failed (status: ERRORED). AWS resources may not have been cleaned up.");
                     return CommandLine.ExitCode.SOFTWARE;
                 }
 
