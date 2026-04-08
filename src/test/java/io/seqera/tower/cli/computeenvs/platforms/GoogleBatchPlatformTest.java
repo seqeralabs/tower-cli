@@ -30,6 +30,7 @@ import java.io.IOException;
 
 import static io.seqera.tower.cli.commands.AbstractApiCmd.USER_WORKSPACE_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
@@ -37,17 +38,23 @@ import static org.mockserver.model.HttpResponse.response;
 
 class GoogleBatchPlatformTest extends BaseCmdTest {
 
+    private static final String CREDENTIALS_RESPONSE = "{\"credentials\":[{\"id\":\"6XfOhoztUq6de3Dw3X9LSb\",\"name\":\"google\",\"description\":null,\"discriminator\":\"google\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-08T18:20:46Z\",\"dateCreated\":\"2021-09-08T12:57:04Z\",\"lastUpdated\":\"2021-09-08T12:57:04Z\"}]}";
+
+    private void mockCredentials(MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "google-batch"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(CREDENTIALS_RESPONSE).withContentType(MediaType.APPLICATION_JSON)
+        );
+    }
+
     @ParameterizedTest
     @EnumSource(OutputType.class)
     void testAdd(OutputType format, MockServerClient mock) throws IOException {
 
         mock.reset();
 
-        mock.when(
-                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "google-batch"), exactly(1)
-        ).respond(
-                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"6XfOhoztUq6de3Dw3X9LSb\",\"name\":\"google\",\"description\":null,\"discriminator\":\"google\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-08T18:20:46Z\",\"dateCreated\":\"2021-09-08T12:57:04Z\",\"lastUpdated\":\"2021-09-08T12:57:04Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
-        );
+        mockCredentials(mock);
 
         mock.when(
                 request().withMethod("POST").withPath("/compute-envs")
@@ -65,11 +72,7 @@ class GoogleBatchPlatformTest extends BaseCmdTest {
 
         mock.reset();
 
-        mock.when(
-                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "google-batch"), exactly(1)
-        ).respond(
-                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"6XfOhoztUq6de3Dw3X9LSb\",\"name\":\"google\",\"description\":null,\"discriminator\":\"google\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-08T18:20:46Z\",\"dateCreated\":\"2021-09-08T12:57:04Z\",\"lastUpdated\":\"2021-09-08T12:57:04Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
-        );
+        mockCredentials(mock);
 
         mock.when(
                 request().withMethod("POST").withPath("/compute-envs")
@@ -89,11 +92,7 @@ class GoogleBatchPlatformTest extends BaseCmdTest {
 
         mock.reset();
 
-        mock.when(
-                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "google-batch"), exactly(1)
-        ).respond(
-                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"6XfOhoztUq6de3Dw3X9LSb\",\"name\":\"google\",\"description\":null,\"discriminator\":\"google\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-08T18:20:46Z\",\"dateCreated\":\"2021-09-08T12:57:04Z\",\"lastUpdated\":\"2021-09-08T12:57:04Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
-        );
+        mockCredentials(mock);
 
         mock.when(
                 request().withMethod("POST").withPath("/compute-envs")
@@ -113,11 +112,7 @@ class GoogleBatchPlatformTest extends BaseCmdTest {
 
         mock.reset();
 
-        mock.when(
-                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "google-batch"), exactly(1)
-        ).respond(
-                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"6XfOhoztUq6de3Dw3X9LSb\",\"name\":\"google\",\"description\":null,\"discriminator\":\"google\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-08T18:20:46Z\",\"dateCreated\":\"2021-09-08T12:57:04Z\",\"lastUpdated\":\"2021-09-08T12:57:04Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
-        );
+        mockCredentials(mock);
 
         mock.when(
                 request().withMethod("POST").withPath("/compute-envs")
@@ -137,11 +132,7 @@ class GoogleBatchPlatformTest extends BaseCmdTest {
 
         mock.reset();
 
-        mock.when(
-                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "google-batch"), exactly(1)
-        ).respond(
-                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"6XfOhoztUq6de3Dw3X9LSb\",\"name\":\"google\",\"description\":null,\"discriminator\":\"google\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-08T18:20:46Z\",\"dateCreated\":\"2021-09-08T12:57:04Z\",\"lastUpdated\":\"2021-09-08T12:57:04Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
-        );
+        mockCredentials(mock);
 
         mock.when(
                 request().withMethod("POST").withPath("/compute-envs")
@@ -154,6 +145,325 @@ class GoogleBatchPlatformTest extends BaseCmdTest {
         assertEquals("", out.stdErr);
         assertEquals(new ComputeEnvAdded("google-batch", "isnEDBLvHDAIteOEF44ow", "google", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testAddWithNetworkTags(MockServerClient mock) throws IOException {
+
+        mock.reset();
+
+        mockCredentials(mock);
+
+        mock.when(
+                request().withMethod("POST").withPath("/compute-envs")
+                        .withBody(JsonBody.json("{\"computeEnv\":{\"credentialsId\":\"6XfOhoztUq6de3Dw3X9LSb\",\"name\":\"google\",\"platform\":\"google-batch\",\"config\":{\"location\":\"europe\",\"workDir\":\"gs://workdir\",\"fusion2Enabled\":false,\"waveEnabled\":false,\"network\":\"my-vpc\",\"networkTags\":[\"allow-ssh\",\"web-tier\"]}}}")), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "compute-envs", "add", "google-batch", "-n", "google", "--work-dir", "gs://workdir", "-l", "europe", "--network", "my-vpc", "--network-tags", "allow-ssh,web-tier");
+        assertEquals("", out.stdErr);
+        assertEquals(new ComputeEnvAdded("google-batch", "isnEDBLvHDAIteOEF44ow", "google", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testAddWithNetworkAndSubnetwork(MockServerClient mock) throws IOException {
+
+        mock.reset();
+
+        mockCredentials(mock);
+
+        mock.when(
+                request().withMethod("POST").withPath("/compute-envs")
+                        .withBody(JsonBody.json("{\"computeEnv\":{\"credentialsId\":\"6XfOhoztUq6de3Dw3X9LSb\",\"name\":\"google\",\"platform\":\"google-batch\",\"config\":{\"location\":\"europe\",\"workDir\":\"gs://workdir\",\"fusion2Enabled\":false,\"waveEnabled\":false,\"network\":\"my-vpc\",\"subnetwork\":\"my-subnet\"}}}")), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "compute-envs", "add", "google-batch", "-n", "google", "--work-dir", "gs://workdir", "-l", "europe", "--network", "my-vpc", "--subnetwork", "my-subnet");
+        assertEquals("", out.stdErr);
+        assertEquals(new ComputeEnvAdded("google-batch", "isnEDBLvHDAIteOEF44ow", "google", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testAddNetworkTagsWithoutVpcFails(MockServerClient mock) {
+
+        mock.reset();
+
+        ExecOut out = exec(mock, "compute-envs", "add", "google-batch", "-n", "google", "--work-dir", "gs://workdir", "-l", "europe", "--network-tags", "allow-ssh");
+
+        assertTrue(out.stdErr.contains("Network tags require VPC configuration"), "Expected VPC required error, got: " + out.stdErr);
+        assertEquals(1, out.exitCode);
+    }
+
+    @Test
+    void testAddNetworkTagsInvalidFormat(MockServerClient mock) {
+
+        mock.reset();
+
+        ExecOut out = exec(mock, "compute-envs", "add", "google-batch", "-n", "google", "--work-dir", "gs://workdir", "-l", "europe", "--network", "my-vpc", "--network-tags", "Allow-SSH");
+
+        assertTrue(out.stdErr.contains("Invalid network tag 'Allow-SSH'"), "Expected invalid tag error, got: " + out.stdErr);
+        assertEquals(1, out.exitCode);
+    }
+
+    @Test
+    void testAddNetworkTagsEndsWithHyphen(MockServerClient mock) {
+
+        mock.reset();
+
+        ExecOut out = exec(mock, "compute-envs", "add", "google-batch", "-n", "google", "--work-dir", "gs://workdir", "-l", "europe", "--network", "my-vpc", "--network-tags", "a-");
+
+        assertTrue(out.stdErr.contains("Invalid network tag 'a-'"), "Expected invalid tag error, got: " + out.stdErr);
+        assertEquals(1, out.exitCode);
+    }
+
+    @Test
+    void testAddNetworkTagsSingleDigitInvalid(MockServerClient mock) {
+
+        mock.reset();
+
+        ExecOut out = exec(mock, "compute-envs", "add", "google-batch", "-n", "google", "--work-dir", "gs://workdir", "-l", "europe", "--network", "my-vpc", "--network-tags", "1");
+
+        assertTrue(out.stdErr.contains("Invalid network tag '1'"), "Expected invalid single-char tag error, got: " + out.stdErr);
+        assertEquals(1, out.exitCode);
+    }
+
+    @Test
+    void testAddNetworkTagsSingleLetterValid(MockServerClient mock) throws IOException {
+
+        mock.reset();
+
+        mockCredentials(mock);
+
+        mock.when(
+                request().withMethod("POST").withPath("/compute-envs")
+                        .withBody(JsonBody.json("{\"computeEnv\":{\"credentialsId\":\"6XfOhoztUq6de3Dw3X9LSb\",\"name\":\"google\",\"platform\":\"google-batch\",\"config\":{\"location\":\"europe\",\"workDir\":\"gs://workdir\",\"fusion2Enabled\":false,\"waveEnabled\":false,\"network\":\"my-vpc\",\"networkTags\":[\"a\"]}}}")), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "compute-envs", "add", "google-batch", "-n", "google", "--work-dir", "gs://workdir", "-l", "europe", "--network", "my-vpc", "--network-tags", "a");
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testAddWithHeadJobMachineType(MockServerClient mock) throws IOException {
+
+        mock.reset();
+
+        mockCredentials(mock);
+
+        mock.when(
+                request().withMethod("POST").withPath("/compute-envs")
+                        .withBody(JsonBody.json("{\"computeEnv\":{\"credentialsId\":\"6XfOhoztUq6de3Dw3X9LSb\",\"name\":\"google\",\"platform\":\"google-batch\",\"config\":{\"location\":\"europe\",\"workDir\":\"gs://workdir\",\"fusion2Enabled\":false,\"waveEnabled\":false,\"machineType\":\"n2-standard-4\"}}}")), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "compute-envs", "add", "google-batch", "-n", "google", "--work-dir", "gs://workdir", "-l", "europe", "--head-job-machine-type", "n2-standard-4");
+        assertEquals("", out.stdErr);
+        assertEquals(new ComputeEnvAdded("google-batch", "isnEDBLvHDAIteOEF44ow", "google", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testAddWithComputeJobsMachineType(MockServerClient mock) throws IOException {
+
+        mock.reset();
+
+        mockCredentials(mock);
+
+        mock.when(
+                request().withMethod("POST").withPath("/compute-envs")
+                        .withBody(JsonBody.json("{\"computeEnv\":{\"credentialsId\":\"6XfOhoztUq6de3Dw3X9LSb\",\"name\":\"google\",\"platform\":\"google-batch\",\"config\":{\"location\":\"europe\",\"workDir\":\"gs://workdir\",\"fusion2Enabled\":false,\"waveEnabled\":false,\"computeJobsMachineType\":[\"n2-standard-8\",\"c2-standard-4\"]}}}")), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "compute-envs", "add", "google-batch", "-n", "google", "--work-dir", "gs://workdir", "-l", "europe", "--compute-jobs-machine-type", "n2-standard-8,c2-standard-4");
+        assertEquals("", out.stdErr);
+        assertEquals(new ComputeEnvAdded("google-batch", "isnEDBLvHDAIteOEF44ow", "google", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testAddWithComputeJobsWildcardMachineType(MockServerClient mock) throws IOException {
+
+        mock.reset();
+
+        mockCredentials(mock);
+
+        mock.when(
+                request().withMethod("POST").withPath("/compute-envs")
+                        .withBody(JsonBody.json("{\"computeEnv\":{\"credentialsId\":\"6XfOhoztUq6de3Dw3X9LSb\",\"name\":\"google\",\"platform\":\"google-batch\",\"config\":{\"location\":\"europe\",\"workDir\":\"gs://workdir\",\"fusion2Enabled\":false,\"waveEnabled\":false,\"computeJobsMachineType\":[\"n2-*\"]}}}")), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "compute-envs", "add", "google-batch", "-n", "google", "--work-dir", "gs://workdir", "-l", "europe", "--compute-jobs-machine-type", "n2-*");
+        assertEquals("", out.stdErr);
+        assertEquals(new ComputeEnvAdded("google-batch", "isnEDBLvHDAIteOEF44ow", "google", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testAddHeadJobMachineTypeAndTemplateAreMutuallyExclusive(MockServerClient mock) {
+
+        mock.reset();
+
+        ExecOut out = exec(mock, "compute-envs", "add", "google-batch", "-n", "google", "--work-dir", "gs://workdir", "-l", "europe",
+                "--head-job-machine-type", "n2-standard-4",
+                "--head-job-template", "projects/my-project/global/instanceTemplates/head-template");
+
+        assertTrue(out.stdErr.contains("Head job machine type and head job instance template are mutually exclusive"), "Expected mutual exclusivity error, got: " + out.stdErr);
+        assertEquals(1, out.exitCode);
+    }
+
+    @Test
+    void testAddComputeJobsMachineTypeAndTemplateAreMutuallyExclusive(MockServerClient mock) {
+
+        mock.reset();
+
+        ExecOut out = exec(mock, "compute-envs", "add", "google-batch", "-n", "google", "--work-dir", "gs://workdir", "-l", "europe",
+                "--compute-jobs-machine-type", "n2-standard-8",
+                "--compute-job-template", "projects/my-project/global/instanceTemplates/compute-template");
+
+        assertTrue(out.stdErr.contains("Compute jobs machine type and compute jobs instance template are mutually exclusive"), "Expected mutual exclusivity error, got: " + out.stdErr);
+        assertEquals(1, out.exitCode);
+    }
+
+    @Test
+    void testAddHeadJobWildcardMachineTypeRejected(MockServerClient mock) {
+
+        mock.reset();
+
+        ExecOut out = exec(mock, "compute-envs", "add", "google-batch", "-n", "google", "--work-dir", "gs://workdir", "-l", "europe",
+                "--head-job-machine-type", "n2-*");
+
+        assertTrue(out.stdErr.contains("Wildcard machine type families are not supported for the head job"), "Expected wildcard rejection error, got: " + out.stdErr);
+        assertEquals(1, out.exitCode);
+    }
+
+    @Test
+    void testAddInvalidMachineTypeFormat(MockServerClient mock) {
+
+        mock.reset();
+
+        ExecOut out = exec(mock, "compute-envs", "add", "google-batch", "-n", "google", "--work-dir", "gs://workdir", "-l", "europe",
+                "--head-job-machine-type", "N2-Standard-4");
+
+        assertTrue(out.stdErr.contains("Invalid machine type 'N2-Standard-4'"), "Expected invalid format error, got: " + out.stdErr);
+        assertEquals(1, out.exitCode);
+    }
+
+    @Test
+    void testAddWithBootDiskImage(MockServerClient mock) throws IOException {
+
+        mock.reset();
+
+        mockCredentials(mock);
+
+        mock.when(
+                request().withMethod("POST").withPath("/compute-envs")
+                        .withBody(JsonBody.json("{\"computeEnv\":{\"credentialsId\":\"6XfOhoztUq6de3Dw3X9LSb\",\"name\":\"google\",\"platform\":\"google-batch\",\"config\":{\"location\":\"europe\",\"workDir\":\"gs://workdir\",\"fusion2Enabled\":false,\"waveEnabled\":false,\"bootDiskImage\":\"projects/ubuntu-os-cloud/global/images/ubuntu-2404-noble-amd64-v20250112\"}}}")), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "compute-envs", "add", "google-batch", "-n", "google", "--work-dir", "gs://workdir", "-l", "europe",
+                "--boot-disk-image", "projects/ubuntu-os-cloud/global/images/ubuntu-2404-noble-amd64-v20250112");
+        assertEquals("", out.stdErr);
+        assertEquals(new ComputeEnvAdded("google-batch", "isnEDBLvHDAIteOEF44ow", "google", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testAddWithBootDiskImageFamily(MockServerClient mock) throws IOException {
+
+        mock.reset();
+
+        mockCredentials(mock);
+
+        mock.when(
+                request().withMethod("POST").withPath("/compute-envs")
+                        .withBody(JsonBody.json("{\"computeEnv\":{\"credentialsId\":\"6XfOhoztUq6de3Dw3X9LSb\",\"name\":\"google\",\"platform\":\"google-batch\",\"config\":{\"location\":\"europe\",\"workDir\":\"gs://workdir\",\"fusion2Enabled\":false,\"waveEnabled\":false,\"bootDiskImage\":\"projects/ubuntu-os-cloud/global/images/family/ubuntu-2404-lts\"}}}")), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "compute-envs", "add", "google-batch", "-n", "google", "--work-dir", "gs://workdir", "-l", "europe",
+                "--boot-disk-image", "projects/ubuntu-os-cloud/global/images/family/ubuntu-2404-lts");
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testAddWithBootDiskImageBatchShortName(MockServerClient mock) throws IOException {
+
+        mock.reset();
+
+        mockCredentials(mock);
+
+        mock.when(
+                request().withMethod("POST").withPath("/compute-envs")
+                        .withBody(JsonBody.json("{\"computeEnv\":{\"credentialsId\":\"6XfOhoztUq6de3Dw3X9LSb\",\"name\":\"google\",\"platform\":\"google-batch\",\"config\":{\"location\":\"europe\",\"workDir\":\"gs://workdir\",\"fusion2Enabled\":false,\"waveEnabled\":false,\"bootDiskImage\":\"batch-debian\"}}}")), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "compute-envs", "add", "google-batch", "-n", "google", "--work-dir", "gs://workdir", "-l", "europe",
+                "--boot-disk-image", "batch-debian");
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testAddWithInvalidBootDiskImage(MockServerClient mock) {
+
+        mock.reset();
+
+        ExecOut out = exec(mock, "compute-envs", "add", "google-batch", "-n", "google", "--work-dir", "gs://workdir", "-l", "europe",
+                "--boot-disk-image", "invalid/image/path");
+
+        assertTrue(out.stdErr.contains("Invalid boot disk image format"), "Expected invalid boot disk image error, got: " + out.stdErr);
+        assertEquals(1, out.exitCode);
+    }
+
+    @Test
+    void testAddWithFusionSnapshots(MockServerClient mock) throws IOException {
+
+        mock.reset();
+
+        mockCredentials(mock);
+
+        mock.when(
+                request().withMethod("POST").withPath("/compute-envs")
+                        .withBody(JsonBody.json("{\"computeEnv\":{\"credentialsId\":\"6XfOhoztUq6de3Dw3X9LSb\",\"name\":\"google\",\"platform\":\"google-batch\",\"config\":{\"location\":\"europe\",\"workDir\":\"gs://workdir\",\"fusion2Enabled\":true,\"fusionSnapshots\":true,\"waveEnabled\":true}}}")), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "compute-envs", "add", "google-batch", "-n", "google", "--work-dir", "gs://workdir", "-l", "europe",
+                "--fusion-v2", "--wave", "--fusion-snapshots");
+        assertEquals("", out.stdErr);
+        assertEquals(new ComputeEnvAdded("google-batch", "isnEDBLvHDAIteOEF44ow", "google", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testAddFusionSnapshotsRequiresFusionV2(MockServerClient mock) {
+
+        mock.reset();
+
+        ExecOut out = exec(mock, "compute-envs", "add", "google-batch", "-n", "google", "--work-dir", "gs://workdir", "-l", "europe",
+                "--wave", "--fusion-snapshots");
+
+        assertTrue(out.stdErr.contains("Fusion Snapshots requires Fusion v2"), "Expected fusion v2 required error, got: " + out.stdErr);
+        assertEquals(1, out.exitCode);
     }
 
 }
