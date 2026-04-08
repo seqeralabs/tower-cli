@@ -20,6 +20,7 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.credentials.add.AddAgentCmd;
 import io.seqera.tower.cli.commands.credentials.add.AddAwsCmd;
 import io.seqera.tower.cli.commands.credentials.add.AddAzureCmd;
+import io.seqera.tower.cli.commands.credentials.add.AddAzureEntraCmd;
 import io.seqera.tower.cli.commands.credentials.add.AddBitbucketCmd;
 import io.seqera.tower.cli.commands.credentials.add.AddCodeCommitCmd;
 import io.seqera.tower.cli.commands.credentials.add.AddContainerRegistryCmd;
@@ -49,6 +50,7 @@ import java.io.IOException;
                 AddSshCmd.class,
                 AddK8sCmd.class,
                 AddAzureCmd.class,
+                AddAzureEntraCmd.class,
                 AddAgentCmd.class,
                 AddContainerRegistryCmd.class
         }
