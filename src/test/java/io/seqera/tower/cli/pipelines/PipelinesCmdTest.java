@@ -380,7 +380,7 @@ class PipelinesCmdTest extends BaseCmdTest {
                 request().withMethod("POST").withPath("/pipelines/68359275903286/versions/default-ver")
                         .withQueryStringParameter("workspaceId","59563405657242")
                         .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody("{\"name\":\"hello-pipeline\",\"launch\":{\"pipeline\":\"https://github.com/nextflow-io/hello\",\"revision\":\"master\",\"preRunScript\":\"yyy\",\"pullLatest\":false,\"stubRun\":false}}"),
+                        .withBody(json("{\"name\":\"hello-pipeline\",\"launch\":{\"pipeline\":\"https://github.com/nextflow-io/hello\",\"revision\":\"master\",\"preRunScript\":\"yyy\",\"pullLatest\":false,\"stubRun\":false}}")),
                 exactly(1)
         ).respond(
                 response().withStatusCode(200)
@@ -413,7 +413,7 @@ class PipelinesCmdTest extends BaseCmdTest {
 
         mock.when(
                 request().withMethod("POST").withPath("/pipelines")
-                        .withBody("{" +
+                        .withBody(json("{" +
                                 "\"name\":\"sleep_one_minute\"," +
                                 "\"launch\":{" +
                                     "\"computeEnvId\":\"vYOK4vn7spw7bHHWBDXZ2\"," +
@@ -422,7 +422,7 @@ class PipelinesCmdTest extends BaseCmdTest {
                                     "\"paramsText\":\"timeout: 60\\n\"," +
                                     "\"pipelineSchemaId\":56789" +
                                 "}" +
-                            "}"), exactly(1)
+                            "}")), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{" +
                         "\"pipeline\":{" +
@@ -728,7 +728,7 @@ class PipelinesCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/pipelines").withBody("{\"name\":\"demo\",\"launch\":{\"computeEnvId\":\"vYOK4vn7spw7bHHWBDXZ2\",\"pipeline\":\"https://github.com/pditommaso/nf-sleep\",\"workDir\":\"s3://nextflow-ci/jordeu\"}}"), exactly(1)
+                request().withMethod("POST").withPath("/pipelines").withBody(json("{\"name\":\"demo\",\"launch\":{\"computeEnvId\":\"vYOK4vn7spw7bHHWBDXZ2\",\"pipeline\":\"https://github.com/pditommaso/nf-sleep\",\"workDir\":\"s3://nextflow-ci/jordeu\"}}")), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"pipeline\":{\"pipelineId\":18388134856008,\"name\":\"demo\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/pditommaso/nf-sleep\",\"userId\":4,\"userName\":\"jordi\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null}}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -759,7 +759,7 @@ class PipelinesCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/pipelines").withBody("{\"name\":\"staging\",\"launch\":{\"computeEnvId\":\"vYOK4vn7spw7bHHWBDXZ2\",\"pipeline\":\"https://github.com/pditommaso/nf-sleep\",\"workDir\":\"s3://nextflow-ci/staging\",\"preRunScript\":\"pre_run_this\",\"postRunScript\":\"post_run_this\"}}"), exactly(1)
+                request().withMethod("POST").withPath("/pipelines").withBody(json("{\"name\":\"staging\",\"launch\":{\"computeEnvId\":\"vYOK4vn7spw7bHHWBDXZ2\",\"pipeline\":\"https://github.com/pditommaso/nf-sleep\",\"workDir\":\"s3://nextflow-ci/staging\",\"preRunScript\":\"pre_run_this\",\"postRunScript\":\"post_run_this\"}}")), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"pipeline\":{\"pipelineId\":21697594587521,\"name\":\"staging\",\"description\":null,\"icon\":null,\"repository\":\"https://github.com/pditommaso/nf-sleep\",\"userId\":4,\"userName\":\"jordi\",\"userFirstName\":null,\"userLastName\":null,\"orgId\":null,\"orgName\":null,\"workspaceId\":null,\"workspaceName\":null,\"visibility\":null}}").withContentType(MediaType.APPLICATION_JSON)
         );
@@ -1164,7 +1164,7 @@ class PipelinesCmdTest extends BaseCmdTest {
 
         mock.when(
                 request().withMethod("POST").withPath("/pipelines")
-                        .withBody("{\"name\":\"pipelineNew\",\"launch\":{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\",\"pipeline\":\"https://github.com/grananda/nextflow-hello\",\"workDir\":\"s3://nextflow-ci/julio\",\"revision\":\"main\",\"resume\":false,\"pullLatest\":false,\"stubRun\":false}}")
+                        .withBody(json("{\"name\":\"pipelineNew\",\"launch\":{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\",\"pipeline\":\"https://github.com/grananda/nextflow-hello\",\"workDir\":\"s3://nextflow-ci/julio\",\"revision\":\"main\",\"resume\":false,\"pullLatest\":false,\"stubRun\":false}}"))
                         .withContentType(MediaType.APPLICATION_JSON), exactly(1)
         ).respond(
                 response()
@@ -1199,7 +1199,7 @@ class PipelinesCmdTest extends BaseCmdTest {
 
         mock.when(
                 request().withMethod("POST").withPath("/pipelines")
-                        .withBody("{\"name\":\"pipelineNew\",\"launch\":{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\",\"pipeline\":\"https://github.com/grananda/nextflow-hello\",\"workDir\":\"s3://nextflow-ci/julio\",\"revision\":\"main\",\"resume\":false,\"pullLatest\":false,\"stubRun\":false}}")
+                        .withBody(json("{\"name\":\"pipelineNew\",\"launch\":{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\",\"pipeline\":\"https://github.com/grananda/nextflow-hello\",\"workDir\":\"s3://nextflow-ci/julio\",\"revision\":\"main\",\"resume\":false,\"pullLatest\":false,\"stubRun\":false}}"))
                         .withContentType(MediaType.APPLICATION_JSON), exactly(1)
         ).respond(
                 response()
@@ -1293,7 +1293,7 @@ class PipelinesCmdTest extends BaseCmdTest {
 
         mock.when(
                 request().withMethod("POST").withPath("/pipelines")
-                        .withBody("{\"name\":\"pipelineNew\",\"launch\":{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\",\"pipeline\":\"https://github.com/grananda/nextflow-hello\",\"workDir\":\"s3://nextflow-ci/jordeu\",\"revision\":\"main\",\"resume\":false,\"pullLatest\":false,\"stubRun\":false}}")
+                        .withBody(json("{\"name\":\"pipelineNew\",\"launch\":{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\",\"pipeline\":\"https://github.com/grananda/nextflow-hello\",\"workDir\":\"s3://nextflow-ci/jordeu\",\"revision\":\"main\",\"resume\":false,\"pullLatest\":false,\"stubRun\":false}}"))
                         .withContentType(MediaType.APPLICATION_JSON), exactly(1)
         ).respond(
                 response()
@@ -1498,7 +1498,7 @@ class PipelinesCmdTest extends BaseCmdTest {
                         .withPath("/labels")
                         .withQueryStringParameter("workspaceId","69509535922157")
                         .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody("{\"name\":\"test_label1\"}"),
+                        .withBody(json("{\"name\":\"test_label1\"}")),
                 exactly(1)
         ).respond(
                 response().withStatusCode(200)
@@ -1522,7 +1522,7 @@ class PipelinesCmdTest extends BaseCmdTest {
                 request().withMethod("POST")
                         .withPath("/labels")
                         .withQueryStringParameter("workspaceId","69509535922157")
-                        .withBody("{\"name\":\"test_label2\",\"value\":\"value\",\"resource\":true}")
+                        .withBody(json("{\"name\":\"test_label2\",\"value\":\"value\",\"resource\":true}"))
                         .withContentType(MediaType.APPLICATION_JSON),
                 exactly(1)
         ).respond(
@@ -1535,7 +1535,7 @@ class PipelinesCmdTest extends BaseCmdTest {
                 request().withMethod("POST")
                         .withPath("/pipelines/labels/apply")
                         .withQueryStringParameter("workspaceId","69509535922157")
-                        .withBody("{\"pipelineIds\":[227906339448730],\"labelIds\":[20504124310835,216786345960497,280969213757193]}")
+                        .withBody(json("{\"pipelineIds\":[227906339448730],\"labelIds\":[20504124310835,216786345960497,280969213757193]}"))
                         .withContentType(MediaType.APPLICATION_JSON),
                 exactly(1)
         ).respond(
@@ -1662,7 +1662,7 @@ class PipelinesCmdTest extends BaseCmdTest {
                 request().withMethod("POST")
                         .withPath("/labels")
                         .withQueryStringParameter("workspaceId","69509535922157")
-                        .withBody("{\"name\":\"test_label2\",\"value\":\"value\",\"resource\":true}")
+                        .withBody(json("{\"name\":\"test_label2\",\"value\":\"value\",\"resource\":true}"))
                         .withContentType(MediaType.APPLICATION_JSON),
                 exactly(1)
         ).respond(
@@ -1676,7 +1676,7 @@ class PipelinesCmdTest extends BaseCmdTest {
                 request().withMethod("POST").withPath("/pipelines/labels/add")
                         .withQueryStringParameter("workspaceId","69509535922157")
                         .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody("{\"pipelineIds\":[227906339448730],\"labelIds\":[20504124310835,280969213757193]}")
+                        .withBody(json("{\"pipelineIds\":[227906339448730],\"labelIds\":[20504124310835,280969213757193]}"))
         ).respond(
                 response().withStatusCode(204)
         );
@@ -1740,7 +1740,7 @@ class PipelinesCmdTest extends BaseCmdTest {
                 request().withMethod("POST")
                         .withPath("/pipelines/labels/remove")
                         .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody("{\"pipelineIds\":[8858801873955],\"labelIds\":[144980212454879,35112846698158]}")
+                        .withBody(json("{\"pipelineIds\":[8858801873955],\"labelIds\":[144980212454879,35112846698158]}"))
         ).respond(
                 response().withStatusCode(204)
         );
