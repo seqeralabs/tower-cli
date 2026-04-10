@@ -9,7 +9,7 @@ jobs:
     steps:
 
       - name: Check out the repo
-        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # ratchet:actions/checkout@v3
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
         
       - name: Install latest version of Tower-CLI 
         run: |
