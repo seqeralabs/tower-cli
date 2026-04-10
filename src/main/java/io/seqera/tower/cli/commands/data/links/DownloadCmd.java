@@ -109,7 +109,7 @@ public class DownloadCmd extends AbstractDataLinksCmd {
     }
 
     private void downloadFile(String path, String id, String credId, Long wspId, Path targetPath) throws ApiException, IOException, InterruptedException {
-        DataLinkDownloadUrlResponse urlResponse = dataLinksApi().generateDownloadUrlDataLink(id, path, credId, wspId, false);
+        DataLinkDownloadUrlResponse urlResponse = dataLinksApi().generateDownloadUrlDataLink(id, path, credId, wspId, false, null);
 
         boolean showProgress = app().output != OutputType.json;
 
