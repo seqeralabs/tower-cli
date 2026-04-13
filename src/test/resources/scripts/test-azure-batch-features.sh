@@ -196,7 +196,7 @@ run_tw "Create Forge CE (single pool, all options)" \
     --fusion-v2 \
     --wave \
     --subnet-id="$SUBNET_ID" \
-    --managed-identity-client-id="$MI_HEAD_CLIENT_ID" \
+    --managed-identity-head-client-id="$MI_HEAD_CLIENT_ID" \
     --managed-identity-pool-client-id="$MI_POOL_CLIENT_ID" \
     --managed-identity-head-resource-id="$MI_HEAD_RESOURCE_ID" \
     --managed-identity-pool-resource-id="$MI_POOL_RESOURCE_ID" \
