@@ -160,7 +160,7 @@ public class AzBatchForgePlatform extends AbstractPlatform<AzBatchConfig> {
         config.subnetId(subnetId);
 
         if (managedIdentity != null) {
-            config.managedIdentityClientId(managedIdentity.managedIdentityClientId);
+            config.managedIdentityClientId(managedIdentity.managedIdentityHeadClientId);
             config.managedIdentityPoolClientId(managedIdentity.managedIdentityPoolClientId);
             config.managedIdentityHeadResourceId(managedIdentity.managedIdentityHeadResourceId);
             config.managedIdentityPoolResourceId(managedIdentity.managedIdentityPoolResourceId);
@@ -197,8 +197,8 @@ public class AzBatchForgePlatform extends AbstractPlatform<AzBatchConfig> {
 
     public static class ManagedIdentityOptions {
 
-        @Option(names = {"--managed-identity-client-id"}, description = "Head job managed identity client ID (UUID). The user-assigned managed identity used by the Nextflow launcher (head job). Mirrors the API field `managedIdentityClientId`; the `managed-identity-pool-*` / `managed-identity-head-resource-id` naming asymmetry is inherited from the SDK model.")
-        public String managedIdentityClientId;
+        @Option(names = {"--managed-identity-head-client-id"}, description = "Head job managed identity client ID (UUID). The user-assigned managed identity used by the Nextflow launcher (head job).")
+        public String managedIdentityHeadClientId;
 
         @Option(names = {"--managed-identity-pool-client-id"}, description = "Compute job managed identity client ID (UUID). The user-assigned managed identity used by compute tasks running on Batch pool nodes.")
         public String managedIdentityPoolClientId;
