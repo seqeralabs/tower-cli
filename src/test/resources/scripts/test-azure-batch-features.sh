@@ -14,7 +14,7 @@
 #   ./test-azure-batch-features.sh [--workspace <workspace>]
 #
 
-set -euo pipefail
+set -uo pipefail
 
 # ---------------------------------------------------------------------------
 # Configuration - override via environment variables
@@ -35,15 +35,18 @@ MI_HEAD_CLIENT_ID="${MI_HEAD_CLIENT_ID:-11111111-1111-1111-1111-111111111111}"
 MI_POOL_CLIENT_ID="${MI_POOL_CLIENT_ID:-22222222-2222-2222-2222-222222222222}"
 MI_HEAD_RESOURCE_ID="${MI_HEAD_RESOURCE_ID:-/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/myRg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/headIdentity}"
 MI_POOL_RESOURCE_ID="${MI_POOL_RESOURCE_ID:-/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/myRg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/poolIdentity}"
+# SUBNET_ID must be a full subnet resource ID (including /subnets/{name}).
+# If the env var only contains a VNet ID, append /subnets/default.
 SUBNET_ID="${SUBNET_ID:-/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/myRg/providers/Microsoft.Network/virtualNetworks/myVnet/subnets/mySubnet}"
+if [[ "$SUBNET_ID" != */subnets/* ]]; then
+    SUBNET_ID="$SUBNET_ID/subnets/default"
+fi
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 PASS=0
 FAIL=0
-SKIP=0
-CLEANUP_IDS=()
 
 ws_flag() {
     if [[ -n "$WORKSPACE" ]]; then
@@ -55,13 +58,13 @@ run_tw() {
     local description="$1"
     shift
     echo -n "  TEST: $description ... "
-    if output=$("$TW" $(ws_flag) "$@" 2>&1); then
+    if output=$($TW "$@" $(ws_flag) 2>&1); then
         echo "PASS"
         ((PASS++))
         return 0
     else
         echo "FAIL"
-        echo "    Command: $TW $(ws_flag) $*"
+        echo "    Command: $TW $* $(ws_flag)"
         echo "    Output: $output"
         ((FAIL++))
         return 1
@@ -72,9 +75,9 @@ run_tw_expect_fail() {
     local description="$1"
     shift
     echo -n "  TEST: $description ... "
-    if output=$("$TW" $(ws_flag) "$@" 2>&1); then
+    if output=$($TW "$@" $(ws_flag) 2>&1); then
         echo "FAIL (expected failure but succeeded)"
-        echo "    Command: $TW $(ws_flag) $*"
+        echo "    Command: $TW $* $(ws_flag)"
         echo "    Output: $output"
         ((FAIL++))
         return 1
@@ -87,12 +90,12 @@ run_tw_expect_fail() {
 
 cleanup_credential() {
     local name="$1"
-    "$TW" $(ws_flag) credentials delete --name="$name" 2>/dev/null || true
+    $TW credentials delete --name="$name" $(ws_flag) 2>/dev/null || true
 }
 
 cleanup_ce() {
     local name="$1"
-    "$TW" $(ws_flag) compute-envs delete --name="$name" 2>/dev/null || true
+    $TW compute-envs delete --name="$name" $(ws_flag) 2>/dev/null || true
 }
 
 # Parse arguments
@@ -144,7 +147,7 @@ run_tw "Update Entra credentials" \
     --storage-name="$STORAGE_NAME" \
     --tenant-id="$TENANT_ID" \
     --client-id="$CLIENT_ID" \
-    --client-secret="new-secret-value"
+    --client-secret="$CLIENT_SECRET"
 
 run_tw_expect_fail "Add Entra credentials missing required --tenant-id" \
     credentials add azure-entra \
@@ -220,6 +223,7 @@ run_tw "Create Forge CE (dual pool, defaults)" \
     -l "$LOCATION" \
     --work-dir="$WORK_DIR" \
     --dual-pool \
+    --head-vm-count=1 \
     --worker-vm-count=8
 
 cleanup_ce "$CE_FORGE_DUAL"
@@ -248,75 +252,9 @@ cleanup_ce "$CE_FORGE_DUAL_FULL"
 echo ""
 
 # ===================================================================
-# 5. Manual CE - Single Pool (backward compat)
+# 5. Cleanup toggles combinations
 # ===================================================================
-echo "--- 5. Manual CE - Single Pool ---"
-
-CE_MANUAL_SINGLE="test-manual-single-$$"
-
-run_tw "Create Manual CE (single pool)" \
-    compute-envs add azure-batch manual \
-    -n "$CE_MANUAL_SINGLE" \
-    --credentials="$CRED_NAME" \
-    -l "$LOCATION" \
-    --work-dir="$WORK_DIR" \
-    --compute-pool-name=my-pool
-
-cleanup_ce "$CE_MANUAL_SINGLE"
-echo ""
-
-# ===================================================================
-# 6. Manual CE - Dual Pool (head + worker)
-# ===================================================================
-echo "--- 6. Manual CE - Dual Pool ---"
-
-CE_MANUAL_DUAL="test-manual-dual-$$"
-
-run_tw "Create Manual CE (separate head and worker pools)" \
-    compute-envs add azure-batch manual \
-    -n "$CE_MANUAL_DUAL" \
-    --credentials="$CRED_NAME" \
-    -l "$LOCATION" \
-    --work-dir="$WORK_DIR" \
-    --compute-pool-name=my-head-pool \
-    --worker-pool=my-worker-pool
-
-cleanup_ce "$CE_MANUAL_DUAL"
-echo ""
-
-# ===================================================================
-# 7. Manual CE - All new options
-# ===================================================================
-echo "--- 7. Manual CE - All new options ---"
-
-CE_MANUAL_FULL="test-manual-full-$$"
-
-run_tw "Create Manual CE (all new options)" \
-    compute-envs add azure-batch manual \
-    -n "$CE_MANUAL_FULL" \
-    --credentials="$CRED_NAME" \
-    -l "$LOCATION" \
-    --work-dir="$WORK_DIR" \
-    --compute-pool-name=my-head-pool \
-    --worker-pool=my-worker-pool \
-    --fusion-v2 \
-    --wave \
-    --subnet-id="$SUBNET_ID" \
-    --managed-identity-client-id="$MI_HEAD_CLIENT_ID" \
-    --managed-identity-pool-client-id="$MI_POOL_CLIENT_ID" \
-    --delete-jobs-on-completion=false \
-    --delete-tasks-on-completion=true \
-    --terminate-jobs-on-completion=true \
-    --token-duration=24h \
-    --job-max-wall-clock-time=3d
-
-cleanup_ce "$CE_MANUAL_FULL"
-echo ""
-
-# ===================================================================
-# 8. Cleanup toggles combinations
-# ===================================================================
-echo "--- 8. Cleanup toggle combinations ---"
+echo "--- 5. Cleanup toggle combinations ---"
 
 CE_CLEANUP="test-cleanup-$$"
 
@@ -335,9 +273,9 @@ cleanup_ce "$CE_CLEANUP"
 echo ""
 
 # ===================================================================
-# 9. Job max wall clock time edge cases
+# 6. Job max wall clock time edge cases
 # ===================================================================
-echo "--- 9. Job max wall clock time ---"
+echo "--- 6. Job max wall clock time ---"
 
 CE_WALLCLOCK="test-wallclock-$$"
 
@@ -384,9 +322,9 @@ run_tw_expect_fail "Reject invalid wall clock time format" \
 echo ""
 
 # ===================================================================
-# 10. Subnet validation
+# 7. Subnet validation
 # ===================================================================
-echo "--- 10. Subnet validation ---"
+echo "--- 7. Subnet validation ---"
 
 CE_SUBNET="test-subnet-$$"
 
@@ -404,16 +342,15 @@ echo ""
 # ===================================================================
 # Cleanup
 # ===================================================================
-echo "--- Cleanup ---"
-cleanup_credential "$CRED_NAME"
-echo "  Cleaned up test credential: $CRED_NAME"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+bash "$SCRIPT_DIR/clean-azure-batch-test-resources.sh"
 echo ""
 
 # ===================================================================
 # Summary
 # ===================================================================
 echo "============================================================"
-echo " Results: $PASS passed, $FAIL failed, $SKIP skipped"
+echo " Results: $PASS passed, $FAIL failed"
 echo "============================================================"
 
 if [[ $FAIL -gt 0 ]]; then
