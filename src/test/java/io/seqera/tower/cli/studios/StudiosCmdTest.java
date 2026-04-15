@@ -30,6 +30,7 @@ import io.seqera.tower.cli.responses.studios.StudioCheckpointsList;
 import io.seqera.tower.cli.responses.studios.StudioDeleted;
 import io.seqera.tower.cli.responses.studios.StudioStartSubmitted;
 import io.seqera.tower.cli.responses.studios.StudioStopSubmitted;
+import io.seqera.tower.cli.responses.studios.StudioUpdated;
 import io.seqera.tower.cli.responses.studios.StudiosTemplatesList;
 import io.seqera.tower.cli.responses.studios.StudiosView;
 import io.seqera.tower.cli.utils.PaginationInfo;
@@ -2023,6 +2024,182 @@ public class StudiosCmdTest extends BaseCmdTest {
                             }
                             """, DataStudioCheckpointDto.class)
         ), null));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testUpdate(OutputType format, MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/studios/3e8370e7").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_view_response_studio_stopped")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("PUT").withPath("/studios/3e8370e7").withQueryStringParameter("workspaceId", "75887156211589").withBody(json("""
+                           {
+                             "configuration": {
+                               "gpu": 0,
+                               "cpu": 2,
+                               "memory": 8192,
+                               "mountData": [
+                                 "v1-user-1ccf131810375d303bf0402dd8423433"
+                               ]
+                             },
+                             "description": "my first studio"
+                           }
+                           """
+                        )
+
+                ), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_update_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+
+        ExecOut out = exec(format, mock, "studios", "update", "-w", "75887156211589", "-i" ,"3e8370e7");
+
+        assertOutput(format, out, new StudioUpdated("3e8370e7", "3e8370e7", 75887156211589L,
+                "[organization1 / workspace1]"));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testUpdateByName(OutputType format, MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/studios").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_list_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/studios/3e8370e7").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_view_response_studio_stopped")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("PUT").withPath("/studios/3e8370e7").withQueryStringParameter("workspaceId", "75887156211589").withBody(json("""
+                           {
+                             "configuration": {
+                               "gpu": 0,
+                               "cpu": 2,
+                               "memory": 8192,
+                               "mountData": [
+                                 "v1-user-1ccf131810375d303bf0402dd8423433"
+                               ]
+                             },
+                             "description": "my first studio"
+                           }
+                           """
+                        )
+
+                ), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_update_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+
+        ExecOut out = exec(format, mock, "studios", "update", "-w", "organization1/workspace1", "-n" ,"studio-a66d");
+
+        assertOutput(format, out, new StudioUpdated("3e8370e7", "studio-a66d", 75887156211589L,
+                "[organization1 / workspace1]"));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testUpdateWithConfigOverride(OutputType format, MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/studios/3e8370e7").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_view_response_studio_stopped")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/labels")
+        ).respond(
+                response().withStatusCode(200).withBody(json("""
+                        {
+                          "labels": [
+                            {
+                              "id": 10,
+                              "name": "owner",
+                              "resource": true,
+                              "value": "jack"
+                            }
+                          ],
+                          "totalSize": 1
+                        }
+                        """))
+        );
+
+        mock.when(
+                request().withMethod("PUT").withPath("/studios/3e8370e7").withQueryStringParameter("workspaceId", "75887156211589").withBody(json("""
+                           {
+                             "configuration": {
+                               "gpu": 0,
+                               "cpu": 4,
+                               "memory": 8192,
+                               "mountData": [
+                                 "v1-user-1ccf131810375d303bf0402dd8423433"
+                               ],
+                               "lifespanHours" : 24
+                             },
+                             "labelIds": [10],
+                             "description": "Override description",
+                             "name": "new-studio-name"
+                           }
+                           """
+                        )
+
+                ), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_update_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+
+        ExecOut out = exec(format, mock, "studios", "update", "-w", "75887156211589", "-i" ,"3e8370e7", "--cpu", "4", "--description", "Override description", "--lifespan", "24", "--labels", "owner=jack", "--new-name", "new-studio-name");
+
+        assertOutput(format, out, new StudioUpdated("3e8370e7", "3e8370e7", 75887156211589L,
+                "[organization1 / workspace1]"));
     }
 
 }
