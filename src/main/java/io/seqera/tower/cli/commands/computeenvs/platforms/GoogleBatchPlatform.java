@@ -17,6 +17,7 @@
 package io.seqera.tower.cli.commands.computeenvs.platforms;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.exceptions.TowerRuntimeException;
 import io.seqera.tower.model.ComputeEnvComputeConfig.PlatformEnum;
 import io.seqera.tower.model.GoogleBatchConfig;
 import picocli.CommandLine.ArgGroup;
@@ -64,7 +65,7 @@ public class GoogleBatchPlatform extends AbstractPlatform<GoogleBatchConfig> {
         GoogleBatchConfig config = new GoogleBatchConfig();
 
         if (fusionSnapshots && !fusionV2) {
-            throw new IllegalArgumentException("Fusion Snapshots requires Fusion v2 to be enabled (--fusion-v2).");
+            throw new TowerRuntimeException("Fusion Snapshots requires Fusion v2 to be enabled (--fusion-v2).");
         }
 
         config
@@ -112,20 +113,20 @@ public class GoogleBatchPlatform extends AbstractPlatform<GoogleBatchConfig> {
 
     private static void validateMachineTypeFormat(String machineType) {
         if (!MACHINE_TYPE_PATTERN.matcher(machineType).matches()) {
-            throw new IllegalArgumentException(String.format("Invalid machine type '%s': must contain only lowercase letters, numbers, and hyphens.", machineType));
+            throw new TowerRuntimeException(String.format("Invalid machine type '%s': must contain only lowercase letters, numbers, and hyphens.", machineType));
         }
     }
 
     private static void validateMachineTypes(AdvancedOptions adv) {
         if (adv.headJobMachineType != null && adv.headJobInstanceTemplate != null) {
-            throw new IllegalArgumentException("Head job machine type and head job instance template are mutually exclusive -- specify only one.");
+            throw new TowerRuntimeException("Head job machine type and head job instance template are mutually exclusive -- specify only one.");
         }
         if (adv.computeJobsMachineType != null && !adv.computeJobsMachineType.isEmpty() && adv.computeJobInstanceTemplate != null) {
-            throw new IllegalArgumentException("Compute jobs machine type and compute jobs instance template are mutually exclusive -- specify only one.");
+            throw new TowerRuntimeException("Compute jobs machine type and compute jobs instance template are mutually exclusive -- specify only one.");
         }
         if (adv.headJobMachineType != null) {
             if (adv.headJobMachineType.contains("*")) {
-                throw new IllegalArgumentException("Wildcard machine type families are not supported for the head job -- select a specific machine type instead.");
+                throw new TowerRuntimeException("Wildcard machine type families are not supported for the head job -- select a specific machine type instead.");
             }
             validateMachineTypeFormat(adv.headJobMachineType);
         }
@@ -138,30 +139,30 @@ public class GoogleBatchPlatform extends AbstractPlatform<GoogleBatchConfig> {
 
     private static void validateBootDiskImage(String bootDiskImage) {
         if (bootDiskImage != null && !BOOT_DISK_IMAGE_PATTERN.matcher(bootDiskImage).matches()) {
-            throw new IllegalArgumentException("Invalid boot disk image format. Use projects/{PROJECT}/global/images/{IMAGE}, projects/{PROJECT}/global/images/family/{FAMILY}, or a Batch image name (e.g., batch-debian).");
+            throw new TowerRuntimeException("Invalid boot disk image format. Use projects/{PROJECT}/global/images/{IMAGE}, projects/{PROJECT}/global/images/family/{FAMILY}, or a Batch image name (e.g., batch-debian).");
         }
     }
 
     private static void validateNetworkTags(List<String> tags, String network) {
         if (network == null || network.isEmpty()) {
-            throw new IllegalArgumentException("Network tags require VPC configuration: set the '--network' option to use network tags.");
+            throw new TowerRuntimeException("Network tags require VPC configuration: set the '--network' option to use network tags.");
         }
 
         if (tags.size() > MAX_NETWORK_TAGS) {
-            throw new IllegalArgumentException(String.format("Too many network tags: maximum is %d, provided %d.", MAX_NETWORK_TAGS, tags.size()));
+            throw new TowerRuntimeException(String.format("Too many network tags: maximum is %d, provided %d.", MAX_NETWORK_TAGS, tags.size()));
         }
 
         for (String tag : tags) {
             if (tag == null || tag.isEmpty() || tag.length() > MAX_TAG_LENGTH) {
-                throw new IllegalArgumentException(String.format("Invalid network tag '%s': must be 1-63 characters.", tag));
+                throw new TowerRuntimeException(String.format("Invalid network tag '%s': must be 1-63 characters.", tag));
             }
             if (tag.length() == 1) {
                 if (!tag.matches("^[a-z]$")) {
-                    throw new IllegalArgumentException(String.format("Invalid network tag '%s': single-character tags must be a lowercase letter.", tag));
+                    throw new TowerRuntimeException(String.format("Invalid network tag '%s': single-character tags must be a lowercase letter.", tag));
                 }
             } else {
                 if (!NETWORK_TAG_PATTERN.matcher(tag).matches()) {
-                    throw new IllegalArgumentException(String.format("Invalid network tag '%s': must start with a lowercase letter, end with a letter or number, and contain only lowercase letters, numbers, and hyphens.", tag));
+                    throw new TowerRuntimeException(String.format("Invalid network tag '%s': must start with a lowercase letter, end with a letter or number, and contain only lowercase letters, numbers, and hyphens.", tag));
                 }
             }
         }

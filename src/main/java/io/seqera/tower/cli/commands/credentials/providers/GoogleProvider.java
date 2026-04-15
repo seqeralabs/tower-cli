@@ -16,6 +16,7 @@
 
 package io.seqera.tower.cli.commands.credentials.providers;
 
+import io.seqera.tower.cli.exceptions.TowerRuntimeException;
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.Credentials.ProviderEnum;
 import io.seqera.tower.model.GoogleSecurityKeys;
@@ -78,7 +79,7 @@ public class GoogleProvider extends AbstractProvider<GoogleSecurityKeys> {
         return switch (mode.toLowerCase()) {
             case "service-account-key" -> false;
             case "workload-identity" -> true;
-            default -> throw new IllegalArgumentException(
+            default -> throw new TowerRuntimeException(
                     String.format("Invalid Google credential mode '%s'. Allowed values: 'service-account-key', 'workload-identity'.", mode));
         };
     }
@@ -86,26 +87,26 @@ public class GoogleProvider extends AbstractProvider<GoogleSecurityKeys> {
     private void validate() {
         if (isWorkloadIdentityMode()) {
             if (serviceAccountKey != null) {
-                throw new IllegalArgumentException("Option '--key' cannot be used with '--mode=workload-identity'. Workload Identity mode uses federated authentication without a key file.");
+                throw new TowerRuntimeException("Option '--key' cannot be used with '--mode=workload-identity'. Workload Identity mode uses federated authentication without a key file.");
             }
             if (serviceAccountEmail == null) {
-                throw new IllegalArgumentException("Option '--service-account-email' is required when using '--mode=workload-identity'.");
+                throw new TowerRuntimeException("Option '--service-account-email' is required when using '--mode=workload-identity'.");
             }
             if (!SA_EMAIL_PATTERN.matcher(serviceAccountEmail).matches()) {
-                throw new IllegalArgumentException("Invalid service account email format. Expected format: <name>@<project>.iam.gserviceaccount.com");
+                throw new TowerRuntimeException("Invalid service account email format. Expected format: <name>@<project>.iam.gserviceaccount.com");
             }
             if (workloadIdentityProvider == null) {
-                throw new IllegalArgumentException("Option '--workload-identity-provider' is required when using '--mode=workload-identity'.");
+                throw new TowerRuntimeException("Option '--workload-identity-provider' is required when using '--mode=workload-identity'.");
             }
             if (!WIF_PROVIDER_PATTERN.matcher(workloadIdentityProvider).matches()) {
-                throw new IllegalArgumentException("Invalid Workload Identity Provider format. Expected: projects/{PROJECT_NUMBER}/locations/global/workloadIdentityPools/{POOL}/providers/{PROVIDER}");
+                throw new TowerRuntimeException("Invalid Workload Identity Provider format. Expected: projects/{PROJECT_NUMBER}/locations/global/workloadIdentityPools/{POOL}/providers/{PROVIDER}");
             }
         } else {
             if (serviceAccountEmail != null || workloadIdentityProvider != null || tokenAudience != null) {
-                throw new IllegalArgumentException("Options '--service-account-email', '--workload-identity-provider', and '--token-audience' can only be used with '--mode=workload-identity'.");
+                throw new TowerRuntimeException("Options '--service-account-email', '--workload-identity-provider', and '--token-audience' can only be used with '--mode=workload-identity'.");
             }
             if (serviceAccountKey == null) {
-                throw new IllegalArgumentException("Option '--key' is required when using service account key mode.");
+                throw new TowerRuntimeException("Option '--key' is required when using service account key mode.");
             }
         }
     }

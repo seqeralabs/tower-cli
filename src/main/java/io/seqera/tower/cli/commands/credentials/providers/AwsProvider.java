@@ -16,6 +16,7 @@
 
 package io.seqera.tower.cli.commands.credentials.providers;
 
+import io.seqera.tower.cli.exceptions.TowerRuntimeException;
 import io.seqera.tower.model.AwsCredentialsMode;
 import io.seqera.tower.model.AwsSecurityKeys;
 import io.seqera.tower.model.Credentials.ProviderEnum;
@@ -80,7 +81,7 @@ public class AwsProvider extends AbstractProvider<AwsSecurityKeys> {
         return switch (mode.toLowerCase()) {
             case "keys" -> AwsCredentialsMode.keys;
             case "role" -> AwsCredentialsMode.role;
-            default -> throw new IllegalArgumentException(String.format("Invalid AWS credential mode '%s'. Allowed values: 'keys', 'role'.", mode));
+            default -> throw new TowerRuntimeException(String.format("Invalid AWS credential mode '%s'. Allowed values: 'keys', 'role'.", mode));
         };
     }
 
@@ -89,15 +90,15 @@ public class AwsProvider extends AbstractProvider<AwsSecurityKeys> {
 
         if (mode == AwsCredentialsMode.role) {
             if (keys != null && (keys.accessKey != null || keys.secretKey != null)) {
-                throw new IllegalArgumentException("Options '--access-key' and '--secret-key' cannot be used with '--mode=role'. Role mode uses IAM role assumption without static credentials.");
+                throw new TowerRuntimeException("Options '--access-key' and '--secret-key' cannot be used with '--mode=role'. Role mode uses IAM role assumption without static credentials.");
             }
             if (assumeRoleArn == null) {
-                throw new IllegalArgumentException("Option '--assume-role-arn' is required when using '--mode=role'.");
+                throw new TowerRuntimeException("Option '--assume-role-arn' is required when using '--mode=role'.");
             }
         }
 
         if (generateExternalId && mode != AwsCredentialsMode.role && assumeRoleArn == null) {
-            throw new IllegalArgumentException("Option '--generate-external-id' requires '--assume-role-arn' to be specified.");
+            throw new TowerRuntimeException("Option '--generate-external-id' requires '--assume-role-arn' to be specified.");
         }
     }
 
