@@ -33,6 +33,7 @@ import java.nio.file.NoSuchFileException;
 
 import static io.seqera.tower.cli.commands.AbstractApiCmd.USER_WORKSPACE_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
@@ -56,6 +57,154 @@ class GoogleProviderTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "credentials", "add", "google", "-n", "google", "-k", tempFile("private_key", "id_rsa", ""));
         assertOutput(format, out, new CredentialsAdded("GOOGLE", "1cz5A8cuBkB5iJliCwJCFU", "google", USER_WORKSPACE_NAME));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAddWithExplicitServiceAccountKeyMode(OutputType format, MockServerClient mock) throws IOException {
+
+        mock.when(
+                request()
+                        .withMethod("POST")
+                        .withPath("/credentials")
+                        .withBody(json("{\"credentials\":{\"keys\":{\"data\":\"private_key\"},\"name\":\"google-sa\",\"provider\":\"google\"}}")),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentialsId\":\"2cz5A8cuBkB5iJliCwJCFU\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "credentials", "add", "google", "-n", "google-sa", "--mode=service-account-key", "-k", tempFile("private_key", "id_rsa", ""));
+        assertOutput(format, out, new CredentialsAdded("GOOGLE", "2cz5A8cuBkB5iJliCwJCFU", "google-sa", USER_WORKSPACE_NAME));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAddWithWorkloadIdentityMode(OutputType format, MockServerClient mock) {
+
+        mock.when(
+                request()
+                        .withMethod("POST")
+                        .withPath("/credentials")
+                        .withBody(json("{\"credentials\":{\"keys\":{\"serviceAccountEmail\":\"my-sa@my-project.iam.gserviceaccount.com\",\"workloadIdentityProvider\":\"projects/123456/locations/global/workloadIdentityPools/my-pool/providers/my-provider\"},\"name\":\"google-wif\",\"provider\":\"google\"}}")),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentialsId\":\"3cz5A8cuBkB5iJliCwJCFU\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "credentials", "add", "google", "-n", "google-wif",
+                "--mode=workload-identity",
+                "--service-account-email=my-sa@my-project.iam.gserviceaccount.com",
+                "--workload-identity-provider=projects/123456/locations/global/workloadIdentityPools/my-pool/providers/my-provider");
+        assertOutput(format, out, new CredentialsAdded("GOOGLE", "3cz5A8cuBkB5iJliCwJCFU", "google-wif", USER_WORKSPACE_NAME));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAddWithWorkloadIdentityModeAndTokenAudience(OutputType format, MockServerClient mock) {
+
+        mock.when(
+                request()
+                        .withMethod("POST")
+                        .withPath("/credentials")
+                        .withBody(json("{\"credentials\":{\"keys\":{\"serviceAccountEmail\":\"my-sa@my-project.iam.gserviceaccount.com\",\"workloadIdentityProvider\":\"projects/123456/locations/global/workloadIdentityPools/my-pool/providers/my-provider\",\"tokenAudience\":\"https://my-audience.example.com\"},\"name\":\"google-wif-aud\",\"provider\":\"google\"}}")),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentialsId\":\"4cz5A8cuBkB5iJliCwJCFU\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "credentials", "add", "google", "-n", "google-wif-aud",
+                "--mode=workload-identity",
+                "--service-account-email=my-sa@my-project.iam.gserviceaccount.com",
+                "--workload-identity-provider=projects/123456/locations/global/workloadIdentityPools/my-pool/providers/my-provider",
+                "--token-audience=https://my-audience.example.com");
+        assertOutput(format, out, new CredentialsAdded("GOOGLE", "4cz5A8cuBkB5iJliCwJCFU", "google-wif-aud", USER_WORKSPACE_NAME));
+    }
+
+    @Test
+    void testAddWorkloadIdentityModeRejectsKeyFile(MockServerClient mock) throws IOException {
+
+        ExecOut out = exec(mock, "credentials", "add", "google", "-n", "google-bad",
+                "--mode=workload-identity",
+                "-k", tempFile("private_key", "id_rsa", ""),
+                "--service-account-email=my-sa@my-project.iam.gserviceaccount.com",
+                "--workload-identity-provider=projects/123456/locations/global/workloadIdentityPools/my-pool/providers/my-provider");
+
+        assertTrue(out.stdErr.contains("'--key' cannot be used with '--mode=workload-identity'"), "Expected error about key not allowed in WIF mode, got: " + out.stdErr);
+        assertEquals(1, out.exitCode);
+    }
+
+    @Test
+    void testAddWorkloadIdentityModeRequiresServiceAccountEmail(MockServerClient mock) {
+
+        ExecOut out = exec(mock, "credentials", "add", "google", "-n", "google-bad",
+                "--mode=workload-identity",
+                "--workload-identity-provider=projects/123456/locations/global/workloadIdentityPools/my-pool/providers/my-provider");
+
+        assertTrue(out.stdErr.contains("'--service-account-email' is required when using '--mode=workload-identity'"), "Expected error about missing service-account-email, got: " + out.stdErr);
+        assertEquals(1, out.exitCode);
+    }
+
+    @Test
+    void testAddWorkloadIdentityModeRequiresWorkloadIdentityProvider(MockServerClient mock) {
+
+        ExecOut out = exec(mock, "credentials", "add", "google", "-n", "google-bad",
+                "--mode=workload-identity",
+                "--service-account-email=my-sa@my-project.iam.gserviceaccount.com");
+
+        assertTrue(out.stdErr.contains("'--workload-identity-provider' is required when using '--mode=workload-identity'"), "Expected error about missing workload-identity-provider, got: " + out.stdErr);
+        assertEquals(1, out.exitCode);
+    }
+
+    @Test
+    void testAddWorkloadIdentityModeInvalidServiceAccountEmail(MockServerClient mock) {
+
+        ExecOut out = exec(mock, "credentials", "add", "google", "-n", "google-bad",
+                "--mode=workload-identity",
+                "--service-account-email=invalid-email@gmail.com",
+                "--workload-identity-provider=projects/123456/locations/global/workloadIdentityPools/my-pool/providers/my-provider");
+
+        assertTrue(out.stdErr.contains("Invalid service account email format"), "Expected error about invalid email format, got: " + out.stdErr);
+        assertEquals(1, out.exitCode);
+    }
+
+    @Test
+    void testAddWorkloadIdentityModeInvalidProviderFormat(MockServerClient mock) {
+
+        ExecOut out = exec(mock, "credentials", "add", "google", "-n", "google-bad",
+                "--mode=workload-identity",
+                "--service-account-email=my-sa@my-project.iam.gserviceaccount.com",
+                "--workload-identity-provider=invalid/provider/path");
+
+        assertTrue(out.stdErr.contains("Invalid Workload Identity Provider format"), "Expected error about invalid provider format, got: " + out.stdErr);
+        assertEquals(1, out.exitCode);
+    }
+
+    @Test
+    void testAddServiceAccountKeyModeRejectsWifOptions(MockServerClient mock) {
+
+        ExecOut out = exec(mock, "credentials", "add", "google", "-n", "google-bad",
+                "--service-account-email=my-sa@my-project.iam.gserviceaccount.com");
+
+        assertTrue(out.stdErr.contains("can only be used with '--mode=workload-identity'"), "Expected error about WIF options in wrong mode, got: " + out.stdErr);
+        assertEquals(1, out.exitCode);
+    }
+
+    @Test
+    void testAddServiceAccountKeyModeRequiresKeyFile(MockServerClient mock) {
+
+        ExecOut out = exec(mock, "credentials", "add", "google", "-n", "google-bad");
+
+        assertTrue(out.stdErr.contains("'--key' is required"), "Expected error about missing key file, got: " + out.stdErr);
+        assertEquals(1, out.exitCode);
+    }
+
+    @Test
+    void testAddInvalidMode(MockServerClient mock) {
+
+        ExecOut out = exec(mock, "credentials", "add", "google", "-n", "google-bad", "--mode=invalid");
+
+        assertTrue(out.stdErr.contains("Invalid Google credential mode 'invalid'"), "Expected error about invalid mode, got: " + out.stdErr);
+        assertEquals(1, out.exitCode);
     }
 
     @Test

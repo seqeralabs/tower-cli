@@ -16,6 +16,7 @@
 
 package io.seqera.tower.cli.commands.credentials.providers;
 
+import io.seqera.tower.cli.exceptions.TowerRuntimeException;
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.Credentials.ProviderEnum;
 import io.seqera.tower.model.GoogleSecurityKeys;
@@ -23,11 +24,30 @@ import picocli.CommandLine.Option;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.regex.Pattern;
 
 public class GoogleProvider extends AbstractProvider<GoogleSecurityKeys> {
 
-    @Option(names = {"-k", "--key"}, description = "Path to JSON file containing Google Cloud service account key. Download from Google Cloud Console IAM & Admin > Service Accounts.", required = true)
+    private static final Pattern SA_EMAIL_PATTERN = Pattern.compile(
+            "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.iam\\.gserviceaccount\\.com$");
+
+    private static final Pattern WIF_PROVIDER_PATTERN = Pattern.compile(
+            "^projects/[^/]+/locations/global/workloadIdentityPools/[^/]+/providers/[^/]+$");
+
+    @Option(names = {"-k", "--key"}, description = "Path to JSON file containing Google Cloud service account key. Download from Google Cloud Console IAM & Admin > Service Accounts.")
     public Path serviceAccountKey;
+
+    @Option(names = {"--mode"}, description = "Google credential mode: 'service-account-key' (JSON key file) or 'workload-identity' (WIF with OIDC tokens). Default: service-account-key.")
+    String mode;
+
+    @Option(names = {"--service-account-email"}, description = "The email address of the Google Cloud service account to impersonate (required for workload-identity mode).")
+    String serviceAccountEmail;
+
+    @Option(names = {"--workload-identity-provider"}, description = "The full resource name of the Workload Identity Pool provider. Format: projects/{PROJECT}/locations/global/workloadIdentityPools/{POOL}/providers/{PROVIDER}")
+    String workloadIdentityProvider;
+
+    @Option(names = {"--token-audience"}, description = "Optional. The intended audience for the OIDC token. If not specified, defaults to the Workload Identity Provider resource name.")
+    String tokenAudience;
 
     public GoogleProvider() {
         super(ProviderEnum.GOOGLE);
@@ -35,7 +55,59 @@ public class GoogleProvider extends AbstractProvider<GoogleSecurityKeys> {
 
     @Override
     public GoogleSecurityKeys securityKeys() throws IOException {
-        return new GoogleSecurityKeys()
-                .data(FilesHelper.readString(serviceAccountKey));
+        validate();
+
+        GoogleSecurityKeys result = new GoogleSecurityKeys();
+
+        if (isWorkloadIdentityMode()) {
+            result.serviceAccountEmail(serviceAccountEmail);
+            result.workloadIdentityProvider(workloadIdentityProvider);
+            if (tokenAudience != null) {
+                result.tokenAudience(tokenAudience);
+            }
+        } else {
+            result.data(FilesHelper.readString(serviceAccountKey));
+        }
+
+        return result;
+    }
+
+    private boolean isWorkloadIdentityMode() {
+        if (mode == null) {
+            return false;
+        }
+        return switch (mode.toLowerCase()) {
+            case "service-account-key" -> false;
+            case "workload-identity" -> true;
+            default -> throw new TowerRuntimeException(
+                    String.format("Invalid Google credential mode '%s'. Allowed values: 'service-account-key', 'workload-identity'.", mode));
+        };
+    }
+
+    private void validate() {
+        if (isWorkloadIdentityMode()) {
+            if (serviceAccountKey != null) {
+                throw new TowerRuntimeException("Option '--key' cannot be used with '--mode=workload-identity'. Workload Identity mode uses federated authentication without a key file.");
+            }
+            if (serviceAccountEmail == null) {
+                throw new TowerRuntimeException("Option '--service-account-email' is required when using '--mode=workload-identity'.");
+            }
+            if (!SA_EMAIL_PATTERN.matcher(serviceAccountEmail).matches()) {
+                throw new TowerRuntimeException("Invalid service account email format. Expected format: <name>@<project>.iam.gserviceaccount.com");
+            }
+            if (workloadIdentityProvider == null) {
+                throw new TowerRuntimeException("Option '--workload-identity-provider' is required when using '--mode=workload-identity'.");
+            }
+            if (!WIF_PROVIDER_PATTERN.matcher(workloadIdentityProvider).matches()) {
+                throw new TowerRuntimeException("Invalid Workload Identity Provider format. Expected: projects/{PROJECT_NUMBER}/locations/global/workloadIdentityPools/{POOL}/providers/{PROVIDER}");
+            }
+        } else {
+            if (serviceAccountEmail != null || workloadIdentityProvider != null || tokenAudience != null) {
+                throw new TowerRuntimeException("Options '--service-account-email', '--workload-identity-provider', and '--token-audience' can only be used with '--mode=workload-identity'.");
+            }
+            if (serviceAccountKey == null) {
+                throw new TowerRuntimeException("Option '--key' is required when using service account key mode.");
+            }
+        }
     }
 }
