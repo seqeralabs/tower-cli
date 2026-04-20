@@ -675,4 +675,53 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
         assertEquals("", out.stdOut);
         assertEquals(1, out.exitCode);
     }
+
+    @Test
+    void testDeleteWaitHappyPath(MockServerClient mock) {
+        // DELETE returns 204
+        mock.when(
+                request().withMethod("DELETE").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        // First DESCRIBE returns DELETING
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnv\":{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"DELETING\"}}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // Second DESCRIBE returns 404 (CE has been deleted)
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+        ).respond(
+                response().withStatusCode(404)
+        );
+
+        ExecOut out = exec(mock, "compute-envs", "delete", "-i", "vYOK4vn7spw7bHHWBDXZ2", "--wait");
+
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testDeleteWaitErrored(MockServerClient mock) {
+        // DELETE returns 204
+        mock.when(
+                request().withMethod("DELETE").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        // DESCRIBE returns ERRORED
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnv\":{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"ERRORED\"}}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "compute-envs", "delete", "-i", "vYOK4vn7spw7bHHWBDXZ2", "--wait");
+
+        assertEquals(1, out.exitCode);
+    }
 }
