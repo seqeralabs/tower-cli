@@ -36,6 +36,9 @@ public class AwsCloudPlatform extends AbstractPlatform<AwsCloudConfig> {
     @Option(names = {"--allow-buckets"}, description = "S3 buckets that the compute environment can access. Comma-separated list of S3 bucket names or paths to grant read-write permissions for workflow data.", split = ",")
     public List<String> allowBuckets;
 
+    @Option(names = {"--sched-enabled"}, description = "Enable the Seqera scheduler for this compute environment. Defaults to false if not specified.")
+    public boolean schedEnabled;
+
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
     public AdvancedOptions adv;
 
@@ -50,6 +53,7 @@ public class AwsCloudPlatform extends AbstractPlatform<AwsCloudConfig> {
         config
                 .waveEnabled(true)
                 .fusion2Enabled(true)
+                .schedEnabled(schedEnabled)
 
                 // Main
                 .region(region)
