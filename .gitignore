@@ -5,9 +5,15 @@
 # Ignore Gradle build output directory
 build
 **/build-info.properties
+docs/cli-metadata.json
 
 # Location for unshared files
 .user/
 .DS_Store
 
+
 *.iml
+
+# macOS system files
+.DS_Store
+**/.DS_Store
