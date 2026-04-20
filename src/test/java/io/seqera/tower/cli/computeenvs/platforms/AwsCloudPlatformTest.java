@@ -29,6 +29,7 @@ import java.io.IOException;
 
 import static io.seqera.tower.cli.commands.AbstractApiCmd.USER_WORKSPACE_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
@@ -68,7 +69,8 @@ public class AwsCloudPlatformTest extends BaseCmdTest {
                                             "workDir": "s3://my-bucket",
                                             "region": "us-east-1",
                                             "fusion2Enabled": true,
-                                            "waveEnabled": true
+                                            "waveEnabled": true,
+                                            "schedEnabled": false
                                         },
                                         "credentialsId": "6XfOhoztUq6de3Dw3X9LSb"
                                     }
@@ -127,6 +129,7 @@ public class AwsCloudPlatformTest extends BaseCmdTest {
                                             "imageId": "ami-12345678",
                                             "fusion2Enabled": true,
                                             "waveEnabled": true,
+                                            "schedEnabled": false,
                                             "arm64Enabled": true,
                                             "ec2KeyPair": "my-key-pair",
                                             "ebsBootSize": 100,
@@ -167,5 +170,107 @@ public class AwsCloudPlatformTest extends BaseCmdTest {
         assertEquals("", out.stdErr);
         assertEquals(0, out.exitCode);
         assertEquals(expected.toString(), out.stdOut);
+    }
+
+    @Test
+    void testAddWithSchedEnabled(MockServerClient mock) throws IOException {
+        mock.reset();
+
+        // given
+        mock.when(
+                request()
+                        .withMethod("GET")
+                        .withPath("/credentials")
+                        .withQueryStringParameter("platformId", "aws-cloud"),
+                exactly(1)
+        ).respond(
+                response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("{\"credentials\":[{\"id\":\"6XfOhoztUq6de3Dw3X9LSb\",\"name\":\"aws\",\"description\":null,\"discriminator\":\"aws\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-08T18:20:46Z\",\"dateCreated\":\"2021-09-08T12:57:04Z\",\"lastUpdated\":\"2021-09-08T12:57:04Z\"}]}")
+        );
+
+        mock.when(
+                request()
+                        .withMethod("POST")
+                        .withPath("/compute-envs")
+                        .withBody(json("""
+                                {
+                                    "computeEnv": {
+                                        "name": "my-aws-cloud-sched",
+                                        "platform": "aws-cloud",
+                                        "config": {
+                                            "workDir": "s3://my-bucket",
+                                            "region": "us-east-1",
+                                            "fusion2Enabled": true,
+                                            "waveEnabled": true,
+                                            "schedEnabled": true
+                                        },
+                                        "credentialsId": "6XfOhoztUq6de3Dw3X9LSb"
+                                    }
+                                }""")),
+                exactly(1)
+        ).respond(
+                response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}")
+        );
+
+        // when
+        ExecOut out = exec(mock, "compute-envs", "add", "aws-cloud",
+                "-n", "my-aws-cloud-sched",
+                "--work-dir", "s3://my-bucket",
+                "-r", "us-east-1",
+                "--sched-enabled"
+        );
+
+        // then
+        var expected = new ComputeEnvAdded("aws-cloud", "isnEDBLvHDAIteOEF44ow", "my-aws-cloud-sched", null, USER_WORKSPACE_NAME);
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        assertEquals(expected.toString(), out.stdOut);
+    }
+
+    @Test
+    void testAddWithSchedEnabledForbidden(MockServerClient mock) throws IOException {
+        mock.reset();
+
+        // given
+        mock.when(
+                request()
+                        .withMethod("GET")
+                        .withPath("/credentials")
+                        .withQueryStringParameter("platformId", "aws-cloud"),
+                exactly(1)
+        ).respond(
+                response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("{\"credentials\":[{\"id\":\"6XfOhoztUq6de3Dw3X9LSb\",\"name\":\"aws\",\"description\":null,\"discriminator\":\"aws\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-08T18:20:46Z\",\"dateCreated\":\"2021-09-08T12:57:04Z\",\"lastUpdated\":\"2021-09-08T12:57:04Z\"}]}")
+        );
+
+        mock.when(
+                request()
+                        .withMethod("POST")
+                        .withPath("/compute-envs"),
+                exactly(1)
+        ).respond(
+                response()
+                        .withStatusCode(403)
+        );
+
+        // when
+        ExecOut out = exec(mock, "compute-envs", "add", "aws-cloud",
+                "-n", "my-aws-cloud-sched",
+                "--work-dir", "s3://my-bucket",
+                "-r", "us-east-1",
+                "--sched-enabled"
+        );
+
+        // then — backend rejected due to feature flag not being enabled
+        assertEquals("", out.stdOut);
+        assertEquals(1, out.exitCode);
+        assertTrue(out.stdErr.contains("ERROR"));
     }
 }
