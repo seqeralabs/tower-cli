@@ -101,7 +101,7 @@ public class AzBatchForgePlatform extends AbstractPlatform<AzBatchConfig> {
 
         if (adv != null) {
             config
-                    .deleteJobsOnCompletion(adv.deleteJobsOnCompletion)
+                    .deleteJobsOnCompletionEnabled(adv.deleteJobsOnCompletion)
                     .deleteTasksOnCompletion(adv.deleteTasksOnCompletion)
                     .terminateJobsOnCompletion(adv.terminateJobsOnCompletion)
                     .tokenDuration(adv.tokenDuration)
