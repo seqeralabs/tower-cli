@@ -29,6 +29,7 @@ import java.io.IOException;
 
 import static io.seqera.tower.cli.commands.AbstractApiCmd.USER_WORKSPACE_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
@@ -270,6 +271,6 @@ public class AwsCloudPlatformTest extends BaseCmdTest {
         // then — backend rejected due to feature flag not being enabled
         assertEquals("", out.stdOut);
         assertEquals(1, out.exitCode);
-        assert out.stdErr.contains("ERROR");
+        assertTrue(out.stdErr.contains("ERROR"));
     }
 }
