@@ -57,6 +57,9 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
     @Option(names = {"--wait"}, description = "Wait until given status or fail. Valid options: ${COMPLETION-CANDIDATES}.")
     public ComputeEnvStatus wait;
 
+    @Option(names = {"-d", "--description"}, description = "Compute environment description.")
+    public String description;
+
     @Option(names = {"--labels"}, description = "Comma-separated list of labels.", split = ",", converter = Label.ResourceLabelsConverter.class)
     public  List<Label> labels;
 
@@ -115,6 +118,7 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
                 .computeEnv(
                         new ComputeEnvComputeConfig()
                                 .name(name)
+                                .description(description)
                                 .platform(platform)
                                 .credentialsId(credsId)
                                 .config(config)

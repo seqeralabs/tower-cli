@@ -646,6 +646,43 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
 
     @ParameterizedTest
     @EnumSource(OutputType.class)
+    void testUpdateDescription(OutputType format, MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_envs_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("PUT").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2")
+                        .withBody(new JsonBody("{\"name\":\"demo\",\"description\":\"Test CE description\"}")),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "compute-envs", "update", "-n", "demo", "--description", "Test CE description");
+
+        assertEquals("", out.stdErr);
+        assertOutput(format, out, new ComputeEnvUpdated(USER_WORKSPACE_NAME, "demo"));
+        assertEquals(0, out.exitCode);
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
     void testUpdateInvalidName(OutputType format, MockServerClient mock) {
 
         mock.when(
