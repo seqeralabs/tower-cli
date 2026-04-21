@@ -215,7 +215,7 @@ public class DatasetsCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("GET").withPath("/workspaces/249664655368293/datasets/4D9TP0w2pM0qmwqVHgrgBK/v/2/n/transaciones_2021-11-26_filter-advanced.csv"), exactly(1)
+                request().withMethod("GET").withPath("/datasets/4D9TP0w2pM0qmwqVHgrgBK/v/2/n/transaciones_2021-11-26_filter-advanced.csv"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("datasets/dataset_download", "txt")).withContentType(MediaType.TEXT_PLAIN)
         );

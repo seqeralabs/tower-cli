@@ -50,7 +50,7 @@ public class DeleteCmd extends AbstractComputeEnvCmd {
         }
 
         try {
-            computeEnvsApi().deleteComputeEnv(id, wspId);
+            computeEnvsApi().deleteComputeEnv(id, wspId, null);
             return new ComputeEnvDeleted(id, workspaceRef(wspId));
         } catch (ApiException e) {
             if (e.getCode() == 403) {
