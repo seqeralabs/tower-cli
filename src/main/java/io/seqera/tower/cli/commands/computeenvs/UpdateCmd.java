@@ -45,6 +45,9 @@ public class UpdateCmd extends AbstractComputeEnvCmd {
     @Option(names = {"--new-name"}, description = "New compute environment name.")
     public String newName;
 
+    @Option(names = {"-d", "--description"}, description = "Compute environment description.")
+    public String description;
+
     @Override
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
@@ -60,7 +63,8 @@ public class UpdateCmd extends AbstractComputeEnvCmd {
 
 
         UpdateComputeEnvRequest req = new UpdateComputeEnvRequest()
-                .name(newName != null ? newName : ce.getName());
+                .name(newName != null ? newName : ce.getName())
+                .description(description != null ? description : ce.getDescription());
 
         computeEnvsApi().updateComputeEnv(ce.getId(), req, wspId);
 

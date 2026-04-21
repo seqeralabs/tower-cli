@@ -4996,7 +4996,7 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"credentialsId","parameterTypes":["java.lang.String"] }, {"name":"equals","parameterTypes":["java.lang.Object"] }, {"name":"getCredentialsId","parameterTypes":[] }, {"name":"getName","parameterTypes":[] }, {"name":"hashCode","parameterTypes":[] }, {"name":"name","parameterTypes":["java.lang.String"] }, {"name":"setCredentialsId","parameterTypes":["java.lang.String"] }, {"name":"setName","parameterTypes":["java.lang.String"] }, {"name":"toIndentedString","parameterTypes":["java.lang.Object"] }, {"name":"toString","parameterTypes":[] }]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"credentialsId","parameterTypes":["java.lang.String"] }, {"name":"description","parameterTypes":["java.lang.String"] }, {"name":"equals","parameterTypes":["java.lang.Object"] }, {"name":"getCredentialsId","parameterTypes":[] }, {"name":"getDescription","parameterTypes":[] }, {"name":"getName","parameterTypes":[] }, {"name":"hashCode","parameterTypes":[] }, {"name":"name","parameterTypes":["java.lang.String"] }, {"name":"setCredentialsId","parameterTypes":["java.lang.String"] }, {"name":"setDescription","parameterTypes":["java.lang.String"] }, {"name":"setName","parameterTypes":["java.lang.String"] }, {"name":"toIndentedString","parameterTypes":["java.lang.Object"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.UpdateCredentialsRequest",

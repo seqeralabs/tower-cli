@@ -31,6 +31,7 @@ import java.io.PrintWriter;
 
 import static io.seqera.tower.cli.utils.FormatHelper.formatComputeEnvId;
 import static io.seqera.tower.cli.utils.FormatHelper.formatComputeEnvStatus;
+import static io.seqera.tower.cli.utils.FormatHelper.formatDescription;
 import static io.seqera.tower.cli.utils.FormatHelper.formatLabels;
 import static io.seqera.tower.cli.utils.FormatHelper.formatTime;
 
@@ -81,6 +82,7 @@ public class ComputeEnvView extends Response {
         table.setPrefix("    ");
         table.addRow("ID", formatComputeEnvId(id, baseWorkspaceUrl));
         table.addRow("Name", computeEnv.getName());
+        table.addRow("Description", formatDescription(computeEnv.getDescription()));
         table.addRow("Platform", computeEnv.getPlatform().getValue());
         table.addRow("Last updated", formatTime(computeEnv.getLastUpdated()));
         table.addRow("Last activity", formatTime(computeEnv.getLastUsed()));
