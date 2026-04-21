@@ -19,6 +19,7 @@ package io.seqera.tower.cli.commands.computeenvs.platforms;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.model.AwsCloudConfig;
 import io.seqera.tower.model.ComputeEnvComputeConfig.PlatformEnum;
+import io.seqera.tower.model.SchedConfig;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Option;
 
@@ -36,8 +37,8 @@ public class AwsCloudPlatform extends AbstractPlatform<AwsCloudConfig> {
     @Option(names = {"--allow-buckets"}, description = "S3 buckets that the compute environment can access. Comma-separated list of S3 bucket names or paths to grant read-write permissions for workflow data.", split = ",")
     public List<String> allowBuckets;
 
-    @Option(names = {"--sched-enabled"}, description = "Enable the Seqera scheduler for this compute environment. Defaults to false if not specified.")
-    public boolean schedEnabled;
+    @ArgGroup(heading = "%nScheduler options:%n", validate = false)
+    public SchedOptions sched;
 
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
     public AdvancedOptions adv;
@@ -53,11 +54,15 @@ public class AwsCloudPlatform extends AbstractPlatform<AwsCloudConfig> {
         config
                 .waveEnabled(true)
                 .fusion2Enabled(true)
-                .schedEnabled(schedEnabled)
+                .schedEnabled(sched != null && sched.schedEnabled)
 
                 // Main
                 .region(region)
                 .allowBuckets(allowBuckets);
+
+        if (sched != null && sched.provisioningModel != null) {
+            config.schedConfig(new SchedConfig().provisioningModel(sched.provisioningModel));
+        }
 
         // Advanced
         if (adv != null) {
@@ -80,6 +85,14 @@ public class AwsCloudPlatform extends AbstractPlatform<AwsCloudConfig> {
                 .environment(environmentVariables());
 
         return config;
+    }
+
+    public static class SchedOptions {
+        @Option(names = {"--sched-enabled"}, description = "Enable the Seqera scheduler for this compute environment. Defaults to false if not specified.")
+        public Boolean schedEnabled;
+
+        @Option(names = {"--provisioning-model"}, description = "Instance provisioning model used by the Seqera scheduler. Valid values: SPOT, SPOT_FIRST, ONDEMAND.")
+        public SchedConfig.ProvisioningModelEnum provisioningModel;
     }
 
     public static class AdvancedOptions {
