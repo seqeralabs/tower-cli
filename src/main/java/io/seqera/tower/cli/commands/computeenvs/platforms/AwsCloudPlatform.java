@@ -60,15 +60,8 @@ public class AwsCloudPlatform extends AbstractPlatform<AwsCloudConfig> {
                 .region(region)
                 .allowBuckets(allowBuckets);
 
-        if (sched != null) {
-            SchedConfig schedConfig = new SchedConfig();
-            if (sched.provisioningModel != null) {
-                schedConfig.provisioningModel(sched.provisioningModel);
-            }
-            if (sched.machineTypes != null) {
-                schedConfig.machineTypes(sched.machineTypes);
-            }
-            config.schedConfig(schedConfig);
+        if (sched != null && sched.provisioningModel != null) {
+            config.schedConfig(new SchedConfig().provisioningModel(sched.provisioningModel));
         }
 
         // Advanced
@@ -100,9 +93,6 @@ public class AwsCloudPlatform extends AbstractPlatform<AwsCloudConfig> {
 
         @Option(names = {"--provisioning-model"}, description = "Instance provisioning model used by the Seqera scheduler. Valid values: SPOT, SPOT_FIRST, ONDEMAND.")
         public SchedConfig.ProvisioningModelEnum provisioningModel;
-
-        @Option(names = {"--sched-machine-types"}, description = "EC2 instance types for compute nodes managed by the Seqera scheduler. Comma-separated list (e.g., m5.xlarge,c5.2xlarge). Leave empty to let the scheduler select the most cost-effective types.", split = ",")
-        public List<String> machineTypes;
     }
 
     public static class AdvancedOptions {
