@@ -297,6 +297,70 @@ public class AwsCloudPlatformTest extends BaseCmdTest {
     }
 
     @Test
+    void testAddWithSchedMachineTypes(MockServerClient mock) throws IOException {
+        mock.reset();
+
+        // given
+        mock.when(
+                request()
+                        .withMethod("GET")
+                        .withPath("/credentials")
+                        .withQueryStringParameter("platformId", "aws-cloud"),
+                exactly(1)
+        ).respond(
+                response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("{\"credentials\":[{\"id\":\"6XfOhoztUq6de3Dw3X9LSb\",\"name\":\"aws\",\"description\":null,\"discriminator\":\"aws\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-08T18:20:46Z\",\"dateCreated\":\"2021-09-08T12:57:04Z\",\"lastUpdated\":\"2021-09-08T12:57:04Z\"}]}")
+        );
+
+        mock.when(
+                request()
+                        .withMethod("POST")
+                        .withPath("/compute-envs")
+                        .withBody(json("""
+                                {
+                                    "computeEnv": {
+                                        "name": "my-aws-cloud-sched-mt",
+                                        "platform": "aws-cloud",
+                                        "config": {
+                                            "workDir": "s3://my-bucket",
+                                            "region": "us-east-1",
+                                            "fusion2Enabled": true,
+                                            "waveEnabled": true,
+                                            "schedEnabled": true,
+                                            "schedConfig": {
+                                                "machineTypes": ["m5.xlarge", "c5.2xlarge"]
+                                            }
+                                        },
+                                        "credentialsId": "6XfOhoztUq6de3Dw3X9LSb"
+                                    }
+                                }""")),
+                exactly(1)
+        ).respond(
+                response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}")
+        );
+
+        // when
+        ExecOut out = exec(mock, "compute-envs", "add", "aws-cloud",
+                "-n", "my-aws-cloud-sched-mt",
+                "--work-dir", "s3://my-bucket",
+                "-r", "us-east-1",
+                "--sched-enabled",
+                "--sched-machine-types", "m5.xlarge,c5.2xlarge"
+        );
+
+        // then
+        var expected = new ComputeEnvAdded("aws-cloud", "isnEDBLvHDAIteOEF44ow", "my-aws-cloud-sched-mt", null, USER_WORKSPACE_NAME);
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        assertEquals(expected.toString(), out.stdOut);
+    }
+
+    @Test
     void testAddWithSchedEnabledForbidden(MockServerClient mock) throws IOException {
         mock.reset();
 
