@@ -47,9 +47,6 @@ public class DeleteCmd extends AbstractComputeEnvCmd {
     @CommandLine.Option(names = {"--wait"}, description = "Wait until the compute environment is fully deleted.")
     public boolean wait;
 
-    private String deletedId;
-    private Long deletedWspId;
-
     @Override
     protected Response exec() throws ApiException {
         Long wspId = workspaceId(workspace.workspace);
@@ -64,8 +61,6 @@ public class DeleteCmd extends AbstractComputeEnvCmd {
 
         try {
             computeEnvsApi().deleteComputeEnv(id, wspId, null);
-            deletedId = id;
-            deletedWspId = wspId;
             return new ComputeEnvDeleted(id, workspaceRef(wspId), wspId);
         } catch (ApiException e) {
             if (e.getCode() == 403) {
