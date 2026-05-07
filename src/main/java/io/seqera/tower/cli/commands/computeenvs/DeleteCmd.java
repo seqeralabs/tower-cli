@@ -30,6 +30,8 @@ import picocli.CommandLine.Command;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
+import static io.seqera.tower.cli.utils.ResponseHelper.waitStatus;
+
 @Command(
         name = "delete",
         description = "Delete a compute environment."
@@ -64,7 +66,7 @@ public class DeleteCmd extends AbstractComputeEnvCmd {
             computeEnvsApi().deleteComputeEnv(id, wspId, null);
             deletedId = id;
             deletedWspId = wspId;
-            return new ComputeEnvDeleted(id, workspaceRef(wspId));
+            return new ComputeEnvDeleted(id, workspaceRef(wspId), wspId);
         } catch (ApiException e) {
             if (e.getCode() == 403) {
                 // Customize the forbidden message
@@ -80,34 +82,18 @@ public class DeleteCmd extends AbstractComputeEnvCmd {
             return exitCode;
         }
 
+        ComputeEnvDeleted computeEnv = (ComputeEnvDeleted) response;
         boolean showProgress = app().output != OutputType.json;
 
         try {
-            long sleepMillis = 2000;
-            while (true) {
-                ComputeEnvStatus status = checkComputeEnvStatus(deletedId, deletedWspId);
-
-                if (status == null) {
-                    // CE is gone (404) - deletion succeeded
-                    if (showProgress) {
-                        app().getOut().println();
-                    }
-                    return CommandLine.ExitCode.OK;
-                }
-
-                if (status == ComputeEnvStatus.ERRORED) {
-                    app().getErr().println("ERROR: Compute environment disposal failed (status: ERRORED). AWS resources may not have been cleaned up.");
-                    return CommandLine.ExitCode.SOFTWARE;
-                }
-
-                if (showProgress) {
-                    app().getOut().print(".");
-                    app().getOut().flush();
-                }
-
-                TimeUnit.MILLISECONDS.sleep(sleepMillis);
-                sleepMillis = Math.min(sleepMillis + 1000, 120_000);
-            }
+            return waitStatus(
+                    app().getOut(),
+                    showProgress,
+                    ComputeEnvStatus.DELETED,
+                    ComputeEnvStatus.values(),
+                    () -> checkComputeEnvStatus(computeEnv.id, computeEnv.workspaceId),
+                    ComputeEnvStatus.ERRORED, ComputeEnvStatus.INVALID
+            );
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             return exitCode;

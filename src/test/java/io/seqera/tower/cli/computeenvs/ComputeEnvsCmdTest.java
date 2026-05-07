@@ -76,7 +76,7 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
         );
 
         ExecOut out = exec(format, mock, "compute-envs", "delete", "-i", "vYOK4vn7spw7bHHWBDXZ2");
-        assertOutput(format, out, new ComputeEnvDeleted("vYOK4vn7spw7bHHWBDXZ2", USER_WORKSPACE_NAME));
+        assertOutput(format, out, new ComputeEnvDeleted("vYOK4vn7spw7bHHWBDXZ2", USER_WORKSPACE_NAME, null));
     }
 
     @Test
@@ -733,7 +733,7 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
         mock.when(
                 request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
         ).respond(
-                response().withStatusCode(404)
+                response().withStatusCode(200).withBody("{\"computeEnv\":{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"DELETED\"}}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         ExecOut out = exec(mock, "compute-envs", "delete", "-i", "vYOK4vn7spw7bHHWBDXZ2", "--wait");
