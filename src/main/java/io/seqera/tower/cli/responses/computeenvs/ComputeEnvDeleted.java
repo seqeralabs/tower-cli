@@ -22,9 +22,11 @@ public class ComputeEnvDeleted extends Response {
 
     public final String id;
     public final String workspaceRef;
+    public final Long workspaceId;
 
-    public ComputeEnvDeleted(String id, String workspaceRef) {
+    public ComputeEnvDeleted(String id, String workspaceRef, Long workspaceId) {
         this.id = id;
+        this.workspaceId = workspaceId;
         this.workspaceRef = workspaceRef;
     }
 
