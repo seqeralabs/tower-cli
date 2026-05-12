@@ -123,6 +123,26 @@ public class FormatHelper {
         return String.format("$%f", value);
     }
 
+    public static String formatMemoryMiB(Long value) {
+        if (value == null) {
+            return "";
+        }
+
+        if (value >= 1024) {
+            return String.format("%.1f GB", value / 1024.0);
+        }
+
+        return String.format("%d MB", value);
+    }
+
+    public static String formatMemoryMiB(Number value) {
+        if (value == null) {
+            return "";
+        }
+
+        return formatMemoryMiB(value.longValue());
+    }
+
     public static String formatPercentage(Double value) {
         if (value == null) {
             return "";

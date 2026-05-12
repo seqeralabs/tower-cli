@@ -39,6 +39,7 @@ public class RunViewMetrics extends Response {
     public final List<Map<String, Object>> metricsCpu;
     public final List<Map<String, Object>> metricsTime;
     public final List<Map<String, Object>> metricsIo;
+    public final List<Map<String, Object>> metricsGpu;
     public final MetricPreviewFormat groupType;
 
     public RunViewMetrics(
@@ -47,6 +48,7 @@ public class RunViewMetrics extends Response {
             List<Map<String, Object>> metricsCpu,
             List<Map<String, Object>> metricsTime,
             List<Map<String, Object>> metricsIo,
+            List<Map<String, Object>> metricsGpu,
             MetricPreviewFormat groupType
     ) {
         this.columns = columns;
@@ -54,6 +56,7 @@ public class RunViewMetrics extends Response {
         this.metricsCpu = metricsCpu;
         this.metricsTime = metricsTime;
         this.metricsIo = metricsIo;
+        this.metricsGpu = metricsGpu;
         this.groupType = groupType;
     }
 
@@ -75,6 +78,10 @@ public class RunViewMetrics extends Response {
 
         if (!metricsIo.isEmpty()) {
             data.put("metricsIo", metricsIo);
+        }
+
+        if (!metricsGpu.isEmpty()) {
+            data.put("metricsGpu", metricsGpu);
         }
 
         return data;
@@ -134,6 +141,17 @@ public class RunViewMetrics extends Response {
                 processDataReducedTable(metricsIo, out, cols);
             } else {
                 processExpandedDataTable(metricsIo, out, cols);
+            }
+        }
+
+        if (!metricsGpu.isEmpty()) {
+            out.println(ansi(String.format("%n%n    @|bold  GPU Metrics|@%n    ----------------%n")));
+
+            if (groupType == MetricPreviewFormat.condensed) {
+                out.println(ansi(String.format("   @|italic   Legend: utilisation / peak memory / avg memory|@%n")));
+                processDataReducedTable(metricsGpu, out, cols);
+            } else {
+                processExpandedDataTable(metricsGpu, out, cols);
             }
         }
     }

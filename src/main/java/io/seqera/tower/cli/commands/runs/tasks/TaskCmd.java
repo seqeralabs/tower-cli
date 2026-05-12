@@ -22,6 +22,7 @@ import io.seqera.tower.cli.commands.runs.ViewCmd;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.runs.tasks.TaskView;
 import io.seqera.tower.model.DescribeTaskResponse;
+import io.seqera.tower.model.GpuMetrics;
 import io.seqera.tower.model.Task;
 import picocli.CommandLine;
 
@@ -47,7 +48,7 @@ public class TaskCmd extends AbstractRunsCmd {
     @CommandLine.Option(names = {"--resources-requested"}, description = "Display resources requested by the task including CPUs, memory, disk space, and time allocation.")
     boolean resourcesRequested;
 
-    @CommandLine.Option(names = {"--resources-usage"}, description = "Display actual resource consumption including CPU percentage, memory usage (RSS, peak RSS, virtual memory), and I/O statistics.")
+    @CommandLine.Option(names = {"--resources-usage"}, description = "Display actual resource consumption including CPU percentage, memory usage (RSS, peak RSS, virtual memory), I/O statistics, and GPU metrics.")
     boolean resourcesUsage;
 
 
@@ -137,6 +138,22 @@ public class TaskCmd extends AbstractRunsCmd {
         map.put("syscw", task.getSyscw() != null ? task.getSyscw() : null);
         map.put("volCtxt", task.getVolCtxt() != null ? task.getVolCtxt() * 1D : null);
         map.put("invCtxt", task.getInvCtxt() != null ? task.getInvCtxt() * 1D : null);
+
+        GpuMetrics gpu = task.getGpuMetrics();
+        if (gpu != null) {
+            map.put("gpuName", gpu.getName());
+            map.put("gpuDriver", gpu.getDriver());
+            map.put("gpuTotalMemory", gpu.getMem());
+            map.put("gpuPct", gpu.getPct());
+            map.put("gpuPeak", gpu.getPeak());
+            map.put("gpuPctMem", gpu.getPctMem());
+            map.put("gpuPeakMem", gpu.getPeakMem());
+            map.put("gpuAvgMem", gpu.getAvgMem());
+            map.put("gpuPeakMemUsed", gpu.getPeakMemUsed());
+            map.put("gpuAvgMemBwUtil", gpu.getAvgMemBwUtil());
+            map.put("gpuPeakMemBwUtil", gpu.getPeakMemBwUtil());
+            map.put("gpuActiveTime", gpu.getActiveTime());
+        }
 
         return map;
     }

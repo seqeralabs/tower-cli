@@ -17,5 +17,5 @@
 package io.seqera.tower.cli.commands.runs.metrics.enums;
 
 public enum MetricType {
-    cpu, mem, time, io
+    cpu, mem, time, io, gpu
 }

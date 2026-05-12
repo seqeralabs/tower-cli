@@ -61,7 +61,7 @@ class MetricsCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(mock,"runs", "view", "-i", "5dAZoXrcmZXRO4", "metrics", "-v", "expanded");
         assertEquals("", out.stdErr);
-        assertEquals(StringUtils.chop(new RunViewMetrics(cols, metricsMem, metricsCpu, metricsTime, metricsIo, MetricPreviewFormat.expanded).toString()), out.stdOut);
+        assertEquals(StringUtils.chop(new RunViewMetrics(cols, metricsMem, metricsCpu, metricsTime, metricsIo, new ArrayList<>(), MetricPreviewFormat.expanded).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -88,7 +88,7 @@ class MetricsCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(mock,"runs", "view", "-i", "5dAZoXrcmZXRO4", "metrics", "-v", "condensed");
         assertEquals("", out.stdErr);
-        assertEquals(StringUtils.chop(new RunViewMetrics(cols, metricsMem, metricsCpu, metricsTime, metricsIo, MetricPreviewFormat.condensed).toString()), out.stdOut);
+        assertEquals(StringUtils.chop(new RunViewMetrics(cols, metricsMem, metricsCpu, metricsTime, metricsIo, new ArrayList<>(), MetricPreviewFormat.condensed).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 }

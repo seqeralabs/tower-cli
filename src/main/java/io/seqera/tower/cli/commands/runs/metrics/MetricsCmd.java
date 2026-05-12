@@ -60,7 +60,7 @@ public class MetricsCmd extends AbstractRunsCmd {
     protected Response exec() throws ApiException {
         Long wspId = workspaceId(parentCommand.workspace.workspace);
 
-        type = type == null ? List.of(MetricType.cpu, MetricType.mem, MetricType.time, MetricType.io) : type;
+        type = type == null ? List.of(MetricType.cpu, MetricType.mem, MetricType.time, MetricType.io, MetricType.gpu) : type;
         columns = columns == null ? List.of(MetricColumn.min, MetricColumn.q1, MetricColumn.q2, MetricColumn.q3, MetricColumn.max, MetricColumn.mean) : columns;
 
         List<WorkflowMetrics> metrics = workflowsApi().describeWorkflowMetrics(parentCommand.id, wspId).getMetrics();
@@ -127,7 +127,23 @@ public class MetricsCmd extends AbstractRunsCmd {
             });
         }
 
-        return new RunViewMetrics(columns, metricsMem, metricsCpu, metricsTime, metricsIo, view);
+        List<Map<String, Object>> metricsGpu = new ArrayList<>();
+        if (type.contains(MetricType.gpu)) {
+            metrics.forEach(it -> {
+                if (it.getProcess().contains(filter) && (it.getGpuUsage() != null || it.getGpuMemPeak() != null || it.getGpuMemAvg() != null)) {
+                    Map<String, Object> data = new LinkedHashMap<>();
+                    data.put("gpuUsage", it.getGpuUsage() != null ? processColumns(it.getGpuUsage()) : null);
+                    data.put("gpuMemPeak", it.getGpuMemPeak() != null ? processColumns(it.getGpuMemPeak()) : null);
+                    data.put("gpuMemAvg", it.getGpuMemAvg() != null ? processColumns(it.getGpuMemAvg()) : null);
+
+                    Map<String, Object> process = new HashMap<>();
+                    process.put(it.getProcess(), data);
+                    metricsGpu.add(process);
+                }
+            });
+        }
+
+        return new RunViewMetrics(columns, metricsMem, metricsCpu, metricsTime, metricsIo, metricsGpu, view);
     }
 
     private Map<String, Object> processColumns(ResourceData resourceData) {

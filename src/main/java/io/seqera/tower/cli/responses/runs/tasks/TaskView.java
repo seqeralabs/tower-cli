@@ -149,6 +149,21 @@ public class TaskView extends Response {
             tableUsage.addRow("volCtxts", usage.get("volCtxt") != null ? usage.get("volCtxt").toString() : "", "Number of voluntary context switches");
             tableUsage.addRow("invCtxt", usage.get("invCtxt") != null ? usage.get("invCtxt").toString() : "", "Number of involuntary context switches");
 
+            if (usage.containsKey("gpuName")) {
+                tableUsage.addRow("gpuName", usage.get("gpuName") != null ? usage.get("gpuName").toString() : "", "GPU model name");
+                tableUsage.addRow("gpuDriver", usage.get("gpuDriver") != null ? usage.get("gpuDriver").toString() : "", "NVIDIA driver version");
+                tableUsage.addRow("gpuTotalMemory", FormatHelper.formatMemoryMiB((Long) usage.get("gpuTotalMemory")), "Total GPU memory");
+                tableUsage.addRow("gpuPct", FormatHelper.formatPercentage((Double) usage.get("gpuPct")), "Average GPU compute utilisation");
+                tableUsage.addRow("gpuPeak", FormatHelper.formatPercentage((Double) usage.get("gpuPeak")), "Peak GPU compute utilisation");
+                tableUsage.addRow("gpuPctMem", FormatHelper.formatPercentage((Double) usage.get("gpuPctMem")), "Average GPU memory utilisation");
+                tableUsage.addRow("gpuPeakMem", FormatHelper.formatPercentage((Double) usage.get("gpuPeakMem")), "Peak GPU memory utilisation");
+                tableUsage.addRow("gpuAvgMem", FormatHelper.formatMemoryMiB((Long) usage.get("gpuAvgMem")), "Average GPU memory used");
+                tableUsage.addRow("gpuPeakMemUsed", FormatHelper.formatMemoryMiB((Long) usage.get("gpuPeakMemUsed")), "Peak GPU memory used");
+                tableUsage.addRow("gpuAvgMemBwUtil", FormatHelper.formatPercentage((Double) usage.get("gpuAvgMemBwUtil")), "Average memory bandwidth utilisation");
+                tableUsage.addRow("gpuPeakMemBwUtil", FormatHelper.formatPercentage((Double) usage.get("gpuPeakMemBwUtil")), "Peak memory bandwidth utilisation");
+                tableUsage.addRow("gpuActiveTime", FormatHelper.formatDurationMillis((Long) usage.get("gpuActiveTime")), "Time the process was actively using GPU");
+            }
+
             tableUsage.setPrefix("    ");
             tableUsage.print();
         }

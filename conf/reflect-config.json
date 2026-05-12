@@ -620,6 +620,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AwsCloudPlatform$SchedOptions",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AzBatchForgePlatform",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -3561,6 +3567,7 @@
 },
 {
   "name":"io.seqera.tower.model.DataStudioUpdateRequest",
+  "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"_configuration","parameterTypes":["io.seqera.tower.model.DataStudioConfiguration"] }, {"name":"addLabelIdsItem","parameterTypes":["java.lang.Long"] }, {"name":"description","parameterTypes":["java.lang.String"] }, {"name":"equals","parameterTypes":["java.lang.Object"] }, {"name":"equalsNullable","parameterTypes":["org.openapitools.jackson.nullable.JsonNullable","org.openapitools.jackson.nullable.JsonNullable"] }, {"name":"getConfiguration","parameterTypes":[] }, {"name":"getConfiguration_JsonNullable","parameterTypes":[] }, {"name":"getDescription","parameterTypes":[] }, {"name":"getDescription_JsonNullable","parameterTypes":[] }, {"name":"getLabelIds","parameterTypes":[] }, {"name":"getLabelIds_JsonNullable","parameterTypes":[] }, {"name":"getName","parameterTypes":[] }, {"name":"getName_JsonNullable","parameterTypes":[] }, {"name":"hashCode","parameterTypes":[] }, {"name":"hashCodeNullable","parameterTypes":["org.openapitools.jackson.nullable.JsonNullable"] }, {"name":"labelIds","parameterTypes":["java.util.List"] }, {"name":"name","parameterTypes":["java.lang.String"] }, {"name":"setConfiguration","parameterTypes":["io.seqera.tower.model.DataStudioConfiguration"] }, {"name":"setConfiguration_JsonNullable","parameterTypes":["org.openapitools.jackson.nullable.JsonNullable"] }, {"name":"setDescription","parameterTypes":["java.lang.String"] }, {"name":"setDescription_JsonNullable","parameterTypes":["org.openapitools.jackson.nullable.JsonNullable"] }, {"name":"setLabelIds","parameterTypes":["java.util.List"] }, {"name":"setLabelIds_JsonNullable","parameterTypes":["org.openapitools.jackson.nullable.JsonNullable"] }, {"name":"setName","parameterTypes":["java.lang.String"] }, {"name":"setName_JsonNullable","parameterTypes":["org.openapitools.jackson.nullable.JsonNullable"] }, {"name":"toIndentedString","parameterTypes":["java.lang.Object"] }, {"name":"toString","parameterTypes":[] }]
@@ -4032,6 +4039,7 @@
 },
 {
   "name":"io.seqera.tower.model.GpuMetrics",
+  "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"activeTime","parameterTypes":["java.lang.Long"] }, {"name":"avgMem","parameterTypes":["java.lang.Long"] }, {"name":"avgMemBwUtil","parameterTypes":["java.lang.Double"] }, {"name":"driver","parameterTypes":["java.lang.String"] }, {"name":"equals","parameterTypes":["java.lang.Object"] }, {"name":"getActiveTime","parameterTypes":[] }, {"name":"getAvgMem","parameterTypes":[] }, {"name":"getAvgMemBwUtil","parameterTypes":[] }, {"name":"getDriver","parameterTypes":[] }, {"name":"getMem","parameterTypes":[] }, {"name":"getName","parameterTypes":[] }, {"name":"getPct","parameterTypes":[] }, {"name":"getPctMem","parameterTypes":[] }, {"name":"getPeak","parameterTypes":[] }, {"name":"getPeakMem","parameterTypes":[] }, {"name":"getPeakMemBwUtil","parameterTypes":[] }, {"name":"getPeakMemUsed","parameterTypes":[] }, {"name":"hashCode","parameterTypes":[] }, {"name":"mem","parameterTypes":["java.lang.Long"] }, {"name":"name","parameterTypes":["java.lang.String"] }, {"name":"pct","parameterTypes":["java.lang.Double"] }, {"name":"pctMem","parameterTypes":["java.lang.Double"] }, {"name":"peak","parameterTypes":["java.lang.Double"] }, {"name":"peakMem","parameterTypes":["java.lang.Double"] }, {"name":"peakMemBwUtil","parameterTypes":["java.lang.Double"] }, {"name":"peakMemUsed","parameterTypes":["java.lang.Long"] }, {"name":"setActiveTime","parameterTypes":["java.lang.Long"] }, {"name":"setAvgMem","parameterTypes":["java.lang.Long"] }, {"name":"setAvgMemBwUtil","parameterTypes":["java.lang.Double"] }, {"name":"setDriver","parameterTypes":["java.lang.String"] }, {"name":"setMem","parameterTypes":["java.lang.Long"] }, {"name":"setName","parameterTypes":["java.lang.String"] }, {"name":"setPct","parameterTypes":["java.lang.Double"] }, {"name":"setPctMem","parameterTypes":["java.lang.Double"] }, {"name":"setPeak","parameterTypes":["java.lang.Double"] }, {"name":"setPeakMem","parameterTypes":["java.lang.Double"] }, {"name":"setPeakMemBwUtil","parameterTypes":["java.lang.Double"] }, {"name":"setPeakMemUsed","parameterTypes":["java.lang.Long"] }, {"name":"toIndentedString","parameterTypes":["java.lang.Object"] }, {"name":"toString","parameterTypes":[] }]
@@ -4691,6 +4699,7 @@
 },
 {
   "name":"io.seqera.tower.model.ResourceAllocation",
+  "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"acceleratorCount","parameterTypes":["java.lang.Integer"] }, {"name":"acceleratorName","parameterTypes":["java.lang.String"] }, {"name":"acceleratorType","parameterTypes":["java.lang.String"] }, {"name":"cpuShares","parameterTypes":["java.lang.Integer"] }, {"name":"equals","parameterTypes":["java.lang.Object"] }, {"name":"getAcceleratorCount","parameterTypes":[] }, {"name":"getAcceleratorName","parameterTypes":[] }, {"name":"getAcceleratorType","parameterTypes":[] }, {"name":"getCpuShares","parameterTypes":[] }, {"name":"getMemoryMiB","parameterTypes":[] }, {"name":"getTime","parameterTypes":[] }, {"name":"hashCode","parameterTypes":[] }, {"name":"memoryMiB","parameterTypes":["java.lang.Integer"] }, {"name":"setAcceleratorCount","parameterTypes":["java.lang.Integer"] }, {"name":"setAcceleratorName","parameterTypes":["java.lang.String"] }, {"name":"setAcceleratorType","parameterTypes":["java.lang.String"] }, {"name":"setCpuShares","parameterTypes":["java.lang.Integer"] }, {"name":"setMemoryMiB","parameterTypes":["java.lang.Integer"] }, {"name":"setTime","parameterTypes":["java.lang.String"] }, {"name":"time","parameterTypes":["java.lang.String"] }, {"name":"toIndentedString","parameterTypes":["java.lang.Object"] }, {"name":"toString","parameterTypes":[] }]
@@ -4759,12 +4768,14 @@
 },
 {
   "name":"io.seqera.tower.model.SchedConfig",
+  "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"addMachineTypesItem","parameterTypes":["java.lang.String"] }, {"name":"equals","parameterTypes":["java.lang.Object"] }, {"name":"getMachineTypes","parameterTypes":[] }, {"name":"getProvisioningModel","parameterTypes":[] }, {"name":"hashCode","parameterTypes":[] }, {"name":"machineTypes","parameterTypes":["java.util.List"] }, {"name":"provisioningModel","parameterTypes":["io.seqera.tower.model.SchedConfig$ProvisioningModelEnum"] }, {"name":"setMachineTypes","parameterTypes":["java.util.List"] }, {"name":"setProvisioningModel","parameterTypes":["io.seqera.tower.model.SchedConfig$ProvisioningModelEnum"] }, {"name":"toIndentedString","parameterTypes":["java.lang.Object"] }, {"name":"toString","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.model.SchedConfig$ProvisioningModelEnum",
+  "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "methods":[{"name":"$values","parameterTypes":[] }, {"name":"fromValue","parameterTypes":["java.lang.String"] }, {"name":"getValue","parameterTypes":[] }, {"name":"toString","parameterTypes":[] }, {"name":"valueOf","parameterTypes":["java.lang.String"] }, {"name":"values","parameterTypes":[] }]
 },
