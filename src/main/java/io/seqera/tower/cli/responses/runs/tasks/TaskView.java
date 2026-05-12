@@ -33,7 +33,6 @@ public class TaskView extends Response {
     public final Map<String, Object> times;
     public final Map<String, Object> resources;
     public final Map<String, Object> usage;
-    public final Map<String, Object> gpuMetrics;
 
     public TaskView(
             Map<String, Object> general,
@@ -41,8 +40,7 @@ public class TaskView extends Response {
             String environment,
             Map<String, Object> times,
             Map<String, Object> resources,
-            Map<String, Object> usage,
-            Map<String, Object> gpuMetrics
+            Map<String, Object> usage
     ) {
         this.general = general;
         this.command = command;
@@ -50,7 +48,6 @@ public class TaskView extends Response {
         this.times = times;
         this.resources = resources;
         this.usage = usage;
-        this.gpuMetrics = gpuMetrics;
     }
 
     @Override
@@ -77,10 +74,6 @@ public class TaskView extends Response {
 
         if (!usage.isEmpty()) {
             data.put("usage", usage);
-        }
-
-        if (!gpuMetrics.isEmpty()) {
-            data.put("gpuMetrics", gpuMetrics);
         }
 
         return data;
@@ -156,27 +149,23 @@ public class TaskView extends Response {
             tableUsage.addRow("volCtxts", usage.get("volCtxt") != null ? usage.get("volCtxt").toString() : "", "Number of voluntary context switches");
             tableUsage.addRow("invCtxt", usage.get("invCtxt") != null ? usage.get("invCtxt").toString() : "", "Number of involuntary context switches");
 
+            if (usage.containsKey("gpuName")) {
+                tableUsage.addRow("gpuName", usage.get("gpuName") != null ? usage.get("gpuName").toString() : "", "GPU model name");
+                tableUsage.addRow("gpuDriver", usage.get("gpuDriver") != null ? usage.get("gpuDriver").toString() : "", "NVIDIA driver version");
+                tableUsage.addRow("gpuTotalMemory", FormatHelper.formatMemoryMiB((Long) usage.get("gpuTotalMemory")), "Total GPU memory");
+                tableUsage.addRow("gpuPct", FormatHelper.formatPercentage((Double) usage.get("gpuPct")), "Average GPU compute utilisation");
+                tableUsage.addRow("gpuPeak", FormatHelper.formatPercentage((Double) usage.get("gpuPeak")), "Peak GPU compute utilisation");
+                tableUsage.addRow("gpuPctMem", FormatHelper.formatPercentage((Double) usage.get("gpuPctMem")), "Average GPU memory utilisation");
+                tableUsage.addRow("gpuPeakMem", FormatHelper.formatPercentage((Double) usage.get("gpuPeakMem")), "Peak GPU memory utilisation");
+                tableUsage.addRow("gpuAvgMem", FormatHelper.formatMemoryMiB((Long) usage.get("gpuAvgMem")), "Average GPU memory used");
+                tableUsage.addRow("gpuPeakMemUsed", FormatHelper.formatMemoryMiB((Long) usage.get("gpuPeakMemUsed")), "Peak GPU memory used");
+                tableUsage.addRow("gpuAvgMemBwUtil", FormatHelper.formatPercentage((Double) usage.get("gpuAvgMemBwUtil")), "Average memory bandwidth utilisation");
+                tableUsage.addRow("gpuPeakMemBwUtil", FormatHelper.formatPercentage((Double) usage.get("gpuPeakMemBwUtil")), "Peak memory bandwidth utilisation");
+                tableUsage.addRow("gpuActiveTime", FormatHelper.formatDurationMillis((Long) usage.get("gpuActiveTime")), "Time the process was actively using GPU");
+            }
+
             tableUsage.setPrefix("    ");
             tableUsage.print();
-        }
-
-        if (!gpuMetrics.isEmpty()) {
-            out.println(ansi(String.format("%n%n    @|bold  GPU metrics|@")));
-            TableList tableGpu = new TableList(out, 3);
-            tableGpu.addRow("name", gpuMetrics.get("name") != null ? gpuMetrics.get("name").toString() : "", "GPU model name");
-            tableGpu.addRow("driver", gpuMetrics.get("driver") != null ? gpuMetrics.get("driver").toString() : "", "NVIDIA driver version");
-            tableGpu.addRow("totalMemory", FormatHelper.formatMemoryMiB((Long) gpuMetrics.get("totalMemory")), "Total GPU memory");
-            tableGpu.addRow("pct", FormatHelper.formatPercentage((Double) gpuMetrics.get("pct")), "Average GPU compute utilisation");
-            tableGpu.addRow("peak", FormatHelper.formatPercentage((Double) gpuMetrics.get("peak")), "Peak GPU compute utilisation");
-            tableGpu.addRow("pctMem", FormatHelper.formatPercentage((Double) gpuMetrics.get("pctMem")), "Average GPU memory utilisation");
-            tableGpu.addRow("peakMem", FormatHelper.formatPercentage((Double) gpuMetrics.get("peakMem")), "Peak GPU memory utilisation");
-            tableGpu.addRow("avgMem", FormatHelper.formatMemoryMiB((Long) gpuMetrics.get("avgMem")), "Average GPU memory used");
-            tableGpu.addRow("peakMemUsed", FormatHelper.formatMemoryMiB((Long) gpuMetrics.get("peakMemUsed")), "Peak GPU memory used");
-            tableGpu.addRow("avgMemBwUtil", FormatHelper.formatPercentage((Double) gpuMetrics.get("avgMemBwUtil")), "Average memory bandwidth utilisation");
-            tableGpu.addRow("peakMemBwUtil", FormatHelper.formatPercentage((Double) gpuMetrics.get("peakMemBwUtil")), "Peak memory bandwidth utilisation");
-            tableGpu.addRow("activeTime", FormatHelper.formatDurationMillis((Long) gpuMetrics.get("activeTime")), "Time the process was actively using GPU");
-            tableGpu.setPrefix("    ");
-            tableGpu.print();
         }
 
     }
