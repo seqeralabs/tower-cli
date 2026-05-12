@@ -22,6 +22,7 @@ import io.seqera.tower.cli.commands.runs.ViewCmd;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.runs.tasks.TaskView;
 import io.seqera.tower.model.DescribeTaskResponse;
+import io.seqera.tower.model.GpuMetrics;
 import io.seqera.tower.model.Task;
 import picocli.CommandLine;
 
@@ -50,6 +51,9 @@ public class TaskCmd extends AbstractRunsCmd {
     @CommandLine.Option(names = {"--resources-usage"}, description = "Display actual resource consumption including CPU percentage, memory usage (RSS, peak RSS, virtual memory), and I/O statistics.")
     boolean resourcesUsage;
 
+    @CommandLine.Option(names = {"--gpu-metrics"}, description = "Display GPU metrics including GPU name, driver, utilisation, memory usage, and active time.")
+    boolean gpuMetrics;
+
 
     @Override
     protected Response exec() throws ApiException, IOException {
@@ -64,6 +68,7 @@ public class TaskCmd extends AbstractRunsCmd {
         Map<String, Object> times = new HashMap<>();
         Map<String, Object> resources = new HashMap<>();
         Map<String, Object> usage = new HashMap<>();
+        Map<String, Object> gpu = new HashMap<>();
 
         if (executionTime) {
             times = TaskCmd.parseExecutionTimeData(task);
@@ -77,7 +82,11 @@ public class TaskCmd extends AbstractRunsCmd {
             usage = TaskCmd.parseResourcesUsageData(task);
         }
 
-        return new TaskView(general, command, environment, times, resources, usage);
+        if (gpuMetrics) {
+            gpu = TaskCmd.parseGpuMetricsData(task);
+        }
+
+        return new TaskView(general, command, environment, times, resources, usage, gpu);
     }
 
     public static Map<String, Object> parseGeneralData(Task task) {
@@ -137,6 +146,28 @@ public class TaskCmd extends AbstractRunsCmd {
         map.put("syscw", task.getSyscw() != null ? task.getSyscw() : null);
         map.put("volCtxt", task.getVolCtxt() != null ? task.getVolCtxt() * 1D : null);
         map.put("invCtxt", task.getInvCtxt() != null ? task.getInvCtxt() * 1D : null);
+
+        return map;
+    }
+
+    public static Map<String, Object> parseGpuMetricsData(Task task) {
+        Map<String, Object> map = new HashMap<>();
+        GpuMetrics gpu = task.getGpuMetrics();
+
+        if (gpu != null) {
+            map.put("name", gpu.getName());
+            map.put("driver", gpu.getDriver());
+            map.put("totalMemory", gpu.getMem());
+            map.put("pct", gpu.getPct());
+            map.put("peak", gpu.getPeak());
+            map.put("pctMem", gpu.getPctMem());
+            map.put("peakMem", gpu.getPeakMem());
+            map.put("avgMem", gpu.getAvgMem());
+            map.put("peakMemUsed", gpu.getPeakMemUsed());
+            map.put("avgMemBwUtil", gpu.getAvgMemBwUtil());
+            map.put("peakMemBwUtil", gpu.getPeakMemBwUtil());
+            map.put("activeTime", gpu.getActiveTime());
+        }
 
         return map;
     }

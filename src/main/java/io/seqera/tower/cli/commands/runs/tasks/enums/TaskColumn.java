@@ -17,6 +17,7 @@
 package io.seqera.tower.cli.commands.runs.tasks.enums;
 
 import io.seqera.tower.cli.utils.FormatHelper;
+import io.seqera.tower.model.GpuMetrics;
 import io.seqera.tower.model.Task;
 
 import java.util.function.Function;
@@ -40,7 +41,12 @@ public enum TaskColumn {
     rchar("rchar", false, Task::getRchar, compose(Task::getRchar, FormatHelper::formatBits)),
     wchar("wchar", false, Task::getWchar, compose(Task::getWchar, FormatHelper::formatDurationMillis)),
     volCtxt("volCtxt", false, Task::getVolCtxt),
-    invCtxt("invCtxt", false, Task::getInvCtxt);
+    invCtxt("invCtxt", false, Task::getInvCtxt),
+    gpuName("gpu_name", false, t -> gpu(t, GpuMetrics::getName)),
+    gpuPct("gpu_pct", false, t -> gpu(t, GpuMetrics::getPct), t -> formatGpu(t, GpuMetrics::getPct, FormatHelper::formatPercentage)),
+    gpuPeak("gpu_peak", false, t -> gpu(t, GpuMetrics::getPeak), t -> formatGpu(t, GpuMetrics::getPeak, FormatHelper::formatPercentage)),
+    gpuMemAvg("gpu_mem_avg", false, t -> gpu(t, GpuMetrics::getAvgMem), t -> formatGpu(t, GpuMetrics::getAvgMem, FormatHelper::formatMemoryMiB)),
+    gpuPeakMemUsed("gpu_peak_mem_used", false, t -> gpu(t, GpuMetrics::getPeakMemUsed), t -> formatGpu(t, GpuMetrics::getPeakMemUsed, FormatHelper::formatMemoryMiB));
 
     private final String description;
     private final boolean fixed;
@@ -79,5 +85,17 @@ public enum TaskColumn {
 
     private static <A, B, C> Function<A, C> compose(Function<A, B> f1, Function<B, C> f2) {
         return f1.andThen(f2);
+    }
+
+    private static <T> Object gpu(Task task, Function<GpuMetrics, T> extractor) {
+        GpuMetrics g = task.getGpuMetrics();
+        return g != null ? extractor.apply(g) : null;
+    }
+
+    private static <T> String formatGpu(Task task, Function<GpuMetrics, T> extractor, Function<T, String> formatter) {
+        GpuMetrics g = task.getGpuMetrics();
+        if (g == null) return "";
+        T val = extractor.apply(g);
+        return val != null ? formatter.apply(val) : "";
     }
 }

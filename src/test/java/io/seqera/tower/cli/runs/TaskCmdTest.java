@@ -56,7 +56,7 @@ public class TaskCmdTest extends BaseCmdTest {
         Map<String, Object> usage = TaskCmd.parseResourcesUsageData(task);
 
         assertEquals("", out.stdErr);
-        assertEquals(StringUtils.chop(new TaskView(general, command, environment, times, resources, usage).toString()), out.stdOut);
+        assertEquals(StringUtils.chop(new TaskView(general, command, environment, times, resources, usage, Map.of()).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -80,7 +80,7 @@ public class TaskCmdTest extends BaseCmdTest {
         Map<String, Object> usage = TaskCmd.parseResourcesUsageData(task);
 
         assertEquals("", out.stdErr);
-        assertEquals(StringUtils.chop(new TaskView(general, command, environment, times, resources, usage).toString()), out.stdOut);
+        assertEquals(StringUtils.chop(new TaskView(general, command, environment, times, resources, usage, Map.of()).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 

@@ -35,6 +35,9 @@ public class MetricFormatMapper {
         FORMATTER.put("timeUsage", FormatHelper::formatPercentage);
         FORMATTER.put("reads", FormatHelper::formatBits);
         FORMATTER.put("writes", FormatHelper::formatBits);
+        FORMATTER.put("gpuUsage", FormatHelper::formatPercentage);
+        FORMATTER.put("gpuMemPeak", FormatHelper::formatMemoryMiB);
+        FORMATTER.put("gpuMemAvg", FormatHelper::formatMemoryMiB);
     }
 
     private static final Map<String, Number> PADDING = new HashMap<>();
@@ -48,6 +51,9 @@ public class MetricFormatMapper {
         PADDING.put("timeUsage", 4);
         PADDING.put("reads", 6);
         PADDING.put("writes", 6);
+        PADDING.put("gpuUsage", 5);
+        PADDING.put("gpuMemPeak", 6);
+        PADDING.put("gpuMemAvg", 6);
     }
 
     private MetricFormatMapper() {
