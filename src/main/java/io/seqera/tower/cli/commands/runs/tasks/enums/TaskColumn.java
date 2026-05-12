@@ -42,7 +42,7 @@ public enum TaskColumn {
     wchar("wchar", false, Task::getWchar, compose(Task::getWchar, FormatHelper::formatDurationMillis)),
     volCtxt("volCtxt", false, Task::getVolCtxt),
     invCtxt("invCtxt", false, Task::getInvCtxt),
-    gpuName("gpu_name", false, t -> gpu(t, GpuMetrics::getName)),
+    gpuName("gpu_name", false, t -> gpu(t, GpuMetrics::getName), t -> formatGpu(t, GpuMetrics::getName, s -> s)),
     gpuPct("gpu_pct", false, t -> gpu(t, GpuMetrics::getPct), t -> formatGpu(t, GpuMetrics::getPct, FormatHelper::formatPercentage)),
     gpuPeak("gpu_peak", false, t -> gpu(t, GpuMetrics::getPeak), t -> formatGpu(t, GpuMetrics::getPeak, FormatHelper::formatPercentage)),
     gpuMemAvg("gpu_mem_avg", false, t -> gpu(t, GpuMetrics::getAvgMem), t -> formatGpu(t, GpuMetrics::getAvgMem, FormatHelper::formatMemoryMiB)),
