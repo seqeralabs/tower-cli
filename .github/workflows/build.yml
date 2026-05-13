@@ -372,7 +372,7 @@ jobs:
             out/jreleaser/output.properties
             
       - name: Send message to slack
-        uses: archive/github-actions-slack@v2.6.0
+        uses: archive/github-actions-slack@9ccf59ff2579a8d72da350ef248629f2946ba6b2 # v2.6.0
         id: send-message
         continue-on-error: true
         with:
