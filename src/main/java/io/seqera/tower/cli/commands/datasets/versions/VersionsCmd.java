@@ -42,7 +42,7 @@ public class VersionsCmd extends AbstractDatasetsCmd {
         DatasetDto dataset = fetchDescribeDatasetResponse(parentCommand.datasetRefOptions, wspId);
         String datasetRef = parentCommand.datasetRefOptions.dataset.datasetName != null ? parentCommand.datasetRefOptions.dataset.datasetName : parentCommand.datasetRefOptions.dataset.datasetId;
 
-        ListDatasetVersionsResponse response = datasetsApi().listDatasetVersions(wspId, dataset.getId(), dataset.getMediaType());
+        ListDatasetVersionsResponse response = datasetsApi().listDatasetVersionsV2(dataset.getId(), wspId, dataset.getMediaType());
 
         return new DatasetVersionsList(response.getVersions(), datasetRef, parentCommand.workspace.workspace);
     }

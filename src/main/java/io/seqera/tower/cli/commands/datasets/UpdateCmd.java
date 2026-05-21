@@ -64,10 +64,10 @@ public class UpdateCmd extends AbstractDatasetsCmd {
         request.setName(newName != null ? newName : dataset.getName());
         request.setDescription(description != null ? description : dataset.getDescription());
 
-        datasetsApi().updateDataset(wspId, dataset.getId(), request);
+        datasetsApi().updateDatasetV2(dataset.getId(), request, wspId);
 
         if (fileName != null) {
-            datasetsApi().uploadDataset(wspId, dataset.getId(), header, fileName.toFile());
+            datasetsApi().uploadDatasetV2(dataset.getId(), wspId, header, fileName.toFile());
         }
 
         return new DatasetUpdate(dataset.getName(), workspace.workspace, dataset.getId());

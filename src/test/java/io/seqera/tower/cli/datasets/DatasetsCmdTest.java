@@ -95,7 +95,8 @@ public class DatasetsCmdTest extends BaseCmdTest {
     @EnumSource(OutputType.class)
     void testView(OutputType format, MockServerClient mock) throws JsonProcessingException {
         mock.when(
-                request().withMethod("GET").withPath("/workspaces/249664655368293/datasets/4D9TP0w2pM0qmwqVHgrgBK/metadata"), exactly(1)
+                request().withMethod("GET").withPath("/datasets/4D9TP0w2pM0qmwqVHgrgBK/metadata")
+                        .withQueryStringParameter("workspaceId", "249664655368293"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("datasets/dataset_metadata")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -119,13 +120,15 @@ public class DatasetsCmdTest extends BaseCmdTest {
     @EnumSource(OutputType.class)
     void testVersions(OutputType format, MockServerClient mock) throws JsonProcessingException {
         mock.when(
-                request().withMethod("GET").withPath("/workspaces/249664655368293/datasets/4D9TP0w2pM0qmwqVHgrgBK/metadata"), exactly(1)
+                request().withMethod("GET").withPath("/datasets/4D9TP0w2pM0qmwqVHgrgBK/metadata")
+                        .withQueryStringParameter("workspaceId", "249664655368293"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("datasets/dataset_metadata")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
-                request().withMethod("GET").withPath("/workspaces/249664655368293/datasets/4D9TP0w2pM0qmwqVHgrgBK/versions"), exactly(1)
+                request().withMethod("GET").withPath("/datasets/4D9TP0w2pM0qmwqVHgrgBK/versions")
+                        .withQueryStringParameter("workspaceId", "249664655368293"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("datasets/dataset_versions")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -162,13 +165,15 @@ public class DatasetsCmdTest extends BaseCmdTest {
     @EnumSource(OutputType.class)
     void testDelete(OutputType format, MockServerClient mock) {
         mock.when(
-                request().withMethod("GET").withPath("/workspaces/249664655368293/datasets/4D9TP0w2pM0qmwqVHgrgBK/metadata"), exactly(1)
+                request().withMethod("GET").withPath("/datasets/4D9TP0w2pM0qmwqVHgrgBK/metadata")
+                        .withQueryStringParameter("workspaceId", "249664655368293"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("datasets/dataset_metadata")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
-                request().withMethod("DELETE").withPath("/workspaces/249664655368293/datasets/4D9TP0w2pM0qmwqVHgrgBK"), exactly(1)
+                request().withMethod("DELETE").withPath("/datasets/4D9TP0w2pM0qmwqVHgrgBK")
+                        .withQueryStringParameter("workspaceId", "249664655368293"), exactly(1)
         ).respond(
                 response().withStatusCode(204)
         );
@@ -185,13 +190,15 @@ public class DatasetsCmdTest extends BaseCmdTest {
     void testUrl(OutputType format, MockServerClient mock) throws JsonProcessingException {
 
         mock.when(
-                request().withMethod("GET").withPath("/workspaces/249664655368293/datasets/4D9TP0w2pM0qmwqVHgrgBK/metadata"), exactly(1)
+                request().withMethod("GET").withPath("/datasets/4D9TP0w2pM0qmwqVHgrgBK/metadata")
+                        .withQueryStringParameter("workspaceId", "249664655368293"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("datasets/dataset_metadata")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
-                request().withMethod("GET").withPath("/workspaces/249664655368293/datasets/4D9TP0w2pM0qmwqVHgrgBK/versions"), exactly(1)
+                request().withMethod("GET").withPath("/datasets/4D9TP0w2pM0qmwqVHgrgBK/versions")
+                        .withQueryStringParameter("workspaceId", "249664655368293"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("datasets/dataset_versions")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -208,13 +215,15 @@ public class DatasetsCmdTest extends BaseCmdTest {
     @EnumSource(OutputType.class)
     void testDownload(OutputType format, MockServerClient mock) throws IOException {
         mock.when(
-                request().withMethod("GET").withPath("/workspaces/249664655368293/datasets/4D9TP0w2pM0qmwqVHgrgBK/metadata"), exactly(1)
+                request().withMethod("GET").withPath("/datasets/4D9TP0w2pM0qmwqVHgrgBK/metadata")
+                        .withQueryStringParameter("workspaceId", "249664655368293"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("datasets/dataset_metadata")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
-                request().withMethod("GET").withPath("/workspaces/249664655368293/datasets/4D9TP0w2pM0qmwqVHgrgBK/versions"), exactly(1)
+                request().withMethod("GET").withPath("/datasets/4D9TP0w2pM0qmwqVHgrgBK/versions")
+                        .withQueryStringParameter("workspaceId", "249664655368293"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("datasets/dataset_versions")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -240,14 +249,16 @@ public class DatasetsCmdTest extends BaseCmdTest {
     @EnumSource(OutputType.class)
     void testAdd(OutputType format, MockServerClient mock) throws IOException {
         mock.when(
-                request().withMethod("POST").withPath("/workspaces/249664655368293/datasets"), exactly(1)
+                request().withMethod("POST").withPath("/datasets")
+                        .withQueryStringParameter("workspaceId", "249664655368293"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("datasets/dataset_created_response")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
                 request().withMethod("POST")
-                        .withPath("/workspaces/249664655368293/datasets/1W3BTHWgRH71OJmOPMdG7S/upload")
+                        .withPath("/datasets/1W3BTHWgRH71OJmOPMdG7S/upload")
+                        .withQueryStringParameter("workspaceId", "249664655368293")
                         .withQueryStringParameter("header", "false")
                 , exactly(1)
         ).respond(
@@ -266,19 +277,16 @@ public class DatasetsCmdTest extends BaseCmdTest {
     void testAddWithOverwrite(OutputType format, MockServerClient mock) throws IOException {
 
         mock.when(
-                request().withMethod("GET").withPath("/workspaces/249664655368293/datasets/4D9TP0w2pM0qmwqVHgrgBK/metadata"), exactly(1)
-        ).respond(
-                response().withStatusCode(200).withBody(loadResource("datasets/dataset_metadata")).withContentType(MediaType.APPLICATION_JSON)
-        );
-
-        mock.when(
-                request().withMethod("GET").withPath("/workspaces/249664655368293/datasets"), exactly(1)
+                request().withMethod("GET").withPath("/datasets")
+                        .withQueryStringParameter("workspaceId", "249664655368293")
+                        .withQueryStringParameter("search", "dataset2"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("datasets/datasets_list")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/workspaces/249664655368293/datasets"), exactly(1)
+                request().withMethod("POST").withPath("/datasets")
+                        .withQueryStringParameter("workspaceId", "249664655368293"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(JsonBody.json("{\n" +
                         "  \"dataset\": {\n" +
@@ -295,7 +303,8 @@ public class DatasetsCmdTest extends BaseCmdTest {
 
         mock.when(
                 request().withMethod("POST")
-                        .withPath("/workspaces/249664655368293/datasets/1W3BTHWgRH71OJmOPMdG7S/upload")
+                        .withPath("/datasets/1W3BTHWgRH71OJmOPMdG7S/upload")
+                        .withQueryStringParameter("workspaceId", "249664655368293")
                         .withQueryStringParameter("header", "false")
                 , exactly(1)
         ).respond(
@@ -303,7 +312,8 @@ public class DatasetsCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("DELETE").withPath("/workspaces/249664655368293/datasets/1W2FqBiI6WoNokQTkPkEzo"), exactly(1)
+                request().withMethod("DELETE").withPath("/datasets/1W2FqBiI6WoNokQTkPkEzo")
+                        .withQueryStringParameter("workspaceId", "249664655368293"), exactly(1)
         ).respond(
                 response().withStatusCode(204)
         );
@@ -319,13 +329,15 @@ public class DatasetsCmdTest extends BaseCmdTest {
     @EnumSource(OutputType.class)
     void testUpdate(OutputType format, MockServerClient mock) {
         mock.when(
-                request().withMethod("GET").withPath("/workspaces/249664655368293/datasets/4D9TP0w2pM0qmwqVHgrgBK/metadata"), exactly(1)
+                request().withMethod("GET").withPath("/datasets/4D9TP0w2pM0qmwqVHgrgBK/metadata")
+                        .withQueryStringParameter("workspaceId", "249664655368293"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("datasets/dataset_metadata")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
-                request().withMethod("PUT").withPath("/workspaces/249664655368293/datasets/4D9TP0w2pM0qmwqVHgrgBK"), exactly(1)
+                request().withMethod("PUT").withPath("/datasets/4D9TP0w2pM0qmwqVHgrgBK")
+                        .withQueryStringParameter("workspaceId", "249664655368293"), exactly(1)
         ).respond(
                 response().withStatusCode(204)
         );
@@ -341,20 +353,23 @@ public class DatasetsCmdTest extends BaseCmdTest {
     @EnumSource(OutputType.class)
     void testUpdateWithFile(OutputType format, MockServerClient mock) throws IOException {
         mock.when(
-                request().withMethod("GET").withPath("/workspaces/249664655368293/datasets/4D9TP0w2pM0qmwqVHgrgBK/metadata"), exactly(1)
+                request().withMethod("GET").withPath("/datasets/4D9TP0w2pM0qmwqVHgrgBK/metadata")
+                        .withQueryStringParameter("workspaceId", "249664655368293"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("datasets/dataset_metadata")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
-                request().withMethod("PUT").withPath("/workspaces/249664655368293/datasets/4D9TP0w2pM0qmwqVHgrgBK"), exactly(1)
+                request().withMethod("PUT").withPath("/datasets/4D9TP0w2pM0qmwqVHgrgBK")
+                        .withQueryStringParameter("workspaceId", "249664655368293"), exactly(1)
         ).respond(
                 response().withStatusCode(204)
         );
 
         mock.when(
                 request().withMethod("POST")
-                        .withPath("/workspaces/249664655368293/datasets/4D9TP0w2pM0qmwqVHgrgBK/upload")
+                        .withPath("/datasets/4D9TP0w2pM0qmwqVHgrgBK/upload")
+                        .withQueryStringParameter("workspaceId", "249664655368293")
                         .withQueryStringParameter("header", "false")
                 , exactly(1)
         ).respond(
@@ -471,7 +486,9 @@ public class DatasetsCmdTest extends BaseCmdTest {
     @EnumSource(OutputType.class)
     void testHideByName(OutputType format, MockServerClient mock) {
         mock.when(
-                request().withMethod("GET").withPath("/workspaces/249664655368293/datasets"), exactly(1)
+                request().withMethod("GET").withPath("/datasets")
+                        .withQueryStringParameter("workspaceId", "249664655368293")
+                        .withQueryStringParameter("search", "dataset1"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("datasets/datasets_list")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -499,7 +516,9 @@ public class DatasetsCmdTest extends BaseCmdTest {
     @EnumSource(OutputType.class)
     void testShowByName(OutputType format, MockServerClient mock) {
         mock.when(
-                request().withMethod("GET").withPath("/workspaces/249664655368293/datasets"), exactly(1)
+                request().withMethod("GET").withPath("/datasets")
+                        .withQueryStringParameter("workspaceId", "249664655368293")
+                        .withQueryStringParameter("search", "dataset1"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("datasets/datasets_list")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -527,7 +546,8 @@ public class DatasetsCmdTest extends BaseCmdTest {
     @EnumSource(OutputType.class)
     void testLabelsApply(OutputType format, MockServerClient mock) {
         mock.when(
-                request().withMethod("GET").withPath("/workspaces/249664655368293/datasets/4D9TP0w2pM0qmwqVHgrgBK/metadata"), exactly(1)
+                request().withMethod("GET").withPath("/datasets/4D9TP0w2pM0qmwqVHgrgBK/metadata")
+                        .withQueryStringParameter("workspaceId", "249664655368293"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("datasets/dataset_metadata")).withContentType(MediaType.APPLICATION_JSON)
         );

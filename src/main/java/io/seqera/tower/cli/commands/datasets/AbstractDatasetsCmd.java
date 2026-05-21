@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 public abstract class AbstractDatasetsCmd extends AbstractApiCmd {
 
     protected DatasetDto datasetByName(Long workspaceId, String datasetName) throws ApiException {
-        ListDatasetsResponse listDatasetsResponse = datasetsApi().listDatasets(workspaceId);
+        ListDatasetsResponse listDatasetsResponse = datasetsApi().listDatasetsV2(workspaceId, null, null, datasetName, null, null, null, List.of());
 
         if (listDatasetsResponse == null || listDatasetsResponse.getDatasets() == null) {
             throw new DatasetNotFoundException(workspaceRef(workspaceId));
@@ -57,7 +57,7 @@ public abstract class AbstractDatasetsCmd extends AbstractApiCmd {
         DatasetDto response;
 
         if (datasetRefOptions.dataset.datasetId != null) {
-            response = datasetsApi().describeDataset(wspId, datasetRefOptions.dataset.datasetId, List.of()).getDataset();
+            response = datasetsApi().describeDatasetV2(datasetRefOptions.dataset.datasetId, wspId, List.of()).getDataset();
         } else {
             response = datasetByName(wspId, datasetRefOptions.dataset.datasetName);
         }
@@ -68,7 +68,7 @@ public abstract class AbstractDatasetsCmd extends AbstractApiCmd {
     protected DatasetVersionDto fetchDatasetVersion(Long wspId, String datasetId, String datasetMediaType, Long version) throws ApiException {
         DatasetVersionDto datasetVersion;
 
-        ListDatasetVersionsResponse listDatasetVersionsResponse = datasetsApi().listDatasetVersions(wspId, datasetId, datasetMediaType);
+        ListDatasetVersionsResponse listDatasetVersionsResponse = datasetsApi().listDatasetVersionsV2(datasetId, wspId, datasetMediaType);
 
         if (listDatasetVersionsResponse == null || listDatasetVersionsResponse.getVersions() == null) {
             throw new TowerException(String.format("No versions were found for dataset %s", datasetId));
@@ -127,7 +127,7 @@ public abstract class AbstractDatasetsCmd extends AbstractApiCmd {
     }
 
     protected void deleteDatasetById(String datasetId, Long wspId) throws DatasetNotFoundException, ApiException {
-        datasetsApi().deleteDataset(wspId, datasetId);
+        datasetsApi().deleteDatasetV2(datasetId, wspId);
     }
 
 
