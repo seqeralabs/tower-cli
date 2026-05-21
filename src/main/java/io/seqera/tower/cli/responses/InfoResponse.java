@@ -41,6 +41,7 @@ public class InfoResponse extends Response {
     public void toString(PrintWriter out) {
         String ok = ansi("@|fg(green) OK|@");
         String fail = ansi("@|fg(red) FAILED|@");
+        String warn = ansi("@|fg(yellow) WARNING|@");
         String undefined = ansi("@|fg(yellow) UNDEFINED|@");
         String skipped = ansi("@|fg(yellow) SKIPPED|@");
 
@@ -59,7 +60,7 @@ public class InfoResponse extends Response {
         TableList healthTable = new TableList(out, 2);
         healthTable.setPrefix("    ");
         healthTable.addRow("Remote API server connection check", connectionCheck == 1 ? ok : connectionCheck == 0 ? fail : skipped);
-        healthTable.addRow("Tower API version check", versionCheck == 1 ? ok : versionCheck == 0 ? fail : skipped);
+        healthTable.addRow("Tower API version check", versionCheck == 1 ? ok : versionCheck == 0 ? warn : skipped);
         healthTable.addRow("Authentication API credential's token", credentialsCheck == 1 ? ok : credentialsCheck == 0 ? fail : skipped);
         healthTable.print();
 
@@ -72,7 +73,9 @@ public class InfoResponse extends Response {
         }
 
         if (versionCheck == 0) {
-            out.println(ansi(String.format("%n    @|bold,fg(red) Tower API version is %s while the minimum required version to be fully compatible is %s|@%n", opts.get("towerApiVersion"), opts.get("cliApiVersion"))));
+            out.println(ansi(String.format("%n    @|bold,fg(yellow) Warning:|@ Platform API version %s is older than this CLI's minimum (%s).", opts.get("towerApiVersion"), opts.get("cliApiVersion"))));
+            out.println(ansi("    Some tw commands may fail or return incomplete results."));
+            out.println(ansi(String.format("    To ensure full compatibility, upgrade Seqera Platform, or install a tw release matching your Platform version:%n    https://github.com/seqeralabs/tower-cli/releases%n")));
         }
 
         if (credentialsCheck == 0) {
@@ -92,6 +95,7 @@ public class InfoResponse extends Response {
 
     @Override
     public int getExitCode() {
-        return (connectionCheck + versionCheck + credentialsCheck == 3) ? CommandLine.ExitCode.OK : CommandLine.ExitCode.SOFTWARE;
+        // versionCheck == 0 is a warning, not a failure — don't fail the command for it
+        return (connectionCheck != 0 && credentialsCheck != 0) ? CommandLine.ExitCode.OK : CommandLine.ExitCode.SOFTWARE;
     }
 }
