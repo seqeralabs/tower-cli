@@ -122,7 +122,8 @@ public class InfoCmdTest extends BaseCmdTest {
         opts.put("userName", "jordi");
 
         assertEquals("", out.stdErr);
-        assertEquals(1, out.exitCode);
+        // Version mismatch is a warning, not a failure — see InfoResponse.getExitCode()
+        assertEquals(0, out.exitCode);
         assertEquals(chop(new InfoResponse(1,0,1, opts).toString()), out.stdOut);
     }
 
