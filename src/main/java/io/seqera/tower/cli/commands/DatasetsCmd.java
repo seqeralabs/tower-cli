@@ -20,7 +20,10 @@ package io.seqera.tower.cli.commands;
 import io.seqera.tower.cli.commands.datasets.AddCmd;
 import io.seqera.tower.cli.commands.datasets.DeleteCmd;
 import io.seqera.tower.cli.commands.datasets.DownloadCmd;
+import io.seqera.tower.cli.commands.datasets.HideCmd;
+import io.seqera.tower.cli.commands.datasets.LabelsCmd;
 import io.seqera.tower.cli.commands.datasets.ListCmd;
+import io.seqera.tower.cli.commands.datasets.ShowCmd;
 import io.seqera.tower.cli.commands.datasets.UpdateCmd;
 import io.seqera.tower.cli.commands.datasets.UrlCmd;
 import io.seqera.tower.cli.commands.datasets.ViewCmd;
@@ -33,7 +36,10 @@ import picocli.CommandLine;
                 AddCmd.class,
                 DeleteCmd.class,
                 DownloadCmd.class,
+                HideCmd.class,
+                LabelsCmd.class,
                 ListCmd.class,
+                ShowCmd.class,
                 ViewCmd.class,
                 UpdateCmd.class,
                 UrlCmd.class,

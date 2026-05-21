@@ -28,6 +28,8 @@ import io.seqera.tower.cli.responses.datasets.DatasetUpdate;
 import io.seqera.tower.cli.responses.datasets.DatasetUrl;
 import io.seqera.tower.cli.responses.datasets.DatasetVersionsList;
 import io.seqera.tower.cli.responses.datasets.DatasetView;
+import io.seqera.tower.cli.responses.datasets.DatasetsVisibility;
+import io.seqera.tower.cli.responses.labels.ManageLabels;
 import io.seqera.tower.model.DatasetDto;
 import io.seqera.tower.model.DatasetVersionDto;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -41,12 +43,14 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.List;
 
 import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
+import static org.mockserver.model.JsonBody.json;
 
 public class DatasetsCmdTest extends BaseCmdTest {
 
@@ -55,7 +59,8 @@ public class DatasetsCmdTest extends BaseCmdTest {
     void testList(OutputType format, MockServerClient mock) throws JsonProcessingException {
 
         mock.when(
-                request().withMethod("GET").withPath("/workspaces/249664655368293/datasets"), exactly(1)
+                request().withMethod("GET").withPath("/datasets")
+                        .withQueryStringParameter("workspaceId", "249664655368293"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("datasets/datasets_list")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -372,5 +377,183 @@ public class DatasetsCmdTest extends BaseCmdTest {
         assertEquals(errorMessage(out.app, new TowerException(String.format("File path '%s' do not exists.", Path.of("path/that/do/not/exist/file.tsv")))), out.stdErr);
         assertEquals("", out.stdOut);
         assertEquals(1, out.exitCode);
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testListWithFilter(OutputType format, MockServerClient mock) throws JsonProcessingException {
+
+        mock.when(
+                request().withMethod("GET").withPath("/datasets")
+                        .withQueryStringParameter("workspaceId", "249664655368293")
+                        .withQueryStringParameter("search", "data"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datasets/datasets_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "datasets", "list", "-w", "249664655368293", "--filter", "data");
+
+        assertOutput(format, out, new DatasetList(Arrays.asList(
+                parseJson("{\"id\":\"4D9TP0w2pM0qmwqVHgrgBK\",\"name\":\"dataset1\",\"description\":null,\"mediaType\":null,\"deleted\":false,\"dateCreated\":\"2021-11-26T14:51:20+01:00\",\"lastUpdated\":\"2021-11-26T14:51:20+01:00\"}", DatasetDto.class),
+                parseJson("{\"id\":\"1W2FqBiI6WoNokQTkPkEzo\",\"name\":\"dataset2\",\"description\":null,\"mediaType\":null,\"deleted\":false,\"dateCreated\":\"2021-11-29T08:05:44+01:00\",\"lastUpdated\":\"2021-11-29T08:05:44+01:00\"}", DatasetDto.class)
+        ), "249664655368293"));
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testListShowHidden(OutputType format, MockServerClient mock) throws JsonProcessingException {
+
+        mock.when(
+                request().withMethod("GET").withPath("/datasets")
+                        .withQueryStringParameter("workspaceId", "249664655368293")
+                        .withQueryStringParameter("visibility", "all"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datasets/datasets_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "datasets", "list", "-w", "249664655368293", "--show-hidden");
+
+        assertOutput(format, out, new DatasetList(Arrays.asList(
+                parseJson("{\"id\":\"4D9TP0w2pM0qmwqVHgrgBK\",\"name\":\"dataset1\",\"description\":null,\"mediaType\":null,\"deleted\":false,\"dateCreated\":\"2021-11-26T14:51:20+01:00\",\"lastUpdated\":\"2021-11-26T14:51:20+01:00\"}", DatasetDto.class),
+                parseJson("{\"id\":\"1W2FqBiI6WoNokQTkPkEzo\",\"name\":\"dataset2\",\"description\":null,\"mediaType\":null,\"deleted\":false,\"dateCreated\":\"2021-11-29T08:05:44+01:00\",\"lastUpdated\":\"2021-11-29T08:05:44+01:00\"}", DatasetDto.class)
+        ), "249664655368293"));
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testHideById(OutputType format, MockServerClient mock) {
+        mock.when(
+                request().withMethod("POST").withPath("/datasets/hide")
+                        .withQueryStringParameter("workspaceId", "249664655368293")
+                        .withBody(json("{\"datasetIds\":[\"4D9TP0w2pM0qmwqVHgrgBK\",\"1W2FqBiI6WoNokQTkPkEzo\"]}")),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(format, mock, "datasets", "hide", "-w", "249664655368293",
+                "-i", "4D9TP0w2pM0qmwqVHgrgBK", "-i", "1W2FqBiI6WoNokQTkPkEzo");
+
+        assertOutput(format, out, new DatasetsVisibility(
+                List.of("4D9TP0w2pM0qmwqVHgrgBK", "1W2FqBiI6WoNokQTkPkEzo"),
+                "249664655368293", true));
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testShowById(OutputType format, MockServerClient mock) {
+        mock.when(
+                request().withMethod("POST").withPath("/datasets/show")
+                        .withQueryStringParameter("workspaceId", "249664655368293")
+                        .withBody(json("{\"datasetIds\":[\"4D9TP0w2pM0qmwqVHgrgBK\"]}")),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(format, mock, "datasets", "show", "-w", "249664655368293",
+                "-i", "4D9TP0w2pM0qmwqVHgrgBK");
+
+        assertOutput(format, out, new DatasetsVisibility(
+                List.of("4D9TP0w2pM0qmwqVHgrgBK"),
+                "249664655368293", false));
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testHideByName(OutputType format, MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/workspaces/249664655368293/datasets"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datasets/datasets_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/datasets/hide")
+                        .withQueryStringParameter("workspaceId", "249664655368293")
+                        .withBody(json("{\"datasetIds\":[\"4D9TP0w2pM0qmwqVHgrgBK\"]}")),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(format, mock, "datasets", "hide", "-w", "249664655368293",
+                "-n", "dataset1");
+
+        assertOutput(format, out, new DatasetsVisibility(
+                List.of("4D9TP0w2pM0qmwqVHgrgBK"),
+                "249664655368293", true));
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testShowByName(OutputType format, MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/workspaces/249664655368293/datasets"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datasets/datasets_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/datasets/show")
+                        .withQueryStringParameter("workspaceId", "249664655368293")
+                        .withBody(json("{\"datasetIds\":[\"4D9TP0w2pM0qmwqVHgrgBK\"]}")),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(format, mock, "datasets", "show", "-w", "249664655368293",
+                "-n", "dataset1");
+
+        assertOutput(format, out, new DatasetsVisibility(
+                List.of("4D9TP0w2pM0qmwqVHgrgBK"),
+                "249664655368293", false));
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testLabelsApply(OutputType format, MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/workspaces/249664655368293/datasets/4D9TP0w2pM0qmwqVHgrgBK/metadata"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datasets/dataset_metadata")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/labels")
+                        .withQueryStringParameter("search", "foo"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("{\"labels\":[{\"id\":111,\"name\":\"foo\",\"value\":null,\"resource\":false,\"isDefault\":false}],\"totalSize\":1}")
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/datasets/labels/apply")
+                        .withQueryStringParameter("workspaceId", "249664655368293")
+                        .withBody(json("{\"datasetIds\":[\"4D9TP0w2pM0qmwqVHgrgBK\"],\"labelIds\":[111]}")),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(format, mock, "datasets", "labels", "-w", "249664655368293",
+                "-i", "4D9TP0w2pM0qmwqVHgrgBK", "foo");
+
+        assertOutput(format, out, new ManageLabels("set", "dataset", "4D9TP0w2pM0qmwqVHgrgBK", 249664655368293L));
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
     }
 }

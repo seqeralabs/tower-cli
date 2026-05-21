@@ -40,7 +40,7 @@ public class ListCmd extends AbstractRunsCmd {
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
-    @CommandLine.Option(names = {"-f", "--filter"}, description = "Filter pipeline runs by run name. Performs case-insensitive substring matching on the runName field.")
+    @CommandLine.Option(names = {"-f", "--filter"}, description = "Filter pipeline runs using the server search syntax. A bare value matches the run name substring; key:value pairs filter on supported keys (e.g. datasetId:<id>, runName:<name>, status:<status>, after:<date>, before:<date>).")
     public String filter;
 
     @CommandLine.Mixin

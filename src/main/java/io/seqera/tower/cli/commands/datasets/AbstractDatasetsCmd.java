@@ -26,6 +26,7 @@ import io.seqera.tower.model.ListDatasetVersionsResponse;
 import io.seqera.tower.model.ListDatasetsResponse;
 import picocli.CommandLine;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -49,29 +50,7 @@ public abstract class AbstractDatasetsCmd extends AbstractApiCmd {
             throw new DatasetNotFoundException(datasetName, workspaceRef(workspaceId));
         }
 
-        return datasetList.stream().findFirst().orElse(null);
-    }
-
-    protected List<DatasetDto> searchByName(Long workspaceId, String datasetName) throws ApiException {
-        ListDatasetsResponse listDatasetsResponse = datasetsApi().listDatasets(workspaceId);
-
-        if (datasetName == null) {
-            return listDatasetsResponse.getDatasets();
-        }
-
-        if (listDatasetsResponse == null || listDatasetsResponse.getDatasets() == null) {
-            throw new DatasetNotFoundException(workspaceRef(workspaceId));
-        }
-
-        List<DatasetDto> datasetList = listDatasetsResponse.getDatasets().stream()
-                .filter(it -> it.getName().startsWith(datasetName))
-                .collect(Collectors.toList());
-
-        if (datasetList.isEmpty()) {
-            throw new DatasetNotFoundException(datasetName, workspaceRef(workspaceId));
-        }
-
-        return datasetList;
+        return datasetList.get(0);
     }
 
     protected DatasetDto fetchDescribeDatasetResponse(DatasetRefOptions datasetRefOptions, Long wspId) throws ApiException {
@@ -127,6 +106,19 @@ public abstract class AbstractDatasetsCmd extends AbstractApiCmd {
 
     protected String getDatasetRef(DatasetRefOptions datasetRefOptions) {
         return datasetRefOptions.dataset.datasetName != null ? datasetRefOptions.dataset.datasetName : datasetRefOptions.dataset.datasetId;
+    }
+
+    protected List<String> resolveDatasetIds(DatasetMultiRefOptions options, Long wspId) throws ApiException {
+        List<String> ids = new ArrayList<>();
+        if (options.dataset.datasetIds != null) {
+            ids.addAll(options.dataset.datasetIds);
+        }
+        if (options.dataset.datasetNames != null) {
+            for (String name : options.dataset.datasetNames) {
+                ids.add(datasetByName(wspId, name).getId());
+            }
+        }
+        return ids;
     }
 
     protected void deleteDatasetByName(String datasetName, Long wspId) throws DatasetNotFoundException, ApiException {
