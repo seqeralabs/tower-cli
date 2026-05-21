@@ -95,7 +95,6 @@ public class InfoResponse extends Response {
 
     @Override
     public int getExitCode() {
-        // versionCheck == 0 is a warning, not a failure — don't fail the command for it
-        return (connectionCheck != 0 && credentialsCheck != 0) ? CommandLine.ExitCode.OK : CommandLine.ExitCode.SOFTWARE;
+        return (connectionCheck + versionCheck + credentialsCheck == 3) ? CommandLine.ExitCode.OK : CommandLine.ExitCode.SOFTWARE;
     }
 }
