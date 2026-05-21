@@ -279,7 +279,8 @@ public class DatasetsCmdTest extends BaseCmdTest {
         mock.when(
                 request().withMethod("GET").withPath("/datasets")
                         .withQueryStringParameter("workspaceId", "249664655368293")
-                        .withQueryStringParameter("search", "dataset2"), exactly(1)
+                        .withQueryStringParameter("search", "dataset2")
+                        .withQueryStringParameter("visibility", "all"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("datasets/datasets_list")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -488,7 +489,8 @@ public class DatasetsCmdTest extends BaseCmdTest {
         mock.when(
                 request().withMethod("GET").withPath("/datasets")
                         .withQueryStringParameter("workspaceId", "249664655368293")
-                        .withQueryStringParameter("search", "dataset1"), exactly(1)
+                        .withQueryStringParameter("search", "dataset1")
+                        .withQueryStringParameter("visibility", "all"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("datasets/datasets_list")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -518,7 +520,8 @@ public class DatasetsCmdTest extends BaseCmdTest {
         mock.when(
                 request().withMethod("GET").withPath("/datasets")
                         .withQueryStringParameter("workspaceId", "249664655368293")
-                        .withQueryStringParameter("search", "dataset1"), exactly(1)
+                        .withQueryStringParameter("search", "dataset1")
+                        .withQueryStringParameter("visibility", "all"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("datasets/datasets_list")).withContentType(MediaType.APPLICATION_JSON)
         );

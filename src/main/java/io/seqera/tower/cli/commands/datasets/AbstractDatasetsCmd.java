@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 public abstract class AbstractDatasetsCmd extends AbstractApiCmd {
 
     protected DatasetDto datasetByName(Long workspaceId, String datasetName) throws ApiException {
-        ListDatasetsResponse listDatasetsResponse = datasetsApi().listDatasetsV2(workspaceId, null, null, datasetName, null, null, null, List.of());
+        ListDatasetsResponse listDatasetsResponse = datasetsApi().listDatasetsV2(workspaceId, null, null, datasetName, null, null, "all", List.of());
 
         if (listDatasetsResponse == null || listDatasetsResponse.getDatasets() == null) {
             throw new DatasetNotFoundException(workspaceRef(workspaceId));
