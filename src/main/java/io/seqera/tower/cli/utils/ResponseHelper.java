@@ -95,7 +95,8 @@ public class ResponseHelper {
                     break;
 
                 case 403:
-                    print(err, decodeMessage(ex));
+                    String forbiddenMessage = decodeMessage(ex);
+                    print(err, forbiddenMessage == null ? "Forbidden" : forbiddenMessage);
                     break;
 
                 default:

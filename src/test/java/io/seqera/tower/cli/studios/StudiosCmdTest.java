@@ -17,6 +17,7 @@
 package io.seqera.tower.cli.studios;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.StudiosCustomTemplateWithCondaException;
@@ -38,6 +39,7 @@ import io.seqera.tower.model.DataStudioCheckpointDto;
 import io.seqera.tower.model.DataStudioDto;
 import io.seqera.tower.model.DataStudioTemplatesListResponse;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
@@ -150,6 +152,33 @@ public class StudiosCmdTest extends BaseCmdTest {
                     }
                   ]
                 }""", DataStudioDto.class), "[organization1 / workspace1]" ));
+    }
+
+    @Test
+    void testViewForbidden(MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/studios/3e8370e7").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(403).withBody("{\"message\":\"Forbidden. Missing permission(s): \\\"studio:view\\\"\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "studios", "view", "-w", "75887156211589", "-i", "3e8370e7");
+
+        assertEquals(errorMessage(out.app, new ApiException(403, "", null, "{\"message\":\"Forbidden. Missing permission(s): \\\"studio:view\\\"\"}")), out.stdErr);
+        assertEquals("", out.stdOut);
+        assertEquals(1, out.exitCode);
     }
 
     @ParameterizedTest
