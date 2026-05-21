@@ -397,7 +397,8 @@ Run `tw runs relaunch -h` to view all the required and optional fields for relau
 
 In the example below, we relaunch a run with ID `3S3KzAasBa4Bt3` in workspace `my-workspace`:
 ```console
-tw runs relaunch -i 3S3KzAasBa4Bt3 -w my-workspace
+$ tw runs relaunch -i 3S3KzAasBa4Bt3 -w my-workspace
+```
 
 ### Cancel a run
 
