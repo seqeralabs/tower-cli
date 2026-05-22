@@ -1,11 +1,32 @@
+// yumi-gradle-licenser is loaded via buildscript so we can constrain its
+// vulnerable transitive dependencies (log4j-core, plexus-utils). Keep the
+// version aligned with libs.versions.toml#licenserVersion.
+buildscript {
+    repositories {
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath 'dev.yumi:yumi-gradle-licenser:4.0.0'
+        constraints {
+            classpath('org.apache.logging.log4j:log4j-core:2.25.4') {
+                because 'GHSA-445c-vh5m-36rj, GHSA-6hg6-v5c8-fphq, GHSA-3pxv-7cmr-fjr4'
+            }
+            classpath('org.codehaus.plexus:plexus-utils:4.0.3') {
+                because 'GHSA-6fmv-xxpf-w3cw'
+            }
+        }
+    }
+}
+
 plugins {
     id 'java'
     id 'application'
     id 'jacoco'
-    alias(libs.plugins.yumiLicenser)
     alias(libs.plugins.graalvmNative)
     alias(libs.plugins.shadow)
 }
+
+apply plugin: 'dev.yumi.gradle.licenser'
 
 // define these in the `gradle.properties` file
 ext.githubUser = project.findProperty('github.packages.user')
@@ -23,6 +44,10 @@ repositories {
 }
 
 dependencies {
+    // Align all Jackson modules to a non-vulnerable version (GHSA-72hv-8253-57qq)
+    implementation(platform(libs.jacksonBom))
+    testImplementation(platform(libs.jacksonBom))
+
     implementation(libs.javaxAnnotation)
     implementation(libs.jakartaAnnotation)
     implementation(libs.slf4jApi)
@@ -59,6 +84,10 @@ license {
     rule(file('HEADER.txt'))
     exclude('**/*.properties')
     exclude('**/*.xml')
+    exclude('**/*.json')
+    exclude('**/*.csv')
+    exclude('**/*.txt')
+    exclude('**/*.sh')
     exclude('gradlew')
     exclude('conf/**')
 }
