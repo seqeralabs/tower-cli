@@ -40,8 +40,8 @@ public class ListCmd extends AbstractDatasetsCmd {
     @CommandLine.Mixin
     public WorkspaceRequiredOptions workspace;
 
-    @CommandLine.Option(names = {"-f", "--filter"}, description = "\"Optional filter criteria, allowing free text search on name or ID \" +\n" +
-            "            \"and keywords: `username`, `label`, `visibility`, `createdAfter`, `createdBefore`, `usedAfter`, `usedBefore`. Example keyword usage: -f label:custom-label.\".")
+    @CommandLine.Option(names = {"-f", "--filter"}, description = "Optional filter criteria, allowing free text search on name or ID " +
+            "and keywords: `username`, `label`, `visibility`, `createdAfter`, `createdBefore`, `usedAfter`, `usedBefore`. Example keyword usage: -f label:custom-label.")
     public String filter;
 
     @CommandLine.Option(names = {"--show-hidden"}, description = "Include datasets marked as hidden in the results.", defaultValue = "false")
@@ -74,6 +74,7 @@ public class ListCmd extends AbstractDatasetsCmd {
                 response.getDatasets(),
                 workspace.workspace,
                 Boolean.TRUE.equals(showLabelsOption.showLabels),
+                showHidden,
                 PaginationInfo.from(paginationOptions, response.getTotalSize())
         );
     }

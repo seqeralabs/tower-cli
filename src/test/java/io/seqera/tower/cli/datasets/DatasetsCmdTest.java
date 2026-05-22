@@ -434,7 +434,7 @@ public class DatasetsCmdTest extends BaseCmdTest {
         assertOutput(format, out, new DatasetList(Arrays.asList(
                 parseJson("{\"id\":\"4D9TP0w2pM0qmwqVHgrgBK\",\"name\":\"dataset1\",\"description\":null,\"mediaType\":null,\"deleted\":false,\"dateCreated\":\"2021-11-26T14:51:20+01:00\",\"lastUpdated\":\"2021-11-26T14:51:20+01:00\"}", DatasetDto.class),
                 parseJson("{\"id\":\"1W2FqBiI6WoNokQTkPkEzo\",\"name\":\"dataset2\",\"description\":null,\"mediaType\":null,\"deleted\":false,\"dateCreated\":\"2021-11-29T08:05:44+01:00\",\"lastUpdated\":\"2021-11-29T08:05:44+01:00\"}", DatasetDto.class)
-        ), "249664655368293"));
+        ), "249664655368293", false, true, null));
         assertEquals("", out.stdErr);
         assertEquals(0, out.exitCode);
     }

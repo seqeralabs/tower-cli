@@ -33,19 +33,21 @@ public class DatasetList extends Response {
     public final List<DatasetDto> datasetList;
     public final String workspace;
     public final boolean showLabels;
+    public final boolean showHidden;
 
     @JsonIgnore
     @Nullable
     private final PaginationInfo paginationInfo;
 
     public DatasetList(List<DatasetDto> datasetList, String workspace) {
-        this(datasetList, workspace, false, null);
+        this(datasetList, workspace, false, false, null);
     }
 
-    public DatasetList(List<DatasetDto> datasetList, String workspace, boolean showLabels, @Nullable PaginationInfo paginationInfo) {
+    public DatasetList(List<DatasetDto> datasetList, String workspace, boolean showLabels, boolean showHidden, @Nullable PaginationInfo paginationInfo) {
         this.datasetList = datasetList;
         this.workspace = workspace;
         this.showLabels = showLabels;
+        this.showHidden = showHidden;
         this.paginationInfo = paginationInfo;
     }
 
@@ -58,7 +60,8 @@ public class DatasetList extends Response {
             return;
         }
 
-        List<String> desc = new ArrayList<>(List.of("ID", "Name", "Created", "Hidden"));
+        List<String> desc = new ArrayList<>(List.of("ID", "Name", "Created"));
+        if (showHidden) desc.add("Hidden");
         if (showLabels) desc.add("Labels");
 
         TableList table = new TableList(out, desc.size(), desc.toArray(new String[0])).sortBy(0);
@@ -67,9 +70,9 @@ public class DatasetList extends Response {
             List<String> row = new ArrayList<>(List.of(
                     ds.getId(),
                     ds.getName(),
-                    FormatHelper.formatDate(ds.getDateCreated()),
-                    Boolean.TRUE.equals(ds.getHidden()) ? "yes" : "no"
+                    FormatHelper.formatDate(ds.getDateCreated())
             ));
+            if (showHidden) row.add(Boolean.TRUE.equals(ds.getHidden()) ? "yes" : "no");
             if (showLabels) row.add(FormatHelper.formatLabels(ds.getLabels()));
             table.addRow(row.toArray(new String[0]));
         });
