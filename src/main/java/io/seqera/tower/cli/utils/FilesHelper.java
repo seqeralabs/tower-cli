@@ -20,6 +20,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -33,6 +35,26 @@ public class FilesHelper {
             return null;
         }
         return Files.readString(path);
+    }
+
+    /**
+     * Reads file content, treating "-" as a request to read from stdin.
+     * Used by launch-related options. Does not close System.in so multiple
+     * launch options can read from stdin within the same invocation
+     * (the first reader consumes the whole stream).
+     */
+    public static String readStringOrStdin(Path path) throws IOException {
+        if (path == null) {
+            return null;
+        }
+        if ("-".equals(path.toString())) {
+            return readFromStdin(System.in);
+        }
+        return Files.readString(path);
+    }
+
+    static String readFromStdin(InputStream in) throws IOException {
+        return new String(in.readAllBytes(), StandardCharsets.UTF_8);
     }
 
     public static void saveString(String fileName, String text) {
