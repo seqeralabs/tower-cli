@@ -1,0 +1,8 @@
+{
+  "containerRepository": "195996028523.dkr.ecr.eu-west-1.amazonaws.com/studios",
+  "lifespanHours": 8,
+  "nameStrategy": "tagPrefix",
+  "orgId": 27736513644467,
+  "privateStudioByDefault": false,
+  "wspId": 75887156211589
+}
