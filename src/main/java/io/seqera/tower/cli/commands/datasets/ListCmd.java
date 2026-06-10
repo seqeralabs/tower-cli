@@ -17,13 +17,18 @@
 package io.seqera.tower.cli.commands.datasets;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.commands.global.PaginationOptions;
+import io.seqera.tower.cli.commands.global.ShowLabelsOption;
 import io.seqera.tower.cli.commands.global.WorkspaceRequiredOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.datasets.DatasetList;
-import io.seqera.tower.model.DatasetDto;
+import io.seqera.tower.cli.utils.PaginationInfo;
+import io.seqera.tower.model.DatasetQueryAttribute;
+import io.seqera.tower.model.ListDatasetsResponse;
 import picocli.CommandLine;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 @CommandLine.Command(
@@ -35,14 +40,42 @@ public class ListCmd extends AbstractDatasetsCmd {
     @CommandLine.Mixin
     public WorkspaceRequiredOptions workspace;
 
-    @CommandLine.Option(names = {"-f", "--filter"}, description = "Filter datasets by name substring")
+    @CommandLine.Option(names = {"-f", "--filter"}, description = "Optional filter criteria, allowing free text search on name or ID " +
+            "and keywords: `username`, `label`, `visibility`, `createdAfter`, `createdBefore`, `usedAfter`, `usedBefore`. Example keyword usage: -f label:custom-label.")
     public String filter;
+
+    @CommandLine.Option(names = {"--show-hidden"}, description = "Include datasets marked as hidden in the results.", defaultValue = "false")
+    public boolean showHidden;
+
+    @CommandLine.Mixin
+    ShowLabelsOption showLabelsOption;
+
+    @CommandLine.Mixin
+    PaginationOptions paginationOptions;
 
     @Override
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
-        List<DatasetDto> response = searchByName(wspId, filter);
 
-        return new DatasetList(response, workspace.workspace);
+        Integer max = PaginationOptions.getMax(paginationOptions);
+        Integer offset = PaginationOptions.getOffset(paginationOptions, max);
+
+        List<DatasetQueryAttribute> attributes = Boolean.TRUE.equals(showLabelsOption.showLabels)
+                ? List.of(DatasetQueryAttribute.labels)
+                : Collections.emptyList();
+
+        String visibility = showHidden ? "all" : null;
+
+        ListDatasetsResponse response = datasetsApi().listDatasetsV2(
+                wspId, max, offset, filter, null, null, visibility, attributes
+        );
+
+        return new DatasetList(
+                response.getDatasets(),
+                workspace.workspace,
+                Boolean.TRUE.equals(showLabelsOption.showLabels),
+                showHidden,
+                PaginationInfo.from(paginationOptions, response.getTotalSize())
+        );
     }
 }
