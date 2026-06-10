@@ -384,7 +384,7 @@ jobs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "🆕 Tower CLI `v${{ steps.version.outputs.VERSION }}` ${{ format('<https://github.com/seqeralabs/tower-cli/releases/tag/v{0}|released.>', steps.version.outputs.tag) || '' }}."
+                  "text": "🆕 Tower CLI `v${{ steps.version.outputs.VERSION }}` ${{ format('<https://github.com/seqeralabs/tower-cli/releases/tag/v{0}|released.>', steps.version.outputs.VERSION) || '' }}."
                 },
               }
             ]
