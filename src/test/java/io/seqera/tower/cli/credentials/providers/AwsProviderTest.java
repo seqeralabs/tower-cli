@@ -137,6 +137,34 @@ class AwsProviderTest extends BaseCmdTest {
         assertOutput(format, out, new CredentialsAdded("AWS", "4cz5A8cuBkB5iJliCwJCFU", "aws-ext", USER_WORKSPACE_NAME));
     }
 
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAddRoleModeSurfacesExternalIdAndTrustPolicy(OutputType format, MockServerClient mock) {
+
+        mock.when(
+                request()
+                        .withMethod("POST")
+                        .withPath("/credentials")
+                        .withQueryStringParameter("useExternalId", "true")
+                        .withBody(json("{\"credentials\":{\"keys\":{\"mode\":\"role\",\"assumeRoleArn\":\"arn:aws:iam::222222222222:role/CustomerRole\"},\"name\":\"aws-role-jump\",\"provider\":\"aws\"}}")),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentialsId\":\"5cz5A8cuBkB5iJliCwJCFU\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // Follow-up describe: returns the generated External ID inside AwsSecurityKeys and the
+        // server-rendered trust policy snippet at the response root.
+        mock.when(
+                request().withMethod("GET").withPath("/credentials/5cz5A8cuBkB5iJliCwJCFU"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":{\"id\":\"5cz5A8cuBkB5iJliCwJCFU\",\"name\":\"aws-role-jump\",\"provider\":\"aws\",\"keys\":{\"discriminator\":\"aws\",\"mode\":\"role\",\"assumeRoleArn\":\"arn:aws:iam::222222222222:role/CustomerRole\",\"externalId\":\"a1b2c3d4-e5f6\"}},\"setupSnippet\":\"{ \\\"Version\\\": \\\"2012-10-17\\\" }\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "credentials", "add", "aws", "-n", "aws-role-jump", "--mode=role", "-r", "arn:aws:iam::222222222222:role/CustomerRole");
+        assertOutput(format, out, new CredentialsAdded("AWS", "5cz5A8cuBkB5iJliCwJCFU", "aws-role-jump", USER_WORKSPACE_NAME,
+                "a1b2c3d4-e5f6", "{ \"Version\": \"2012-10-17\" }"));
+    }
+
     @Test
     void testAddRoleModeRejectsAccessKeys(MockServerClient mock) {
 
