@@ -62,21 +62,22 @@ public abstract class AbstractAddCmd<T extends SecurityKeys> extends AbstractCre
 
         CreateCredentialsResponse resp = credentialsApi().createCredentials(new CreateCredentialsRequest().credentials(specs), wspId, getProvider().useExternalId());
 
-        // Follow-up describe to surface the generated External ID and the server-rendered
-        // provider-side setup snippet (e.g. AWS IAM trust policy). Fields are nullable —
-        // most providers and most flows leave them empty.
         String externalId = null;
         String setupSnippet = null;
-        try {
-            DescribeCredentialsResponse describe = credentialsApi().describeCredentials(resp.getCredentialsId(), wspId);
-            if (describe != null) {
-                if (describe.getCredentials() != null && describe.getCredentials().getKeys() instanceof AwsSecurityKeys) {
-                    externalId = ((AwsSecurityKeys) describe.getCredentials().getKeys()).getExternalId();
+        if (Boolean.TRUE.equals(getProvider().useExternalId())) {
+            try {
+                DescribeCredentialsResponse describe = credentialsApi().describeCredentials(resp.getCredentialsId(), wspId);
+                if (describe != null) {
+                    if (describe.getCredentials() != null && describe.getCredentials().getKeys() instanceof AwsSecurityKeys) {
+                        externalId = ((AwsSecurityKeys) describe.getCredentials().getKeys()).getExternalId();
+                    }
+                    setupSnippet = describe.getSetupSnippet();
                 }
-                setupSnippet = describe.getSetupSnippet();
+            } catch (ApiException e) {
+                getSpec().commandLine().getErr().println(ansi(String.format(
+                        "@|fg(yellow) Warning:|@ could not fetch credential details after creation: %s. The credential was created.",
+                        e.getMessage())));
             }
-        } catch (ApiException ignored) {
-            // The credential is created; the follow-up describe is a best-effort enrichment.
         }
 
         return new CredentialsAdded(getProvider().type().name(), resp.getCredentialsId(), name, workspaceRef(wspId),
