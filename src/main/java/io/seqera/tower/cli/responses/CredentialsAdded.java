@@ -64,9 +64,10 @@ public class CredentialsAdded extends Response {
     }
 
     private static String indent(String text, String prefix) {
+        String nl = String.format("%n");
         StringBuilder sb = new StringBuilder();
         for (String line : text.split("\\R", -1)) {
-            sb.append(prefix).append(line).append('\n');
+            sb.append(prefix).append(line).append(nl);
         }
         return sb.toString();
     }
