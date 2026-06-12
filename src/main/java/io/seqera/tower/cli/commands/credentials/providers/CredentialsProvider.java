@@ -29,7 +29,7 @@ public interface CredentialsProvider {
 
     SecurityKeys securityKeys() throws IOException, ApiException;
 
-    default Boolean useExternalId() {
-        return null;
+    default boolean useExternalId() {
+        return false;
     }
 }

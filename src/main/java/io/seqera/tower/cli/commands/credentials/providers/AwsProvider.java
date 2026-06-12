@@ -63,15 +63,12 @@ public class AwsProvider extends AbstractProvider<AwsSecurityKeys> {
     }
 
     @Override
-    public Boolean useExternalId() {
+    public boolean useExternalId() {
         AwsCredentialsMode mode = getMode();
         if (mode == AwsCredentialsMode.role) {
             return true;
         }
-        if (generateExternalId && assumeRoleArn != null) {
-            return true;
-        }
-        return null;
+        return generateExternalId && assumeRoleArn != null;
     }
 
     private AwsCredentialsMode getMode() {
