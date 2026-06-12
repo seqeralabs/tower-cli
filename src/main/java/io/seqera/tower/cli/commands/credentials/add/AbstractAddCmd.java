@@ -64,7 +64,7 @@ public abstract class AbstractAddCmd<T extends SecurityKeys> extends AbstractCre
 
         String externalId = null;
         String setupSnippet = null;
-        if (Boolean.TRUE.equals(getProvider().useExternalId())) {
+        if (getProvider().useExternalId()) {
             try {
                 DescribeCredentialsResponse describe = credentialsApi().describeCredentials(resp.getCredentialsId(), wspId);
                 if (describe != null) {
