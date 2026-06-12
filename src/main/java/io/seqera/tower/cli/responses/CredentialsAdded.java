@@ -22,16 +22,7 @@ public class CredentialsAdded extends Response {
     public final String provider;
     public final String name;
     public final String workspaceRef;
-    /**
-     * Generated External ID for AWS role-mode credentials when --generate-external-id is used.
-     * Null for other providers or when External ID generation was not requested.
-     */
     public final String externalId;
-    /**
-     * Server-rendered provider-side setup snippet (e.g. AWS IAM role trust policy) that the
-     * user should paste at their cloud provider. Populated when a renderer is available for
-     * the credential type and the installation is configured for it; otherwise null.
-     */
     public final String setupSnippet;
 
     public CredentialsAdded(String provider, String id, String name, String workspaceRef) {

@@ -50,26 +50,28 @@ public abstract class AbstractAddCmd<T extends SecurityKeys> extends AbstractCre
     @Override
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
+        CredentialsProvider provider = getProvider();
+        boolean useExternalId = provider.useExternalId();
 
         Credentials specs = new Credentials();
         specs
-            .keys(getProvider().securityKeys())
+            .keys(provider.securityKeys())
             .name(name)
-            .baseUrl(getProvider().baseUrl())
-            .provider(getProvider().type());
+            .baseUrl(provider.baseUrl())
+            .provider(provider.type());
 
         if (overwrite) tryDeleteCredentials(name, wspId);
 
-        CreateCredentialsResponse resp = credentialsApi().createCredentials(new CreateCredentialsRequest().credentials(specs), wspId, getProvider().useExternalId());
+        CreateCredentialsResponse resp = credentialsApi().createCredentials(new CreateCredentialsRequest().credentials(specs), wspId, useExternalId);
 
         String externalId = null;
         String setupSnippet = null;
-        if (getProvider().useExternalId()) {
+        if (useExternalId) {
             try {
                 DescribeCredentialsResponse describe = credentialsApi().describeCredentials(resp.getCredentialsId(), wspId);
                 if (describe != null) {
-                    if (describe.getCredentials() != null && describe.getCredentials().getKeys() instanceof AwsSecurityKeys) {
-                        externalId = ((AwsSecurityKeys) describe.getCredentials().getKeys()).getExternalId();
+                    if (describe.getCredentials() != null && describe.getCredentials().getKeys() instanceof AwsSecurityKeys aws) {
+                        externalId = aws.getExternalId();
                     }
                     setupSnippet = describe.getSetupSnippet();
                 }
@@ -80,7 +82,7 @@ public abstract class AbstractAddCmd<T extends SecurityKeys> extends AbstractCre
             }
         }
 
-        return new CredentialsAdded(getProvider().type().name(), resp.getCredentialsId(), name, workspaceRef(wspId),
+        return new CredentialsAdded(provider.type().name(), resp.getCredentialsId(), name, workspaceRef(wspId),
                 externalId, setupSnippet);
     }
 
