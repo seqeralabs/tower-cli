@@ -22,16 +22,44 @@ public class CredentialsAdded extends Response {
     public final String provider;
     public final String name;
     public final String workspaceRef;
+    public final String externalId;
+    public final String setupSnippet;
 
     public CredentialsAdded(String provider, String id, String name, String workspaceRef) {
+        this(provider, id, name, workspaceRef, null, null);
+    }
+
+    public CredentialsAdded(String provider, String id, String name, String workspaceRef,
+                            String externalId, String setupSnippet) {
         this.provider = provider;
         this.id = id;
         this.name = name;
         this.workspaceRef = workspaceRef;
+        this.externalId = externalId;
+        this.setupSnippet = setupSnippet;
     }
 
     @Override
     public String toString() {
-        return ansi(String.format("%n  @|yellow New %S credentials '%s (%s)' added at %s workspace|@%n", provider, name, id, workspaceRef));
+        StringBuilder out = new StringBuilder();
+        out.append(ansi(String.format("%n  @|yellow New %S credentials '%s (%s)' added at %s workspace|@%n",
+                provider, name, id, workspaceRef)));
+        if (externalId != null && !externalId.isEmpty()) {
+            out.append(ansi(String.format("%n  @|bold External ID:|@ %s%n", externalId)));
+        }
+        if (setupSnippet != null && !setupSnippet.isEmpty()) {
+            out.append(ansi(String.format("%n  @|bold Trust policy|@ (paste this into your IAM role's trust relationship):%n%n%s%n",
+                    indent(setupSnippet, "    "))));
+        }
+        return out.toString();
+    }
+
+    private static String indent(String text, String prefix) {
+        String nl = String.format("%n");
+        StringBuilder sb = new StringBuilder();
+        for (String line : text.split("\\R", -1)) {
+            sb.append(prefix).append(line).append(nl);
+        }
+        return sb.toString();
     }
 }

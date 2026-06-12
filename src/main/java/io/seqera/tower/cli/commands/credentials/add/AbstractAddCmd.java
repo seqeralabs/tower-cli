@@ -23,9 +23,11 @@ import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.exceptions.CredentialsNotFoundException;
 import io.seqera.tower.cli.responses.CredentialsAdded;
 import io.seqera.tower.cli.responses.Response;
+import io.seqera.tower.model.AwsSecurityKeys;
 import io.seqera.tower.model.CreateCredentialsRequest;
 import io.seqera.tower.model.CreateCredentialsResponse;
 import io.seqera.tower.model.Credentials;
+import io.seqera.tower.model.DescribeCredentialsResponse;
 import io.seqera.tower.model.SecurityKeys;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -48,19 +50,40 @@ public abstract class AbstractAddCmd<T extends SecurityKeys> extends AbstractCre
     @Override
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
+        CredentialsProvider provider = getProvider();
+        boolean useExternalId = provider.useExternalId();
 
         Credentials specs = new Credentials();
         specs
-            .keys(getProvider().securityKeys())
+            .keys(provider.securityKeys())
             .name(name)
-            .baseUrl(getProvider().baseUrl())
-            .provider(getProvider().type());
+            .baseUrl(provider.baseUrl())
+            .provider(provider.type());
 
         if (overwrite) tryDeleteCredentials(name, wspId);
 
-        CreateCredentialsResponse resp = credentialsApi().createCredentials(new CreateCredentialsRequest().credentials(specs), wspId, getProvider().useExternalId());
+        CreateCredentialsResponse resp = credentialsApi().createCredentials(new CreateCredentialsRequest().credentials(specs), wspId, useExternalId);
 
-        return new CredentialsAdded(getProvider().type().name(), resp.getCredentialsId(), name, workspaceRef(wspId));
+        String externalId = null;
+        String setupSnippet = null;
+        if (useExternalId) {
+            try {
+                DescribeCredentialsResponse describe = credentialsApi().describeCredentials(resp.getCredentialsId(), wspId);
+                if (describe != null) {
+                    if (describe.getCredentials() != null && describe.getCredentials().getKeys() instanceof AwsSecurityKeys aws) {
+                        externalId = aws.getExternalId();
+                    }
+                    setupSnippet = describe.getSetupSnippet();
+                }
+            } catch (ApiException e) {
+                getSpec().commandLine().getErr().println(ansi(String.format(
+                        "@|fg(yellow) Warning:|@ could not fetch credential details after creation: %s. The credential was created.",
+                        e.getMessage())));
+            }
+        }
+
+        return new CredentialsAdded(provider.type().name(), resp.getCredentialsId(), name, workspaceRef(wspId),
+                externalId, setupSnippet);
     }
 
     protected abstract CredentialsProvider getProvider();
