@@ -297,6 +297,13 @@ jobs:
           name: windows-test-reports
           path: build/reports/tests/test/
 
+      # GraalVM native-image needs the MSVC toolchain on Windows. The
+      # windows-latest runner now ships Visual Studio 2026, which GraalVM's
+      # auto-detection cannot locate (it looks for VS 2022), so set up the
+      # developer environment explicitly to stay independent of the VS version.
+      - name: Set up MSVC developer environment
+        uses: ilammy/msvc-dev-cmd@0b201ec74fa43914dc39ae48a89fd1d8cb592756 # v1.13.0
+
       - name: Build Native Image
         run: ./gradlew nativeCompile
         env:
@@ -384,7 +391,7 @@ jobs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "🆕 Tower CLI `v${{ steps.version.outputs.VERSION }}` ${{ format('<https://github.com/seqeralabs/tower-cli/releases/tag/v{0}|released.>', steps.version.outputs.tag) || '' }}."
+                  "text": "🆕 Tower CLI `v${{ steps.version.outputs.VERSION }}` ${{ format('<https://github.com/seqeralabs/tower-cli/releases/tag/v{0}|released.>', steps.version.outputs.VERSION) || '' }}."
                 },
               }
             ]
