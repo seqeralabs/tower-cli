@@ -16,6 +16,8 @@
 
 package io.seqera.tower.cli.commands.studios;
 
+import java.util.Map;
+
 import picocli.CommandLine;
 
 public class StudioConfigurationOptions {
@@ -31,6 +33,9 @@ public class StudioConfigurationOptions {
 
     @CommandLine.Option(names = {"--lifespan"}, description = "Optional configuration override for 'lifespan' setting (integer representing hours). Defaults to workspace lifespan setting.")
     public Integer lifespan;
+
+    @CommandLine.Option(names = {"-e", "--env"}, description = "Add environment variables to the studio as key=value pairs. Can be specified multiple times (e.g. -e KEY1=value1 -e KEY2=value2).")
+    public Map<String, String> environment;
 
     @CommandLine.Mixin
     public DataLinkRefOptions dataLinkRefOptions;

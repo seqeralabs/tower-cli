@@ -58,6 +58,12 @@ public class StartCmd extends AbstractStudiosCmd {
     @CommandLine.Option(names = {"--description"}, description = "Optional configuration override for 'description'.")
     public String description;
 
+    @CommandLine.Option(names = {"--spot"}, description = "Optional override to launch the studio on spot instances.")
+    public Boolean spot;
+
+    @CommandLine.Option(names = {"--ssh"}, description = "Optional override to enable SSH connectivity to the studio.")
+    public Boolean ssh;
+
     @Override
     protected Response exec() throws ApiException {
         Long wspId = workspaceId(workspace.workspace);
@@ -97,6 +103,9 @@ public class StartCmd extends AbstractStudiosCmd {
 
     private DataStudioStartRequest getStartRequestWithOverridesApplied(DataStudioDto studioDto) throws ApiException {
         DataStudioConfiguration newConfig = studioConfigurationFrom(studioDto.getWorkspaceId(), studioDto, studioConfigOptions);
+        if (ssh != null) {
+            newConfig.setSshEnabled(ssh);
+        }
         String appliedDescription = description == null
                 ? studioDto.getDescription()
                 : description;
@@ -106,6 +115,9 @@ public class StartCmd extends AbstractStudiosCmd {
         request.setConfiguration(newConfig);
         request.setDescription(appliedDescription);
         request.setLabelIds(getLabelIds(labels, studioDto.getWorkspaceId()));
+        if (spot != null) {
+            request.setSpot(spot);
+        }
 
         return request;
     }

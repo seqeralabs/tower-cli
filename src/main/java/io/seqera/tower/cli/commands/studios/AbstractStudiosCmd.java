@@ -146,6 +146,10 @@ public class AbstractStudiosCmd extends AbstractApiCmd {
 
         studioConfiguration.setMountData(getMountDataIds(configOptions, studioConfiguration, wspId));
 
+        if (configOptions.environment != null) {
+            studioConfiguration.setEnvironment(configOptions.environment);
+        }
+
 
         if (condaEnvOverride != null && !condaEnvOverride.isEmpty()) {
             studioConfiguration.setCondaEnvironment(condaEnvOverride);
