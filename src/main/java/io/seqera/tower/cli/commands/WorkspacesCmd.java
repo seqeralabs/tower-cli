@@ -22,6 +22,7 @@ import io.seqera.tower.cli.commands.workspaces.LeaveCmd;
 import io.seqera.tower.cli.commands.workspaces.ListCmd;
 import io.seqera.tower.cli.commands.workspaces.UpdateCmd;
 import io.seqera.tower.cli.commands.workspaces.ViewCmd;
+import io.seqera.tower.cli.commands.workspaces.settings.SettingsCmd;
 import picocli.CommandLine;
 
 @CommandLine.Command(
@@ -34,6 +35,7 @@ import picocli.CommandLine;
                 UpdateCmd.class,
                 ViewCmd.class,
                 LeaveCmd.class,
+                SettingsCmd.class,
         }
 )
 public class WorkspacesCmd extends AbstractRootCmd {
