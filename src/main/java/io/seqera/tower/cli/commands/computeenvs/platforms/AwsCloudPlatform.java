@@ -17,6 +17,7 @@
 package io.seqera.tower.cli.commands.computeenvs.platforms;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.exceptions.TowerRuntimeException;
 import io.seqera.tower.model.AwsCloudConfig;
 import io.seqera.tower.model.ComputeEnvComputeConfig.PlatformEnum;
 import io.seqera.tower.model.SchedConfig;
@@ -73,12 +74,18 @@ public class AwsCloudPlatform extends AbstractPlatform<AwsCloudConfig> {
 
         // Advanced
         if (adv != null) {
+            if (adv.ebsKmsKeyId != null && !Boolean.TRUE.equals(adv.ebsEncrypted)) {
+                throw new TowerRuntimeException("EBS KMS key requires EBS encryption to be enabled (--ebs-encryption).");
+            }
+
             config
                     .instanceType(adv.instanceType)
                     .imageId(adv.imageId)
                     .arm64Enabled(adv.arm64Enabled)
                     .ec2KeyPair(adv.ec2KeyPair)
                     .ebsBootSize(adv.ebsBootSize)
+                    .ebsEncrypted(adv.ebsEncrypted)
+                    .ebsKmsKeyId(adv.ebsKmsKeyId)
                     .instanceProfileArn(adv.instanceProfileArn)
                     .subnetId(adv.subnetId)
                     .securityGroups(adv.securityGroups);
@@ -111,6 +118,12 @@ public class AwsCloudPlatform extends AbstractPlatform<AwsCloudConfig> {
 
         @Option(names = {"--boot-disk-size"}, description = "EC2 instance boot disk size in GB. Controls the root volume size for compute instances. If absent, Platform defaults to 50 GB gp3 volume.")
         public Integer ebsBootSize;
+
+        @Option(names = {"--ebs-encryption"}, description = "Encrypt the boot EBS volume of provisioned instances. Defaults to false if not specified.")
+        public Boolean ebsEncrypted;
+
+        @Option(names = {"--ebs-kms-key"}, description = "KMS key ARN used to encrypt the boot EBS volume. Only applied when EBS encryption is enabled (--ebs-encryption). When omitted, the account/region default EBS encryption key is used.")
+        public String ebsKmsKeyId;
 
         @Option(names = {"--ec2-key-pair"}, description = "EC2 key pair name for SSH access to running instances. The key pair must already exist in the specified region.")
         public String ec2KeyPair;
