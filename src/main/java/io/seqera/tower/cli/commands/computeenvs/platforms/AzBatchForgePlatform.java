@@ -52,6 +52,9 @@ public class AzBatchForgePlatform extends AbstractPlatform<AzBatchConfig> {
     @Option(names = {"--no-auto-scale"}, description = "Disable pool autoscaling (single pool mode). When disabled, pool maintains fixed VM count and does not scale based on workload.")
     public boolean noAutoScale;
 
+    @Option(names = {"--boot-disk-size"}, description = "Boot disk size in GB for pool nodes. Applies to all pools. In dual pool mode, per-pool values (--head-boot-disk-size, --worker-boot-disk-size) take precedence. If absent, Azure's default is used.")
+    public Integer bootDiskSizeGb;
+
     @ArgGroup(heading = "%nDual pool options (head pool):%n", validate = false)
     public HeadPoolOptions headPoolOpts;
 
@@ -112,12 +115,19 @@ public class AzBatchForgePlatform extends AbstractPlatform<AzBatchConfig> {
         AzBatchForgeConfig forge = new AzBatchForgeConfig()
                 .disposeOnDeletion(!preserveResources);
 
+        if (bootDiskSizeGb != null) {
+            forge.bootDiskSizeGB(bootDiskSizeGb);
+        }
+
         if (dualPool) {
             AzBatchPoolConfig headPool = new AzBatchPoolConfig();
             if (headPoolOpts != null) {
                 headPool.vmType(headPoolOpts.headVmType);
                 headPool.vmCount(headPoolOpts.headVmCount);
                 headPool.autoScale(headPoolOpts.headNoAutoScale != null ? !headPoolOpts.headNoAutoScale : null);
+                if (headPoolOpts.headBootDiskSizeGb != null) {
+                    headPool.bootDiskSizeGB(headPoolOpts.headBootDiskSizeGb);
+                }
             }
 
             AzBatchPoolConfig workerPool = new AzBatchPoolConfig();
@@ -125,6 +135,9 @@ public class AzBatchForgePlatform extends AbstractPlatform<AzBatchConfig> {
                 workerPool.vmType(workerPoolOpts.workerVmType);
                 workerPool.vmCount(workerPoolOpts.workerVmCount);
                 workerPool.autoScale(workerPoolOpts.workerNoAutoScale != null ? !workerPoolOpts.workerNoAutoScale : null);
+                if (workerPoolOpts.workerBootDiskSizeGb != null) {
+                    workerPool.bootDiskSizeGB(workerPoolOpts.workerBootDiskSizeGb);
+                }
             }
 
             forge.headPool(headPool);
@@ -180,6 +193,9 @@ public class AzBatchForgePlatform extends AbstractPlatform<AzBatchConfig> {
         @Option(names = {"--head-no-auto-scale"}, description = "Disable autoscaling for the head pool (dual pool mode).")
         public Boolean headNoAutoScale;
 
+        @Option(names = {"--head-boot-disk-size"}, description = "Boot disk size in GB for the head pool nodes (dual pool mode). Overrides --boot-disk-size for this pool.")
+        public Integer headBootDiskSizeGb;
+
     }
 
     public static class WorkerPoolOptions {
@@ -192,6 +208,9 @@ public class AzBatchForgePlatform extends AbstractPlatform<AzBatchConfig> {
 
         @Option(names = {"--worker-no-auto-scale"}, description = "Disable autoscaling for the worker pool (dual pool mode).")
         public Boolean workerNoAutoScale;
+
+        @Option(names = {"--worker-boot-disk-size"}, description = "Boot disk size in GB for the worker pool nodes (dual pool mode). Overrides --boot-disk-size for this pool.")
+        public Integer workerBootDiskSizeGb;
 
     }
 
