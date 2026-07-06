@@ -78,6 +78,10 @@ public class AwsCloudPlatform extends AbstractPlatform<AwsCloudConfig> {
                 throw new TowerRuntimeException("EBS KMS key requires EBS encryption to be enabled (--ebs-encryption).");
             }
 
+            if (adv.subnetId != null && adv.subnetIds != null) {
+                throw new TowerRuntimeException("Options --subnet-id and --subnet-ids are mutually exclusive; use --subnet-ids.");
+            }
+
             config
                     .instanceType(adv.instanceType)
                     .imageId(adv.imageId)
@@ -87,7 +91,9 @@ public class AwsCloudPlatform extends AbstractPlatform<AwsCloudConfig> {
                     .ebsEncrypted(adv.ebsEncrypted)
                     .ebsKmsKeyId(adv.ebsKmsKeyId)
                     .instanceProfileArn(adv.instanceProfileArn)
+                    .vpcId(adv.vpcId)
                     .subnetId(adv.subnetId)
+                    .subnetIds(adv.subnetIds)
                     .securityGroups(adv.securityGroups);
         }
 
@@ -140,7 +146,14 @@ public class AwsCloudPlatform extends AbstractPlatform<AwsCloudConfig> {
         @Option(names = {"--security-groups"}, description = "Security group IDs for network access control. Comma-separated list defining firewall rules for EC2 instances.", split = ",")
         public List<String> securityGroups;
 
-        @Option(names = {"--subnet-id"}, description = "VPC subnet ID for instance placement. Determines network isolation and internet access configuration.")
+        @Deprecated
+        @Option(names = {"--subnet-id"}, description = "DEPRECATED - Use '--subnet-ids' instead. VPC subnet ID for instance placement. Determines network isolation and internet access configuration.")
         public String subnetId;
+
+        @Option(names = {"--subnet-ids"}, description = "VPC subnet IDs for instance placement. Comma-separated list; the first subnet is used for basic placement while Intelligent Compute may use all of them. Mutually exclusive with --subnet-id.", split = ",")
+        public List<String> subnetIds;
+
+        @Option(names = {"--vpc-id"}, description = "VPC ID used to scope subnet and security-group selection. Determines the network in which EC2 instances are launched.")
+        public String vpcId;
     }
 }
