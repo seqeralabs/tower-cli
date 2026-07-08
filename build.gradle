@@ -98,7 +98,7 @@ application {
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+        languageVersion = JavaLanguageVersion.of(25)
     }
 }
 
@@ -120,7 +120,7 @@ graalvmNative {
             buildArgs.add('-H:+ReportExceptionStackTraces')
 
             javaLauncher = javaToolchains.launcherFor {
-                languageVersion = JavaLanguageVersion.of(21)
+                languageVersion = JavaLanguageVersion.of(25)
                 vendor = JvmVendorSpec.matching("Oracle Corporation")
             }
 
@@ -155,7 +155,7 @@ tasks.register('buildInfo') {
 }
 
 tasks.named('compileJava') {
-    options.release = 21
+    options.release = 17
     options.compilerArgs += ["-Aproject=${project.name}"]
     dependsOn tasks.named('buildInfo')
 }
