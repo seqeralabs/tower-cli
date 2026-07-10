@@ -19,6 +19,7 @@ package io.seqera.tower.cli.commands.computeenvs.platforms;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.model.AzCloudConfig;
 import io.seqera.tower.model.ComputeEnvComputeConfig.PlatformEnum;
+import io.seqera.tower.model.SchedConfig;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Option;
 
@@ -36,6 +37,9 @@ public class AzCloudPlatform extends AbstractPlatform<AzCloudConfig> {
     @Option(names = {"--resource-group"}, description = "Azure resource group for organizing and managing virtual machines. The resource group must already exist in the subscription.", required = true)
     public String resourceGroup;
 
+    @ArgGroup(heading = "%nScheduler options:%n", validate = false)
+    public SchedOptions sched;
+
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
     public AdvancedOptions adv;
 
@@ -50,10 +54,22 @@ public class AzCloudPlatform extends AbstractPlatform<AzCloudConfig> {
         config
                 .waveEnabled(true)
                 .fusion2Enabled(true)
+                .schedEnabled(sched != null && Boolean.TRUE.equals(sched.schedEnabled))
 
                 // Main
                 .region(region)
                 .resourceGroup(resourceGroup);
+
+        if (sched != null) {
+            SchedConfig schedConfig = new SchedConfig();
+            if (sched.provisioningModel != null) {
+                schedConfig.provisioningModel(sched.provisioningModel);
+            }
+            if (sched.machineTypes != null) {
+                schedConfig.machineTypes(sched.machineTypes);
+            }
+            config.schedConfig(schedConfig);
+        }
 
         // Advanced
         if (adv != null) {
@@ -78,6 +94,17 @@ public class AzCloudPlatform extends AbstractPlatform<AzCloudConfig> {
                 .environment(environmentVariables());
 
         return config;
+    }
+
+    public static class SchedOptions {
+        @Option(names = {"--sched-enabled"}, description = "Enable the Seqera scheduler for this compute environment. Defaults to false if not specified.")
+        public Boolean schedEnabled;
+
+        @Option(names = {"--provisioning-model"}, description = "Instance provisioning model used by the Seqera scheduler. Valid values: SPOT, SPOT_FIRST, ONDEMAND.")
+        public SchedConfig.ProvisioningModelEnum provisioningModel;
+
+        @Option(names = {"--sched-machine-types"}, description = "Azure VM sizes for compute nodes managed by the Seqera scheduler. Comma-separated list (e.g., Standard_D4s_v3,Standard_E4s_v3). Leave empty to let the scheduler select the most cost-effective sizes.", split = ",")
+        public List<String> machineTypes;
     }
 
     public static class AdvancedOptions {
