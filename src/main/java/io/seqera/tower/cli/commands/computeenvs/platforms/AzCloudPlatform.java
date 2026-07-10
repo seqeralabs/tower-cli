@@ -23,6 +23,7 @@ import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Option;
 
 import java.io.IOException;
+import java.util.List;
 
 public class AzCloudPlatform extends AbstractPlatform<AzCloudConfig> {
 
@@ -62,6 +63,7 @@ public class AzCloudPlatform extends AbstractPlatform<AzCloudConfig> {
                     .networkId(adv.networkId)
                     .managedIdentityId(adv.managedIdentityId)
                     .managedIdentityClientId(adv.managedIdentityClientId)
+                    .subnets(adv.subnets)
                     .logWorkspaceId(adv.logWorkspaceId)
                     .logTableName(adv.logTableName)
                     .dataCollectionEndpoint(adv.dataCollectionEndpoint)
@@ -102,6 +104,9 @@ public class AzCloudPlatform extends AbstractPlatform<AzCloudConfig> {
 
         @Option(names = {"--network-id"}, description = "Azure virtual network resource ID. Defines the network where VMs will be deployed for network isolation and connectivity.")
         public String networkId;
+
+        @Option(names = {"--subnets"}, description = "Subnet names within the virtual network for VM placement. Comma-separated list scoping where VMs are launched inside the network specified by --network-id.", split = ",")
+        public List<String> subnets;
 
         @Option(names = {"--subscription-id"}, description = "Azure subscription ID where resources will be created. Used to specify the billing and access control boundary.")
         public String subscriptionId;
