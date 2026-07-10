@@ -1,6 +1,6 @@
 // yumi-gradle-licenser is loaded via buildscript so we can constrain its
-// vulnerable transitive dependencies (log4j-core, plexus-utils). Keep the
-// version aligned with libs.versions.toml#licenserVersion.
+// vulnerable transitive dependencies (log4j-core, plexus-utils). The version is
+// pinned directly in the classpath declaration below.
 buildscript {
     repositories {
         gradlePluginPortal()
