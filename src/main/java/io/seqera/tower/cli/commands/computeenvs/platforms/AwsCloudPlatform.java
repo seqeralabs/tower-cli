@@ -48,12 +48,12 @@ public class AwsCloudPlatform extends AbstractPlatform<AwsCloudConfig> {
         super(PlatformEnum.AWS_CLOUD);
     }
 
-    @Option(names = {"--fusion-metrics"}, negatable = true, description = "Send Fusion metrics to Seqera for this compute environment. Fusion always generates the metrics; this only controls whether they are collected and sent to Seqera. Only valid when Fusion is enabled. If unset, Platform applies its default.")
-    public Boolean fusionMetrics;
+    @Option(names = {"--fusion-metrics-collection"}, negatable = true, description = "Send Fusion metrics to Seqera for this compute environment. Fusion always generates the metrics; this only controls whether they are collected and sent to Seqera. Only valid when Fusion is enabled. If unset, Platform applies its default.")
+    public Boolean fusionMetricsCollection;
 
     @Override
     public Boolean fusionMetricsCollectionEnabled() {
-        return fusionMetrics;
+        return fusionMetricsCollection;
     }
 
     @Override

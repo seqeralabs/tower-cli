@@ -702,7 +702,7 @@ public class AwsCloudPlatformTest extends BaseCmdTest {
                 "-n", "my-aws-cloud-fm",
                 "--work-dir", "s3://my-bucket",
                 "-r", "us-east-1",
-                "--fusion-metrics"
+                "--fusion-metrics-collection"
         );
 
         // then
@@ -760,7 +760,7 @@ public class AwsCloudPlatformTest extends BaseCmdTest {
                 "-n", "my-aws-cloud-fm-off",
                 "--work-dir", "s3://my-bucket",
                 "-r", "us-east-1",
-                "--no-fusion-metrics"
+                "--no-fusion-metrics-collection"
         );
 
         // then
