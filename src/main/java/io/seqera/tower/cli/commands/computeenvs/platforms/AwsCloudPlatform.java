@@ -63,7 +63,7 @@ public class AwsCloudPlatform extends AbstractPlatform<AwsCloudConfig> {
         config
                 .waveEnabled(true)
                 .fusion2Enabled(true)
-                .schedEnabled(sched != null && sched.schedEnabled)
+                .schedEnabled(sched != null && Boolean.TRUE.equals(sched.schedEnabled))
 
                 // Main
                 .region(region)
