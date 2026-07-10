@@ -122,6 +122,7 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
                                 .platform(platform)
                                 .credentialsId(credsId)
                                 .config(config)
+                                .fusionMetricsCollectionEnabled(fusionMetricsCollectionEnabled())
                 )
                 .labelIds(labelIds);
 
@@ -149,5 +150,14 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
     }
 
     protected abstract Platform getPlatform();
+
+    /**
+     * Compute-environment-level Fusion metrics collection flag, resolved from the selected
+     * platform. Returns {@code null} when the platform does not support it or the user did not
+     * specify it, letting Platform apply its default.
+     */
+    protected Boolean fusionMetricsCollectionEnabled() {
+        return getPlatform().fusionMetricsCollectionEnabled();
+    }
 
 }

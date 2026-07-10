@@ -77,6 +77,12 @@ public class ImportCmd extends AbstractAddCmd {
         throw new UnsupportedOperationException("Unknown platform");
     }
 
+    @Override
+    protected Boolean fusionMetricsCollectionEnabled() {
+        // Import has no selected platform; let Platform resolve the default for the imported config.
+        return null;
+    }
+
     private void tryDeleteCE(String name, Long wspId) throws ApiException {
         try {
             ComputeEnvResponseDto ce = computeEnvByRef(wspId, name);

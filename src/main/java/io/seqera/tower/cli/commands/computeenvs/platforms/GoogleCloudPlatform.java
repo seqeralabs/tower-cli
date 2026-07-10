@@ -47,6 +47,14 @@ public class GoogleCloudPlatform extends AbstractPlatform<GoogleCloudConfig> {
         super(PlatformEnum.GOOGLE_CLOUD);
     }
 
+    @Option(names = {"--fusion-metrics"}, negatable = true, description = "Send Fusion metrics to Seqera for this compute environment. Fusion always generates the metrics; this only controls whether they are collected and sent to Seqera. Only valid when Fusion is enabled. If unset, Platform applies its default.")
+    public Boolean fusionMetrics;
+
+    @Override
+    public Boolean fusionMetricsCollectionEnabled() {
+        return fusionMetrics;
+    }
+
     @Override
     public GoogleCloudConfig computeConfig() throws ApiException, IOException {
         GoogleCloudConfig config = new GoogleCloudConfig();
