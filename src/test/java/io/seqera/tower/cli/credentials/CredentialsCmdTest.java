@@ -28,7 +28,9 @@ import io.seqera.tower.cli.exceptions.ShowUsageException;
 import io.seqera.tower.cli.responses.CredentialsAdded;
 import io.seqera.tower.cli.responses.CredentialsDeleted;
 import io.seqera.tower.cli.responses.CredentialsList;
+import io.seqera.tower.cli.responses.CredentialsValidated;
 import io.seqera.tower.model.Credentials;
+import io.seqera.tower.model.CredentialsStatus;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -200,5 +202,54 @@ class CredentialsCmdTest extends BaseCmdTest {
 
     }
 
+    @Test
+    void testValidateAvailable(MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/credentials/1cz5A8cuBkB5iJliCwJCFU"), exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+                        .withBody("{\"credentials\":{\"id\":\"1cz5A8cuBkB5iJliCwJCFU\",\"name\":\"aws\",\"provider\":\"aws\"}}")
+                        .withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/credentials/1cz5A8cuBkB5iJliCwJCFU/validate"), exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+                        .withBody("{\"status\":\"AVAILABLE\",\"transientError\":false}")
+                        .withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "credentials", "validate", "-i", "1cz5A8cuBkB5iJliCwJCFU");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        assertEquals(new CredentialsValidated("1cz5A8cuBkB5iJliCwJCFU", "aws", USER_WORKSPACE_NAME, CredentialsStatus.AVAILABLE, false, null).toString(), out.stdOut);
+    }
+
+    @Test
+    void testValidateInvalid(MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/credentials/1cz5A8cuBkB5iJliCwJCFU"), exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+                        .withBody("{\"credentials\":{\"id\":\"1cz5A8cuBkB5iJliCwJCFU\",\"name\":\"aws\",\"provider\":\"aws\"}}")
+                        .withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/credentials/1cz5A8cuBkB5iJliCwJCFU/validate"), exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+                        .withBody("{\"status\":\"INVALID\",\"transientError\":false,\"message\":\"Access denied\"}")
+                        .withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "credentials", "validate", "-i", "1cz5A8cuBkB5iJliCwJCFU");
+
+        assertEquals("", out.stdErr);
+        assertEquals(1, out.exitCode);
+        assertEquals(new CredentialsValidated("1cz5A8cuBkB5iJliCwJCFU", "aws", USER_WORKSPACE_NAME, CredentialsStatus.INVALID, false, "Access denied").toString(), out.stdOut);
+    }
 
 }
