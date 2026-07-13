@@ -19,10 +19,12 @@ package io.seqera.tower.cli.commands.computeenvs.platforms;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.model.ComputeEnvComputeConfig.PlatformEnum;
 import io.seqera.tower.model.GoogleCloudConfig;
+import io.seqera.tower.model.SchedConfig;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Option;
 
 import java.io.IOException;
+import java.util.List;
 
 public class GoogleCloudPlatform extends AbstractPlatform<GoogleCloudConfig> {
 
@@ -35,11 +37,22 @@ public class GoogleCloudPlatform extends AbstractPlatform<GoogleCloudConfig> {
     @Option(names = {"-z", "--zone"}, description = "Google Cloud zone within the region (e.g., us-central1-a). If omitted, defaults to the first zone alphabetically in the region.", required = true)
     public String zone;
 
+    @ArgGroup(heading = "%nScheduler options:%n", validate = false)
+    public SchedOptions sched;
+
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
     public AdvancedOptions adv;
 
     public GoogleCloudPlatform() {
         super(PlatformEnum.GOOGLE_CLOUD);
+    }
+
+    @Option(names = {"--fusion-metrics-collection"}, negatable = true, description = "Send Fusion metrics to Seqera for this compute environment. Fusion always generates the metrics; this only controls whether they are collected and sent to Seqera. Only valid when Fusion is enabled. If unset, Platform applies its default.")
+    public Boolean fusionMetricsCollection;
+
+    @Override
+    public Boolean fusionMetricsCollectionEnabled() {
+        return fusionMetricsCollection;
     }
 
     @Override
@@ -49,10 +62,22 @@ public class GoogleCloudPlatform extends AbstractPlatform<GoogleCloudConfig> {
         config
                 .waveEnabled(true)
                 .fusion2Enabled(true)
+                .schedEnabled(sched != null && Boolean.TRUE.equals(sched.schedEnabled))
 
                 // Main
                 .region(region)
                 .zone(zone);
+
+        if (sched != null) {
+            SchedConfig schedConfig = new SchedConfig();
+            if (sched.provisioningModel != null) {
+                schedConfig.provisioningModel(sched.provisioningModel);
+            }
+            if (sched.machineTypes != null) {
+                schedConfig.machineTypes(sched.machineTypes);
+            }
+            config.schedConfig(schedConfig);
+        }
 
         // Advanced
         if (adv != null) {
@@ -72,6 +97,17 @@ public class GoogleCloudPlatform extends AbstractPlatform<GoogleCloudConfig> {
                 .environment(environmentVariables());
 
         return config;
+    }
+
+    public static class SchedOptions {
+        @Option(names = {"--sched-enabled"}, description = "Enable the Seqera scheduler for this compute environment. Defaults to false if not specified.")
+        public Boolean schedEnabled;
+
+        @Option(names = {"--provisioning-model"}, description = "Instance provisioning model used by the Seqera scheduler. Valid values: SPOT, SPOT_FIRST, ONDEMAND.")
+        public SchedConfig.ProvisioningModelEnum provisioningModel;
+
+        @Option(names = {"--sched-machine-types"}, description = "Compute Engine machine types for compute nodes managed by the Seqera scheduler. Comma-separated list (e.g., n2-standard-4,c2-standard-8). Leave empty to let the scheduler select the most cost-effective types.", split = ",")
+        public List<String> machineTypes;
     }
 
     public static class AdvancedOptions {

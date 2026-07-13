@@ -28,4 +28,14 @@ public interface Platform {
     PlatformEnum type();
 
     ComputeConfig computeConfig(Long workspaceId, CredentialsApi credentialsApi) throws ApiException, IOException;
+
+    /**
+     * Whether to collect Fusion metrics for this compute environment. This is a
+     * compute-environment-level flag (set on {@code ComputeEnvComputeConfig}, not the
+     * platform config) and only valid on Fusion-capable platforms. Returns {@code null}
+     * when the user did not specify it, letting Platform resolve the default.
+     */
+    default Boolean fusionMetricsCollectionEnabled() {
+        return null;
+    }
 }

@@ -86,6 +86,14 @@ public class AzBatchForgePlatform extends AbstractPlatform<AzBatchConfig> {
         super(PlatformEnum.AZURE_BATCH);
     }
 
+    @Option(names = {"--fusion-metrics-collection"}, negatable = true, description = "Send Fusion metrics to Seqera for this compute environment. Fusion always generates the metrics; this only controls whether they are collected and sent to Seqera. Only valid when Fusion is enabled. If unset, Platform applies its default.")
+    public Boolean fusionMetricsCollection;
+
+    @Override
+    public Boolean fusionMetricsCollectionEnabled() {
+        return fusionMetricsCollection;
+    }
+
     @Override
     public AzBatchConfig computeConfig(Long workspaceId, CredentialsApi credentialsApi) throws ApiException, IOException {
         AzBatchConfig config = new AzBatchConfig();

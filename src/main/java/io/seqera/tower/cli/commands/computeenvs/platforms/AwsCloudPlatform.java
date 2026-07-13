@@ -48,6 +48,14 @@ public class AwsCloudPlatform extends AbstractPlatform<AwsCloudConfig> {
         super(PlatformEnum.AWS_CLOUD);
     }
 
+    @Option(names = {"--fusion-metrics-collection"}, negatable = true, description = "Send Fusion metrics to Seqera for this compute environment. Fusion always generates the metrics; this only controls whether they are collected and sent to Seqera. Only valid when Fusion is enabled. If unset, Platform applies its default.")
+    public Boolean fusionMetricsCollection;
+
+    @Override
+    public Boolean fusionMetricsCollectionEnabled() {
+        return fusionMetricsCollection;
+    }
+
     @Override
     public AwsCloudConfig computeConfig() throws ApiException, IOException {
         AwsCloudConfig config = new AwsCloudConfig();
@@ -55,7 +63,7 @@ public class AwsCloudPlatform extends AbstractPlatform<AwsCloudConfig> {
         config
                 .waveEnabled(true)
                 .fusion2Enabled(true)
-                .schedEnabled(sched != null && sched.schedEnabled)
+                .schedEnabled(sched != null && Boolean.TRUE.equals(sched.schedEnabled))
 
                 // Main
                 .region(region)

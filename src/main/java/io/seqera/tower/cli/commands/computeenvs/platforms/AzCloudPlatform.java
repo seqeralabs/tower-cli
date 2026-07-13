@@ -19,10 +19,12 @@ package io.seqera.tower.cli.commands.computeenvs.platforms;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.model.AzCloudConfig;
 import io.seqera.tower.model.ComputeEnvComputeConfig.PlatformEnum;
+import io.seqera.tower.model.SchedConfig;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Option;
 
 import java.io.IOException;
+import java.util.List;
 
 public class AzCloudPlatform extends AbstractPlatform<AzCloudConfig> {
 
@@ -35,11 +37,22 @@ public class AzCloudPlatform extends AbstractPlatform<AzCloudConfig> {
     @Option(names = {"--resource-group"}, description = "Azure resource group for organizing and managing virtual machines. The resource group must already exist in the subscription.", required = true)
     public String resourceGroup;
 
+    @ArgGroup(heading = "%nScheduler options:%n", validate = false)
+    public SchedOptions sched;
+
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
     public AdvancedOptions adv;
 
     public AzCloudPlatform() {
         super(PlatformEnum.AZURE_CLOUD);
+    }
+
+    @Option(names = {"--fusion-metrics-collection"}, negatable = true, description = "Send Fusion metrics to Seqera for this compute environment. Fusion always generates the metrics; this only controls whether they are collected and sent to Seqera. Only valid when Fusion is enabled. If unset, Platform applies its default.")
+    public Boolean fusionMetricsCollection;
+
+    @Override
+    public Boolean fusionMetricsCollectionEnabled() {
+        return fusionMetricsCollection;
     }
 
     @Override
@@ -49,10 +62,22 @@ public class AzCloudPlatform extends AbstractPlatform<AzCloudConfig> {
         config
                 .waveEnabled(true)
                 .fusion2Enabled(true)
+                .schedEnabled(sched != null && Boolean.TRUE.equals(sched.schedEnabled))
 
                 // Main
                 .region(region)
                 .resourceGroup(resourceGroup);
+
+        if (sched != null) {
+            SchedConfig schedConfig = new SchedConfig();
+            if (sched.provisioningModel != null) {
+                schedConfig.provisioningModel(sched.provisioningModel);
+            }
+            if (sched.machineTypes != null) {
+                schedConfig.machineTypes(sched.machineTypes);
+            }
+            config.schedConfig(schedConfig);
+        }
 
         // Advanced
         if (adv != null) {
@@ -62,6 +87,7 @@ public class AzCloudPlatform extends AbstractPlatform<AzCloudConfig> {
                     .networkId(adv.networkId)
                     .managedIdentityId(adv.managedIdentityId)
                     .managedIdentityClientId(adv.managedIdentityClientId)
+                    .subnets(adv.subnets)
                     .logWorkspaceId(adv.logWorkspaceId)
                     .logTableName(adv.logTableName)
                     .dataCollectionEndpoint(adv.dataCollectionEndpoint)
@@ -76,6 +102,17 @@ public class AzCloudPlatform extends AbstractPlatform<AzCloudConfig> {
                 .environment(environmentVariables());
 
         return config;
+    }
+
+    public static class SchedOptions {
+        @Option(names = {"--sched-enabled"}, description = "Enable the Seqera scheduler for this compute environment. Defaults to false if not specified.")
+        public Boolean schedEnabled;
+
+        @Option(names = {"--provisioning-model"}, description = "Instance provisioning model used by the Seqera scheduler. Valid values: SPOT, SPOT_FIRST, ONDEMAND.")
+        public SchedConfig.ProvisioningModelEnum provisioningModel;
+
+        @Option(names = {"--sched-machine-types"}, description = "Azure VM sizes for compute nodes managed by the Seqera scheduler. Comma-separated list (e.g., Standard_D4s_v3,Standard_E4s_v3). Leave empty to let the scheduler select the most cost-effective sizes.", split = ",")
+        public List<String> machineTypes;
     }
 
     public static class AdvancedOptions {
@@ -102,6 +139,9 @@ public class AzCloudPlatform extends AbstractPlatform<AzCloudConfig> {
 
         @Option(names = {"--network-id"}, description = "Azure virtual network resource ID. Defines the network where VMs will be deployed for network isolation and connectivity.")
         public String networkId;
+
+        @Option(names = {"--subnets"}, description = "Subnet names within the virtual network for VM placement. Comma-separated list scoping where VMs are launched inside the network specified by --network-id.", split = ",")
+        public List<String> subnets;
 
         @Option(names = {"--subscription-id"}, description = "Azure subscription ID where resources will be created. Used to specify the billing and access control boundary.")
         public String subscriptionId;

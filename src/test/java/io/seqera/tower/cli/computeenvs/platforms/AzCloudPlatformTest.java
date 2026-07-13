@@ -131,6 +131,7 @@ public class AzCloudPlatformTest extends BaseCmdTest {
                                             "waveEnabled": true,
                                             "subscriptionId": "12345678-1234-1234-1234-123456789012",
                                             "networkId": "/subscriptions/.../virtualNetworks/my-vnet",
+                                            "subnets": ["subnet-a", "subnet-b"],
                                             "managedIdentityId": "/subscriptions/.../userAssignedIdentities/my-identity",
                                             "managedIdentityClientId": "87654321-4321-4321-4321-210987654321",
                                             "logWorkspaceId": "log-workspace-id",
@@ -158,6 +159,7 @@ public class AzCloudPlatformTest extends BaseCmdTest {
                 "--instance-type", "Standard_D4s_v3",
                 "--subscription-id", "12345678-1234-1234-1234-123456789012",
                 "--network-id", "/subscriptions/.../virtualNetworks/my-vnet",
+                "--subnets", "subnet-a,subnet-b",
                 "--managed-identity-id", "/subscriptions/.../userAssignedIdentities/my-identity",
                 "--managed-identity-client-id", "87654321-4321-4321-4321-210987654321",
                 "--log-workspace-id", "log-workspace-id",
@@ -168,6 +170,74 @@ public class AzCloudPlatformTest extends BaseCmdTest {
 
         // then
         var expected = new ComputeEnvAdded("azure-cloud", "isnEDBLvHDAIteOEF44ow", "my-azure-cloud-advanced", null, USER_WORKSPACE_NAME);
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        assertEquals(expected.toString(), out.stdOut);
+    }
+
+    @Test
+    void testAddWithScheduler(MockServerClient mock) throws IOException {
+        mock.reset();
+
+        // given
+        mock.when(
+                request()
+                        .withMethod("GET")
+                        .withPath("/credentials")
+                        .withQueryStringParameter("platformId", "azure-cloud"),
+                exactly(1)
+        ).respond(
+                response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("{\"credentials\":[{\"id\":\"6XfOhoztUq6de3Dw3X9LSb\",\"name\":\"azure\",\"description\":null,\"discriminator\":\"azure\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-08T18:20:46Z\",\"dateCreated\":\"2021-09-08T12:57:04Z\",\"lastUpdated\":\"2021-09-08T12:57:04Z\"}]}")
+        );
+
+        mock.when(
+                request()
+                        .withMethod("POST")
+                        .withPath("/compute-envs")
+                        .withBody(json("""
+                                {
+                                    "computeEnv": {
+                                        "name": "my-azure-cloud-sched",
+                                        "platform": "azure-cloud",
+                                        "config": {
+                                            "workDir": "az://my-container",
+                                            "region": "eastus",
+                                            "resourceGroup": "my-resource-group",
+                                            "fusion2Enabled": true,
+                                            "waveEnabled": true,
+                                            "schedEnabled": true,
+                                            "schedConfig": {
+                                                "provisioningModel": "spot",
+                                                "machineTypes": ["Standard_D4s_v3", "Standard_E4s_v3"]
+                                            }
+                                        },
+                                        "credentialsId": "6XfOhoztUq6de3Dw3X9LSb"
+                                    }
+                                }""")),
+                exactly(1)
+        ).respond(
+                response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}")
+        );
+
+        // when
+        ExecOut out = exec(mock, "compute-envs", "add", "azure-cloud",
+                "-n", "my-azure-cloud-sched",
+                "--work-dir", "az://my-container",
+                "-r", "eastus",
+                "--resource-group", "my-resource-group",
+                "--sched-enabled",
+                "--provisioning-model", "SPOT",
+                "--sched-machine-types", "Standard_D4s_v3,Standard_E4s_v3"
+        );
+
+        // then
+        var expected = new ComputeEnvAdded("azure-cloud", "isnEDBLvHDAIteOEF44ow", "my-azure-cloud-sched", null, USER_WORKSPACE_NAME);
         assertEquals("", out.stdErr);
         assertEquals(0, out.exitCode);
         assertEquals(expected.toString(), out.stdOut);
