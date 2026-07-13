@@ -32,6 +32,7 @@ import io.seqera.tower.cli.responses.computeenvs.ComputeEnvDeleted;
 import io.seqera.tower.cli.responses.computeenvs.ComputeEnvExport;
 import io.seqera.tower.cli.responses.computeenvs.ComputeEnvList;
 import io.seqera.tower.cli.responses.computeenvs.ComputeEnvUpdated;
+import io.seqera.tower.cli.responses.computeenvs.ComputeEnvValidated;
 import io.seqera.tower.cli.responses.computeenvs.ComputeEnvView;
 import io.seqera.tower.cli.responses.computeenvs.ComputeEnvsPrimaryGet;
 import io.seqera.tower.cli.responses.computeenvs.ComputeEnvsPrimarySet;
@@ -760,5 +761,51 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
         ExecOut out = exec(mock, "compute-envs", "delete", "-i", "vYOK4vn7spw7bHHWBDXZ2", "--wait");
 
         assertEquals(1, out.exitCode);
+    }
+
+    @Test
+    void testValidateAvailable(MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/isnEDBLvHDAIteOEF44ow"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnv\":{\"id\":\"isnEDBLvHDAIteOEF44ow\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"INVALID\"}}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/compute-envs/isnEDBLvHDAIteOEF44ow/validate"), exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+                        .withBody("{\"status\":\"AVAILABLE\",\"transientError\":false}")
+                        .withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "compute-envs", "validate", "-i", "isnEDBLvHDAIteOEF44ow");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        assertEquals(new ComputeEnvValidated("isnEDBLvHDAIteOEF44ow", "demo", USER_WORKSPACE_NAME, ComputeEnvStatus.AVAILABLE, false, null).toString(), out.stdOut);
+    }
+
+    @Test
+    void testValidateInvalid(MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/isnEDBLvHDAIteOEF44ow"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnv\":{\"id\":\"isnEDBLvHDAIteOEF44ow\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"INVALID\"}}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/compute-envs/isnEDBLvHDAIteOEF44ow/validate"), exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+                        .withBody("{\"status\":\"INVALID\",\"transientError\":false,\"message\":\"Work directory not accessible\"}")
+                        .withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "compute-envs", "validate", "-i", "isnEDBLvHDAIteOEF44ow");
+
+        assertEquals("", out.stdErr);
+        assertEquals(1, out.exitCode);
+        assertEquals(new ComputeEnvValidated("isnEDBLvHDAIteOEF44ow", "demo", USER_WORKSPACE_NAME, ComputeEnvStatus.INVALID, false, "Work directory not accessible").toString(), out.stdOut);
     }
 }
