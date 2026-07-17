@@ -22,6 +22,7 @@ import io.seqera.tower.model.DataLinkDto;
 import io.seqera.tower.model.DataStudioConfiguration;
 import io.seqera.tower.model.DataStudioDto;
 import io.seqera.tower.model.DataStudioStatusInfo;
+import io.seqera.tower.model.StudioSshDetailsDto;
 import io.seqera.tower.model.UserInfo;
 
 import java.io.PrintWriter;
@@ -66,6 +67,23 @@ public class StudiosView extends Response {
         table.addRow("CPU allocated",  config == null ? "-" : String.valueOf(config.getCpu()));
         table.addRow("Memory allocated", config == null ? "-" : String.valueOf(config.getMemory()));
         table.addRow("Build reports", studio.getWaveBuildUrl() == null ? "NA" : studio.getWaveBuildUrl());
+        table.addRow("Private", studio.getIsPrivate() == null ? "NA" : String.valueOf(studio.getIsPrivate()));
+        table.addRow("Lifespan (hours)", studio.getEffectiveLifespanHours() == null ? "Unlimited" : String.valueOf(studio.getEffectiveLifespanHours()));
+        table.addRow("SSH enabled", config == null || config.getSshEnabled() == null ? "false" : String.valueOf(config.getSshEnabled()));
+
+        StudioSshDetailsDto sshDetails = studio.getSshDetails();
+        if (sshDetails != null) {
+            table.addRow("SSH host", sshDetails.getHost());
+            table.addRow("SSH port", sshDetails.getPort() == null ? "NA" : String.valueOf(sshDetails.getPort()));
+            table.addRow("SSH command", sshDetails.getCommand());
+        }
+
+        if (config != null && config.getEnvironment() != null && !config.getEnvironment().isEmpty()) {
+            String envVars = config.getEnvironment().entrySet().stream()
+                    .map(e -> String.format("%s=%s", e.getKey(), e.getValue()))
+                    .collect(java.util.stream.Collectors.joining(", "));
+            table.addRow("Environment variables", envVars);
+        }
 
         table.print();
         if (config != null && config.getCondaEnvironment() != null && !config.getCondaEnvironment().isEmpty()) {

@@ -20,7 +20,7 @@ import picocli.CommandLine;
 
 public class StudioTemplateOptions {
 
-    @CommandLine.ArgGroup(multiplicity = "1")
+    @CommandLine.ArgGroup(multiplicity = "0..1")
     public StudioTemplate template;
 
     public static class StudioTemplate {
@@ -32,6 +32,9 @@ public class StudioTemplateOptions {
     }
 
     public String getTemplate() {
+        if (template == null) {
+            return null;
+        }
         return template.standardTemplate != null ? template.standardTemplate : template.customTemplate;
     }
 }

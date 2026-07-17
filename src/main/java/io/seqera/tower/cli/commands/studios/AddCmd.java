@@ -67,11 +67,20 @@ public class AddCmd extends AbstractStudiosCmd{
     @CommandLine.Mixin
     public StudioConfigurationOptions studioConfigOptions;
 
+    @CommandLine.Mixin
+    public StudioRemoteConfigOptions remoteConfigOptions;
+
     @CommandLine.Option(names = {"-a", "--auto-start"}, description = "Create studio and start it immediately (default: false)", defaultValue = "false")
     public Boolean autoStart;
 
     @CommandLine.Option(names = {"--private"}, description = "Create a private studio that only you can access or manage (default: false)", defaultValue = "false")
     public Boolean isPrivate;
+
+    @CommandLine.Option(names = {"--spot"}, description = "Launch the studio on spot instances (default: provider/compute environment default).")
+    public Boolean spot;
+
+    @CommandLine.Option(names = {"--ssh"}, description = "Enable SSH connectivity to the studio (default: false).")
+    public Boolean ssh;
 
     @CommandLine.Option(names = {"--labels"}, description = "Comma-separated list of labels", split = ",", converter = Label.StudioResourceLabelsConverter.class)
     public List<Label> labels;
@@ -83,7 +92,7 @@ public class AddCmd extends AbstractStudiosCmd{
     protected Response exec() throws ApiException {
         Long wspId = workspaceId(workspace.workspace);
 
-        templateValidation(templateOptions, condaEnv, wspId);
+        templateValidation(templateOptions, remoteConfigOptions, condaEnv, wspId);
         DataStudioCreateRequest request = prepareRequest(wspId);
         DataStudioCreateResponse response = studiosApi().createDataStudio(request, wspId, autoStart);
         DataStudioDto studioDto = response.getStudio();
@@ -91,9 +100,16 @@ public class AddCmd extends AbstractStudiosCmd{
         return new StudiosCreated(studioDto.getSessionId(), wspId, workspaceRef(wspId), baseWorkspaceUrl(wspId), autoStart);
     }
 
-    private void templateValidation(StudioTemplateOptions templateOptions, Path condaEnv, Long wspId) throws ApiException {
-        if (templateOptions.template.standardTemplate != null) {
-            checkIfTemplateIsAvailable(templateOptions.template.standardTemplate, wspId);
+    private void templateValidation(StudioTemplateOptions templateOptions, StudioRemoteConfigOptions remoteConfigOptions, Path condaEnv, Long wspId) throws ApiException {
+        String standardTemplate = templateOptions.template == null ? null : templateOptions.template.standardTemplate;
+
+        // A template is mandatory unless a Git repository is provided, since the remote repository may define it.
+        if (templateOptions.getTemplate() == null && remoteConfigOptions.isEmpty()) {
+            throw new TowerException("A studio template is required: provide -t/--template or -ct/--custom-template, or a Git repository via --repository");
+        }
+
+        if (standardTemplate != null) {
+            checkIfTemplateIsAvailable(standardTemplate, wspId);
         } else if (condaEnv != null) {
             throw new StudiosCustomTemplateWithCondaException();
         }
@@ -115,6 +131,15 @@ public class AddCmd extends AbstractStudiosCmd{
         if (description != null && !description.isEmpty()) {request.description(description);}
         request.setLabelIds(getLabelIds(labels, wspId));
         request.setIsPrivate(isPrivate);
+        if (spot != null) {
+            request.setSpot(spot);
+        }
+        if (remoteConfigOptions.revision != null && remoteConfigOptions.isEmpty()) {
+            throw new TowerException("--revision requires --repository to be set");
+        }
+        if (!remoteConfigOptions.isEmpty()) {
+            request.setRemoteConfig(remoteConfigOptions.toRemoteConfiguration());
+        }
         request.setDataStudioToolUrl(templateOptions.getTemplate());
         ComputeEnvResponseDto ceResponse = computeEnvByRef(wspId, computeEnv);
         request.setComputeEnvId(ceResponse.getId());
@@ -130,6 +155,9 @@ public class AddCmd extends AbstractStudiosCmd{
 
 
         DataStudioConfiguration newConfig = studioConfigurationFrom(workspaceId(workspace.workspace), studioConfigOptions, condaEnvString);
+        if (ssh != null) {
+            newConfig.setSshEnabled(ssh);
+        }
         request.setConfiguration(setDefaults(newConfig));
         return request;
     }

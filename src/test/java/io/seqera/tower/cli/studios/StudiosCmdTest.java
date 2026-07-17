@@ -53,6 +53,7 @@ import org.mockserver.verify.VerificationTimes;
 
 import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
@@ -2229,6 +2230,332 @@ public class StudiosCmdTest extends BaseCmdTest {
 
         assertOutput(format, out, new StudioUpdated("3e8370e7", "3e8370e7", 75887156211589L,
                 "[organization1 / workspace1]"));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAddWithSpotAndSsh(OutputType format, MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/studios/templates")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("max", "20"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_templates_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs")
+                        .withQueryStringParameter("status", "AVAILABLE")
+                        .withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("POST").withPath("/studios")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withBody(json("""
+                           {
+                             "spot": true,
+                             "configuration": {
+                               "sshEnabled": true
+                             }
+                           }
+                           """))
+                , exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_created_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t", "cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot", "-c", "demo", "--spot", "--ssh");
+
+        assertOutput(format, out, new StudiosCreated("3e8370e7", 75887156211589L, "[organization1 / workspace1]",
+                "http://localhost:" + mock.getPort() + "/orgs/organization1/workspaces/workspace1", false));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAddWithRepository(OutputType format, MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/studios/templates")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("max", "20"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_templates_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs")
+                        .withQueryStringParameter("status", "AVAILABLE")
+                        .withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("POST").withPath("/studios")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withBody(json("""
+                           {
+                             "remoteConfig": {
+                               "repository": "https://github.com/owner/repo",
+                               "revision": "main"
+                             }
+                           }
+                           """))
+                , exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_created_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t", "cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot", "-c", "demo", "--repository", "https://github.com/owner/repo", "--revision", "main");
+
+        assertOutput(format, out, new StudiosCreated("3e8370e7", 75887156211589L, "[organization1 / workspace1]",
+                "http://localhost:" + mock.getPort() + "/orgs/organization1/workspaces/workspace1", false));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testUpdateWithComputeEnv(OutputType format, MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/studios/3e8370e7").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_view_response_studio_stopped")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs")
+                        .withQueryStringParameter("status", "AVAILABLE")
+                        .withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("PUT").withPath("/studios/3e8370e7").withQueryStringParameter("workspaceId", "75887156211589").withBody(json("""
+                           {
+                             "computeEnvId": "vYOK4vn7spw7bHHWBDXZ2"
+                           }
+                           """))
+                , exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_update_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "update", "-w", "75887156211589", "-i", "3e8370e7", "--compute-env", "demo");
+
+        assertOutput(format, out, new StudioUpdated("3e8370e7", "3e8370e7", 75887156211589L,
+                "[organization1 / workspace1]"));
+    }
+
+    @Test
+    void testUpdateWithIncompatibleComputeEnvListsCompatibleOnes(MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/studios/3e8370e7").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_view_response_studio_stopped")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs")
+                        .withQueryStringParameter("status", "AVAILABLE")
+                        .withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        // The update is rejected because the target CE is not compatible.
+        mock.when(
+                request().withMethod("PUT").withPath("/studios/3e8370e7").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(400).withBody("{\"message\":\"Compute environment 'vYOK4vn7spw7bHHWBDXZ2' is not compatible with the Studio's current compute environment\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+        // The CLI then queries the compatible CEs to suggest valid options.
+        mock.when(
+                request().withMethod("GET").withPath("/studios/3e8370e7/compatible-ce").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"ce-compatible-123\",\"name\":\"compatible-ce\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\"}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "studios", "update", "-w", "75887156211589", "-i", "3e8370e7", "--compute-env", "demo");
+
+        assertEquals(1, out.exitCode);
+        assertTrue(out.stdErr.contains("not compatible"), out.stdErr);
+        assertTrue(out.stdErr.contains("compatible-ce"), out.stdErr);
+        assertTrue(out.stdErr.contains("ce-compatible-123"), out.stdErr);
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAddWithEnvironmentVariables(OutputType format, MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/studios/templates")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("max", "20"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_templates_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs")
+                        .withQueryStringParameter("status", "AVAILABLE")
+                        .withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("POST").withPath("/studios")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withBody(json("""
+                           {
+                             "configuration": {
+                               "environment": {
+                                 "FOO": "bar",
+                                 "BAZ": "qux"
+                               }
+                             }
+                           }
+                           """))
+                , exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_created_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t", "cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot", "-c", "demo", "-e", "FOO=bar", "-e", "BAZ=qux");
+
+        assertOutput(format, out, new StudiosCreated("3e8370e7", 75887156211589L, "[organization1 / workspace1]",
+                "http://localhost:" + mock.getPort() + "/orgs/organization1/workspaces/workspace1", false));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAddWithUrlAndNoTemplate(OutputType format, MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs")
+                        .withQueryStringParameter("status", "AVAILABLE")
+                        .withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("POST").withPath("/studios")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withBody(json("""
+                           {
+                             "remoteConfig": {
+                               "repository": "https://github.com/owner/repo"
+                             }
+                           }
+                           """))
+                , exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_created_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-c", "demo", "--repository", "https://github.com/owner/repo");
+
+        assertOutput(format, out, new StudiosCreated("3e8370e7", 75887156211589L, "[organization1 / workspace1]",
+                "http://localhost:" + mock.getPort() + "/orgs/organization1/workspaces/workspace1", false));
+    }
+
+    @Test
+    void testAddWithoutTemplateOrUrlFails(MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-c", "demo");
+
+        assertEquals(1, out.exitCode);
+        assertTrue(out.stdErr.contains("A studio template is required"), out.stdErr);
     }
 
 }
