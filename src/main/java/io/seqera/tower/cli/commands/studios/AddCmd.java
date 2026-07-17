@@ -105,7 +105,7 @@ public class AddCmd extends AbstractStudiosCmd{
 
         // A template is mandatory unless a Git repository is provided, since the remote repository may define it.
         if (templateOptions.getTemplate() == null && remoteConfigOptions.isEmpty()) {
-            throw new TowerException("A studio template is required: provide -t/--template or -ct/--custom-template, or a Git repository via -u/--url");
+            throw new TowerException("A studio template is required: provide -t/--template or -ct/--custom-template, or a Git repository via --repository");
         }
 
         if (standardTemplate != null) {
@@ -135,7 +135,7 @@ public class AddCmd extends AbstractStudiosCmd{
             request.setSpot(spot);
         }
         if (remoteConfigOptions.revision != null && remoteConfigOptions.isEmpty()) {
-            throw new TowerException("--revision requires --url to be set");
+            throw new TowerException("--revision requires --repository to be set");
         }
         if (!remoteConfigOptions.isEmpty()) {
             request.setRemoteConfig(remoteConfigOptions.toRemoteConfiguration());

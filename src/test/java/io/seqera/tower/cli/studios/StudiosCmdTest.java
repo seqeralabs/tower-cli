@@ -2334,7 +2334,7 @@ public class StudiosCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("studios/studios_created_response")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t", "cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot", "-c", "demo", "--url", "https://github.com/owner/repo", "--revision", "main");
+        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t", "cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot", "-c", "demo", "--repository", "https://github.com/owner/repo", "--revision", "main");
 
         assertOutput(format, out, new StudiosCreated("3e8370e7", 75887156211589L, "[organization1 / workspace1]",
                 "http://localhost:" + mock.getPort() + "/orgs/organization1/workspaces/workspace1", false));
@@ -2533,7 +2533,7 @@ public class StudiosCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("studios/studios_created_response")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-c", "demo", "--url", "https://github.com/owner/repo");
+        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-c", "demo", "--repository", "https://github.com/owner/repo");
 
         assertOutput(format, out, new StudiosCreated("3e8370e7", 75887156211589L, "[organization1 / workspace1]",
                 "http://localhost:" + mock.getPort() + "/orgs/organization1/workspaces/workspace1", false));

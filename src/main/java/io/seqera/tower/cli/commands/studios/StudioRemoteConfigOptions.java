@@ -21,14 +21,14 @@ import picocli.CommandLine;
 
 public class StudioRemoteConfigOptions {
 
-    @CommandLine.Option(names = {"-u", "--url"}, description = "Git repository URL to import studio configuration from.")
-    public String url;
+    @CommandLine.Option(names = {"--repository"}, description = "Git repository URL to import studio configuration from.")
+    public String repository;
 
-    @CommandLine.Option(names = {"--revision"}, description = "Optional branch, tag or commit of the Git repository to check out. Requires --url.")
+    @CommandLine.Option(names = {"--revision"}, description = "Optional branch, tag or commit of the Git repository to check out. Requires --repository.")
     public String revision;
 
     public boolean isEmpty() {
-        return url == null || url.isEmpty();
+        return repository == null || repository.isEmpty();
     }
 
     public StudioRemoteConfiguration toRemoteConfiguration() {
@@ -36,7 +36,7 @@ public class StudioRemoteConfigOptions {
             return null;
         }
         StudioRemoteConfiguration remoteConfig = new StudioRemoteConfiguration();
-        remoteConfig.setRepository(url);
+        remoteConfig.setRepository(repository);
         if (revision != null && !revision.isEmpty()) {
             remoteConfig.setRevision(revision);
         }
