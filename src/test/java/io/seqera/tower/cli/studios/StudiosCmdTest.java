@@ -156,6 +156,116 @@ public class StudiosCmdTest extends BaseCmdTest {
                 }""", DataStudioDto.class), "[organization1 / workspace1]" ));
     }
 
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testViewByName(OutputType format, MockServerClient mock) throws JsonProcessingException {
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // the name is resolved to a session id via the list endpoint...
+        mock.when(
+                request().withMethod("GET").withPath("/studios").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_list_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // ...then the full detail (including allowedUsers) is fetched by that id, since the list DTO is partial
+        mock.when(
+                request().withMethod("GET").withPath("/studios/3e8370e7").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_view_response_with_allowed_users")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "view", "-w", "75887156211589", "-n", "studio-a66d");
+
+        assertOutput(format, out, new StudiosView(parseJson("""
+                {
+                  "sessionId": "3e8370e7",
+                  "workspaceId": 75887156211589,
+                  "user": {
+                    "id": 2345,
+                    "userName": "John Doe",
+                    "email": "john@seqera.io",
+                    "avatar": null
+                  },
+                  "allowedUsers": [
+                    {
+                      "id": 21,
+                      "userName": "nonowner",
+                      "email": "nonowner@seqera.io",
+                      "avatar": null
+                    }
+                  ],
+                  "name": "studio-a66d",
+                  "description": "my first studio",
+                  "studioUrl": "https://a3e8370e7.dev-tower.com",
+                  "computeEnv": {
+                    "id": "3xkkzYH2nbD3nZjrzKm0oR",
+                    "name": "ce1",
+                    "platform": "aws-batch",
+                    "region": "us-east-2"
+                  },
+                  "template": {
+                    "repository": "cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot",
+                    "icon": "vscode"
+                  },
+                  "configuration": {
+                    "gpu": 0,
+                    "cpu": 2,
+                    "memory": 8192,
+                    "mountData": [
+                      "v1-user-1ccf131810375d303bf0402dd8423433"
+                    ],
+                    "condaEnvironment":null
+                  },
+                  "dateCreated": "2024-12-19T06:49:24.893122+01:00",
+                  "lastUpdated": "2024-12-19T06:52:50.686822+01:00",
+                  "statusInfo": {
+                    "status": "running",
+                    "message": "",
+                    "lastUpdate": "2024-12-19T05:52:41.823Z"
+                  },
+                  "waveBuildUrl": null,
+                  "baseImage": "cr.seqera.io/public/data-studio-jupyter:4.2.5-snapshot",
+                  "isPrivate": true,
+                  "mountedDataLinks": [
+                    {
+                      "id": "v1-user-1ccf131810375d303bf0402dd8423433",
+                      "name": "aaa-my-bucket",
+                      "resourceRef": "s3://aaa-my-bucket",
+                      "type": "bucket",
+                      "provider": "aws",
+                      "region": "us-east-2"
+                    }
+                  ],
+                  "progress": [
+                    {
+                      "status": "succeeded",
+                      "message": "Provisioning compute resources",
+                      "warnings": null
+                    },
+                    {
+                      "status": "succeeded",
+                      "message": "Mounting checkpoints",
+                      "warnings": null
+                    }
+                  ]
+                }""", DataStudioDto.class), "[organization1 / workspace1]" ));
+
+        // proves the fetch-then-describe path: name resolved via list, full detail fetched by id
+        mock.verify(request().withMethod("GET").withPath("/studios").withQueryStringParameter("workspaceId", "75887156211589"), VerificationTimes.exactly(1));
+        mock.verify(request().withMethod("GET").withPath("/studios/3e8370e7").withQueryStringParameter("workspaceId", "75887156211589"), VerificationTimes.exactly(1));
+    }
+
     @Test
     void testViewForbidden(MockServerClient mock) {
         mock.when(

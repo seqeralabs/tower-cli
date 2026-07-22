@@ -46,19 +46,16 @@ public class AbstractStudiosCmd extends AbstractApiCmd {
     protected String getSessionId(StudioRefOptions studioRefOptions, Long wspId) throws ApiException {
         return studioRefOptions.studio.sessionId != null
                 ? studioRefOptions.studio.sessionId
-                : fetchStudio(studioRefOptions, wspId).getSessionId();
+                : getStudioByName(wspId, studioRefOptions.studio.studioName).getSessionId();
     }
 
     protected DataStudioDto fetchStudio(StudioRefOptions studioRefOptions, Long wspId) throws ApiException {
-        DataStudioDto studio;
-
         if (studioRefOptions.studio.sessionId != null) {
-            studio = getStudioById(wspId, studioRefOptions.studio.sessionId);
-        } else {
-            studio = getStudioByName(wspId, studioRefOptions.studio.studioName);
+            return getStudioById(wspId, studioRefOptions.studio.sessionId);
         }
 
-        return studio;
+        String sessionId = getStudioByName(wspId, studioRefOptions.studio.studioName).getSessionId();
+        return getStudioById(wspId, sessionId);
     }
 
     protected String getParentStudioSessionId(ParentStudioRefOptions parentStudioRefOptions, Long wspId) throws ApiException {
