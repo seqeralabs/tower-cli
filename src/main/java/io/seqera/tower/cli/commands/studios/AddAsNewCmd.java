@@ -66,6 +66,9 @@ public class AddAsNewCmd extends AbstractStudiosCmd{
     @CommandLine.Option(names = {"--private"}, description = "Create a private studio that only you can access or manage (default: false)", defaultValue = "false")
     public Boolean isPrivate;
 
+    @CommandLine.Option(names = {"--allow-user"}, description = "ID of a user, besides the creator, allowed to connect to and start this studio when it is private.")
+    public List<Long> allowedUserIds;
+
     @CommandLine.Option(names = {"--labels"}, description = "Comma-separated list of labels", split = ",", converter = Label.StudioResourceLabelsConverter.class)
     public List<Label> labels;
 
@@ -99,6 +102,7 @@ public class AddAsNewCmd extends AbstractStudiosCmd{
         }
         request.setLabelIds(getLabelIds(labels, wspId));
         request.setIsPrivate(isPrivate);
+        request.setAllowedUserIds(allowedUserIds);
         if (parentCheckpointId == null) {
             DataStudioListCheckpointsResponse response = studiosApi().listDataStudioCheckpoints(parentDataStudio.getSessionId(), parentDataStudio.getWorkspaceId(), null, 1, null);
             if (!response.getCheckpoints().isEmpty()) {
