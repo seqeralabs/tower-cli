@@ -82,8 +82,8 @@ public class AddCmd extends AbstractStudiosCmd{
     @CommandLine.Option(names = {"--ssh"}, description = "Enable SSH connectivity to the studio (default: false).")
     public Boolean ssh;
 
-    @CommandLine.Option(names = {"--allow-user"}, description = "User (numeric ID, username, or email), besides the creator, allowed to connect to and start this studio when it is private. Repeatable. The platform currently accepts only one additional user; extra users are rejected by the API.")
-    public List<String> allowedUserIds;
+    @CommandLine.Option(names = {"--allow-user"}, description = "User (numeric ID, username, or email), besides the creator, allowed to connect to and start this studio when it is private.")
+    public String allowedUser;
 
     @CommandLine.Option(names = {"--labels"}, description = "Comma-separated list of labels", split = ",", converter = Label.StudioResourceLabelsConverter.class)
     public List<Label> labels;
@@ -134,7 +134,7 @@ public class AddCmd extends AbstractStudiosCmd{
         if (description != null && !description.isEmpty()) {request.description(description);}
         request.setLabelIds(getLabelIds(labels, wspId));
         request.setIsPrivate(isPrivate);
-        request.setAllowedUserIds(resolveAllowedUserIds(allowedUserIds, wspId));
+        request.setAllowedUserIds(resolveAllowedUserIds(allowedUser, wspId));
         if (spot != null) {
             request.setSpot(spot);
         }

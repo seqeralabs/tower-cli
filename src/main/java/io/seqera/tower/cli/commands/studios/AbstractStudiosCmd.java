@@ -16,7 +16,6 @@
 
 package io.seqera.tower.cli.commands.studios;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -97,15 +96,13 @@ public class AbstractStudiosCmd extends AbstractApiCmd {
      * Resolves each {@code --allow-user} value (a numeric user ID, username, or email) to a numeric
      * user ID. Returns {@code null} when nothing was provided, so the allow list is left untouched.
      */
-    protected List<Long> resolveAllowedUserIds(List<String> allowUsers, Long wspId) throws ApiException {
-        if (allowUsers == null) {
+    protected List<Long> resolveAllowedUserIds(String allowUser, Long wspId) throws ApiException {
+        if (allowUser == null) {
             return null;
         }
-        List<Long> userIds = new ArrayList<>(allowUsers.size());
-        for (String value : allowUsers) {
-            userIds.add(resolveUserId(value, wspId));
-        }
-        return userIds;
+        // The platform currently permits a single additional user, so the CLI exposes one value; the
+        // API field is a list for forward-compatibility, hence the resolved id is wrapped in a list.
+        return List.of(resolveUserId(allowUser, wspId));
     }
 
     private Long resolveUserId(String userToAllow, Long wspId) throws ApiException {

@@ -870,6 +870,54 @@ public class StudiosCmdTest extends BaseCmdTest {
 
     @ParameterizedTest
     @EnumSource(OutputType.class)
+    void testStartWithAllowedUser(OutputType format, MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/studios/3e8370e7").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_view_response_studio_stopped")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // A username override is resolved to a user id via the organization members.
+        mock.when(
+                request().withMethod("GET").withPath("/orgs/27736513644467/members"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"members\":[{\"memberId\":1,\"userId\":7,\"userName\":\"someuser\",\"email\":\"someuser@seqera.io\",\"role\":\"member\"}],\"totalSize\":1}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // Assert the resolved id (7) is sent on the start request.
+        mock.when(
+                request().withMethod("PUT").withPath("/studios/3e8370e7/start").withQueryStringParameter("workspaceId", "75887156211589")
+                        .withBody(json("""
+                           {
+                             "allowedUserIds": [7]
+                           }
+                           """, MatchType.ONLY_MATCHING_FIELDS))
+                , exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_start_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "start", "-w", "75887156211589", "-i", "3e8370e7", "--allow-user", "someuser");
+
+        assertOutput(format, out, new StudioStartSubmitted("3e8370e7", "3e8370e7",75887156211589L,
+                "[organization1 / workspace1]",  "http://localhost:"+mock.getPort()+"/orgs/organization1/workspaces/workspace1", true));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
     void testStartByName(OutputType format, MockServerClient mock) {
 
         mock.when(
