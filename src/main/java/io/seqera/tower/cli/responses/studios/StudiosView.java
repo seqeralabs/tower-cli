@@ -58,6 +58,8 @@ public class StudiosView extends Response {
         table.addRow("Description", formatDescription(studio.getDescription(), 100));
         table.addRow("Created on", formatTime(studio.getDateCreated()));
         table.addRow("Created by", studioUser == null ? "NA" : String.format("%s | %s",studioUser.getUserName(), studioUser.getEmail()));
+        table.addRow("Allowed users", studio.getAllowedUsers() == null || studio.getAllowedUsers().isEmpty() ? "NA" : studio.getAllowedUsers()
+                .stream().map(u -> String.format("%s | %s", u.getUserName(), u.getEmail())).collect(java.util.stream.Collectors.joining(", ")));
         table.addRow("Template", studio.getTemplate() == null ? "NA" : studio.getTemplate().getRepository());
         table.addRow("Mounted data", studio.getMountedDataLinks() == null ? "NA" : studio.getMountedDataLinks()
                 .stream().map(DataLinkDto::getResourceRef).collect(java.util.stream.Collectors.joining(", ")));

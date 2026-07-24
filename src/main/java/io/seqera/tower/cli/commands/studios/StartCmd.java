@@ -64,6 +64,9 @@ public class StartCmd extends AbstractStudiosCmd {
     @CommandLine.Option(names = {"--ssh"}, description = "Optional override to enable SSH connectivity to the studio.")
     public Boolean ssh;
 
+    @CommandLine.Option(names = {"--allow-user"}, description = "Override the user (numeric ID, username, or email), besides the creator, allowed to connect to and start this studio when it is private. Omit to leave the allow list unchanged. Only the studio creator may change it.")
+    public String allowedUser;
+
     @Override
     protected Response exec() throws ApiException {
         Long wspId = workspaceId(workspace.workspace);
@@ -115,6 +118,7 @@ public class StartCmd extends AbstractStudiosCmd {
         request.setConfiguration(newConfig);
         request.setDescription(appliedDescription);
         request.setLabelIds(getLabelIds(labels, studioDto.getWorkspaceId()));
+        request.setAllowedUserIds(resolveAllowedUserIds(allowedUser, studioDto.getWorkspaceId()));
         if (spot != null) {
             request.setSpot(spot);
         }

@@ -48,6 +48,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.mockserver.client.MockServerClient;
+import org.mockserver.matchers.MatchType;
 import org.mockserver.model.MediaType;
 import org.mockserver.verify.VerificationTimes;
 
@@ -153,6 +154,116 @@ public class StudiosCmdTest extends BaseCmdTest {
                     }
                   ]
                 }""", DataStudioDto.class), "[organization1 / workspace1]" ));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testViewByName(OutputType format, MockServerClient mock) throws JsonProcessingException {
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // the name is resolved to a session id via the list endpoint...
+        mock.when(
+                request().withMethod("GET").withPath("/studios").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_list_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // ...then the full detail (including allowedUsers) is fetched by that id, since the list DTO is partial
+        mock.when(
+                request().withMethod("GET").withPath("/studios/3e8370e7").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_view_response_with_allowed_users")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "view", "-w", "75887156211589", "-n", "studio-a66d");
+
+        assertOutput(format, out, new StudiosView(parseJson("""
+                {
+                  "sessionId": "3e8370e7",
+                  "workspaceId": 75887156211589,
+                  "user": {
+                    "id": 2345,
+                    "userName": "John Doe",
+                    "email": "john@seqera.io",
+                    "avatar": null
+                  },
+                  "allowedUsers": [
+                    {
+                      "id": 21,
+                      "userName": "nonowner",
+                      "email": "nonowner@seqera.io",
+                      "avatar": null
+                    }
+                  ],
+                  "name": "studio-a66d",
+                  "description": "my first studio",
+                  "studioUrl": "https://a3e8370e7.dev-tower.com",
+                  "computeEnv": {
+                    "id": "3xkkzYH2nbD3nZjrzKm0oR",
+                    "name": "ce1",
+                    "platform": "aws-batch",
+                    "region": "us-east-2"
+                  },
+                  "template": {
+                    "repository": "cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot",
+                    "icon": "vscode"
+                  },
+                  "configuration": {
+                    "gpu": 0,
+                    "cpu": 2,
+                    "memory": 8192,
+                    "mountData": [
+                      "v1-user-1ccf131810375d303bf0402dd8423433"
+                    ],
+                    "condaEnvironment":null
+                  },
+                  "dateCreated": "2024-12-19T06:49:24.893122+01:00",
+                  "lastUpdated": "2024-12-19T06:52:50.686822+01:00",
+                  "statusInfo": {
+                    "status": "running",
+                    "message": "",
+                    "lastUpdate": "2024-12-19T05:52:41.823Z"
+                  },
+                  "waveBuildUrl": null,
+                  "baseImage": "cr.seqera.io/public/data-studio-jupyter:4.2.5-snapshot",
+                  "isPrivate": true,
+                  "mountedDataLinks": [
+                    {
+                      "id": "v1-user-1ccf131810375d303bf0402dd8423433",
+                      "name": "aaa-my-bucket",
+                      "resourceRef": "s3://aaa-my-bucket",
+                      "type": "bucket",
+                      "provider": "aws",
+                      "region": "us-east-2"
+                    }
+                  ],
+                  "progress": [
+                    {
+                      "status": "succeeded",
+                      "message": "Provisioning compute resources",
+                      "warnings": null
+                    },
+                    {
+                      "status": "succeeded",
+                      "message": "Mounting checkpoints",
+                      "warnings": null
+                    }
+                  ]
+                }""", DataStudioDto.class), "[organization1 / workspace1]" ));
+
+        // proves the fetch-then-describe path: name resolved via list, full detail fetched by id
+        mock.verify(request().withMethod("GET").withPath("/studios").withQueryStringParameter("workspaceId", "75887156211589"), VerificationTimes.exactly(1));
+        mock.verify(request().withMethod("GET").withPath("/studios/3e8370e7").withQueryStringParameter("workspaceId", "75887156211589"), VerificationTimes.exactly(1));
     }
 
     @Test
@@ -759,6 +870,54 @@ public class StudiosCmdTest extends BaseCmdTest {
 
     @ParameterizedTest
     @EnumSource(OutputType.class)
+    void testStartWithAllowedUser(OutputType format, MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/studios/3e8370e7").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_view_response_studio_stopped")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // A username override is resolved to a user id via the organization members.
+        mock.when(
+                request().withMethod("GET").withPath("/orgs/27736513644467/members"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"members\":[{\"memberId\":1,\"userId\":7,\"userName\":\"someuser\",\"email\":\"someuser@seqera.io\",\"role\":\"member\"}],\"totalSize\":1}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // Assert the resolved id (7) is sent on the start request.
+        mock.when(
+                request().withMethod("PUT").withPath("/studios/3e8370e7/start").withQueryStringParameter("workspaceId", "75887156211589")
+                        .withBody(json("""
+                           {
+                             "allowedUserIds": [7]
+                           }
+                           """, MatchType.ONLY_MATCHING_FIELDS))
+                , exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_start_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "start", "-w", "75887156211589", "-i", "3e8370e7", "--allow-user", "someuser");
+
+        assertOutput(format, out, new StudioStartSubmitted("3e8370e7", "3e8370e7",75887156211589L,
+                "[organization1 / workspace1]",  "http://localhost:"+mock.getPort()+"/orgs/organization1/workspaces/workspace1", true));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
     void testStartByName(OutputType format, MockServerClient mock) {
 
         mock.when(
@@ -1305,6 +1464,140 @@ public class StudiosCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t" ,"cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot", "-c", "demo",
         "--cpu", "3","--memory", "100", "--lifespan", "24", "--description", "Some description", "--private", "--labels", "owner=jack");
+
+        assertOutput(format, out, new StudiosCreated("3e8370e7",75887156211589L, "[organization1 / workspace1]",
+                "http://localhost:"+mock.getPort()+"/orgs/organization1/workspaces/workspace1", false));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAddPrivateWithAllowedUser(OutputType format, MockServerClient mock){
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/studios/templates")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("max", "20"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_templates_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs")
+                        .withQueryStringParameter("status", "AVAILABLE")
+                        .withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // Assert only the allow-list fields are sent; the rest of the create body is covered by other tests.
+        mock.when(
+                request().withMethod("POST").withPath("/studios")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("autostart", "false")
+                        .withBody(json("""
+                           {
+                             "isPrivate": true,
+                             "allowedUserIds": [21]
+                           }
+                           """, MatchType.ONLY_MATCHING_FIELDS))
+                , exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_created_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t" ,"cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot", "-c", "demo",
+        "--private", "--allow-user", "21");
+
+        assertOutput(format, out, new StudiosCreated("3e8370e7",75887156211589L, "[organization1 / workspace1]",
+                "http://localhost:"+mock.getPort()+"/orgs/organization1/workspaces/workspace1", false));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAddPrivateWithAllowedUserByEmail(OutputType format, MockServerClient mock){
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/studios/templates")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("max", "20"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_templates_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs")
+                        .withQueryStringParameter("status", "AVAILABLE")
+                        .withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // Resolution: the email is not a full member, so the resolver falls back to collaborators,
+        // where it finds the user (userId 21) — mirroring how a workspace collaborator is looked up.
+        mock.when(
+                request().withMethod("GET").withPath("/orgs/27736513644467/members"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"members\":[],\"totalSize\":0}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/orgs/27736513644467/collaborators"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"members\":[{\"memberId\":255080245994226,\"userId\":21,\"userName\":\"nonowner\",\"email\":\"nonowner@seqera.io\",\"role\":\"collaborator\"}],\"totalSize\":1}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // The resolved user id (21) is what gets sent in the request.
+        mock.when(
+                request().withMethod("POST").withPath("/studios")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("autostart", "false")
+                        .withBody(json("""
+                           {
+                             "isPrivate": true,
+                             "allowedUserIds": [21]
+                           }
+                           """, MatchType.ONLY_MATCHING_FIELDS))
+                , exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_created_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t" ,"cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot", "-c", "demo",
+        "--private", "--allow-user", "nonowner@seqera.io");
 
         assertOutput(format, out, new StudiosCreated("3e8370e7",75887156211589L, "[organization1 / workspace1]",
                 "http://localhost:"+mock.getPort()+"/orgs/organization1/workspaces/workspace1", false));

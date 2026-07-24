@@ -26,6 +26,7 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.commands.data.links.DataLinkService;
 import io.seqera.tower.cli.commands.labels.Label;
+import io.seqera.tower.cli.exceptions.MemberNotFoundException;
 import io.seqera.tower.cli.exceptions.StudioNotFoundException;
 import io.seqera.tower.model.DataStudioConfiguration;
 import io.seqera.tower.cli.commands.enums.OutputType;
@@ -35,6 +36,8 @@ import io.seqera.tower.model.DataStudioStatus;
 import io.seqera.tower.model.DataStudioStatusInfo;
 import io.seqera.tower.model.DataStudioTemplate;
 import io.seqera.tower.model.DataStudioTemplatesListResponse;
+import io.seqera.tower.model.ListMembersResponse;
+import io.seqera.tower.model.MemberDbDto;
 
 import static io.seqera.tower.cli.utils.ResponseHelper.waitStatus;
 import static io.seqera.tower.model.DataStudioProgressStepStatus.ERRORED;
@@ -46,19 +49,16 @@ public class AbstractStudiosCmd extends AbstractApiCmd {
     protected String getSessionId(StudioRefOptions studioRefOptions, Long wspId) throws ApiException {
         return studioRefOptions.studio.sessionId != null
                 ? studioRefOptions.studio.sessionId
-                : fetchStudio(studioRefOptions, wspId).getSessionId();
+                : getStudioByName(wspId, studioRefOptions.studio.studioName).getSessionId();
     }
 
     protected DataStudioDto fetchStudio(StudioRefOptions studioRefOptions, Long wspId) throws ApiException {
-        DataStudioDto studio;
-
         if (studioRefOptions.studio.sessionId != null) {
-            studio = getStudioById(wspId, studioRefOptions.studio.sessionId);
-        } else {
-            studio = getStudioByName(wspId, studioRefOptions.studio.studioName);
+            return getStudioById(wspId, studioRefOptions.studio.sessionId);
         }
 
-        return studio;
+        String sessionId = getStudioByName(wspId, studioRefOptions.studio.studioName).getSessionId();
+        return getStudioById(wspId, sessionId);
     }
 
     protected String getParentStudioSessionId(ParentStudioRefOptions parentStudioRefOptions, Long wspId) throws ApiException {
@@ -90,6 +90,44 @@ public class AbstractStudiosCmd extends AbstractApiCmd {
 
     private DataStudioDto getStudioById(Long wspId, String sessionId) throws ApiException {
         return studiosApi().describeDataStudio(sessionId, wspId);
+    }
+
+    /**
+     * Resolves each {@code --allow-user} value (a numeric user ID, username, or email) to a numeric
+     * user ID. Returns {@code null} when nothing was provided, so the allow list is left untouched.
+     */
+    protected List<Long> resolveAllowedUserIds(String allowUser, Long wspId) throws ApiException {
+        if (allowUser == null) {
+            return null;
+        }
+        // The platform currently permits a single additional user, so the CLI exposes one value; the
+        // API field is a list for forward-compatibility, hence the resolved id is wrapped in a list.
+        return List.of(resolveUserId(allowUser, wspId));
+    }
+
+    private Long resolveUserId(String userToAllow, Long wspId) throws ApiException {
+        // A numeric value is treated as a user ID directly.
+        if (userToAllow != null && !userToAllow.isEmpty() && userToAllow.chars().allMatch(Character::isDigit)) {
+            return Long.parseLong(userToAllow);
+        }
+        // Resolve the username/email to a user ID. A workspace participant may be a full organization
+        // member or a collaborator (role=collaborator, which listOrganizationMembers excludes), so check
+        // both. The backend still enforces that the resolved user is a participant of the workspace.
+        Long organizationId = orgId(wspId);
+        MemberDbDto member = firstMember(orgsApi().listOrganizationMembers(organizationId, null, null, userToAllow));
+        if (member == null) {
+            member = firstMember(orgsApi().listOrganizationCollaborators(organizationId, null, null, userToAllow));
+        }
+        if (member == null || member.getUserId() == null) {
+            throw new MemberNotFoundException(organizationId, userToAllow);
+        }
+        return member.getUserId();
+    }
+
+    private static MemberDbDto firstMember(ListMembersResponse response) {
+        return response == null || response.getMembers() == null
+                ? null
+                : response.getMembers().stream().findFirst().orElse(null);
     }
 
     protected Integer onBeforeExit(int exitCode, String sessionId, Long workspaceId, DataStudioStatus targetStatus) {
