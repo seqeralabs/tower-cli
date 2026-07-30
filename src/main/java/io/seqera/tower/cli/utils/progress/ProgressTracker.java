@@ -34,6 +34,22 @@ public class ProgressTracker {
         this.totalBytes = totalBytes;
     }
 
+    /**
+     * Returns the current cumulative uploaded-bytes count, so a caller can roll back to it if an
+     * in-flight part fails and has to be retried (avoids double-counting the re-sent bytes).
+     */
+    public synchronized long snapshot() {
+        return uploadedBytes;
+    }
+
+    /**
+     * Restores the cumulative uploaded-bytes count to a previously taken {@link #snapshot()} value,
+     * used to discard the progress reported by a failed part before it is retried.
+     */
+    public synchronized void restore(long bytes) {
+        uploadedBytes = bytes;
+    }
+
     public synchronized void update(long count) {
         uploadedBytes += count;
         int percent = (int) ((uploadedBytes * 100) / totalBytes);

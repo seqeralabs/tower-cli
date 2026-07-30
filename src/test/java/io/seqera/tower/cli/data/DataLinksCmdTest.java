@@ -891,7 +891,229 @@ public class DataLinksCmdTest extends BaseCmdTest {
                                "}\n"))
                 , VerificationTimes.exactly(1));
 
-        assertEquals(errorMessage(out.app, new TowerRuntimeException("Failed to upload file: Failed to upload file: HTTP 404, Message: not found")), out.stdErr);
+        assertEquals(errorMessage(out.app, new TowerRuntimeException("Failed to upload file: Failed to upload part 1: HTTP 404, Message: not found")), out.stdErr);
+        assertEquals("", out.stdOut);
+        assertEquals(1, out.exitCode);
+
+        Files.deleteIfExists(testFile);
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = OutputType.class, names = {"json"})
+    void testUploadRefreshesUrlOnExpiredTokenAndSucceeds(OutputType format, MockServerClient mock) throws IOException {
+        // credentials fetch
+        mock.when(
+                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"57Ic6reczFn78H1DTaaXkp\",\"name\":\"aws\",\"description\":null,\"discriminator\":\"aws\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-09T07:20:53Z\",\"dateCreated\":\"2021-09-08T05:48:51Z\",\"lastUpdated\":\"2021-09-08T05:48:51Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // status check
+        mock.when(
+                request().withMethod("GET").withPath("/data-links").withQueryStringParameter("workspaceId", "75887156211589").withQueryStringParameter("offset", "0").withQueryStringParameter("max", "1"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("data/links/datalinks_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        // mock fetch data links list
+        mock.when(
+                request().withMethod("GET").withPath("/data-links").withQueryStringParameter("workspaceId", "75887156211589").withQueryStringParameter("search", "a-test-bucket-eend-us-east-1"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("data/links/datalinks_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        Path testFile = tempDir().resolve("test.txt");
+        Files.write(testFile, "test content".getBytes());
+
+        // Mock multipart upload request
+        mock.when(
+                request().withMethod("POST").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/upload").withQueryStringParameter("workspaceId", "75887156211589").withQueryStringParameter("credentialsId", "57Ic6reczFn78H1DTaaXkp"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\n    \"uploadId\": \"upload-123\",\n    \"uploadUrls\": [\"http://localhost:" + mock.getPort() + "/upload\"]\n}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // First PUT fails with an expired-token error
+        mock.when(
+                request().withMethod("PUT").withPath("/upload"), exactly(1)
+        ).respond(
+                response().withStatusCode(400).withBody("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Error><Code>ExpiredToken</Code><Message>The provided token has expired.</Message></Error>")
+        );
+
+        // Refresh endpoint returns a fresh URL for part 1
+        mock.when(
+                request().withMethod("POST").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/upload/refresh").withQueryStringParameter("workspaceId", "75887156211589").withQueryStringParameter("credentialsId", "57Ic6reczFn78H1DTaaXkp"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\n    \"uploadId\": \"upload-123\",\n    \"uploadUrls\": [{\"partNumber\": 1, \"url\": \"http://localhost:" + mock.getPort() + "/upload\"}]\n}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // Second PUT (after refresh) succeeds
+        mock.when(
+                request().withMethod("PUT").withPath("/upload"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withHeader(new Header("Etag", "etag-123"))
+        );
+
+        // Finish upload (success)
+        mock.when(request()
+                .withMethod("POST").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/upload/finish")
+                .withQueryStringParameter("workspaceId", "75887156211589")
+                .withQueryStringParameter("credentialsId", "57Ic6reczFn78H1DTaaXkp")
+                .withBody(json("{\n\"uploadId\":\"upload-123\",\n\"fileName\":\"test.txt\",\n\"tags\":[{\"partNumber\":1,\"eTag\":\"etag-123\"}],\n\"withError\":false\n}")), exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+        );
+
+        ExecOut out = exec(format, mock, "data-links", "upload", "-w", "75887156211589", "-n", "a-test-bucket-eend-us-east-1",
+                "-c", "57Ic6reczFn78H1DTaaXkp", testFile.toString());
+
+        // The refresh endpoint was invoked exactly once
+        mock.verify(request().withMethod("POST").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/upload/refresh"), VerificationTimes.exactly(1));
+
+        assertOutput(format, out, DataLinkFileTransferResult.uploaded(List.of(
+                new DataLinkFileTransferResult.SimplePathInfo(DataLinkItemType.FILE, testFile.toString(), 1)
+        )));
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+
+        Files.deleteIfExists(testFile);
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = OutputType.class, names = {"json"})
+    void testUploadRetriesOnTransientErrorAndSucceeds(OutputType format, MockServerClient mock) throws IOException {
+        // credentials fetch
+        mock.when(
+                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"57Ic6reczFn78H1DTaaXkp\",\"name\":\"aws\",\"description\":null,\"discriminator\":\"aws\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-09T07:20:53Z\",\"dateCreated\":\"2021-09-08T05:48:51Z\",\"lastUpdated\":\"2021-09-08T05:48:51Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // status check
+        mock.when(
+                request().withMethod("GET").withPath("/data-links").withQueryStringParameter("workspaceId", "75887156211589").withQueryStringParameter("offset", "0").withQueryStringParameter("max", "1"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("data/links/datalinks_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        // mock fetch data links list
+        mock.when(
+                request().withMethod("GET").withPath("/data-links").withQueryStringParameter("workspaceId", "75887156211589").withQueryStringParameter("search", "a-test-bucket-eend-us-east-1"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("data/links/datalinks_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        Path testFile = tempDir().resolve("test.txt");
+        Files.write(testFile, "test content".getBytes());
+
+        // Mock multipart upload request
+        mock.when(
+                request().withMethod("POST").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/upload").withQueryStringParameter("workspaceId", "75887156211589").withQueryStringParameter("credentialsId", "57Ic6reczFn78H1DTaaXkp"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\n    \"uploadId\": \"upload-123\",\n    \"uploadUrls\": [\"http://localhost:" + mock.getPort() + "/upload\"]\n}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // First PUT fails with a transient 503 (no provider error code -> classified transient by status)
+        mock.when(
+                request().withMethod("PUT").withPath("/upload"), exactly(1)
+        ).respond(
+                response().withStatusCode(503)
+        );
+
+        // Second PUT (retry of the same URL) succeeds
+        mock.when(
+                request().withMethod("PUT").withPath("/upload"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withHeader(new Header("Etag", "etag-123"))
+        );
+
+        // Finish upload (success)
+        mock.when(request()
+                .withMethod("POST").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/upload/finish")
+                .withQueryStringParameter("workspaceId", "75887156211589")
+                .withQueryStringParameter("credentialsId", "57Ic6reczFn78H1DTaaXkp")
+                .withBody(json("{\n\"uploadId\":\"upload-123\",\n\"fileName\":\"test.txt\",\n\"tags\":[{\"partNumber\":1,\"eTag\":\"etag-123\"}],\n\"withError\":false\n}")), exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+        );
+
+        ExecOut out = exec(format, mock, "data-links", "upload", "-w", "75887156211589", "-n", "a-test-bucket-eend-us-east-1",
+                "-c", "57Ic6reczFn78H1DTaaXkp", testFile.toString());
+
+        // The refresh endpoint must NOT be called for a transient error
+        mock.verify(request().withMethod("POST").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/upload/refresh"), VerificationTimes.exactly(0));
+
+        assertOutput(format, out, DataLinkFileTransferResult.uploaded(List.of(
+                new DataLinkFileTransferResult.SimplePathInfo(DataLinkItemType.FILE, testFile.toString(), 1)
+        )));
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+
+        Files.deleteIfExists(testFile);
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = OutputType.class, names = {"json"})
+    void testUploadFailsWithClearMessageWhenRefreshNotSupported(OutputType format, MockServerClient mock) throws IOException {
+        // credentials fetch
+        mock.when(
+                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"57Ic6reczFn78H1DTaaXkp\",\"name\":\"aws\",\"description\":null,\"discriminator\":\"aws\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-09T07:20:53Z\",\"dateCreated\":\"2021-09-08T05:48:51Z\",\"lastUpdated\":\"2021-09-08T05:48:51Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // status check
+        mock.when(
+                request().withMethod("GET").withPath("/data-links").withQueryStringParameter("workspaceId", "75887156211589").withQueryStringParameter("offset", "0").withQueryStringParameter("max", "1"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("data/links/datalinks_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        // mock fetch data links list
+        mock.when(
+                request().withMethod("GET").withPath("/data-links").withQueryStringParameter("workspaceId", "75887156211589").withQueryStringParameter("search", "a-test-bucket-eend-us-east-1"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("data/links/datalinks_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        Path testFile = tempDir().resolve("test.txt");
+        Files.write(testFile, "test content".getBytes());
+
+        // Mock multipart upload request
+        mock.when(
+                request().withMethod("POST").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/upload").withQueryStringParameter("workspaceId", "75887156211589").withQueryStringParameter("credentialsId", "57Ic6reczFn78H1DTaaXkp"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\n    \"uploadId\": \"upload-123\",\n    \"uploadUrls\": [\"http://localhost:" + mock.getPort() + "/upload\"]\n}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // PUT fails with an expired-token error -> triggers a refresh attempt
+        mock.when(
+                request().withMethod("PUT").withPath("/upload"), exactly(1)
+        ).respond(
+                response().withStatusCode(400).withBody("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Error><Code>ExpiredToken</Code><Message>The provided token has expired.</Message></Error>")
+        );
+
+        // Old Platform: the refresh endpoint does not exist -> 404
+        mock.when(
+                request().withMethod("POST").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/upload/refresh"), exactly(1)
+        ).respond(
+                response().withStatusCode(404)
+        );
+
+        // Finish upload is still called with withError=true to abort the multipart upload
+        mock.when(request()
+                .withMethod("POST").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/upload/finish")
+                .withQueryStringParameter("workspaceId", "75887156211589")
+                .withQueryStringParameter("credentialsId", "57Ic6reczFn78H1DTaaXkp")
+                .withBody(json("{\n\"uploadId\":\"upload-123\",\n\"fileName\":\"test.txt\",\n\"tags\":[],\n\"withError\":true\n}")), exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+        );
+
+        ExecOut out = exec(format, mock, "data-links", "upload", "-w", "75887156211589", "-n", "a-test-bucket-eend-us-east-1",
+                "-c", "57Ic6reczFn78H1DTaaXkp", testFile.toString());
+
+        // The upload is still finalized with withError=true
+        mock.verify(request().withMethod("POST").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/upload/finish")
+                .withBody(json("{\n\"uploadId\":\"upload-123\",\n\"fileName\":\"test.txt\",\n\"tags\":[],\n\"withError\":true\n}")), VerificationTimes.exactly(1));
+
+        assertEquals(errorMessage(out.app, new TowerRuntimeException("Failed to upload file: Token refresh is not supported for this Platform version.")), out.stdErr);
         assertEquals("", out.stdOut);
         assertEquals(1, out.exitCode);
 
