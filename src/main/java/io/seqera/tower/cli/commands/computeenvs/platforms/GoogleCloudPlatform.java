@@ -17,6 +17,7 @@
 package io.seqera.tower.cli.commands.computeenvs.platforms;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.exceptions.TowerRuntimeException;
 import io.seqera.tower.model.ComputeEnvComputeConfig.PlatformEnum;
 import io.seqera.tower.model.GoogleCloudConfig;
 import io.seqera.tower.model.SchedConfig;
@@ -25,8 +26,13 @@ import picocli.CommandLine.Option;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class GoogleCloudPlatform extends AbstractPlatform<GoogleCloudConfig> {
+
+    private static final Pattern NETWORK_TAG_PATTERN = Pattern.compile("^[a-z][-a-z0-9]*[a-z0-9]$");
+    private static final int MAX_NETWORK_TAGS = 64;
+    private static final int MAX_TAG_LENGTH = 63;
 
     @Option(names = {"--work-dir"}, description = "Nextflow work directory. Path where workflow intermediate files are stored. Must be a Google Cloud Storage bucket path (e.g., gs://your-bucket/work). Credentials must have read-write access.", required = true)
     public String workDir;
@@ -81,12 +87,20 @@ public class GoogleCloudPlatform extends AbstractPlatform<GoogleCloudConfig> {
 
         // Advanced
         if (adv != null) {
+            if (adv.networkTags != null && !adv.networkTags.isEmpty()) {
+                validateNetworkTags(adv.networkTags, adv.network);
+            }
+
             config
                     .arm64Enabled(adv.arm64Enabled)
                     .gpuEnabled(adv.gpuEnabled)
                     .imageId(adv.imageId)
                     .instanceType(adv.instanceType)
-                    .bootDiskSizeGb(adv.bootDiskSizeGb);
+                    .bootDiskSizeGb(adv.bootDiskSizeGb)
+                    .network(adv.network)
+                    .subnetworks(adv.subnetworks)
+                    .networkTags(adv.networkTags)
+                    .usePrivateAddress(adv.usePrivateAddress);
         }
 
         // Common
@@ -97,6 +111,31 @@ public class GoogleCloudPlatform extends AbstractPlatform<GoogleCloudConfig> {
                 .environment(environmentVariables());
 
         return config;
+    }
+
+    private static void validateNetworkTags(List<String> tags, String network) {
+        if (network == null || network.isEmpty()) {
+            throw new TowerRuntimeException("Network tags require VPC configuration: set the '--network' option to use network tags.");
+        }
+
+        if (tags.size() > MAX_NETWORK_TAGS) {
+            throw new TowerRuntimeException(String.format("Too many network tags: maximum is %d, provided %d.", MAX_NETWORK_TAGS, tags.size()));
+        }
+
+        for (String tag : tags) {
+            if (tag == null || tag.isEmpty() || tag.length() > MAX_TAG_LENGTH) {
+                throw new TowerRuntimeException(String.format("Invalid network tag '%s': must be 1-63 characters.", tag));
+            }
+            if (tag.length() == 1) {
+                if (!tag.matches("^[a-z]$")) {
+                    throw new TowerRuntimeException(String.format("Invalid network tag '%s': single-character tags must be a lowercase letter.", tag));
+                }
+            } else {
+                if (!NETWORK_TAG_PATTERN.matcher(tag).matches()) {
+                    throw new TowerRuntimeException(String.format("Invalid network tag '%s': must start with a lowercase letter, end with a letter or number, and contain only lowercase letters, numbers, and hyphens.", tag));
+                }
+            }
+        }
     }
 
     public static class SchedOptions {
@@ -125,5 +164,17 @@ public class GoogleCloudPlatform extends AbstractPlatform<GoogleCloudConfig> {
 
         @Option(names = {"--instance-type"}, description = "Compute Engine machine type (e.g., n1-standard-1, n2-standard-2). If omitted, a default machine type is used.")
         public String instanceType;
+
+        @Option(names = {"--network"}, description = "Google Cloud VPC network name or URI. Required when using subnetworks or network tags. When omitted, the project's 'default' network is used.")
+        public String network;
+
+        @Option(names = {"--subnetworks"}, split = ",", paramLabel = "<subnetwork>", description = "Google Cloud VPC subnetworks for instance placement. Comma-separated list of names or URIs in the same region as the compute environment; the first is used for basic placement while Intelligent Compute may use all of them. Requires --network.")
+        public List<String> subnetworks;
+
+        @Option(names = {"--network-tags"}, split = ",", paramLabel = "<tag>", description = "Comma-separated list of network tags applied to VMs for firewall rule targeting. Tags must be lowercase, use only letters, numbers, and hyphens (1-63 chars). Requires --network.")
+        public List<String> networkTags;
+
+        @Option(names = {"--use-private-address"}, description = "Do not attach a public IP address to VM instances. When enabled, only Google internal services are accessible. Requires Cloud NAT for external access.")
+        public Boolean usePrivateAddress;
     }
 }
