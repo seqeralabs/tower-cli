@@ -18,6 +18,7 @@ package io.seqera.tower.cli.commands.data.links.upload;
 
 import io.seqera.tower.api.DataLinksApi;
 import io.seqera.tower.cli.exceptions.TowerRuntimeException;
+import io.seqera.tower.cli.utils.progress.PartProgress;
 import io.seqera.tower.cli.utils.progress.ProgressTracker;
 import io.seqera.tower.cli.utils.progress.ProgressTrackingBodyPublisher;
 import io.seqera.tower.model.DataLinkMultiPartUploadResponse;
@@ -31,8 +32,8 @@ import java.net.http.HttpResponse;
 
 public class GoogleUploader extends AbstractProviderUploader {
 
-    public GoogleUploader(String id, String credId, Long wspId, String outputDir, String relativeKey, DataLinksApi dataLinksApi) {
-        super(id, credId, wspId, outputDir, relativeKey, dataLinksApi);
+    public GoogleUploader(String id, String credId, Long wspId, String outputDir, String relativeKey, DataLinksApi dataLinksApi, int concurrency) {
+        super(id, credId, wspId, outputDir, relativeKey, dataLinksApi, concurrency);
     }
 
     @Override
@@ -44,16 +45,16 @@ public class GoogleUploader extends AbstractProviderUploader {
         HttpClient client = HttpClient.newHttpClient();
         try {
             while (nextByteToRead < fileSize) {
-                int partNumber = (int) (nextByteToRead / MULTI_UPLOAD_PART_SIZE_IN_BYTES);
+                int partNumber = (int) (nextByteToRead / partSizeBytes());
                 byte[] chunk = getChunk(file, partNumber);
                 final long start = nextByteToRead;
                 final long end = start + chunk.length;
-                long baseline = tracker.snapshot();
+                PartProgress part = tracker.newPart();
 
-                HttpResponse<String> response = sendWithRetryOnTransientError(client, tracker, baseline,
+                HttpResponse<String> response = sendWithRetryOnTransientError(client, part,
                         () -> HttpRequest.newBuilder()
                                 .uri(URI.create(url))
-                                .PUT(new ProgressTrackingBodyPublisher(chunk, tracker))
+                                .PUT(new ProgressTrackingBodyPublisher(chunk, part))
                                 .header("Content-Range", String.format("bytes %d-%d/%d", start, Math.max(0, end - 1), fileSize))
                                 .build());
 
@@ -67,7 +68,7 @@ public class GoogleUploader extends AbstractProviderUploader {
                 } else if (response.statusCode() == 200) {
                     break; // Upload completed successfully
                 } else {
-                    tracker.restore(baseline);
+                    part.reset();
                     throw new IOException("Failed to upload file: HTTP " + response.statusCode());
                 }
             }

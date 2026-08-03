@@ -25,11 +25,11 @@ import java.util.concurrent.Flow;
 
 public class ProgressTrackingBodyPublisher implements HttpRequest.BodyPublisher {
     private final byte[] data;
-    private final ProgressTracker tracker;
+    private final ProgressSink sink;
 
-    public ProgressTrackingBodyPublisher(byte[] data, ProgressTracker tracker) {
+    public ProgressTrackingBodyPublisher(byte[] data, ProgressSink sink) {
         this.data = data;
-        this.tracker = tracker;
+        this.sink = sink;
     }
 
     @Override
@@ -40,14 +40,14 @@ public class ProgressTrackingBodyPublisher implements HttpRequest.BodyPublisher 
     @Override
     public void subscribe(Flow.Subscriber<? super ByteBuffer> subscriber) {
         // Wrap byte array in InputStream and monitor progress
-        InputStream input = new ProgressInputStream(new ByteArrayInputStream(data), tracker);
+        InputStream input = new ProgressInputStream(new ByteArrayInputStream(data), sink);
         subscriber.onSubscribe(new InputStreamSubscription(input, subscriber));
     }
 
     private static class InputStreamSubscription implements Flow.Subscription {
         private final InputStream input;
         private final Flow.Subscriber<? super ByteBuffer> subscriber;
-        private final int bufferSize = 8192;
+        private final int bufferSize = 256 * 1024;
         private boolean completed = false;
 
         public InputStreamSubscription(InputStream input, Flow.Subscriber<? super ByteBuffer> subscriber) {
