@@ -22,6 +22,7 @@ package io.seqera.tower.cli.data;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.data.links.ListCmd;
+import io.seqera.tower.cli.commands.data.links.upload.AbstractProviderUploader;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.TowerRuntimeException;
 import io.seqera.tower.cli.responses.data.DataLinkDeleted;
@@ -35,6 +36,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EnumSource;
 import io.seqera.tower.model.DataLinkItemType;
 import org.mockserver.client.MockServerClient;
+import org.mockserver.matchers.MatchType;
 import org.mockserver.model.Header;
 import org.mockserver.model.MediaType;
 import org.mockserver.verify.VerificationTimes;
@@ -797,6 +799,116 @@ public class DataLinksCmdTest extends BaseCmdTest {
         // No errors thrown
         assertEquals("", out.stdErr);
         assertEquals(0, out.exitCode);
+
+        Files.deleteIfExists(testFile);
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = OutputType.class, names = {"json"})
+    void testUploadMultipartFileInParallel(OutputType format, MockServerClient mock) throws IOException {
+        // credentials fetch
+        mock.when(
+                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"57Ic6reczFn78H1DTaaXkp\",\"name\":\"aws\",\"description\":null,\"discriminator\":\"aws\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-09T07:20:53Z\",\"dateCreated\":\"2021-09-08T05:48:51Z\",\"lastUpdated\":\"2021-09-08T05:48:51Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // status check
+        mock.when(
+                request().withMethod("GET").withPath("/data-links")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("offset", "0")
+                        .withQueryStringParameter("max", "1"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("data/links/datalinks_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        // fetch data links list
+        mock.when(
+                request().withMethod("GET").withPath("/data-links")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("search", "a-test-bucket-eend-us-east-1"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("data/links/datalinks_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // 12-byte file which, with a 5-byte part size, becomes 3 parts: [0,5) [5,10) [10,12)
+        Path testFile = tempDir().resolve("test.txt");
+        Files.write(testFile, "0123456789AB".getBytes());
+
+        // generate: return three positional part URLs (index+1 == partNumber)
+        mock.when(
+                request().withMethod("POST").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/upload")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("credentialsId", "57Ic6reczFn78H1DTaaXkp"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\n" +
+                        "    \"uploadId\": \"upload-123\",\n" +
+                        "    \"uploadUrls\": [" +
+                        "\"http://localhost:" + mock.getPort() + "/upload-1\"," +
+                        "\"http://localhost:" + mock.getPort() + "/upload-2\"," +
+                        "\"http://localhost:" + mock.getPort() + "/upload-3\"]\n" +
+                        "}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // Part 1 is delayed so it completes LAST — this proves the completed-parts list is ordered by
+        // part number, not by (nondeterministic) completion order.
+        mock.when(request().withMethod("PUT").withPath("/upload-1"), exactly(1)).respond(
+                response().withStatusCode(200).withHeader(new Header("Etag", "etag-1"))
+                        .withDelay(java.util.concurrent.TimeUnit.MILLISECONDS, 500)
+        );
+        mock.when(request().withMethod("PUT").withPath("/upload-2"), exactly(1)).respond(
+                response().withStatusCode(200).withHeader(new Header("Etag", "etag-2"))
+        );
+        mock.when(request().withMethod("PUT").withPath("/upload-3"), exactly(1)).respond(
+                response().withStatusCode(200).withHeader(new Header("Etag", "etag-3"))
+        );
+
+        // finish
+        mock.when(request()
+                .withMethod("POST").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/upload/finish")
+                .withQueryStringParameter("workspaceId", "75887156211589")
+                .withQueryStringParameter("credentialsId", "57Ic6reczFn78H1DTaaXkp"), exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+        );
+
+        // Shrink the part size so the tiny file uploads as 3 parts; run them 3-way concurrently.
+        String previous = System.setProperty(AbstractProviderUploader.PART_SIZE_ENV, "5");
+        ExecOut out;
+        try {
+            out = exec(format, mock, "data-links", "upload", "-w", "75887156211589", "-n", "a-test-bucket-eend-us-east-1",
+                    "-c", "57Ic6reczFn78H1DTaaXkp", "--concurrency", "3", testFile.toString());
+        } finally {
+            if (previous == null) {
+                System.clearProperty(AbstractProviderUploader.PART_SIZE_ENV);
+            } else {
+                System.setProperty(AbstractProviderUploader.PART_SIZE_ENV, previous);
+            }
+        }
+
+        assertOutput(format, out, DataLinkFileTransferResult.uploaded(List.of(
+                new DataLinkFileTransferResult.SimplePathInfo(DataLinkItemType.FILE, testFile.toString(), 1)
+        )));
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+
+        // Every part was uploaded exactly once...
+        mock.verify(request().withMethod("PUT").withPath("/upload-1"), VerificationTimes.exactly(1));
+        mock.verify(request().withMethod("PUT").withPath("/upload-2"), VerificationTimes.exactly(1));
+        mock.verify(request().withMethod("PUT").withPath("/upload-3"), VerificationTimes.exactly(1));
+        // ...and finish received the tags in ascending part-number order (STRICT enforces array order),
+        // each part paired with the ETag from its own PUT response, despite part 1 completing last.
+        mock.verify(request()
+                .withMethod("POST").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/upload/finish")
+                .withBody(json("" +
+                        "{\n" +
+                        "        \"uploadId\":\"upload-123\",\n" +
+                        "        \"fileName\":\"test.txt\",\n" +
+                        "        \"tags\":[{\"partNumber\":1,\"eTag\":\"etag-1\"},{\"partNumber\":2,\"eTag\":\"etag-2\"},{\"partNumber\":3,\"eTag\":\"etag-3\"}],\n" +
+                        "        \"withError\":false\n" +
+                        "}\n", MatchType.STRICT)), VerificationTimes.exactly(1));
 
         Files.deleteIfExists(testFile);
     }

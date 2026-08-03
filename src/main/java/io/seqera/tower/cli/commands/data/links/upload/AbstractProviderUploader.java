@@ -19,6 +19,7 @@ package io.seqera.tower.cli.commands.data.links.upload;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.api.DataLinksApi;
 import io.seqera.tower.cli.exceptions.TowerRuntimeException;
+import io.seqera.tower.cli.utils.progress.PartProgress;
 import io.seqera.tower.cli.utils.progress.ProgressTracker;
 import io.seqera.tower.cli.utils.progress.ProgressTrackingBodyPublisher;
 import io.seqera.tower.model.DataLinkRefreshMultiPartUploadRequest;
@@ -37,14 +38,46 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletionService;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class AbstractProviderUploader implements CloudProviderUploader {
 
-    static final Integer MULTI_UPLOAD_PART_SIZE_IN_BYTES = 250 * 1024 * 1024; // 250 MB
+    static final int DEFAULT_PART_SIZE_IN_BYTES = 250 * 1024 * 1024; // 250 MB
+
+    /**
+     * Overrides the multipart part size (in bytes).
+     */
+    public static final String PART_SIZE_ENV = "TOWER_UPLOAD_SIZE_PART_BYTES";
+
+    /** Multipart upload part size in bytes; honors {@link #PART_SIZE_ENV}, defaulting to 250 MB. */
+    static int partSizeBytes() {
+        String value = System.getenv(PART_SIZE_ENV);
+        if (value == null) {
+            value = System.getProperty(PART_SIZE_ENV);
+        }
+        if (value != null) {
+            try {
+                int parsed = Integer.parseInt(value.trim());
+                if (parsed > 0) {
+                    return parsed;
+                }
+            } catch (NumberFormatException ignored) {
+                // fall through to the default
+            }
+        }
+        return DEFAULT_PART_SIZE_IN_BYTES;
+    }
 
     /** Max attempts per part, covering both refresh-on-expiry and transient-error retries. */
     static final int MAX_PART_ATTEMPTS = 5;
@@ -65,22 +98,30 @@ public abstract class AbstractProviderUploader implements CloudProviderUploader 
     protected final String outputDir;
     protected final String relativeKey;
     protected final DataLinksApi dataLinksApi;
+    protected final int concurrency;
 
-    protected AbstractProviderUploader(String id, String credId, Long wspId, String outputDir, String relativeKey, DataLinksApi dataLinksApi) {
+    protected AbstractProviderUploader(String id, String credId, Long wspId, String outputDir, String relativeKey, DataLinksApi dataLinksApi, int concurrency) {
         this.id = id;
         this.credId = credId;
         this.wspId = wspId;
         this.outputDir = outputDir;
         this.relativeKey = relativeKey;
         this.dataLinksApi = dataLinksApi;
+        this.concurrency = concurrency;
     }
 
     protected enum UploadErrorType { EXPIRY, TRANSIENT, HARD_FAIL }
 
+    /** A unit of parallel work: uploads one part (1-based part number) and returns its result. */
+    @FunctionalInterface
+    protected interface PartTask<R> {
+        R run(int partNumber) throws Exception;
+    }
+
     protected byte[] getChunk(File file, int index) {
         try (RandomAccessFile raf = new RandomAccessFile(file, "r")) {
-            long start = (long) index * MULTI_UPLOAD_PART_SIZE_IN_BYTES;
-            long end = Math.min(start + MULTI_UPLOAD_PART_SIZE_IN_BYTES, file.length());
+            long start = (long) index * partSizeBytes();
+            long end = Math.min(start + partSizeBytes(), file.length());
             int length = (int) (end - start);
 
             byte[] buffer = new byte[length];
@@ -97,7 +138,7 @@ public abstract class AbstractProviderUploader implements CloudProviderUploader 
         if (contentLength <= 0) {
             return 1;
         }
-        return (int) Math.ceil((double) contentLength / MULTI_UPLOAD_PART_SIZE_IN_BYTES);
+        return (int) Math.ceil((double) contentLength / partSizeBytes());
     }
 
     /**
@@ -121,7 +162,7 @@ public abstract class AbstractProviderUploader implements CloudProviderUploader 
             byte[] chunk, ProgressTracker tracker, String uploadId, long contentLength, int successStatus, boolean refreshable)
             throws ApiException, IOException, InterruptedException {
 
-        long baseline = tracker.snapshot();
+        PartProgress part = tracker.newPart();
         for (int attempt = 1; attempt <= MAX_PART_ATTEMPTS; attempt++) {
             String url = partUrls.get(partNumber);
             if (url == null) {
@@ -136,10 +177,10 @@ public abstract class AbstractProviderUploader implements CloudProviderUploader 
             }
 
             final String partUrl = url;
-            HttpResponse<String> response = sendWithRetryOnTransientError(client, tracker, baseline,
+            HttpResponse<String> response = sendWithRetryOnTransientError(client, part,
                     () -> HttpRequest.newBuilder()
                             .uri(URI.create(partUrl))
-                            .PUT(new ProgressTrackingBodyPublisher(chunk, tracker))
+                            .PUT(new ProgressTrackingBodyPublisher(chunk, part))
                             .build());
 
             if (response.statusCode() == successStatus) {
@@ -147,7 +188,7 @@ public abstract class AbstractProviderUploader implements CloudProviderUploader 
             }
 
             // Non-success: discard the bytes this attempt reported before deciding what to do.
-            tracker.restore(baseline);
+            part.reset();
             UploadErrorType type = classify(response.statusCode(), response.body());
             if (type == UploadErrorType.EXPIRY && refreshable && attempt < MAX_PART_ATTEMPTS) {
                 // Re-sign this part and a forward window of upcoming parts in a single call, then retry.
@@ -161,21 +202,71 @@ public abstract class AbstractProviderUploader implements CloudProviderUploader 
     }
 
     /**
+     * Uploads all parts concurrently using a bounded worker pool, returning the per-part results
+     * keyed by part number. The effective worker count is {@code min(concurrency, totalParts)} so a
+     * small file never spawns more threads than parts.
+     *
+     * @param totalParts the number of parts (tasks run for part numbers {@code 1..totalParts})
+     * @param task       uploads a single part and returns its result (must be non-null to be recorded)
+     * @return a map of part number to task result for every part (only populated on full success)
+     */
+    protected <R> Map<Integer, R> uploadPartsInParallel(int totalParts, PartTask<R> task) {
+        int workers = Math.max(1, Math.min(concurrency, totalParts));
+        ExecutorService pool = Executors.newFixedThreadPool(workers);
+        Map<Integer, R> results = new ConcurrentHashMap<>();
+        List<Future<Integer>> futures = new ArrayList<>();
+        try {
+            CompletionService<Integer> completion = new ExecutorCompletionService<>(pool);
+            for (int p = 1; p <= totalParts; p++) {
+                final int partNumber = p;
+                futures.add(completion.submit(() -> {
+                    R r = task.run(partNumber);
+                    if (r != null) {
+                        results.put(partNumber, r);
+                    }
+                    return partNumber;
+                }));
+            }
+            for (int i = 0; i < totalParts; i++) {
+                completion.take().get();
+            }
+            return results;
+        } catch (ExecutionException e) {
+            // First failure: cancel the rest and surface the cause to the caller.
+            futures.forEach(f -> f.cancel(true));
+            Throwable cause = e.getCause();
+            throw new TowerRuntimeException(cause != null ? cause.getMessage() : e.getMessage(), cause);
+        } catch (InterruptedException e) {
+            futures.forEach(f -> f.cancel(true));
+            Thread.currentThread().interrupt();
+            throw new TowerRuntimeException("Upload interrupted", e);
+        } finally {
+            pool.shutdownNow();
+            try {
+                pool.awaitTermination(30, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+
+    /**
      * Sends a request with transient-failure recovery shared by all providers: network errors and transient
      * HTTP responses (5xx / throttling, per {@link #classify}) are retried by re-sending the same request
      * with exponential backoff, up to {@link #MAX_PART_ATTEMPTS}. Returns the first response that is not a
      * transient failure — the caller decides whether that means success, expiry, resume, or hard failure.
      * Throws the last network error if the budget is exhausted by network failures.
      *
-     * @param baseline the tracker snapshot taken before the first attempt (see {@link ProgressTracker#snapshot()})
+     * @param part     progress accounting for this part; its bytes are rolled back before each attempt
+     *                 so a re-send does not double-count (a no-op on the first attempt)
      * @param request  factory invoked once per attempt to build a fresh request (and body publisher)
      */
-    protected HttpResponse<String> sendWithRetryOnTransientError(HttpClient client, ProgressTracker tracker, long baseline,
+    protected HttpResponse<String> sendWithRetryOnTransientError(HttpClient client, PartProgress part,
                                                                  Supplier<HttpRequest> request) throws IOException, InterruptedException {
 
         IOException lastError = null;
         for (int attempt = 1; attempt <= MAX_PART_ATTEMPTS; attempt++) {
-            tracker.restore(baseline);
+            part.reset();
             try {
                 HttpResponse<String> response = client.send(request.get(), HttpResponse.BodyHandlers.ofString());
                 if (classify(response.statusCode(), response.body()) == UploadErrorType.TRANSIENT && attempt < MAX_PART_ATTEMPTS) {

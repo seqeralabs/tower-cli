@@ -1,0 +1,103 @@
+/*
+ * Copyright 2021-2026, Seqera.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package io.seqera.tower.cli.utils.progress;
+
+import org.junit.jupiter.api.Test;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class ProgressTrackerTest {
+
+    private static ProgressTracker tracker(long totalBytes, PrintWriter out) {
+        return new ProgressTracker(out, true, totalBytes);
+    }
+
+    @Test
+    void resetRollsBackOnlyThisPartsBytes() {
+        ProgressTracker t = tracker(100, new PrintWriter(new StringWriter()));
+        PartProgress part = t.newPart();
+
+        part.update(50);   // failed attempt reports 50 of 100
+        part.reset();      // roll it back
+        assertEquals(0, t.currentBytes());
+
+        part.update(100);  // successful retry reports the full part
+        assertEquals(100, t.currentBytes());
+    }
+
+    @Test
+    void terminatingNewlinePrintedExactlyOnce() {
+        StringWriter sw = new StringWriter();
+        PrintWriter out = new PrintWriter(sw);
+        ProgressTracker t = tracker(100, out);
+        PartProgress part = t.newPart();
+
+        part.update(100);  // reach 100% -> newline
+        part.reset();      // dip back below 100%
+        part.update(100);  // reach 100% again -> latch must suppress a second newline
+        out.flush();
+
+        long newlines = sw.toString().chars().filter(c -> c == '\n').count();
+        assertEquals(1, newlines);
+    }
+
+    @Test
+    void concurrentPartsWithRollbacksSettleAtTotal() throws Exception {
+        int parts = 16;
+        long bytesPerPart = 4096;
+        long total = parts * bytesPerPart;
+
+        ProgressTracker t = tracker(total, new PrintWriter(new StringWriter()));
+        ExecutorService pool = Executors.newFixedThreadPool(8);
+        try {
+            List<Future<?>> futures = new ArrayList<>();
+            for (int i = 0; i < parts; i++) {
+                futures.add(pool.submit(() -> {
+                    PartProgress part = t.newPart();
+                    // Simulate two failed attempts that each report a partial amount and roll back,
+                    // then a successful attempt that reports the full part in small increments.
+                    for (int attempt = 0; attempt < 2; attempt++) {
+                        part.update(bytesPerPart / 2);
+                        part.reset();
+                    }
+                    for (long sent = 0; sent < bytesPerPart; sent += 512) {
+                        part.update(512);
+                    }
+                }));
+            }
+            for (Future<?> f : futures) {
+                f.get();
+            }
+        } finally {
+            pool.shutdownNow();
+            pool.awaitTermination(10, TimeUnit.SECONDS);
+        }
+
+        // Every part's rollbacks only ever undid its own bytes, so the shared total lands exactly
+        // on the sum of all committed parts — no cross-part corruption.
+        assertEquals(total, t.currentBytes());
+    }
+}

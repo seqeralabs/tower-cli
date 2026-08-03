@@ -62,11 +62,20 @@ public class UploadCmd extends AbstractDataLinksCmd {
     @CommandLine.Option(names = {"-o", "--output-dir"}, description = "Destination directory in the data link")
     public String outputDir;
 
+    @CommandLine.Option(names = {"--silent"}, description = "Suppress upload progress indicators. Useful for scripting or logging to files.")
+    public boolean silent;
+
+    @CommandLine.Option(names = {"--concurrency"}, defaultValue = "4", description = "Number of file chunks to upload in parallel (default: ${DEFAULT-VALUE}). Each in-flight chunk buffers up to 250 MB in memory, so peak memory is roughly concurrency x 250 MB.")
+    public int concurrency;
+
     @CommandLine.Parameters(arity = "1..*", description = "Paths to files or directories to upload")
     private List<String> paths;
 
     @Override
     protected Response exec() throws ApiException, IOException, InterruptedException {
+        if (concurrency < 1) {
+            throw new TowerRuntimeException("--concurrency must be at least 1.");
+        }
         checkFilesValidForUpload();
 
         Long wspId = workspaceId(workspace.workspace);
@@ -122,7 +131,7 @@ public class UploadCmd extends AbstractDataLinksCmd {
         }
         long contentLength = file.length();
 
-        boolean showProgress = app().output != OutputType.json;
+        boolean showProgress = app().output != OutputType.json && !silent;
         if (showProgress) {
             app().getOut().println("Uploading file: " + file.getPath());
         }
@@ -149,14 +158,14 @@ public class UploadCmd extends AbstractDataLinksCmd {
     private CloudProviderUploader createUploadStrategy(DataLinkProvider provider, String id, String credId, Long wspId, String outputDir, String relativeKey) throws ApiException {
         switch (provider) {
             case AWS:
-                return new AwsUploader(id, credId, wspId, outputDir, relativeKey, dataLinksApi());
+                return new AwsUploader(id, credId, wspId, outputDir, relativeKey, dataLinksApi(), concurrency);
             case GOOGLE:
-                return new GoogleUploader(id, credId, wspId, outputDir, relativeKey, dataLinksApi());
+                return new GoogleUploader(id, credId, wspId, outputDir, relativeKey, dataLinksApi(), concurrency);
             case AZURE:
-                return new AzureUploader(id, credId, wspId, outputDir, relativeKey, dataLinksApi());
+                return new AzureUploader(id, credId, wspId, outputDir, relativeKey, dataLinksApi(), concurrency);
             case SEQERACOMPUTE:
                 // Seqera Compute uses S3-compatible uploads, same as AWS
-                return new AwsUploader(id, credId, wspId, outputDir, relativeKey, dataLinksApi());
+                return new AwsUploader(id, credId, wspId, outputDir, relativeKey, dataLinksApi(), concurrency);
             default:
                 throw new TowerRuntimeException("Unsupported data-link provider: " + provider);
         }
