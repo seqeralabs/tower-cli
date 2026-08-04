@@ -77,6 +77,10 @@ public class RelaunchCmd extends AbstractRunsCmd {
             throw new TowerException("Not allowed to change '--work-dir' option when resuming. Use '--no-resume' if you want to relaunch into a different working directory without resuming.");
         }
 
+        if (!noResume && pipeline != null) {
+            throw new TowerException("Not allowed to change '--pipeline' option when resuming. Use '--no-resume' if you want to relaunch a different pipeline without resuming.");
+        }
+
         WorkflowMaxDbDto workflow = workflowById(wspId, id, NO_WORKFLOW_ATTRIBUTES).getWorkflow();
         WorkflowLaunchResponse launch = workflowLaunchResponse(workflow.getId(), wspId);
 
