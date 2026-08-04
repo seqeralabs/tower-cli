@@ -119,6 +119,12 @@ public class RelaunchCmd extends AbstractRunsCmd {
                 .resume(!noResume)
                 .pullLatest(coalesce(opts.pullLatest, launch.getPullLatest()))
                 .stubRun(coalesce(opts.stubRun, launch.getStubRun()))
+                // Platform reads these from the incoming request only, without falling back to the
+                // source launch, so they have to be carried over explicitly or they are lost.
+                .headJobCpus(launch.getHeadJobCpus())
+                .headJobMemoryMb(launch.getHeadJobMemoryMb())
+                .optimizationId(launch.getOptimizationId())
+                .optimizationTargets(launch.getOptimizationTargets())
                 .dateCreated(OffsetDateTime.now())
                 .runName(name)
                 .launchContainer(launchContainer)
