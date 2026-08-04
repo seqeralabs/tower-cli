@@ -97,6 +97,9 @@ public class RelaunchCmd extends AbstractRunsCmd {
                 .pipeline(coalesce(pipeline, launch.getPipeline()))
                 .workDir(opts.workDir != null ? opts.workDir : selectWorkDir(!noResume, launch.getResumeDir(), launch.getWorkDir(), workflow.getWorkDir()))
                 .revision(coalesce(opts.revision, (noResume ? launch.getRevision() : launch.getResumeCommitId())))
+                // Platform never inherits the commit ID from the source launch: an unset value means
+                // "unpinned", so only an explicit --commit-id pins the relaunch to a given commit.
+                .commitId(opts.commitId)
                 .configProfiles(coalesce(opts.profile, launch.getConfigProfiles()))
                 .configText(opts.config != null ? FilesHelper.readString(opts.config) : launch.getConfigText())
                 .paramsText(opts.paramsFile != null ? FilesHelper.readString(opts.paramsFile) : launch.getParamsText())
