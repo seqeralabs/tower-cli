@@ -89,9 +89,11 @@ public class RelaunchCmd extends AbstractRunsCmd {
             ce = computeEnvByRef(wspId, opts.computeEnv);
         }
 
-        // Check if it's not possible to resume the workflow
-        if (launch.getResumeCommitId() == null) {
-            noResume = true;
+        // A run can only be resumed from the commit ID it reported: without it there is no
+        // revision to resume from, and silently relaunching from scratch would charge the user
+        // for a full rerun while reporting a resume.
+        if (!noResume && launch.getResumeCommitId() == null) {
+            throw new TowerException(String.format("Pipeline run '%s' cannot be resumed because it did not report a commit ID. Use '--no-resume' to relaunch it from scratch.", id));
         }
 
         WorkflowLaunchRequest workflowLaunchRequest = new WorkflowLaunchRequest()
