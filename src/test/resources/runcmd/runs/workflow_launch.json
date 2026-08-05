@@ -111,6 +111,10 @@
     "stubRun": false,
     "resumeDir": "s3://fusionfs/scratch/5qRNYT6iAJfRbJ",
     "resumeCommitId": "89bf536ce4faa98b4d50a8ec0a0343780bc62e0a",
+    "headJobCpus": 8,
+    "headJobMemoryMb": 16384,
+    "optimizationId": "rOYdwTnmTaRCJjUq",
+    "optimizationTargets": "cpus, memory",
     "dateCreated": "2022-08-01T15:58:08Z"
   }
 }

@@ -77,6 +77,10 @@ public class RelaunchCmd extends AbstractRunsCmd {
             throw new TowerException("Not allowed to change '--work-dir' option when resuming. Use '--no-resume' if you want to relaunch into a different working directory without resuming.");
         }
 
+        if (!noResume && pipeline != null) {
+            throw new TowerException("Not allowed to change '--pipeline' option when resuming. Use '--no-resume' if you want to relaunch a different pipeline without resuming.");
+        }
+
         WorkflowMaxDbDto workflow = workflowById(wspId, id, NO_WORKFLOW_ATTRIBUTES).getWorkflow();
         WorkflowLaunchResponse launch = workflowLaunchResponse(workflow.getId(), wspId);
 
@@ -85,9 +89,11 @@ public class RelaunchCmd extends AbstractRunsCmd {
             ce = computeEnvByRef(wspId, opts.computeEnv);
         }
 
-        // Check if it's not possible to resume the workflow
-        if (launch.getResumeCommitId() == null) {
-            noResume = true;
+        // A run can only be resumed from the commit ID it reported: without it there is no
+        // revision to resume from, and silently relaunching from scratch would charge the user
+        // for a full rerun while reporting a resume.
+        if (!noResume && launch.getResumeCommitId() == null) {
+            throw new TowerException(String.format("Pipeline run '%s' cannot be resumed because it did not report a commit ID. Use '--no-resume' to relaunch it from scratch.", id));
         }
 
         WorkflowLaunchRequest workflowLaunchRequest = new WorkflowLaunchRequest()
@@ -97,6 +103,9 @@ public class RelaunchCmd extends AbstractRunsCmd {
                 .pipeline(coalesce(pipeline, launch.getPipeline()))
                 .workDir(opts.workDir != null ? opts.workDir : selectWorkDir(!noResume, launch.getResumeDir(), launch.getWorkDir(), workflow.getWorkDir()))
                 .revision(coalesce(opts.revision, (noResume ? launch.getRevision() : launch.getResumeCommitId())))
+                // Platform never inherits the commit ID from the source launch: an unset value means
+                // "unpinned", so only an explicit --commit-id pins the relaunch to a given commit.
+                .commitId(opts.commitId)
                 .configProfiles(coalesce(opts.profile, launch.getConfigProfiles()))
                 .configText(opts.config != null ? FilesHelper.readString(opts.config) : launch.getConfigText())
                 .paramsText(opts.paramsFile != null ? FilesHelper.readString(opts.paramsFile) : launch.getParamsText())
@@ -110,6 +119,12 @@ public class RelaunchCmd extends AbstractRunsCmd {
                 .resume(!noResume)
                 .pullLatest(coalesce(opts.pullLatest, launch.getPullLatest()))
                 .stubRun(coalesce(opts.stubRun, launch.getStubRun()))
+                // Platform reads these from the incoming request only, without falling back to the
+                // source launch, so they have to be carried over explicitly or they are lost.
+                .headJobCpus(launch.getHeadJobCpus())
+                .headJobMemoryMb(launch.getHeadJobMemoryMb())
+                .optimizationId(launch.getOptimizationId())
+                .optimizationTargets(launch.getOptimizationTargets())
                 .dateCreated(OffsetDateTime.now())
                 .runName(name)
                 .launchContainer(launchContainer)

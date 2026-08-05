@@ -76,6 +76,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
+import static org.mockserver.model.JsonBody.json;
 
 class RunsCmdTest extends BaseCmdTest {
 
@@ -500,7 +501,25 @@ class RunsCmdTest extends BaseCmdTest {
     @EnumSource(OutputType.class)
     void testRelaunch(OutputType format, MockServerClient mock) {
         mock.when(
-                request().withMethod("POST").withPath("/workflow/launch"), exactly(1)
+                request().withMethod("POST").withPath("/workflow/launch")
+                        .withBody(json("""
+                            {
+                                "launch":{
+                                    "id":"5SCyEXKrCqFoGzOXGpesr5",
+                                    "sessionId":"ecaad2dd-83bb-4e0d-9418-d84f177e1e74",
+                                    "computeEnvId":"2lu3NFms1qRvwTVnrs1yhg",
+                                    "pipeline":"https://github.com/nf-core/rnaseq",
+                                    "workDir":"s3://fusionfs/scratch/5qRNYT6iAJfRbJ",
+                                    "revision":"89bf536ce4faa98b4d50a8ec0a0343780bc62e0a",
+                                    "resume":true,
+                                    "headJobCpus":8,
+                                    "headJobMemoryMb":16384,
+                                    "optimizationId":"rOYdwTnmTaRCJjUq",
+                                    "optimizationTargets":"cpus, memory"
+                                }
+                            }"""
+                        )),
+                exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("workflow_launch")).withContentType(MediaType.APPLICATION_JSON)
         );
@@ -526,6 +545,85 @@ class RunsCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "runs", "relaunch", "-i", "5mDfiUtqyptDib");
         assertOutput(format, out, new RunSubmited("35aLiS0bIM5efd", null, String.format("%s/user/jordi/watch/35aLiS0bIM5efd", url(mock)), "user"));
+    }
+
+    @Test
+    void testRelaunchWithCommitId(MockServerClient mock) {
+        mock.when(
+                request().withMethod("POST").withPath("/workflow/launch")
+                        .withBody(json("""
+                            {
+                                "launch":{
+                                    "resume":true,
+                                    "commitId":"1c0e11e42bdba1f5aef4dc0d9a4a4bb1e8be9d75"
+                                }
+                            }"""
+                        )),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workflow_launch")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/workflow/5mDfiUtqyptDib"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workflow_view")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/workflow/5mDfiUtqyptDib/launch"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("runs/workflow_launch")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "runs", "relaunch", "-i", "5mDfiUtqyptDib", "--commit-id", "1c0e11e42bdba1f5aef4dc0d9a4a4bb1e8be9d75");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testRelaunchWithoutResumableCommitId(MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/workflow/5mDfiUtqyptDib"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workflow_view")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // A run that never reported a commit ID has no revision to resume from
+        mock.when(
+                request().withMethod("GET").withPath("/workflow/5mDfiUtqyptDib/launch"), exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+                        .withBody("{\"launch\":{\"id\":\"5SCyEXKrCqFoGzOXGpesr5\",\"pipeline\":\"https://github.com/nf-core/rnaseq\",\"workDir\":\"s3://fusionfs\",\"resumeDir\":\"s3://fusionfs/scratch/5qRNYT6iAJfRbJ\",\"resumeCommitId\":null}}")
+                        .withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "runs", "relaunch", "-i", "5mDfiUtqyptDib");
+
+        assertEquals(errorMessage(out.app, new TowerException("Pipeline run '5mDfiUtqyptDib' cannot be resumed because it did not report a commit ID. Use '--no-resume' to relaunch it from scratch.")), out.stdErr);
+        assertEquals("", out.stdOut);
+        assertEquals(1, out.exitCode);
+    }
+
+    @Test
+    void testRelaunchRejectsUnwritableFieldsWhenResuming(MockServerClient mock) {
+        // Platform makes both fields read-only on a resumed launch, so fail before submitting
+        ExecOut pipelineOut = exec(mock, "runs", "relaunch", "-i", "5mDfiUtqyptDib", "--pipeline", "https://github.com/nf-core/rnaseq");
+
+        assertEquals(errorMessage(pipelineOut.app, new TowerException("Not allowed to change '--pipeline' option when resuming. Use '--no-resume' if you want to relaunch a different pipeline without resuming.")), pipelineOut.stdErr);
+        assertEquals(1, pipelineOut.exitCode);
+
+        ExecOut workDirOut = exec(mock, "runs", "relaunch", "-i", "5mDfiUtqyptDib", "--work-dir", "s3://other-bucket");
+
+        assertEquals(errorMessage(workDirOut.app, new TowerException("Not allowed to change '--work-dir' option when resuming. Use '--no-resume' if you want to relaunch into a different working directory without resuming.")), workDirOut.stdErr);
+        assertEquals(1, workDirOut.exitCode);
     }
 
     @Test
