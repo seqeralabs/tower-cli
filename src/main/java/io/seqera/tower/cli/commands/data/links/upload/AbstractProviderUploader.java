@@ -295,14 +295,7 @@ public abstract class AbstractProviderUploader implements CloudProviderUploader 
     }
 
     /**
-     * Requests freshly-signed upload URLs for the given part numbers from the Platform.
-     *
-     * Re-signing is a mode of the regular upload endpoint: setting {@code uploadId} + {@code partNumbers} on the
-     * request re-signs those parts of the already in-progress upload instead of initiating a new one. The
-     * response URLs are positional — {@code uploadUrls.get(i)} corresponds to {@code partNumbers.get(i)} — so they
-     * are zipped back to their part numbers here.
-     *
-     * A 404 means the Platform predates re-signing support — surfaced as a clear, actionable message.
+     * Requests freshly-signed upload URLs for the given part numbers.
      */
     protected Map<Integer, String> refreshUrls(String uploadId, long contentLength, List<Integer> partNumbers) throws ApiException {
         DataLinkMultiPartUploadRequest request = new DataLinkMultiPartUploadRequest();
