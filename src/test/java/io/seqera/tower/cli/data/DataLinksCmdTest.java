@@ -1050,11 +1050,13 @@ public class DataLinksCmdTest extends BaseCmdTest {
                 response().withStatusCode(400).withBody("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Error><Code>ExpiredToken</Code><Message>The provided token has expired.</Message></Error>")
         );
 
-        // Refresh endpoint returns a fresh URL for part 1
+        // Re-signing re-calls the upload endpoint with uploadId + partNumbers set; the response URLs are
+        // positional, matching the requested part numbers (here: a fresh URL for part 1).
         mock.when(
-                request().withMethod("POST").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/upload/refresh").withQueryStringParameter("workspaceId", "75887156211589").withQueryStringParameter("credentialsId", "57Ic6reczFn78H1DTaaXkp"), exactly(1)
+                request().withMethod("POST").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/upload").withQueryStringParameter("workspaceId", "75887156211589").withQueryStringParameter("credentialsId", "57Ic6reczFn78H1DTaaXkp")
+                        .withBody(json("{\"uploadId\": \"upload-123\", \"partNumbers\": [1]}", MatchType.ONLY_MATCHING_FIELDS)), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\n    \"uploadId\": \"upload-123\",\n    \"uploadUrls\": [{\"partNumber\": 1, \"url\": \"http://localhost:" + mock.getPort() + "/upload\"}]\n}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody("{\n    \"uploadId\": \"upload-123\",\n    \"uploadUrls\": [\"http://localhost:" + mock.getPort() + "/upload\"]\n}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         // Second PUT (after refresh) succeeds
@@ -1077,8 +1079,9 @@ public class DataLinksCmdTest extends BaseCmdTest {
         ExecOut out = exec(format, mock, "data-links", "upload", "-w", "75887156211589", "-n", "a-test-bucket-eend-us-east-1",
                 "-c", "57Ic6reczFn78H1DTaaXkp", testFile.toString());
 
-        // The refresh endpoint was invoked exactly once
-        mock.verify(request().withMethod("POST").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/upload/refresh"), VerificationTimes.exactly(1));
+        // The upload endpoint was re-invoked in re-sign mode (uploadId + partNumbers) exactly once
+        mock.verify(request().withMethod("POST").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/upload")
+                .withBody(json("{\"uploadId\": \"upload-123\", \"partNumbers\": [1]}", MatchType.ONLY_MATCHING_FIELDS)), VerificationTimes.exactly(1));
 
         assertOutput(format, out, DataLinkFileTransferResult.uploaded(List.of(
                 new DataLinkFileTransferResult.SimplePathInfo(DataLinkItemType.FILE, testFile.toString(), 1)
@@ -1149,8 +1152,9 @@ public class DataLinksCmdTest extends BaseCmdTest {
         ExecOut out = exec(format, mock, "data-links", "upload", "-w", "75887156211589", "-n", "a-test-bucket-eend-us-east-1",
                 "-c", "57Ic6reczFn78H1DTaaXkp", testFile.toString());
 
-        // The refresh endpoint must NOT be called for a transient error
-        mock.verify(request().withMethod("POST").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/upload/refresh"), VerificationTimes.exactly(0));
+        // Re-signing (upload endpoint with uploadId + partNumbers) must NOT be triggered for a transient error
+        mock.verify(request().withMethod("POST").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/upload")
+                .withBody(json("{\"uploadId\": \"upload-123\", \"partNumbers\": [1]}", MatchType.ONLY_MATCHING_FIELDS)), VerificationTimes.exactly(0));
 
         assertOutput(format, out, DataLinkFileTransferResult.uploaded(List.of(
                 new DataLinkFileTransferResult.SimplePathInfo(DataLinkItemType.FILE, testFile.toString(), 1)
@@ -1201,11 +1205,13 @@ public class DataLinksCmdTest extends BaseCmdTest {
                 response().withStatusCode(400).withBody("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Error><Code>ExpiredToken</Code><Message>The provided token has expired.</Message></Error>")
         );
 
-        // Old Platform: the refresh endpoint does not exist -> 404
+        // Old Platform: it predates re-signing, so it ignores the uploadId/partNumbers fields and instead
+        // initiates a brand-new upload, returning a *different* uploadId. The CLI must detect this mismatch.
         mock.when(
-                request().withMethod("POST").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/upload/refresh"), exactly(1)
+                request().withMethod("POST").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/upload").withQueryStringParameter("workspaceId", "75887156211589").withQueryStringParameter("credentialsId", "57Ic6reczFn78H1DTaaXkp")
+                        .withBody(json("{\"uploadId\": \"upload-123\", \"partNumbers\": [1]}", MatchType.ONLY_MATCHING_FIELDS)), exactly(1)
         ).respond(
-                response().withStatusCode(404)
+                response().withStatusCode(200).withBody("{\n    \"uploadId\": \"a-different-upload-999\",\n    \"uploadUrls\": [\"http://localhost:" + mock.getPort() + "/upload\"]\n}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         // Finish upload is still called with withError=true to abort the multipart upload

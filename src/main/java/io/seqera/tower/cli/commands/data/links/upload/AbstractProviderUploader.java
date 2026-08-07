@@ -22,9 +22,8 @@ import io.seqera.tower.cli.exceptions.TowerRuntimeException;
 import io.seqera.tower.cli.utils.progress.PartProgress;
 import io.seqera.tower.cli.utils.progress.ProgressTracker;
 import io.seqera.tower.cli.utils.progress.ProgressTrackingBodyPublisher;
-import io.seqera.tower.model.DataLinkRefreshMultiPartUploadRequest;
-import io.seqera.tower.model.DataLinkRefreshMultiPartUploadResponse;
-import io.seqera.tower.model.PartUploadUrl;
+import io.seqera.tower.model.DataLinkMultiPartUploadRequest;
+import io.seqera.tower.model.DataLinkMultiPartUploadResponse;
 
 import java.io.File;
 import java.io.IOException;
@@ -297,20 +296,26 @@ public abstract class AbstractProviderUploader implements CloudProviderUploader 
 
     /**
      * Requests freshly-signed upload URLs for the given part numbers from the Platform.
-     * A 404 means the Platform predates the refresh endpoint — surfaced as a clear, actionable message.
+     *
+     * Re-signing is a mode of the regular upload endpoint: setting {@code uploadId} + {@code partNumbers} on the
+     * request re-signs those parts of the already in-progress upload instead of initiating a new one. The
+     * response URLs are positional — {@code uploadUrls.get(i)} corresponds to {@code partNumbers.get(i)} — so they
+     * are zipped back to their part numbers here.
+     *
+     * A 404 means the Platform predates re-signing support — surfaced as a clear, actionable message.
      */
     protected Map<Integer, String> refreshUrls(String uploadId, long contentLength, List<Integer> partNumbers) throws ApiException {
-        DataLinkRefreshMultiPartUploadRequest request = new DataLinkRefreshMultiPartUploadRequest();
+        DataLinkMultiPartUploadRequest request = new DataLinkMultiPartUploadRequest();
         request.setUploadId(uploadId);
         request.setFileName(relativeKey);
         request.setContentLength(contentLength);
         request.setPartNumbers(partNumbers);
 
-        DataLinkRefreshMultiPartUploadResponse response;
+        DataLinkMultiPartUploadResponse response;
         try {
             response = outputDir != null
-                    ? dataLinksApi.refreshDataLinkUploadUrlWithPath(id, outputDir, request, credId, wspId, null)
-                    : dataLinksApi.refreshDataLinkUploadUrl(id, request, credId, wspId, null);
+                    ? dataLinksApi.generateDataLinkUploadUrlWithPath(id, outputDir, request, credId, wspId, null)
+                    : dataLinksApi.generateDataLinkUploadUrl(id, request, credId, wspId, null);
         } catch (ApiException e) {
             if (e.getCode() == 404) {
                 throw new TowerRuntimeException("Token refresh is not supported for this Platform version.");
@@ -318,10 +323,22 @@ public abstract class AbstractProviderUploader implements CloudProviderUploader 
             throw e;
         }
 
+        // A Platform that predates re-signing ignores the uploadId/partNumbers fields and instead initiates a
+        // brand-new multi-part upload, returning a different uploadId. Detect that by the echoed uploadId and
+        // fail clearly rather than mixing URLs from a different upload into the in-progress one.
+        if (!uploadId.equals(response.getUploadId())) {
+            throw new TowerRuntimeException("Token refresh is not supported for this Platform version.");
+        }
+
+        List<String> urls = response.getUploadUrls();
         Map<Integer, String> map = new HashMap<>();
-        if (response.getUploadUrls() != null) {
-            for (PartUploadUrl part : response.getUploadUrls()) {
-                map.put(part.getPartNumber(), part.getUrl());
+        if (urls != null) {
+            if (urls.size() != partNumbers.size()) {
+                throw new TowerRuntimeException("Platform returned " + urls.size()
+                        + " refreshed upload URLs but " + partNumbers.size() + " were requested");
+            }
+            for (int i = 0; i < partNumbers.size(); i++) {
+                map.put(partNumbers.get(i), urls.get(i));
             }
         }
         return map;
@@ -369,7 +386,7 @@ public abstract class AbstractProviderUploader implements CloudProviderUploader 
         long jitter = ThreadLocalRandom.current().nextLong(BACKOFF_BASE_MILLIS / 2);
         Thread.sleep(Math.min(base + jitter, BACKOFF_MAX_MILLIS));
     }
-
+    
     private static boolean isNotEmpty(String s) {
         return s != null && !s.isEmpty();
     }
