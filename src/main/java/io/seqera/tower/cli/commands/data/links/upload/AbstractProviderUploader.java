@@ -21,8 +21,10 @@ import io.seqera.tower.api.DataLinksApi;
 import io.seqera.tower.cli.exceptions.TowerRuntimeException;
 import io.seqera.tower.cli.utils.progress.ProgressTracker;
 import io.seqera.tower.cli.utils.progress.ProgressTrackingBodyPublisher;
+import io.seqera.tower.model.DataLinkFinishMultiPartUploadRequest;
 import io.seqera.tower.model.DataLinkMultiPartUploadRequest;
 import io.seqera.tower.model.DataLinkMultiPartUploadResponse;
+import io.seqera.tower.model.UploadEtag;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,6 +35,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -229,6 +232,7 @@ public abstract class AbstractProviderUploader implements CloudProviderUploader 
         // brand-new multi-part upload, returning a different uploadId. Detect that by the echoed uploadId and
         // fail clearly rather than mixing URLs from a different upload into the in-progress one.
         if (!uploadId.equals(response.getUploadId())) {
+            abandonUpload(response.getUploadId());
             throw new TowerRuntimeException("Token refresh is not supported for this Platform version.");
         }
 
@@ -247,10 +251,39 @@ public abstract class AbstractProviderUploader implements CloudProviderUploader 
     }
 
     /**
+     * Finalizes a multi-part upload on the Platform. With {@code withError} the upload is aborted instead of
+     * committed, which is also how an unwanted upload is cleaned up.
+     */
+    protected void finishUpload(String uploadId, boolean withError, List<UploadEtag> tags) throws ApiException {
+        DataLinkFinishMultiPartUploadRequest request = new DataLinkFinishMultiPartUploadRequest();
+        request.setFileName(relativeKey);
+        request.setUploadId(uploadId);
+        request.setWithError(withError);
+        request.setTags(tags);
+
+        if (outputDir != null) {
+            dataLinksApi.finishDataLinkUploadWithPath(id, outputDir, request, credId, wspId);
+        } else {
+            dataLinksApi.finishDataLinkUpload(id, request, credId, wspId);
+        }
+    }
+
+    private void abandonUpload(String uploadId) {
+        if (uploadId == null) {
+            return;
+        }
+        try {
+            finishUpload(uploadId, true, Collections.emptyList());
+        } catch (Exception e) {
+            // ignore — cleanup is best-effort against a Platform that may not support it
+        }
+    }
+
+    /**
      * Classifies a failed part upload from its HTTP status and provider error body:
      * <ul>
      *   <li>EXPIRY — the signing credentials expired; the URL must be refreshed before retrying</li>
-     *   <li>TRANSIENT — a temporary error (5xx / throttling / network); retry the same URL with backoff</li>
+     *   <li>TRANSIENT — a temporary error (5xx / 429 / throttling / network); retry the same URL with backoff</li>
      *   <li>HARD_FAIL — anything else; do not retry</li>
      * </ul>
      */
@@ -264,12 +297,16 @@ public abstract class AbstractProviderUploader implements CloudProviderUploader 
                     return UploadErrorType.EXPIRY;
                 case "InternalError":           // S3
                 case "SlowDown":                // S3 throttling
+                case "RequestTimeout":          // S3
+                case "ServerBusy":              // Azure throttling
+                case "OperationTimedOut":       // Azure
                     return UploadErrorType.TRANSIENT;
                 default:
                     // fall through to status-based classification
             }
         }
-        if (statusCode == 500 || statusCode == 502 || statusCode == 503 || statusCode == 504) {
+        // 429 is how GCS (and some fronting proxies) signal throttling, without an XML error body.
+        if (statusCode == 429 || statusCode == 500 || statusCode == 502 || statusCode == 503 || statusCode == 504) {
             return UploadErrorType.TRANSIENT;
         }
         return UploadErrorType.HARD_FAIL;

@@ -1056,6 +1056,79 @@ public class DataLinksCmdTest extends BaseCmdTest {
 
     @ParameterizedTest
     @EnumSource(value = OutputType.class, names = {"json"})
+    void testUploadRetriesOnThrottlingAndSucceeds(OutputType format, MockServerClient mock) throws IOException {
+        // credentials fetch
+        mock.when(
+                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"57Ic6reczFn78H1DTaaXkp\",\"name\":\"aws\",\"description\":null,\"discriminator\":\"aws\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-09T07:20:53Z\",\"dateCreated\":\"2021-09-08T05:48:51Z\",\"lastUpdated\":\"2021-09-08T05:48:51Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // status check
+        mock.when(
+                request().withMethod("GET").withPath("/data-links").withQueryStringParameter("workspaceId", "75887156211589").withQueryStringParameter("offset", "0").withQueryStringParameter("max", "1"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("data/links/datalinks_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        // mock fetch data links list
+        mock.when(
+                request().withMethod("GET").withPath("/data-links").withQueryStringParameter("workspaceId", "75887156211589").withQueryStringParameter("search", "a-test-bucket-eend-us-east-1"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("data/links/datalinks_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        Path testFile = tempDir().resolve("test.txt");
+        Files.write(testFile, "test content".getBytes());
+
+        // Mock multipart upload request
+        mock.when(
+                request().withMethod("POST").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/upload").withQueryStringParameter("workspaceId", "75887156211589").withQueryStringParameter("credentialsId", "57Ic6reczFn78H1DTaaXkp"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\n    \"uploadId\": \"upload-123\",\n    \"uploadUrls\": [\"http://localhost:" + mock.getPort() + "/upload\"]\n}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // First PUT is throttled with a bare 429 (how GCS and fronting proxies signal it, no XML error body)
+        mock.when(
+                request().withMethod("PUT").withPath("/upload"), exactly(1)
+        ).respond(
+                response().withStatusCode(429)
+        );
+
+        // Second PUT (retry of the same URL) succeeds
+        mock.when(
+                request().withMethod("PUT").withPath("/upload"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withHeader(new Header("Etag", "etag-123"))
+        );
+
+        // Finish upload (success)
+        mock.when(request()
+                .withMethod("POST").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/upload/finish")
+                .withQueryStringParameter("workspaceId", "75887156211589")
+                .withQueryStringParameter("credentialsId", "57Ic6reczFn78H1DTaaXkp")
+                .withBody(json("{\n\"uploadId\":\"upload-123\",\n\"fileName\":\"test.txt\",\n\"tags\":[{\"partNumber\":1,\"eTag\":\"etag-123\"}],\n\"withError\":false\n}")), exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+        );
+
+        ExecOut out = exec(format, mock, "data-links", "upload", "-w", "75887156211589", "-n", "a-test-bucket-eend-us-east-1",
+                "-c", "57Ic6reczFn78H1DTaaXkp", testFile.toString());
+
+        // Throttling is not a credential problem, so re-signing must not be triggered
+        mock.verify(request().withMethod("POST").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/upload")
+                .withBody(json("{\"uploadId\": \"upload-123\", \"partNumbers\": [1]}", MatchType.ONLY_MATCHING_FIELDS)), VerificationTimes.exactly(0));
+
+        assertOutput(format, out, DataLinkFileTransferResult.uploaded(List.of(
+                new DataLinkFileTransferResult.SimplePathInfo(DataLinkItemType.FILE, testFile.toString(), 1)
+        )));
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+
+        Files.deleteIfExists(testFile);
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = OutputType.class, names = {"json"})
     void testUploadFailsWithClearMessageWhenRefreshNotSupported(OutputType format, MockServerClient mock) throws IOException {
         // credentials fetch
         mock.when(
@@ -1113,12 +1186,26 @@ public class DataLinksCmdTest extends BaseCmdTest {
                 response().withStatusCode(200)
         );
 
+        // ...and the upload the old Platform started behind our back is aborted too, so it is not left open
+        mock.when(request()
+                .withMethod("POST").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/upload/finish")
+                .withQueryStringParameter("workspaceId", "75887156211589")
+                .withQueryStringParameter("credentialsId", "57Ic6reczFn78H1DTaaXkp")
+                .withBody(json("{\n\"uploadId\":\"a-different-upload-999\",\n\"fileName\":\"test.txt\",\n\"tags\":[],\n\"withError\":true\n}")), exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+        );
+
         ExecOut out = exec(format, mock, "data-links", "upload", "-w", "75887156211589", "-n", "a-test-bucket-eend-us-east-1",
                 "-c", "57Ic6reczFn78H1DTaaXkp", testFile.toString());
 
         // The upload is still finalized with withError=true
         mock.verify(request().withMethod("POST").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/upload/finish")
                 .withBody(json("{\n\"uploadId\":\"upload-123\",\n\"fileName\":\"test.txt\",\n\"tags\":[],\n\"withError\":true\n}")), VerificationTimes.exactly(1));
+
+        // The upload the old Platform created in response to the refresh request is aborted as well
+        mock.verify(request().withMethod("POST").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/upload/finish")
+                .withBody(json("{\n\"uploadId\":\"a-different-upload-999\",\n\"fileName\":\"test.txt\",\n\"tags\":[],\n\"withError\":true\n}")), VerificationTimes.exactly(1));
 
         assertEquals(errorMessage(out.app, new TowerRuntimeException("Failed to upload file: Token refresh is not supported for this Platform version.")), out.stdErr);
         assertEquals("", out.stdOut);
