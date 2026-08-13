@@ -51,6 +51,8 @@ public class AzureUploader extends AbstractProviderUploader {
         int totalParts = initialUrls.size();
 
         try (HttpClient client = HttpClient.newHttpClient()) {
+            checkPartCount(contentLength, totalParts);
+
             uploadPartsInParallel(totalParts, partNumber -> {
                 byte[] chunk = getChunk(file, partNumber - 1);
                 uploadPartWithRetry(client, partUrls, partNumber, chunk, tracker, null, contentLength, 201, false);

@@ -58,16 +58,14 @@ public abstract class AbstractProviderUploader implements CloudProviderUploader 
     static final int DEFAULT_PART_SIZE_IN_BYTES = 250 * 1024 * 1024; // 250 MB
 
     /**
-     * Overrides the multipart part size (in bytes).
+     * Test-only override of the multipart part size, in bytes, so a test can drive a multi-part upload
+     * without producing a multi-hundred-megabyte fixture.
      */
-    public static final String PART_SIZE_ENV = "TOWER_UPLOAD_SIZE_PART_BYTES";
+    public static final String PART_SIZE_PROPERTY = "io.seqera.tower.cli.upload.partSizeBytes";
 
-    /** Multipart upload part size in bytes; honors {@link #PART_SIZE_ENV}, defaulting to 250 MB. */
+    /** Multipart upload part size in bytes; 250 MB unless overridden by {@link #PART_SIZE_PROPERTY} in tests. */
     static int partSizeBytes() {
-        String value = System.getenv(PART_SIZE_ENV);
-        if (value == null) {
-            value = System.getProperty(PART_SIZE_ENV);
-        }
+        String value = System.getProperty(PART_SIZE_PROPERTY);
         if (value != null) {
             try {
                 int parsed = Integer.parseInt(value.trim());
@@ -141,6 +139,20 @@ public abstract class AbstractProviderUploader implements CloudProviderUploader 
             return 1;
         }
         return (int) Math.ceil((double) contentLength / partSizeBytes());
+    }
+
+    /**
+     * Guards against the CLI and Platform disagreeing on the part size. Part boundaries are computed
+     * locally from {@link #partSizeBytes()} while the number of parts comes from the presigned URLs
+     * Platform hands back; if the two disagree the file would be sliced into pieces that do not cover
+     * it and the upload would be finalized as a silently truncated object.
+     */
+    protected void checkPartCount(long contentLength, int urlCount) {
+        int expected = totalParts(contentLength);
+        if (expected != urlCount) {
+            throw new TowerRuntimeException("Platform returned " + urlCount + " upload URLs but this file needs "
+                    + expected + " parts of " + partSizeBytes() + " bytes; refusing to upload a truncated file.");
+        }
     }
 
     /**

@@ -875,16 +875,16 @@ public class DataLinksCmdTest extends BaseCmdTest {
         );
 
         // Shrink the part size so the tiny file uploads as 3 parts; run them 3-way concurrently.
-        String previous = System.setProperty(AbstractProviderUploader.PART_SIZE_ENV, "5");
+        String previous = System.setProperty(AbstractProviderUploader.PART_SIZE_PROPERTY, "5");
         ExecOut out;
         try {
             out = exec(format, mock, "data-links", "upload", "-w", "75887156211589", "-n", "a-test-bucket-eend-us-east-1",
                     "-c", "57Ic6reczFn78H1DTaaXkp", "--concurrency", "3", testFile.toString());
         } finally {
             if (previous == null) {
-                System.clearProperty(AbstractProviderUploader.PART_SIZE_ENV);
+                System.clearProperty(AbstractProviderUploader.PART_SIZE_PROPERTY);
             } else {
-                System.setProperty(AbstractProviderUploader.PART_SIZE_ENV, previous);
+                System.setProperty(AbstractProviderUploader.PART_SIZE_PROPERTY, previous);
             }
         }
 
@@ -909,6 +909,91 @@ public class DataLinksCmdTest extends BaseCmdTest {
                         "        \"tags\":[{\"partNumber\":1,\"eTag\":\"etag-1\"},{\"partNumber\":2,\"eTag\":\"etag-2\"},{\"partNumber\":3,\"eTag\":\"etag-3\"}],\n" +
                         "        \"withError\":false\n" +
                         "}\n", MatchType.STRICT)), VerificationTimes.exactly(1));
+
+        Files.deleteIfExists(testFile);
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = OutputType.class, names = {"json"})
+    void testUploadFailsWhenPartCountDisagreesWithPlatform(OutputType format, MockServerClient mock) throws IOException {
+        // credentials fetch
+        mock.when(
+                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"57Ic6reczFn78H1DTaaXkp\",\"name\":\"aws\",\"description\":null,\"discriminator\":\"aws\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-09T07:20:53Z\",\"dateCreated\":\"2021-09-08T05:48:51Z\",\"lastUpdated\":\"2021-09-08T05:48:51Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // status check
+        mock.when(
+                request().withMethod("GET").withPath("/data-links")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("offset", "0")
+                        .withQueryStringParameter("max", "1"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("data/links/datalinks_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        // fetch data links list
+        mock.when(
+                request().withMethod("GET").withPath("/data-links")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("search", "a-test-bucket-eend-us-east-1"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("data/links/datalinks_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // 12-byte file which, at the 5-byte part size below, needs 3 parts
+        Path testFile = tempDir().resolve("test.txt");
+        Files.write(testFile, "0123456789AB".getBytes());
+
+        // ...but Platform sliced the file with a different part size and returns only 2 URLs. Uploading
+        // 2 x 5 bytes and finalizing would store a truncated object, so the CLI must refuse.
+        mock.when(
+                request().withMethod("POST").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/upload")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("credentialsId", "57Ic6reczFn78H1DTaaXkp"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\n" +
+                        "    \"uploadId\": \"upload-123\",\n" +
+                        "    \"uploadUrls\": [" +
+                        "\"http://localhost:" + mock.getPort() + "/upload-1\"," +
+                        "\"http://localhost:" + mock.getPort() + "/upload-2\"]\n" +
+                        "}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // finish (abort)
+        mock.when(request()
+                .withMethod("POST").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/upload/finish")
+                .withQueryStringParameter("workspaceId", "75887156211589")
+                .withQueryStringParameter("credentialsId", "57Ic6reczFn78H1DTaaXkp"), exactly(1)
+        ).respond(
+                response().withStatusCode(200)
+        );
+
+        String previous = System.setProperty(AbstractProviderUploader.PART_SIZE_PROPERTY, "5");
+        ExecOut out;
+        try {
+            out = exec(format, mock, "data-links", "upload", "-w", "75887156211589", "-n", "a-test-bucket-eend-us-east-1",
+                    "-c", "57Ic6reczFn78H1DTaaXkp", testFile.toString());
+        } finally {
+            if (previous == null) {
+                System.clearProperty(AbstractProviderUploader.PART_SIZE_PROPERTY);
+            } else {
+                System.setProperty(AbstractProviderUploader.PART_SIZE_PROPERTY, previous);
+            }
+        }
+
+        assertEquals(errorMessage(out.app, new TowerRuntimeException("Failed to upload file: Platform returned 2 upload URLs but this file needs 3 parts of 5 bytes; refusing to upload a truncated file.")), out.stdErr);
+        assertEquals("", out.stdOut);
+        assertEquals(1, out.exitCode);
+
+        // Nothing was uploaded, and the multipart upload was aborted rather than committed
+        mock.verify(request().withMethod("PUT").withPath("/upload-1"), VerificationTimes.exactly(0));
+        mock.verify(request().withMethod("PUT").withPath("/upload-2"), VerificationTimes.exactly(0));
+        mock.verify(request()
+                .withMethod("POST").withPath("/data-links/v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4/upload/finish")
+                .withBody(json("{\n\"uploadId\":\"upload-123\",\n\"fileName\":\"test.txt\",\n\"tags\":[],\n\"withError\":true\n}")), VerificationTimes.exactly(1));
 
         Files.deleteIfExists(testFile);
     }
