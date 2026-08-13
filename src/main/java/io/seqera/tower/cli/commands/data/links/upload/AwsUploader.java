@@ -20,7 +20,6 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.api.DataLinksApi;
 import io.seqera.tower.cli.exceptions.TowerRuntimeException;
 import io.seqera.tower.cli.utils.progress.ProgressTracker;
-import io.seqera.tower.model.DataLinkFinishMultiPartUploadRequest;
 import io.seqera.tower.model.DataLinkMultiPartUploadResponse;
 import io.seqera.tower.model.UploadEtag;
 
@@ -80,27 +79,12 @@ public class AwsUploader extends AbstractProviderUploader {
             withError = true;
             throw new TowerRuntimeException("Failed to upload file: " + e.getMessage(), e);
         } finally {
-            finalizeUpload(urlResponse, withError, tags);
-        }
-    }
-
-    private void finalizeUpload(DataLinkMultiPartUploadResponse urlResponse, boolean withError, List<UploadEtag> tags) throws ApiException {
-        // Finalize the upload
-        DataLinkFinishMultiPartUploadRequest finishMultiPartUploadRequest = new DataLinkFinishMultiPartUploadRequest();
-        finishMultiPartUploadRequest.setFileName(relativeKey);
-        finishMultiPartUploadRequest.setUploadId(urlResponse.getUploadId());
-        finishMultiPartUploadRequest.setWithError(withError);
-        finishMultiPartUploadRequest.setTags(tags);
-
-        if (outputDir != null) {
-            dataLinksApi.finishDataLinkUploadWithPath(id, outputDir, finishMultiPartUploadRequest, credId, wspId);
-        } else {
-            dataLinksApi.finishDataLinkUpload(id, finishMultiPartUploadRequest, credId, wspId);
+            finishUpload(urlResponse.getUploadId(), withError, tags);
         }
     }
 
     @Override
     public void abortUpload(DataLinkMultiPartUploadResponse urlResponse) throws ApiException {
-        finalizeUpload(urlResponse, true, Collections.emptyList());
+        finishUpload(urlResponse.getUploadId(), true, Collections.emptyList());
     }
 }
