@@ -56,6 +56,8 @@ public class AwsUploader extends AbstractProviderUploader {
         int totalParts = initialUrls.size();
 
         try (HttpClient client = HttpClient.newHttpClient()) {
+            checkPartCount(contentLength, totalParts);
+
             // Upload all parts concurrently; each returns its ETag keyed by part number.
             Map<Integer, String> etags = uploadPartsInParallel(totalParts, partNumber -> {
                 byte[] chunk = getChunk(file, partNumber - 1);
