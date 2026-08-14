@@ -60,6 +60,10 @@ public abstract class AbstractProviderUploader implements CloudProviderUploader 
     /**
      * Test-only override of the multipart part size, in bytes, so a test can drive a multi-part upload
      * without producing a multi-hundred-megabyte fixture.
+     *
+     * <p>Only takes effect in-process: the binary test run executes the native image as a separate
+     * process, which does not inherit the test JVM's system properties, so tests relying on this must be
+     * disabled when {@code TOWER_CLI} is set.
      */
     public static final String PART_SIZE_PROPERTY = "io.seqera.tower.cli.upload.partSizeBytes";
 
