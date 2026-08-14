@@ -31,6 +31,7 @@ import io.seqera.tower.cli.responses.data.DataLinksList;
 import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.model.DataLinkDto;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -805,6 +806,8 @@ public class DataLinksCmdTest extends BaseCmdTest {
 
     @ParameterizedTest
     @EnumSource(value = OutputType.class, names = {"json"})
+    @DisabledIfEnvironmentVariable(named = "TOWER_CLI", matches = ".+",
+            disabledReason = "shrinks the part size through a system property, which cannot reach the native binary running as a separate process")
     void testUploadMultipartFileInParallel(OutputType format, MockServerClient mock) throws IOException {
         // credentials fetch
         mock.when(
@@ -915,6 +918,8 @@ public class DataLinksCmdTest extends BaseCmdTest {
 
     @ParameterizedTest
     @EnumSource(value = OutputType.class, names = {"json"})
+    @DisabledIfEnvironmentVariable(named = "TOWER_CLI", matches = ".+",
+            disabledReason = "shrinks the part size through a system property, which cannot reach the native binary running as a separate process")
     void testUploadFailsWhenPartCountDisagreesWithPlatform(OutputType format, MockServerClient mock) throws IOException {
         // credentials fetch
         mock.when(
