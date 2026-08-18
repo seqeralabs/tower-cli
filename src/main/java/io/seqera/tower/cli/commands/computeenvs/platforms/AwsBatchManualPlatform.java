@@ -90,7 +90,8 @@ public class AwsBatchManualPlatform extends AbstractPlatform<AwsBatchConfig> {
                 .computeJobRole(adv().computeJobRole)
                 .headJobCpus(adv().headJobCpus)
                 .headJobMemoryMb(adv().headJobMemoryMb)
-                .headJobRole(adv().headJobRole);
+                .headJobRole(adv().headJobRole)
+                .secretsKmsKeyId(adv().secretsKmsKeyId);
 
                 // Common
                 config.workDir(workDir)
@@ -133,5 +134,8 @@ public class AwsBatchManualPlatform extends AbstractPlatform<AwsBatchConfig> {
 
         @Option(names = {"--cli-path"}, description = "Nextflow requires the AWS CLI installed in the Ec2 instances. Use this field to specify the path.")
         public String cliPath;
+
+        @Option(names = {"--secrets-kms-key"}, description = "Customer-managed KMS key used to encrypt the temporary Secrets Manager secrets created for runs that use pipeline secrets. Accepts a key ARN or a key id. When omitted, the AWS-managed default Secrets Manager key is used.")
+        public String secretsKmsKeyId;
     }
 }
