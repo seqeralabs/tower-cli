@@ -9,7 +9,7 @@ jobs:
     steps:
 
       - name: Check out the repo
-        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
+        uses: actions/checkout@a37ce9120846195fa4ece8f58b268e6043cb2f26 # v3.7.0
         
       - name: Install latest version of Tower-CLI 
         run: |
@@ -20,7 +20,7 @@ jobs:
         
 
       - name: Generate terminal images with rich-codex
-        uses: ewels/rich-codex@80de9de011c994f32274bb4cffee140567621d8e # v1.2.11
+        uses: ewels/rich-codex@74d8432695de542da2f2acdbc5681cdf306791ec # v1.3.0
         env:
           TOWER_ACCESS_TOKEN: ${{ secrets.TOWER_ACCESS_TOKEN }}
         with:
