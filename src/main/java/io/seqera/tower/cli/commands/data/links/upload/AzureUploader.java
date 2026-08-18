@@ -28,15 +28,15 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public class AzureUploader extends AbstractProviderUploader {
 
-    public AzureUploader(String id, String credId, Long wspId, String outputDir, String relativeKey, DataLinksApi dataLinksApi) {
-        super(id, credId, wspId, outputDir, relativeKey, dataLinksApi);
+    public AzureUploader(String id, String credId, Long wspId, String outputDir, String relativeKey, DataLinksApi dataLinksApi, int concurrency) {
+        super(id, credId, wspId, outputDir, relativeKey, dataLinksApi, concurrency);
     }
 
     @Override
@@ -44,18 +44,20 @@ public class AzureUploader extends AbstractProviderUploader {
         long contentLength = file.length();
 
         List<String> initialUrls = urlResponse.getUploadUrls();
-        Map<Integer, String> partUrls = new HashMap<>();
+        Map<Integer, String> partUrls = new ConcurrentHashMap<>();
         for (int i = 0; i < initialUrls.size(); i++) {
             partUrls.put(i + 1, initialUrls.get(i));
         }
         int totalParts = initialUrls.size();
 
-        HttpClient client = HttpClient.newHttpClient();
-        try {
-            for (int partNumber = 1; partNumber <= totalParts; partNumber++) {
+        try (HttpClient client = HttpClient.newHttpClient()) {
+            checkPartCount(contentLength, totalParts);
+
+            uploadPartsInParallel(totalParts, partNumber -> {
                 byte[] chunk = getChunk(file, partNumber - 1);
                 uploadPartWithRetry(client, partUrls, partNumber, chunk, tracker, null, contentLength, 201, false);
-            }
+                return Boolean.TRUE; // result unused; must be non-null to mark the part done
+            });
 
             // Finalize the upload by sending the ordered list of block IDs
             List<String> orderedUrls = new ArrayList<>();
