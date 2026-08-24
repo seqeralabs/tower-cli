@@ -151,9 +151,9 @@ public class UploadCmd extends AbstractDataLinksCmd {
             case AWS:
                 return new AwsUploader(id, credId, wspId, outputDir, relativeKey, dataLinksApi());
             case GOOGLE:
-                return new GoogleUploader();
+                return new GoogleUploader(id, credId, wspId, outputDir, relativeKey, dataLinksApi());
             case AZURE:
-                return new AzureUploader();
+                return new AzureUploader(id, credId, wspId, outputDir, relativeKey, dataLinksApi());
             case SEQERACOMPUTE:
                 // Seqera Compute uses S3-compatible uploads, same as AWS
                 return new AwsUploader(id, credId, wspId, outputDir, relativeKey, dataLinksApi());

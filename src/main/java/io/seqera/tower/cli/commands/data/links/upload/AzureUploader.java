@@ -16,9 +16,9 @@
 
 package io.seqera.tower.cli.commands.data.links.upload;
 
+import io.seqera.tower.api.DataLinksApi;
 import io.seqera.tower.cli.exceptions.TowerRuntimeException;
 import io.seqera.tower.cli.utils.progress.ProgressTracker;
-import io.seqera.tower.cli.utils.progress.ProgressTrackingBodyPublisher;
 import io.seqera.tower.model.DataLinkMultiPartUploadResponse;
 
 import java.io.File;
@@ -27,37 +27,42 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class AzureUploader extends AbstractProviderUploader {
 
+    public AzureUploader(String id, String credId, Long wspId, String outputDir, String relativeKey, DataLinksApi dataLinksApi) {
+        super(id, credId, wspId, outputDir, relativeKey, dataLinksApi);
+    }
+
     @Override
     public void uploadFile(File file, DataLinkMultiPartUploadResponse urlResponse, ProgressTracker tracker) {
-        List<String> urls = urlResponse.getUploadUrls();
+        long contentLength = file.length();
+
+        List<String> initialUrls = urlResponse.getUploadUrls();
+        Map<Integer, String> partUrls = new HashMap<>();
+        for (int i = 0; i < initialUrls.size(); i++) {
+            partUrls.put(i + 1, initialUrls.get(i));
+        }
+        int totalParts = initialUrls.size();
 
         HttpClient client = HttpClient.newHttpClient();
         try {
-            // Upload chunks
-            for (int i = 0; i < urls.size(); i++) {
-                String url = urls.get(i);
-                byte[] chunk = getChunk(file, i);
-
-                HttpRequest request = HttpRequest.newBuilder()
-                        .uri(URI.create(url))
-                        .PUT(new ProgressTrackingBodyPublisher(chunk, tracker))
-                        .build();
-
-                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-                if (response.statusCode() != 201) {
-                    // Abort the upload before throwing the exception
-                    throw new IOException("Failed to upload chunk: HTTP " + response.statusCode());
-                }
+            for (int partNumber = 1; partNumber <= totalParts; partNumber++) {
+                byte[] chunk = getChunk(file, partNumber - 1);
+                uploadPartWithRetry(client, partUrls, partNumber, chunk, tracker, null, contentLength, 201, false);
             }
 
-            // Finalize the upload by sending list of block IDs
-            finalizeUpload(urls, client);
+            // Finalize the upload by sending the ordered list of block IDs
+            List<String> orderedUrls = new ArrayList<>();
+            for (int partNumber = 1; partNumber <= totalParts; partNumber++) {
+                orderedUrls.add(partUrls.get(partNumber));
+            }
+            finalizeUpload(orderedUrls, client);
 
         } catch (Exception e) {
             abortUpload(urlResponse);
@@ -74,7 +79,7 @@ public class AzureUploader extends AbstractProviderUploader {
             // Send an empty block list to abort the upload
             // Per Azure documentation, any Uncommitted blocks not part of the final BlockList are garbage collected
             String emptyBlockList = "<?xml version=\"1.0\" encoding=\"utf-8\"?><BlockList></BlockList>";
-            
+
             HttpRequest abortRequest = HttpRequest.newBuilder()
                     .uri(URI.create(abortUrl))
                     .PUT(HttpRequest.BodyPublishers.ofString(emptyBlockList))
@@ -126,4 +131,4 @@ public class AzureUploader extends AbstractProviderUploader {
         xml.append("</BlockList>");
         return xml.toString();
     }
-} 
+}

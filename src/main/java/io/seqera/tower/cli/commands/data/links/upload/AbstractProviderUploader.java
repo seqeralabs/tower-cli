@@ -16,14 +16,68 @@
 
 package io.seqera.tower.cli.commands.data.links.upload;
 
+import io.seqera.tower.ApiException;
+import io.seqera.tower.api.DataLinksApi;
+import io.seqera.tower.cli.exceptions.TowerRuntimeException;
+import io.seqera.tower.cli.utils.progress.ProgressTracker;
+import io.seqera.tower.cli.utils.progress.ProgressTrackingBodyPublisher;
+import io.seqera.tower.model.DataLinkFinishMultiPartUploadRequest;
+import io.seqera.tower.model.DataLinkMultiPartUploadRequest;
+import io.seqera.tower.model.DataLinkMultiPartUploadResponse;
+import io.seqera.tower.model.UploadEtag;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.io.UncheckedIOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Supplier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public abstract class AbstractProviderUploader implements CloudProviderUploader {
 
     static final Integer MULTI_UPLOAD_PART_SIZE_IN_BYTES = 250 * 1024 * 1024; // 250 MB
+
+    /** Max attempts per part, covering both refresh-on-expiry and transient-error retries. */
+    static final int MAX_PART_ATTEMPTS = 5;
+
+    /** Number of upcoming parts whose URLs are refreshed in a single call when a credential expires. */
+    static final int REFRESH_WINDOW = 100;
+
+    private static final long BACKOFF_BASE_MILLIS = 500L;
+    private static final long BACKOFF_MAX_MILLIS = 10_000L;
+
+    // Provider error codes (from the S3/Azure XML <Error><Code>...</Code></Error> body) that mean the
+    // signing credentials have expired and the URL must be refreshed before retrying.
+    private static final Pattern ERROR_CODE = Pattern.compile("<Code>(.*?)</Code>", Pattern.DOTALL);
+
+    protected final String id;
+    protected final String credId;
+    protected final Long wspId;
+    protected final String outputDir;
+    protected final String relativeKey;
+    protected final DataLinksApi dataLinksApi;
+
+    protected AbstractProviderUploader(String id, String credId, Long wspId, String outputDir, String relativeKey, DataLinksApi dataLinksApi) {
+        this.id = id;
+        this.credId = credId;
+        this.wspId = wspId;
+        this.outputDir = outputDir;
+        this.relativeKey = relativeKey;
+        this.dataLinksApi = dataLinksApi;
+    }
+
+    protected enum UploadErrorType { EXPIRY, TRANSIENT, HARD_FAIL }
 
     protected byte[] getChunk(File file, int index) {
         try (RandomAccessFile raf = new RandomAccessFile(file, "r")) {
@@ -40,4 +94,239 @@ public abstract class AbstractProviderUploader implements CloudProviderUploader 
             throw new UncheckedIOException(e);
         }
     }
-} 
+
+    protected int totalParts(long contentLength) {
+        if (contentLength <= 0) {
+            return 1;
+        }
+        return (int) Math.ceil((double) contentLength / MULTI_UPLOAD_PART_SIZE_IN_BYTES);
+    }
+
+    /**
+     * Uploads a single part.
+     * When {@code refreshable}, an expiry-class error causes the presigned URL (and a forward window of upcoming parts)
+     * to be refreshed via the Platform and the part retried;
+     * otherwise an expiry is terminal (providers such as Azure/GCS cannot re-mint URLs for an in-progress upload).
+     *
+     * In both modes a transient error retries the same URL with exponential backoff.
+     * On a hard failure, or once the attempt budget is exhausted, the error is propagated so the
+     * caller can finalize/abort the upload.
+     *
+     * @param partUrls     mutable part-number -> URL map, seeded from the initial upload response and
+     *                     updated in place as URLs are refreshed
+     * @param uploadId     the in-progress multi-part upload id (may be {@code null}, e.g. for Azure)
+     * @param successStatus the HTTP status that indicates a successful part upload (200 for S3, 201 for Azure)
+     * @param refreshable  whether the provider supports refreshing URLs on expiry (S3 only)
+     * @return the successful HTTP response (headers/body available to the caller, e.g. for the S3 ETag)
+     */
+    protected HttpResponse<String> uploadPartWithRetry(HttpClient client, Map<Integer, String> partUrls, int partNumber,
+            byte[] chunk, ProgressTracker tracker, String uploadId, long contentLength, int successStatus, boolean refreshable)
+            throws ApiException, IOException, InterruptedException {
+
+        long baseline = tracker.snapshot();
+        for (int attempt = 1; attempt <= MAX_PART_ATTEMPTS; attempt++) {
+            String url = partUrls.get(partNumber);
+            if (url == null) {
+                if (!refreshable) {
+                    throw new TowerRuntimeException("Failed to obtain an upload URL for part " + partNumber);
+                }
+                partUrls.putAll(refreshUrls(uploadId, contentLength, refreshWindow(partNumber, contentLength)));
+                url = partUrls.get(partNumber);
+                if (url == null) {
+                    throw new TowerRuntimeException("Failed to obtain an upload URL for part " + partNumber);
+                }
+            }
+
+            final String partUrl = url;
+            HttpResponse<String> response = sendWithRetryOnTransientError(client, tracker, baseline,
+                    () -> HttpRequest.newBuilder()
+                            .uri(URI.create(partUrl))
+                            .PUT(new ProgressTrackingBodyPublisher(chunk, tracker))
+                            .build());
+
+            if (response.statusCode() == successStatus) {
+                return response;
+            }
+
+            // Non-success: discard the bytes this attempt reported before deciding what to do.
+            tracker.restore(baseline);
+            UploadErrorType type = classify(response.statusCode(), response.body());
+            if (type == UploadErrorType.EXPIRY && refreshable && attempt < MAX_PART_ATTEMPTS) {
+                // Re-sign this part and a forward window of upcoming parts in a single call, then retry.
+                partUrls.putAll(refreshUrls(uploadId, contentLength, refreshWindow(partNumber, contentLength)));
+                continue;
+            }
+            throw new IOException("Failed to upload part " + partNumber + ": HTTP " + response.statusCode()
+                    + (isNotEmpty(response.body()) ? ", Message: " + response.body() : ""));
+        }
+        throw new IOException("Failed to upload part " + partNumber + " after " + MAX_PART_ATTEMPTS + " attempts");
+    }
+
+    /**
+     * Sends a request with transient-failure recovery shared by all providers: network errors and transient
+     * HTTP responses (5xx / throttling, per {@link #classify}) are retried by re-sending the same request
+     * with exponential backoff, up to {@link #MAX_PART_ATTEMPTS}. Returns the first response that is not a
+     * transient failure — the caller decides whether that means success, expiry, resume, or hard failure.
+     * Throws the last network error if the budget is exhausted by network failures.
+     *
+     * @param baseline the tracker snapshot taken before the first attempt (see {@link ProgressTracker#snapshot()})
+     * @param request  factory invoked once per attempt to build a fresh request (and body publisher)
+     */
+    protected HttpResponse<String> sendWithRetryOnTransientError(HttpClient client, ProgressTracker tracker, long baseline,
+                                                                 Supplier<HttpRequest> request) throws IOException, InterruptedException {
+
+        IOException lastError = null;
+        for (int attempt = 1; attempt <= MAX_PART_ATTEMPTS; attempt++) {
+            tracker.restore(baseline);
+            try {
+                HttpResponse<String> response = client.send(request.get(), HttpResponse.BodyHandlers.ofString());
+                if (classify(response.statusCode(), response.body()) == UploadErrorType.TRANSIENT && attempt < MAX_PART_ATTEMPTS) {
+                    backoff(attempt);
+                    continue;
+                }
+                return response;
+            } catch (IOException e) {
+                // Network-level failure (connection reset, socket timeout, ...) — treat as transient.
+                lastError = e;
+                if (attempt == MAX_PART_ATTEMPTS) {
+                    break;
+                }
+                backoff(attempt);
+            }
+        }
+        throw lastError != null ? lastError : new IOException("Request failed after " + MAX_PART_ATTEMPTS + " attempts");
+    }
+
+    private List<Integer> refreshWindow(int partNumber, long contentLength) {
+        int total = totalParts(contentLength);
+        List<Integer> parts = new ArrayList<>();
+        for (int p = partNumber; p < partNumber + REFRESH_WINDOW && p <= total; p++) {
+            parts.add(p);
+        }
+        return parts;
+    }
+
+    /**
+     * Requests freshly-signed upload URLs for the given part numbers.
+     */
+    protected Map<Integer, String> refreshUrls(String uploadId, long contentLength, List<Integer> partNumbers) throws ApiException {
+        DataLinkMultiPartUploadRequest request = new DataLinkMultiPartUploadRequest();
+        request.setUploadId(uploadId);
+        request.setFileName(relativeKey);
+        request.setContentLength(contentLength);
+        request.setPartNumbers(partNumbers);
+
+        DataLinkMultiPartUploadResponse response;
+        try {
+            response = outputDir != null
+                    ? dataLinksApi.generateDataLinkUploadUrlWithPath(id, outputDir, request, credId, wspId, null)
+                    : dataLinksApi.generateDataLinkUploadUrl(id, request, credId, wspId, null);
+        } catch (ApiException e) {
+            if (e.getCode() == 404) {
+                throw new TowerRuntimeException("Token refresh is not supported for this Platform version.");
+            }
+            throw e;
+        }
+
+        // A Platform that predates re-signing ignores the uploadId/partNumbers fields and instead initiates a
+        // brand-new multi-part upload, returning a different uploadId. Detect that by the echoed uploadId and
+        // fail clearly rather than mixing URLs from a different upload into the in-progress one.
+        if (!uploadId.equals(response.getUploadId())) {
+            abandonUpload(response.getUploadId());
+            throw new TowerRuntimeException("Token refresh is not supported for this Platform version.");
+        }
+
+        List<String> urls = response.getUploadUrls();
+        Map<Integer, String> map = new HashMap<>();
+        if (urls != null) {
+            if (urls.size() != partNumbers.size()) {
+                throw new TowerRuntimeException("Platform returned " + urls.size()
+                        + " refreshed upload URLs but " + partNumbers.size() + " were requested");
+            }
+            for (int i = 0; i < partNumbers.size(); i++) {
+                map.put(partNumbers.get(i), urls.get(i));
+            }
+        }
+        return map;
+    }
+
+    /**
+     * Finalizes a multi-part upload on the Platform. With {@code withError} the upload is aborted instead of
+     * committed, which is also how an unwanted upload is cleaned up.
+     */
+    protected void finishUpload(String uploadId, boolean withError, List<UploadEtag> tags) throws ApiException {
+        DataLinkFinishMultiPartUploadRequest request = new DataLinkFinishMultiPartUploadRequest();
+        request.setFileName(relativeKey);
+        request.setUploadId(uploadId);
+        request.setWithError(withError);
+        request.setTags(tags);
+
+        if (outputDir != null) {
+            dataLinksApi.finishDataLinkUploadWithPath(id, outputDir, request, credId, wspId);
+        } else {
+            dataLinksApi.finishDataLinkUpload(id, request, credId, wspId);
+        }
+    }
+
+    private void abandonUpload(String uploadId) {
+        if (uploadId == null) {
+            return;
+        }
+        try {
+            finishUpload(uploadId, true, Collections.emptyList());
+        } catch (Exception e) {
+            // ignore — cleanup is best-effort against a Platform that may not support it
+        }
+    }
+
+    /**
+     * Classifies a failed part upload from its HTTP status and provider error body:
+     * <ul>
+     *   <li>EXPIRY — the signing credentials expired; the URL must be refreshed before retrying</li>
+     *   <li>TRANSIENT — a temporary error (5xx / 429 / throttling / network); retry the same URL with backoff</li>
+     *   <li>HARD_FAIL — anything else; do not retry</li>
+     * </ul>
+     */
+    protected UploadErrorType classify(int statusCode, String body) {
+        String code = extractErrorCode(body);
+        if (code != null) {
+            switch (code) {
+                case "ExpiredToken":            // S3
+                case "SignatureDoesNotMatch":   // S3
+                case "RequestTimeTooSkewed":    // S3
+                    return UploadErrorType.EXPIRY;
+                case "InternalError":           // S3
+                case "SlowDown":                // S3 throttling
+                case "RequestTimeout":          // S3
+                case "ServerBusy":              // Azure throttling
+                case "OperationTimedOut":       // Azure
+                    return UploadErrorType.TRANSIENT;
+                default:
+                    // fall through to status-based classification
+            }
+        }
+        // 429 is how GCS (and some fronting proxies) signal throttling, without an XML error body.
+        if (statusCode == 429 || statusCode == 500 || statusCode == 502 || statusCode == 503 || statusCode == 504) {
+            return UploadErrorType.TRANSIENT;
+        }
+        return UploadErrorType.HARD_FAIL;
+    }
+
+    protected static String extractErrorCode(String body) {
+        if (!isNotEmpty(body)) {
+            return null;
+        }
+        Matcher m = ERROR_CODE.matcher(body);
+        return m.find() ? m.group(1).trim() : null;
+    }
+
+    protected void backoff(int attempt) throws InterruptedException {
+        long base = BACKOFF_BASE_MILLIS * (1L << (attempt - 1));
+        long jitter = ThreadLocalRandom.current().nextLong(BACKOFF_BASE_MILLIS / 2);
+        Thread.sleep(Math.min(base + jitter, BACKOFF_MAX_MILLIS));
+    }
+    
+    private static boolean isNotEmpty(String s) {
+        return s != null && !s.isEmpty();
+    }
+}
