@@ -61,6 +61,9 @@ public class DownloadCmd extends AbstractDataLinksCmd {
     @CommandLine.Option(names = {"-o", "--output-dir"}, description = "Output directory for downloaded files")
     public String outputDir;
 
+    @CommandLine.Option(names = {"--silent"}, description = "Suppress download progress indicators. Useful for scripting or logging to files.")
+    public boolean silent;
+
     @CommandLine.Parameters(arity = "1..*", description = "Paths to files or directories to download")
     private List<String> paths;
 
@@ -111,7 +114,7 @@ public class DownloadCmd extends AbstractDataLinksCmd {
     private void downloadFile(String path, String id, String credId, Long wspId, Path targetPath) throws ApiException, IOException, InterruptedException {
         DataLinkDownloadUrlResponse urlResponse = dataLinksApi().generateDownloadUrlDataLink(id, path, credId, wspId, false, null);
 
-        boolean showProgress = app().output != OutputType.json;
+        boolean showProgress = app().output != OutputType.json && !silent;
 
         if (showProgress) {
             app().getOut().println("  Downloading file: " + path);
@@ -138,7 +141,7 @@ public class DownloadCmd extends AbstractDataLinksCmd {
                 .orElse(-1);
 
         ProgressTracker tracker = new ProgressTracker(app().getOut(), showProgress, contentLength);
-        try (InputStream in = new ProgressInputStream(response.body(), tracker);
+        try (InputStream in = new ProgressInputStream(response.body(), tracker.newPart());
              OutputStream output = Files.newOutputStream(targetPath)) {
 
             byte[] buffer = new byte[8192];

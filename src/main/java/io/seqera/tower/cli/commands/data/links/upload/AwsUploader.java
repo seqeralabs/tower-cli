@@ -28,15 +28,15 @@ import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class AwsUploader extends AbstractProviderUploader {
 
-    public AwsUploader(String id, String credId, Long wspId, String outputDir, String relativeKey, DataLinksApi dataLinksApi) {
-        super(id, credId, wspId, outputDir, relativeKey, dataLinksApi);
+    public AwsUploader(String id, String credId, Long wspId, String outputDir, String relativeKey, DataLinksApi dataLinksApi, int concurrency) {
+        super(id, credId, wspId, outputDir, relativeKey, dataLinksApi, concurrency);
     }
 
     @Override
@@ -49,27 +49,33 @@ public class AwsUploader extends AbstractProviderUploader {
         // Seed the part-number -> URL map from the initially generated URLs (positional: index+1 == partNumber).
         // The map is updated in place by uploadPartWithRetry whenever URLs are refreshed on expiry.
         List<String> initialUrls = urlResponse.getUploadUrls();
-        Map<Integer, String> partUrls = new HashMap<>();
+        Map<Integer, String> partUrls = new ConcurrentHashMap<>();
         for (int i = 0; i < initialUrls.size(); i++) {
             partUrls.put(i + 1, initialUrls.get(i));
         }
         int totalParts = initialUrls.size();
 
         try (HttpClient client = HttpClient.newHttpClient()) {
-            for (int partNumber = 1; partNumber <= totalParts; partNumber++) {
+            checkPartCount(contentLength, totalParts);
+
+            // Upload all parts concurrently; each returns its ETag keyed by part number.
+            Map<Integer, String> etags = uploadPartsInParallel(totalParts, partNumber -> {
                 byte[] chunk = getChunk(file, partNumber - 1);
-
                 HttpResponse<String> response = uploadPartWithRetry(client, partUrls, partNumber, chunk, tracker, uploadId, contentLength, 200, true);
-
                 Optional<String> etag = response.headers().firstValue("ETag");
-                if (etag.isPresent()) {
-                    UploadEtag uploadEtag = new UploadEtag();
-                    uploadEtag.eTag(etag.get());
-                    uploadEtag.partNumber(partNumber);
-                    tags.add(uploadEtag);
-                } else {
+                if (etag.isEmpty()) {
                     throw new TowerRuntimeException("Failed to upload file: Possible CORS issue");
                 }
+                return etag.get();
+            });
+
+            // S3 requires the completed-parts list in ascending part-number order, so build it from
+            // the keyed results after all parts finish (completion order is nondeterministic).
+            for (int partNumber = 1; partNumber <= totalParts; partNumber++) {
+                UploadEtag uploadEtag = new UploadEtag();
+                uploadEtag.eTag(etags.get(partNumber));
+                uploadEtag.partNumber(partNumber);
+                tags.add(uploadEtag);
             }
         } catch (Exception e) {
             withError = true;

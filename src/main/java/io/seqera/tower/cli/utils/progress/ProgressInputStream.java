@@ -21,24 +21,24 @@ import java.io.InputStream;
 
 public class ProgressInputStream extends InputStream {
         private final InputStream source;
-        private final ProgressTracker tracker;
+        private final ProgressSink sink;
 
-        public ProgressInputStream(InputStream source, ProgressTracker tracker) {
+        public ProgressInputStream(InputStream source, ProgressSink sink) {
             this.source = source;
-            this.tracker = tracker;
+            this.sink = sink;
         }
 
         @Override
         public int read() throws IOException {
             int b = source.read();
-            if (b != -1) tracker.update(1);
+            if (b != -1) sink.update(1);
             return b;
         }
 
         @Override
         public int read(byte[] b, int off, int len) throws IOException {
             int count = source.read(b, off, len);
-            if (count > 0) tracker.update(count);
+            if (count > 0) sink.update(count);
             return count;
         }
 

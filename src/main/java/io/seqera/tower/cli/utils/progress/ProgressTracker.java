@@ -17,65 +17,80 @@
 package io.seqera.tower.cli.utils.progress;
 
 import java.io.PrintWriter;
-import java.time.Instant;
+import java.util.function.LongSupplier;
 
 public class ProgressTracker {
+
+    /** Minimum wall-clock gap between two repaints of the progress bar. */
+    private static final long RENDER_INTERVAL_MILLIS = 1000;
+
     private final PrintWriter out;
     private final boolean showProgress;
     public final long totalBytes;
     private volatile long uploadedBytes = 0;
-    private volatile int lastPercent = -1;
+    private long lastRenderMillis = -1; // -1 = never rendered yet
+    private boolean finished = false;
     private final int barWidth = 40;
-    private final Instant startTime = Instant.now();
+    private final LongSupplier nowMillis;
+    private final long startMillis;
 
     public ProgressTracker(PrintWriter out, boolean showProgress, long totalBytes) {
+        this(out, showProgress, totalBytes, System::currentTimeMillis);
+    }
+
+    ProgressTracker(PrintWriter out, boolean showProgress, long totalBytes, LongSupplier nowMillis) {
         this.out = out;
         this.showProgress = showProgress;
         this.totalBytes = totalBytes;
+        this.nowMillis = nowMillis;
+        this.startMillis = nowMillis.getAsLong();
     }
 
     /**
-     * Returns the current cumulative uploaded-bytes count, so a caller can roll back to it if an
-     * in-flight part fails and has to be retried (avoids double-counting the re-sent bytes).
+     * Creates a progress accounting handle scoped to a single upload part. Each part reports its
+     * bytes through the returned {@link PartProgress}, which can roll back only its own bytes on a
+     * failed attempt — safe even when many parts upload concurrently.
      */
-    public synchronized long snapshot() {
+    public PartProgress newPart() {
+        return new PartProgress(this);
+    }
+
+    /** Current cumulative uploaded-bytes count. Package-private, for observability in tests. */
+    synchronized long currentBytes() {
         return uploadedBytes;
     }
 
-    /**
-     * Restores the cumulative uploaded-bytes count to a previously taken {@link #snapshot()} value,
-     * used to discard the progress reported by a failed part before it is retried.
-     */
-    public synchronized void restore(long bytes) {
-        uploadedBytes = bytes;
-    }
-
-    public synchronized void update(long count) {
+    synchronized void update(long count) {
         uploadedBytes += count;
-        int percent = (int) ((uploadedBytes * 100) / totalBytes);
-        if (percent != lastPercent) {
-            lastPercent = percent;
 
-            long elapsedMillis = java.time.Duration.between(startTime, Instant.now()).toMillis();
+        long elapsedMillis = nowMillis.getAsLong() - startMillis;
+        boolean complete = uploadedBytes >= totalBytes;
+        boolean due = lastRenderMillis < 0 || (elapsedMillis - lastRenderMillis) >= RENDER_INTERVAL_MILLIS;
+
+        if (showProgress && !finished && (due || complete)) {
+            lastRenderMillis = elapsedMillis;
+
+            int percent = (int) ((uploadedBytes * 100) / totalBytes);
+            long elapsedSeconds = elapsedMillis / 1000;
             double speed = uploadedBytes / (elapsedMillis / 1000.0);
-            double eta = (totalBytes - uploadedBytes) / speed;
-            if (showProgress) {
-                if (totalBytes > 1024) {
-                    renderBar(percent, uploadedBytes / 1024, totalBytes / 1024, "KBs", eta);
-                }
-                else {
-                    renderBar(percent, uploadedBytes, totalBytes, "bytes", eta);
-                }
+            double eta = (elapsedMillis <= 0 || !Double.isFinite(speed) || speed <= 0)
+                    ? 0.0 : (totalBytes - uploadedBytes) / speed;
+            if (totalBytes > 1024) {
+                renderBar(percent, uploadedBytes / 1024, totalBytes / 1024, "KBs", eta, elapsedSeconds);
+            }
+            else {
+                renderBar(percent, uploadedBytes, totalBytes, "bytes", eta, elapsedSeconds);
             }
         }
-        if (showProgress && percent == 100 ) {
+        if (showProgress && complete && !finished) {
+            finished = true;
             out.println("");
         }
     }
 
-    private void renderBar(int percent, long current, long total, String sizeUnitLabel,double eta) {
+    private void renderBar(int percent, long current, long total, String sizeUnitLabel, double eta, long elapsedSeconds) {
         int filled = (int) ((percent / 100.0) * barWidth);
         String bar = "[" + "=".repeat(filled) + " ".repeat(barWidth - filled) + "]";
-        out.printf("\r Progress: %s %3d%% (%d/%d %s, ETA: %.1fs)", bar, percent, current, total, sizeUnitLabel, eta);
+        out.printf("\r Progress: %s %3d%% (%d/%d %s, ETA: %.1fs, Elapsed: %ds)", bar, percent, current, total, sizeUnitLabel, eta, elapsedSeconds);
     }
 }
