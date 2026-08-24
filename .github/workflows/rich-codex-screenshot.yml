@@ -20,7 +20,7 @@ jobs:
         
 
       - name: Generate terminal images with rich-codex
-        uses: ewels/rich-codex@74d8432695de542da2f2acdbc5681cdf306791ec # v1.3.0
+        uses: ewels/rich-codex@1af970c6b6850d5870fed9041ac7a6337940fdc3 # v1.3.1
         env:
           TOWER_ACCESS_TOKEN: ${{ secrets.TOWER_ACCESS_TOKEN }}
         with:
