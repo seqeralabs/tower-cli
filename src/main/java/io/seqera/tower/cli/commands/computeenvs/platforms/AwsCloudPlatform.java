@@ -98,6 +98,7 @@ public class AwsCloudPlatform extends AbstractPlatform<AwsCloudConfig> {
                     .ebsBootSize(adv.ebsBootSize)
                     .ebsEncrypted(adv.ebsEncrypted)
                     .ebsKmsKeyId(adv.ebsKmsKeyId)
+                    .secretsKmsKeyId(adv.secretsKmsKeyId)
                     .instanceProfileArn(adv.instanceProfileArn)
                     .vpcId(adv.vpcId)
                     .subnetId(adv.subnetId)
@@ -138,6 +139,9 @@ public class AwsCloudPlatform extends AbstractPlatform<AwsCloudConfig> {
 
         @Option(names = {"--ebs-kms-key"}, description = "KMS key ARN used to encrypt the boot EBS volume. Only applied when EBS encryption is enabled (--ebs-encryption). When omitted, the account/region default EBS encryption key is used.")
         public String ebsKmsKeyId;
+
+        @Option(names = {"--secrets-kms-key"}, description = "Customer-managed KMS key used to encrypt the temporary Secrets Manager secrets created for runs that use pipeline secrets. Accepts a key ARN or a key id. When omitted, the AWS-managed default Secrets Manager key is used.")
+        public String secretsKmsKeyId;
 
         @Option(names = {"--ec2-key-pair"}, description = "EC2 key pair name for SSH access to running instances. The key pair must already exist in the specified region.")
         public String ec2KeyPair;
