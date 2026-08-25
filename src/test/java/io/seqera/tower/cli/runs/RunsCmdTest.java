@@ -57,6 +57,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
+import org.mockserver.verify.VerificationTimes;
 
 import java.io.File;
 import java.io.IOException;
@@ -76,6 +77,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
+import static org.mockserver.model.JsonBody.json;
+import static org.mockserver.model.StringBody.subString;
 
 class RunsCmdTest extends BaseCmdTest {
 
@@ -526,6 +529,57 @@ class RunsCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "runs", "relaunch", "-i", "5mDfiUtqyptDib");
         assertOutput(format, out, new RunSubmited("35aLiS0bIM5efd", null, String.format("%s/user/jordi/watch/35aLiS0bIM5efd", url(mock)), "user"));
+    }
+
+    @Test
+    void testRelaunchKeepsOriginalLaunchConfiguration(MockServerClient mock) {
+        mock.reset();
+
+        mock.when(
+                request().withMethod("POST").withPath("/workflow/launch"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workflow_launch")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/workflow/5mDfiUtqyptDib"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workflow_view")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/workflow/5mDfiUtqyptDib/launch"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("runs/workflow_launch_v2")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "runs", "relaunch", "-i", "5mDfiUtqyptDib");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        mock.verify(request().withMethod("POST").withPath("/workflow/launch")
+                .withBody(json("""
+                    {
+                        "launch":{
+                            "id":"5SCyEXKrCqFoGzOXGpesr5",
+                            "computeEnvId":"2lu3NFms1qRvwTVnrs1yhg",
+                            "pipeline":"https://github.com/nf-core/rnaseq",
+                            "pipelineSchemaId":42,
+                            "resume":true,
+                            "nextflowVersion":"26.04.6",
+                            "outputDir":"/outputs",
+                            "syntaxParser":"v2"
+                        }
+                    }""")), VerificationTimes.exactly(1));
+        // 'revision' carries the commit to run, so the original commitId must not be inherited
+        mock.verify(request().withMethod("POST").withPath("/workflow/launch")
+                .withBody(subString("\"commitId\"")), VerificationTimes.exactly(0));
     }
 
     @Test

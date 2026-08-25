@@ -29,6 +29,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
+import org.mockserver.verify.VerificationTimes;
 
 import java.io.IOException;
 
@@ -39,6 +40,7 @@ import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 import static org.mockserver.model.JsonBody.json;
+import static org.mockserver.model.StringBody.subString;
 
 
 class LaunchCmdTest extends BaseCmdTest {
@@ -78,6 +80,65 @@ class LaunchCmdTest extends BaseCmdTest {
         // Assert results
         assertEquals(errorMessage(out.app, new InvalidResponseException("Pipeline 'hello' not found on this workspace.")), out.stdErr);
         assertEquals(1, out.exitCode);
+    }
+
+    @Test
+    void testSubmitLaunchpadPipelineKeepsStoredLaunchConfiguration(MockServerClient mock) {
+
+        // Create server expectation
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("pipelines_sarek")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines/250911634275687/launch"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("pipeline_launch_describe_v2")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/workflow/launch")
+                        .withBody(json("""
+                            {
+                                "launch":{
+                                    "id":"5nmCvXcarkvv8tELMF4KyY",
+                                    "computeEnvId":"4X7YrYJp9B1d1DUpfur7DS",
+                                    "pipeline":"https://github.com/nf-core/sarek",
+                                    "workDir":"/efs",
+                                    "pipelineSchemaId":42,
+                                    "pullLatest":false,
+                                    "stubRun":false,
+                                    "launchContainer":"quay.io/seqeralabs/nf-launcher:j17-24.10.0",
+                                    "nextflowVersion":"26.04.6",
+                                    "outputDir":"/outputs",
+                                    "syntaxParser":"v2"
+                                }
+                            }"""
+                        )),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workflow_launch")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // Run the command
+        ExecOut out = exec(mock, "launch", "sarek");
+
+        // Assert results: the request matcher above is the assertion, the run only submits if it matched
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        // A new run must not inherit the stored session or resume state
+        mock.verify(request().withMethod("POST").withPath("/workflow/launch")
+                .withBody(subString("\"sessionId\"")), VerificationTimes.exactly(0));
+        mock.verify(request().withMethod("POST").withPath("/workflow/launch")
+                .withBody(subString("\"resume\"")), VerificationTimes.exactly(0));
     }
 
     @ParameterizedTest

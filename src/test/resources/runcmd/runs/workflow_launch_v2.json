@@ -1,0 +1,35 @@
+{
+  "launch": {
+    "id": "3r9NghqwymK6xymExVnmdB",
+    "computeEnv": {
+      "id": "2lu3NFms1qRvwTVnrs1yhg",
+      "name": "aws_batch",
+      "platform": "aws-batch",
+      "status": "AVAILABLE"
+    },
+    "pipeline": "https://github.com/nf-core/rnaseq",
+    "workDir": "s3://fusionfs",
+    "revision": null,
+    "commitId": "89bf536ce4faa98b4d50a8ec0a0343780bc62e0a",
+    "sessionId": "d77a5ac4-1a25-45d6-bab0-358605abc332",
+    "configProfiles": null,
+    "configText": null,
+    "towerConfig": null,
+    "paramsText": null,
+    "preRunScript": null,
+    "postRunScript": null,
+    "mainScript": null,
+    "entryName": null,
+    "schemaName": null,
+    "pipelineSchemaId": 42,
+    "resume": false,
+    "pullLatest": false,
+    "stubRun": false,
+    "nextflowVersion": "26.04.6",
+    "outputDir": "/outputs",
+    "syntaxParser": "v2",
+    "resumeDir": "s3://fusionfs/scratch/5qRNYT6iAJfRbJ",
+    "resumeCommitId": "89bf536ce4faa98b4d50a8ec0a0343780bc62e0a",
+    "dateCreated": "2022-08-01T15:58:08Z"
+  }
+}

@@ -24,6 +24,7 @@ import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.runs.RunSubmited;
 import io.seqera.tower.cli.utils.FilesHelper;
+import io.seqera.tower.cli.utils.ModelHelper;
 import io.seqera.tower.model.ComputeEnvResponseDto;
 import io.seqera.tower.model.DescribeWorkflowLaunchResponse;
 import io.seqera.tower.model.SubmitWorkflowLaunchRequest;
@@ -90,9 +91,10 @@ public class RelaunchCmd extends AbstractRunsCmd {
             noResume = true;
         }
 
-        WorkflowLaunchRequest workflowLaunchRequest = new WorkflowLaunchRequest()
+        // Start from the original run configuration so that fields this command does not name are inherited
+        // instead of silently dropped, among them syntaxParser (COMP-2318).
+        WorkflowLaunchRequest workflowLaunchRequest = ModelHelper.createLaunchRequest(launch)
                 .id(workflow.getLaunchId())
-                .sessionId(launch.getSessionId())
                 .computeEnvId(ce != null ? ce.getId() : launch.getComputeEnv().getId())
                 .pipeline(coalesce(pipeline, launch.getPipeline()))
                 .workDir(opts.workDir != null ? opts.workDir : selectWorkDir(!noResume, launch.getResumeDir(), launch.getWorkDir(), workflow.getWorkDir()))
@@ -113,6 +115,9 @@ public class RelaunchCmd extends AbstractRunsCmd {
                 .dateCreated(OffsetDateTime.now())
                 .runName(name)
                 .launchContainer(launchContainer)
+                // 'revision' above already carries the commit to run, so an inherited commitId would pin the
+                // relaunch to the original commit and ignore both the resume commit and '--revision'.
+                .commitId(null)
                 ;
 
         if (!noResume) {
