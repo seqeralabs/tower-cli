@@ -20,7 +20,7 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.commands.labels.Label;
-import io.seqera.tower.cli.commands.pipelines.LaunchOptions;
+import io.seqera.tower.cli.commands.pipelines.NullableLaunchOptions;
 import io.seqera.tower.cli.commands.pipelines.versions.VersionRefOptions;
 import io.seqera.tower.cli.exceptions.InvalidResponseException;
 import io.seqera.tower.cli.responses.Response;
@@ -32,12 +32,12 @@ import io.seqera.tower.model.PipelineDbDto;
 import io.seqera.tower.model.SubmitWorkflowLaunchRequest;
 import io.seqera.tower.model.SubmitWorkflowLaunchResponse;
 import io.seqera.tower.model.WorkflowLaunchRequest;
-import io.seqera.tower.model.WorkflowLaunchRequest.SyntaxParserEnum;
 import io.seqera.tower.model.WorkflowStatus;
 import jakarta.annotation.Nullable;
 import picocli.CommandLine;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
@@ -98,14 +98,8 @@ public class LaunchCmd extends AbstractRootCmd {
     @Option(names = {"--launch-container"}, description = "Container image to use for the Nextflow launcher.")
     String launchContainer;
 
-    @Option(names = {"--syntax-parser"}, description = "Nextflow language syntax parser version: 'v1' (legacy) or 'v2'. Overrides the value stored in the pipeline.")
-    SyntaxParserEnum syntaxParser;
-
-    @Option(names = {"--nextflow-version"}, description = "Nextflow version to run the workflow with. Must exist in the Platform version catalog and meet the minimum required by the compute environment. Overrides the value stored in the pipeline.")
-    String nextflowVersion;
-
-    @Option(names = {"--output-dir"}, description = "Per-run output directory, passed to Nextflow as '-output-dir'. Requires Nextflow 24.10.0 or later and the workflow outputs syntax. Overrides the value stored in the pipeline.")
-    String outputDir;
+    @Mixin
+    NullableLaunchOptions nullableOptions;
 
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
     AdvancedOptions adv;
@@ -151,7 +145,7 @@ public class LaunchCmd extends AbstractRootCmd {
     private WorkflowLaunchRequest updateLaunchRequest(WorkflowLaunchRequest base) throws IOException {
         boolean disableOptimization = coalesce(adv().disableOptimization, false);
 
-        applyNullableOptions(base);
+        nullableOptions.applyNullableOptions(base);
 
         return base
                 .runName(name)
@@ -179,23 +173,6 @@ public class LaunchCmd extends AbstractRootCmd {
                 .sessionId(null)
                 .resume(null)
                 .dateCreated(null);
-    }
-
-    /**
-     * Same reasoning as {@link LaunchOptions#applyNullableOptions}: these setters wrap their argument in
-     * {@code JsonNullable.of()}, so applying them unconditionally would overwrite the pipeline's stored
-     * value with an explicit null. This command declares its own options rather than the shared mixin.
-     */
-    private void applyNullableOptions(WorkflowLaunchRequest base) {
-        if (syntaxParser != null) {
-            base.syntaxParser(syntaxParser);
-        }
-        if (nextflowVersion != null) {
-            base.nextflowVersion(nextflowVersion);
-        }
-        if (outputDir != null) {
-            base.outputDir(outputDir);
-        }
     }
 
     protected Response runTowerPipeline(Long wspId) throws ApiException, IOException {

@@ -16,14 +16,12 @@
 
 package io.seqera.tower.cli.commands.pipelines;
 
-import io.seqera.tower.model.WorkflowLaunchRequest;
-import io.seqera.tower.model.WorkflowLaunchRequest.SyntaxParserEnum;
 import picocli.CommandLine.Option;
 
 import java.nio.file.Path;
 import java.util.List;
 
-public class LaunchOptions {
+public class LaunchOptions extends NullableLaunchOptions {
 
     @Option(names = {"-c", "--compute-env"}, description = "Compute environment identifier where the pipeline will run. Defaults to workspace primary compute environment if omitted. Provide the name or identifier.")
     public String computeEnv;
@@ -72,31 +70,4 @@ public class LaunchOptions {
 
     @Option(names = {"--workspace-secrets"}, split = ",", description = "Array of workspace secrets to make available to the pipeline.")
     public List<String> workspaceSecrets;
-
-    @Option(names = {"--syntax-parser"}, description = "Nextflow language syntax parser version: 'v1' (legacy) or 'v2'.")
-    public SyntaxParserEnum syntaxParser;
-
-    @Option(names = {"--nextflow-version"}, description = "Nextflow version to run the workflow with. Must exist in the Platform version catalog and meet the minimum required by the compute environment.")
-    public String nextflowVersion;
-
-    @Option(names = {"--output-dir"}, description = "Per-run output directory, passed to Nextflow as '-output-dir'. Requires Nextflow 24.10.0 or later and the workflow outputs syntax.")
-    public String outputDir;
-
-    /**
-     * Applies the options whose model fields are {@code JsonNullable}, which is why they cannot join the
-     * coalesce chains: their setters wrap the argument in {@code JsonNullable.of()}, so calling one with a
-     * null would send an explicit null instead of leaving the field undefined. For syntaxParser that is not
-     * neutral - Platform reads an explicit null as the legacy parser (COMP-2318).
-     */
-    public void applyNullableOptions(WorkflowLaunchRequest request) {
-        if (syntaxParser != null) {
-            request.syntaxParser(syntaxParser);
-        }
-        if (nextflowVersion != null) {
-            request.nextflowVersion(nextflowVersion);
-        }
-        if (outputDir != null) {
-            request.outputDir(outputDir);
-        }
-    }
 }
