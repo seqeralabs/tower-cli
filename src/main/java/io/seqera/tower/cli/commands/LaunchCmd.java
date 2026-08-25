@@ -132,12 +132,16 @@ public class LaunchCmd extends AbstractRootCmd {
         ), wspId, null);
     }
 
+    /**
+     * Applies the command line overrides on top of a launch configuration, mutating it in place so that every
+     * field the CLI does not know about still reaches the API. Rebuilding the request here used to drop the
+     * fields this method did not name, among them syntaxParser (COMP-2318).
+     */
     private WorkflowLaunchRequest updateLaunchRequest(WorkflowLaunchRequest base) throws IOException {
-        return new WorkflowLaunchRequest()
-                .id(base.getId())
-                .computeEnvId(base.getComputeEnvId())
-                .runName(coalesce(name, base.getRunName()))
-                .pipeline(base.getPipeline())
+        boolean disableOptimization = coalesce(adv().disableOptimization, false);
+
+        return base
+                .runName(name)
                 .workDir(coalesce(workDir, base.getWorkDir()))
                 .revision(coalesce(revision, base.getRevision()))
                 .commitId(coalesce(commitId, base.getCommitId()))
@@ -145,7 +149,6 @@ public class LaunchCmd extends AbstractRootCmd {
                 .userSecrets(coalesce(removeEmptyValues(adv().userSecrets), base.getUserSecrets()))
                 .workspaceSecrets(coalesce(removeEmptyValues(adv().workspaceSecrets), base.getWorkspaceSecrets()))
                 .configText(coalesce(readStringOrStdin(adv().config), base.getConfigText()))
-                .towerConfig(base.getTowerConfig())
                 .paramsText(coalesce(readStringOrStdin(paramsFile), base.getParamsText()))
                 .preRunScript(coalesce(readStringOrStdin(adv().preRunScript), base.getPreRunScript()))
                 .postRunScript(coalesce(readStringOrStdin(adv().postRunScript), base.getPostRunScript()))
@@ -154,12 +157,15 @@ public class LaunchCmd extends AbstractRootCmd {
                 .schemaName(coalesce(adv().schemaName, base.getSchemaName()))
                 .pullLatest(coalesce(adv().pullLatest, base.getPullLatest()))
                 .stubRun(coalesce(adv().stubRun, base.getStubRun()))
-                .optimizationId(coalesce(adv().disableOptimization, false) ? null : base.getOptimizationId())
-                .optimizationTargets(coalesce(adv().disableOptimization, false) ? null : base.getOptimizationTargets())
-                .labelIds(base.getLabelIds())
+                .optimizationId(disableOptimization ? null : base.getOptimizationId())
+                .optimizationTargets(disableOptimization ? null : base.getOptimizationTargets())
                 .headJobCpus(coalesce(adv().headJobCpus, base.getHeadJobCpus()))
                 .headJobMemoryMb(coalesce(adv().headJobMemoryMb, base.getHeadJobMemoryMb()))
-                .launchContainer(launchContainer);
+                .launchContainer(coalesce(launchContainer, base.getLaunchContainer()))
+                // A stored launch record describes an earlier run: a new run starts a fresh session, never resumes.
+                .sessionId(null)
+                .resume(null)
+                .dateCreated(null);
     }
 
     protected Response runTowerPipeline(Long wspId) throws ApiException, IOException {

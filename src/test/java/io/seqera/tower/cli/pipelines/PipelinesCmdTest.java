@@ -1146,6 +1146,42 @@ class PipelinesCmdTest extends BaseCmdTest {
     }
 
     @Test
+    void testExportKeepsSyntaxParser(MockServerClient mock) {
+
+        mock.reset();
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines").withQueryStringParameter("search", "\"sleep\""), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("pipelines_sleep")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines/183522618315672"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("{\"pipeline\":{\"pipelineId\":183522618315672,\"name\":\"sleep_one_minute\",\"repository\":\"https://github.com/pditommaso/nf-sleep\"}}")
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines/183522618315672/launch"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("{\"launch\":{\"id\":\"5nmCvXcarkvv8tELMF4KyY\",\"pipeline\":\"https://github.com/pditommaso/nf-sleep\",\"workDir\":\"s3://nextflow-ci/jordeu\",\"nextflowVersion\":\"26.04.6\",\"outputDir\":\"/outputs\",\"syntaxParser\":\"v2\",\"launchContainer\":\"quay.io/seqeralabs/nf-launcher:j17-24.10.0\"}}")
+        );
+
+        ExecOut out = exec(mock, "pipelines", "export", "-n", "sleep");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        // An export that drops these fields downgrades the pipeline when it is imported back (COMP-2318)
+        assertTrue(out.stdOut.contains("\"syntaxParser\" : \"v2\""), out.stdOut);
+        assertTrue(out.stdOut.contains("\"nextflowVersion\" : \"26.04.6\""), out.stdOut);
+        assertTrue(out.stdOut.contains("\"outputDir\" : \"/outputs\""), out.stdOut);
+        assertTrue(out.stdOut.contains("\"launchContainer\" : \"quay.io/seqeralabs/nf-launcher:j17-24.10.0\""), out.stdOut);
+    }
+
+    @Test
     void testImport(MockServerClient mock) throws IOException {
 
         mock.reset();

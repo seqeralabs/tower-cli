@@ -1,0 +1,33 @@
+{
+  "launch": {
+    "id": "5nmCvXcarkvv8tELMF4KyY",
+    "computeEnv": {
+      "id": "4X7YrYJp9B1d1DUpfur7DS",
+      "name": "aws jordeu",
+      "platform": "aws-batch",
+      "status": "AVAILABLE"
+    },
+    "pipeline": "https://github.com/nf-core/sarek",
+    "workDir": "/efs",
+    "revision": null,
+    "sessionId": "d77a5ac4-1a25-45d6-bab0-358605abc332",
+    "configProfiles": null,
+    "configText": null,
+    "paramsText": null,
+    "preRunScript": null,
+    "postRunScript": null,
+    "mainScript": null,
+    "entryName": null,
+    "schemaName": null,
+    "pipelineSchemaId": 42,
+    "resume": false,
+    "pullLatest": false,
+    "stubRun": false,
+    "launchContainer": "quay.io/seqeralabs/nf-launcher:j17-24.10.0",
+    "nextflowVersion": "26.04.6",
+    "outputDir": "/outputs",
+    "syntaxParser": "v2",
+    "dateCreated": "2021-06-21T18:06:01Z",
+    "lastUpdated": "2021-07-14T12:55:29Z"
+  }
+}
