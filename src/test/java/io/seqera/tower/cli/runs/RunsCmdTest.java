@@ -583,6 +583,42 @@ class RunsCmdTest extends BaseCmdTest {
     }
 
     @Test
+    void testRelaunchOverridingSyntaxParser(MockServerClient mock) {
+        mock.reset();
+
+        mock.when(
+                request().withMethod("POST").withPath("/workflow/launch"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workflow_launch")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/workflow/5mDfiUtqyptDib"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workflow_view")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/workflow/5mDfiUtqyptDib/launch"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("runs/workflow_launch_v2")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "runs", "relaunch", "-i", "5mDfiUtqyptDib", "--syntax-parser", "v1");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        mock.verify(request().withMethod("POST").withPath("/workflow/launch")
+                .withBody(json("{\"launch\":{\"syntaxParser\":\"v1\"}}")), VerificationTimes.exactly(1));
+    }
+
+    @Test
     void testInvalidAuth(MockServerClient mock) {
         mock.when(
                 request().withMethod("DELETE").withPath("/workflow/5dAZoXrcmZXRO4"), exactly(1)

@@ -16,6 +16,7 @@
 
 package io.seqera.tower.cli.commands.pipelines;
 
+import io.seqera.tower.model.WorkflowLaunchRequest.SyntaxParserEnum;
 import picocli.CommandLine.Option;
 
 import java.nio.file.Path;
@@ -70,4 +71,7 @@ public class LaunchOptions {
 
     @Option(names = {"--workspace-secrets"}, split = ",", description = "Array of workspace secrets to make available to the pipeline.")
     public List<String> workspaceSecrets;
+
+    @Option(names = {"--syntax-parser"}, description = "Nextflow language syntax parser version: 'v1' (legacy) or 'v2'.")
+    public SyntaxParserEnum syntaxParser;
 }

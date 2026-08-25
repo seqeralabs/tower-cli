@@ -97,6 +97,34 @@ public class AddCmd extends AbstractPipelinesCmd {
         String preRunScriptValue = opts.preRunScript == null && ce != null ? ce.getConfig().getPreRunScript() : FilesHelper.readString(opts.preRunScript);
         String postRunScriptValue = opts.postRunScript == null && ce != null ? ce.getConfig().getPostRunScript() : FilesHelper.readString(opts.postRunScript);
 
+        WorkflowLaunchRequest launch = new WorkflowLaunchRequest()
+                .computeEnvId(ce != null ? ce.getId() : null)
+                .pipeline(pipeline)
+                .revision(opts.revision)
+                .commitId(opts.commitId)
+                .workDir(workDirValue)
+                .configProfiles(opts.profile)
+                .paramsText(FilesHelper.readString(opts.paramsFile))
+
+                // Advanced options
+                .configText(FilesHelper.readString(opts.config))
+                .preRunScript(preRunScriptValue)
+                .postRunScript(postRunScriptValue)
+                .pullLatest(opts.pullLatest)
+                .stubRun(opts.stubRun)
+                .mainScript(opts.mainScript)
+                .entryName(opts.entryName)
+                .schemaName(opts.schemaName)
+                .pipelineSchemaId(pipelineSchemaId)
+                .userSecrets(removeEmptyValues(opts.userSecrets))
+                .workspaceSecrets(removeEmptyValues(opts.workspaceSecrets));
+
+        // Only set when requested: the setter cannot express 'undefined', and sending an explicit
+        // null makes Platform fall back to the legacy parser (COMP-2318).
+        if (opts.syntaxParser != null) {
+            launch.syntaxParser(opts.syntaxParser);
+        }
+
         CreatePipelineResponse response;
         try {
             response = pipelinesApi().createPipeline(
@@ -104,28 +132,7 @@ public class AddCmd extends AbstractPipelinesCmd {
                             .name(name)
                             .description(description)
                             .version(versionName != null ? new CreatePipelineVersionRequest().name(versionName) : null)
-                            .launch(new WorkflowLaunchRequest()
-                                    .computeEnvId(ce != null ? ce.getId() : null)
-                                    .pipeline(pipeline)
-                                    .revision(opts.revision)
-                                    .commitId(opts.commitId)
-                                    .workDir(workDirValue)
-                                    .configProfiles(opts.profile)
-                                    .paramsText(FilesHelper.readString(opts.paramsFile))
-
-                                    // Advanced options
-                                    .configText(FilesHelper.readString(opts.config))
-                                    .preRunScript(preRunScriptValue)
-                                    .postRunScript(postRunScriptValue)
-                                    .pullLatest(opts.pullLatest)
-                                    .stubRun(opts.stubRun)
-                                    .mainScript(opts.mainScript)
-                                    .entryName(opts.entryName)
-                                    .schemaName(opts.schemaName)
-                                    .pipelineSchemaId(pipelineSchemaId)
-                                    .userSecrets(removeEmptyValues(opts.userSecrets))
-                                    .workspaceSecrets(removeEmptyValues(opts.workspaceSecrets))
-                            )
+                            .launch(launch)
                     , wspId
             );
         } catch (ApiException e) {
