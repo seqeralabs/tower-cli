@@ -223,11 +223,7 @@ public class UpdateCmd extends AbstractPipelinesCmd {
                 .userSecrets(coalesce(removeEmptyValues(opts.userSecrets), launch.getUserSecrets()))
                 .workspaceSecrets(coalesce(removeEmptyValues(opts.workspaceSecrets), launch.getWorkspaceSecrets()));
 
-        // Only set when requested: the setter cannot express 'undefined', so an unconditional call
-        // would replace an unset value with an explicit null, which Platform reads as the legacy parser.
-        if (opts.syntaxParser != null) {
-            launchRequest.syntaxParser(opts.syntaxParser);
-        }
+        opts.applyNullableOptions(launchRequest);
 
         return new UpdatePipelineRequest()
                 .name(coalesce(newName, pipe.getName()))

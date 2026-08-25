@@ -119,11 +119,7 @@ public class AddCmd extends AbstractPipelinesCmd {
                 .userSecrets(removeEmptyValues(opts.userSecrets))
                 .workspaceSecrets(removeEmptyValues(opts.workspaceSecrets));
 
-        // Only set when requested: the setter cannot express 'undefined', and sending an explicit
-        // null makes Platform fall back to the legacy parser (COMP-2318).
-        if (opts.syntaxParser != null) {
-            launch.syntaxParser(opts.syntaxParser);
-        }
+        opts.applyNullableOptions(launch);
 
         CreatePipelineResponse response;
         try {

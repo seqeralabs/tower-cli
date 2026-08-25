@@ -1185,6 +1185,46 @@ class PipelinesCmdTest extends BaseCmdTest {
     }
 
     @Test
+    void testAddWithNextflowVersionAndOutputDir(MockServerClient mock) {
+
+        mock.reset();
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"primary\":true}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnv\":{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"config\":{\"workDir\":\"s3://nextflow-ci/jordeu\",\"discriminator\":\"aws-batch\"}}}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/pipelines")
+                        .withBody(json("""
+                            {
+                                "launch":{
+                                    "pipeline":"https://github.com/pditommaso/nf-sleep",
+                                    "nextflowVersion":"26.04.6",
+                                    "outputDir":"s3://nextflow-ci/outputs"
+                                }
+                            }"""
+                        )), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"pipeline\":{\"pipelineId\":217997727159863,\"name\":\"sleep_one_minute\"}}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "pipelines", "add", "-n", "sleep_one_minute",
+                "--nextflow-version", "26.04.6", "--output-dir", "s3://nextflow-ci/outputs",
+                "https://github.com/pditommaso/nf-sleep");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
     void testAddWithInvalidSyntaxParser(MockServerClient mock) {
 
         mock.reset();

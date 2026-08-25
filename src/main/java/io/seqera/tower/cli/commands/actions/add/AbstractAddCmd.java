@@ -88,11 +88,7 @@ public abstract class AbstractAddCmd extends AbstractActionsCmd {
                 .mainScript(opts.mainScript)
                 .entryName(opts.entryName);
 
-        // Only set when requested: the setter cannot express 'undefined', and sending an explicit
-        // null makes Platform fall back to the legacy parser (COMP-2318).
-        if (opts.syntaxParser != null) {
-            workflowLaunchRequest.syntaxParser(opts.syntaxParser);
-        }
+        opts.applyNullableOptions(workflowLaunchRequest);
 
         CreateActionRequest request = new CreateActionRequest();
         request.setName(actionName);
