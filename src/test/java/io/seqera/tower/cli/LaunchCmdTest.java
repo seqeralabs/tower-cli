@@ -141,6 +141,51 @@ class LaunchCmdTest extends BaseCmdTest {
                 .withBody(subString("\"resume\"")), VerificationTimes.exactly(0));
     }
 
+    @Test
+    void testSubmitLaunchpadPipelineOverridingSyntaxParser(MockServerClient mock) {
+
+        // Create server expectation
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("pipelines_sarek")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines/250911634275687/launch"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("pipeline_launch_describe_v2")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/workflow/launch")
+                        .withBody(json("""
+                            {
+                                "launch":{
+                                    "pipeline":"https://github.com/nf-core/sarek",
+                                    "syntaxParser":"v1"
+                                }
+                            }"""
+                        )),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workflow_launch")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // Run the command
+        ExecOut out = exec(mock, "launch", "sarek", "--syntax-parser", "v1");
+
+        // Assert results
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+    }
+
     @ParameterizedTest
     @EnumSource(OutputType.class)
     void testSubmitLaunchpadPipeline(OutputType format, MockServerClient mock) {

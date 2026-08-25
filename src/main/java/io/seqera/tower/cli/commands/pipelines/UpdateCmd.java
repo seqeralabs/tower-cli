@@ -23,6 +23,7 @@ import io.seqera.tower.cli.exceptions.InvalidResponseException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.pipelines.PipelinesUpdated;
 import io.seqera.tower.cli.utils.FilesHelper;
+import io.seqera.tower.cli.utils.ModelHelper;
 import io.seqera.tower.cli.utils.VersionNameHelper;
 import io.seqera.tower.model.LaunchDbDto;
 import io.seqera.tower.model.PipelineDbDto;
@@ -199,29 +200,39 @@ public class UpdateCmd extends AbstractPipelinesCmd {
      * fields without having to re-specify everything.
      */
     private UpdatePipelineRequest buildUpdateRequest(PipelineDbDto pipe, LaunchDbDto launch, String ceId) throws IOException {
+        // Start from the stored configuration so fields without a flag survive the update untouched
+        // instead of being reset to null, among them syntaxParser (COMP-2318).
+        WorkflowLaunchRequest launchRequest = ModelHelper.createLaunchRequest(launch)
+                .computeEnvId(ceId)
+                .pipeline(coalesce(pipeline, launch.getPipeline()))
+                .revision(coalesce(opts.revision, launch.getRevision()))
+                // A pinned commit only applies to the revision it was given with, so it is not inherited
+                .commitId(opts.commitId)
+                .workDir(coalesce(opts.workDir, launch.getWorkDir()))
+                .configProfiles(coalesce(opts.profile, launch.getConfigProfiles()))
+                .paramsText(coalesce(FilesHelper.readString(opts.paramsFile), launch.getParamsText()))
+                .configText(coalesce(FilesHelper.readString(opts.config), launch.getConfigText()))
+                .preRunScript(coalesce(FilesHelper.readString(opts.preRunScript), launch.getPreRunScript()))
+                .postRunScript(coalesce(FilesHelper.readString(opts.postRunScript), launch.getPostRunScript()))
+                .pullLatest(coalesce(opts.pullLatest, launch.getPullLatest()))
+                .stubRun(coalesce(opts.stubRun, launch.getStubRun()))
+                .mainScript(coalesce(opts.mainScript, launch.getMainScript()))
+                .entryName(coalesce(opts.entryName, launch.getEntryName()))
+                .schemaName(coalesce(opts.schemaName, launch.getSchemaName()))
+                .pipelineSchemaId(coalesce(pipelineSchemaId, launch.getPipelineSchemaId()))
+                .userSecrets(coalesce(removeEmptyValues(opts.userSecrets), launch.getUserSecrets()))
+                .workspaceSecrets(coalesce(removeEmptyValues(opts.workspaceSecrets), launch.getWorkspaceSecrets()));
+
+        // Only set when requested: the setter cannot express 'undefined', so an unconditional call
+        // would replace an unset value with an explicit null, which Platform reads as the legacy parser.
+        if (opts.syntaxParser != null) {
+            launchRequest.syntaxParser(opts.syntaxParser);
+        }
+
         return new UpdatePipelineRequest()
                 .name(coalesce(newName, pipe.getName()))
                 .description(coalesce(description, pipe.getDescription()))
-                .launch(new WorkflowLaunchRequest()
-                        .computeEnvId(ceId)
-                        .pipeline(coalesce(pipeline, launch.getPipeline()))
-                        .revision(coalesce(opts.revision, launch.getRevision()))
-                        .commitId(opts.commitId)
-                        .workDir(coalesce(opts.workDir, launch.getWorkDir()))
-                        .configProfiles(coalesce(opts.profile, launch.getConfigProfiles()))
-                        .paramsText(coalesce(FilesHelper.readString(opts.paramsFile), launch.getParamsText()))
-                        .configText(coalesce(FilesHelper.readString(opts.config), launch.getConfigText()))
-                        .preRunScript(coalesce(FilesHelper.readString(opts.preRunScript), launch.getPreRunScript()))
-                        .postRunScript(coalesce(FilesHelper.readString(opts.postRunScript), launch.getPostRunScript()))
-                        .pullLatest(coalesce(opts.pullLatest, launch.getPullLatest()))
-                        .stubRun(coalesce(opts.stubRun, launch.getStubRun()))
-                        .mainScript(coalesce(opts.mainScript, launch.getMainScript()))
-                        .entryName(coalesce(opts.entryName, launch.getEntryName()))
-                        .schemaName(coalesce(opts.schemaName, launch.getSchemaName()))
-                        .pipelineSchemaId(coalesce(pipelineSchemaId, launch.getPipelineSchemaId()))
-                        .userSecrets(coalesce(removeEmptyValues(opts.userSecrets), launch.getUserSecrets()))
-                        .workspaceSecrets(coalesce(removeEmptyValues(opts.workspaceSecrets), launch.getWorkspaceSecrets()))
-                );
+                .launch(launchRequest);
     }
 
     // --- Post-update version handling ---

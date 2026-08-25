@@ -31,6 +31,7 @@ import io.seqera.tower.model.PipelineDbDto;
 import io.seqera.tower.model.SubmitWorkflowLaunchRequest;
 import io.seqera.tower.model.SubmitWorkflowLaunchResponse;
 import io.seqera.tower.model.WorkflowLaunchRequest;
+import io.seqera.tower.model.WorkflowLaunchRequest.SyntaxParserEnum;
 import io.seqera.tower.model.WorkflowStatus;
 import jakarta.annotation.Nullable;
 import picocli.CommandLine;
@@ -96,6 +97,9 @@ public class LaunchCmd extends AbstractRootCmd {
     @Option(names = {"--launch-container"}, description = "Container image to use for the Nextflow launcher.")
     String launchContainer;
 
+    @Option(names = {"--syntax-parser"}, description = "Nextflow language syntax parser version: 'v1' (legacy) or 'v2'. Overrides the value stored in the pipeline.")
+    SyntaxParserEnum syntaxParser;
+
     @ArgGroup(heading = "%nAdvanced options:%n", validate = false)
     AdvancedOptions adv;
 
@@ -139,6 +143,12 @@ public class LaunchCmd extends AbstractRootCmd {
      */
     private WorkflowLaunchRequest updateLaunchRequest(WorkflowLaunchRequest base) throws IOException {
         boolean disableOptimization = coalesce(adv().disableOptimization, false);
+
+        // Only set when requested: the setter cannot express 'undefined', so an unconditional call
+        // would replace the pipeline's stored value with an explicit null, which Platform reads as v1.
+        if (syntaxParser != null) {
+            base.syntaxParser(syntaxParser);
+        }
 
         return base
                 .runName(name)

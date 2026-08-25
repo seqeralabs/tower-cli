@@ -24,6 +24,7 @@ import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.actions.ActionUpdate;
 import io.seqera.tower.cli.utils.FilesHelper;
+import io.seqera.tower.cli.utils.ModelHelper;
 import io.seqera.tower.model.ActionResponseDto;
 import io.seqera.tower.model.UpdateActionRequest;
 import io.seqera.tower.model.WorkflowLaunchRequest;
@@ -31,6 +32,7 @@ import picocli.CommandLine;
 
 import java.io.IOException;
 import java.util.Objects;
+import static io.seqera.tower.cli.utils.ModelHelper.coalesce;
 
 @CommandLine.Command(
         name = "update",
@@ -77,23 +79,31 @@ public class UpdateCmd extends AbstractActionsCmd {
         String postRunScriptValue = opts.postRunScript != null ? FilesHelper.readString(opts.postRunScript) : action.getLaunch().getPostRunScript();
 
 
-        WorkflowLaunchRequest workflowLaunchRequest = new WorkflowLaunchRequest();
-        workflowLaunchRequest.computeEnvId(ceId)
+        // Start from the stored configuration so fields without a flag survive the update untouched
+        // instead of being reset to null, among them syntaxParser (COMP-2318).
+        WorkflowLaunchRequest workflowLaunchRequest = ModelHelper.createLaunchRequest(action.getLaunch())
+                .computeEnvId(ceId)
                 .id(action.getLaunch().getId())
                 .pipeline(action.getLaunch().getPipeline())
-                .revision(opts.revision)
+                .revision(coalesce(opts.revision, action.getLaunch().getRevision()))
                 .workDir(workDirValue)
-                .configProfiles(opts.profile)
-                .paramsText(FilesHelper.readString(opts.paramsFile))
+                .configProfiles(coalesce(opts.profile, action.getLaunch().getConfigProfiles()))
+                .paramsText(coalesce(FilesHelper.readString(opts.paramsFile), action.getLaunch().getParamsText()))
 
                 // Advanced options
-                .configText(FilesHelper.readString(opts.config))
+                .configText(coalesce(FilesHelper.readString(opts.config), action.getLaunch().getConfigText()))
                 .preRunScript(preRunScriptValue)
                 .postRunScript(postRunScriptValue)
-                .pullLatest(opts.pullLatest)
-                .stubRun(opts.stubRun)
-                .mainScript(opts.mainScript)
-                .entryName(opts.entryName);
+                .pullLatest(coalesce(opts.pullLatest, action.getLaunch().getPullLatest()))
+                .stubRun(coalesce(opts.stubRun, action.getLaunch().getStubRun()))
+                .mainScript(coalesce(opts.mainScript, action.getLaunch().getMainScript()))
+                .entryName(coalesce(opts.entryName, action.getLaunch().getEntryName()));
+
+        // Only set when requested: the setter cannot express 'undefined', so an unconditional call
+        // would replace an unset value with an explicit null, which Platform reads as the legacy parser.
+        if (opts.syntaxParser != null) {
+            workflowLaunchRequest.syntaxParser(opts.syntaxParser);
+        }
 
         UpdateActionRequest request = new UpdateActionRequest();
         request.setName(newName != null ? newName : actionName);
