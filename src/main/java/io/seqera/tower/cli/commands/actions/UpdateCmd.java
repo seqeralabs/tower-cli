@@ -99,11 +99,7 @@ public class UpdateCmd extends AbstractActionsCmd {
                 .mainScript(coalesce(opts.mainScript, action.getLaunch().getMainScript()))
                 .entryName(coalesce(opts.entryName, action.getLaunch().getEntryName()));
 
-        // Only set when requested: the setter cannot express 'undefined', so an unconditional call
-        // would replace an unset value with an explicit null, which Platform reads as the legacy parser.
-        if (opts.syntaxParser != null) {
-            workflowLaunchRequest.syntaxParser(opts.syntaxParser);
-        }
+        opts.applyNullableOptions(workflowLaunchRequest);
 
         UpdateActionRequest request = new UpdateActionRequest();
         request.setName(newName != null ? newName : actionName);

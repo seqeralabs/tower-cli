@@ -142,7 +142,7 @@ class LaunchCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testSubmitLaunchpadPipelineOverridingSyntaxParser(MockServerClient mock) {
+    void testSubmitLaunchpadPipelineOverridingNullableOptions(MockServerClient mock) {
 
         // Create server expectation
         mock.when(
@@ -163,7 +163,9 @@ class LaunchCmdTest extends BaseCmdTest {
                             {
                                 "launch":{
                                     "pipeline":"https://github.com/nf-core/sarek",
-                                    "syntaxParser":"v1"
+                                    "syntaxParser":"v1",
+                                    "nextflowVersion":"25.10.1",
+                                    "outputDir":"/new-outputs"
                                 }
                             }"""
                         )),
@@ -179,7 +181,8 @@ class LaunchCmdTest extends BaseCmdTest {
         );
 
         // Run the command
-        ExecOut out = exec(mock, "launch", "sarek", "--syntax-parser", "v1");
+        ExecOut out = exec(mock, "launch", "sarek", "--syntax-parser", "v1",
+                "--nextflow-version", "25.10.1", "--output-dir", "/new-outputs");
 
         // Assert results
         assertEquals("", out.stdErr);

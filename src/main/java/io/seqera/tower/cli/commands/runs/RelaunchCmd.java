@@ -120,11 +120,7 @@ public class RelaunchCmd extends AbstractRunsCmd {
                 .commitId(null)
                 ;
 
-        // Only set when requested: the setter cannot express 'undefined', so an unconditional call
-        // would replace the original run's value with an explicit null, which Platform reads as v1.
-        if (opts.syntaxParser != null) {
-            workflowLaunchRequest.syntaxParser(opts.syntaxParser);
-        }
+        opts.applyNullableOptions(workflowLaunchRequest);
 
         if (!noResume) {
             workflowLaunchRequest.sessionId(workflow.getSessionId());
