@@ -37,13 +37,28 @@ jobs:
       actions: read
       id-token: write
     steps:
+      # CodeQL actions/untrusted-checkout-toctou: refs/pull/N/head is mutable, an
+      # attacker could push a different commit after the trusted comment fires this
+      # job but before checkout runs. Resolve the SHA once, right after the trust
+      # gate above, and pin checkout to it instead of the branch ref.
+      # https://github.com/AdnaneKhan/ActionsTOCTOU
+      # https://docs.github.com/en/actions/reference/security/secure-use
+      - name: Resolve trusted PR head SHA
+        id: resolve-sha
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          PR_NUMBER="${{ github.event.issue.number || github.event.pull_request.number }}"
+          SHA=$(gh pr view "$PR_NUMBER" --repo "${{ github.repository }}" --json headRefOid --jq .headRefOid)
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+
       - name: Checkout PR head
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # ratchet:actions/checkout@v4.4.0
         with:
           # Agent mode performs no branch setup of its own (unlike tag mode), and
           # a comment event points at the default branch — without an explicit ref
           # every file Claude reads would be master's copy, not the change's.
-          ref: refs/pull/${{ github.event.issue.number || github.event.pull_request.number }}/head
+          ref: ${{ steps.resolve-sha.outputs.sha }}
           fetch-depth: 1
 
       - name: Run Claude PR Review
