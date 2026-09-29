@@ -32,4 +32,15 @@ public interface CredentialsProvider {
     default boolean useExternalId() {
         return false;
     }
+
+    /**
+     * Whether to describe the credentials after creation, to surface server-generated
+     * setup details (External ID, trust policy).
+     *
+     * <p>Defaults to {@link #useExternalId()}, but is not equivalent to it: a provider may have
+     * setup details without an External ID (e.g. AWS workload identity returns only a trust policy).
+     */
+    default boolean fetchSetupDetails() {
+        return useExternalId();
+    }
 }

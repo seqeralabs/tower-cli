@@ -31,8 +31,11 @@ public class AwsProvider extends AbstractProvider<AwsSecurityKeys> {
     @Option(names = {"-r", "--assume-role-arn"}, description = "IAM role ARN to assume for accessing AWS resources. Allows cross-account access or privilege elevation. Must be a fully qualified ARN (e.g., arn:aws:iam::123456789012:role/RoleName).")
     String assumeRoleArn;
 
-    @Option(names = {"--mode"}, description = "AWS credential mode: 'keys' (access key + secret key) or 'role' (IAM role only). Default: keys.")
+    @Option(names = {"--mode"}, description = "AWS credential mode: 'keys' (access key + secret key), 'role' (IAM role only) or 'workload-identity' (OIDC workload identity federation via sts:AssumeRoleWithWebIdentity, requires Identity Federation enabled). Default: keys. The mode cannot be changed after creation; on update, it defaults to the mode of the existing credentials.")
     String mode;
+
+    // Mode of the existing credentials, used on update when '--mode' is not given
+    private AwsCredentialsMode inheritedMode;
 
     @Option(names = {"--generate-external-id"}, description = "Generate a platform-managed External ID for the credential (used with IAM role ARN).", defaultValue = "false")
     boolean generateExternalId;
@@ -68,22 +71,51 @@ public class AwsProvider extends AbstractProvider<AwsSecurityKeys> {
         if (mode == AwsCredentialsMode.role) {
             return true;
         }
+        if (mode == AwsCredentialsMode.workloadIdentity) {
+            return false;
+        }
         return generateExternalId && assumeRoleArn != null;
+    }
+
+    @Override
+    public boolean fetchSetupDetails() {
+        return useExternalId() || getMode() == AwsCredentialsMode.workloadIdentity;
+    }
+
+    public boolean hasMode() {
+        return mode != null;
+    }
+
+    public void inheritMode(AwsCredentialsMode mode) {
+        this.inheritedMode = mode;
     }
 
     private AwsCredentialsMode getMode() {
         if (mode == null) {
-            return null;
+            return inheritedMode;
         }
         return switch (mode.toLowerCase()) {
             case "keys" -> AwsCredentialsMode.keys;
             case "role" -> AwsCredentialsMode.role;
-            default -> throw new TowerRuntimeException(String.format("Invalid AWS credential mode '%s'. Allowed values: 'keys', 'role'.", mode));
+            case "workload-identity", "workloadidentity" -> AwsCredentialsMode.workloadIdentity;
+            default -> throw new TowerRuntimeException(String.format("Invalid AWS credential mode '%s'. Allowed values: 'keys', 'role', 'workload-identity'.", mode));
         };
     }
 
     private void validate() {
         AwsCredentialsMode mode = getMode();
+
+        if (mode == AwsCredentialsMode.workloadIdentity) {
+            if (keys != null && (keys.accessKey != null || keys.secretKey != null)) {
+                throw new TowerRuntimeException("Options '--access-key' and '--secret-key' cannot be used with '--mode=workload-identity'. Workload identity mode uses short-lived OIDC tokens without static credentials.");
+            }
+            if (assumeRoleArn == null) {
+                throw new TowerRuntimeException("Option '--assume-role-arn' is required when using '--mode=workload-identity'.");
+            }
+            if (generateExternalId) {
+                throw new TowerRuntimeException("Option '--generate-external-id' cannot be used with '--mode=workload-identity'.");
+            }
+        }
 
         if (mode == AwsCredentialsMode.role) {
             if (keys != null && (keys.accessKey != null || keys.secretKey != null)) {

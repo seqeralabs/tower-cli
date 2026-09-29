@@ -66,7 +66,9 @@ public abstract class AbstractAddCmd<T extends SecurityKeys> extends AbstractCre
 
         String externalId = null;
         String setupSnippet = null;
-        if (useExternalId) {
+        // Not the same as useExternalId: AWS workload identity has no External ID (useExternalId=false)
+        // but still needs the describe call to surface its trust policy.
+        if (provider.fetchSetupDetails()) {
             try {
                 DescribeCredentialsResponse describe = credentialsApi().describeCredentials(resp.getCredentialsId(), wspId);
                 if (describe != null) {

@@ -275,6 +275,188 @@ class AwsProviderTest extends BaseCmdTest {
         assertOutput(format, out, new CredentialsUpdated("AWS", "aws", USER_WORKSPACE_NAME));
     }
 
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAddWithWorkloadIdentityMode(OutputType format, MockServerClient mock) {
+
+        mock.when(
+                request()
+                        .withMethod("POST")
+                        .withPath("/credentials")
+                        .withQueryStringParameter("useExternalId", "false")
+                        .withBody(json("{\"credentials\":{\"keys\":{\"mode\":\"workloadIdentity\",\"assumeRoleArn\":\"arn:aws:iam::222222222222:role/WifRole\"},\"name\":\"aws-wif\",\"provider\":\"aws\"}}")),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentialsId\":\"6cz5A8cuBkB5iJliCwJCFU\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/credentials/6cz5A8cuBkB5iJliCwJCFU"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":{\"id\":\"6cz5A8cuBkB5iJliCwJCFU\",\"name\":\"aws-wif\",\"provider\":\"aws\",\"keys\":{\"discriminator\":\"aws\",\"mode\":\"workloadIdentity\",\"assumeRoleArn\":\"arn:aws:iam::222222222222:role/WifRole\"}},\"setupSnippet\":\"{ \\\"Action\\\": \\\"sts:AssumeRoleWithWebIdentity\\\" }\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "credentials", "add", "aws", "-n", "aws-wif", "--mode=workload-identity", "-r", "arn:aws:iam::222222222222:role/WifRole");
+        assertOutput(format, out, new CredentialsAdded("AWS", "6cz5A8cuBkB5iJliCwJCFU", "aws-wif", USER_WORKSPACE_NAME,
+                null, "{ \"Action\": \"sts:AssumeRoleWithWebIdentity\" }"));
+    }
+
+    @Test
+    void testAddWithWorkloadIdentityModeCamelCaseAlias(MockServerClient mock) {
+
+        mock.when(
+                request()
+                        .withMethod("POST")
+                        .withPath("/credentials")
+                        .withBody(json("{\"credentials\":{\"keys\":{\"mode\":\"workloadIdentity\",\"assumeRoleArn\":\"arn:aws:iam::222222222222:role/WifRole\"},\"name\":\"aws-wif\",\"provider\":\"aws\"}}")),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentialsId\":\"6cz5A8cuBkB5iJliCwJCFU\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/credentials/6cz5A8cuBkB5iJliCwJCFU"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":{\"id\":\"6cz5A8cuBkB5iJliCwJCFU\",\"name\":\"aws-wif\",\"provider\":\"aws\"}}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "credentials", "add", "aws", "-n", "aws-wif", "--mode=workloadIdentity", "-r", "arn:aws:iam::222222222222:role/WifRole");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testAddWorkloadIdentityModeRejectsAccessKeys(MockServerClient mock) {
+
+        ExecOut out = exec(mock, "credentials", "add", "aws", "-n", "aws-wif-bad", "--mode=workload-identity", "-a", "access_key", "-s", "secret_key", "-r", "arn_role");
+
+        assertTrue(out.stdErr.contains("'--access-key' and '--secret-key' cannot be used with '--mode=workload-identity'"), "Expected error about access keys not allowed in workload identity mode, got: " + out.stdErr);
+        assertEquals(1, out.exitCode);
+    }
+
+    @Test
+    void testAddWorkloadIdentityModeRequiresAssumeRoleArn(MockServerClient mock) {
+
+        ExecOut out = exec(mock, "credentials", "add", "aws", "-n", "aws-wif-bad", "--mode=workload-identity");
+
+        assertTrue(out.stdErr.contains("'--assume-role-arn' is required when using '--mode=workload-identity'"), "Expected error about missing assume-role-arn, got: " + out.stdErr);
+        assertEquals(1, out.exitCode);
+    }
+
+    @Test
+    void testAddWorkloadIdentityModeRejectsGenerateExternalId(MockServerClient mock) {
+
+        ExecOut out = exec(mock, "credentials", "add", "aws", "-n", "aws-wif-bad", "--mode=workload-identity", "-r", "arn_role", "--generate-external-id");
+
+        assertTrue(out.stdErr.contains("'--generate-external-id' cannot be used with '--mode=workload-identity'"), "Expected error about external ID not allowed in workload identity mode, got: " + out.stdErr);
+        assertEquals(1, out.exitCode);
+    }
+
+    @Test
+    void testAddInvalidMode(MockServerClient mock) {
+
+        ExecOut out = exec(mock, "credentials", "add", "aws", "-n", "aws-bad", "--mode=invalid", "-r", "arn_role");
+
+        assertTrue(out.stdErr.contains("Invalid AWS credential mode 'invalid'. Allowed values: 'keys', 'role', 'workload-identity'."), "Expected error about invalid mode, got: " + out.stdErr);
+        assertEquals(1, out.exitCode);
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testUpdateWithWorkloadIdentityMode(OutputType format, MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/credentials/kfKx9xRgzpIIZrbCMOcU4"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":{\"id\":\"kfKx9xRgzpIIZrbCMOcU4\",\"name\":\"aws\",\"provider\":\"aws\",\"keys\":{\"discriminator\":\"aws\",\"mode\":\"workloadIdentity\",\"assumeRoleArn\":\"arn:aws:iam::123456789012:role/OldRole\"}}}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request()
+                        .withMethod("PUT")
+                        .withPath("/credentials/kfKx9xRgzpIIZrbCMOcU4")
+                        .withQueryStringParameter("useExternalId", "false")
+                        .withBody(json("{\"credentials\":{\"keys\":{\"mode\":\"workloadIdentity\",\"assumeRoleArn\":\"arn:aws:iam::123456789012:role/NewRole\"},\"id\":\"kfKx9xRgzpIIZrbCMOcU4\",\"name\":\"aws\",\"provider\":\"aws\"}}"))
+                        .withContentType(MediaType.APPLICATION_JSON)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(format, mock, "credentials", "update", "aws", "-i", "kfKx9xRgzpIIZrbCMOcU4", "--mode=workload-identity", "-r", "arn:aws:iam::123456789012:role/NewRole");
+        assertOutput(format, out, new CredentialsUpdated("AWS", "aws", USER_WORKSPACE_NAME));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testUpdateInheritsStoredMode(OutputType format, MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/credentials/kfKx9xRgzpIIZrbCMOcU4"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":{\"id\":\"kfKx9xRgzpIIZrbCMOcU4\",\"name\":\"aws\",\"provider\":\"aws\",\"keys\":{\"discriminator\":\"aws\",\"mode\":\"workloadIdentity\",\"assumeRoleArn\":\"arn:aws:iam::123456789012:role/OldRole\"}}}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request()
+                        .withMethod("PUT")
+                        .withPath("/credentials/kfKx9xRgzpIIZrbCMOcU4")
+                        .withQueryStringParameter("useExternalId", "false")
+                        .withBody(json("{\"credentials\":{\"keys\":{\"mode\":\"workloadIdentity\",\"assumeRoleArn\":\"arn:aws:iam::123456789012:role/NewRole\"},\"id\":\"kfKx9xRgzpIIZrbCMOcU4\",\"name\":\"aws\",\"provider\":\"aws\"}}"))
+                        .withContentType(MediaType.APPLICATION_JSON)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(format, mock, "credentials", "update", "aws", "-i", "kfKx9xRgzpIIZrbCMOcU4", "-r", "arn:aws:iam::123456789012:role/NewRole");
+        assertOutput(format, out, new CredentialsUpdated("AWS", "aws", USER_WORKSPACE_NAME));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testUpdateByNameInheritsStoredMode(OutputType format, MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/credentials"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"kfKx9xRgzpIIZrbCMOcU4\",\"name\":\"aws\",\"provider\":\"aws\"}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/credentials/kfKx9xRgzpIIZrbCMOcU4"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":{\"id\":\"kfKx9xRgzpIIZrbCMOcU4\",\"name\":\"aws\",\"provider\":\"aws\",\"keys\":{\"discriminator\":\"aws\",\"mode\":\"workloadIdentity\",\"assumeRoleArn\":\"arn:aws:iam::123456789012:role/OldRole\"}}}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request()
+                        .withMethod("PUT")
+                        .withPath("/credentials/kfKx9xRgzpIIZrbCMOcU4")
+                        .withBody(json("{\"credentials\":{\"keys\":{\"mode\":\"workloadIdentity\",\"assumeRoleArn\":\"arn:aws:iam::123456789012:role/NewRole\"},\"id\":\"kfKx9xRgzpIIZrbCMOcU4\",\"name\":\"aws\",\"provider\":\"aws\"}}"))
+                        .withContentType(MediaType.APPLICATION_JSON)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(format, mock, "credentials", "update", "aws", "-n", "aws", "-r", "arn:aws:iam::123456789012:role/NewRole");
+        assertOutput(format, out, new CredentialsUpdated("AWS", "aws", USER_WORKSPACE_NAME));
+    }
+
+    @Test
+    void testUpdateInheritedWorkloadIdentityModeRejectsAccessKeys(MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/credentials/kfKx9xRgzpIIZrbCMOcU4"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":{\"id\":\"kfKx9xRgzpIIZrbCMOcU4\",\"name\":\"aws\",\"provider\":\"aws\",\"keys\":{\"discriminator\":\"aws\",\"mode\":\"workloadIdentity\",\"assumeRoleArn\":\"arn:aws:iam::123456789012:role/OldRole\"}}}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "credentials", "update", "aws", "-i", "kfKx9xRgzpIIZrbCMOcU4", "-a", "access_key", "-s", "secret_key");
+
+        assertTrue(out.stdErr.contains("'--access-key' and '--secret-key' cannot be used with '--mode=workload-identity'"), "Expected error about access keys not allowed in workload identity mode, got: " + out.stdErr);
+        assertEquals(1, out.exitCode);
+    }
+
     @Test
     void testUpdateNotFound(MockServerClient mock) {
 

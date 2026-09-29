@@ -32,7 +32,7 @@ Run `tw credentials add <provider> -h` to view the required fields for your prov
 
 Seqera requires credentials to access your cloud compute environments. See the [compute environment page][compute-envs] for your cloud provider for more information.
 
-AWS credentials support two modes: **keys** (default) and **role**.
+AWS credentials support three modes: **keys** (default), **role**, and **workload-identity**.
 
 **Keys mode** — uses an AWS access key and secret key:
 
@@ -57,6 +57,48 @@ Keys mode also supports an optional IAM role ARN for cross-account access, with 
   ```
 
 > **Note**: In role mode, `--access-key` and `--secret-key` cannot be used. The `--assume-role-arn` option is required.
+
+**Workload identity mode** — uses OIDC workload identity federation (`sts:AssumeRoleWithWebIdentity`) with short-lived tokens, without static credentials. Requires Identity Federation to be enabled for your organization. The IAM role trust policy to paste into AWS is printed after creation:
+
+  ```console
+  $ tw credentials add aws --name=my_aws_wif_creds --mode=workload-identity --assume-role-arn=<role ARN>
+
+    New AWS credentials 'my_aws_wif_creds (3sxCxvxfx8xnxdxGxQxqxH)' added at user workspace
+
+    Trust policy (paste this into your IAM role's trust relationship):
+
+      { ... }
+  ```
+
+> **Note**: In workload identity mode, `--access-key`, `--secret-key`, and `--generate-external-id` cannot be used. The `--assume-role-arn` option is required.
+
+The AWS credential mode cannot be changed after creation. When updating, `--mode` defaults to the mode of the existing credentials:
+
+  ```bash
+  tw credentials update aws --name=my_aws_wif_creds --assume-role-arn=<new role ARN>
+  ```
+
+Google credentials support two modes: **service-account-key** (default) and **workload-identity**.
+
+**Service account key mode** — uses a service account JSON key file:
+
+  ```console
+  $ tw credentials add google --name=my_google_creds --key=<path to JSON key file>
+
+    New GOOGLE credentials 'my_google_creds (4sxCxvxfx8xnxdxGxQxqxH)' added at user workspace
+  ```
+
+**Workload identity mode** — uses Workload Identity Federation to impersonate a service account with short-lived OIDC tokens, without a key file. Requires Identity Federation to be enabled for your organization:
+
+  ```console
+  $ tw credentials add google --name=my_google_wif_creds --mode=workload-identity \
+      --service-account-email=<name>@<project>.iam.gserviceaccount.com \
+      --workload-identity-provider=projects/<project number>/locations/global/workloadIdentityPools/<pool>/providers/<provider>
+
+    New GOOGLE credentials 'my_google_wif_creds (5sxCxvxfx8xnxdxGxQxqxH)' added at user workspace
+  ```
+
+> **Note**: `--token-audience` is optional and defaults to `//iam.googleapis.com/<workload identity provider>`.
 
 #### Git credentials
 

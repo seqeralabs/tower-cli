@@ -37,7 +37,7 @@ public class GoogleProvider extends AbstractProvider<GoogleSecurityKeys> {
     @Option(names = {"-k", "--key"}, description = "Path to JSON file containing Google Cloud service account key. Download from Google Cloud Console IAM & Admin > Service Accounts.")
     public Path serviceAccountKey;
 
-    @Option(names = {"--mode"}, description = "Google credential mode: 'service-account-key' (JSON key file) or 'workload-identity' (WIF with OIDC tokens). Default: service-account-key.")
+    @Option(names = {"--mode"}, description = "Google credential mode: 'service-account-key' (JSON key file) or 'workload-identity' (WIF with OIDC tokens, requires Identity Federation enabled). Default: service-account-key.")
     String mode;
 
     @Option(names = {"--service-account-email"}, description = "The email address of the Google Cloud service account to impersonate (required for workload-identity mode).")
@@ -46,7 +46,7 @@ public class GoogleProvider extends AbstractProvider<GoogleSecurityKeys> {
     @Option(names = {"--workload-identity-provider"}, description = "The full resource name of the Workload Identity Pool provider. Format: projects/{PROJECT}/locations/global/workloadIdentityPools/{POOL}/providers/{PROVIDER}")
     String workloadIdentityProvider;
 
-    @Option(names = {"--token-audience"}, description = "Optional. The intended audience for the OIDC token. If not specified, defaults to the Workload Identity Provider resource name.")
+    @Option(names = {"--token-audience"}, description = "Optional. The intended audience for the OIDC token. If not specified, defaults to //iam.googleapis.com/<workload identity provider>.")
     String tokenAudience;
 
     public GoogleProvider() {

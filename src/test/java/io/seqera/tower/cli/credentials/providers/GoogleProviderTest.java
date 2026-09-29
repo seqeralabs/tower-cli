@@ -22,6 +22,7 @@ package io.seqera.tower.cli.credentials.providers;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.responses.CredentialsAdded;
+import io.seqera.tower.cli.responses.CredentialsUpdated;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -205,6 +206,34 @@ class GoogleProviderTest extends BaseCmdTest {
 
         assertTrue(out.stdErr.contains("Invalid Google credential mode 'invalid'"), "Expected error about invalid mode, got: " + out.stdErr);
         assertEquals(1, out.exitCode);
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testUpdateWithWorkloadIdentityMode(OutputType format, MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/credentials/kfKx9xRgzpIIZrbCMOcU4"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":{\"id\":\"kfKx9xRgzpIIZrbCMOcU4\",\"name\":\"google-wif\",\"provider\":\"google\"}}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request()
+                        .withMethod("PUT")
+                        .withPath("/credentials/kfKx9xRgzpIIZrbCMOcU4")
+                        .withBody(json("{\"credentials\":{\"keys\":{\"serviceAccountEmail\":\"new-sa@my-project.iam.gserviceaccount.com\",\"workloadIdentityProvider\":\"projects/123456/locations/global/workloadIdentityPools/my-pool/providers/my-provider\",\"tokenAudience\":\"https://my-audience.example.com\"},\"id\":\"kfKx9xRgzpIIZrbCMOcU4\",\"name\":\"google-wif\",\"provider\":\"google\"}}"))
+                        .withContentType(MediaType.APPLICATION_JSON)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(format, mock, "credentials", "update", "google", "-i", "kfKx9xRgzpIIZrbCMOcU4",
+                "--mode=workload-identity",
+                "--service-account-email=new-sa@my-project.iam.gserviceaccount.com",
+                "--workload-identity-provider=projects/123456/locations/global/workloadIdentityPools/my-pool/providers/my-provider",
+                "--token-audience=https://my-audience.example.com");
+        assertOutput(format, out, new CredentialsUpdated("GOOGLE", "google-wif", USER_WORKSPACE_NAME));
     }
 
     @Test
