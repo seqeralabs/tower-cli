@@ -139,6 +139,23 @@ $ tw credentials delete --name=my_aws_creds
   Credentials '1sxCxvxfx8xnxdxGxQxqxH' deleted at user workspace
 ```
 
+Credentials used by running pipelines or Studio sessions are not deleted. The command lists the jobs that use them instead:
+
+```console
+$ tw credentials delete --name=my_aws_creds
+
+ ERROR: Credentials '1sxCxvxfx8xnxdxGxQxqxH' are used by running jobs and were not deleted:
+  - workflow 'nf-hello' (4Xa1b2c3)
+  - studio 'rnaseq-studio' (7Bc4d5e6)
+Use --force to delete them anyway. The jobs listed above will be stopped.
+```
+
+Add `--force` to delete the credentials anyway. The running pipelines and Studio sessions that use them are stopped:
+
+```bash
+tw credentials delete --name=my_aws_creds --force
+```
+
 ## Compute environments
 
 Compute environments in Seqera define the execution platform where a pipeline runs. A compute environment is composed of the credentials, configuration, and storage options related to a particular computing platform.  See [Seqera Platform compute environments][compute-envs] for more information on supported compute environments.

@@ -36,6 +36,9 @@ public class DeleteCmd extends AbstractCredentialsCmd {
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
 
+    @CommandLine.Option(names = {"--force"}, description = "Delete the credentials even if running pipelines or Studio sessions use them. Those runs and sessions are stopped. By default, credentials in use are not deleted.")
+    public boolean force = false;
+
     @Override
     protected Response exec() throws ApiException {
         Long wspId = workspaceId(workspace.workspace);
@@ -48,7 +51,7 @@ public class DeleteCmd extends AbstractCredentialsCmd {
             id = credentials.getId();
         }
 
-        deleteCredentialsById(id, wspId);
+        deleteCredentialsById(id, wspId, force);
         return new CredentialsDeleted(id, workspaceRef(wspId));
     }
 }
