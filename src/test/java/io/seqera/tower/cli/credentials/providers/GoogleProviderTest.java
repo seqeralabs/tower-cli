@@ -237,7 +237,7 @@ class GoogleProviderTest extends BaseCmdTest {
         assertOutput(format, out, new CredentialsUpdated("GOOGLE", "google-wif", USER_WORKSPACE_NAME));
     }
 
-    private static final String WIF_PROVIDER = "\"projects/123456/locations/global/workloadIdentityPools/my-pool/providers/my-provider\"";
+    private static final String WIF_PROVIDER = "projects/123456/locations/global/workloadIdentityPools/my-pool/providers/my-provider";
 
     private static String storedWifCredentials(String id, String name) {
         return "{\"id\":\"" + id + "\",\"name\":\"" + name + "\",\"provider\":\"google\",\"keys\":{\"discriminator\":\"google\","
