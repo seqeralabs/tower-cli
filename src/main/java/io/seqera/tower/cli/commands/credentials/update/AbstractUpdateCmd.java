@@ -24,6 +24,8 @@ import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.responses.CredentialsUpdated;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.Credentials;
+import io.seqera.tower.model.DescribeCredentialsResponse;
+import io.seqera.tower.model.SecurityKeys;
 import io.seqera.tower.model.UpdateCredentialsRequest;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -66,6 +68,20 @@ public abstract class AbstractUpdateCmd extends AbstractCredentialsCmd {
         credentialsApi().updateCredentials(creds.getId(), new UpdateCredentialsRequest().credentials(specs), wspId, getProvider().useExternalId());
 
         return new CredentialsUpdated(getProvider().type().name(), name, workspaceRef(wspId));
+    }
+
+    /**
+     * The keys of the existing credentials, used to default the mode on update. Credentials looked up by
+     * name come from the list endpoint, which may not carry the keys; those are described on demand.
+     *
+     * @return the stored keys, or {@code null} when they cannot be read
+     */
+    protected SecurityKeys storedKeys(Credentials creds, Long wspId) throws ApiException {
+        if (creds.getKeys() != null || credentialsRefOptions.credentialsRef.credentialsId != null) {
+            return creds.getKeys();
+        }
+        DescribeCredentialsResponse describe = credentialsApi().describeCredentials(creds.getId(), wspId);
+        return describe != null && describe.getCredentials() != null ? describe.getCredentials().getKeys() : null;
     }
 
     protected abstract CredentialsProvider getProvider();

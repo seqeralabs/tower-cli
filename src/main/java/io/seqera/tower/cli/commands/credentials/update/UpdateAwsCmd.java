@@ -16,10 +16,17 @@
 
 package io.seqera.tower.cli.commands.credentials.update;
 
+import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.credentials.providers.AwsProvider;
 import io.seqera.tower.cli.commands.credentials.providers.CredentialsProvider;
+import io.seqera.tower.cli.responses.Response;
+import io.seqera.tower.model.AwsSecurityKeys;
+import io.seqera.tower.model.Credentials;
+import io.seqera.tower.model.SecurityKeys;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
+
+import java.io.IOException;
 
 @Command(
         name = "aws",
@@ -33,5 +40,15 @@ public class UpdateAwsCmd extends AbstractUpdateCmd {
     @Override
     protected CredentialsProvider getProvider() {
         return provider;
+    }
+
+    @Override
+    protected Response update(Credentials creds, Long wspId) throws ApiException, IOException {
+        // AWS credential mode cannot change after creation: default to the stored one
+        if (!provider.hasMode()) {
+            SecurityKeys keys = storedKeys(creds, wspId);
+            provider.inheritMode(keys instanceof AwsSecurityKeys aws ? aws.getMode() : null);
+        }
+        return super.update(creds, wspId);
     }
 }

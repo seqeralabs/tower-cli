@@ -18,12 +18,17 @@ package io.seqera.tower.cli.commands.credentials;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import io.seqera.tower.cli.exceptions.CredentialsInUseException;
 import io.seqera.tower.cli.exceptions.CredentialsNotFoundException;
 import io.seqera.tower.model.Credentials;
+import io.seqera.tower.model.DeleteCredentialsConflictResponse;
 import io.seqera.tower.model.ListCredentialsResponse;
 import picocli.CommandLine.Command;
 
 import java.util.Objects;
+
+import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
 
 @Command
 public abstract class AbstractCredentialsCmd extends AbstractApiCmd {
@@ -61,11 +66,39 @@ public abstract class AbstractCredentialsCmd extends AbstractApiCmd {
 
     protected void deleteCredentialsByName(String name, Long wspId) throws CredentialsNotFoundException, ApiException {
         Credentials credentials = findCredentialsByName(wspId, name);
-        deleteCredentialsById(credentials.getId(), wspId);
+        // Used by `add --overwrite`, which keeps deleting without the running-jobs check
+        deleteCredentialsById(credentials.getId(), wspId, true);
     }
 
-    protected void deleteCredentialsById(String id, Long wspId) throws CredentialsNotFoundException, ApiException {
-        credentialsApi().deleteCredentials(id, wspId, false);
+    /**
+     * Deletes the credentials. Unless {@code force} is set, the Platform refuses to delete credentials used by
+     * running pipelines or Studio sessions, instead of stopping them.
+     *
+     * @throws CredentialsInUseException when running jobs use the credentials and {@code force} is not set
+     */
+    protected void deleteCredentialsById(String id, Long wspId, boolean force) throws CredentialsNotFoundException, ApiException {
+        try {
+            credentialsApi().deleteCredentials(id, wspId, !force);
+        } catch (ApiException e) {
+            DeleteCredentialsConflictResponse conflict = decodeConflict(e);
+            if (conflict != null) {
+                throw new CredentialsInUseException(id, conflict.getConflicts());
+            }
+            throw e;
+        }
+    }
+
+    private static DeleteCredentialsConflictResponse decodeConflict(ApiException e) {
+        if (e.getCode() != 409 || e.getResponseBody() == null) {
+            return null;
+        }
+        try {
+            DeleteCredentialsConflictResponse conflict = parseJson(e.getResponseBody(), DeleteCredentialsConflictResponse.class);
+            return conflict.getConflicts() == null || conflict.getConflicts().isEmpty() ? null : conflict;
+        } catch (JsonProcessingException ignored) {
+            // Not a conflict body: let the original error through
+            return null;
+        }
     }
 
 }

@@ -22,11 +22,13 @@ package io.seqera.tower.cli.credentials.providers;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.responses.CredentialsAdded;
+import io.seqera.tower.cli.responses.CredentialsUpdated;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
+import org.mockserver.verify.VerificationTimes;
 
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
@@ -205,6 +207,180 @@ class GoogleProviderTest extends BaseCmdTest {
 
         assertTrue(out.stdErr.contains("Invalid Google credential mode 'invalid'"), "Expected error about invalid mode, got: " + out.stdErr);
         assertEquals(1, out.exitCode);
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testUpdateWithWorkloadIdentityMode(OutputType format, MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/credentials/kfKx9xRgzpIIZrbCMOcU4"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":{\"id\":\"kfKx9xRgzpIIZrbCMOcU4\",\"name\":\"google-wif\",\"provider\":\"google\"}}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request()
+                        .withMethod("PUT")
+                        .withPath("/credentials/kfKx9xRgzpIIZrbCMOcU4")
+                        .withBody(json("{\"credentials\":{\"keys\":{\"serviceAccountEmail\":\"new-sa@my-project.iam.gserviceaccount.com\",\"workloadIdentityProvider\":\"projects/123456/locations/global/workloadIdentityPools/my-pool/providers/my-provider\",\"tokenAudience\":\"https://my-audience.example.com\"},\"id\":\"kfKx9xRgzpIIZrbCMOcU4\",\"name\":\"google-wif\",\"provider\":\"google\"}}"))
+                        .withContentType(MediaType.APPLICATION_JSON)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(format, mock, "credentials", "update", "google", "-i", "kfKx9xRgzpIIZrbCMOcU4",
+                "--mode=workload-identity",
+                "--service-account-email=new-sa@my-project.iam.gserviceaccount.com",
+                "--workload-identity-provider=projects/123456/locations/global/workloadIdentityPools/my-pool/providers/my-provider",
+                "--token-audience=https://my-audience.example.com");
+        assertOutput(format, out, new CredentialsUpdated("GOOGLE", "google-wif", USER_WORKSPACE_NAME));
+    }
+
+    private static final String WIF_PROVIDER = "projects/123456/locations/global/workloadIdentityPools/my-pool/providers/my-provider";
+
+    private static String storedWifCredentials(String id, String name) {
+        return "{\"id\":\"" + id + "\",\"name\":\"" + name + "\",\"provider\":\"google\",\"keys\":{\"discriminator\":\"google\","
+                + "\"serviceAccountEmail\":\"old-sa@my-project.iam.gserviceaccount.com\",\"workloadIdentityProvider\":\"" + WIF_PROVIDER + "\"}}";
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testUpdateInheritsWorkloadIdentityMode(OutputType format, MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/credentials/gwKx9xRgzpIIZrbCMOcU4"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":" + storedWifCredentials("gwKx9xRgzpIIZrbCMOcU4", "google-wif") + "}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request()
+                        .withMethod("PUT")
+                        .withPath("/credentials/gwKx9xRgzpIIZrbCMOcU4")
+                        .withBody(json("{\"credentials\":{\"keys\":{\"serviceAccountEmail\":\"new-sa@my-project.iam.gserviceaccount.com\",\"workloadIdentityProvider\":\"" + WIF_PROVIDER + "\"},\"id\":\"gwKx9xRgzpIIZrbCMOcU4\",\"name\":\"google-wif\",\"provider\":\"google\"}}"))
+                        .withContentType(MediaType.APPLICATION_JSON)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(format, mock, "credentials", "update", "google", "-i", "gwKx9xRgzpIIZrbCMOcU4",
+                "--service-account-email=new-sa@my-project.iam.gserviceaccount.com",
+                "--workload-identity-provider=" + WIF_PROVIDER);
+        assertOutput(format, out, new CredentialsUpdated("GOOGLE", "google-wif", USER_WORKSPACE_NAME));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testUpdateByNameInheritsWorkloadIdentityMode(OutputType format, MockServerClient mock) {
+        // The list endpoint returns the keys, so the mode is read from it without describing the credentials
+        mock.when(
+                request().withMethod("GET").withPath("/credentials"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":[" + storedWifCredentials("gnKx9xRgzpIIZrbCMOcU4", "google-wif-listed") + "]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request()
+                        .withMethod("PUT")
+                        .withPath("/credentials/gnKx9xRgzpIIZrbCMOcU4")
+                        .withBody(json("{\"credentials\":{\"keys\":{\"serviceAccountEmail\":\"new-sa@my-project.iam.gserviceaccount.com\",\"workloadIdentityProvider\":\"" + WIF_PROVIDER + "\"},\"id\":\"gnKx9xRgzpIIZrbCMOcU4\",\"name\":\"google-wif-listed\",\"provider\":\"google\"}}"))
+                        .withContentType(MediaType.APPLICATION_JSON)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(format, mock, "credentials", "update", "google", "-n", "google-wif-listed",
+                "--service-account-email=new-sa@my-project.iam.gserviceaccount.com",
+                "--workload-identity-provider=" + WIF_PROVIDER);
+        assertOutput(format, out, new CredentialsUpdated("GOOGLE", "google-wif-listed", USER_WORKSPACE_NAME));
+        mock.verify(request().withMethod("GET").withPath("/credentials/gnKx9xRgzpIIZrbCMOcU4"), VerificationTimes.never());
+    }
+
+    @Test
+    void testUpdateInheritedWorkloadIdentityRejectsKeyFile(MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/credentials/gkKx9xRgzpIIZrbCMOcU4"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":" + storedWifCredentials("gkKx9xRgzpIIZrbCMOcU4", "google-wif") + "}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "credentials", "update", "google", "-i", "gkKx9xRgzpIIZrbCMOcU4", "-k", "key.json");
+
+        assertTrue(out.stdErr.contains("Option '--key' cannot be used with the existing credentials' workload-identity mode."), "Expected error naming the inherited mode, got: " + out.stdErr);
+        assertTrue(out.stdErr.contains("add '--mode=service-account-key'"), "Expected a hint on switching to a key file, got: " + out.stdErr);
+        assertEquals(1, out.exitCode);
+    }
+
+    @Test
+    void testUpdateExplicitServiceAccountKeyModeSwitchesWorkloadIdentity(MockServerClient mock) throws IOException {
+        // Google mode can change after creation: an explicit --mode wins over the stored one
+        mock.when(
+                request().withMethod("GET").withPath("/credentials/gsKx9xRgzpIIZrbCMOcU4"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":" + storedWifCredentials("gsKx9xRgzpIIZrbCMOcU4", "google-wif") + "}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request()
+                        .withMethod("PUT")
+                        .withPath("/credentials/gsKx9xRgzpIIZrbCMOcU4")
+                        .withBody(json("{\"credentials\":{\"keys\":{\"data\":\"private_key\"},\"id\":\"gsKx9xRgzpIIZrbCMOcU4\",\"name\":\"google-wif\",\"provider\":\"google\"}}"))
+                        .withContentType(MediaType.APPLICATION_JSON)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(mock, "credentials", "update", "google", "-i", "gsKx9xRgzpIIZrbCMOcU4",
+                "--mode=service-account-key", "-k", tempFile("private_key", "id_rsa", ""));
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testUpdateKeyFileCredentialsKeepKeyMode(MockServerClient mock) throws IOException {
+        // Stored key-file credentials expose no WIF fields, so no --mode keeps service account key mode
+        mock.when(
+                request().withMethod("GET").withPath("/credentials/gfKx9xRgzpIIZrbCMOcU4"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":{\"id\":\"gfKx9xRgzpIIZrbCMOcU4\",\"name\":\"google-key\",\"provider\":\"google\",\"keys\":{\"discriminator\":\"google\"}}}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request()
+                        .withMethod("PUT")
+                        .withPath("/credentials/gfKx9xRgzpIIZrbCMOcU4")
+                        .withBody(json("{\"credentials\":{\"keys\":{\"data\":\"private_key\"},\"id\":\"gfKx9xRgzpIIZrbCMOcU4\",\"name\":\"google-key\",\"provider\":\"google\"}}"))
+                        .withContentType(MediaType.APPLICATION_JSON)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(mock, "credentials", "update", "google", "-i", "gfKx9xRgzpIIZrbCMOcU4", "-k", tempFile("private_key", "id_rsa", ""));
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testAddWithWorkloadIdentityCamelCaseAlias(MockServerClient mock) {
+        mock.when(
+                request()
+                        .withMethod("POST")
+                        .withPath("/credentials")
+                        .withBody(json("{\"credentials\":{\"keys\":{\"serviceAccountEmail\":\"my-sa@my-project.iam.gserviceaccount.com\",\"workloadIdentityProvider\":\"" + WIF_PROVIDER + "\"},\"name\":\"google-wif-alias\",\"provider\":\"google\"}}")),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentialsId\":\"9cz5A8cuBkB5iJliCwJCFU\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "credentials", "add", "google", "-n", "google-wif-alias",
+                "--mode=workloadIdentity",
+                "--service-account-email=my-sa@my-project.iam.gserviceaccount.com",
+                "--workload-identity-provider=" + WIF_PROVIDER);
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
     }
 
     @Test

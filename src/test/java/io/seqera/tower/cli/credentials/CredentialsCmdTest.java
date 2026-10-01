@@ -23,6 +23,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
+import io.seqera.tower.cli.exceptions.CredentialsInUseException;
 import io.seqera.tower.cli.exceptions.CredentialsNotFoundException;
 import io.seqera.tower.cli.exceptions.ShowUsageException;
 import io.seqera.tower.cli.responses.CredentialsAdded;
@@ -31,6 +32,7 @@ import io.seqera.tower.cli.responses.CredentialsList;
 import io.seqera.tower.cli.responses.CredentialsValidated;
 import io.seqera.tower.model.Credentials;
 import io.seqera.tower.model.CredentialsStatus;
+import io.seqera.tower.model.DeleteCredentialsConflictResponseConflict;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -56,13 +58,75 @@ class CredentialsCmdTest extends BaseCmdTest {
     @EnumSource(OutputType.class)
     void testDelete(OutputType format, MockServerClient mock) {
         mock.when(
-                request().withMethod("DELETE").withPath("/credentials/1cz5A8cuBkB5iJliCwJCFU"), exactly(1)
+                request().withMethod("DELETE").withPath("/credentials/1cz5A8cuBkB5iJliCwJCFU")
+                        .withQueryStringParameter("checked", "true"), exactly(1)
         ).respond(
                 response().withStatusCode(204)
         );
 
         ExecOut out = exec(format, mock, "credentials", "delete", "-i", "1cz5A8cuBkB5iJliCwJCFU");
         assertOutput(format, out, new CredentialsDeleted("1cz5A8cuBkB5iJliCwJCFU", USER_WORKSPACE_NAME));
+    }
+
+    private static final String CONFLICT_BODY = "{\"credentialsId\":\"2dz5A8cuBkB5iJliCwJCIN\",\"conflicts\":["
+            + "{\"type\":\"workflow\",\"id\":\"4Xa1b2c3\",\"name\":\"nf-hello\",\"url\":\"https://cloud.seqera.io/orgs/o/workspaces/w/watch/4Xa1b2c3\"},"
+            + "{\"type\":\"studio\",\"id\":\"7Bc4d5e6\",\"name\":\"rnaseq-studio\"}]}";
+
+    private static List<DeleteCredentialsConflictResponseConflict> expectedConflicts() {
+        return List.of(
+                new DeleteCredentialsConflictResponseConflict().type("workflow").id("4Xa1b2c3").name("nf-hello")
+                        .url("https://cloud.seqera.io/orgs/o/workspaces/w/watch/4Xa1b2c3"),
+                new DeleteCredentialsConflictResponseConflict().type("studio").id("7Bc4d5e6").name("rnaseq-studio")
+        );
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testDeleteForce(OutputType format, MockServerClient mock) {
+        mock.when(
+                request().withMethod("DELETE").withPath("/credentials/2dz5A8cuBkB5iJliCwJFRC")
+                        .withQueryStringParameter("checked", "false"), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(format, mock, "credentials", "delete", "-i", "2dz5A8cuBkB5iJliCwJFRC", "--force");
+        assertOutput(format, out, new CredentialsDeleted("2dz5A8cuBkB5iJliCwJFRC", USER_WORKSPACE_NAME));
+    }
+
+    @Test
+    void testDeleteInUse(MockServerClient mock) {
+        mock.when(
+                request().withMethod("DELETE").withPath("/credentials/2dz5A8cuBkB5iJliCwJCIN")
+                        .withQueryStringParameter("checked", "true"), exactly(1)
+        ).respond(
+                response().withStatusCode(409).withBody(CONFLICT_BODY).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "credentials", "delete", "-i", "2dz5A8cuBkB5iJliCwJCIN");
+
+        CredentialsInUseException expected = new CredentialsInUseException("2dz5A8cuBkB5iJliCwJCIN", expectedConflicts());
+        assertEquals(errorMessage(out.app, expected), out.stdErr);
+        assertTrue(out.stdErr.contains("workflow 'nf-hello' (4Xa1b2c3) https://cloud.seqera.io/orgs/o/workspaces/w/watch/4Xa1b2c3"), out.stdErr);
+        assertTrue(out.stdErr.contains("studio 'rnaseq-studio' (7Bc4d5e6)"), out.stdErr);
+        assertEquals("", out.stdOut);
+        assertEquals(1, out.exitCode);
+    }
+
+    @Test
+    void testDeleteConflictWithoutConflictList(MockServerClient mock) {
+        // A 409 that is not a running-jobs conflict keeps the API's own message
+        mock.when(
+                request().withMethod("DELETE").withPath("/credentials/2dz5A8cuBkB5iJliCwJCNL"), exactly(1)
+        ).respond(
+                response().withStatusCode(409).withBody("{\"message\":\"Conflict\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "credentials", "delete", "-i", "2dz5A8cuBkB5iJliCwJCNL");
+
+        assertEquals(errorMessage(out.app, new ApiException(409, "", null, "{\"message\":\"Conflict\"}")), out.stdErr);
+        assertEquals("", out.stdOut);
+        assertEquals(1, out.exitCode);
     }
 
     @Test
@@ -192,7 +256,8 @@ class CredentialsCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("DELETE").withPath("/credentials/1cz5A8cuBkB5iJliCwJCFU"), exactly(1)
+                request().withMethod("DELETE").withPath("/credentials/1cz5A8cuBkB5iJliCwJCFU")
+                        .withQueryStringParameter("checked", "false"), exactly(1)
         ).respond(
                 response().withStatusCode(204)
         );
