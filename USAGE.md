@@ -100,6 +100,14 @@ Google credentials support two modes: **service-account-key** (default) and **wo
 
 > **Note**: `--token-audience` is optional and defaults to `//iam.googleapis.com/<workload identity provider>`.
 
+When updating Google credentials, `--mode` defaults to the mode of the existing credentials. Pass `--mode` explicitly to switch between service account key and workload identity:
+
+  ```bash
+  tw credentials update google --name=my_google_wif_creds \
+      --service-account-email=<name>@<project>.iam.gserviceaccount.com \
+      --workload-identity-provider=projects/<project number>/locations/global/workloadIdentityPools/<pool>/providers/<provider>
+  ```
+
 #### Git credentials
 
 Seqera requires access credentials to interact with pipeline Git repositories. See [Git integration][git-integration] for more information.

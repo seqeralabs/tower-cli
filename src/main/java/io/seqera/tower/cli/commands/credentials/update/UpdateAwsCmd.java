@@ -20,7 +20,6 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.credentials.providers.AwsProvider;
 import io.seqera.tower.cli.commands.credentials.providers.CredentialsProvider;
 import io.seqera.tower.cli.responses.Response;
-import io.seqera.tower.model.AwsCredentialsMode;
 import io.seqera.tower.model.AwsSecurityKeys;
 import io.seqera.tower.model.Credentials;
 import io.seqera.tower.model.SecurityKeys;
@@ -47,17 +46,9 @@ public class UpdateAwsCmd extends AbstractUpdateCmd {
     protected Response update(Credentials creds, Long wspId) throws ApiException, IOException {
         // AWS credential mode cannot change after creation: default to the stored one
         if (!provider.hasMode()) {
-            provider.inheritMode(storedMode(creds, wspId));
+            SecurityKeys keys = storedKeys(creds, wspId);
+            provider.inheritMode(keys instanceof AwsSecurityKeys aws ? aws.getMode() : null);
         }
         return super.update(creds, wspId);
-    }
-
-    private AwsCredentialsMode storedMode(Credentials creds, Long wspId) throws ApiException {
-        SecurityKeys keys = creds.getKeys();
-        // Credentials looked up by name come from the list endpoint, which does not carry the keys
-        if (keys == null && credentialsRefOptions.credentialsRef.credentialsId == null) {
-            keys = credentialsApi().describeCredentials(creds.getId(), wspId).getCredentials().getKeys();
-        }
-        return keys instanceof AwsSecurityKeys aws ? aws.getMode() : null;
     }
 }

@@ -23,6 +23,8 @@ import io.seqera.tower.model.Credentials.ProviderEnum;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Option;
 
+import java.util.Locale;
+
 public class AwsProvider extends AbstractProvider<AwsSecurityKeys> {
 
     @ArgGroup(exclusive = false)
@@ -94,7 +96,7 @@ public class AwsProvider extends AbstractProvider<AwsSecurityKeys> {
         if (mode == null) {
             return inheritedMode;
         }
-        return switch (mode.toLowerCase()) {
+        return switch (mode.toLowerCase(Locale.ROOT)) {
             case "keys" -> AwsCredentialsMode.keys;
             case "role" -> AwsCredentialsMode.role;
             case "workload-identity", "workloadidentity" -> AwsCredentialsMode.workloadIdentity;
@@ -102,27 +104,39 @@ public class AwsProvider extends AbstractProvider<AwsSecurityKeys> {
         };
     }
 
+    /**
+     * How errors name the mode: the '--mode' option the user passed, or the mode inherited from the
+     * existing credentials on update, so the message does not quote an option that was never typed.
+     */
+    private String modeForErrorMessage(String modeName) {
+        return mode != null
+                ? String.format("'--mode=%s'", modeName)
+                : String.format("the existing credentials' %s mode", modeName);
+    }
+
     private void validate() {
         AwsCredentialsMode mode = getMode();
 
         if (mode == AwsCredentialsMode.workloadIdentity) {
+            String ref = modeForErrorMessage("workload-identity");
             if (keys != null && (keys.accessKey != null || keys.secretKey != null)) {
-                throw new TowerRuntimeException("Options '--access-key' and '--secret-key' cannot be used with '--mode=workload-identity'. Workload identity mode uses short-lived OIDC tokens without static credentials.");
+                throw new TowerRuntimeException(String.format("Options '--access-key' and '--secret-key' cannot be used with %s. Workload identity mode uses short-lived OIDC tokens without static credentials.", ref));
             }
             if (assumeRoleArn == null) {
-                throw new TowerRuntimeException("Option '--assume-role-arn' is required when using '--mode=workload-identity'.");
+                throw new TowerRuntimeException(String.format("Option '--assume-role-arn' is required when using %s.", ref));
             }
             if (generateExternalId) {
-                throw new TowerRuntimeException("Option '--generate-external-id' cannot be used with '--mode=workload-identity'.");
+                throw new TowerRuntimeException(String.format("Option '--generate-external-id' cannot be used with %s.", ref));
             }
         }
 
         if (mode == AwsCredentialsMode.role) {
+            String ref = modeForErrorMessage("role");
             if (keys != null && (keys.accessKey != null || keys.secretKey != null)) {
-                throw new TowerRuntimeException("Options '--access-key' and '--secret-key' cannot be used with '--mode=role'. Role mode uses IAM role assumption without static credentials.");
+                throw new TowerRuntimeException(String.format("Options '--access-key' and '--secret-key' cannot be used with %s. Role mode uses IAM role assumption without static credentials.", ref));
             }
             if (assumeRoleArn == null) {
-                throw new TowerRuntimeException("Option '--assume-role-arn' is required when using '--mode=role'.");
+                throw new TowerRuntimeException(String.format("Option '--assume-role-arn' is required when using %s.", ref));
             }
         }
 

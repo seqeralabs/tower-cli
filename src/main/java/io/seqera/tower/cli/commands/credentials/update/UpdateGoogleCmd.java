@@ -16,10 +16,17 @@
 
 package io.seqera.tower.cli.commands.credentials.update;
 
+import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.credentials.providers.CredentialsProvider;
 import io.seqera.tower.cli.commands.credentials.providers.GoogleProvider;
+import io.seqera.tower.cli.responses.Response;
+import io.seqera.tower.model.Credentials;
+import io.seqera.tower.model.GoogleSecurityKeys;
+import io.seqera.tower.model.SecurityKeys;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
+
+import java.io.IOException;
 
 @Command(
         name = "google",
@@ -33,5 +40,18 @@ public class UpdateGoogleCmd extends AbstractUpdateCmd {
     @Override
     protected CredentialsProvider getProvider() {
         return provider;
+    }
+
+    @Override
+    protected Response update(Credentials creds, Long wspId) throws ApiException, IOException {
+        // Default to the mode of the existing credentials; an explicit --mode can still switch it
+        if (!provider.hasMode()) {
+            SecurityKeys keys = storedKeys(creds, wspId);
+            // Same rule as the Platform: both fields set means workload identity
+            provider.inheritWorkloadIdentity(keys instanceof GoogleSecurityKeys google
+                    && google.getServiceAccountEmail() != null
+                    && google.getWorkloadIdentityProvider() != null);
+        }
+        return super.update(creds, wspId);
     }
 }
