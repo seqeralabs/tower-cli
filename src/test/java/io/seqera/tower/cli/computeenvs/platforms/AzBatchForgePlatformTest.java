@@ -117,12 +117,60 @@ class AzBatchForgePlatformTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/compute-envs").withBody(JsonBody.json("{\"computeEnv\":{\"name\":\"azure\",\"platform\":\"azure-batch\",\"config\":{\"workDir\":\"az://nextflow-ci/jordeu\",\"region\":\"europe\",\"forge\":{\"disposeOnDeletion\":true,\"bootDiskSizeGB\":100,\"headPool\":{\"bootDiskSizeGB\":50},\"workerPool\":{\"bootDiskSizeGB\":200}}},\"credentialsId\":\"57Ic6reczFn78H1DTaaXkp\"}}")), exactly(1)
+                request().withMethod("POST").withPath("/compute-envs").withBody(JsonBody.json("{\"computeEnv\":{\"name\":\"azure\",\"platform\":\"azure-batch\",\"config\":{\"workDir\":\"az://nextflow-ci/jordeu\",\"region\":\"europe\",\"forge\":{\"disposeOnDeletion\":true,\"bootDiskSizeGB\":100,\"headPool\":{\"autoScale\":true,\"bootDiskSizeGB\":50},\"workerPool\":{\"autoScale\":true,\"bootDiskSizeGB\":200}}},\"credentialsId\":\"57Ic6reczFn78H1DTaaXkp\"}}")), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         ExecOut out = exec(mock, "compute-envs", "add", "azure-batch", "forge", "-n", "azure", "-l", "europe", "--work-dir", "az://nextflow-ci/jordeu", "--dual-pool", "--boot-disk-size", "100", "--head-boot-disk-size", "50", "--worker-boot-disk-size", "200");
+
+        assertEquals("", out.stdErr);
+        assertEquals(new ComputeEnvAdded("azure-batch", "isnEDBLvHDAIteOEF44ow", "azure", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testAddDualPoolEnablesAutoscalingByDefault(MockServerClient mock) {
+
+        mock.reset();
+
+        mock.when(
+                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "azure-batch"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"57Ic6reczFn78H1DTaaXkp\",\"name\":\"azure\",\"description\":null,\"discriminator\":\"azure\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":null,\"dateCreated\":\"2021-09-07T13:50:21Z\",\"lastUpdated\":\"2021-09-07T13:50:21Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/compute-envs").withBody(JsonBody.json("{\"computeEnv\":{\"name\":\"azure\",\"platform\":\"azure-batch\",\"config\":{\"workDir\":\"az://nextflow-ci/jordeu\",\"region\":\"europe\",\"forge\":{\"disposeOnDeletion\":true,\"headPool\":{\"vmCount\":8,\"autoScale\":true},\"workerPool\":{\"vmCount\":32,\"autoScale\":true}}},\"credentialsId\":\"57Ic6reczFn78H1DTaaXkp\"}}")), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "compute-envs", "add", "azure-batch", "forge", "-n", "azure", "-l", "europe", "--work-dir", "az://nextflow-ci/jordeu", "--dual-pool", "--head-vm-count", "8", "--worker-vm-count", "32");
+
+        assertEquals("", out.stdErr);
+        assertEquals(new ComputeEnvAdded("azure-batch", "isnEDBLvHDAIteOEF44ow", "azure", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testAddDualPoolDisablesAutoscalingExplicitly(MockServerClient mock) {
+
+        mock.reset();
+
+        mock.when(
+                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "azure-batch"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"57Ic6reczFn78H1DTaaXkp\",\"name\":\"azure\",\"description\":null,\"discriminator\":\"azure\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":null,\"dateCreated\":\"2021-09-07T13:50:21Z\",\"lastUpdated\":\"2021-09-07T13:50:21Z\"}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/compute-envs").withBody(JsonBody.json("{\"computeEnv\":{\"name\":\"azure\",\"platform\":\"azure-batch\",\"config\":{\"workDir\":\"az://nextflow-ci/jordeu\",\"region\":\"europe\",\"forge\":{\"disposeOnDeletion\":true,\"headPool\":{\"autoScale\":false},\"workerPool\":{\"autoScale\":false}}},\"credentialsId\":\"57Ic6reczFn78H1DTaaXkp\"}}")), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "compute-envs", "add", "azure-batch", "forge", "-n", "azure", "-l", "europe", "--work-dir", "az://nextflow-ci/jordeu", "--dual-pool", "--head-no-auto-scale", "--worker-no-auto-scale");
 
         assertEquals("", out.stdErr);
         assertEquals(new ComputeEnvAdded("azure-batch", "isnEDBLvHDAIteOEF44ow", "azure", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
