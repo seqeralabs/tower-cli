@@ -16,6 +16,8 @@
 
 package io.seqera.tower.cli.organizations;
 
+import io.seqera.tower.model.DescribeOrganizationQuotasResponse;
+import io.seqera.tower.cli.responses.organizations.OrganizationQuotasView;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
@@ -404,5 +406,25 @@ class OrganizationsCmdTest extends BaseCmdTest {
 
         assertEquals("", out.stdOut);
         assertEquals(1, out.exitCode);
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testQuotas(OutputType format, MockServerClient mock) throws JsonProcessingException {
+        mock.when(request().withMethod("GET").withPath("/user-info"))
+                .respond(response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON));
+        mock.when(request().withMethod("GET").withPath("/user/1264/workspaces"))
+                .respond(response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON));
+        mock.when(request().withMethod("GET").withPath("/orgs/27736513644467"), exactly(1))
+                .respond(response().withStatusCode(200).withBody(loadResource("organizations/organizations_view")).withContentType(MediaType.APPLICATION_JSON));
+        String body = """
+                {"quotas": {"maxWorkspaces": 10, "maxMembers": 50, "maxTeams": 5, "maxCustomRolesPerOrg": 20, "maxRuns": 1000}}
+                """;
+        mock.when(request().withMethod("GET").withPath("/orgs/27736513644467/quotas"), exactly(1))
+                .respond(response().withStatusCode(200).withBody(body).withContentType(MediaType.APPLICATION_JSON));
+
+        ExecOut out = exec(format, mock, "organizations", "quotas", "-n", "organization1");
+
+        assertOutput(format, out, new OrganizationQuotasView("organization1", parseJson(body, DescribeOrganizationQuotasResponse.class).getQuotas()));
     }
 }
