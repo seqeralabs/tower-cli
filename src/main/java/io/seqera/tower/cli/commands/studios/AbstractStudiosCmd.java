@@ -17,9 +17,11 @@
 package io.seqera.tower.cli.commands.studios;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Supplier;
 
 import io.seqera.tower.ApiException;
@@ -38,6 +40,7 @@ import io.seqera.tower.model.DataStudioTemplate;
 import io.seqera.tower.model.DataStudioTemplatesListResponse;
 import io.seqera.tower.model.ListMembersResponse;
 import io.seqera.tower.model.MemberDbDto;
+import io.seqera.tower.model.MountData;
 
 import static io.seqera.tower.cli.utils.ResponseHelper.waitStatus;
 import static io.seqera.tower.model.DataStudioProgressStepStatus.ERRORED;
@@ -178,7 +181,7 @@ public class AbstractStudiosCmd extends AbstractApiCmd {
                 ? studioConfiguration.getLifespanHours()
                 : configOptions.lifespan);
 
-        studioConfiguration.setMountData(getMountDataIds(configOptions, studioConfiguration, wspId));
+        applyMountData(configOptions, studioConfiguration, wspId);
 
         if (configOptions.environment != null) {
             studioConfiguration.setEnvironment(configOptions.environment);
@@ -192,13 +195,19 @@ public class AbstractStudiosCmd extends AbstractApiCmd {
         return studioConfiguration;
     }
 
-    List<String> getMountDataIds(StudioConfigurationOptions studioConfigOptions, DataStudioConfiguration currentStudioConfiguration, Long wspId) throws ApiException {
+    private void applyMountData(StudioConfigurationOptions studioConfigOptions, DataStudioConfiguration studioConfiguration, Long wspId) throws ApiException {
         if (studioConfigOptions.dataLinkRefOptions == null || studioConfigOptions.dataLinkRefOptions.dataLinkRef == null) {
-            return currentStudioConfiguration.getMountData();
+            return;
         }
 
         DataLinkService dataLinkService = new DataLinkService(dataLinksApi(), app());
-        return dataLinkService.getDataLinkIds(studioConfigOptions.dataLinkRefOptions.dataLinkRef, wspId);
+        List<MountData> mountData = dataLinkService.getMountData(studioConfigOptions.dataLinkRefOptions.dataLinkRef, wspId);
+
+        // The platform gives mountDataV2 precedence, so it must be replaced too: a base configuration
+        // fetched from an existing studio carries its current mounts there.
+        studioConfiguration.setMountDataV2(mountData);
+        // Kept for platform versions that predate mountDataV2; they mount the whole data link.
+        studioConfiguration.setMountData(mountData.stream().map(MountData::getDataLinkId).distinct().toList());
     }
 
     protected List<Long> getLabelIds(List<Label> labels, Long wspId) throws ApiException {
@@ -216,6 +225,7 @@ public class AbstractStudiosCmd extends AbstractApiCmd {
         private final String sessionId;
         private final Long workspaceId;
         private DataStudioProgressStep currentProgressStep;
+        private final Set<String> printedWarnings = new HashSet<>();
 
         public ProgressStepMessageSupplier(String sessionId, Long workspaceId) {
             this.sessionId = sessionId;
@@ -227,22 +237,35 @@ public class AbstractStudiosCmd extends AbstractApiCmd {
         public String get() {
             try {
                 DataStudioDto studioDto = studiosApi().describeDataStudio(sessionId, workspaceId);
+                StringBuilder messages = new StringBuilder();
 
                 Optional<DataStudioProgressStep> inProgressStep = studioDto.getProgress().stream()
                         .filter(step -> step.getStatus() == IN_PROGRESS || step.getStatus() == ERRORED)
                         .findFirst();
 
-                if (inProgressStep.isPresent() && !inProgressStep.get().equals(currentProgressStep)) {
+                // Compare without warnings: a step gaining a warning is still the same step.
+                if (inProgressStep.isPresent() && !isSameStep(inProgressStep.get(), currentProgressStep)) {
                     currentProgressStep = inProgressStep.get();
-                    return currentProgressStep.getStatus() != ERRORED
+                    messages.append(currentProgressStep.getStatus() != ERRORED
                             ? String.format("\n  %s", currentProgressStep.getMessage())
-                            : String.format("\n  %s - Error encountered: %s", currentProgressStep.getMessage(), studioDto.getStatusInfo().getMessage());
+                            : String.format("\n  %s - Error encountered: %s", currentProgressStep.getMessage(), studioDto.getStatusInfo().getMessage()));
                 }
 
-                return "";
+                // Warnings can also be attached to steps that already succeeded.
+                studioDto.getProgress().stream()
+                        .filter(step -> step.getWarnings() != null)
+                        .flatMap(step -> step.getWarnings().stream())
+                        .filter(printedWarnings::add)
+                        .forEach(warning -> messages.append(String.format("\n  Warning: %s", warning)));
+
+                return messages.toString();
             } catch (Exception e) {
                 return "";
             }
+        }
+
+        private boolean isSameStep(DataStudioProgressStep a, DataStudioProgressStep b) {
+            return a.getStatus() == b.getStatus() && Objects.equals(a.getMessage(), b.getMessage());
         }
     }
 }

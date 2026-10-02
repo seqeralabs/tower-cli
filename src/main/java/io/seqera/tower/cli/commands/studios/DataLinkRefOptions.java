@@ -29,7 +29,7 @@ public class DataLinkRefOptions {
 
     public static class DataLinkRef {
 
-        @CommandLine.Option(names = {"--mount-data-uris"}, description = "Comma separate list of data-link URIs: s3://nextflow-bucket,s3://another-bucket", split = ",")
+        @CommandLine.Option(names = {"--mount-data-uris"}, description = "Comma separate list of data-link URIs: s3://nextflow-bucket,s3://another-bucket. A URI of a folder inside a data link mounts only that folder: s3://nextflow-bucket/inputs", split = ",")
         private List<String> mountDataUris;
         @CommandLine.Option(names = {"--mount-data"}, description = "Comma separate list of data-link names: nextflow-bucket,my-custom-data-link-name", split = ",")
         private List<String> mountDataNames;
