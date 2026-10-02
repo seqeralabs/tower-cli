@@ -23,6 +23,7 @@ import io.seqera.tower.cli.utils.FormatHelper;
 import io.seqera.tower.cli.utils.ModelHelper;
 import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.ActionResponseDto;
+import io.seqera.tower.model.CronActionConfig;
 import io.seqera.tower.model.WorkflowLaunchRequest;
 
 import java.io.PrintWriter;
@@ -65,6 +66,7 @@ public class ActionsView extends Response {
         table.addRow("Pipeline URL", action.getLaunch().getPipeline());
         table.addRow("Source", action.getSource().toString());
         table.addRow("Hook URL", action.getHookUrl());
+        addTriggerRows(table);
         table.addRow("Last event", FormatHelper.formatTime(action.getLastSeen()));
         table.addRow("Date created", FormatHelper.formatTime(action.getDateCreated()));
         table.addRow("Last event", FormatHelper.formatTime(action.getLastSeen()));
@@ -74,6 +76,18 @@ public class ActionsView extends Response {
 
         out.println(String.format("%n  Configuration:%n%n%s%n", configJson.replaceAll("(?m)^", "     ")));
 
+    }
+
+    private void addTriggerRows(TableList table) {
+        switch (action.getConfig()) {
+            case CronActionConfig cron -> {
+                table.addRow("Cron expression", cron.getExpression());
+                table.addRow("Timezone", cron.getTimezone());
+                table.addRow("Next execution", FormatHelper.formatTime(action.getNextExecution()));
+            }
+            case null, default -> {
+            }
+        }
     }
 
 }

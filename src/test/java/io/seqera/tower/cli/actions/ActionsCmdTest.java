@@ -34,10 +34,12 @@ import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.matchers.MatchType;
 import org.mockserver.model.MediaType;
+import org.mockserver.verify.VerificationTimes;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
 
 import static io.seqera.tower.cli.commands.AbstractApiCmd.USER_WORKSPACE_NAME;
 import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
@@ -790,6 +792,110 @@ class ActionsCmdTest extends BaseCmdTest {
         assertEquals("", out.stdOut);
         assertEquals(1, out.exitCode);
         assertEquals(errorMessage(out.app, new TowerException(String.format("An error has occur while setting the action '%s' to '%s'", "hello", "PAUSE"))), out.stdErr);
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAddCron(OutputType format, MockServerClient mock) {
+        mock.reset();
+        mockPrimaryComputeEnv(mock);
+
+        mock.when(
+                request().withMethod("POST").withPath("/actions")
+                        .withBody(json("{\"name\": \"nightly\", \"source\": \"cron\", \"cron\": {\"expression\": \"0 2 * * *\", \"timezone\": \"Europe/London\"}}", MatchType.ONLY_MATCHING_FIELDS)),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("/actions/action_add")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "actions", "add", "cron", "-n", "nightly", "--pipeline", "https://github.com/pditommaso/nf-sleep", "--cron-expression", "0 2 * * *", "--timezone", "Europe/London");
+        assertOutput(format, out, new ActionAdd("nightly", USER_WORKSPACE_NAME, "2Z1g6MCWpOLgHLA65cw1qt"));
+    }
+
+    @Test
+    void testUpdateCron(MockServerClient mock) {
+        mock.reset();
+        mockActionLookup(mock, "cron", CRON_CONFIG);
+
+        mock.when(
+                request().withMethod("PUT").withPath("/actions/57byWxhmUDLLWIF4J97XEP")
+                        .withBody(json("{\"name\": \"hello\", \"cron\": {\"expression\": \"*/15 * * * *\"}}", MatchType.ONLY_MATCHING_FIELDS)),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(mock, "actions", "update", "-n", "hello", "--cron-expression", "*/15 * * * *");
+        assertOutput(OutputType.console, out, new ActionUpdate("hello", USER_WORKSPACE_NAME, "57byWxhmUDLLWIF4J97XEP"));
+    }
+
+    @Test
+    void testUpdateCronOptionsOnGithubAction(MockServerClient mock) {
+        mock.reset();
+        mockActionLookup(mock, "github", "{\"events\": [\"push\"], \"discriminator\": \"github\"}");
+
+        ExecOut out = exec(mock, "actions", "update", "-n", "hello", "--timezone", "UTC");
+
+        assertEquals("", out.stdOut);
+        assertEquals(1, out.exitCode);
+        assertEquals(errorMessage(out.app, new TowerException("Options --cron-expression and --timezone apply only to cron actions, but action 'hello' is a github action")), out.stdErr);
+        mock.verify(request().withMethod("PUT"), VerificationTimes.never());
+    }
+
+    @Test
+    void testViewCron(MockServerClient mock) {
+        mock.reset();
+        mockActionLookup(mock, "cron", CRON_CONFIG);
+        mockUserInfo(mock);
+
+        ExecOut out = exec(mock, "actions", "view", "-n", "hello");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        assertTrue(out.stdOut.contains("Cron expression | 0 2 * * *"), out.stdOut);
+        assertTrue(out.stdOut.matches("(?s).*Timezone +\\| Europe/London.*"), out.stdOut);
+    }
+
+    private static final String CRON_CONFIG = "{\"expression\": \"0 2 * * *\", \"timezone\": \"Europe/London\", \"discriminator\": \"cron\"}";
+
+    private void mockPrimaryComputeEnv(MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs").withQueryStringParameter("status", "AVAILABLE"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
+        );
+    }
+
+    private void mockUserInfo(MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+    }
+
+    /** Serves action 'hello' as an action of the given source and trigger configuration. */
+    private void mockActionLookup(MockServerClient mock, String source, String configJson) {
+        mock.when(
+                request().withMethod("GET").withPath("/actions"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("actions/actions_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        String view = new String(loadResource("actions/action_view"))
+                .replace("\"source\": \"github\"", "\"source\": \"" + source + "\"")
+                .replaceFirst("(?m)^    \"config\": \\{[^}]*\\}", Matcher.quoteReplacement("\"config\": " + configJson));
+        mock.when(
+                request().withMethod("GET").withPath("/actions/57byWxhmUDLLWIF4J97XEP"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(view).withContentType(MediaType.APPLICATION_JSON)
+        );
     }
 
     @Test

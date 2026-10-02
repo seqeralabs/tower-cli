@@ -26,6 +26,8 @@ import io.seqera.tower.cli.responses.actions.ActionUpdate;
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.cli.utils.ModelHelper;
 import io.seqera.tower.model.ActionResponseDto;
+import io.seqera.tower.model.ActionSource;
+import io.seqera.tower.model.CronActionRequest;
 import io.seqera.tower.model.UpdateActionRequest;
 import io.seqera.tower.model.WorkflowLaunchRequest;
 import picocli.CommandLine;
@@ -48,6 +50,12 @@ public class UpdateCmd extends AbstractActionsCmd {
 
     @CommandLine.Option(names = {"--new-name"}, description = "Updated action name. Must be unique per workspace. Names consist of alphanumeric, hyphen, and underscore characters.")
     public String newName;
+
+    @CommandLine.Option(names = {"--cron-expression"}, description = "Schedule of a cron action, as a standard 5-field cron expression.")
+    public String cronExpression;
+
+    @CommandLine.Option(names = {"--timezone"}, description = "IANA timezone the schedule of a cron action runs in.")
+    public String timezone;
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
@@ -106,6 +114,11 @@ public class UpdateCmd extends AbstractActionsCmd {
         request.setName(newName != null ? newName : actionName);
         request.setLaunch(workflowLaunchRequest);
 
+        if (cronExpression != null || timezone != null) {
+            requireSource(action, ActionSource.cron, "--cron-expression and --timezone");
+            request.setCron(new CronActionRequest().expression(cronExpression).timezone(timezone));
+        }
+
         try {
             actionsApi().updateAction(action.getId(), request, wspId);
         } catch (Exception e) {
@@ -125,5 +138,12 @@ public class UpdateCmd extends AbstractActionsCmd {
         }
 
         return new ActionUpdate(actionName, workspaceRef(wspId), action.getId());
+    }
+
+    // The API refuses a trigger block that does not match the action source, so say which options apply.
+    private static void requireSource(ActionResponseDto action, ActionSource source, String options) throws TowerException {
+        if (action.getSource() != source) {
+            throw new TowerException(String.format("Options %s apply only to %s actions, but action '%s' is a %s action", options, source, action.getName(), action.getSource()));
+        }
     }
 }
