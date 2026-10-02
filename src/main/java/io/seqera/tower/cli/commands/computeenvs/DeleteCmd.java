@@ -86,11 +86,7 @@ public class DeleteCmd extends AbstractComputeEnvCmd {
         }
     }
 
-    private ComputeEnvStatus checkComputeEnvStatus(String computeEnvId, Long workspaceId) {
-        try {
-            return computeEnvsApi().describeComputeEnv(computeEnvId, workspaceId, Collections.emptyList()).getComputeEnv().getStatus();
-        } catch (ApiException | NullPointerException e) {
-            return null;
-        }
+    private ComputeEnvStatus checkComputeEnvStatus(String computeEnvId, Long workspaceId) throws ApiException {
+        return computeEnvsApi().describeComputeEnv(computeEnvId, workspaceId, Collections.emptyList()).getComputeEnv().getStatus();
     }
 }

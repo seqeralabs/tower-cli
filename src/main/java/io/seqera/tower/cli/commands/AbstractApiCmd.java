@@ -58,6 +58,7 @@ import io.seqera.tower.cli.exceptions.MissingTowerAccessTokenException;
 import io.seqera.tower.cli.exceptions.NoComputeEnvironmentException;
 import io.seqera.tower.cli.exceptions.OrganizationNotFoundException;
 import io.seqera.tower.cli.exceptions.ShowUsageException;
+import io.seqera.tower.cli.exceptions.StatusCheckFailedException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.exceptions.WorkspaceNotFoundException;
 import io.seqera.tower.cli.responses.Response;
@@ -699,8 +700,8 @@ public abstract class AbstractApiCmd extends AbstractCmd {
             return onBeforeExit(exitCode, response);
         } catch (Exception e) {
             errorMessage(app(), e);
+            return e instanceof StatusCheckFailedException ? StatusCheckFailedException.EXIT_CODE : CommandLine.ExitCode.SOFTWARE;
         }
-        return CommandLine.ExitCode.SOFTWARE;
     }
 
     protected Integer onBeforeExit(int exitCode, Response response) throws ApiException {
