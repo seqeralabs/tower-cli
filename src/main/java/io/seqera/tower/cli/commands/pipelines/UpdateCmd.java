@@ -25,8 +25,10 @@ import io.seqera.tower.cli.responses.pipelines.PipelinesUpdated;
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.cli.utils.ModelHelper;
 import io.seqera.tower.cli.utils.VersionNameHelper;
+import io.seqera.tower.model.LabelDbDto;
 import io.seqera.tower.model.LaunchDbDto;
 import io.seqera.tower.model.PipelineDbDto;
+import io.seqera.tower.model.PipelineQueryAttribute;
 import io.seqera.tower.model.PipelineVersionFullInfoDto;
 import io.seqera.tower.model.PipelineVersionManageRequest;
 import io.seqera.tower.model.UpdatePipelineRequest;
@@ -82,7 +84,8 @@ public class UpdateCmd extends AbstractPipelinesCmd {
         Long wspId = workspaceId(workspace.workspace);
 
         // Fetch uses describePipeline, which returns the default version on pipe.getVersion()
-        PipelineDbDto pipe = fetchPipeline(pipelineRefOptions, wspId);
+        // Labels are fetched only to be sent back: the update replaces the pipeline's labels with the given ones.
+        PipelineDbDto pipe = fetchPipeline(pipelineRefOptions, wspId, PipelineQueryAttribute.labels);
 
         // If the user wants to rename the pipeline (--new-name), validate early before making any
         // changes. The server checks uniqueness within the workspace/org scope.
@@ -212,6 +215,7 @@ public class UpdateCmd extends AbstractPipelinesCmd {
                 .configProfiles(coalesce(opts.profile, launch.getConfigProfiles()))
                 .paramsText(coalesce(FilesHelper.readString(opts.paramsFile), launch.getParamsText()))
                 .configText(coalesce(FilesHelper.readString(opts.config), launch.getConfigText()))
+                .towerConfig(coalesce(FilesHelper.readString(opts.towerConfig), launch.getTowerConfig()))
                 .preRunScript(coalesce(FilesHelper.readString(opts.preRunScript), launch.getPreRunScript()))
                 .postRunScript(coalesce(FilesHelper.readString(opts.postRunScript), launch.getPostRunScript()))
                 .pullLatest(coalesce(opts.pullLatest, launch.getPullLatest()))
@@ -228,6 +232,8 @@ public class UpdateCmd extends AbstractPipelinesCmd {
         return new UpdatePipelineRequest()
                 .name(coalesce(newName, pipe.getName()))
                 .description(coalesce(description, pipe.getDescription()))
+                .icon(pipe.getIcon())
+                .labelIds(pipe.getLabels() == null ? null : pipe.getLabels().stream().map(LabelDbDto::getId).toList())
                 .launch(launchRequest);
     }
 

@@ -127,7 +127,8 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
                 .headJobCpus(adv().headJobCpus)
                 .headJobMemoryMb(adv().headJobMemoryMb)
                 .headJobRole(adv().headJobRole)
-                .secretsKmsKeyId(adv().secretsKmsKeyId);
+                .secretsKmsKeyId(adv().secretsKmsKeyId)
+                .logGroup(adv().logGroup);
 
                 // Common
                 config.workDir(workDir)
@@ -152,6 +153,8 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
             throw new TowerException("Fusion v1 is deprecated, please use '--fusion-v2' instead");
         }
 
+        validateDragen();
+
         ForgeConfig forge = new ForgeConfig()
                 .type(provisioningModel)
                 .maxCpus(maxCpus)
@@ -171,7 +174,10 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
                 .ebsBootSize(adv().bootDiskSizeGb)
                 .bidPercentage(adv().bidPercentage)
                 .fargateHeadEnabled(fargate)
-                .ecsConfig(FilesHelper.readString(ecsConfig));
+                .ecsConfig(FilesHelper.readString(ecsConfig))
+                .dragenEnabled(adv().dragen)
+                .dragenAmiId(adv().dragenAmiId)
+                .dragenInstanceType(adv().dragenInstanceType);
 
 
         if (efs != null) {
@@ -189,6 +195,16 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
         }
 
         return forge;
+    }
+
+    private void validateDragen() throws TowerException {
+        boolean dragenSettings = adv().dragenAmiId != null || adv().dragenInstanceType != null;
+        if (!adv().dragen && dragenSettings) {
+            throw new TowerException("DRAGEN AMI ID and instance type require '--dragen'");
+        }
+        if (adv().dragen && (adv().dragenAmiId == null || adv().dragenInstanceType == null)) {
+            throw new TowerException("DRAGEN requires '--dragen-ami-id' and '--dragen-instance-type'");
+        }
     }
 
     private AdvancedOptions adv() {
@@ -277,6 +293,18 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
 
         @Option(names = {"--secrets-kms-key"}, description = "Customer-managed KMS key used to encrypt the temporary Secrets Manager secrets created for runs that use pipeline secrets. Accepts a key ARN or a key id. When omitted, the AWS-managed default Secrets Manager key is used.")
         public String secretsKmsKeyId;
+
+        @Option(names = {"--log-group"}, description = "CloudWatch log group for the logs of pipeline executions. Must already exist. If absent, Platform defaults to /aws/batch/job.")
+        public String logGroup;
+
+        @Option(names = {"--dragen"}, description = "Enable Illumina DRAGEN instances. Requires --dragen-ami-id and --dragen-instance-type. Not compatible with EFS, FSx or Fargate.")
+        public boolean dragen;
+
+        @Option(names = {"--dragen-ami-id"}, description = "AMI ID for DRAGEN instances.")
+        public String dragenAmiId;
+
+        @Option(names = {"--dragen-instance-type"}, description = "EC2 instance type for DRAGEN instances (e.g., f2.6xlarge, f2.12xlarge, f2.48xlarge).")
+        public String dragenInstanceType;
 
     }
 

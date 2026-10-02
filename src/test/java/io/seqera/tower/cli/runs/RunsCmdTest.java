@@ -28,6 +28,9 @@ import io.seqera.tower.cli.exceptions.ShowUsageException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.runs.RunCanceled;
 import io.seqera.tower.cli.responses.runs.RunDeleted;
+import io.seqera.tower.cli.responses.runs.RunLog;
+import io.seqera.tower.cli.responses.runs.RunStarred;
+import io.seqera.tower.cli.responses.runs.RunsDeleted;
 import io.seqera.tower.cli.responses.runs.RunDump;
 import io.seqera.tower.cli.responses.runs.RunFileDownloaded;
 import io.seqera.tower.cli.responses.runs.RunList;
@@ -56,6 +59,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
+import org.mockserver.matchers.MatchType;
 import org.mockserver.model.MediaType;
 import org.mockserver.verify.VerificationTimes;
 
@@ -95,6 +99,37 @@ class RunsCmdTest extends BaseCmdTest {
         assertOutput(format, out, new RunDeleted("5dAZoXrcmZXRO4", USER_WORKSPACE_NAME));
     }
 
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testDeleteMany(OutputType format, MockServerClient mock) {
+        mock.when(
+                request().withMethod("POST").withPath("/workflow/delete")
+                        .withQueryStringParameter("force", "true")
+                        .withBody(json("{\"workflowIds\":[\"5dAZoXrcmZXRO4\",\"3xFx5yTHcIWQl\",\"1Gm7JBQAcU6pVO\"]}", MatchType.STRICT)), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"failedWorkflowIds\":[]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "runs", "delete", "-i", "5dAZoXrcmZXRO4,3xFx5yTHcIWQl", "-i", "1Gm7JBQAcU6pVO", "--force");
+        assertOutput(format, out, new RunsDeleted(List.of("5dAZoXrcmZXRO4", "3xFx5yTHcIWQl", "1Gm7JBQAcU6pVO"), List.of(), USER_WORKSPACE_NAME));
+    }
+
+    @Test
+    void testDeleteManyPartialFailure(MockServerClient mock) {
+        mock.when(
+                request().withMethod("POST").withPath("/workflow/delete"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"failedWorkflowIds\":[\"3xFx5yTHcIWQl\"]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "runs", "delete", "-i", "5dAZoXrcmZXRO4,3xFx5yTHcIWQl");
+
+        assertEquals("", out.stdErr);
+        assertEquals(chop(new RunsDeleted(List.of("5dAZoXrcmZXRO4"), List.of("3xFx5yTHcIWQl"), USER_WORKSPACE_NAME).toString()), out.stdOut);
+        assertTrue(out.stdOut.contains("'3xFx5yTHcIWQl' could not be deleted"), out.stdOut);
+        assertEquals(1, out.exitCode);
+    }
+
     @Test
     void testDeleteForbidden(MockServerClient mock) {
         mock.when(
@@ -121,6 +156,46 @@ class RunsCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "runs", "cancel", "-i", "5dAZoXrcmZXRO4");
         assertOutput(format, out, new RunCanceled("5dAZoXrcmZXRO4", USER_WORKSPACE_NAME));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testStar(OutputType format, MockServerClient mock) {
+        mock.when(
+                request().withMethod("POST").withPath("/workflow/5dAZoXrcmZXRO4/star"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"workflowId\":\"5dAZoXrcmZXRO4\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "runs", "star", "-i", "5dAZoXrcmZXRO4");
+        assertOutput(format, out, new RunStarred("5dAZoXrcmZXRO4", USER_WORKSPACE_NAME, true));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testUnstar(OutputType format, MockServerClient mock) {
+        mock.when(
+                request().withMethod("DELETE").withPath("/workflow/5dAZoXrcmZXRO4/star"), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(format, mock, "runs", "unstar", "-i", "5dAZoXrcmZXRO4");
+        assertOutput(format, out, new RunStarred("5dAZoXrcmZXRO4", USER_WORKSPACE_NAME, false));
+    }
+
+    @Test
+    void testUnstarNotStarred(MockServerClient mock) {
+        mock.when(
+                request().withMethod("DELETE").withPath("/workflow/5dAZoXrcmZXRO4/star"), exactly(1)
+        ).respond(
+                response().withStatusCode(404).withBody("{\"message\":\"Workflow '5dAZoXrcmZXRO4' is not starred\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "runs", "unstar", "-i", "5dAZoXrcmZXRO4");
+
+        assertEquals(errorMessage(out.app, new ApiException(404, "", null, "{\"message\":\"Workflow '5dAZoXrcmZXRO4' is not starred\"}")), out.stdErr);
+        assertEquals(1, out.exitCode);
     }
 
     @Test
@@ -573,6 +648,7 @@ class RunsCmdTest extends BaseCmdTest {
                             "pipelineSchemaId":42,
                             "resume":true,
                             "nextflowVersion":"26.04.6",
+                            "towerConfig":"reports: {}",
                             "outputDir":"/outputs",
                             "syntaxParser":"v2"
                         }
@@ -616,6 +692,43 @@ class RunsCmdTest extends BaseCmdTest {
         assertEquals(0, out.exitCode);
         mock.verify(request().withMethod("POST").withPath("/workflow/launch")
                 .withBody(json("{\"launch\":{\"syntaxParser\":\"v1\"}}")), VerificationTimes.exactly(1));
+    }
+
+    @Test
+    void testRelaunchOverridingTowerConfig(MockServerClient mock) throws IOException {
+        mock.reset();
+
+        mock.when(
+                request().withMethod("POST").withPath("/workflow/launch"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workflow_launch")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/workflow/5mDfiUtqyptDib"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workflow_view")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/workflow/5mDfiUtqyptDib/launch"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("runs/workflow_launch_v2")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "runs", "relaunch", "-i", "5mDfiUtqyptDib",
+                "--tower-config", tempFile("reports: []", "tower", "yml"));
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        mock.verify(request().withMethod("POST").withPath("/workflow/launch")
+                .withBody(json("{\"launch\":{\"towerConfig\":\"reports: []\"}}")), VerificationTimes.exactly(1));
     }
 
     @Test
@@ -676,6 +789,63 @@ class RunsCmdTest extends BaseCmdTest {
         assertEquals("", out.stdErr);
         assertEquals(new RunFileDownloaded(file, RunDownloadFileType.stdout).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testLog(OutputType format, MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/workflow/5dAZoXrcmZXRO4/log"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("""
+                        {"log": {"entries": ["N E X T F L O W  ~  version 26.04.6", "Launching `main.nf`"], "pending": true, "truncated": false, "downloads": []}}""").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "runs", "view", "-i", "5dAZoXrcmZXRO4", "log");
+        assertOutput(format, out, new RunLog(List.of("N E X T F L O W  ~  version 26.04.6", "Launching `main.nf`"), false, null, null));
+    }
+
+    @Test
+    void testLogPagesWithForwardToken(MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/workflow/5dAZoXrcmZXRO4/log").withQueryStringParameter("next", "f/123"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("""
+                        {"log": {"entries": ["second page"], "truncated": false, "forwardToken": "f/456"}}""").withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/workflow/5dAZoXrcmZXRO4/log").withQueryStringParameter("next", "f/456"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("""
+                        {"log": {"entries": [], "truncated": false, "forwardToken": "f/456"}}""").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut page = exec(mock, "runs", "view", "-i", "5dAZoXrcmZXRO4", "log", "--next", "f/123");
+        assertTrue(page.stdOut.startsWith("second page"), page.stdOut);
+        assertTrue(page.stdOut.contains("--next f/456"), page.stdOut);
+
+        // An empty page is the end of the available log: no cursor hint even though the stream returns one
+        ExecOut end = exec(mock, "runs", "view", "-i", "5dAZoXrcmZXRO4", "log", "--next", "f/456");
+        assertEquals(0, end.exitCode);
+        assertTrue(!end.stdOut.contains("--next"), end.stdOut);
+    }
+
+    @Test
+    void testTaskLogTruncatedWithMessage(MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/workflow/5dAZoXrcmZXRO4/log/5"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("""
+                        {"log": {"entries": ["Hello"], "pending": false, "truncated": true, "message": "Unable to retrieve output log - Cause: gone"}}""").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "runs", "view", "-i", "5dAZoXrcmZXRO4", "log", "-t", "5");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        assertEquals(chop(new RunLog(List.of("Hello"), true, "Unable to retrieve output log - Cause: gone", null).toString()), out.stdOut);
+        assertTrue(out.stdOut.startsWith("Hello"), out.stdOut);
+        assertTrue(out.stdOut.contains("Log truncated"), out.stdOut);
     }
 
     @Test

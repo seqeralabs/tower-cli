@@ -19,6 +19,7 @@ package io.seqera.tower.cli.commands.runs;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.commands.runs.download.DownloadCmd;
+import io.seqera.tower.cli.commands.runs.log.LogCmd;
 import io.seqera.tower.cli.commands.runs.metrics.MetricsCmd;
 import io.seqera.tower.cli.commands.runs.tasks.TaskCmd;
 import io.seqera.tower.cli.commands.runs.tasks.TasksCmd;
@@ -48,6 +49,7 @@ import static io.seqera.tower.cli.utils.FormatHelper.formatLabels;
         description = "View pipeline run details",
         subcommands = {
                 DownloadCmd.class,
+                LogCmd.class,
                 MetricsCmd.class,
                 TasksCmd.class,
                 TaskCmd.class,

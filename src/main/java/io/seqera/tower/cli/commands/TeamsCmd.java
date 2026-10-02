@@ -21,6 +21,9 @@ import io.seqera.tower.cli.commands.teams.AddCmd;
 import io.seqera.tower.cli.commands.teams.DeleteCmd;
 import io.seqera.tower.cli.commands.teams.ListCmd;
 import io.seqera.tower.cli.commands.teams.MembersCmd;
+import io.seqera.tower.cli.commands.teams.UpdateCmd;
+import io.seqera.tower.cli.commands.teams.ViewCmd;
+import io.seqera.tower.cli.commands.teams.WorkspacesCmd;
 import picocli.CommandLine;
 
 @CommandLine.Command(
@@ -29,8 +32,11 @@ import picocli.CommandLine;
         subcommands = {
                 ListCmd.class,
                 AddCmd.class,
+                ViewCmd.class,
+                UpdateCmd.class,
                 DeleteCmd.class,
                 MembersCmd.class,
+                WorkspacesCmd.class,
         }
 )
 public class TeamsCmd extends AbstractRootCmd {

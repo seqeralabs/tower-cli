@@ -35,6 +35,7 @@ import io.seqera.tower.cli.responses.pipelines.PipelinesDeleted;
 import io.seqera.tower.cli.responses.pipelines.PipelinesExport;
 import io.seqera.tower.cli.responses.pipelines.PipelinesList;
 import io.seqera.tower.cli.responses.pipelines.PipelinesUpdated;
+import io.seqera.tower.cli.responses.pipelines.PipelinesSchema;
 import io.seqera.tower.cli.responses.pipelines.PipelinesView;
 import io.seqera.tower.cli.utils.ModelHelper;
 import io.seqera.tower.cli.utils.PaginationInfo;
@@ -42,6 +43,7 @@ import io.seqera.tower.model.ComputeEnvComputeConfig;
 import io.seqera.tower.model.CreatePipelineRequest;
 import io.seqera.tower.model.LaunchDbDto;
 import io.seqera.tower.model.PipelineDbDto;
+import io.seqera.tower.model.PipelineSchemaAttributes;
 import io.seqera.tower.model.WorkflowLaunchRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
@@ -1185,7 +1187,7 @@ class PipelinesCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testAddWithNextflowVersionAndOutputDir(MockServerClient mock) {
+    void testAddWithNextflowVersionAndOutputDir(MockServerClient mock) throws IOException {
 
         mock.reset();
 
@@ -1208,6 +1210,7 @@ class PipelinesCmdTest extends BaseCmdTest {
                                 "launch":{
                                     "pipeline":"https://github.com/pditommaso/nf-sleep",
                                     "nextflowVersion":"26.04.6",
+                                    "towerConfig":"reports: {}",
                                     "outputDir":"s3://nextflow-ci/outputs"
                                 }
                             }"""
@@ -1218,6 +1221,7 @@ class PipelinesCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(mock, "pipelines", "add", "-n", "sleep_one_minute",
                 "--nextflow-version", "26.04.6", "--output-dir", "s3://nextflow-ci/outputs",
+                "--tower-config", tempFile("reports: {}", "tower", "yml"),
                 "https://github.com/pditommaso/nf-sleep");
 
         assertEquals("", out.stdErr);
@@ -1238,7 +1242,7 @@ class PipelinesCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testUpdateKeepsStoredSyntaxParser(MockServerClient mock) {
+    void testUpdateKeepsStoredConfigurationLabelsAndIcon(MockServerClient mock) {
 
         mock.reset();
 
@@ -1249,7 +1253,8 @@ class PipelinesCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("GET").withPath("/pipelines/217997727159863"), exactly(1)
+                request().withMethod("GET").withPath("/pipelines/217997727159863")
+                        .withQueryStringParameter("attributes", "labels"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("""
                         {
@@ -1257,6 +1262,8 @@ class PipelinesCmdTest extends BaseCmdTest {
                                 "pipelineId": 217997727159863,
                                 "name": "sleep_one_minute",
                                 "repository": "https://github.com/pditommaso/nf-sleep",
+                                "icon": "https://avatars.example.com/custom.png",
+                                "labels": [{"id": 11, "name": "team", "value": "rnd", "resource": true}, {"id": 12, "name": "prod", "resource": false}],
                                 "version": {"id": "default-ver", "name": "sleep_one_minute-1", "isDefault": true}
                             }
                         }""").withContentType(MediaType.APPLICATION_JSON)
@@ -1267,19 +1274,22 @@ class PipelinesCmdTest extends BaseCmdTest {
                         .withQueryStringParameter("versionId", "default-ver"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withContentType(MediaType.APPLICATION_JSON)
-                        .withBody("{\"launch\":{\"id\":\"5nmCvXcarkvv8tELMF4KyY\",\"computeEnvId\":null,\"computeEnv\":{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\"},\"pipeline\":\"https://github.com/pditommaso/nf-sleep\",\"workDir\":\"s3://nextflow-ci/jordeu\",\"revision\":\"main\",\"syntaxParser\":\"v2\",\"nextflowVersion\":\"26.04.6\"}}")
+                        .withBody("{\"launch\":{\"id\":\"5nmCvXcarkvv8tELMF4KyY\",\"computeEnvId\":null,\"computeEnv\":{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\"},\"pipeline\":\"https://github.com/pditommaso/nf-sleep\",\"workDir\":\"s3://nextflow-ci/jordeu\",\"revision\":\"main\",\"syntaxParser\":\"v2\",\"nextflowVersion\":\"26.04.6\",\"towerConfig\":\"reports: {}\"}}")
         );
 
         mock.when(
                 request().withMethod("POST").withPath("/pipelines/217997727159863/versions/default-ver")
                         .withBody(json("""
                             {
+                                "icon":"https://avatars.example.com/custom.png",
+                                "labelIds":[11,12],
                                 "launch":{
                                     "computeEnvId":"vYOK4vn7spw7bHHWBDXZ2",
                                     "pipeline":"https://github.com/pditommaso/nf-sleep",
                                     "revision":"main",
                                     "syntaxParser":"v2",
-                                    "nextflowVersion":"26.04.6"
+                                    "nextflowVersion":"26.04.6",
+                                    "towerConfig":"reports: {}"
                                 }
                             }""")), exactly(1)
         ).respond(
@@ -1987,6 +1997,54 @@ class PipelinesCmdTest extends BaseCmdTest {
     }
 
     // --- Version ID / Version Name wiring tests ---
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testSchema(OutputType format, MockServerClient mock) {
+        mock.reset();
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines/217997727159863"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"pipeline\":{\"pipelineId\":217997727159863,\"name\":\"sleep_one_minute\"}}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines/217997727159863/schema")
+                        .withQueryStringParameter("attributes", "schema"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"schema\":\"{\\\"title\\\":\\\"nf-sleep\\\"}\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "pipelines", "schema", "-i", "217997727159863");
+        assertOutput(format, out, new PipelinesSchema(PipelineSchemaAttributes.schema, "{\"title\":\"nf-sleep\"}"));
+        if (format == OutputType.console) {
+            assertEquals("{\"title\":\"nf-sleep\"}", out.stdOut);
+        }
+    }
+
+    @Test
+    void testSchemaParamsNotFound(MockServerClient mock) {
+        mock.reset();
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines/217997727159863"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"pipeline\":{\"pipelineId\":217997727159863,\"name\":\"sleep_one_minute\"}}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines/217997727159863/schema")
+                        .withQueryStringParameter("attributes", "params"), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(mock, "pipelines", "schema", "-i", "217997727159863", "--params");
+
+        assertEquals(errorMessage(out.app, new TowerException("No params found for pipeline 'sleep_one_minute'")), out.stdErr);
+        assertEquals(1, out.exitCode);
+    }
 
     @Test
     void testViewWithVersionId(MockServerClient mock) throws JsonProcessingException {

@@ -18,6 +18,7 @@ package io.seqera.tower.cli.commands.computeenvs.platforms;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.api.CredentialsApi;
+import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.ComputeConfig;
 import io.seqera.tower.model.ComputeEnvComputeConfig.PlatformEnum;
@@ -91,6 +92,13 @@ public abstract class AbstractPlatform<T extends ComputeConfig> implements Platf
         });
 
         return vars;
+    }
+
+    protected static Boolean propagateHeadJobOptions(Boolean propagate, String headJobOptions) throws TowerException {
+        if (Boolean.TRUE.equals(propagate) && headJobOptions == null) {
+            throw new TowerException("'--propagate-head-job-options' requires '--head-job-options'");
+        }
+        return propagate;
     }
 
     public PlatformEnum type() {

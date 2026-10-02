@@ -25,6 +25,7 @@ import io.seqera.tower.api.CredentialsApi;
 import io.seqera.tower.api.DataLinksApi;
 import io.seqera.tower.api.DatasetsApi;
 import io.seqera.tower.api.Ga4ghApi;
+import io.seqera.tower.api.IdentitiesApi;
 import io.seqera.tower.api.LabelsApi;
 import io.seqera.tower.api.LaunchApi;
 import io.seqera.tower.api.OrgsApi;
@@ -98,6 +99,14 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     public static final String USER_WORKSPACE_NAME = "user";
     public static final String WORKSPACE_REF_SEPARATOR = "/";
 
+    // Some endpoints take a body on DELETE (e.g. data-link content). The SDK suppresses Jersey's HTTP compliance
+    // check, so the request is sent, but Jersey still logs a warning to stderr. Strong reference: JUL holds loggers weakly.
+    private static final Logger JERSEY_INVOCATION_LOGGER = Logger.getLogger("org.glassfish.jersey.client.JerseyInvocation");
+
+    static {
+        JERSEY_INVOCATION_LOGGER.setLevel(java.util.logging.Level.SEVERE);
+    }
+
     // No attributes constants
     public static final List<ComputeEnvQueryAttribute> NO_CE_ATTRIBUTES = Collections.EMPTY_LIST;
     public static final List<WorkflowQueryAttribute> NO_WORKFLOW_ATTRIBUTES = Collections.EMPTY_LIST;
@@ -114,6 +123,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     private DataLinksApi dataLinksApi;
     private DatasetsApi datasetsApi;
     private Ga4ghApi ga4ghApi;
+    private IdentitiesApi identitiesApi;
     private LabelsApi labelsApi;
     private LaunchApi launchApi;
     private OrgsApi orgsApi;
@@ -214,6 +224,10 @@ public abstract class AbstractApiCmd extends AbstractCmd {
 
     protected Ga4ghApi ga4ghApi() throws ApiException {
         return ga4ghApi == null ? new Ga4ghApi(apiClient()) : ga4ghApi;
+    }
+
+    protected IdentitiesApi identitiesApi() throws ApiException {
+        return identitiesApi == null ? new IdentitiesApi(apiClient()) : identitiesApi;
     }
 
     protected LabelsApi labelsApi() throws ApiException {

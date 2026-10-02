@@ -26,14 +26,17 @@ import io.seqera.tower.cli.responses.datasets.DatasetDownload;
 import io.seqera.tower.cli.responses.datasets.DatasetList;
 import io.seqera.tower.cli.responses.datasets.DatasetUpdate;
 import io.seqera.tower.cli.responses.datasets.DatasetUrl;
+import io.seqera.tower.cli.responses.datasets.DatasetVersionDisabled;
 import io.seqera.tower.cli.responses.datasets.DatasetVersionsList;
 import io.seqera.tower.cli.responses.datasets.DatasetView;
 import io.seqera.tower.cli.responses.datasets.DatasetsVisibility;
 import io.seqera.tower.cli.responses.labels.ManageLabels;
 import io.seqera.tower.model.DatasetDto;
 import io.seqera.tower.model.DatasetVersionDto;
+import io.seqera.tower.model.ListDatasetVersionsResponse;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.api.BeforeEach;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.JsonBody;
 import org.mockserver.model.MediaType;
@@ -47,12 +50,18 @@ import java.util.List;
 
 import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 import static org.mockserver.model.JsonBody.json;
 
 public class DatasetsCmdTest extends BaseCmdTest {
+
+    @BeforeEach
+    void init(MockServerClient mock) {
+        mock.reset();
+    }
 
     @ParameterizedTest
     @EnumSource(OutputType.class)
@@ -578,5 +587,57 @@ public class DatasetsCmdTest extends BaseCmdTest {
         assertOutput(format, out, new ManageLabels("set", "dataset", "4D9TP0w2pM0qmwqVHgrgBK", 249664655368293L));
         assertEquals("", out.stdErr);
         assertEquals(0, out.exitCode);
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testDisableVersion(OutputType format, MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/datasets/4D9TP0w2pM0qmwqVHgrgBK/metadata")
+                        .withQueryStringParameter("workspaceId", "249664655368293"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datasets/dataset_metadata")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("POST").withPath("/datasets/4D9TP0w2pM0qmwqVHgrgBK/versions/2/disable")
+                        .withQueryStringParameter("workspaceId", "249664655368293"), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(format, mock, "datasets", "disable-version", "-w", "249664655368293", "-i", "4D9TP0w2pM0qmwqVHgrgBK", "--dataset-version", "2");
+
+        assertOutput(format, out, new DatasetVersionDisabled("4D9TP0w2pM0qmwqVHgrgBK", 2L, "249664655368293"));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testVersionsShowsDisabled(OutputType format, MockServerClient mock) throws JsonProcessingException {
+        String versions = """
+                {"versions": [
+                  {"datasetId": "4D9TP0w2pM0qmwqVHgrgBK", "version": 1, "hasHeader": true, "mediaType": "text/csv", "disabled": true,
+                   "fileName": "samples.csv",
+                   "url": "https://api/workspaces/249664655368293/datasets/4D9TP0w2pM0qmwqVHgrgBK/v/1/n/samples.csv"}
+                ]}
+                """;
+        mock.when(
+                request().withMethod("GET").withPath("/datasets/4D9TP0w2pM0qmwqVHgrgBK/metadata")
+                        .withQueryStringParameter("workspaceId", "249664655368293"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datasets/dataset_metadata")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/datasets/4D9TP0w2pM0qmwqVHgrgBK/versions")
+                        .withQueryStringParameter("workspaceId", "249664655368293"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(versions).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "datasets", "view", "-w", "249664655368293", "-i", "4D9TP0w2pM0qmwqVHgrgBK", "versions");
+
+        assertOutput(format, out, new DatasetVersionsList(parseJson(versions, ListDatasetVersionsResponse.class).getVersions(), "4D9TP0w2pM0qmwqVHgrgBK", "249664655368293"));
+        if (format == OutputType.console) {
+            assertTrue(out.stdOut.contains("Disabled"), out.stdOut);
+        }
     }
 }

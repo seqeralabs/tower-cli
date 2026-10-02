@@ -22,6 +22,8 @@ import io.seqera.tower.cli.commands.runs.LabelsCmd;
 import io.seqera.tower.cli.commands.runs.DumpCmd;
 import io.seqera.tower.cli.commands.runs.ListCmd;
 import io.seqera.tower.cli.commands.runs.RelaunchCmd;
+import io.seqera.tower.cli.commands.runs.StarCmd;
+import io.seqera.tower.cli.commands.runs.UnstarCmd;
 import io.seqera.tower.cli.commands.runs.ViewCmd;
 import picocli.CommandLine;
 
@@ -35,7 +37,9 @@ import picocli.CommandLine;
                 CancelCmd.class,
                 LabelsCmd.class,
                 DeleteCmd.class,
-                DumpCmd.class
+                DumpCmd.class,
+                StarCmd.class,
+                UnstarCmd.class
         }
 )
 public class RunsCmd extends AbstractRootCmd {

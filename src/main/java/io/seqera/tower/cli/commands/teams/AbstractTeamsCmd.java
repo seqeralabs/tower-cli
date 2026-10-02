@@ -52,7 +52,7 @@ public abstract class AbstractTeamsCmd extends AbstractApiCmd {
     }
 
     public TeamDbDto findTeamByName(Long orgId, String teamName) throws ApiException {
-        ListTeamResponse listTeamResponse = teamsApi().listOrganizationTeams(orgId, null, null, null);
+        ListTeamResponse listTeamResponse = teamsApi().listOrganizationTeams(orgId, null, null, teamName);
 
         if (listTeamResponse == null) {
             throw new TeamNotFoundException(orgId, teamName);
@@ -64,6 +64,11 @@ public abstract class AbstractTeamsCmd extends AbstractApiCmd {
                 .filter(item -> Objects.equals(item.getName(), teamName))
                 .findFirst()
                 .orElseThrow(() -> new TeamNotFoundException(orgId, teamName));
+    }
+
+    protected TeamDbDto fetchTeam(Long orgId, TeamRefOptions ref) throws ApiException {
+        Long teamId = ref.team.id != null ? ref.team.id : findTeamByName(orgId, ref.team.name).getTeamId();
+        return teamsApi().describeOrganizationTeam(orgId, teamId).getTeam();
     }
 
     public void deleteTeamById(Long teamId, String orgRef) throws OrganizationNotFoundException, ApiException {
