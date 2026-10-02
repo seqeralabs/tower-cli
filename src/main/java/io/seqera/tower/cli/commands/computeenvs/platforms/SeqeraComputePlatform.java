@@ -35,6 +35,9 @@ public class SeqeraComputePlatform extends AbstractPlatform<SeqeraComputeConfig>
     @CommandLine.Option(names = {"--instance-type-size"}, description = "Studios instance size, controlling compute resources and capabilities. Options: ${COMPLETION-CANDIDATES}. Free-tier organizations are limited to SMALL.")
     public SeqeraComputeCloudInstanceTypeSize instanceTypeSize;
 
+    @CommandLine.Option(names = {"--data-retention-policy"}, description = "Apply the automatic data retention policy to the S3 bucket created by Seqera Compute. Intermediate files are deleted after 28 days to manage storage cost.")
+    public Boolean dataRetentionPolicy;
+
     public SeqeraComputePlatform() {
         super(PlatformEnum.SEQERACOMPUTE_PLATFORM);
     }
@@ -47,7 +50,8 @@ public class SeqeraComputePlatform extends AbstractPlatform<SeqeraComputeConfig>
         // settings will automatically be configured by seqera compute and can't
         // be overridden.
 
-        config.region(region);
+        config.region(region)
+                .defaultDataRetentionPolicy(dataRetentionPolicy);
 
         if (instanceTypeSize != null) {
             config.instanceTypeSize(instanceTypeSize);
