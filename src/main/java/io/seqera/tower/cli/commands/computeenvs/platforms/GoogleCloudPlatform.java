@@ -75,13 +75,11 @@ public class GoogleCloudPlatform extends AbstractPlatform<GoogleCloudConfig> {
                 .zone(zone);
 
         if (sched != null) {
-            SchedConfig schedConfig = new SchedConfig();
-            if (sched.provisioningModel != null) {
-                schedConfig.provisioningModel(sched.provisioningModel);
-            }
-            if (sched.machineTypes != null) {
-                schedConfig.machineTypes(sched.machineTypes);
-            }
+            SchedConfig schedConfig = new SchedConfig()
+                    .provisioningModel(sched.provisioningModel)
+                    .machineTypes(sched.machineTypes)
+                    .predictionModel(sched.predictionModel)
+                    .nvmeEnabled(sched.nvmeEnabled);
             config.schedConfig(schedConfig);
         }
 
@@ -148,6 +146,12 @@ public class GoogleCloudPlatform extends AbstractPlatform<GoogleCloudConfig> {
 
         @Option(names = {"--sched-machine-types"}, description = "Compute Engine machine types for compute nodes managed by the Seqera scheduler. Comma-separated list (e.g., n2-standard-4,c2-standard-8). Leave empty to let the scheduler select the most cost-effective types.", split = ",")
         public List<String> machineTypes;
+
+        @Option(names = {"--prediction-model"}, description = "Model the Seqera scheduler uses to predict task resource requirements. Suggested values: none, qr/v1, qr/v2, qr/v3. If absent, the scheduler default (none) applies.")
+        public String predictionModel;
+
+        @Option(names = {"--nvme-storage"}, description = "Restrict the Seqera scheduler to Compute Engine machine types that provide local SSD (NVMe) storage for faster I/O.")
+        public Boolean nvmeEnabled;
     }
 
     public static class AdvancedOptions {
