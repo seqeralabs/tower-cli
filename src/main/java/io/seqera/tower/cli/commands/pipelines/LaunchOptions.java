@@ -44,6 +44,9 @@ public class LaunchOptions extends NullableLaunchOptions {
     @Option(names = {"--config"}, description = "Nextflow configuration as text (overrides config files). Provide the path to a file containing the content.")
     public Path config;
 
+    @Option(names = {"--tower-config"}, description = "Seqera Platform configuration in tower.yml format. Overrides the pipeline's tower.yml for this run. Provide the path to a file containing the content.")
+    public Path towerConfig;
+
     @Option(names = {"--pre-run"}, description = "Add a script that executes in the nf-launch script prior to invoking Nextflow processes. See: https://docs.seqera.io/platform-cloud/launch/advanced#pre-and-post-run-scripts. Provide the path to a file containing the content.")
     public Path preRunScript;
 

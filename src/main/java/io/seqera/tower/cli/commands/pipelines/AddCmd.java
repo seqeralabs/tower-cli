@@ -108,6 +108,7 @@ public class AddCmd extends AbstractPipelinesCmd {
 
                 // Advanced options
                 .configText(FilesHelper.readString(opts.config))
+                .towerConfig(FilesHelper.readString(opts.towerConfig))
                 .preRunScript(preRunScriptValue)
                 .postRunScript(postRunScriptValue)
                 .pullLatest(opts.pullLatest)

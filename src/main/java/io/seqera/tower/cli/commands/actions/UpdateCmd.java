@@ -92,6 +92,7 @@ public class UpdateCmd extends AbstractActionsCmd {
 
                 // Advanced options
                 .configText(coalesce(FilesHelper.readString(opts.config), action.getLaunch().getConfigText()))
+                .towerConfig(coalesce(FilesHelper.readString(opts.towerConfig), action.getLaunch().getTowerConfig()))
                 .preRunScript(preRunScriptValue)
                 .postRunScript(postRunScriptValue)
                 .pullLatest(coalesce(opts.pullLatest, action.getLaunch().getPullLatest()))
