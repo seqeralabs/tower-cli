@@ -91,6 +91,7 @@ public class SeqeraComputePlatformTest extends BaseCmdTest {
                                         "platform": "seqeracompute-platform",
                                         "config": {
                                             "region": "eu-west-2",
+                                            "defaultDataRetentionPolicy": true,
                                             "preRunScript": "pre_run_me",
                                             "postRunScript": "post_run_me",
                                             "environment": [
@@ -115,6 +116,7 @@ public class SeqeraComputePlatformTest extends BaseCmdTest {
                 "-n", "another-compute-env",
                 "-r", "eu-west-2",
                 "--work-dir", "my-work-dir",
+                "--data-retention-policy",
                 "--nextflow-config", tempFile("nextflow_config", "nextflow", "config"),
                 "-e", "head:KEY1=value1", "-e", "both:KEY2=value2",
                 "--pre-run", tempFile("pre_run_me", "pre", "sh"),
