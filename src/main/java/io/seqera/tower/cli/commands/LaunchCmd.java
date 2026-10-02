@@ -23,6 +23,7 @@ import io.seqera.tower.cli.commands.labels.Label;
 import io.seqera.tower.cli.commands.pipelines.NullableLaunchOptions;
 import io.seqera.tower.cli.commands.pipelines.versions.VersionRefOptions;
 import io.seqera.tower.cli.exceptions.InvalidResponseException;
+import io.seqera.tower.cli.exceptions.StatusCheckFailedException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.runs.RunSubmited;
 import io.seqera.tower.model.ComputeEnvResponseDto;
@@ -89,7 +90,7 @@ public class LaunchCmd extends AbstractRootCmd {
     @ArgGroup(multiplicity = "0..1")
     VersionRefOptions.VersionRef versionRef;
 
-    @Option(names = {"--wait"}, description = "Wait until workflow reaches specified status: ${COMPLETION-CANDIDATES}")
+    @Option(names = {"--wait"}, description = "Wait until workflow reaches specified status: ${COMPLETION-CANDIDATES}. Exits with code 3 if the run was submitted but its status could not be checked.")
     public WorkflowStatus wait;
 
     @Option(names = {"-l", "--labels"}, split = ",", description = "Labels to assign to each pipeline run. Provide comma-separated label values (use key=value format for resource labels). Labels will be created if they don't exist", converter = Label.LabelConverter.class)
@@ -249,18 +250,22 @@ public class LaunchCmd extends AbstractRootCmd {
                     () -> checkWorkflowStatus(submitted.workflowId, submitted.workspaceId),
                     WorkflowStatus.CANCELLED, WorkflowStatus.FAILED, WorkflowStatus.SUCCEEDED
             );
+        } catch (StatusCheckFailedException e) {
+            String workspaceOption = submitted.workspaceId == null ? "" : " -w " + submitted.workspaceId;
+            throw new StatusCheckFailedException(String.format("Run %s was submitted but its status could not be checked (%s). It may still be running, check it with: tw runs view -i %s%s", submitted.workflowId, e.getReason(), submitted.workflowId, workspaceOption), e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             return exitCode;
         }
     }
 
-    private WorkflowStatus checkWorkflowStatus(String workflowId, Long workspaceId) {
-        try {
-            return workflowsApi().describeWorkflow(workflowId, workspaceId, NO_WORKFLOW_ATTRIBUTES).getWorkflow().getStatus();
-        } catch (ApiException | NullPointerException e) {
-            return null;
+    private WorkflowStatus checkWorkflowStatus(String workflowId, Long workspaceId) throws ApiException {
+        WorkflowStatus status = workflowsApi().describeWorkflow(workflowId, workspaceId, NO_WORKFLOW_ATTRIBUTES).getWorkflow().getStatus();
+        // Platform lost contact with the run, which may still be running: keep polling as for a failed check
+        if (status == WorkflowStatus.UNKNOWN) {
+            throw new IllegalStateException("run status is UNKNOWN");
         }
+        return status;
     }
 
     private List<Long> obtainLabelIDs(@Nullable Long workspaceId) throws ApiException {

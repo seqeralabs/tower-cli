@@ -149,13 +149,9 @@ public class AbstractStudiosCmd extends AbstractApiCmd {
         }
     }
 
-    protected DataStudioStatus checkStudioStatus(String sessionId, Long workspaceId) {
-        try {
-            DataStudioStatusInfo statusInfo = studiosApi().describeDataStudio(sessionId, workspaceId).getStatusInfo();
-            return statusInfo == null ? null : statusInfo.getStatus();
-        } catch (ApiException e) {
-            return null;
-        }
+    protected DataStudioStatus checkStudioStatus(String sessionId, Long workspaceId) throws ApiException {
+        DataStudioStatusInfo statusInfo = studiosApi().describeDataStudio(sessionId, workspaceId).getStatusInfo();
+        return statusInfo == null ? null : statusInfo.getStatus();
     }
 
     protected DataStudioConfiguration studioConfigurationFrom(Long wspId, StudioConfigurationOptions configurationOptions, String condaEnvOverride) throws ApiException {
