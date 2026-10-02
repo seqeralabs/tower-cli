@@ -69,7 +69,7 @@ public class ActionsList extends Response {
 
         actions.forEach(element -> {
 
-            // Arrays.asList, not List.of: bucket actions have no endpoint until provisioned.
+            // Arrays.asList, not List.of: cron actions, and bucket actions until provisioned, have no endpoint.
             List<String> rows = new ArrayList<>(Arrays.asList(
                     formatActionId(element.getId(), baseWorkspaceUrl),
                     element.getName(),
