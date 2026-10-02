@@ -20,7 +20,6 @@ import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.model.LogPage;
 
 import java.io.PrintWriter;
-import java.util.List;
 
 public class StudioLog extends Response {
 
@@ -38,9 +37,7 @@ public class StudioLog extends Response {
     public void toString(PrintWriter out) {
         out.println(ansi(String.format("%n  @|bold Log of studio %s at %s workspace:|@%n", userSuppliedStudioIdentifier, workspaceRef)));
 
-        // SDK 1.200 types LogPage.entries as Object (the spec says Iterator), but Platform sends a JSON array
-        List<?> entries = log != null && log.getEntries() instanceof List<?> list ? list : List.of();
-        if (entries.isEmpty()) {
+        if (log == null || log.getEntries() == null || log.getEntries().isEmpty()) {
             if (log != null && Boolean.TRUE.equals(log.getPending())) {
                 out.println(ansi("    @|yellow Waiting for the output log|@"));
             } else {
@@ -49,7 +46,7 @@ public class StudioLog extends Response {
             return;
         }
 
-        entries.forEach(out::println);
+        log.getEntries().forEach(out::println);
 
         if (Boolean.TRUE.equals(log.getTruncated())) {
             out.println(ansi(String.format("%n    @|yellow Log truncated|@")));

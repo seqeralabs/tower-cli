@@ -58,7 +58,7 @@ public class ResolveCmd extends AbstractLineageCmd {
         Long wspId = workspaceId(workspace.workspace);
         String sessionId = source.run != null ? source.run.sessionId : null;
 
-        String lid = lineageApi().resolveLineage(wspId, sessionId, source.filePath).getLid();
+        String lid = lineageApi().resolveLineage(wspId, sessionId, null, source.filePath).getLid();
         return new LineageResolved(workspaceRef(wspId), lid);
     }
 }

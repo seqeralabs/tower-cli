@@ -17,6 +17,8 @@
 package io.seqera.tower.cli.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.cfg.JsonNodeFeature;
 import io.seqera.tower.JSON;
 
 public class JsonHelper {
@@ -25,7 +27,9 @@ public class JsonHelper {
     }
 
     public static String prettyJson(Object obj) throws JsonProcessingException {
-        return new JSON().getContext(obj.getClass()).writerWithDefaultPrettyPrinter().writeValueAsString(obj);
+        // SDK fields declared nullable are JsonNullable, which NON_NULL does not omit when the server sends an explicit null
+        ObjectMapper mapper = new JSON().getMapper().configure(JsonNodeFeature.WRITE_NULL_PROPERTIES, false);
+        return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(mapper.valueToTree(obj));
     }
 
     public static <T> T parseJson(String json, Class<T> clazz) throws JsonProcessingException {

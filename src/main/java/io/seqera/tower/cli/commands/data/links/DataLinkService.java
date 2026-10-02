@@ -74,7 +74,7 @@ public class DataLinkService  {
     DataLinksFetchStatus checkDataLinksFetchStatus(Long wspId, String credentialsId) {
         int status;
         try {
-            status = api.listDataLinksWithHttpInfo(wspId, credentialsId, null, 1, 0, null).getStatusCode();
+            status = api.listDataLinksWithHttpInfo(wspId, credentialsId, null, 1, 0, null, null).getStatusCode();
         } catch (ApiException e) {
             return DataLinksFetchStatus.ERROR;
         }
@@ -197,7 +197,7 @@ public class DataLinkService  {
 
     private DataLinkDto getDataLinkById(String dataLinkId, Long wspId, String credId) {
         try {
-            return api.describeDataLink(dataLinkId, wspId, credId).getDataLink();
+            return api.describeDataLink(dataLinkId, wspId, credId, null).getDataLink();
         } catch (ApiException e) {
             throw new TowerRuntimeException("Encountered error while retrieving data link for id " + dataLinkId, e);
         }
@@ -205,7 +205,7 @@ public class DataLinkService  {
 
     private List<DataLinkDto> getDataLinksBySearchCriteria(Long wspId, String search, String credId) {
         try {
-            return api.listDataLinks(wspId, credId, search, null, null, null).getDataLinks();
+            return api.listDataLinks(wspId, credId, search, null, null, null, null).getDataLinks();
         } catch (ApiException e) {
             throw new TowerRuntimeException("Encountered error while retrieving data links for " + search, e);
         }

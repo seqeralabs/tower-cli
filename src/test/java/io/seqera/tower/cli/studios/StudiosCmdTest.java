@@ -2970,6 +2970,52 @@ public class StudiosCmdTest extends BaseCmdTest {
         mock.verify(request().withMethod("PUT").withPath("/studios/3e8370e7/checkpoints/1"), VerificationTimes.once());
     }
 
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testLogs(OutputType format, MockServerClient mock) throws JsonProcessingException {
+        mockWorkspace(mock);
+        String logPage = """
+                {
+                  "entries": ["Starting studio", "Studio ready"],
+                  "forwardToken": "f/123",
+                  "rewindToken": "b/123",
+                  "pending": false,
+                  "truncated": false
+                }
+                """;
+        mock.when(
+                request().withMethod("GET").withPath("/studios/3e8370e7/log")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("next", "f/100")
+                        .withQueryStringParameter("maxLength", "500"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"log\": " + logPage + "}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "logs", "-w", "75887156211589", "-i", "3e8370e7", "--next", "f/100", "--max-length", "500");
+
+        assertOutput(format, out, new StudioLog("3e8370e7", "[organization1 / workspace1]", parseJson(logPage, LogPage.class)));
+        if (format == OutputType.console) {
+            assertTrue(out.stdOut.contains(String.format("Starting studio%nStudio ready")), out.stdOut);
+            assertTrue(out.stdOut.contains("--next f/123"), out.stdOut);
+        }
+    }
+
+    @Test
+    void testLogsPending(MockServerClient mock) {
+        mockWorkspace(mock);
+        mock.when(
+                request().withMethod("GET").withPath("/studios/3e8370e7/log").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"log\": {\"entries\": [], \"pending\": true}}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "studios", "logs", "-w", "75887156211589", "-i", "3e8370e7");
+
+        assertEquals(0, out.exitCode);
+        assertTrue(out.stdOut.contains("Waiting for the output log"), out.stdOut);
+    }
+
     private String withMountDataV2(String resource, String mountDataV2) {
         return new String(loadResource(resource)).replace("\"mountData\": [", "\"mountDataV2\": " + mountDataV2 + ",\n    \"mountData\": [");
     }
@@ -3144,34 +3190,4 @@ public class StudiosCmdTest extends BaseCmdTest {
         assertTrue(out.stdOut.contains("Warning: " + checkpointWarning), out.stdOut);
     }
 
-    @ParameterizedTest
-    @EnumSource(OutputType.class)
-    void testLogs(OutputType format, MockServerClient mock) throws JsonProcessingException {
-        mockWorkspace(mock);
-        String logPage = """
-                {
-                  "entries": ["Starting studio", "Studio ready"],
-                  "forwardToken": "f/123",
-                  "rewindToken": "b/123",
-                  "pending": false,
-                  "truncated": false
-                }
-                """;
-        mock.when(
-                request().withMethod("GET").withPath("/studios/3e8370e7/log")
-                        .withQueryStringParameter("workspaceId", "75887156211589")
-                        .withQueryStringParameter("next", "f/100")
-                        .withQueryStringParameter("maxLength", "500"), exactly(1)
-        ).respond(
-                response().withStatusCode(200).withBody("{\"log\": " + logPage + "}").withContentType(MediaType.APPLICATION_JSON)
-        );
-
-        ExecOut out = exec(format, mock, "studios", "logs", "-w", "75887156211589", "-i", "3e8370e7", "--next", "f/100", "--max-length", "500");
-
-        assertOutput(format, out, new StudioLog("3e8370e7", "[organization1 / workspace1]", parseJson(logPage, LogPage.class)));
-        if (format == OutputType.console) {
-            assertTrue(out.stdOut.contains(String.format("Starting studio%nStudio ready")), out.stdOut);
-            assertTrue(out.stdOut.contains("--next f/123"), out.stdOut);
-        }
-    }
 }
