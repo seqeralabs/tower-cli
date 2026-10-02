@@ -17,6 +17,7 @@
 package io.seqera.tower.cli.commands;
 
 import io.seqera.tower.ApiException;
+import io.seqera.tower.cli.commands.info.VersionsCmd;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.InfoResponse;
 import io.seqera.tower.cli.responses.Response;
@@ -32,7 +33,10 @@ import java.util.Properties;
 
 @CommandLine.Command(
         name = "info",
-        description = "Show system info and health status"
+        description = "Show system info and health status",
+        subcommands = {
+                VersionsCmd.class,
+        }
 )
 public class InfoCmd extends AbstractRootCmd {
     @Override
