@@ -1185,7 +1185,7 @@ class PipelinesCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testAddWithNextflowVersionAndOutputDir(MockServerClient mock) {
+    void testAddWithNextflowVersionAndOutputDir(MockServerClient mock) throws IOException {
 
         mock.reset();
 
@@ -1208,6 +1208,8 @@ class PipelinesCmdTest extends BaseCmdTest {
                                 "launch":{
                                     "pipeline":"https://github.com/pditommaso/nf-sleep",
                                     "nextflowVersion":"26.04.6",
+                                    "fusionVersion":"2.6",
+                                    "towerConfig":"reports: {}",
                                     "outputDir":"s3://nextflow-ci/outputs"
                                 }
                             }"""
@@ -1217,7 +1219,8 @@ class PipelinesCmdTest extends BaseCmdTest {
         );
 
         ExecOut out = exec(mock, "pipelines", "add", "-n", "sleep_one_minute",
-                "--nextflow-version", "26.04.6", "--output-dir", "s3://nextflow-ci/outputs",
+                "--nextflow-version", "26.04.6", "--fusion-version", "2.6", "--output-dir", "s3://nextflow-ci/outputs",
+                "--tower-config", tempFile("reports: {}", "tower", "yml"),
                 "https://github.com/pditommaso/nf-sleep");
 
         assertEquals("", out.stdErr);
@@ -1267,7 +1270,7 @@ class PipelinesCmdTest extends BaseCmdTest {
                         .withQueryStringParameter("versionId", "default-ver"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withContentType(MediaType.APPLICATION_JSON)
-                        .withBody("{\"launch\":{\"id\":\"5nmCvXcarkvv8tELMF4KyY\",\"computeEnvId\":null,\"computeEnv\":{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\"},\"pipeline\":\"https://github.com/pditommaso/nf-sleep\",\"workDir\":\"s3://nextflow-ci/jordeu\",\"revision\":\"main\",\"syntaxParser\":\"v2\",\"nextflowVersion\":\"26.04.6\"}}")
+                        .withBody("{\"launch\":{\"id\":\"5nmCvXcarkvv8tELMF4KyY\",\"computeEnvId\":null,\"computeEnv\":{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\"},\"pipeline\":\"https://github.com/pditommaso/nf-sleep\",\"workDir\":\"s3://nextflow-ci/jordeu\",\"revision\":\"main\",\"syntaxParser\":\"v2\",\"nextflowVersion\":\"26.04.6\",\"fusionVersion\":\"2.5\",\"towerConfig\":\"reports: {}\"}}")
         );
 
         mock.when(
@@ -1279,7 +1282,9 @@ class PipelinesCmdTest extends BaseCmdTest {
                                     "pipeline":"https://github.com/pditommaso/nf-sleep",
                                     "revision":"main",
                                     "syntaxParser":"v2",
-                                    "nextflowVersion":"26.04.6"
+                                    "nextflowVersion":"26.04.6",
+                                    "fusionVersion":"2.5",
+                                    "towerConfig":"reports: {}"
                                 }
                             }""")), exactly(1)
         ).respond(

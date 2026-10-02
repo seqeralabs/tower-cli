@@ -43,6 +43,9 @@ public class NullableLaunchOptions {
     @Option(names = {"--nextflow-version"}, description = "Nextflow version to run the workflow with. Must exist in the Platform version catalog and meet the minimum required by the compute environment. Takes precedence over the value stored in the launch configuration.")
     public String nextflowVersion;
 
+    @Option(names = {"--fusion-version"}, description = "Fusion version to run the workflow with. Must exist in the Platform version catalog and only applies when the compute environment enables Fusion v2. Takes precedence over the value stored in the launch configuration.")
+    public String fusionVersion;
+
     @Option(names = {"--output-dir"}, description = "Per-run output directory, passed to Nextflow as '-output-dir'. Requires Nextflow 24.10.0 or later and the workflow outputs syntax. Takes precedence over the value stored in the launch configuration.")
     public String outputDir;
 
@@ -52,6 +55,9 @@ public class NullableLaunchOptions {
         }
         if (nextflowVersion != null) {
             request.nextflowVersion(nextflowVersion);
+        }
+        if (fusionVersion != null) {
+            request.fusionVersion(fusionVersion);
         }
         if (outputDir != null) {
             request.outputDir(outputDir);

@@ -374,6 +374,36 @@ class ActionsCmdTest extends BaseCmdTest {
         assertOutput(format, out, new ActionAdd("new-action", USER_WORKSPACE_NAME, "2Z1g6MCWpOLgHLA65cw1qt"));
     }
 
+    @Test
+    void testAddWithFusionVersionAndTowerConfig(MockServerClient mock) throws IOException {
+        mock.reset();
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs").withQueryStringParameter("status", "AVAILABLE"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"primary\":true}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/actions")
+                        .withBody(json("{\"launch\":{\"fusionVersion\":\"2.6\",\"towerConfig\":\"reports: {}\"}}")), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("/actions/action_add")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "actions", "add", "github", "-n", "new-action", "--pipeline", "https://github.com/pditommaso/nf-sleep",
+                "--fusion-version", "2.6", "--tower-config", tempFile("reports: {}", "tower", "yml"));
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+    }
+
     @ParameterizedTest
     @EnumSource(OutputType.class)
     void testAddWithOverwrite(OutputType format, MockServerClient mock) {

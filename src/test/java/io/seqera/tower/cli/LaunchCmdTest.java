@@ -168,6 +168,7 @@ class LaunchCmdTest extends BaseCmdTest {
                                     "pipeline":"https://github.com/nf-core/sarek",
                                     "syntaxParser":"v1",
                                     "nextflowVersion":"25.10.1",
+                                    "fusionVersion":"2.6",
                                     "outputDir":"/new-outputs"
                                 }
                             }"""
@@ -185,7 +186,7 @@ class LaunchCmdTest extends BaseCmdTest {
 
         // Run the command
         ExecOut out = exec(mock, "launch", "sarek", "--syntax-parser", "v1",
-                "--nextflow-version", "25.10.1", "--output-dir", "/new-outputs");
+                "--nextflow-version", "25.10.1", "--fusion-version", "2.6", "--output-dir", "/new-outputs");
 
         // Assert results
         assertEquals("", out.stdErr);
@@ -304,6 +305,7 @@ class LaunchCmdTest extends BaseCmdTest {
                                 "revision":"develop",
                                 "configProfiles":["test","docker"],
                                 "configText":"extra_config",
+                                "towerConfig":"reports: {}",
                                 "preRunScript":"pre_run_me",
                                 "postRunScript":"post_run_me",
                                 "mainScript":"alternate.nf",
@@ -326,7 +328,8 @@ class LaunchCmdTest extends BaseCmdTest {
 
         // Run the command
         ExecOut out = exec(mock, "launch", "sarek", "-p", "test,docker", "-r", "develop", "--work-dir", "/my_work_dir",
-                "--config", tempFile("extra_config", "nextflow", "config"), "--pull-latest", "--stub-run",
+                "--config", tempFile("extra_config", "nextflow", "config"), "--tower-config", tempFile("reports: {}", "tower", "yml"),
+                "--pull-latest", "--stub-run",
                 "--pre-run", tempFile("pre_run_me", "pre", "sh"), "--post-run", tempFile("post_run_me", "post", "sh"),
                 "--main-script", "alternate.nf", "--entry-name", "dsl2", "--schema-name", "my_schema.json", "--disable-optimization");
 

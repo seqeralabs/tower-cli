@@ -212,6 +212,7 @@ public class UpdateCmd extends AbstractPipelinesCmd {
                 .configProfiles(coalesce(opts.profile, launch.getConfigProfiles()))
                 .paramsText(coalesce(FilesHelper.readString(opts.paramsFile), launch.getParamsText()))
                 .configText(coalesce(FilesHelper.readString(opts.config), launch.getConfigText()))
+                .towerConfig(coalesce(FilesHelper.readString(opts.towerConfig), launch.getTowerConfig()))
                 .preRunScript(coalesce(FilesHelper.readString(opts.preRunScript), launch.getPreRunScript()))
                 .postRunScript(coalesce(FilesHelper.readString(opts.postRunScript), launch.getPostRunScript()))
                 .pullLatest(coalesce(opts.pullLatest, launch.getPullLatest()))
