@@ -98,6 +98,14 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     public static final String USER_WORKSPACE_NAME = "user";
     public static final String WORKSPACE_REF_SEPARATOR = "/";
 
+    // Some endpoints take a body on DELETE (e.g. data-link content). The SDK suppresses Jersey's HTTP compliance
+    // check, so the request is sent, but Jersey still logs a warning to stderr. Strong reference: JUL holds loggers weakly.
+    private static final Logger JERSEY_INVOCATION_LOGGER = Logger.getLogger("org.glassfish.jersey.client.JerseyInvocation");
+
+    static {
+        JERSEY_INVOCATION_LOGGER.setLevel(java.util.logging.Level.SEVERE);
+    }
+
     // No attributes constants
     public static final List<ComputeEnvQueryAttribute> NO_CE_ATTRIBUTES = Collections.EMPTY_LIST;
     public static final List<WorkflowQueryAttribute> NO_WORKFLOW_ATTRIBUTES = Collections.EMPTY_LIST;
