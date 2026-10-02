@@ -66,6 +66,11 @@ public abstract class AbstractTeamsCmd extends AbstractApiCmd {
                 .orElseThrow(() -> new TeamNotFoundException(orgId, teamName));
     }
 
+    protected TeamDbDto fetchTeam(Long orgId, TeamRefOptions ref) throws ApiException {
+        Long teamId = ref.team.id != null ? ref.team.id : findTeamByName(orgId, ref.team.name).getTeamId();
+        return teamsApi().describeOrganizationTeam(orgId, teamId).getTeam();
+    }
+
     public void deleteTeamById(Long teamId, String orgRef) throws OrganizationNotFoundException, ApiException {
         OrgAndWorkspaceDto orgAndWorkspaceDbDto = findOrganizationByRef(orgRef);
         deleteTeamById(teamId, orgAndWorkspaceDbDto.getOrgId());

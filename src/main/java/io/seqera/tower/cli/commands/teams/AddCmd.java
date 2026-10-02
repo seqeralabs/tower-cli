@@ -43,6 +43,9 @@ public class AddCmd extends AbstractTeamsCmd {
     @CommandLine.Option(names = {"-d", "--description"}, description = "Team description. Free-text description providing context about the team's purpose, members, or project scope.")
     public String teamDescription;
 
+    @CommandLine.Option(names = {"--idp-group"}, description = "Link the team to this IdP group (display name, see 'tw organizations idp-groups list'). Team membership is then managed by the IdP.")
+    public String idpGroup;
+
     @CommandLine.Option(names = {"--overwrite"}, description = "Overwrite existing team. If a team with this name already exists in the organization, delete it first before creating the new one. Use with caution as this removes all team members and permissions.", defaultValue = "false")
     public Boolean overwrite;
 
@@ -56,6 +59,9 @@ public class AddCmd extends AbstractTeamsCmd {
 
         CreateTeamRequest request = new CreateTeamRequest();
         request.setTeam(team);
+        if (idpGroup != null) {
+            request.setIdpGroupId(findIdpGroupByName(orgAndWorkspaceDbDto.getOrgId(), idpGroup).getId());
+        }
 
         if(overwrite) tryDeleteTeam(orgAndWorkspaceDbDto.getOrgId(), teamName);
 
