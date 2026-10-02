@@ -44,9 +44,9 @@ public class DatasetVersionsList extends Response {
             return;
         }
 
-        TableList table = new TableList(out, 5, "Version", "Has Header", "Media Type", "File Name", "URL").sortBy(0);
+        TableList table = new TableList(out, 6, "Version", "Has Header", "Media Type", "File Name", "URL", "Disabled").sortBy(0);
         table.setPrefix("    ");
-        versions.forEach(v -> table.addRow(v.getVersion().toString(), v.getHasHeader().toString(), v.getMediaType(), v.getFileName(), v.getUrl()));
+        versions.forEach(v -> table.addRow(v.getVersion().toString(), v.getHasHeader().toString(), v.getMediaType(), v.getFileName(), v.getUrl(), String.valueOf(Boolean.TRUE.equals(v.getDisabled()))));
         table.print();
 
         out.println("");
