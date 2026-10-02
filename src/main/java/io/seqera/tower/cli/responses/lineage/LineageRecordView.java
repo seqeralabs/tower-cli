@@ -51,6 +51,7 @@ public class LineageRecordView extends Response {
         table.addRow("Run ID", Objects.toString(display.getWorkflowId(), ""));
         table.addRow("Run name", Objects.toString(display.getRunName(), ""));
         table.addRow("Process", Objects.toString(display.getProcessName(), ""));
+        table.addRow("Pipeline", Objects.toString(display.getPipelineName(), ""));
         table.print();
 
         if (record.getData() != null) {
