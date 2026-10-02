@@ -70,6 +70,7 @@ public class StudiosView extends Response {
         table.addRow("Memory allocated", config == null ? "-" : String.valueOf(config.getMemory()));
         table.addRow("Build reports", studio.getWaveBuildUrl() == null ? "NA" : studio.getWaveBuildUrl());
         table.addRow("Private", studio.getIsPrivate() == null ? "NA" : String.valueOf(studio.getIsPrivate()));
+        table.addRow("Starred", studio.getStarred() == null ? "NA" : String.valueOf(studio.getStarred()));
         table.addRow("Lifespan (hours)", studio.getEffectiveLifespanHours() == null ? "Unlimited" : String.valueOf(studio.getEffectiveLifespanHours()));
         table.addRow("SSH enabled", config == null || config.getSshEnabled() == null ? "false" : String.valueOf(config.getSshEnabled()));
 
