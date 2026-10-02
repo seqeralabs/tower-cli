@@ -28,6 +28,7 @@ import io.seqera.tower.cli.exceptions.ShowUsageException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.runs.RunCanceled;
 import io.seqera.tower.cli.responses.runs.RunDeleted;
+import io.seqera.tower.cli.responses.runs.RunLog;
 import io.seqera.tower.cli.responses.runs.RunStarred;
 import io.seqera.tower.cli.responses.runs.RunsDeleted;
 import io.seqera.tower.cli.responses.runs.RunDump;
@@ -789,6 +790,38 @@ class RunsCmdTest extends BaseCmdTest {
         assertEquals("", out.stdErr);
         assertEquals(new RunFileDownloaded(file, RunDownloadFileType.stdout).toString(), out.stdOut);
         assertEquals(0, out.exitCode);
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testLog(OutputType format, MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/workflow/5dAZoXrcmZXRO4/log"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("""
+                        {"log": {"entries": ["N E X T F L O W  ~  version 26.04.6", "Launching `main.nf`"], "pending": true, "truncated": false, "downloads": []}}""").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "runs", "view", "-i", "5dAZoXrcmZXRO4", "log");
+        assertOutput(format, out, new RunLog(List.of("N E X T F L O W  ~  version 26.04.6", "Launching `main.nf`"), false, null));
+    }
+
+    @Test
+    void testTaskLogTruncatedWithMessage(MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/workflow/5dAZoXrcmZXRO4/log/5"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("""
+                        {"log": {"entries": ["Hello"], "pending": false, "truncated": true, "message": "Unable to retrieve output log - Cause: gone"}}""").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "runs", "view", "-i", "5dAZoXrcmZXRO4", "log", "-t", "5");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        assertEquals(chop(new RunLog(List.of("Hello"), true, "Unable to retrieve output log - Cause: gone").toString()), out.stdOut);
+        assertTrue(out.stdOut.startsWith("Hello"), out.stdOut);
+        assertTrue(out.stdOut.contains("Log truncated"), out.stdOut);
     }
 
     @Test
