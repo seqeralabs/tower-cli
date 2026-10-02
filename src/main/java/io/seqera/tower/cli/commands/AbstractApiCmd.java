@@ -25,6 +25,7 @@ import io.seqera.tower.api.CredentialsApi;
 import io.seqera.tower.api.DataLinksApi;
 import io.seqera.tower.api.DatasetsApi;
 import io.seqera.tower.api.Ga4ghApi;
+import io.seqera.tower.api.IdentitiesApi;
 import io.seqera.tower.api.LabelsApi;
 import io.seqera.tower.api.LaunchApi;
 import io.seqera.tower.api.OrgsApi;
@@ -122,6 +123,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     private DataLinksApi dataLinksApi;
     private DatasetsApi datasetsApi;
     private Ga4ghApi ga4ghApi;
+    private IdentitiesApi identitiesApi;
     private LabelsApi labelsApi;
     private LaunchApi launchApi;
     private OrgsApi orgsApi;
@@ -222,6 +224,10 @@ public abstract class AbstractApiCmd extends AbstractCmd {
 
     protected Ga4ghApi ga4ghApi() throws ApiException {
         return ga4ghApi == null ? new Ga4ghApi(apiClient()) : ga4ghApi;
+    }
+
+    protected IdentitiesApi identitiesApi() throws ApiException {
+        return identitiesApi == null ? new IdentitiesApi(apiClient()) : identitiesApi;
     }
 
     protected LabelsApi labelsApi() throws ApiException {
