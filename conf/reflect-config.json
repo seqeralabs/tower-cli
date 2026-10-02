@@ -251,6 +251,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.RolesCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.RunsCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -370,6 +376,13 @@
   "name":"io.seqera.tower.cli.commands.actions.add.AbstractAddCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
+},
+{
+  "name":"io.seqera.tower.cli.commands.actions.add.AddBucketCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"dataLinkId"}, {"name":"events"}, {"name":"markerFile"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"io.seqera.tower.cli.commands.actions.add.AddGitHubCmd",
@@ -1615,6 +1628,13 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.members.RolesCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"organizationRef"}, {"name":"user"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.members.UpdateCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1857,6 +1877,48 @@
   "name":"io.seqera.tower.cli.commands.pipelineschemas.AddCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.roles.AddCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"description"}, {"name":"name"}, {"name":"organizationRef"}, {"name":"permissions"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.roles.DeleteCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"name"}, {"name":"organizationRef"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.roles.ListCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"filter"}, {"name":"organizationRef"}, {"name":"paginationOptions"}, {"name":"type"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.roles.PermissionsCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"organizationRef"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.roles.UpdateCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"description"}, {"name":"name"}, {"name":"newName"}, {"name":"organizationRef"}, {"name":"permissions"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.roles.ViewCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"name"}, {"name":"organizationRef"}],
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2742,6 +2804,14 @@
   "queryAllDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.cli.responses.members.MemberRolesList",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.cli.responses.members.MembersAdded",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -2903,6 +2973,42 @@
 },
 {
   "name":"io.seqera.tower.cli.responses.pipelineschemas.PipelineSchemasAdded",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.roles.RoleAdded",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.roles.RoleDeleted",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.roles.RolePermissionsList",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.roles.RoleUpdated",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.roles.RoleView",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.roles.RolesList",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true
