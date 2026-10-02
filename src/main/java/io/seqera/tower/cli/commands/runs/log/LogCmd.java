@@ -34,6 +34,9 @@ public class LogCmd extends AbstractRunsCmd {
     @CommandLine.Option(names = {"-t"}, description = "Task numeric identifier. When specified, displays the task output log instead of the Nextflow head job output.")
     public Long task;
 
+    @CommandLine.Option(names = {"--next"}, description = "Pagination cursor of the log page to display, as printed at the end of the previous page.")
+    public String next;
+
     @CommandLine.ParentCommand
     ViewCmd parentCommand;
 
@@ -44,9 +47,13 @@ public class LogCmd extends AbstractRunsCmd {
         // Platform serves the compute platform's live log stream when it has one, so unlike 'download' this
         // also works while the run is active; otherwise it falls back to the output file.
         LogPage page = task == null
-                ? workflowsApi().getWorkflowLog(parentCommand.id, wspId, null, null).getLog()
-                : workflowsApi().getWorkflowTaskLog(parentCommand.id, task, null, wspId, null).getLog();
+                ? workflowsApi().getWorkflowLog(parentCommand.id, wspId, next, null).getLog()
+                : workflowsApi().getWorkflowTaskLog(parentCommand.id, task, next, wspId, null).getLog();
 
-        return new RunLog(page.getEntries(), Boolean.TRUE.equals(page.getTruncated()), page.getMessage());
+        // Live streams (e.g. CloudWatch) return one page per call without flagging truncation; an empty page means
+        // the end of what is available, even though the stream keeps returning a cursor
+        boolean hasEntries = page.getEntries() != null && !page.getEntries().isEmpty();
+        String nextPage = hasEntries ? page.getForwardToken() : null;
+        return new RunLog(page.getEntries(), Boolean.TRUE.equals(page.getTruncated()), page.getMessage(), nextPage);
     }
 }

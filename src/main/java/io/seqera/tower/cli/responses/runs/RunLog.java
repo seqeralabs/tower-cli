@@ -27,11 +27,13 @@ public class RunLog extends Response {
     public final List<String> entries;
     public final boolean truncated;
     public final String message;
+    public final String next;
 
-    public RunLog(List<String> entries, boolean truncated, String message) {
+    public RunLog(List<String> entries, boolean truncated, String message, String next) {
         this.entries = entries;
         this.truncated = truncated;
         this.message = message;
+        this.next = next;
     }
 
     @Override
@@ -44,6 +46,9 @@ public class RunLog extends Response {
         }
         if (truncated) {
             out.println(ansi(String.format("%n  @|yellow Log truncated. Use 'tw runs view download' to get the complete file once the run has finished.|@")));
+        }
+        if (next != null) {
+            out.println(ansi(String.format("%n  @|bold Next page:|@ --next %s", next)));
         }
     }
 }
