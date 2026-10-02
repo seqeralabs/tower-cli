@@ -765,7 +765,7 @@ tw managed-identities credentials -o my-org -n hpc1 add -l my_linux_user -k ~/.s
 - `tw launch`, `tw pipelines add|update`, `tw runs relaunch`, and `tw actions add|update`: `--tower-config`.
 - `tw runs star|unstar`, `tw runs view log [--next <cursor>]`, and `tw runs delete -i <id>,<id>`.
 - `tw pipelines schema`: show a pipeline's parameter schema.
-- `tw actions add bucket`.
+- `tw actions add cron|bucket`.
 - `tw studios extend|rename-checkpoint`. `--mount-data-uris` also accepts a folder inside a data link.
 - `tw data-links delete-content|download-script`.
 - `tw datasets add --url`, `tw datasets update --url`, and `tw datasets disable-version`.
