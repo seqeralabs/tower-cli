@@ -18,6 +18,7 @@ package io.seqera.tower.cli.commands.actions;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.actions.add.AddBucketCmd;
+import io.seqera.tower.cli.commands.actions.add.AddCronCmd;
 import io.seqera.tower.cli.commands.actions.add.AddGitHubCmd;
 import io.seqera.tower.cli.commands.actions.add.AddTowerCmd;
 import io.seqera.tower.cli.exceptions.ShowUsageException;
@@ -32,6 +33,7 @@ import java.io.IOException;
         subcommands = {
                 AddGitHubCmd.class,
                 AddTowerCmd.class,
+                AddCronCmd.class,
                 AddBucketCmd.class,
         }
 )

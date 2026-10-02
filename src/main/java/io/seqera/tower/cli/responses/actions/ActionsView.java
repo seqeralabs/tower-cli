@@ -25,6 +25,7 @@ import io.seqera.tower.cli.utils.ModelHelper;
 import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.ActionResponseDto;
 import io.seqera.tower.model.BucketActionConfig;
+import io.seqera.tower.model.CronActionConfig;
 import io.seqera.tower.model.WorkflowLaunchRequest;
 
 import java.io.PrintWriter;
@@ -80,6 +81,11 @@ public class ActionsView extends Response {
 
     private void addTriggerRows(TableList table) {
         switch (action.getConfig()) {
+            case CronActionConfig cron -> {
+                table.addRow("Cron expression", cron.getExpression());
+                table.addRow("Timezone", cron.getTimezone());
+                table.addRow("Next execution", FormatHelper.formatTime(action.getNextExecution()));
+            }
             case BucketActionConfig bucket -> {
                 table.addRow("Data link ID", bucket.getDataLinkId());
                 table.addRow("Bucket", bucket.getBucketName());
