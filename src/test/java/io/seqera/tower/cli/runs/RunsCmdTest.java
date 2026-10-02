@@ -573,6 +573,7 @@ class RunsCmdTest extends BaseCmdTest {
                             "pipelineSchemaId":42,
                             "resume":true,
                             "nextflowVersion":"26.04.6",
+                            "towerConfig":"reports: {}",
                             "outputDir":"/outputs",
                             "syntaxParser":"v2"
                         }
@@ -616,6 +617,43 @@ class RunsCmdTest extends BaseCmdTest {
         assertEquals(0, out.exitCode);
         mock.verify(request().withMethod("POST").withPath("/workflow/launch")
                 .withBody(json("{\"launch\":{\"syntaxParser\":\"v1\"}}")), VerificationTimes.exactly(1));
+    }
+
+    @Test
+    void testRelaunchOverridingTowerConfig(MockServerClient mock) throws IOException {
+        mock.reset();
+
+        mock.when(
+                request().withMethod("POST").withPath("/workflow/launch"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workflow_launch")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/workflow/5mDfiUtqyptDib"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workflow_view")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/workflow/5mDfiUtqyptDib/launch"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("runs/workflow_launch_v2")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "runs", "relaunch", "-i", "5mDfiUtqyptDib",
+                "--tower-config", tempFile("reports: []", "tower", "yml"));
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        mock.verify(request().withMethod("POST").withPath("/workflow/launch")
+                .withBody(json("{\"launch\":{\"towerConfig\":\"reports: []\"}}")), VerificationTimes.exactly(1));
     }
 
     @Test

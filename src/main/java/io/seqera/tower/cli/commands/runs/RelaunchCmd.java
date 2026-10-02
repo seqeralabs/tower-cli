@@ -101,6 +101,7 @@ public class RelaunchCmd extends AbstractRunsCmd {
                 .revision(coalesce(opts.revision, (noResume ? launch.getRevision() : launch.getResumeCommitId())))
                 .configProfiles(coalesce(opts.profile, launch.getConfigProfiles()))
                 .configText(opts.config != null ? FilesHelper.readString(opts.config) : launch.getConfigText())
+                .towerConfig(opts.towerConfig != null ? FilesHelper.readString(opts.towerConfig) : launch.getTowerConfig())
                 .paramsText(opts.paramsFile != null ? FilesHelper.readString(opts.paramsFile) : launch.getParamsText())
                 .preRunScript(opts.preRunScript != null ? FilesHelper.readString(opts.preRunScript) : launch.getPreRunScript())
                 .postRunScript(opts.postRunScript != null ? FilesHelper.readString(opts.postRunScript) : launch.getPostRunScript())

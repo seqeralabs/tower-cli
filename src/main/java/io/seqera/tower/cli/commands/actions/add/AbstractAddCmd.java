@@ -81,6 +81,7 @@ public abstract class AbstractAddCmd extends AbstractActionsCmd {
 
                 // Advanced options
                 .configText(FilesHelper.readString(opts.config))
+                .towerConfig(FilesHelper.readString(opts.towerConfig))
                 .preRunScript(preRunScriptValue)
                 .postRunScript(postRunScriptValue)
                 .pullLatest(opts.pullLatest)
