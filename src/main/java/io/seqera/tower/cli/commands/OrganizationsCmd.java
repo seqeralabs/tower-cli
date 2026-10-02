@@ -19,6 +19,7 @@ package io.seqera.tower.cli.commands;
 import io.seqera.tower.cli.commands.organizations.AddCmd;
 import io.seqera.tower.cli.commands.organizations.DeleteCmd;
 import io.seqera.tower.cli.commands.organizations.ListCmd;
+import io.seqera.tower.cli.commands.organizations.QuotasCmd;
 import io.seqera.tower.cli.commands.organizations.UpdateCmd;
 import io.seqera.tower.cli.commands.organizations.ViewCmd;
 import picocli.CommandLine;
@@ -32,6 +33,7 @@ import picocli.CommandLine;
                 AddCmd.class,
                 UpdateCmd.class,
                 ViewCmd.class,
+                QuotasCmd.class,
         }
 )
 public class OrganizationsCmd extends AbstractRootCmd {
