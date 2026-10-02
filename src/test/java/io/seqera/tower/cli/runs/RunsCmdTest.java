@@ -802,7 +802,32 @@ class RunsCmdTest extends BaseCmdTest {
         );
 
         ExecOut out = exec(format, mock, "runs", "view", "-i", "5dAZoXrcmZXRO4", "log");
-        assertOutput(format, out, new RunLog(List.of("N E X T F L O W  ~  version 26.04.6", "Launching `main.nf`"), false, null));
+        assertOutput(format, out, new RunLog(List.of("N E X T F L O W  ~  version 26.04.6", "Launching `main.nf`"), false, null, null));
+    }
+
+    @Test
+    void testLogPagesWithForwardToken(MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/workflow/5dAZoXrcmZXRO4/log").withQueryStringParameter("next", "f/123"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("""
+                        {"log": {"entries": ["second page"], "truncated": false, "forwardToken": "f/456"}}""").withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/workflow/5dAZoXrcmZXRO4/log").withQueryStringParameter("next", "f/456"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("""
+                        {"log": {"entries": [], "truncated": false, "forwardToken": "f/456"}}""").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut page = exec(mock, "runs", "view", "-i", "5dAZoXrcmZXRO4", "log", "--next", "f/123");
+        assertTrue(page.stdOut.startsWith("second page"), page.stdOut);
+        assertTrue(page.stdOut.contains("--next f/456"), page.stdOut);
+
+        // An empty page is the end of the available log: no cursor hint even though the stream returns one
+        ExecOut end = exec(mock, "runs", "view", "-i", "5dAZoXrcmZXRO4", "log", "--next", "f/456");
+        assertEquals(0, end.exitCode);
+        assertTrue(!end.stdOut.contains("--next"), end.stdOut);
     }
 
     @Test
@@ -818,7 +843,7 @@ class RunsCmdTest extends BaseCmdTest {
 
         assertEquals("", out.stdErr);
         assertEquals(0, out.exitCode);
-        assertEquals(chop(new RunLog(List.of("Hello"), true, "Unable to retrieve output log - Cause: gone").toString()), out.stdOut);
+        assertEquals(chop(new RunLog(List.of("Hello"), true, "Unable to retrieve output log - Cause: gone", null).toString()), out.stdOut);
         assertTrue(out.stdOut.startsWith("Hello"), out.stdOut);
         assertTrue(out.stdOut.contains("Log truncated"), out.stdOut);
     }
