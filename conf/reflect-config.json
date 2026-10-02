@@ -155,6 +155,12 @@
   "allDeclaredMethods":true
 },
 {
+  "name":"io.seqera.tower.cli.commands.AccessTokensCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.ActionsCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -206,6 +212,12 @@
   "name":"io.seqera.tower.cli.commands.LaunchCmd$AdvancedOptions",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.ManagedIdentitiesCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -266,6 +278,33 @@
   "name":"io.seqera.tower.cli.commands.WorkspacesCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.accesstokens.AddCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"name"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.accesstokens.DeleteCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"ref"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.accesstokens.DeleteCmd$TokenRef",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"id"}, {"name":"name"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.accesstokens.ListCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -379,6 +418,20 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.computeenvs.DisableCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"computeEnvRefOptions"}, {"name":"workspace"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.computeenvs.EnableCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"computeEnvRefOptions"}, {"name":"workspace"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.computeenvs.ExportCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -406,6 +459,13 @@
   "name":"io.seqera.tower.cli.commands.computeenvs.UpdateCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.computeenvs.ValidateCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"computeEnvRefOptions"}, {"name":"force"}, {"name":"workspace"}],
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -673,6 +733,13 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.computeenvs.platforms.AzCloudPlatform$SchedOptions",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"machineTypes"}, {"name":"maxCpusPerUser"}, {"name":"maxSpotAttempts"}, {"name":"nvmeEnabled"}, {"name":"predictionModel"}, {"name":"provisioningModel"}, {"name":"schedEnabled"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.EksPlatform",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -706,6 +773,13 @@
   "name":"io.seqera.tower.cli.commands.computeenvs.platforms.GoogleCloudPlatform$AdvancedOptions",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.computeenvs.platforms.GoogleCloudPlatform$SchedOptions",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"billingExportTable"}, {"name":"machineTypes"}, {"name":"maxCpusPerUser"}, {"name":"maxSpotAttempts"}, {"name":"nvmeEnabled"}, {"name":"predictionModel"}, {"name":"provisioningModel"}, {"name":"schedEnabled"}],
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -830,6 +904,13 @@
   "name":"io.seqera.tower.cli.commands.credentials.UpdateCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.credentials.ValidateCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"credentialsRefOptions"}, {"name":"force"}, {"name":"workspace"}],
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1134,9 +1215,23 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.data.links.DeleteContentCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"credentialsRef"}, {"name":"dataLinkRefOptions"}, {"name":"dirs"}, {"name":"files"}, {"name":"workspace"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.data.links.DownloadCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.data.links.DownloadScriptCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"credentialsRef"}, {"name":"dataLinkRefOptions"}, {"name":"dirs"}, {"name":"files"}, {"name":"workspace"}],
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1225,6 +1320,13 @@
   "name":"io.seqera.tower.cli.commands.datasets.DeleteCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.datasets.DisableVersionCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"datasetRefOptions"}, {"name":"version"}, {"name":"workspace"}],
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1383,6 +1485,101 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.managedidentities.AbstractManagedIdentitiesCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.commands.managedidentities.AddCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"hostName"}, {"name":"name"}, {"name":"organizationRef"}, {"name":"platform"}, {"name":"port"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.managedidentities.CredentialsCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"organizationRef"}, {"name":"ref"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.managedidentities.DeleteCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"force"}, {"name":"organizationRef"}, {"name":"ref"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.managedidentities.ListCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"organizationRef"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.managedidentities.ManagedIdentityRefOptions",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"managedIdentity"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.managedidentities.ManagedIdentityRefOptions$ManagedIdentityRef",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"id"}, {"name":"name"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.managedidentities.SshManagedCredentialsMetadata",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"userName"}]
+},
+{
+  "name":"io.seqera.tower.cli.commands.managedidentities.UpdateCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"hostName"}, {"name":"newName"}, {"name":"organizationRef"}, {"name":"port"}, {"name":"ref"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.managedidentities.ViewCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"organizationRef"}, {"name":"ref"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.managedidentities.credentials.AddCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"member"}, {"name":"parent"}, {"name":"ssh"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.managedidentities.credentials.DeleteCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"force"}, {"name":"member"}, {"name":"parent"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.managedidentities.credentials.SshCredentialsOptions",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"linuxUserName"}, {"name":"passphrase"}, {"name":"privateKey"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.managedidentities.credentials.UpdateCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"member"}, {"name":"parent"}, {"name":"ssh"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.members.AbstractMembersClass",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
@@ -1456,6 +1653,13 @@
   "name":"io.seqera.tower.cli.commands.organizations.OrganizationsOptions",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.organizations.QuotasCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"organizationRefOptions"}],
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1547,6 +1751,13 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.pipelines.NullableLaunchOptions",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"fusionVersion"}, {"name":"nextflowVersion"}, {"name":"outputDir"}, {"name":"syntaxParser"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.pipelines.PipelineRefOptions",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -1556,6 +1767,13 @@
   "name":"io.seqera.tower.cli.commands.pipelines.PipelineRefOptions$PipelineRef",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.pipelines.SchemaCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"params"}, {"name":"pipelineRefOptions"}, {"name":"versionRef"}, {"name":"workspace"}],
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1683,6 +1901,20 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.runs.StarCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"id"}, {"name":"workspace"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.runs.UnstarCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"id"}, {"name":"workspace"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.runs.ViewCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -1692,6 +1924,13 @@
   "name":"io.seqera.tower.cli.commands.runs.download.DownloadCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.runs.log.LogCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"parentCommand"}, {"name":"task"}],
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1806,6 +2045,13 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.studios.ExtendCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"studioRefOptions"}, {"name":"workspace"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.studios.ListCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -1821,6 +2067,13 @@
   "name":"io.seqera.tower.cli.commands.studios.ParentStudioRefOptions$ParentStudioRef",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.studios.RenameCheckpointCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"checkpointId"}, {"name":"newName"}, {"name":"studioRefOptions"}, {"name":"workspace"}],
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1863,6 +2116,13 @@
   "name":"io.seqera.tower.cli.commands.studios.StudioRefOptions$StudioRef",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.studios.StudioRemoteConfigOptions",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"repository"}, {"name":"revision"}],
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1922,6 +2182,41 @@
   "name":"io.seqera.tower.cli.commands.teams.MembersCmd",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.teams.TeamRefOptions",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"team"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.teams.TeamRefOptions$TeamRef",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"id"}, {"name":"name"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.teams.UpdateCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"description"}, {"name":"idpGroup"}, {"name":"newName"}, {"name":"organizationRef"}, {"name":"ref"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.teams.ViewCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"organizationRef"}, {"name":"ref"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.teams.WorkspacesCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"organizationRef"}, {"name":"paginationOptions"}, {"name":"ref"}],
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2049,6 +2344,14 @@
   "queryAllDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.cli.responses.CredentialsValidated",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.cli.responses.InfoResponse",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -2058,6 +2361,24 @@
   "name":"io.seqera.tower.cli.responses.Response",
   "allDeclaredFields":true,
   "allDeclaredMethods":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.accesstokens.AccessTokenAdded",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"accessToken"}, {"name":"id"}, {"name":"name"}]
+},
+{
+  "name":"io.seqera.tower.cli.responses.accesstokens.AccessTokenDeleted",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"id"}, {"name":"name"}]
+},
+{
+  "name":"io.seqera.tower.cli.responses.accesstokens.AccessTokensList",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"tokens"}]
 },
 {
   "name":"io.seqera.tower.cli.responses.actions.ActionAdd",
@@ -2108,6 +2429,18 @@
   "queryAllDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.cli.responses.computeenvs.ComputeEnvDisabled",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"id"}, {"name":"workspaceRef"}]
+},
+{
+  "name":"io.seqera.tower.cli.responses.computeenvs.ComputeEnvEnabled",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"id"}, {"name":"workspaceRef"}]
+},
+{
   "name":"io.seqera.tower.cli.responses.computeenvs.ComputeEnvExport",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -2126,6 +2459,44 @@
   "queryAllDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.cli.responses.computeenvs.ComputeEnvValidated",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.computeenvs.ComputeEnvView",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.computeenvs.ComputeEnvsPrimaryGet",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.computeenvs.ComputeEnvsPrimarySet",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.data.DataLinkContentDeleted",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"dirs"}, {"name":"files"}, {"name":"id"}, {"name":"wspId"}]
+},
+{
   "name":"io.seqera.tower.cli.responses.data.DataLinkContentList",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -2136,6 +2507,12 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.data.DataLinkDownloadScript",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"script"}]
 },
 {
   "name":"io.seqera.tower.cli.responses.data.DataLinkFileTransferResult",
@@ -2179,6 +2556,14 @@
   "queryAllDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.cli.responses.datasets.DatasetDownload",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.cli.responses.datasets.DatasetList",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -2195,6 +2580,12 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.datasets.DatasetVersionDisabled",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"datasetRef"}, {"name":"version"}, {"name":"workspaceRef"}]
 },
 {
   "name":"io.seqera.tower.cli.responses.datasets.DatasetVersionsList",
@@ -2245,6 +2636,60 @@
   "queryAllDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.cli.responses.managedidentities.ManagedCredentialsAdded",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"managedCredentialsId"}, {"name":"managedIdentityName"}]
+},
+{
+  "name":"io.seqera.tower.cli.responses.managedidentities.ManagedCredentialsDeleted",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"managedCredentialsId"}, {"name":"managedIdentityName"}]
+},
+{
+  "name":"io.seqera.tower.cli.responses.managedidentities.ManagedCredentialsList",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"managedCredentials"}, {"name":"managedIdentityName"}, {"name":"organizationRef"}]
+},
+{
+  "name":"io.seqera.tower.cli.responses.managedidentities.ManagedCredentialsUpdated",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"managedCredentialsId"}, {"name":"managedIdentityName"}]
+},
+{
+  "name":"io.seqera.tower.cli.responses.managedidentities.ManagedIdentitiesList",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"managedIdentities"}, {"name":"organizationRef"}]
+},
+{
+  "name":"io.seqera.tower.cli.responses.managedidentities.ManagedIdentityAdded",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"id"}, {"name":"name"}, {"name":"organizationRef"}]
+},
+{
+  "name":"io.seqera.tower.cli.responses.managedidentities.ManagedIdentityDeleted",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"id"}, {"name":"name"}, {"name":"organizationRef"}]
+},
+{
+  "name":"io.seqera.tower.cli.responses.managedidentities.ManagedIdentityUpdated",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"id"}, {"name":"name"}, {"name":"organizationRef"}]
+},
+{
+  "name":"io.seqera.tower.cli.responses.managedidentities.ManagedIdentityView",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"managedIdentity"}, {"name":"organizationRef"}]
+},
+{
   "name":"io.seqera.tower.cli.responses.members.MembersAdded",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -2275,6 +2720,22 @@
   "allDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.cli.responses.organizations.OrganizationQuotasView",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.organizations.OrganizationsAdded",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.cli.responses.organizations.OrganizationsDeleted",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -2289,6 +2750,14 @@
 {
   "name":"io.seqera.tower.cli.responses.organizations.OrganizationsUpdated",
   "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.organizations.OrganizationsView",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true
 },
@@ -2329,6 +2798,14 @@
   "allDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.cli.responses.pipelines.PipelinesDeleted",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.cli.responses.pipelines.PipelinesExport",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -2339,6 +2816,14 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.pipelines.PipelinesSchema",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
 },
 {
   "name":"io.seqera.tower.cli.responses.pipelines.PipelinesUpdated",
@@ -2401,14 +2886,64 @@
   "allDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.cli.responses.runs.RunLog",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"entries"}, {"name":"message"}, {"name":"truncated"}]
+},
+{
+  "name":"io.seqera.tower.cli.responses.runs.RunStarred",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"id"}, {"name":"starred"}, {"name":"workspaceRef"}]
+},
+{
   "name":"io.seqera.tower.cli.responses.runs.RunSubmited",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.cli.responses.runs.RunView",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.runs.RunViewMetrics",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.runs.RunsDeleted",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"deleted"}, {"name":"failed"}, {"name":"workspaceRef"}]
+},
+{
+  "name":"io.seqera.tower.cli.responses.runs.tasks.TaskView",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.cli.responses.runs.tasks.TasksView",
   "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.runs.utils.MetricFormatMapper",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true
 },
@@ -2443,6 +2978,12 @@
   "queryAllDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.cli.responses.studios.StudioCheckpointUpdated",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"checkpointId"}, {"name":"name"}, {"name":"userSuppliedStudioIdentifier"}, {"name":"workspaceRef"}]
+},
+{
   "name":"io.seqera.tower.cli.responses.studios.StudioCheckpointsList",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -2453,6 +2994,12 @@
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.studios.StudioLifespanExtended",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"lifespanHours"}, {"name":"userSuppliedStudioIdentifier"}, {"name":"workspaceRef"}]
 },
 {
   "name":"io.seqera.tower.cli.responses.studios.StudioStartSubmitted",
@@ -2507,6 +3054,24 @@
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.teams.TeamUpdated",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"organizationName"}, {"name":"teamName"}]
+},
+{
+  "name":"io.seqera.tower.cli.responses.teams.TeamView",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"organizationName"}, {"name":"team"}]
+},
+{
+  "name":"io.seqera.tower.cli.responses.teams.TeamWorkspacesList",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"organizationName"}, {"name":"teamName"}, {"name":"workspaces"}]
 },
 {
   "name":"io.seqera.tower.cli.responses.teams.TeamsList",
