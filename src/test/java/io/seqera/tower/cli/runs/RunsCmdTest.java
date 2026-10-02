@@ -28,6 +28,7 @@ import io.seqera.tower.cli.exceptions.ShowUsageException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.runs.RunCanceled;
 import io.seqera.tower.cli.responses.runs.RunDeleted;
+import io.seqera.tower.cli.responses.runs.RunStarred;
 import io.seqera.tower.cli.responses.runs.RunDump;
 import io.seqera.tower.cli.responses.runs.RunFileDownloaded;
 import io.seqera.tower.cli.responses.runs.RunList;
@@ -121,6 +122,46 @@ class RunsCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "runs", "cancel", "-i", "5dAZoXrcmZXRO4");
         assertOutput(format, out, new RunCanceled("5dAZoXrcmZXRO4", USER_WORKSPACE_NAME));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testStar(OutputType format, MockServerClient mock) {
+        mock.when(
+                request().withMethod("POST").withPath("/workflow/5dAZoXrcmZXRO4/star"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"workflowId\":\"5dAZoXrcmZXRO4\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "runs", "star", "-i", "5dAZoXrcmZXRO4");
+        assertOutput(format, out, new RunStarred("5dAZoXrcmZXRO4", USER_WORKSPACE_NAME, true));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testUnstar(OutputType format, MockServerClient mock) {
+        mock.when(
+                request().withMethod("DELETE").withPath("/workflow/5dAZoXrcmZXRO4/star"), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(format, mock, "runs", "unstar", "-i", "5dAZoXrcmZXRO4");
+        assertOutput(format, out, new RunStarred("5dAZoXrcmZXRO4", USER_WORKSPACE_NAME, false));
+    }
+
+    @Test
+    void testUnstarNotStarred(MockServerClient mock) {
+        mock.when(
+                request().withMethod("DELETE").withPath("/workflow/5dAZoXrcmZXRO4/star"), exactly(1)
+        ).respond(
+                response().withStatusCode(404).withBody("{\"message\":\"Workflow '5dAZoXrcmZXRO4' is not starred\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "runs", "unstar", "-i", "5dAZoXrcmZXRO4");
+
+        assertEquals(errorMessage(out.app, new ApiException(404, "", null, "{\"message\":\"Workflow '5dAZoXrcmZXRO4' is not starred\"}")), out.stdErr);
+        assertEquals(1, out.exitCode);
     }
 
     @Test
