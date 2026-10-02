@@ -69,7 +69,8 @@ public class MoabPlatform extends AbstractPlatform<MoabComputeConfig> {
 
                 // Advanced
                 .maxQueueSize(adv().maxQueueSize)
-                .headJobOptions(adv().headJobOptions);
+                .headJobOptions(adv().headJobOptions)
+                .propagateHeadJobOptions(propagateHeadJobOptions(adv().propagateHeadJobOptions, adv().headJobOptions));
 
         // Common
         config.workDir(workDir)
@@ -94,5 +95,8 @@ public class MoabPlatform extends AbstractPlatform<MoabComputeConfig> {
 
         @Option(names = {"--head-job-options"}, description = "Additional submit options for the Nextflow head job. Appended to the submit command for the main orchestration process.")
         public String headJobOptions;
+
+        @Option(names = {"--propagate-head-job-options"}, description = "Apply the head job submit options to the compute jobs as well. Requires --head-job-options.")
+        public Boolean propagateHeadJobOptions;
     }
 }

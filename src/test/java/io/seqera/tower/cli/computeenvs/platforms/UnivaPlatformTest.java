@@ -69,14 +69,14 @@ class UnivaPlatformTest extends BaseCmdTest {
 
         mock.when(
                 request().withMethod("POST").withPath("/compute-envs").withBody(
-                        JsonBody.json("{\"computeEnv\":{\"credentialsId\":\"2ba2oekqeTEBzwSDgXg7xf\",\"name\":\"uge\",\"platform\":\"uge-platform\",\"config\":{\"userName\":\"jordi\",\"hostName\":\"ssh.mydomain.net\",\"maxQueueSize\":200,\"workDir\":\"/home/jordeu/nf\",\"headQueue\":\"normal\"}}}")
+                        JsonBody.json("{\"computeEnv\":{\"credentialsId\":\"2ba2oekqeTEBzwSDgXg7xf\",\"name\":\"uge\",\"platform\":\"uge-platform\",\"config\":{\"userName\":\"jordi\",\"hostName\":\"ssh.mydomain.net\",\"maxQueueSize\":200,\"headJobOptions\":\"--mem=4G\",\"propagateHeadJobOptions\":true,\"workDir\":\"/home/jordeu/nf\",\"headQueue\":\"normal\"}}}")
                 ),
                 exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "compute-envs", "add", "uge", "-n", "uge", "--work-dir", "/home/jordeu/nf", "-u", "jordi", "-H", "ssh.mydomain.net", "-q", "normal", "--max-queue-size=200");
+        ExecOut out = exec(mock, "compute-envs", "add", "uge", "-n", "uge", "--work-dir", "/home/jordeu/nf", "-u", "jordi", "-H", "ssh.mydomain.net", "-q", "normal", "--max-queue-size=200", "--head-job-options=--mem=4G", "--propagate-head-job-options");
 
         assertEquals("", out.stdErr);
         assertEquals(new ComputeEnvAdded("uge-platform", "isnEDBLvHDAIteOEF44ow", "uge", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
