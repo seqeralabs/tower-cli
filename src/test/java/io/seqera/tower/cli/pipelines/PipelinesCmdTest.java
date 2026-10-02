@@ -1240,7 +1240,7 @@ class PipelinesCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testUpdateKeepsStoredSyntaxParser(MockServerClient mock) {
+    void testUpdateKeepsStoredConfigurationLabelsAndIcon(MockServerClient mock) {
 
         mock.reset();
 
@@ -1251,7 +1251,8 @@ class PipelinesCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("GET").withPath("/pipelines/217997727159863"), exactly(1)
+                request().withMethod("GET").withPath("/pipelines/217997727159863")
+                        .withQueryStringParameter("attributes", "labels"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("""
                         {
@@ -1259,6 +1260,8 @@ class PipelinesCmdTest extends BaseCmdTest {
                                 "pipelineId": 217997727159863,
                                 "name": "sleep_one_minute",
                                 "repository": "https://github.com/pditommaso/nf-sleep",
+                                "icon": "https://avatars.example.com/custom.png",
+                                "labels": [{"id": 11, "name": "team", "value": "rnd", "resource": true}, {"id": 12, "name": "prod", "resource": false}],
                                 "version": {"id": "default-ver", "name": "sleep_one_minute-1", "isDefault": true}
                             }
                         }""").withContentType(MediaType.APPLICATION_JSON)
@@ -1276,6 +1279,8 @@ class PipelinesCmdTest extends BaseCmdTest {
                 request().withMethod("POST").withPath("/pipelines/217997727159863/versions/default-ver")
                         .withBody(json("""
                             {
+                                "icon":"https://avatars.example.com/custom.png",
+                                "labelIds":[11,12],
                                 "launch":{
                                     "computeEnvId":"vYOK4vn7spw7bHHWBDXZ2",
                                     "pipeline":"https://github.com/pditommaso/nf-sleep",
