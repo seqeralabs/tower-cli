@@ -29,6 +29,8 @@ import io.seqera.tower.cli.responses.studios.StudiosCreated;
 import io.seqera.tower.cli.responses.studios.StudiosList;
 import io.seqera.tower.cli.responses.studios.StudioCheckpointsList;
 import io.seqera.tower.cli.responses.studios.StudioDeleted;
+import io.seqera.tower.cli.responses.studios.StudioCheckpointUpdated;
+import io.seqera.tower.cli.responses.studios.StudioLifespanExtended;
 import io.seqera.tower.cli.responses.studios.StudioStartSubmitted;
 import io.seqera.tower.cli.responses.studios.StudioStopSubmitted;
 import io.seqera.tower.cli.responses.studios.StudioUpdated;
@@ -2849,6 +2851,67 @@ public class StudiosCmdTest extends BaseCmdTest {
 
         assertEquals(1, out.exitCode);
         assertTrue(out.stdErr.contains("A studio template is required"), out.stdErr);
+    }
+
+    private void mockWorkspace(MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testExtend(OutputType format, MockServerClient mock) {
+        mockWorkspace(mock);
+        mock.when(
+                request().withMethod("POST").withPath("/studios/3e8370e7/lifespan").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"sessionId\": \"3e8370e7\", \"effectiveLifespanHours\": 16}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "extend", "-w", "75887156211589", "-i", "3e8370e7");
+
+        assertOutput(format, out, new StudioLifespanExtended("3e8370e7", "[organization1 / workspace1]", 16));
+        mock.verify(request().withMethod("POST").withPath("/studios/3e8370e7/lifespan"), VerificationTimes.once());
+    }
+
+    @Test
+    void testExtendNotApproachingExpiration(MockServerClient mock) {
+        mockWorkspace(mock);
+        mock.when(
+                request().withMethod("POST").withPath("/studios/3e8370e7/lifespan").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(400).withBody("{\"message\": \"Studio lifespan can only be extended once it is approaching its scheduled auto-stop.\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "studios", "extend", "-w", "75887156211589", "-i", "3e8370e7");
+
+        assertEquals(1, out.exitCode);
+        assertTrue(out.stdErr.contains("approaching its scheduled auto-stop"), out.stdErr);
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testRenameCheckpoint(OutputType format, MockServerClient mock) {
+        mockWorkspace(mock);
+        mock.when(
+                request().withMethod("PUT").withPath("/studios/3e8370e7/checkpoints/1").withQueryStringParameter("workspaceId", "75887156211589")
+                        .withBody(json("{\"name\": \"before-upgrade\"}", MatchType.STRICT)), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"id\": 1, \"name\": \"before-upgrade\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "rename-checkpoint", "-w", "75887156211589", "-i", "3e8370e7", "--checkpoint-id", "1", "--new-name", "before-upgrade");
+
+        assertOutput(format, out, new StudioCheckpointUpdated("3e8370e7", "[organization1 / workspace1]", 1L, "before-upgrade"));
+        mock.verify(request().withMethod("PUT").withPath("/studios/3e8370e7/checkpoints/1"), VerificationTimes.once());
     }
 
 }
