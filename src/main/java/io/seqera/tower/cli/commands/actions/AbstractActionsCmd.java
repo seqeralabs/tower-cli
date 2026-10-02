@@ -63,6 +63,12 @@ public abstract class AbstractActionsCmd extends AbstractApiCmd {
         return listActionsResponseActionInfos.stream().findFirst().orElse(null);
     }
 
+    protected String actionId(ActionRefOptions actionRefOptions, Long wspId) throws ApiException {
+        return actionRefOptions.action.actionId != null
+                ? actionRefOptions.action.actionId
+                : actionByName(wspId, actionRefOptions.action.actionName).getId();
+    }
+
     protected DescribeActionResponse fetchDescribeActionResponse(ActionRefOptions actionRefOptions, Long wspId, ActionQueryAttribute... attributes) throws ApiException {
         DescribeActionResponse response;
 
