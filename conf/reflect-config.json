@@ -227,6 +227,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.LineageCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.ManagedIdentitiesCmd",
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
@@ -470,6 +476,13 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.agents.LaunchCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"agentRef"}, {"name":"instructions"}, {"name":"workspace"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.agents.ListCmd",
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
@@ -488,6 +501,26 @@
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
   "fields":[{"name":"ref"}, {"name":"workspace"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.agents.runs.ListCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"filter"}, {"name":"paginationOptions"}, {"name":"workspace"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.agents.runs.RunsCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.agents.runs.ViewCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"id"}, {"name":"workspace"}],
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1639,6 +1672,71 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.lineage.AbstractLineageCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.commands.lineage.AbstractNavigateCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"lidOptions"}, {"name":"type"}, {"name":"workspace"}]
+},
+{
+  "name":"io.seqera.tower.cli.commands.lineage.DownstreamCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.lineage.LidOptions",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"lid"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.lineage.ResolveCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"source"}, {"name":"workspace"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.lineage.ResolveCmd$Run",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"runName"}, {"name":"sessionId"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.lineage.ResolveCmd$Source",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"filePath"}, {"name":"run"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.lineage.SearchCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"max"}, {"name":"pageToken"}, {"name":"query"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.lineage.UpstreamCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.lineage.ViewCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"lidOptions"}, {"name":"summary"}, {"name":"workspace"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.managedidentities.AbstractManagedIdentitiesCmd",
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true
@@ -2375,6 +2473,13 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.studios.LogsCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"maxLength"}, {"name":"next"}, {"name":"studioRefOptions"}, {"name":"workspace"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.studios.ParentStudioRefOptions",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -2774,6 +2879,24 @@
   "queryAllDeclaredConstructors":true
 },
 {
+  "name":"io.seqera.tower.cli.responses.agents.AgentLaunched",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.agents.AgentRunView",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.agents.AgentRunsList",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
   "name":"io.seqera.tower.cli.responses.agents.AgentUpdated",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -3030,6 +3153,24 @@
 },
 {
   "name":"io.seqera.tower.cli.responses.labels.ManageLabels",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.lineage.LineageRecordView",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.lineage.LineageRecordsList",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.lineage.LineageResolved",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true
@@ -3504,6 +3645,12 @@
 },
 {
   "name":"io.seqera.tower.cli.responses.studios.StudioLifespanExtended",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.studios.StudioLog",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true

@@ -79,7 +79,9 @@ public class GoogleCloudPlatform extends AbstractPlatform<GoogleCloudConfig> {
                     .provisioningModel(sched.provisioningModel)
                     .machineTypes(sched.machineTypes)
                     .predictionModel(sched.predictionModel)
-                    .nvmeEnabled(sched.nvmeEnabled);
+                    .nvmeEnabled(sched.nvmeEnabled)
+                    .maxCpusPerUser(sched.maxCpusPerUser)
+                    .maxSpotAttempts(sched.maxSpotAttempts);
             config.schedConfig(schedConfig);
         }
 
@@ -152,6 +154,12 @@ public class GoogleCloudPlatform extends AbstractPlatform<GoogleCloudConfig> {
 
         @Option(names = {"--nvme-storage"}, description = "Restrict the Seqera scheduler to Compute Engine machine types that provide local SSD (NVMe) storage for faster I/O.")
         public Boolean nvmeEnabled;
+
+        @Option(names = {"--max-cpus-per-user"}, description = "Maximum concurrent vCPUs a single user may use across their runs on this compute environment. Must be a positive integer. If absent, there is no limit.")
+        public Integer maxCpusPerUser;
+
+        @Option(names = {"--max-spot-attempts"}, description = "Total spot attempts for a task, including the first, before giving up on spot capacity (1-10). With SPOT_FIRST, the task then falls back to on-demand. Only valid with the SPOT and SPOT_FIRST provisioning models.")
+        public Integer maxSpotAttempts;
     }
 
     public static class AdvancedOptions {

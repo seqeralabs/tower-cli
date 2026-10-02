@@ -869,6 +869,8 @@ public class AwsCloudPlatformTest extends BaseCmdTest {
                                             "schedConfig": {
                                                 "predictionModel": "qr/v3",
                                                 "nvmeEnabled": true,
+                                                "maxCpusPerUser": 64,
+                                                "maxSpotAttempts": 3,
                                                 "backendStrategy": "EC2",
                                                 "pool": {
                                                     "enabled": true,
@@ -899,6 +901,10 @@ public class AwsCloudPlatformTest extends BaseCmdTest {
                 "--prediction-model",
                 "qr/v3",
                 "--nvme-storage",
+                "--max-cpus-per-user",
+                "64",
+                "--max-spot-attempts",
+                "3",
                 "--backend-strategy",
                 "EC2",
                 "--warm-pool",

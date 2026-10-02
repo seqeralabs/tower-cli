@@ -20,19 +20,26 @@ package io.seqera.tower.cli.agents;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
+import io.seqera.tower.cli.commands.global.PaginationOptions;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.agents.AgentAdded;
 import io.seqera.tower.cli.responses.agents.AgentDeleted;
+import io.seqera.tower.cli.responses.agents.AgentLaunched;
+import io.seqera.tower.cli.responses.agents.AgentRunView;
+import io.seqera.tower.cli.responses.agents.AgentRunsList;
 import io.seqera.tower.cli.responses.agents.AgentUpdated;
 import io.seqera.tower.cli.responses.agents.AgentView;
 import io.seqera.tower.cli.responses.agents.AgentsList;
 import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.model.AgentDbDto;
+import io.seqera.tower.model.AgentRunDbDto;
+import io.seqera.tower.model.AgentRunStatusResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
+import org.mockserver.matchers.MatchType;
 import org.mockserver.model.MediaType;
 
 import java.io.IOException;
@@ -212,5 +219,77 @@ class AgentsCmdTest extends BaseCmdTest {
         ExecOut out = exec(format, mock, "agents", "disable", "-w", WSP_ID, "-n", "fix-failed-runs");
 
         assertOutput(format, out, new AgentUpdated(WSP_REF, "fix-failed-runs", "disabled"));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testLaunchConfiguredAgent(OutputType format, MockServerClient mock) {
+        mockDescribe(mock);
+        mock.when(request().withMethod("POST").withPath("/agents/launch").withQueryStringParameter("workspaceId", WSP_ID)
+                        .withBody(json("{\"agentConfigId\":\"agt_1\",\"instructions\":\"Find the root cause\"}")), exactly(1))
+                .respond(response().withStatusCode(200).withBody("{\"agentRunId\":\"run_1\",\"status\":\"pending\"}").withContentType(MediaType.APPLICATION_JSON));
+
+        ExecOut out = exec(format, mock, "agents", "launch", "-w", WSP_ID, "-i", "agt_1");
+
+        assertOutput(format, out, new AgentLaunched(WSP_REF, "run_1", "pending"));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testLaunchAdHocInstructions(OutputType format, MockServerClient mock) {
+        mock.when(request().withMethod("POST").withPath("/agents/launch").withQueryStringParameter("workspaceId", WSP_ID)
+                        .withBody(json("{\"instructions\":\"Summarize last week runs\"}", MatchType.STRICT)), exactly(1))
+                .respond(response().withStatusCode(200).withBody("{\"agentRunId\":\"run_2\",\"status\":\"pending\"}").withContentType(MediaType.APPLICATION_JSON));
+
+        ExecOut out = exec(format, mock, "agents", "launch", "-w", WSP_ID, "--instructions", "Summarize last week runs");
+
+        assertOutput(format, out, new AgentLaunched(WSP_REF, "run_2", "pending"));
+    }
+
+    @Test
+    void testLaunchWithoutAgentOrInstructions(MockServerClient mock) {
+        ExecOut out = exec(mock, "agents", "launch", "-w", WSP_ID);
+
+        assertEquals(errorMessage(out.app, new TowerException("Specify an agent to launch (--id or --name) or the instructions to run (--instructions or --instructions-file)")), out.stdErr);
+        assertEquals(1, out.exitCode);
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testRunsList(OutputType format, MockServerClient mock) throws JsonProcessingException {
+        String run = """
+                {
+                  "id": "run_1",
+                  "title": "Debug run 4abc",
+                  "status": "completed",
+                  "trigger": {"type": "manual", "entityId": "agt_1"},
+                  "workflowId": "4abc",
+                  "workspaceId": 75887156211589,
+                  "dateCreated": "2026-09-03T10:00:00Z",
+                  "lastUpdated": "2026-09-03T10:05:00Z"
+                }
+                """;
+        mock.when(request().withMethod("GET").withPath("/agents/runs")
+                        .withQueryStringParameter("workspaceId", WSP_ID)
+                        .withQueryStringParameter("search", "status:completed")
+                        .withQueryStringParameter("max", "100")
+                        .withQueryStringParameter("offset", "0"), exactly(1))
+                .respond(response().withStatusCode(200).withBody("{\"agentRuns\":[" + run + "],\"totalSize\":1}").withContentType(MediaType.APPLICATION_JSON));
+
+        ExecOut out = exec(format, mock, "agents", "runs", "list", "-w", WSP_ID, "-f", "status:completed");
+
+        assertOutput(format, out, new AgentRunsList(WSP_REF, List.of(parseJson(run, AgentRunDbDto.class)), PaginationInfo.from(new PaginationOptions(), 1L)));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testRunsView(OutputType format, MockServerClient mock) throws JsonProcessingException {
+        String status = "{\"agentRunId\":\"run_1\",\"status\":\"running\",\"threadId\":\"thr_1\",\"sessionId\":\"ses_1\"}";
+        mock.when(request().withMethod("GET").withPath("/agents/runs/run_1/status").withQueryStringParameter("workspaceId", WSP_ID), exactly(1))
+                .respond(response().withStatusCode(200).withBody(status).withContentType(MediaType.APPLICATION_JSON));
+
+        ExecOut out = exec(format, mock, "agents", "runs", "view", "-w", WSP_ID, "-i", "run_1");
+
+        assertOutput(format, out, new AgentRunView(WSP_REF, parseJson(status, AgentRunStatusResponse.class)));
     }
 }

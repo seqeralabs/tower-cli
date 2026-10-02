@@ -76,6 +76,8 @@ public class AwsCloudPlatform extends AbstractPlatform<AwsCloudConfig> {
                     .machineTypes(sched.machineTypes)
                     .predictionModel(sched.predictionModel)
                     .nvmeEnabled(sched.nvmeEnabled)
+                    .maxCpusPerUser(sched.maxCpusPerUser)
+                    .maxSpotAttempts(sched.maxSpotAttempts)
                     .backendStrategy(sched.backendStrategy)
                     .pool(sched.warmPool());
             config.schedConfig(schedConfig);
@@ -133,6 +135,12 @@ public class AwsCloudPlatform extends AbstractPlatform<AwsCloudConfig> {
 
         @Option(names = {"--nvme-storage"}, description = "Restrict the Seqera scheduler to EC2 instance types that provide local SSD (NVMe) storage for faster I/O.")
         public Boolean nvmeEnabled;
+
+        @Option(names = {"--max-cpus-per-user"}, description = "Maximum concurrent vCPUs a single user may use across their runs on this compute environment. Must be a positive integer. If absent, there is no limit.")
+        public Integer maxCpusPerUser;
+
+        @Option(names = {"--max-spot-attempts"}, description = "Total spot attempts for a task, including the first, before giving up on spot capacity (1-10). With SPOT_FIRST, the task then falls back to on-demand. Only valid with the SPOT and SPOT_FIRST provisioning models.")
+        public Integer maxSpotAttempts;
 
         @Option(names = {"--backend-strategy"}, description = "Backend the Seqera scheduler uses to run tasks. ECS delegates task execution to AWS ECS; EC2 runs tasks directly on EC2 instances. Valid values: ECS, EC2.")
         public SchedConfig.BackendStrategyEnum backendStrategy;

@@ -418,7 +418,9 @@ public class GoogleCloudPlatformTest extends BaseCmdTest {
                                             "schedEnabled": true,
                                             "schedConfig": {
                                                 "predictionModel": "qr/v3",
-                                                "nvmeEnabled": true
+                                                "nvmeEnabled": true,
+                                                "maxCpusPerUser": 64,
+                                                "maxSpotAttempts": 3
                                             }
                                         },
                                         "credentialsId": "6XfOhoztUq6de3Dw3X9LSb"
@@ -444,7 +446,11 @@ public class GoogleCloudPlatformTest extends BaseCmdTest {
                 "--sched-enabled",
                 "--prediction-model",
                 "qr/v3",
-                "--nvme-storage"
+                "--nvme-storage",
+                "--max-cpus-per-user",
+                "64",
+                "--max-spot-attempts",
+                "3"
         );
 
         // then
