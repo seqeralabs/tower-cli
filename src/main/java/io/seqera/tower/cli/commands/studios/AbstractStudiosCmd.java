@@ -40,6 +40,7 @@ import io.seqera.tower.model.DataStudioTemplate;
 import io.seqera.tower.model.DataStudioTemplatesListResponse;
 import io.seqera.tower.model.ListMembersResponse;
 import io.seqera.tower.model.MemberDbDto;
+import io.seqera.tower.model.MountData;
 
 import static io.seqera.tower.cli.utils.ResponseHelper.waitStatus;
 import static io.seqera.tower.model.DataStudioProgressStepStatus.ERRORED;
@@ -184,7 +185,7 @@ public class AbstractStudiosCmd extends AbstractApiCmd {
                 ? studioConfiguration.getLifespanHours()
                 : configOptions.lifespan);
 
-        studioConfiguration.setMountData(getMountDataIds(configOptions, studioConfiguration, wspId));
+        applyMountData(configOptions, studioConfiguration, wspId);
 
         if (configOptions.environment != null) {
             studioConfiguration.setEnvironment(configOptions.environment);
@@ -198,13 +199,19 @@ public class AbstractStudiosCmd extends AbstractApiCmd {
         return studioConfiguration;
     }
 
-    List<String> getMountDataIds(StudioConfigurationOptions studioConfigOptions, DataStudioConfiguration currentStudioConfiguration, Long wspId) throws ApiException {
+    private void applyMountData(StudioConfigurationOptions studioConfigOptions, DataStudioConfiguration studioConfiguration, Long wspId) throws ApiException {
         if (studioConfigOptions.dataLinkRefOptions == null || studioConfigOptions.dataLinkRefOptions.dataLinkRef == null) {
-            return currentStudioConfiguration.getMountData();
+            return;
         }
 
         DataLinkService dataLinkService = new DataLinkService(dataLinksApi(), app());
-        return dataLinkService.getDataLinkIds(studioConfigOptions.dataLinkRefOptions.dataLinkRef, wspId);
+        List<MountData> mountData = dataLinkService.getMountData(studioConfigOptions.dataLinkRefOptions.dataLinkRef, wspId);
+
+        // The platform gives mountDataV2 precedence, so it must be replaced too: a base configuration
+        // fetched from an existing studio carries its current mounts there.
+        studioConfiguration.setMountDataV2(mountData);
+        // Kept for platform versions that predate mountDataV2; they mount the whole data link.
+        studioConfiguration.setMountData(mountData.stream().map(MountData::getDataLinkId).distinct().toList());
     }
 
     protected List<Long> getLabelIds(List<Label> labels, Long wspId) throws ApiException {

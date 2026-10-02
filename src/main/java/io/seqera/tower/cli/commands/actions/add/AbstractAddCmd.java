@@ -95,6 +95,7 @@ public abstract class AbstractAddCmd extends AbstractActionsCmd {
         request.setName(actionName);
         request.setSource(getSource());
         request.setLaunch(workflowLaunchRequest);
+        configureTrigger(request);
 
         if (overwrite) tryDeleteAction(actionName, wspId);
 
@@ -121,4 +122,8 @@ public abstract class AbstractAddCmd extends AbstractActionsCmd {
     }
 
     protected abstract ActionSource getSource();
+
+    /** Sets the source-specific trigger configuration. GitHub and Seqera Platform actions have none. */
+    protected void configureTrigger(CreateActionRequest request) {
+    }
 }

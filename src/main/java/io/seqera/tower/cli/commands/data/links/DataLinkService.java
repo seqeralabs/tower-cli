@@ -16,8 +16,8 @@
 
 package io.seqera.tower.cli.commands.data.links;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -30,6 +30,7 @@ import io.seqera.tower.cli.exceptions.MultipleDataLinksFoundException;
 import io.seqera.tower.cli.exceptions.TowerRuntimeException;
 import io.seqera.tower.cli.utils.ResponseHelper;
 import io.seqera.tower.model.DataLinkDto;
+import io.seqera.tower.model.MountData;
 
 public class DataLinkService  {
 
@@ -114,10 +115,10 @@ public class DataLinkService  {
         return null;
     }
 
-    public List<String> getDataLinkIds(io.seqera.tower.cli.commands.studios.DataLinkRefOptions.DataLinkRef dataLinkRef, Long wspId) {
+    public List<MountData> getMountData(io.seqera.tower.cli.commands.studios.DataLinkRefOptions.DataLinkRef dataLinkRef, Long wspId) {
         // if DataLink IDs are supplied - use those directly
         if (dataLinkRef.getMountDataIds() != null) {
-            return dataLinkRef.getMountDataIds();
+            return dataLinkRef.getMountDataIds().stream().map(id -> new MountData().dataLinkId(id)).collect(Collectors.toList());
         }
 
         // Check and wait if DataLinks are still being fetched
@@ -126,21 +127,41 @@ public class DataLinkService  {
             throw new TowerRuntimeException("Failed to fetch datalinks for mountData - please retry.");
         }
 
-        List<String> dataLinkIds = new ArrayList<>();
-
         if (dataLinkRef.getMountDataNames() != null) {
-            dataLinkIds = dataLinkRef.getMountDataNames().stream()
-                    .map(name -> getDataLinkByName(wspId, null, name).getId())
+            return dataLinkRef.getMountDataNames().stream()
+                    .map(name -> new MountData().dataLinkId(getDataLinkByName(wspId, null, name).getId()))
                     .collect(Collectors.toList());
         }
 
-        if (dataLinkRef.getMountDataUris() != null) {
-            dataLinkIds = dataLinkRef.getMountDataUris().stream()
-                    .map(resourceRef -> getDataLinkByResourceRef(wspId, null, resourceRef).getId())
-                    .collect(Collectors.toList());
-        }
+        return dataLinkRef.getMountDataUris().stream()
+                .map(uri -> getMountDataByUri(wspId, uri))
+                .collect(Collectors.toList());
+    }
 
-        return dataLinkIds;
+    /**
+     * Resolves a URI to the data link whose resource reference is the URI itself or its closest parent,
+     * so that a folder inside a data link can be mounted (the remainder becomes the mount path).
+     */
+    private MountData getMountDataByUri(Long wspId, String uri) {
+        String target = stripTrailingSlash(uri);
+        int rootEnd = target.indexOf("://") + 2;
+        String candidate = target;
+        while (true) {
+            Optional<DataLinkDto> dataLink = findDataLinkByResourceRef(wspId, candidate);
+            if (dataLink.isPresent()) {
+                MountData mountData = new MountData().dataLinkId(dataLink.get().getId());
+                return candidate.equals(target) ? mountData : mountData.path(target.substring(candidate.length() + 1));
+            }
+            int parentEnd = candidate.lastIndexOf('/');
+            if (parentEnd <= rootEnd) {
+                throw new DataLinkNotFoundException(getResourceRefKeywordParam(uri), wspId);
+            }
+            candidate = candidate.substring(0, parentEnd);
+        }
+    }
+
+    private static String stripTrailingSlash(String ref) {
+        return ref != null && ref.endsWith("/") ? ref.substring(0, ref.length() - 1) : ref;
     }
 
     private DataLinkDto getDataLinkByName(Long wspId, String credId, String name) {
@@ -151,21 +172,27 @@ public class DataLinkService  {
         return getDataLinkBySearchAndFindExactMatch(wspId, getResourceRefKeywordParam(resourceRef), credId, datalink -> resourceRef.equals(datalink.getResourceRef()));
     }
 
+    private Optional<DataLinkDto> findDataLinkByResourceRef(Long wspId, String resourceRef) {
+        // Data links created before Platform normalised resource refs may still be stored with a trailing slash
+        return findDataLinkBySearchAndExactMatch(wspId, getResourceRefKeywordParam(resourceRef), null, datalink -> resourceRef.equals(stripTrailingSlash(datalink.getResourceRef())));
+    }
+
     private DataLinkDto getDataLinkBySearchAndFindExactMatch(Long wspId, String search, String credId, Predicate<DataLinkDto> filter) {
+        return findDataLinkBySearchAndExactMatch(wspId, search, credId, filter)
+                .orElseThrow(() -> new DataLinkNotFoundException(search, wspId));
+    }
+
+    private Optional<DataLinkDto> findDataLinkBySearchAndExactMatch(Long wspId, String search, String credId, Predicate<DataLinkDto> filter) {
         var datalinks = getDataLinksBySearchCriteria(wspId, search, credId).stream()
                 .filter(filter)
                 .collect(Collectors.toList());
-
-        if (datalinks.isEmpty()) {
-            throw new DataLinkNotFoundException(search, wspId);
-        }
 
         if (datalinks.size() > 1) {
             var dataLinkIds = datalinks.stream().map(DataLinkDto::getId).collect(Collectors.toList());
             throw new MultipleDataLinksFoundException(search, wspId, dataLinkIds);
         }
 
-        return datalinks.get(0);
+        return datalinks.stream().findFirst();
     }
 
     private DataLinkDto getDataLinkById(String dataLinkId, Long wspId, String credId) {

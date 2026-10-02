@@ -16,25 +16,25 @@
 
 package io.seqera.tower.cli.commands;
 
-import io.seqera.tower.cli.commands.members.AddCmd;
-import io.seqera.tower.cli.commands.members.DeleteCmd;
-import io.seqera.tower.cli.commands.members.LeaveCmd;
-import io.seqera.tower.cli.commands.members.ListCmd;
-import io.seqera.tower.cli.commands.members.RolesCmd;
-import io.seqera.tower.cli.commands.members.UpdateCmd;
-import picocli.CommandLine;
+import io.seqera.tower.cli.commands.roles.AddCmd;
+import io.seqera.tower.cli.commands.roles.DeleteCmd;
+import io.seqera.tower.cli.commands.roles.ListCmd;
+import io.seqera.tower.cli.commands.roles.PermissionsCmd;
+import io.seqera.tower.cli.commands.roles.UpdateCmd;
+import io.seqera.tower.cli.commands.roles.ViewCmd;
+import picocli.CommandLine.Command;
 
-@CommandLine.Command(
-        name = "members",
-        description = "Manage organization members",
+@Command(
+        name = "roles",
+        description = "Manage workspace roles. Custom roles are not available for Seqera Cloud Basic organizations.",
         subcommands = {
                 ListCmd.class,
+                ViewCmd.class,
                 AddCmd.class,
-                DeleteCmd.class,
                 UpdateCmd.class,
-                LeaveCmd.class,
-                RolesCmd.class,
+                DeleteCmd.class,
+                PermissionsCmd.class,
         }
 )
-public class MembersCmd extends AbstractRootCmd {
+public class RolesCmd extends AbstractRootCmd {
 }
