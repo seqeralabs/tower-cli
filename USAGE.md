@@ -722,9 +722,11 @@ tw roles permissions -o my-org
 tw roles add -o my-org -n launcher -d "Launch only" -p <permission>,<permission>
 ```
 
-### Teams and quotas
+### Teams, IdP groups and SCIM
 
-- `tw teams view|update|workspaces`: view a team, update its name or description, and list its workspaces.
+- `tw teams view|update|workspaces`: view a team, update its name, description or linked IdP group (`--idp-group`, `--unlink-idp-group`), and list its workspaces.
+- `tw organizations idp-groups list|add|delete`: manage the identity provider groups available to the organization.
+- `tw organizations scim view|create-token|rotate-token|revoke-token`: manage SCIM provisioning.
 - `tw organizations quotas` and `tw members roles -u <user>`: view organization quotas and a member's workspace roles.
 
 ## Personal access
@@ -754,10 +756,19 @@ tw managed-identities add -o my-org -n hpc1 -p slurm -H login.hpc.example.com
 tw managed-identities credentials -o my-org -n hpc1 add -l my_linux_user -k ~/.ssh/id_rsa
 ```
 
+## Audit logs
+
+Run `tw audit-logs -h` to view the supported operations: `list`, `view`, and `export`. These commands require a root user.
+
+```bash
+tw audit-logs export --after 2026-09-01T00:00:00Z --before 2026-09-30T23:59:59Z -o september.csv
+```
+
 ## Other additions
 
 - `tw compute-envs enable|disable`: enable or disable a compute environment.
 - `tw compute-envs add`:
+  - Intelligent Compute options on `aws-cloud`, `azure-cloud`, and `google-cloud`. Run `tw compute-envs add <platform> -h` for the options each platform supports.
   - AWS Batch: CloudWatch log group and DRAGEN options.
   - AWS Cloud: `--log-group`. Google Cloud: `--project-id`.
   - HPC platforms: `--propagate-head-job-options`.
