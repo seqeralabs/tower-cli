@@ -26,15 +26,21 @@ import io.seqera.tower.cli.responses.datasets.DatasetDownload;
 import io.seqera.tower.cli.responses.datasets.DatasetList;
 import io.seqera.tower.cli.responses.datasets.DatasetUpdate;
 import io.seqera.tower.cli.responses.datasets.DatasetUrl;
+import io.seqera.tower.cli.responses.datasets.DatasetVersionDisabled;
 import io.seqera.tower.cli.responses.datasets.DatasetVersionsList;
 import io.seqera.tower.cli.responses.datasets.DatasetView;
 import io.seqera.tower.cli.responses.datasets.DatasetsVisibility;
 import io.seqera.tower.cli.responses.labels.ManageLabels;
 import io.seqera.tower.model.DatasetDto;
 import io.seqera.tower.model.DatasetVersionDto;
+import io.seqera.tower.model.ListDatasetVersionsResponse;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
+import org.mockserver.matchers.MatchType;
+import org.mockserver.verify.VerificationTimes;
 import org.mockserver.model.JsonBody;
 import org.mockserver.model.MediaType;
 
@@ -47,12 +53,18 @@ import java.util.List;
 
 import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 import static org.mockserver.model.JsonBody.json;
 
 public class DatasetsCmdTest extends BaseCmdTest {
+
+    @BeforeEach
+    void init(MockServerClient mock) {
+        mock.reset();
+    }
 
     @ParameterizedTest
     @EnumSource(OutputType.class)
@@ -578,5 +590,156 @@ public class DatasetsCmdTest extends BaseCmdTest {
         assertOutput(format, out, new ManageLabels("set", "dataset", "4D9TP0w2pM0qmwqVHgrgBK", 249664655368293L));
         assertEquals("", out.stdErr);
         assertEquals(0, out.exitCode);
+    }
+
+    private static final String LINK_URL = "https://example.com/samples.csv";
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAddWithUrl(OutputType format, MockServerClient mock) {
+        mock.when(
+                request().withMethod("POST").withPath("/datasets/validate-url")
+                        .withQueryStringParameter("workspaceId", "249664655368293")
+                        .withBody(json("{\"url\": \"" + LINK_URL + "\"}", MatchType.STRICT)), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"valid\": true, \"mediaType\": \"text/csv\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("POST").withPath("/datasets")
+                        .withQueryStringParameter("workspaceId", "249664655368293")
+                        .withBody(json("{\"name\": \"dataset3\", \"description\": \"Dataset 3 description.\", \"sourceType\": \"LINKED\"}", MatchType.STRICT)), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datasets/dataset_created_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("POST").withPath("/datasets/1W3BTHWgRH71OJmOPMdG7S/link")
+                        .withQueryStringParameter("workspaceId", "249664655368293")
+                        .withBody(json("{\"url\": \"" + LINK_URL + "\", \"hasHeader\": true}", MatchType.STRICT)), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"version\": {\"datasetId\": \"1W3BTHWgRH71OJmOPMdG7S\", \"version\": 1}}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "datasets", "add", "-w", "249664655368293", "-n", "dataset3", "-d", "Dataset 3 description.", "--url", LINK_URL, "--header");
+
+        assertOutput(format, out, new DatasetCreate("dataset3", "249664655368293", "1W3BTHWgRH71OJmOPMdG7S"));
+        mock.verify(request().withPath("/datasets/1W3BTHWgRH71OJmOPMdG7S/upload"), VerificationTimes.never());
+    }
+
+    @Test
+    void testAddWithInvalidUrlCreatesNothing(MockServerClient mock) {
+        mock.when(
+                request().withMethod("POST").withPath("/datasets/validate-url"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"valid\": false, \"errorCode\": \"UNSUPPORTED_FORMAT\", \"errorMessage\": \"The URL does not return a CSV or TSV file.\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "datasets", "add", "-w", "249664655368293", "-n", "dataset3", "--url", LINK_URL);
+
+        assertEquals(errorMessage(out.app, new TowerException("Dataset URL '" + LINK_URL + "' cannot be linked: The URL does not return a CSV or TSV file.")), out.stdErr);
+        assertEquals(1, out.exitCode);
+        mock.verify(request().withMethod("POST").withPath("/datasets"), VerificationTimes.never());
+    }
+
+    @Test
+    void testAddRequiresEitherFileOrUrl(MockServerClient mock) throws IOException {
+
+        ExecOut neither = exec(mock, "datasets", "add", "-w", "249664655368293", "-n", "dataset3");
+        assertEquals(1, neither.exitCode);
+        assertEquals(errorMessage(neither.app, new TowerException("Provide either a FILENAME to upload or a --url to link")), neither.stdErr);
+
+        ExecOut both = exec(mock, "datasets", "add", "-w", "249664655368293", "-n", "dataset3", "--url", LINK_URL,
+                tempFile(new String(loadResource("datasets/dataset_data", "csv"), StandardCharsets.UTF_8), "data", ".csv"));
+        assertEquals(1, both.exitCode);
+        assertEquals(errorMessage(both.app, new TowerException("Provide either a FILENAME to upload or a --url to link")), both.stdErr);
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testUpdateWithUrl(OutputType format, MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/datasets/4D9TP0w2pM0qmwqVHgrgBK/metadata")
+                        .withQueryStringParameter("workspaceId", "249664655368293"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datasets/dataset_metadata")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("PUT").withPath("/datasets/4D9TP0w2pM0qmwqVHgrgBK")
+                        .withQueryStringParameter("workspaceId", "249664655368293"), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+        mock.when(
+                request().withMethod("POST").withPath("/datasets/4D9TP0w2pM0qmwqVHgrgBK/link")
+                        .withQueryStringParameter("workspaceId", "249664655368293")
+                        .withBody(json("{\"url\": \"" + LINK_URL + "\", \"hasHeader\": false}", MatchType.STRICT)), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"version\": {\"datasetId\": \"4D9TP0w2pM0qmwqVHgrgBK\", \"version\": 3}}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "datasets", "update", "-w", "249664655368293", "-i", "4D9TP0w2pM0qmwqVHgrgBK", "--url", LINK_URL);
+
+        assertOutput(format, out, new DatasetUpdate("dataset1", "249664655368293", "4D9TP0w2pM0qmwqVHgrgBK"));
+    }
+
+    @Test
+    void testUpdateRejectsFileAndUrl(MockServerClient mock) throws IOException {
+        ExecOut out = exec(mock, "datasets", "update", "-w", "249664655368293", "-i", "4D9TP0w2pM0qmwqVHgrgBK", "--url", LINK_URL,
+                "-f", tempFile(new String(loadResource("datasets/dataset_data", "csv"), StandardCharsets.UTF_8), "data", ".csv"));
+
+        assertEquals(errorMessage(out.app, new TowerException("Provide either a --file to upload or a --url to link, not both")), out.stdErr);
+        assertEquals(1, out.exitCode);
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testDisableVersion(OutputType format, MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/datasets/4D9TP0w2pM0qmwqVHgrgBK/metadata")
+                        .withQueryStringParameter("workspaceId", "249664655368293"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datasets/dataset_metadata")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("POST").withPath("/datasets/4D9TP0w2pM0qmwqVHgrgBK/versions/2/disable")
+                        .withQueryStringParameter("workspaceId", "249664655368293"), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(format, mock, "datasets", "disable-version", "-w", "249664655368293", "-i", "4D9TP0w2pM0qmwqVHgrgBK", "--dataset-version", "2");
+
+        assertOutput(format, out, new DatasetVersionDisabled("4D9TP0w2pM0qmwqVHgrgBK", 2L, "249664655368293"));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testVersionsShowsLinkedAndDisabled(OutputType format, MockServerClient mock) throws JsonProcessingException {
+        String versions = """
+                {"versions": [
+                  {"datasetId": "4D9TP0w2pM0qmwqVHgrgBK", "version": 1, "hasHeader": true, "mediaType": "text/csv", "disabled": true,
+                   "url": "https://api/workspaces/249664655368293/datasets/4D9TP0w2pM0qmwqVHgrgBK/v/1/n/samples.csv",
+                   "linkedSource": {"url": "https://example.com/samples.csv"}}
+                ]}
+                """;
+        mock.when(
+                request().withMethod("GET").withPath("/datasets/4D9TP0w2pM0qmwqVHgrgBK/metadata")
+                        .withQueryStringParameter("workspaceId", "249664655368293"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("datasets/dataset_metadata")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/datasets/4D9TP0w2pM0qmwqVHgrgBK/versions")
+                        .withQueryStringParameter("workspaceId", "249664655368293"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(versions).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "datasets", "view", "-w", "249664655368293", "-i", "4D9TP0w2pM0qmwqVHgrgBK", "versions");
+
+        assertOutput(format, out, new DatasetVersionsList(parseJson(versions, ListDatasetVersionsResponse.class).getVersions(), "4D9TP0w2pM0qmwqVHgrgBK", "249664655368293"));
+        if (format == OutputType.console) {
+            assertTrue(out.stdOut.contains("https://example.com/samples.csv"), out.stdOut);
+            assertTrue(out.stdOut.contains("Disabled"), out.stdOut);
+        }
     }
 }

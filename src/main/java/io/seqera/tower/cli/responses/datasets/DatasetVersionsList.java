@@ -44,11 +44,19 @@ public class DatasetVersionsList extends Response {
             return;
         }
 
-        TableList table = new TableList(out, 5, "Version", "Has Header", "Media Type", "File Name", "URL").sortBy(0);
+        TableList table = new TableList(out, 6, "Version", "Has Header", "Media Type", "File Name", "URL", "Disabled").sortBy(0);
         table.setPrefix("    ");
-        versions.forEach(v -> table.addRow(v.getVersion().toString(), v.getHasHeader().toString(), v.getMediaType(), v.getFileName(), v.getUrl()));
+        versions.forEach(v -> table.addRow(v.getVersion().toString(), v.getHasHeader().toString(), v.getMediaType(), fileNameOrSourceUrl(v), v.getUrl(), String.valueOf(Boolean.TRUE.equals(v.getDisabled()))));
         table.print();
 
         out.println("");
+    }
+
+    // Linked versions have no uploaded file, they point to a source URL instead.
+    private static String fileNameOrSourceUrl(DatasetVersionDto version) {
+        if (version.getFileName() != null) {
+            return version.getFileName();
+        }
+        return version.getLinkedSource() == null || version.getLinkedSource().getUrl() == null ? "" : version.getLinkedSource().getUrl();
     }
 }
