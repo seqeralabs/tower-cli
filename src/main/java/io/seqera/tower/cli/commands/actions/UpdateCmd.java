@@ -27,12 +27,14 @@ import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.cli.utils.ModelHelper;
 import io.seqera.tower.model.ActionResponseDto;
 import io.seqera.tower.model.ActionSource;
+import io.seqera.tower.model.BucketActionRequest;
 import io.seqera.tower.model.CronActionRequest;
 import io.seqera.tower.model.UpdateActionRequest;
 import io.seqera.tower.model.WorkflowLaunchRequest;
 import picocli.CommandLine;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 import static io.seqera.tower.cli.utils.ModelHelper.coalesce;
 
@@ -56,6 +58,12 @@ public class UpdateCmd extends AbstractActionsCmd {
 
     @CommandLine.Option(names = {"--timezone"}, description = "IANA timezone the schedule of a cron action runs in.")
     public String timezone;
+
+    @CommandLine.Option(names = {"--marker-file"}, description = "Marker file of a bucket action, relative to the data link path.")
+    public String markerFile;
+
+    @CommandLine.Option(names = {"--events"}, split = ",", description = "Comma-separated bucket events that trigger a bucket action: object:created, object:deleted.")
+    public List<String> events;
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
@@ -117,6 +125,14 @@ public class UpdateCmd extends AbstractActionsCmd {
         if (cronExpression != null || timezone != null) {
             requireSource(action, ActionSource.cron, "--cron-expression and --timezone");
             request.setCron(new CronActionRequest().expression(cronExpression).timezone(timezone));
+        }
+
+        if (markerFile != null || events != null) {
+            requireSource(action, ActionSource.bucket, "--marker-file and --events");
+            BucketActionRequest bucket = new BucketActionRequest().events(events);
+            // An explicit null marker file would reach the API as a blank one, which it refuses.
+            if (markerFile != null) bucket.markerFile(markerFile);
+            request.setBucket(bucket);
         }
 
         try {

@@ -23,6 +23,7 @@ import io.seqera.tower.cli.utils.FormatHelper;
 import io.seqera.tower.cli.utils.ModelHelper;
 import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.ActionResponseDto;
+import io.seqera.tower.model.BucketActionConfig;
 import io.seqera.tower.model.CronActionConfig;
 import io.seqera.tower.model.WorkflowLaunchRequest;
 
@@ -63,6 +64,7 @@ public class ActionsView extends Response {
         table.addRow("ID", formatActionId(action.getId(), baseWorkspaceUrl));
         table.addRow("Name", action.getName());
         table.addRow("Status", formatActionStatus(action.getStatus()));
+        if (action.getError() != null) table.addRow("Error", action.getError());
         table.addRow("Pipeline URL", action.getLaunch().getPipeline());
         table.addRow("Source", action.getSource().toString());
         table.addRow("Hook URL", action.getHookUrl());
@@ -84,6 +86,12 @@ public class ActionsView extends Response {
                 table.addRow("Cron expression", cron.getExpression());
                 table.addRow("Timezone", cron.getTimezone());
                 table.addRow("Next execution", FormatHelper.formatTime(action.getNextExecution()));
+            }
+            case BucketActionConfig bucket -> {
+                table.addRow("Data link ID", bucket.getDataLinkId());
+                table.addRow("Bucket", bucket.getBucketName());
+                table.addRow("Marker file", bucket.getMarkerFile());
+                table.addRow("Events", bucket.getEvents() == null ? null : String.join(", ", bucket.getEvents()));
             }
             case null, default -> {
             }
