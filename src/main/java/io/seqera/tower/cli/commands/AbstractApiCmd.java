@@ -20,6 +20,7 @@ import io.seqera.tower.ApiClient;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.api.ActionsApi;
 import io.seqera.tower.api.AvatarsApi;
+import io.seqera.tower.api.CompatibilityApi;
 import io.seqera.tower.api.ComputeEnvsApi;
 import io.seqera.tower.api.CredentialsApi;
 import io.seqera.tower.api.DataLinksApi;
@@ -27,6 +28,7 @@ import io.seqera.tower.api.DatasetsApi;
 import io.seqera.tower.api.Ga4ghApi;
 import io.seqera.tower.api.LabelsApi;
 import io.seqera.tower.api.LaunchApi;
+import io.seqera.tower.api.NextflowApi;
 import io.seqera.tower.api.OrgsApi;
 import io.seqera.tower.api.PipelineSchemasApi;
 import io.seqera.tower.api.PipelineSecretsApi;
@@ -110,6 +112,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
 
     private ActionsApi actionsApi;
     private AvatarsApi avatarsApi;
+    private CompatibilityApi compatibilityApi;
     private ComputeEnvsApi computeEnvsApi;
     private CredentialsApi credentialsApi;
     private DataLinksApi dataLinksApi;
@@ -117,6 +120,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     private Ga4ghApi ga4ghApi;
     private LabelsApi labelsApi;
     private LaunchApi launchApi;
+    private NextflowApi nextflowApi;
     private OrgsApi orgsApi;
     private PipelinesApi pipelinesApi;
     private PipelineSchemasApi pipelineSchemasApi;
@@ -197,6 +201,10 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         return avatarsApi == null ? new AvatarsApi(apiClient()) : avatarsApi;
     }
 
+    protected CompatibilityApi compatibilityApi() throws ApiException {
+        return compatibilityApi == null ? new CompatibilityApi(apiClient()) : compatibilityApi;
+    }
+
     protected ComputeEnvsApi computeEnvsApi() throws ApiException {
         return computeEnvsApi == null ? new ComputeEnvsApi(apiClient()) : computeEnvsApi;
     }
@@ -223,6 +231,10 @@ public abstract class AbstractApiCmd extends AbstractCmd {
 
     protected LaunchApi launchApi() throws ApiException {
         return launchApi == null ? new LaunchApi(apiClient()) : launchApi;
+    }
+
+    protected NextflowApi nextflowApi() throws ApiException {
+        return nextflowApi == null ? new NextflowApi(apiClient()) : nextflowApi;
     }
 
     protected OrgsApi orgsApi() throws ApiException {
