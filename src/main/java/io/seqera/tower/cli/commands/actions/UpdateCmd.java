@@ -137,10 +137,7 @@ public class UpdateCmd extends AbstractActionsCmd {
 
         if (markerFile != null || events != null) {
             requireSource(action, ActionSource.bucket, "--marker-file and --events");
-            BucketActionRequest bucket = new BucketActionRequest().events(events);
-            // An explicit null marker file would reach the API as a blank one, which it refuses.
-            if (markerFile != null) bucket.markerFile(markerFile);
-            request.setBucket(bucket);
+            request.setBucket(new BucketActionRequest().markerFile(markerFile).events(events));
         }
 
         if (watchPipelineId != null || runStatus != null) {
