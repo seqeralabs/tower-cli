@@ -53,7 +53,7 @@ public class ModelHelper {
      * API gains in a future SDK release are carried over with no change here.
      * <p>
      * Going through JSON is what makes this safe for the nullable fields ({@code syntaxParser},
-     * {@code nextflowVersion}, {@code outputDir}): an undefined value stays undefined instead of becoming an
+     * {@code nextflowVersion}, {@code fusionVersion}, {@code outputDir}): an undefined value stays undefined instead of becoming an
      * explicit {@code null}, which the fluent setters cannot express because they wrap their argument in
      * {@code JsonNullable.of()} unconditionally.
      */
