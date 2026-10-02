@@ -91,7 +91,8 @@ public class AwsBatchManualPlatform extends AbstractPlatform<AwsBatchConfig> {
                 .headJobCpus(adv().headJobCpus)
                 .headJobMemoryMb(adv().headJobMemoryMb)
                 .headJobRole(adv().headJobRole)
-                .secretsKmsKeyId(adv().secretsKmsKeyId);
+                .secretsKmsKeyId(adv().secretsKmsKeyId)
+                .logGroup(adv().logGroup);
 
                 // Common
                 config.workDir(workDir)
@@ -137,5 +138,8 @@ public class AwsBatchManualPlatform extends AbstractPlatform<AwsBatchConfig> {
 
         @Option(names = {"--secrets-kms-key"}, description = "Customer-managed KMS key used to encrypt the temporary Secrets Manager secrets created for runs that use pipeline secrets. Accepts a key ARN or a key id. When omitted, the AWS-managed default Secrets Manager key is used.")
         public String secretsKmsKeyId;
+
+        @Option(names = {"--log-group"}, description = "CloudWatch log group for the logs of pipeline executions. Must already exist. If absent, Platform defaults to /aws/batch/job.")
+        public String logGroup;
     }
 }
