@@ -19,6 +19,7 @@ package io.seqera.tower.cli.commands;
 import io.seqera.tower.ApiClient;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.api.ActionsApi;
+import io.seqera.tower.api.AdminApi;
 import io.seqera.tower.api.AgentsApi;
 import io.seqera.tower.api.AvatarsApi;
 import io.seqera.tower.api.CompatibilityApi;
@@ -206,6 +207,10 @@ public abstract class AbstractApiCmd extends AbstractCmd {
 
     protected ActionsApi actionsApi() throws ApiException {
         return actionsApi == null ? new ActionsApi(apiClient()) : actionsApi;
+    }
+
+    protected AdminApi adminApi() throws ApiException {
+        return new AdminApi(apiClient());
     }
 
     protected AgentsApi agentsApi() throws ApiException {
