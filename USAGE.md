@@ -709,6 +709,49 @@ $ tw data-links browse -w seqeralabs/showcase -i v1-user-6d8f44c239e2a098b3e02e9
  FOLDER | technical/                                 | 0        
 ```
 
+## Organization administration
+
+These commands act on an organization (`-o`/`--organization`). Most require the organization `OWNER` role.
+
+### Teams and quotas
+
+- `tw teams view|update|workspaces`: view a team, update its name or description, and list its workspaces.
+- `tw organizations quotas`: view organization quotas.
+
+## Personal access
+
+### Access tokens
+
+Run `tw access-tokens -h` to view the supported operations: `list`, `add`, and `delete`. The token value is only shown when the token is created.
+
+```bash
+tw access-tokens add -n ci
+```
+
+## Managed identities
+
+Managed identities give organization members individual SSH access to an HPC cluster (Slurm, LSF, UGE, Altair PBS, or Moab). Run `tw managed-identities -h` to view the supported operations. Each member then adds their own credentials:
+
+```bash
+tw managed-identities add -o my-org -n hpc1 -p slurm -H login.hpc.example.com
+tw managed-identities credentials -o my-org -n hpc1 add -l my_linux_user -k ~/.ssh/id_rsa
+```
+
+## Other additions
+
+- `tw compute-envs enable|disable`: enable or disable a compute environment.
+- `tw compute-envs add`:
+  - AWS Batch: CloudWatch log group and DRAGEN options.
+  - AWS Cloud: `--log-group`. Google Cloud: `--project-id`.
+  - HPC platforms: `--propagate-head-job-options`.
+  - Seqera Compute: `--data-retention-policy`.
+- `tw launch`, `tw pipelines add|update`, `tw runs relaunch`, and `tw actions add|update`: `--tower-config`.
+- `tw runs star|unstar`, `tw runs view log [--next <cursor>]`, and `tw runs delete -i <id>,<id>`.
+- `tw pipelines schema`: show a pipeline's parameter schema.
+- `tw studios extend|rename-checkpoint`.
+- `tw data-links delete-content|download-script`.
+- `tw datasets disable-version`.
+
 [compute-envs]: https://docs.seqera.io/platform/latest/compute-envs/overview
 [credentials]: https://docs.seqera.io/platform/latest/credentials/overview
 [git-integration]: https://docs.seqera.io/platform/latest/git/overview
