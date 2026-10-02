@@ -23,6 +23,7 @@ import io.seqera.tower.model.ListActionsResponseActionInfo;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -68,7 +69,8 @@ public class ActionsList extends Response {
 
         actions.forEach(element -> {
 
-            List<String> rows = new ArrayList<>(List.of(
+            // Arrays.asList, not List.of: cron and pipeline-status actions have no endpoint.
+            List<String> rows = new ArrayList<>(Arrays.asList(
                     formatActionId(element.getId(), baseWorkspaceUrl),
                     element.getName(),
                     element.getEndpoint(),

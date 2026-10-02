@@ -988,6 +988,30 @@ class ActionsCmdTest extends BaseCmdTest {
 
     private static final String PIPELINE_STATUS_CONFIG = "{\"pipelineId\": 42, \"runStatus\": \"FAILED\", \"discriminator\": \"pipeline_status\"}";
 
+    @Test
+    void testListNewSources(MockServerClient mock) {
+        mock.reset();
+        mockUserInfo(mock);
+
+        mock.when(
+                request().withMethod("GET").withPath("/actions"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"actions\": [" +
+                        "{\"id\": \"1a\", \"name\": \"nightly\", \"source\": \"cron\", \"status\": \"ACTIVE\", \"endpoint\": null, \"config\": " + CRON_CONFIG + "}," +
+                        "{\"id\": \"2b\", \"name\": \"on-upload\", \"source\": \"bucket\", \"status\": \"ERROR\", \"endpoint\": null, \"config\": " + BUCKET_CONFIG + "}," +
+                        "{\"id\": \"3c\", \"name\": \"on-failure\", \"source\": \"pipeline_status\", \"status\": \"PAUSED\", \"endpoint\": null, \"config\": " + PIPELINE_STATUS_CONFIG + "}" +
+                        "]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "actions", "list");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        assertTrue(out.stdOut.matches("(?s).*nightly .*cron.*"), out.stdOut);
+        assertTrue(out.stdOut.matches("(?s).*on-upload .*bucket.*"), out.stdOut);
+        assertTrue(out.stdOut.matches("(?s).*on-failure .*pipeline_status.*"), out.stdOut);
+    }
+
     private static final String CRON_CONFIG = "{\"expression\": \"0 2 * * *\", \"timezone\": \"Europe/London\", \"discriminator\": \"cron\"}";
 
     private void mockPrimaryComputeEnv(MockServerClient mock) {
