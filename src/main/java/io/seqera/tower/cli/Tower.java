@@ -39,6 +39,7 @@ import io.seqera.tower.cli.commands.RolesCmd;
 import io.seqera.tower.cli.commands.RunsCmd;
 import io.seqera.tower.cli.commands.SecretsCmd;
 import io.seqera.tower.cli.commands.ServiceAccountsCmd;
+import io.seqera.tower.cli.commands.SshKeysCmd;
 import io.seqera.tower.cli.commands.TeamsCmd;
 import io.seqera.tower.cli.commands.WorkspacesCmd;
 import io.seqera.tower.cli.commands.enums.OutputType;
@@ -76,6 +77,7 @@ import static picocli.AutoComplete.GenerateCompletion;
                 PipelineSchemasCmd.class,
                 RolesCmd.class,
                 RunsCmd.class,
+                SshKeysCmd.class,
                 TeamsCmd.class,
                 WorkspacesCmd.class,
                 SecretsCmd.class,
