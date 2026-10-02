@@ -860,6 +860,26 @@ class ActionsCmdTest extends BaseCmdTest {
 
     private static final String BUCKET_CONFIG = "{\"dataLinkId\": \"v1-user-abc\", \"bucketName\": \"my-bucket\", \"markerFile\": \"incoming/.done\", \"events\": [\"object:created\", \"object:deleted\"], \"discriminator\": \"bucket\"}";
 
+    @Test
+    void testListNewSources(MockServerClient mock) {
+        mock.reset();
+        mockUserInfo(mock);
+
+        mock.when(
+                request().withMethod("GET").withPath("/actions"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"actions\": [" +
+                        "{\"id\": \"2b\", \"name\": \"on-upload\", \"source\": \"bucket\", \"status\": \"ERROR\", \"endpoint\": null, \"config\": " + BUCKET_CONFIG + "}" +
+                        "]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "actions", "list");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        assertTrue(out.stdOut.matches("(?s).*on-upload .*bucket.*"), out.stdOut);
+    }
+
     private void mockPrimaryComputeEnv(MockServerClient mock) {
         mock.when(
                 request().withMethod("GET").withPath("/compute-envs").withQueryStringParameter("status", "AVAILABLE"), exactly(1)
