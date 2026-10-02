@@ -21,6 +21,7 @@ import io.seqera.tower.cli.exceptions.TowerRuntimeException;
 import io.seqera.tower.model.AwsCloudConfig;
 import io.seqera.tower.model.ComputeEnvComputeConfig.PlatformEnum;
 import io.seqera.tower.model.SchedConfig;
+import io.seqera.tower.model.SchedConfigPool;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Option;
 
@@ -70,13 +71,15 @@ public class AwsCloudPlatform extends AbstractPlatform<AwsCloudConfig> {
                 .allowBuckets(allowBuckets);
 
         if (sched != null) {
-            SchedConfig schedConfig = new SchedConfig();
-            if (sched.provisioningModel != null) {
-                schedConfig.provisioningModel(sched.provisioningModel);
-            }
-            if (sched.machineTypes != null) {
-                schedConfig.machineTypes(sched.machineTypes);
-            }
+            SchedConfig schedConfig = new SchedConfig()
+                    .provisioningModel(sched.provisioningModel)
+                    .machineTypes(sched.machineTypes)
+                    .predictionModel(sched.predictionModel)
+                    .nvmeEnabled(sched.nvmeEnabled)
+                    .maxCpusPerUser(sched.maxCpusPerUser)
+                    .maxSpotAttempts(sched.maxSpotAttempts)
+                    .backendStrategy(sched.backendStrategy)
+                    .pool(sched.warmPool());
             config.schedConfig(schedConfig);
         }
 
@@ -125,6 +128,43 @@ public class AwsCloudPlatform extends AbstractPlatform<AwsCloudConfig> {
 
         @Option(names = {"--sched-machine-types"}, description = "EC2 instance types for compute nodes managed by the Seqera scheduler. Comma-separated list (e.g., m5.xlarge,c5.2xlarge). Leave empty to let the scheduler select the most cost-effective types.", split = ",")
         public List<String> machineTypes;
+
+        @Option(names = {"--prediction-model"}, description = "Model the Seqera scheduler uses to predict task resource requirements. Suggested values: none, qr/v1, qr/v2, qr/v3. If absent, the scheduler default (none) applies.")
+        public String predictionModel;
+
+        @Option(names = {"--nvme-storage"}, description = "Restrict the Seqera scheduler to EC2 instance types that provide local SSD (NVMe) storage for faster I/O.")
+        public Boolean nvmeEnabled;
+
+        @Option(names = {"--max-cpus-per-user"}, description = "Maximum concurrent vCPUs a single user may use across their runs on this compute environment. Must be a positive integer. If absent, there is no limit.")
+        public Integer maxCpusPerUser;
+
+        @Option(names = {"--max-spot-attempts"}, description = "Total spot attempts for a task, including the first, before giving up on spot capacity (1-10). With SPOT_FIRST, the task then falls back to on-demand. Only valid with the SPOT and SPOT_FIRST provisioning models.")
+        public Integer maxSpotAttempts;
+
+        @Option(names = {"--backend-strategy"}, description = "Backend the Seqera scheduler uses to run tasks. ECS delegates task execution to AWS ECS; EC2 runs tasks directly on EC2 instances. Valid values: ECS, EC2.")
+        public SchedConfig.BackendStrategyEnum backendStrategy;
+
+        @Option(names = {"--warm-pool"}, description = "Keep a pool of idle VMs ready to absorb incoming tasks with minimal start latency. Requires --warm-pool-size. Only applies with --backend-strategy EC2.")
+        public Boolean warmPoolEnabled;
+
+        @Option(names = {"--warm-pool-size"}, description = "Number of idle VMs to keep in the warm pool. Must be greater than zero.")
+        public Integer warmPoolSize;
+
+        @Option(names = {"--warm-pool-scale-to-zero"}, paramLabel = "<seconds>", description = "Seconds of inactivity after which the warm pool scales to zero. Set to 0 to never scale to zero.")
+        public Integer warmPoolScaleToZeroSecs;
+
+        SchedConfigPool warmPool() {
+            if (warmPoolEnabled == null && warmPoolSize == null && warmPoolScaleToZeroSecs == null) {
+                return null;
+            }
+            if (Boolean.TRUE.equals(warmPoolEnabled) && (warmPoolSize == null || warmPoolSize < 1)) {
+                throw new TowerRuntimeException("Option --warm-pool requires --warm-pool-size greater than zero.");
+            }
+            return new SchedConfigPool()
+                    .enabled(warmPoolEnabled)
+                    .desiredWarm(warmPoolSize)
+                    .scaleToZeroSecs(warmPoolScaleToZeroSecs);
+        }
     }
 
     public static class AdvancedOptions {
