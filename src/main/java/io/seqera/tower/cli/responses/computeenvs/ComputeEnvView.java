@@ -18,7 +18,6 @@ package io.seqera.tower.cli.responses.computeenvs;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.seqera.tower.JSON;
 import io.seqera.tower.cli.commands.computeenvs.platforms.AwsBatchForgePlatform;
 import io.seqera.tower.cli.commands.computeenvs.platforms.AwsBatchManualPlatform;
 import io.seqera.tower.cli.responses.Response;
@@ -34,6 +33,7 @@ import static io.seqera.tower.cli.utils.FormatHelper.formatComputeEnvStatus;
 import static io.seqera.tower.cli.utils.FormatHelper.formatDescription;
 import static io.seqera.tower.cli.utils.FormatHelper.formatLabels;
 import static io.seqera.tower.cli.utils.FormatHelper.formatTime;
+import static io.seqera.tower.cli.utils.JsonHelper.prettyJson;
 
 public class ComputeEnvView extends Response {
 
@@ -72,7 +72,7 @@ public class ComputeEnvView extends Response {
         }
 
         try {
-            configJson = new JSON().getContext(ComputeConfig.class).writerWithDefaultPrettyPrinter().writeValueAsString(config);
+            configJson = prettyJson(config);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
