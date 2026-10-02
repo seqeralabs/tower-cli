@@ -23,13 +23,19 @@ import io.seqera.tower.cli.exceptions.OrganizationNotFoundException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.teams.TeamAdded;
 import io.seqera.tower.cli.responses.teams.TeamDeleted;
+import io.seqera.tower.cli.responses.teams.TeamUpdated;
+import io.seqera.tower.cli.responses.teams.TeamView;
+import io.seqera.tower.cli.responses.teams.TeamWorkspacesList;
 import io.seqera.tower.cli.responses.teams.TeamsList;
 import io.seqera.tower.cli.utils.PaginationInfo;
+import io.seqera.tower.model.DescribeTeamResponse;
+import io.seqera.tower.model.ListWorkspacesByTeamResponse;
 import io.seqera.tower.model.TeamDbDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
+import org.mockserver.matchers.MatchType;
 import org.mockserver.model.MediaType;
 
 import java.util.Arrays;
@@ -41,6 +47,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
+import static org.mockserver.model.JsonBody.json;
 
 class TeamsCmdTest extends BaseCmdTest {
 
@@ -362,5 +369,74 @@ class TeamsCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "teams", "delete", "-o", "organization1", "-i", "69076469523589");
         assertOutput(format, out, new TeamDeleted("organization1", "69076469523589"));
+    }
+
+    private static final String TEAM_PATH = "/orgs/27736513644467/teams/69076469523589";
+
+    private static final String TEAM = """
+            {"team": {"teamId": 69076469523589, "name": "team-test-1", "description": "a new team", "membersCount": 2,
+                      "avatarUrl": "https://tower.example/api/avatars/av123"}}
+            """;
+
+    private void mockUserWorkspaces(MockServerClient mock) {
+        mock.when(request().withMethod("GET").withPath("/user-info"))
+                .respond(response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON));
+        mock.when(request().withMethod("GET").withPath("/user/1264/workspaces"))
+                .respond(response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON));
+    }
+
+    private void mockDescribeTeam(MockServerClient mock) {
+        mock.when(request().withMethod("GET").withPath(TEAM_PATH), exactly(1))
+                .respond(response().withStatusCode(200).withBody(TEAM).withContentType(MediaType.APPLICATION_JSON));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testViewByName(OutputType format, MockServerClient mock) throws JsonProcessingException {
+        mockUserWorkspaces(mock);
+        mock.when(request().withMethod("GET").withPath("/orgs/27736513644467/teams"), exactly(1))
+                .respond(response().withStatusCode(200).withBody(loadResource("teams/teams_list")).withContentType(MediaType.APPLICATION_JSON));
+        mockDescribeTeam(mock);
+
+        ExecOut out = exec(format, mock, "teams", "view", "-o", "organization1", "-n", "team-test-1");
+
+        assertOutput(format, out, new TeamView("organization1", parseJson(TEAM, DescribeTeamResponse.class).getTeam()));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testUpdateKeepsUnsetFieldsAndAvatar(OutputType format, MockServerClient mock) {
+        mockUserWorkspaces(mock);
+        mockDescribeTeam(mock);
+        mock.when(
+                request().withMethod("PUT").withPath(TEAM_PATH)
+                        .withBody(json("""
+                                {"name": "team-renamed", "description": "a new team", "avatarId": "av123"}
+                                """, MatchType.STRICT)), exactly(1)
+        ).respond(response().withStatusCode(204));
+
+        ExecOut out = exec(format, mock, "teams", "update", "-o", "organization1", "-i", "69076469523589", "--new-name", "team-renamed");
+
+        assertOutput(format, out, new TeamUpdated("organization1", "team-renamed"));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testWorkspaces(OutputType format, MockServerClient mock) throws JsonProcessingException {
+        mockUserWorkspaces(mock);
+        mockDescribeTeam(mock);
+        String body = """
+                {"workspaces": [{"orgId": 27736513644467, "orgName": "organization1", "workspaceId": 75887156211589, "workspaceName": "workspace1",
+                                 "workspaceFullName": "Workspace 1", "participantId": 9, "participantRole": "launch"}], "totalSize": 1}
+                """;
+        mock.when(
+                request().withMethod("GET").withPath(TEAM_PATH + "/workspaces")
+                        .withQueryStringParameter("max", "100")
+                        .withQueryStringParameter("offset", "0"), exactly(1)
+        ).respond(response().withStatusCode(200).withBody(body).withContentType(MediaType.APPLICATION_JSON));
+
+        ExecOut out = exec(format, mock, "teams", "workspaces", "-o", "organization1", "-i", "69076469523589");
+
+        assertOutput(format, out, new TeamWorkspacesList("organization1", "team-test-1", parseJson(body, ListWorkspacesByTeamResponse.class).getWorkspaces(), null));
     }
 }
