@@ -375,7 +375,11 @@ class TeamsCmdTest extends BaseCmdTest {
 
     private static final String TEAM = """
             {"team": {"teamId": 69076469523589, "name": "team-test-1", "description": "a new team", "membersCount": 2,
-                      "avatarUrl": "https://tower.example/api/avatars/av123"}}
+                      "avatarUrl": "https://tower.example/api/avatars/av123", "idpGroupId": null, "idpGroupName": null}}
+            """;
+
+    private static final String IDP_GROUPS = """
+            {"groups": [{"id": 5, "displayName": "eng-admins", "source": "SCIM"}, {"id": 6, "displayName": "eng", "source": "MANUAL"}]}
             """;
 
     private void mockUserWorkspaces(MockServerClient mock) {
@@ -418,6 +422,70 @@ class TeamsCmdTest extends BaseCmdTest {
         ExecOut out = exec(format, mock, "teams", "update", "-o", "organization1", "-i", "69076469523589", "--new-name", "team-renamed");
 
         assertOutput(format, out, new TeamUpdated("organization1", "team-renamed"));
+    }
+
+    @Test
+    void testUpdateLinksIdpGroup(MockServerClient mock) {
+        mockUserWorkspaces(mock);
+        mockDescribeTeam(mock);
+        mock.when(request().withMethod("GET").withPath("/orgs/27736513644467/idp-groups"), exactly(1))
+                .respond(response().withStatusCode(200).withBody(IDP_GROUPS).withContentType(MediaType.APPLICATION_JSON));
+        mock.when(
+                request().withMethod("PUT").withPath(TEAM_PATH)
+                        .withBody(json("""
+                                {"name": "team-test-1", "description": "a new team", "avatarId": "av123", "idpGroupId": 6}
+                                """, MatchType.STRICT)), exactly(1)
+        ).respond(response().withStatusCode(204));
+
+        ExecOut out = exec(mock, "teams", "update", "-o", "organization1", "-i", "69076469523589", "--idp-group", "eng");
+
+        assertOutput(OutputType.console, out, new TeamUpdated("organization1", "team-test-1"));
+    }
+
+    @Test
+    void testUpdateUnlinksIdpGroup(MockServerClient mock) {
+        mockUserWorkspaces(mock);
+        mockDescribeTeam(mock);
+        mock.when(
+                request().withMethod("PUT").withPath(TEAM_PATH)
+                        .withBody(json("""
+                                {"name": "team-test-1", "description": "a new team", "avatarId": "av123", "idpGroupId": null}
+                                """, MatchType.STRICT)), exactly(1)
+        ).respond(response().withStatusCode(204));
+
+        ExecOut out = exec(mock, "teams", "update", "-o", "organization1", "-i", "69076469523589", "--unlink-idp-group");
+
+        assertOutput(OutputType.console, out, new TeamUpdated("organization1", "team-test-1"));
+    }
+
+    @Test
+    void testUpdateWithUnknownIdpGroup(MockServerClient mock) {
+        mockUserWorkspaces(mock);
+        mockDescribeTeam(mock);
+        mock.when(request().withMethod("GET").withPath("/orgs/27736513644467/idp-groups"), exactly(1))
+                .respond(response().withStatusCode(200).withBody(IDP_GROUPS).withContentType(MediaType.APPLICATION_JSON));
+
+        ExecOut out = exec(mock, "teams", "update", "-o", "organization1", "-i", "69076469523589", "--idp-group", "missing");
+
+        assertEquals(errorMessage(out.app, new TowerException("IdP group 'missing' not found in organization '27736513644467'")), out.stdErr);
+        assertEquals(1, out.exitCode);
+    }
+
+    @Test
+    void testAddWithIdpGroup(MockServerClient mock) {
+        mockUserWorkspaces(mock);
+        mock.when(request().withMethod("GET").withPath("/orgs/27736513644467/idp-groups"), exactly(1))
+                .respond(response().withStatusCode(200).withBody(IDP_GROUPS).withContentType(MediaType.APPLICATION_JSON));
+        mock.when(
+                request().withMethod("POST").withPath("/orgs/27736513644467/teams")
+                        .withBody(json("""
+                                {"team": {"name": "team-test"}, "idpGroupId": 5}
+                                """, MatchType.ONLY_MATCHING_FIELDS)), exactly(1)
+        ).respond(response().withStatusCode(200).withBody(loadResource("teams/teams_add")).withContentType(MediaType.APPLICATION_JSON));
+
+        ExecOut out = exec(mock, "teams", "add", "-o", "organization1", "-n", "team-test", "--idp-group", "eng-admins");
+
+        assertOutput(OutputType.console, out, new TeamAdded("organization1", "team-test"));
     }
 
     @ParameterizedTest

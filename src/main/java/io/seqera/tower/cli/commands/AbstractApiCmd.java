@@ -19,6 +19,7 @@ package io.seqera.tower.cli.commands;
 import io.seqera.tower.ApiClient;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.api.ActionsApi;
+import io.seqera.tower.api.AdminApi;
 import io.seqera.tower.api.AvatarsApi;
 import io.seqera.tower.api.ComputeEnvsApi;
 import io.seqera.tower.api.CredentialsApi;
@@ -63,6 +64,7 @@ import io.seqera.tower.model.ComputeEnvQueryAttribute;
 import io.seqera.tower.model.ComputeEnvResponseDto;
 import io.seqera.tower.model.Credentials;
 import io.seqera.tower.model.DataStudioQueryAttribute;
+import io.seqera.tower.model.IdpGroupEntry;
 import io.seqera.tower.model.ListComputeEnvsResponseEntry;
 import io.seqera.tower.model.ListPipelineVersionsResponse;
 import io.seqera.tower.model.ListWorkspacesAndOrgResponse;
@@ -204,6 +206,10 @@ public abstract class AbstractApiCmd extends AbstractCmd {
 
     protected ActionsApi actionsApi() throws ApiException {
         return actionsApi == null ? new ActionsApi(apiClient()) : actionsApi;
+    }
+
+    protected AdminApi adminApi() throws ApiException {
+        return new AdminApi(apiClient());
     }
 
     protected AvatarsApi avatarsApi() throws ApiException {
@@ -546,6 +552,14 @@ public abstract class AbstractApiCmd extends AbstractCmd {
                 .collect(Collectors.toList());
 
         return orgAndWorkspaceDbDtoList.stream().findFirst().orElseThrow(() -> new OrganizationNotFoundException(organizationRef));
+    }
+
+    protected IdpGroupEntry findIdpGroupByName(Long orgId, String displayName) throws ApiException {
+        return orgsApi().listOrganizationIdpGroups(orgId).getGroups()
+                .stream()
+                .filter(group -> Objects.equals(group.getDisplayName(), displayName))
+                .findFirst()
+                .orElseThrow(() -> new TowerException(String.format("IdP group '%s' not found in organization '%d'", displayName, orgId)));
     }
 
     protected List<Long> findOrCreateLabels(Long wspId, List<Label> labels) throws ApiException {

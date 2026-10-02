@@ -23,6 +23,7 @@ package io.seqera.tower.cli;
 import io.seqera.tower.cli.commands.AbstractCmd;
 import io.seqera.tower.cli.commands.AccessTokensCmd;
 import io.seqera.tower.cli.commands.ActionsCmd;
+import io.seqera.tower.cli.commands.AuditLogsCmd;
 import io.seqera.tower.cli.commands.CollaboratorsCmd;
 import io.seqera.tower.cli.commands.ComputeEnvsCmd;
 import io.seqera.tower.cli.commands.CredentialsCmd;
@@ -62,6 +63,7 @@ import static picocli.AutoComplete.GenerateCompletion;
         subcommands = {
                 AccessTokensCmd.class,
                 ActionsCmd.class,
+                AuditLogsCmd.class,
                 CollaboratorsCmd.class,
                 ComputeEnvsCmd.class,
                 CredentialsCmd.class,
