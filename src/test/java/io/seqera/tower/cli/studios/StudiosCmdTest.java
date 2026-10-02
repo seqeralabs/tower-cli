@@ -3089,6 +3089,50 @@ public class StudiosCmdTest extends BaseCmdTest {
         mock.verify(request().withMethod("PUT").withPath("/studios/3e8370e7/start"), VerificationTimes.never());
     }
 
+    @Test
+    void testUpdateWithMountDataUriMatchesDataLinkStoredWithTrailingSlash(MockServerClient mock) {
+        mockWorkspace(mock);
+        mock.when(
+                request().withMethod("GET").withPath("/studios/3e8370e7").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_view_response_studio_stopped")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/data-links")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("offset", "0")
+                        .withQueryStringParameter("max", "1"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("data/links/datalinks_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        // Data links created before Platform stripped trailing slashes keep them in their resource ref
+        String legacyDataLinks = new String(loadResource("data/links/datalinks_list"))
+                .replace("\"resourceRef\": \"s3://a-test-bucket-eend-us-east-1\"", "\"resourceRef\": \"s3://a-test-bucket-eend-us-east-1/\"");
+        mock.when(
+                request().withMethod("GET").withPath("/data-links").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(legacyDataLinks).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("PUT").withPath("/studios/3e8370e7").withQueryStringParameter("workspaceId", "75887156211589").withBody(json("""
+                           {
+                             "configuration": {
+                               "mountData": ["v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4"],
+                               "mountDataV2": [{"dataLinkId": "v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4"}]
+                             }
+                           }
+                           """)), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_update_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "studios", "update", "-w", "75887156211589", "-i", "3e8370e7",
+                "--mount-data-uris", "s3://a-test-bucket-eend-us-east-1/");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+    }
+
     @ParameterizedTest
     @EnumSource(OutputType.class)
     void testViewShowsMountPaths(OutputType format, MockServerClient mock) throws JsonProcessingException {

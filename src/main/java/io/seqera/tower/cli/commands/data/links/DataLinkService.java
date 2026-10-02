@@ -143,7 +143,7 @@ public class DataLinkService  {
      * so that a folder inside a data link can be mounted (the remainder becomes the mount path).
      */
     private MountData getMountDataByUri(Long wspId, String uri) {
-        String target = uri.endsWith("/") ? uri.substring(0, uri.length() - 1) : uri;
+        String target = stripTrailingSlash(uri);
         int rootEnd = target.indexOf("://") + 2;
         String candidate = target;
         while (true) {
@@ -160,6 +160,10 @@ public class DataLinkService  {
         }
     }
 
+    private static String stripTrailingSlash(String ref) {
+        return ref != null && ref.endsWith("/") ? ref.substring(0, ref.length() - 1) : ref;
+    }
+
     private DataLinkDto getDataLinkByName(Long wspId, String credId, String name) {
         return getDataLinkBySearchAndFindExactMatch(wspId, name, credId, datalink -> name.equals(datalink.getName()));
     }
@@ -169,7 +173,8 @@ public class DataLinkService  {
     }
 
     private Optional<DataLinkDto> findDataLinkByResourceRef(Long wspId, String resourceRef) {
-        return findDataLinkBySearchAndExactMatch(wspId, getResourceRefKeywordParam(resourceRef), null, datalink -> resourceRef.equals(datalink.getResourceRef()));
+        // Data links created before Platform normalised resource refs may still be stored with a trailing slash
+        return findDataLinkBySearchAndExactMatch(wspId, getResourceRefKeywordParam(resourceRef), null, datalink -> resourceRef.equals(stripTrailingSlash(datalink.getResourceRef())));
     }
 
     private DataLinkDto getDataLinkBySearchAndFindExactMatch(Long wspId, String search, String credId, Predicate<DataLinkDto> filter) {
