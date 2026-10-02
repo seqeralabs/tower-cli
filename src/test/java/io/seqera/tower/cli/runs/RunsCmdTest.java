@@ -29,6 +29,7 @@ import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.runs.RunCanceled;
 import io.seqera.tower.cli.responses.runs.RunDeleted;
 import io.seqera.tower.cli.responses.runs.RunStarred;
+import io.seqera.tower.cli.responses.runs.RunsDeleted;
 import io.seqera.tower.cli.responses.runs.RunDump;
 import io.seqera.tower.cli.responses.runs.RunFileDownloaded;
 import io.seqera.tower.cli.responses.runs.RunList;
@@ -57,6 +58,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
+import org.mockserver.matchers.MatchType;
 import org.mockserver.model.MediaType;
 import org.mockserver.verify.VerificationTimes;
 
@@ -94,6 +96,37 @@ class RunsCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "runs", "delete", "-i", "5dAZoXrcmZXRO4");
         assertOutput(format, out, new RunDeleted("5dAZoXrcmZXRO4", USER_WORKSPACE_NAME));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testDeleteMany(OutputType format, MockServerClient mock) {
+        mock.when(
+                request().withMethod("POST").withPath("/workflow/delete")
+                        .withQueryStringParameter("force", "true")
+                        .withBody(json("{\"workflowIds\":[\"5dAZoXrcmZXRO4\",\"3xFx5yTHcIWQl\",\"1Gm7JBQAcU6pVO\"]}", MatchType.STRICT)), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"failedWorkflowIds\":[]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "runs", "delete", "-i", "5dAZoXrcmZXRO4,3xFx5yTHcIWQl", "-i", "1Gm7JBQAcU6pVO", "--force");
+        assertOutput(format, out, new RunsDeleted(List.of("5dAZoXrcmZXRO4", "3xFx5yTHcIWQl", "1Gm7JBQAcU6pVO"), List.of(), USER_WORKSPACE_NAME));
+    }
+
+    @Test
+    void testDeleteManyPartialFailure(MockServerClient mock) {
+        mock.when(
+                request().withMethod("POST").withPath("/workflow/delete"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"failedWorkflowIds\":[\"3xFx5yTHcIWQl\"]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "runs", "delete", "-i", "5dAZoXrcmZXRO4,3xFx5yTHcIWQl");
+
+        assertEquals("", out.stdErr);
+        assertEquals(chop(new RunsDeleted(List.of("5dAZoXrcmZXRO4"), List.of("3xFx5yTHcIWQl"), USER_WORKSPACE_NAME).toString()), out.stdOut);
+        assertTrue(out.stdOut.contains("'3xFx5yTHcIWQl' could not be deleted"), out.stdOut);
+        assertEquals(1, out.exitCode);
     }
 
     @Test
