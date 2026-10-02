@@ -717,19 +717,19 @@ These commands act on an organization (`-o`/`--organization`). Most require the 
 
 Run `tw service-accounts -h` to view the supported operations: `list`, `add`, `view`, `update`, and `delete`. Service accounts are non-human organization members. Add one to a workspace with `tw participants add -t MEMBER -n <name>`.
 
-```console
-$ tw service-accounts add -o my-org -n ci-bot -d "CI pipeline launcher"
-$ tw service-accounts list -o my-org
-$ tw service-accounts list -w my-org/my-workspace
+```bash
+tw service-accounts add -o my-org -n ci-bot -d "CI pipeline launcher"
+tw service-accounts list -o my-org
+tw service-accounts list -w my-org/my-workspace
 ```
 
 ### Custom roles
 
 Run `tw roles -h` to view the supported operations: `list`, `view`, `add`, `update`, `delete`, and `permissions`. `tw participants update --role` accepts custom role names.
 
-```console
-$ tw roles permissions -o my-org
-$ tw roles add -o my-org -n launcher -d "Launch only" -p <permission>,<permission>
+```bash
+tw roles permissions -o my-org
+tw roles add -o my-org -n launcher -d "Launch only" -p <permission>,<permission>
 ```
 
 ### Teams, IdP groups and SCIM
@@ -745,52 +745,52 @@ $ tw roles add -o my-org -n launcher -d "Launch only" -p <permission>,<permissio
 
 Run `tw ssh-keys -h` to view the supported operations: `list`, `add`, `view`, and `delete`. Use `-k -` to read the public key from stdin.
 
-```console
-$ tw ssh-keys add -n laptop -k ~/.ssh/id_ed25519.pub
+```bash
+tw ssh-keys add -n laptop -k ~/.ssh/id_ed25519.pub
 ```
 
 ### Access tokens
 
 Run `tw access-tokens -h` to view the supported operations: `list`, `add`, and `delete`. The token value is only shown when the token is created.
 
-```console
-$ tw access-tokens add -n ci
+```bash
+tw access-tokens add -n ci
 ```
 
 ## Managed identities
 
 Managed identities give organization members individual SSH access to an HPC cluster (Slurm, LSF, UGE, Altair PBS, or Moab). Run `tw managed-identities -h` to view the supported operations. Each member then adds their own credentials:
 
-```console
-$ tw managed-identities add -o my-org -n hpc1 -p slurm -H login.hpc.example.com
-$ tw managed-identities credentials -o my-org -n hpc1 add -l my_linux_user -k ~/.ssh/id_rsa
+```bash
+tw managed-identities add -o my-org -n hpc1 -p slurm -H login.hpc.example.com
+tw managed-identities credentials -o my-org -n hpc1 add -l my_linux_user -k ~/.ssh/id_rsa
 ```
 
 ## Agents
 
 Run `tw agents -h` to view the supported operations: `list`, `view`, `add`, `update`, `delete`, `enable`, `disable`, `launch`, and `runs list|view`. Agents must be enabled for the organization.
 
-```console
-$ tw agents add -w my-org/my-workspace -n triage --instructions-file triage.md
-$ tw agents launch -w my-org/my-workspace -n triage
-$ tw agents runs list -w my-org/my-workspace
+```bash
+tw agents add -w my-org/my-workspace -n triage --instructions-file triage.md
+tw agents launch -w my-org/my-workspace -n triage
+tw agents runs list -w my-org/my-workspace
 ```
 
 ## Lineage
 
 Run `tw lineage -h` to view the supported operations: `resolve`, `view`, `search`, `upstream`, and `downstream`. Lineage must be enabled for the workspace.
 
-```console
-$ tw lineage resolve -w my-org/my-workspace --file-path s3://bucket/results/out.bam
-$ tw lineage upstream -w my-org/my-workspace -i <lid>
+```bash
+tw lineage resolve -w my-org/my-workspace --file-path s3://bucket/results/out.bam
+tw lineage upstream -w my-org/my-workspace -i <lid>
 ```
 
 ## Audit logs
 
 Run `tw audit-logs -h` to view the supported operations: `list`, `view`, and `export`. These commands require a root user.
 
-```console
-$ tw audit-logs export --after 2026-09-01T00:00:00Z --before 2026-09-30T23:59:59Z -o september.csv
+```bash
+tw audit-logs export --after 2026-09-01T00:00:00Z --before 2026-09-30T23:59:59Z -o september.csv
 ```
 
 ## Other additions
