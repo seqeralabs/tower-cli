@@ -124,6 +124,6 @@ public abstract class AbstractAddCmd extends AbstractActionsCmd {
     protected abstract ActionSource getSource();
 
     /** Sets the source-specific trigger configuration. GitHub and Seqera Platform actions have none. */
-    protected void configureTrigger(CreateActionRequest request) {
+    protected void configureTrigger(CreateActionRequest request) throws TowerException {
     }
 }

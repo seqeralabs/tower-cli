@@ -922,6 +922,72 @@ class ActionsCmdTest extends BaseCmdTest {
 
     private static final String BUCKET_CONFIG = "{\"dataLinkId\": \"v1-user-abc\", \"bucketName\": \"my-bucket\", \"markerFile\": \"incoming/.done\", \"events\": [\"object:created\", \"object:deleted\"], \"discriminator\": \"bucket\"}";
 
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAddPipelineStatus(OutputType format, MockServerClient mock) {
+        mock.reset();
+        mockPrimaryComputeEnv(mock);
+
+        mock.when(
+                request().withMethod("POST").withPath("/actions")
+                        .withBody(json("{\"name\": \"on-failure\", \"source\": \"pipeline_status\", \"pipelineStatus\": {\"pipelineId\": 42, \"runStatus\": \"FAILED\"}}", MatchType.ONLY_MATCHING_FIELDS)),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("/actions/action_add")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "actions", "add", "pipeline-status", "-n", "on-failure", "--pipeline", "https://github.com/pditommaso/nf-sleep",
+                "--watch-pipeline-id", "42", "--run-status", "FAILED");
+        assertOutput(format, out, new ActionAdd("on-failure", USER_WORKSPACE_NAME, "2Z1g6MCWpOLgHLA65cw1qt"));
+    }
+
+    @Test
+    void testAddPipelineStatusRejectsNonTerminalRunStatus(MockServerClient mock) {
+        mock.reset();
+        mockPrimaryComputeEnv(mock);
+
+        ExecOut out = exec(mock, "actions", "add", "pipeline-status", "-n", "on-run", "--pipeline", "https://github.com/pditommaso/nf-sleep",
+                "--watch-pipeline-id", "42", "--run-status", "RUNNING");
+
+        assertEquals(1, out.exitCode);
+        assertEquals(errorMessage(out.app, new TowerException("Run status 'RUNNING' cannot trigger an action. Use SUCCEEDED, FAILED or CANCELLED")), out.stdErr);
+        mock.verify(request().withMethod("POST").withPath("/actions"), VerificationTimes.never());
+    }
+
+    @Test
+    void testUpdatePipelineStatus(MockServerClient mock) {
+        mock.reset();
+        mockActionLookup(mock, "pipeline_status", PIPELINE_STATUS_CONFIG);
+
+        mock.when(
+                request().withMethod("PUT").withPath("/actions/57byWxhmUDLLWIF4J97XEP")
+                        .withBody(json("{\"name\": \"hello\", \"pipelineStatus\": {\"runStatus\": \"SUCCEEDED\"}}", MatchType.ONLY_MATCHING_FIELDS)),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(mock, "actions", "update", "-n", "hello", "--run-status", "SUCCEEDED");
+        assertOutput(OutputType.console, out, new ActionUpdate("hello", USER_WORKSPACE_NAME, "57byWxhmUDLLWIF4J97XEP"));
+    }
+
+    @Test
+    void testViewPipelineStatus(MockServerClient mock) {
+        mock.reset();
+        mockActionLookup(mock, "pipeline_status", PIPELINE_STATUS_CONFIG);
+        mockUserInfo(mock);
+
+        ExecOut out = exec(mock, "actions", "view", "-n", "hello");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        assertTrue(out.stdOut.matches("(?s).*Source +\\| pipeline_status.*"), out.stdOut);
+        assertTrue(out.stdOut.matches("(?s).*Watched pipeline ID +\\| 42.*"), out.stdOut);
+        assertTrue(out.stdOut.matches("(?s).*Run status +\\| FAILED.*"), out.stdOut);
+    }
+
+    private static final String PIPELINE_STATUS_CONFIG = "{\"pipelineId\": 42, \"runStatus\": \"FAILED\", \"discriminator\": \"pipeline_status\"}";
+
     private static final String CRON_CONFIG = "{\"expression\": \"0 2 * * *\", \"timezone\": \"Europe/London\", \"discriminator\": \"cron\"}";
 
     private void mockPrimaryComputeEnv(MockServerClient mock) {
