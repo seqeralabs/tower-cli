@@ -20,6 +20,7 @@ import io.seqera.tower.cli.commands.members.AddCmd;
 import io.seqera.tower.cli.commands.members.DeleteCmd;
 import io.seqera.tower.cli.commands.members.LeaveCmd;
 import io.seqera.tower.cli.commands.members.ListCmd;
+import io.seqera.tower.cli.commands.members.RolesCmd;
 import io.seqera.tower.cli.commands.members.UpdateCmd;
 import picocli.CommandLine;
 
@@ -32,6 +33,7 @@ import picocli.CommandLine;
                 DeleteCmd.class,
                 UpdateCmd.class,
                 LeaveCmd.class,
+                RolesCmd.class,
         }
 )
 public class MembersCmd extends AbstractRootCmd {
