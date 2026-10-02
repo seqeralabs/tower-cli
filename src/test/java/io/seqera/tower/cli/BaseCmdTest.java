@@ -32,10 +32,10 @@ import org.mockserver.junit.jupiter.MockServerExtension;
 import picocli.CommandLine;
 import picocli.CommandLine.ExitCode;
 
-import java.io.BufferedReader;
+import java.nio.charset.Charset;
+import java.io.UncheckedIOException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.file.Files;
@@ -137,8 +137,9 @@ public abstract class BaseCmdTest {
             builder.command(ArrayUtils.insert(0, buildArgs(format, mock, args), command));
             Process process = builder.start();
 
-            StreamGobbler consumeOut = new StreamGobbler(process.getInputStream(), outWriter::println);
-            StreamGobbler consumeErr = new StreamGobbler(process.getErrorStream(), errWriter::println);
+            // Copy the raw streams: re-joining lines with println turned line feeds inside printed content into CRLF on Windows
+            StreamGobbler consumeOut = new StreamGobbler(process.getInputStream(), outWriter::print);
+            StreamGobbler consumeErr = new StreamGobbler(process.getErrorStream(), errWriter::print);
             Future<?> taskOut = Executors.newSingleThreadExecutor().submit(consumeOut);
             Future<?> taskErr = Executors.newSingleThreadExecutor().submit(consumeErr);
             int exitCode = process.waitFor();
@@ -246,7 +247,11 @@ public abstract class BaseCmdTest {
 
         @Override
         public void run() {
-            new BufferedReader(new InputStreamReader(inputStream)).lines().forEach(consumer);
+            try {
+                consumer.accept(new String(inputStream.readAllBytes(), Charset.defaultCharset()));
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
         }
     }
 
