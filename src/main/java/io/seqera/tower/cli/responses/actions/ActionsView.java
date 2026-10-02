@@ -25,6 +25,7 @@ import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.ActionResponseDto;
 import io.seqera.tower.model.BucketActionConfig;
 import io.seqera.tower.model.CronActionConfig;
+import io.seqera.tower.model.PipelineStatusActionConfig;
 import io.seqera.tower.model.WorkflowLaunchRequest;
 
 import java.io.PrintWriter;
@@ -91,6 +92,10 @@ public class ActionsView extends Response {
                 table.addRow("Bucket", bucket.getBucketName());
                 table.addRow("Marker file", bucket.getMarkerFile());
                 table.addRow("Events", bucket.getEvents() == null ? null : String.join(", ", bucket.getEvents()));
+            }
+            case PipelineStatusActionConfig pipelineStatus -> {
+                table.addRow("Watched pipeline ID", pipelineStatus.getPipelineId() == null ? null : pipelineStatus.getPipelineId().toString());
+                table.addRow("Run status", pipelineStatus.getRunStatus() == null ? null : pipelineStatus.getRunStatus().toString());
             }
             case null, default -> {
             }

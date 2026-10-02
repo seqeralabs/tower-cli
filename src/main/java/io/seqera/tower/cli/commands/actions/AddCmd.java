@@ -20,6 +20,7 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.actions.add.AddBucketCmd;
 import io.seqera.tower.cli.commands.actions.add.AddCronCmd;
 import io.seqera.tower.cli.commands.actions.add.AddGitHubCmd;
+import io.seqera.tower.cli.commands.actions.add.AddPipelineStatusCmd;
 import io.seqera.tower.cli.commands.actions.add.AddTowerCmd;
 import io.seqera.tower.cli.exceptions.ShowUsageException;
 import io.seqera.tower.cli.responses.Response;
@@ -35,6 +36,7 @@ import java.io.IOException;
                 AddTowerCmd.class,
                 AddCronCmd.class,
                 AddBucketCmd.class,
+                AddPipelineStatusCmd.class,
         }
 )
 public class AddCmd extends AbstractActionsCmd {

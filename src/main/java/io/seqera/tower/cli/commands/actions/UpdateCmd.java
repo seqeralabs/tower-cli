@@ -29,8 +29,10 @@ import io.seqera.tower.model.ActionResponseDto;
 import io.seqera.tower.model.ActionSource;
 import io.seqera.tower.model.BucketActionRequest;
 import io.seqera.tower.model.CronActionRequest;
+import io.seqera.tower.model.PipelineStatusActionRequest;
 import io.seqera.tower.model.UpdateActionRequest;
 import io.seqera.tower.model.WorkflowLaunchRequest;
+import io.seqera.tower.model.WorkflowStatus;
 import picocli.CommandLine;
 
 import java.io.IOException;
@@ -64,6 +66,12 @@ public class UpdateCmd extends AbstractActionsCmd {
 
     @CommandLine.Option(names = {"--events"}, split = ",", description = "Comma-separated bucket events that trigger a bucket action: object:created, object:deleted.")
     public List<String> events;
+
+    @CommandLine.Option(names = {"--watch-pipeline-id"}, description = "Launchpad pipeline identifier whose runs trigger a pipeline-status action.")
+    public Long watchPipelineId;
+
+    @CommandLine.Option(names = {"--run-status"}, description = "Run state that triggers a pipeline-status action: SUCCEEDED, FAILED or CANCELLED.")
+    public WorkflowStatus runStatus;
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
@@ -130,6 +138,12 @@ public class UpdateCmd extends AbstractActionsCmd {
         if (markerFile != null || events != null) {
             requireSource(action, ActionSource.bucket, "--marker-file and --events");
             request.setBucket(new BucketActionRequest().markerFile(markerFile).events(events));
+        }
+
+        if (watchPipelineId != null || runStatus != null) {
+            requireSource(action, ActionSource.pipeline_status, "--watch-pipeline-id and --run-status");
+            checkTriggerRunStatus(runStatus);
+            request.setPipelineStatus(new PipelineStatusActionRequest().pipelineId(watchPipelineId).runStatus(runStatus));
         }
 
         try {
