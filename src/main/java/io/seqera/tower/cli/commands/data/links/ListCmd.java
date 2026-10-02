@@ -69,7 +69,7 @@ public class ListCmd extends AbstractDataLinksCmd {
         DataLinkService dataLinkService = new DataLinkService(dataLinksApi(), app());
         boolean isResultIncomplete = dataLinkService.checkIfResultIncomplete(wspId, credId, wait);
 
-        DataLinksListResponse data = dataLinksApi().listDataLinks(wspId, credId, search, max, offset, visibility);
+        DataLinksListResponse data = dataLinksApi().listDataLinks(wspId, credId, search, max, offset, visibility, null);
         return new DataLinksList(workspaceRef(wspId), data.getDataLinks(),
                 isResultIncomplete,
                 PaginationInfo.from(offset, max, data.getTotalSize()));

@@ -713,6 +713,16 @@ $ tw data-links browse -w seqeralabs/showcase -i v1-user-6d8f44c239e2a098b3e02e9
 
 These commands act on an organization (`-o`/`--organization`). Most require the organization `OWNER` role.
 
+### Service accounts
+
+Run `tw service-accounts -h` to view the supported operations: `list`, `add`, `view`, `update`, and `delete`. Service accounts are non-human organization members. Add one to a workspace with `tw participants add -t MEMBER -n <name>`.
+
+```bash
+tw service-accounts add -o my-org -n ci-bot -d "CI pipeline launcher"
+tw service-accounts list -o my-org
+tw service-accounts list -w my-org/my-workspace
+```
+
 ### Custom roles
 
 Run `tw roles -h` to view the supported operations: `list`, `view`, `add`, `update`, `delete`, and `permissions`. `tw participants update --role` accepts custom role names.
@@ -792,13 +802,14 @@ tw audit-logs export --after 2026-09-01T00:00:00Z --before 2026-09-30T23:59:59Z 
   - AWS Cloud: `--log-group`. Google Cloud: `--project-id`.
   - HPC platforms: `--propagate-head-job-options`.
   - Seqera Compute: `--data-retention-policy`.
-- `tw launch`, `tw pipelines add|update`, `tw runs relaunch`, and `tw actions add|update`: `--tower-config`. List the Nextflow versions you can launch with `tw info versions`.
+- `tw launch`, `tw pipelines add|update`, `tw runs relaunch`, and `tw actions add|update`: `--fusion-version` and `--tower-config`. List the versions you can launch with `tw info versions`.
 - `tw runs star|unstar`, `tw runs view log [--next <cursor>]`, and `tw runs delete -i <id>,<id>`.
 - `tw pipelines schema`: show a pipeline's parameter schema.
-- `tw actions add cron|bucket`.
+- `tw actions add cron|bucket|pipeline-status` and `tw actions triggers list|view`.
 - `tw studios star|unstar|extend|logs|rename-checkpoint`. `--mount-data-uris` also accepts a folder inside a data link.
 - `tw data-links delete-content|download-script`.
 - `tw datasets add --url`, `tw datasets update --url`, and `tw datasets disable-version`.
+- `tw credentials federation-setup -p aws|google`: show the values to configure in your cloud provider before adding workload identity credentials.
 
 [compute-envs]: https://docs.seqera.io/platform/latest/compute-envs/overview
 [credentials]: https://docs.seqera.io/platform/latest/credentials/overview

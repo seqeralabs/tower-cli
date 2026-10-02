@@ -21,7 +21,7 @@ package io.seqera.tower.cli.computeenvs;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.ApiException;
-import io.seqera.tower.JSON;
+import io.seqera.tower.cli.utils.JsonHelper;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
@@ -353,7 +353,7 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
                 "    \"credentialsId\": \"6g0ER59L4ZoE5zpOmUP48D\"\n" +
                 "  }", ComputeConfig.class);
 
-        String configOutput = new JSON().getContext(ComputeConfig.class).writerWithDefaultPrettyPrinter().writeValueAsString(computeConfig);
+        String configOutput = JsonHelper.prettyJson(computeConfig);
 
         assertOutput(format, out, new ComputeEnvExport(configOutput, null));
 

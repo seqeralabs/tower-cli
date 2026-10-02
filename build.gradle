@@ -92,8 +92,13 @@ license {
     exclude('conf/**')
 }
 
+// Jersey's HttpURLConnection connector can only send PATCH by reflecting into these JDK internals
+// (HttpUrlConnectorProvider.SET_METHOD_WORKAROUND, enabled by the SDK's ApiClient)
+def jerseyPatchOpens = ['java.base/java.net', 'java.base/sun.net.www.protocol.https']
+
 application {
     mainClass.set('io.seqera.tower.cli.Tower')
+    applicationDefaultJvmArgs = jerseyPatchOpens.collect { "--add-opens=${it}=ALL-UNNAMED" }
 }
 
 java {
@@ -118,6 +123,8 @@ graalvmNative {
             buildArgs.add('-H:+AddAllCharsets')
             buildArgs.add('-H:EnableURLProtocols=https,http')
             buildArgs.add('-H:+ReportExceptionStackTraces')
+            // Native images enforce module encapsulation for setAccessible too, so the reflection entries alone are not enough
+            buildArgs.addAll(jerseyPatchOpens.collect { "--add-opens=${it}=ALL-UNNAMED" })
 
             javaLauncher = javaToolchains.launcherFor {
                 languageVersion = JavaLanguageVersion.of(25)
@@ -168,7 +175,7 @@ tasks.named('run') {
 
     // Run with GraalVM Tracing Agent enabled
     if (System.getProperty('tracing-agent')?.toBoolean()) {
-        jvmArgs = ["-agentlib:native-image-agent=access-filter-file=conf/access-filter-file.json,config-merge-dir=conf/"]
+        jvmArgs += ["-agentlib:native-image-agent=access-filter-file=conf/access-filter-file.json,config-merge-dir=conf/"]
     }
 }
 
@@ -181,6 +188,9 @@ tasks.register('runReflectionConfigGenerator', JavaExec) {
 }
 
 tasks.named('shadowJar') {
+    manifest {
+        attributes 'Add-Opens': jerseyPatchOpens.join(' ')
+    }
     archiveBaseName.set('tw')
     archiveClassifier.set('')
     archiveVersion.set('')
@@ -190,9 +200,10 @@ tasks.named('test') {
     // Use junit platform for unit tests
     useJUnitPlatform()
     dependsOn tasks.named('checkLicenses')
+    jvmArgs jerseyPatchOpens.collect { "--add-opens=${it}=ALL-UNNAMED" }
     // Run tests with GraalVM Tracing Agent enabled
     if (System.getProperty('tracing-agent')?.toBoolean()) {
-        jvmArgs = ["-agentlib:native-image-agent=access-filter-file=conf/access-filter-file.json,config-merge-dir=conf/"]
+        jvmArgs += ["-agentlib:native-image-agent=access-filter-file=conf/access-filter-file.json,config-merge-dir=conf/"]
     }
 }
 

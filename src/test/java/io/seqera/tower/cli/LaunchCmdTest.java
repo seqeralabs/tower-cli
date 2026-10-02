@@ -22,12 +22,14 @@ package io.seqera.tower.cli;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.InvalidResponseException;
+import io.seqera.tower.cli.exceptions.StatusCheckFailedException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.runs.RunSubmited;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
+import org.mockserver.model.HttpResponse;
 import org.mockserver.model.MediaType;
 import org.mockserver.verify.VerificationTimes;
 
@@ -36,6 +38,7 @@ import java.io.IOException;
 import static io.seqera.tower.cli.commands.AbstractApiCmd.USER_WORKSPACE_NAME;
 import static io.seqera.tower.cli.commands.AbstractApiCmd.buildWorkspaceRef;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
@@ -165,6 +168,7 @@ class LaunchCmdTest extends BaseCmdTest {
                                     "pipeline":"https://github.com/nf-core/sarek",
                                     "syntaxParser":"v1",
                                     "nextflowVersion":"25.10.1",
+                                    "fusionVersion":"2.6",
                                     "outputDir":"/new-outputs"
                                 }
                             }"""
@@ -182,7 +186,7 @@ class LaunchCmdTest extends BaseCmdTest {
 
         // Run the command
         ExecOut out = exec(mock, "launch", "sarek", "--syntax-parser", "v1",
-                "--nextflow-version", "25.10.1", "--output-dir", "/new-outputs");
+                "--nextflow-version", "25.10.1", "--fusion-version", "2.6", "--output-dir", "/new-outputs");
 
         // Assert results
         assertEquals("", out.stdErr);
@@ -859,4 +863,81 @@ class LaunchCmdTest extends BaseCmdTest {
         assertEquals(1, out.exitCode);
     }
 
+
+    @Test
+    void testWaitKeepsPollingAfterTransientError(MockServerClient mock) {
+        mockGithubLaunch(mock);
+        mockWorkflowStatusResponse(mock, response().withStatusCode(502));
+        mockWorkflowStatusResponse(mock, workflowStatus("SUCCEEDED"));
+
+        ExecOut out = exec(OutputType.json, mock, "launch", "https://github.com/nextflow-io/hello", "--wait=SUCCEEDED");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testWaitKeepsPollingAfterUnrecognizedStatus(MockServerClient mock) {
+        mockGithubLaunch(mock);
+        mockWorkflowStatusResponse(mock, workflowStatus("PAUSED"));
+        mockWorkflowStatusResponse(mock, workflowStatus("SUCCEEDED"));
+
+        ExecOut out = exec(OutputType.json, mock, "launch", "https://github.com/nextflow-io/hello", "--wait=SUCCEEDED");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testWaitReportsUncheckedStatusWithDistinctExitCode(MockServerClient mock) {
+        mockGithubLaunch(mock);
+        mockWorkflowStatusResponse(mock, response().withStatusCode(404));
+
+        ExecOut out = exec(OutputType.json, mock, "launch", "https://github.com/nextflow-io/hello", "--wait=SUCCEEDED");
+
+        assertTrue(out.stdOut.contains("57ojrWRzTyous"), "workflow id is printed before polling");
+        assertTrue(out.stdErr.contains("Run 57ojrWRzTyous was submitted but its status could not be checked (HTTP 404). It may still be running, check it with: tw runs view -i 57ojrWRzTyous"), out.stdErr);
+        assertEquals(StatusCheckFailedException.EXIT_CODE, out.exitCode);
+    }
+
+    @Test
+    void testWaitFailsWhenRunFails(MockServerClient mock) {
+        mockGithubLaunch(mock);
+        mockWorkflowStatusResponse(mock, workflowStatus("FAILED"));
+
+        ExecOut out = exec(OutputType.json, mock, "launch", "https://github.com/nextflow-io/hello", "--wait=SUCCEEDED");
+
+        assertEquals(1, out.exitCode);
+    }
+
+    private void mockGithubLaunch(MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs").withQueryStringParameter("status", "AVAILABLE"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"1uJweHHZTo7gydE6pyDt7x\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"primary\":true}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/1uJweHHZTo7gydE6pyDt7x"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnv\":{\"id\":\"1uJweHHZTo7gydE6pyDt7x\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"config\":{\"discriminator\":\"aws-batch\",\"workDir\":\"s3://nextflow-ci/jordeu\"}}}").withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("POST").withPath("/workflow/launch"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"workflowId\":\"57ojrWRzTyous\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+    }
+
+    private static void mockWorkflowStatusResponse(MockServerClient mock, HttpResponse response) {
+        mock.when(request().withMethod("GET").withPath("/workflow/57ojrWRzTyous"), exactly(1)).respond(response);
+    }
+
+    private static HttpResponse workflowStatus(String status) {
+        return response().withStatusCode(200).withBody(String.format("{\"workflow\":{\"id\":\"57ojrWRzTyous\",\"status\":\"%s\"}}", status)).withContentType(MediaType.APPLICATION_JSON);
+    }
 }

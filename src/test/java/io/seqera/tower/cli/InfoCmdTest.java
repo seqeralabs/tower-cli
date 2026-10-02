@@ -17,6 +17,7 @@
 package io.seqera.tower.cli;
 
 import io.seqera.tower.cli.commands.enums.OutputType;
+import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.ComponentVersions;
 import io.seqera.tower.cli.responses.ComponentVersions.ComponentVersion;
 import io.seqera.tower.cli.responses.InfoResponse;
@@ -160,14 +161,57 @@ public class InfoCmdTest extends BaseCmdTest {
         assertEquals(chop(new InfoResponse(0,-1,-1, opts).toString()), out.stdOut);
     }
 
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testVersionsFromCatalog(OutputType format, MockServerClient mock) {
+        mock.reset();
+        mock.when(
+                request().withMethod("GET").withPath("/platform/versions"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"catalogEnabled\":true,\"nextflowVersions\":[]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/service-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("info/service-info")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/catalog/components/fusion/versions")
+                        .withQueryStringParameter("platform", "22.3.0-torricelli")
+                        .withQueryStringParameter("nextflow", "26.04"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("""
+                        {
+                            "versions": [
+                                {"component": "fusion", "version": "2.5", "origin": "published", "yanked": false},
+                                {"component": "fusion", "version": "2.6", "origin": "published", "yanked": false}
+                            ],
+                            "defaultVersion": "2.6",
+                            "deploymentVersions": {"platform": "22.3.0-torricelli"}
+                        }""").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "info", "versions", "-c", "fusion", "--nextflow", "26.04");
+
+        assertOutput(format, out, new ComponentVersions("fusion", List.of(
+                new ComponentVersion("2.5", false),
+                new ComponentVersion("2.6", true))));
+        if (format == OutputType.json) {
+            assertTrue(out.stdOut.replaceAll("\\s", "").contains("{\"version\":\"2.6\",\"isDefault\":true}"), out.stdOut);
+        }
+    }
+
     @Test
-    void testVersions(MockServerClient mock) {
+    void testVersionsWithoutCatalog(MockServerClient mock) {
         mock.reset();
         mock.when(
                 request().withMethod("GET").withPath("/platform/versions"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("""
                         {
+                            "catalogEnabled": false,
                             "nextflowVersions": [
                                 {"version": "25.10.1", "image": "nf-launcher:j21-25.10.1"},
                                 {"version": "26.04.6", "image": "nf-launcher:j21-26.04.6", "default": true}
@@ -183,6 +227,21 @@ public class InfoCmdTest extends BaseCmdTest {
                 new ComponentVersion("25.10.1", false),
                 new ComponentVersion("26.04.6", true))).toString()), out.stdOut);
         assertTrue(out.stdOut.contains("26.04.6"), out.stdOut);
+    }
+
+    @Test
+    void testVersionsFusionWithoutCatalog(MockServerClient mock) {
+        mock.reset();
+        mock.when(
+                request().withMethod("GET").withPath("/platform/versions"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"catalogEnabled\":false}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "info", "versions", "-c", "fusion");
+
+        assertEquals(errorMessage(out.app, new TowerException("The component compatibility catalog is not enabled on this Platform: only Nextflow versions can be listed, without compatibility filters")), out.stdErr);
+        assertEquals(1, out.exitCode);
     }
 
     private String getCliVersion() throws IOException {

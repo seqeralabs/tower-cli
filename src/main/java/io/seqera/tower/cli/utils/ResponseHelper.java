@@ -22,6 +22,7 @@ import io.seqera.tower.cli.Tower;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.ApiExceptionMessage;
 import io.seqera.tower.cli.exceptions.ShowUsageException;
+import io.seqera.tower.cli.exceptions.StatusCheckFailedException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.exceptions.TowerRuntimeException;
 import io.seqera.tower.cli.responses.Response;
@@ -30,11 +31,14 @@ import picocli.CommandLine;
 import javax.ws.rs.ProcessingException;
 import java.io.PrintWriter;
 import java.nio.file.NoSuchFileException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
@@ -42,6 +46,9 @@ import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
 import static io.seqera.tower.cli.utils.JsonHelper.prettyJson;
 
 public class ResponseHelper {
+
+    // Covers a backend incident window (e.g. a DB pool exhaustion) without polling a dead server forever
+    private static final Duration MAX_FAILING_POLLS = Duration.ofMinutes(10);
 
     private ResponseHelper() {
     }
@@ -134,11 +141,17 @@ public class ResponseHelper {
 
     }
 
-    public static <S extends Enum<?>> Integer waitStatus(PrintWriter out, boolean showProgress, S targetStatus, S[] allStates, Supplier<S> checkStatus, S... endStates ) throws InterruptedException {
+    public static <S extends Enum<?>> Integer waitStatus(PrintWriter out, boolean showProgress, S targetStatus, S[] allStates, Callable<S> checkStatus, S... endStates ) throws InterruptedException {
         return waitStatus(out, showProgress, null, targetStatus, allStates, checkStatus, endStates);
     }
 
-    public static <S extends Enum<?>> Integer waitStatus(PrintWriter out, boolean showProgress, Supplier<String> additionalProgressSteps, S targetStatus, S[] allStates, Supplier<S> checkStatus, S... endStates ) throws InterruptedException {
+    /**
+     * Polls {@code checkStatus} until it reports {@code targetStatus} or a later/end state. A failed poll or a status
+     * outside {@code allStates} keeps polling: the resource already exists, so reporting it as failed would make
+     * callers retry and duplicate it. Polling gives up with {@link StatusCheckFailedException} on an authorization or
+     * not-found error, or once polls have kept failing for {@link #MAX_FAILING_POLLS}.
+     */
+    public static <S extends Enum<?>> Integer waitStatus(PrintWriter out, boolean showProgress, Supplier<String> additionalProgressSteps, S targetStatus, S[] allStates, Callable<S> checkStatus, S... endStates ) throws InterruptedException {
 
         Map<S, Integer> positions = new HashMap<>();
         for (int i=0; i < allStates.length; i++) {
@@ -150,19 +163,44 @@ public class ResponseHelper {
         int secondsToSleep = 2;
         int maxSecondsToSleep = 120;
         int targetPos = positions.get(targetStatus);
-        int currentPos;
+        int currentPos = -1;
+        S status = null;
         S lastReported = null;
+        Instant failingSince = null;
 
         if (showProgress) {
             out.print(String.format("  Waiting %s status...", targetStatus));
             out.flush();
         }
 
-        S status;
         do {
             TimeUnit.SECONDS.sleep(secondsToSleep);
-            status = checkStatus.get();
-            currentPos = status == null ? positions.size() : positions.get(status);
+            if (secondsToSleep < maxSecondsToSleep) {
+                secondsToSleep += 1;
+            }
+
+            try {
+                status = checkStatus.call();
+                failingSince = null;
+            } catch (InterruptedException e) {
+                throw e;
+            } catch (Exception e) {
+                failingSince = failingSince == null ? Instant.now() : failingSince;
+                if (isPermanentFailure(e) || Duration.between(failingSince, Instant.now()).compareTo(MAX_FAILING_POLLS) > 0) {
+                    if (showProgress) {
+                        out.print("  [UNKNOWN]\n\n");
+                        out.flush();
+                    }
+                    throw new StatusCheckFailedException(describeFailure(e), e);
+                }
+                if (showProgress) {
+                    out.print('.');
+                    out.flush();
+                }
+                continue;
+            }
+
+            currentPos = positions.getOrDefault(status, currentPos);
             if (showProgress) {
                 out.print('.');
                 if (lastReported != status) {
@@ -177,9 +215,6 @@ public class ResponseHelper {
                 }
                 out.flush();
             }
-            if (secondsToSleep < maxSecondsToSleep) {
-                secondsToSleep += 1;
-            }
         } while (currentPos < targetPos && !immutableStates.contains(status));
 
         if (showProgress) {
@@ -191,6 +226,21 @@ public class ResponseHelper {
         }
 
         return currentPos == targetPos ? CommandLine.ExitCode.OK : CommandLine.ExitCode.SOFTWARE;
+    }
+
+    private static boolean isPermanentFailure(Exception e) {
+        return e instanceof ApiException api && (api.getCode() == 401 || api.getCode() == 403 || api.getCode() == 404);
+    }
+
+    private static String describeFailure(Exception e) {
+        if (e instanceof ApiException api && api.getCode() > 0) {
+            return "HTTP " + api.getCode();
+        }
+        Throwable root = e;
+        while (root.getCause() != null) {
+            root = root.getCause();
+        }
+        return root.getMessage() != null ? root.getMessage() : root.getClass().getSimpleName();
     }
 
 }

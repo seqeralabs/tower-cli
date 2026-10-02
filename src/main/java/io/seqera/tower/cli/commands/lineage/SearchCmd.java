@@ -30,7 +30,7 @@ import picocli.CommandLine.Option;
 )
 public class SearchCmd extends AbstractLineageCmd {
 
-    @Option(names = {"-q", "--query"}, description = "Search query. Combines free text and the qualifiers: `type`, `workflow`, `task`, `label`, and `workspace` (org/name) or `workspaceId` to narrow the scope. Whitespace means AND, a comma inside a qualifier means OR. Example: -q 'type:FileOutput workspace:acme/dev multiqc'.")
+    @Option(names = {"-q", "--query"}, description = "Search query. Combines free text and the qualifiers: `type`, `workflow`, `task`, `pipeline`, `pipelineId`, `label`, and `workspace` (org/name) or `workspaceId` to narrow the scope. Whitespace means AND, a comma inside a qualifier means OR. Example: -q 'type:FileOutput workspace:acme/dev multiqc'.")
     public String query;
 
     @Option(names = {"--max"}, description = "Maximum number of records per page (capped by the server)")

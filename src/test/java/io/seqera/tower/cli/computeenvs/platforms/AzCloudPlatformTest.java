@@ -276,6 +276,7 @@ public class AzCloudPlatformTest extends BaseCmdTest {
                                             "resourceGroup": "my-resource-group",
                                             "fusion2Enabled": true,
                                             "waveEnabled": true,
+                                            "keyVaultUrl": "https://my-vault.vault.azure.net",
                                             "schedEnabled": true,
                                             "schedConfig": {
                                                 "predictionModel": "qr/v3",
@@ -311,7 +312,8 @@ public class AzCloudPlatformTest extends BaseCmdTest {
                 "--max-cpus-per-user",
                 "64",
                 "--max-spot-attempts",
-                "3"
+                "3",
+                "--key-vault-url", "https://my-vault.vault.azure.net"
         );
 
         // then

@@ -18,7 +18,6 @@ package io.seqera.tower.cli.responses.pipelines;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.seqera.tower.JSON;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.ModelHelper;
 import io.seqera.tower.cli.utils.TableList;
@@ -31,6 +30,7 @@ import java.io.PrintWriter;
 
 import static io.seqera.tower.cli.utils.FormatHelper.formatLabels;
 import static io.seqera.tower.cli.utils.FormatHelper.formatPipelineId;
+import static io.seqera.tower.cli.utils.JsonHelper.prettyJson;
 
 public class PipelinesView extends Response {
 
@@ -55,7 +55,7 @@ public class PipelinesView extends Response {
         String configJson = "";
         try {
             WorkflowLaunchRequest request = ModelHelper.createLaunchRequest(launch);
-            configJson = new JSON().getContext(WorkflowLaunchRequest.class).writerWithDefaultPrettyPrinter().writeValueAsString(request);
+            configJson = prettyJson(request);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

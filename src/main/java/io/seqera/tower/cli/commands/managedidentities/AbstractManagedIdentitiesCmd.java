@@ -22,7 +22,7 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.exceptions.CredentialsInUseException;
 import io.seqera.tower.cli.exceptions.ManagedIdentityNotFoundException;
-import io.seqera.tower.model.DeleteCredentialsConflictResponse;
+import io.seqera.tower.model.DeleteManagedCredentialsConflictResponse;
 import io.seqera.tower.model.ManagedIdentityDbDtoAbstractGridConfig;
 import picocli.CommandLine.Command;
 
@@ -56,7 +56,7 @@ public abstract class AbstractManagedIdentitiesCmd extends AbstractApiCmd {
         try {
             call.run();
         } catch (ApiException e) {
-            DeleteCredentialsConflictResponse conflict = decodeConflict(e);
+            DeleteManagedCredentialsConflictResponse conflict = decodeConflict(e);
             if (conflict != null) {
                 throw new CredentialsInUseException(ref, conflict.getConflicts());
             }
@@ -64,14 +64,12 @@ public abstract class AbstractManagedIdentitiesCmd extends AbstractApiCmd {
         }
     }
 
-    // The managed credentials 409 body has the same shape as the credentials one, whose conflict type
-    // CredentialsInUseException reports.
-    private static DeleteCredentialsConflictResponse decodeConflict(ApiException e) {
+    private static DeleteManagedCredentialsConflictResponse decodeConflict(ApiException e) {
         if (e.getCode() != 409 || e.getResponseBody() == null) {
             return null;
         }
         try {
-            DeleteCredentialsConflictResponse conflict = parseJson(e.getResponseBody(), DeleteCredentialsConflictResponse.class);
+            DeleteManagedCredentialsConflictResponse conflict = parseJson(e.getResponseBody(), DeleteManagedCredentialsConflictResponse.class);
             return conflict.getConflicts() == null || conflict.getConflicts().isEmpty() ? null : conflict;
         } catch (JsonProcessingException ignored) {
             // Not a conflict body: let the original error through

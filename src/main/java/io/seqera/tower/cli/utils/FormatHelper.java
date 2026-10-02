@@ -331,6 +331,8 @@ public class FormatHelper {
                 return ansi("@|fg(green) MEMBER|@");
             case owner:
                 return ansi("@|fg(magenta) OWNER|@");
+            case service_account:
+                return ansi("@|fg(cyan) SERVICE_ACCOUNT|@");
             default:
                 return role.toString();
         }
@@ -368,6 +370,14 @@ public class FormatHelper {
         var text = description.trim().replace("\n", " ").replace("\r", " ");
         // cap the description length if too long
         return text.length() > maxLength ? text.substring(0, maxLength) + "..." : text;
+    }
+
+    /**
+     * Strips control characters, except newlines and tabs, from text that comes from outside
+     * Platform, such as an action trigger event, so it cannot inject terminal escape sequences.
+     */
+    public static String formatUntrusted(String value) {
+        return value == null ? null : value.replaceAll("[\\p{Cc}&&[^\\n\\t]]", "");
     }
 
     public static String formatLargeStringWithEllipsis(String largeString, int maxLength) {

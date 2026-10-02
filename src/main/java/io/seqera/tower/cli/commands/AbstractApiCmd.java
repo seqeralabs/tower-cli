@@ -22,6 +22,7 @@ import io.seqera.tower.api.ActionsApi;
 import io.seqera.tower.api.AdminApi;
 import io.seqera.tower.api.AgentsApi;
 import io.seqera.tower.api.AvatarsApi;
+import io.seqera.tower.api.CompatibilityApi;
 import io.seqera.tower.api.ComputeEnvsApi;
 import io.seqera.tower.api.CredentialsApi;
 import io.seqera.tower.api.DataLinksApi;
@@ -39,6 +40,7 @@ import io.seqera.tower.api.PipelineVersionsApi;
 import io.seqera.tower.api.PipelinesApi;
 import io.seqera.tower.api.PlatformsApi;
 import io.seqera.tower.api.RolesApi;
+import io.seqera.tower.api.ServiceAccountsApi;
 import io.seqera.tower.api.ServiceInfoApi;
 import io.seqera.tower.api.SshKeysApi;
 import io.seqera.tower.api.StudiosApi;
@@ -58,6 +60,7 @@ import io.seqera.tower.cli.exceptions.MissingTowerAccessTokenException;
 import io.seqera.tower.cli.exceptions.NoComputeEnvironmentException;
 import io.seqera.tower.cli.exceptions.OrganizationNotFoundException;
 import io.seqera.tower.cli.exceptions.ShowUsageException;
+import io.seqera.tower.cli.exceptions.StatusCheckFailedException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.exceptions.WorkspaceNotFoundException;
 import io.seqera.tower.cli.responses.Response;
@@ -125,6 +128,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
 
     private ActionsApi actionsApi;
     private AvatarsApi avatarsApi;
+    private CompatibilityApi compatibilityApi;
     private ComputeEnvsApi computeEnvsApi;
     private CredentialsApi credentialsApi;
     private DataLinksApi dataLinksApi;
@@ -141,6 +145,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     private PipelineVersionsApi pipelineVersionsApi;
     private PlatformsApi platformsApi;
     private RolesApi rolesApi;
+    private ServiceAccountsApi serviceAccountsApi;
     private ServiceInfoApi serviceInfoApi;
     private SshKeysApi sshKeysApi;
     private StudiosApi studiosApi;
@@ -224,6 +229,10 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         return avatarsApi == null ? new AvatarsApi(apiClient()) : avatarsApi;
     }
 
+    protected CompatibilityApi compatibilityApi() throws ApiException {
+        return compatibilityApi == null ? new CompatibilityApi(apiClient()) : compatibilityApi;
+    }
+
     protected ComputeEnvsApi computeEnvsApi() throws ApiException {
         return computeEnvsApi == null ? new ComputeEnvsApi(apiClient()) : computeEnvsApi;
     }
@@ -290,6 +299,10 @@ public abstract class AbstractApiCmd extends AbstractCmd {
 
     protected RolesApi rolesApi() throws ApiException {
         return rolesApi == null ? new RolesApi(apiClient()) : rolesApi;
+    }
+
+    protected ServiceAccountsApi serviceAccountsApi() throws ApiException {
+        return serviceAccountsApi == null ? new ServiceAccountsApi(apiClient()) : serviceAccountsApi;
     }
 
     protected ServiceInfoApi serviceInfoApi() throws ApiException {
@@ -699,8 +712,8 @@ public abstract class AbstractApiCmd extends AbstractCmd {
             return onBeforeExit(exitCode, response);
         } catch (Exception e) {
             errorMessage(app(), e);
+            return e instanceof StatusCheckFailedException ? StatusCheckFailedException.EXIT_CODE : CommandLine.ExitCode.SOFTWARE;
         }
-        return CommandLine.ExitCode.SOFTWARE;
     }
 
     protected Integer onBeforeExit(int exitCode, Response response) throws ApiException {

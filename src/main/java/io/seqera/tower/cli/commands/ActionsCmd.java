@@ -22,6 +22,7 @@ import io.seqera.tower.cli.commands.actions.LabelsCmd;
 import io.seqera.tower.cli.commands.actions.ListCmd;
 import io.seqera.tower.cli.commands.actions.UpdateCmd;
 import io.seqera.tower.cli.commands.actions.ViewCmd;
+import io.seqera.tower.cli.commands.actions.triggers.TriggersCmd;
 import picocli.CommandLine;
 
 @CommandLine.Command(
@@ -34,6 +35,7 @@ import picocli.CommandLine;
                 AddCmd.class,
                 UpdateCmd.class,
                 LabelsCmd.class,
+                TriggersCmd.class,
         }
 )
 public class ActionsCmd extends AbstractRootCmd {
