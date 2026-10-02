@@ -420,7 +420,8 @@ public class GoogleCloudPlatformTest extends BaseCmdTest {
                                                 "predictionModel": "qr/v3",
                                                 "nvmeEnabled": true,
                                                 "maxCpusPerUser": 64,
-                                                "maxSpotAttempts": 3
+                                                "maxSpotAttempts": 3,
+                                                "billingExportTable": "my-project.billing.gcp_billing_export_v1_01F197_9D74B5_BC674D"
                                             }
                                         },
                                         "credentialsId": "6XfOhoztUq6de3Dw3X9LSb"
@@ -450,7 +451,9 @@ public class GoogleCloudPlatformTest extends BaseCmdTest {
                 "--max-cpus-per-user",
                 "64",
                 "--max-spot-attempts",
-                "3"
+                "3",
+                "--billing-export-table",
+                "my-project.billing.gcp_billing_export_v1_01F197_9D74B5_BC674D"
         );
 
         // then
