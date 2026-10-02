@@ -18,6 +18,8 @@ package io.seqera.tower.cli.commands;
 
 import io.seqera.tower.cli.commands.data.links.AddCmd;
 import io.seqera.tower.cli.commands.data.links.DeleteCmd;
+import io.seqera.tower.cli.commands.data.links.DeleteContentCmd;
+import io.seqera.tower.cli.commands.data.links.DownloadScriptCmd;
 import io.seqera.tower.cli.commands.data.links.DownloadCmd;
 import io.seqera.tower.cli.commands.data.links.ListCmd;
 import io.seqera.tower.cli.commands.data.links.UpdateCmd;
@@ -32,9 +34,11 @@ import picocli.CommandLine;
                 ListCmd.class,
                 AddCmd.class,
                 DeleteCmd.class,
+                DeleteContentCmd.class,
                 UpdateCmd.class,
                 BrowseCmd.class,
                 DownloadCmd.class,
+                DownloadScriptCmd.class,
                 UploadCmd.class
         }
 )
