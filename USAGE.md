@@ -758,10 +758,21 @@ tw managed-identities credentials -o my-org -n hpc1 add -l my_linux_user -k ~/.s
 
 ## Agents
 
-Run `tw agents -h` to view the supported operations: `list`, `view`, `add`, `update`, `delete`, `enable`, and `disable`. Agents must be enabled for the organization.
+Run `tw agents -h` to view the supported operations: `list`, `view`, `add`, `update`, `delete`, `enable`, `disable`, `launch`, and `runs list|view`. Agents must be enabled for the organization.
 
 ```bash
 tw agents add -w my-org/my-workspace -n triage --instructions-file triage.md
+tw agents launch -w my-org/my-workspace -n triage
+tw agents runs list -w my-org/my-workspace
+```
+
+## Lineage
+
+Run `tw lineage -h` to view the supported operations: `resolve`, `view`, `search`, `upstream`, and `downstream`. Lineage must be enabled for the workspace.
+
+```bash
+tw lineage resolve -w my-org/my-workspace --file-path s3://bucket/results/out.bam
+tw lineage upstream -w my-org/my-workspace -i <lid>
 ```
 
 ## Audit logs
@@ -785,7 +796,7 @@ tw audit-logs export --after 2026-09-01T00:00:00Z --before 2026-09-30T23:59:59Z 
 - `tw runs star|unstar`, `tw runs view log [--next <cursor>]`, and `tw runs delete -i <id>,<id>`.
 - `tw pipelines schema`: show a pipeline's parameter schema.
 - `tw actions add cron|bucket`.
-- `tw studios star|unstar|extend|rename-checkpoint`. `--mount-data-uris` also accepts a folder inside a data link.
+- `tw studios star|unstar|extend|logs|rename-checkpoint`. `--mount-data-uris` also accepts a folder inside a data link.
 - `tw data-links delete-content|download-script`.
 - `tw datasets add --url`, `tw datasets update --url`, and `tw datasets disable-version`.
 
