@@ -709,6 +709,107 @@ $ tw data-links browse -w seqeralabs/showcase -i v1-user-6d8f44c239e2a098b3e02e9
  FOLDER | technical/                                 | 0        
 ```
 
+## Organization administration
+
+These commands act on an organization (`-o`/`--organization`). Most require the organization `OWNER` role.
+
+### Service accounts
+
+Run `tw service-accounts -h` to view the supported operations: `list`, `add`, `view`, `update`, and `delete`. Service accounts are non-human organization members. Add one to a workspace with `tw participants add -t MEMBER -n <name>`.
+
+```console
+$ tw service-accounts add -o my-org -n ci-bot -d "CI pipeline launcher"
+$ tw service-accounts list -o my-org
+$ tw service-accounts list -w my-org/my-workspace
+```
+
+### Custom roles
+
+Run `tw roles -h` to view the supported operations: `list`, `view`, `add`, `update`, `delete`, and `permissions`. `tw participants update --role` accepts custom role names.
+
+```console
+$ tw roles permissions -o my-org
+$ tw roles add -o my-org -n launcher -d "Launch only" -p <permission>,<permission>
+```
+
+### Teams, IdP groups and SCIM
+
+- `tw teams view|update|workspaces`: view a team, update its name, description or linked IdP group (`--idp-group`, `--unlink-idp-group`), and list its workspaces.
+- `tw organizations idp-groups list|add|delete`: manage the identity provider groups available to the organization.
+- `tw organizations scim view|create-token|rotate-token|revoke-token`: manage SCIM provisioning.
+- `tw organizations quotas` and `tw members roles -u <user>`: view organization quotas and a member's workspace roles.
+
+## Personal access
+
+### SSH keys
+
+Run `tw ssh-keys -h` to view the supported operations: `list`, `add`, `view`, and `delete`. Use `-k -` to read the public key from stdin.
+
+```console
+$ tw ssh-keys add -n laptop -k ~/.ssh/id_ed25519.pub
+```
+
+### Access tokens
+
+Run `tw access-tokens -h` to view the supported operations: `list`, `add`, and `delete`. The token value is only shown when the token is created.
+
+```console
+$ tw access-tokens add -n ci
+```
+
+## Managed identities
+
+Managed identities give organization members individual SSH access to an HPC cluster (Slurm, LSF, UGE, Altair PBS, or Moab). Run `tw managed-identities -h` to view the supported operations. Each member then adds their own credentials:
+
+```console
+$ tw managed-identities add -o my-org -n hpc1 -p slurm -H login.hpc.example.com
+$ tw managed-identities credentials -o my-org -n hpc1 add -l my_linux_user -k ~/.ssh/id_rsa
+```
+
+## Agents
+
+Run `tw agents -h` to view the supported operations: `list`, `view`, `add`, `update`, `delete`, `enable`, `disable`, `launch`, and `runs list|view`. Agents must be enabled for the organization.
+
+```console
+$ tw agents add -w my-org/my-workspace -n triage --instructions-file triage.md
+$ tw agents launch -w my-org/my-workspace -n triage
+$ tw agents runs list -w my-org/my-workspace
+```
+
+## Lineage
+
+Run `tw lineage -h` to view the supported operations: `resolve`, `view`, `search`, `upstream`, and `downstream`. Lineage must be enabled for the workspace.
+
+```console
+$ tw lineage resolve -w my-org/my-workspace --file-path s3://bucket/results/out.bam
+$ tw lineage upstream -w my-org/my-workspace -i <lid>
+```
+
+## Audit logs
+
+Run `tw audit-logs -h` to view the supported operations: `list`, `view`, and `export`. These commands require a root user.
+
+```console
+$ tw audit-logs export --after 2026-09-01T00:00:00Z --before 2026-09-30T23:59:59Z -o september.csv
+```
+
+## Other additions
+
+- `tw compute-envs enable|disable`: enable or disable a compute environment.
+- `tw compute-envs add`:
+  - Intelligent Compute options on `aws-cloud`, `azure-cloud`, and `google-cloud`. Run `tw compute-envs add <platform> -h` for the options each platform supports.
+  - AWS Batch: CloudWatch log group and DRAGEN options.
+  - HPC platforms: `--propagate-head-job-options`.
+  - Seqera Compute: `--data-retention-policy`.
+- `tw launch`, `tw pipelines add|update`, `tw runs relaunch`, and `tw actions add|update`: `--fusion-version` and `--tower-config`. List the versions you can launch with `tw info versions`.
+- `tw runs star|unstar`, `tw runs view log [--next <cursor>]`, and `tw runs delete -i <id>,<id>`.
+- `tw pipelines schema`: show a pipeline's parameter schema.
+- `tw actions add cron|bucket|pipeline-status` and `tw actions triggers list|view`.
+- `tw studios star|unstar|extend|logs|rename-checkpoint`. `--mount-data-uris` also accepts a folder inside a data link.
+- `tw data-links delete-content|download-script`.
+- `tw datasets add --url`, `tw datasets update --url`, and `tw datasets disable-version`.
+- `tw credentials federation-setup -p aws|google`: show the values to configure in your cloud provider before adding workload identity credentials.
+
 [compute-envs]: https://docs.seqera.io/platform/latest/compute-envs/overview
 [credentials]: https://docs.seqera.io/platform/latest/credentials/overview
 [git-integration]: https://docs.seqera.io/platform/latest/git/overview
