@@ -14,24 +14,29 @@
  * limitations under the License.
  */
 
+
 package io.seqera.tower.cli.commands.runs;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.runs.RunDeleted;
+import io.seqera.tower.cli.responses.runs.RunsDeleted;
+import io.seqera.tower.model.DeleteWorkflowsRequest;
 import picocli.CommandLine;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
 
 @CommandLine.Command(
         name = "delete",
-        description = "Delete a pipeline run"
+        description = "Delete one or more pipeline runs"
 )
 public class DeleteCmd extends AbstractRunsCmd {
 
-    @CommandLine.Option(names = {"-i", "-id"}, description = "Pipeline run identifier. The unique workflow ID to delete. Deletes the run record and associated metadata from Seqera Platform.", required = true)
-    public String id;
+    @CommandLine.Option(names = {"-i", "-id"}, split = ",", description = "Pipeline run identifier. The unique workflow ID to delete. Deletes the run record and associated metadata from Seqera Platform. Repeat the option or provide a comma-separated list to delete several runs at once.", required = true)
+    public List<String> ids;
 
     @CommandLine.Option(names = {"--force"}, description = "Force deletion of active workflows. By default, only completed workflows can be deleted. Use this flag to delete running or pending workflows.")
     public boolean force = false;
@@ -42,8 +47,17 @@ public class DeleteCmd extends AbstractRunsCmd {
     @Override
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
-        
-        workflowsApi().deleteWorkflow(id, wspId, force);
-        return new RunDeleted(id, workspaceRef(wspId));
+
+        if (ids.size() == 1) {
+            workflowsApi().deleteWorkflow(ids.getFirst(), wspId, force);
+            return new RunDeleted(ids.getFirst(), workspaceRef(wspId));
+        }
+
+        // The bulk endpoint reports the runs it could not delete instead of failing the whole request.
+        List<String> failed = Objects.requireNonNullElse(workflowsApi()
+                .deleteWorkflowMany(new DeleteWorkflowsRequest().workflowIds(ids), wspId, force)
+                .getFailedWorkflowIds(), List.of());
+        List<String> deleted = ids.stream().filter(id -> !failed.contains(id)).toList();
+        return new RunsDeleted(deleted, failed, workspaceRef(wspId));
     }
 }
