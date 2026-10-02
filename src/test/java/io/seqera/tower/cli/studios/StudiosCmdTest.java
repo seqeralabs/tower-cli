@@ -2996,7 +2996,7 @@ public class StudiosCmdTest extends BaseCmdTest {
 
         assertOutput(format, out, new StudioLog("3e8370e7", "[organization1 / workspace1]", parseJson(logPage, LogPage.class)));
         if (format == OutputType.console) {
-            assertTrue(out.stdOut.contains("Starting studio\nStudio ready"), out.stdOut);
+            assertTrue(out.stdOut.contains(String.format("Starting studio%nStudio ready")), out.stdOut);
             assertTrue(out.stdOut.contains("--next f/123"), out.stdOut);
         }
     }
