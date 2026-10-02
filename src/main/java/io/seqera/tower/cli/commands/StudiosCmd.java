@@ -21,6 +21,8 @@ import io.seqera.tower.cli.commands.studios.CheckpointsCmd;
 import io.seqera.tower.cli.commands.studios.DeleteCmd;
 import io.seqera.tower.cli.commands.studios.ExtendCmd;
 import io.seqera.tower.cli.commands.studios.RenameCheckpointCmd;
+import io.seqera.tower.cli.commands.studios.StarCmd;
+import io.seqera.tower.cli.commands.studios.UnstarCmd;
 import io.seqera.tower.cli.commands.studios.ListCmd;
 import io.seqera.tower.cli.commands.studios.AddAsNewCmd;
 import io.seqera.tower.cli.commands.studios.StartCmd;
@@ -45,6 +47,8 @@ import picocli.CommandLine;
                 StopCmd.class,
                 UpdateCmd.class,
                 DeleteCmd.class,
+                StarCmd.class,
+                UnstarCmd.class,
                 ExtendCmd.class,
         }
 )

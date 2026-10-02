@@ -32,6 +32,7 @@ import io.seqera.tower.cli.responses.studios.StudioCheckpointsList;
 import io.seqera.tower.cli.responses.studios.StudioDeleted;
 import io.seqera.tower.cli.responses.studios.StudioCheckpointUpdated;
 import io.seqera.tower.cli.responses.studios.StudioLifespanExtended;
+import io.seqera.tower.cli.responses.studios.StudioStarred;
 import io.seqera.tower.cli.responses.studios.StudioStartSubmitted;
 import io.seqera.tower.cli.responses.studios.StudioStopSubmitted;
 import io.seqera.tower.cli.responses.studios.StudioUpdated;
@@ -2865,6 +2866,58 @@ public class StudiosCmdTest extends BaseCmdTest {
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
         );
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testStar(OutputType format, MockServerClient mock) {
+        mockWorkspace(mock);
+        mock.when(
+                request().withMethod("POST").withPath("/studios/3e8370e7/star").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"sessionId\": \"3e8370e7\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "star", "-w", "75887156211589", "-i", "3e8370e7");
+
+        assertOutput(format, out, new StudioStarred("3e8370e7", "[organization1 / workspace1]", true));
+        mock.verify(request().withMethod("POST").withPath("/studios/3e8370e7/star"), VerificationTimes.once());
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testUnstarByName(OutputType format, MockServerClient mock) {
+        mockWorkspace(mock);
+        mock.when(
+                request().withMethod("GET").withPath("/studios").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_list_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("DELETE").withPath("/studios/3e8370e7/star").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "unstar", "-w", "75887156211589", "-n", "studio-a66d");
+
+        assertOutput(format, out, new StudioStarred("studio-a66d", "[organization1 / workspace1]", false));
+        mock.verify(request().withMethod("DELETE").withPath("/studios/3e8370e7/star"), VerificationTimes.once());
+    }
+
+    @Test
+    void testUnstarNotStarred(MockServerClient mock) {
+        mockWorkspace(mock);
+        mock.when(
+                request().withMethod("DELETE").withPath("/studios/3e8370e7/star").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(404).withBody("{\"message\": \"Studio '3e8370e7' is not starred\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "studios", "unstar", "-w", "75887156211589", "-i", "3e8370e7");
+
+        assertEquals(1, out.exitCode);
+        assertTrue(out.stdErr.contains("Studio '3e8370e7' is not starred"), out.stdErr);
     }
 
     @ParameterizedTest

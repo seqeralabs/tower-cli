@@ -756,6 +756,14 @@ tw managed-identities add -o my-org -n hpc1 -p slurm -H login.hpc.example.com
 tw managed-identities credentials -o my-org -n hpc1 add -l my_linux_user -k ~/.ssh/id_rsa
 ```
 
+## Agents
+
+Run `tw agents -h` to view the supported operations: `list`, `view`, `add`, `update`, `delete`, `enable`, and `disable`. Agents must be enabled for the organization.
+
+```bash
+tw agents add -w my-org/my-workspace -n triage --instructions-file triage.md
+```
+
 ## Audit logs
 
 Run `tw audit-logs -h` to view the supported operations: `list`, `view`, and `export`. These commands require a root user.
@@ -773,11 +781,11 @@ tw audit-logs export --after 2026-09-01T00:00:00Z --before 2026-09-30T23:59:59Z 
   - AWS Cloud: `--log-group`. Google Cloud: `--project-id`.
   - HPC platforms: `--propagate-head-job-options`.
   - Seqera Compute: `--data-retention-policy`.
-- `tw launch`, `tw pipelines add|update`, `tw runs relaunch`, and `tw actions add|update`: `--tower-config`.
+- `tw launch`, `tw pipelines add|update`, `tw runs relaunch`, and `tw actions add|update`: `--tower-config`. List the Nextflow versions you can launch with `tw info versions`.
 - `tw runs star|unstar`, `tw runs view log [--next <cursor>]`, and `tw runs delete -i <id>,<id>`.
 - `tw pipelines schema`: show a pipeline's parameter schema.
 - `tw actions add cron|bucket`.
-- `tw studios extend|rename-checkpoint`. `--mount-data-uris` also accepts a folder inside a data link.
+- `tw studios star|unstar|extend|rename-checkpoint`. `--mount-data-uris` also accepts a folder inside a data link.
 - `tw data-links delete-content|download-script`.
 - `tw datasets add --url`, `tw datasets update --url`, and `tw datasets disable-version`.
 
