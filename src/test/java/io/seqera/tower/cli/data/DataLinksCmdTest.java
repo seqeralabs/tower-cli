@@ -25,7 +25,9 @@ import io.seqera.tower.cli.commands.data.links.ListCmd;
 import io.seqera.tower.cli.commands.data.links.upload.AbstractProviderUploader;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.TowerRuntimeException;
+import io.seqera.tower.cli.responses.data.DataLinkContentDeleted;
 import io.seqera.tower.cli.responses.data.DataLinkDeleted;
+import io.seqera.tower.cli.responses.data.DataLinkDownloadScript;
 import io.seqera.tower.cli.responses.data.DataLinkFileTransferResult;
 import io.seqera.tower.cli.responses.data.DataLinksList;
 import io.seqera.tower.cli.utils.PaginationInfo;
@@ -1765,5 +1767,99 @@ public class DataLinksCmdTest extends BaseCmdTest {
                         }
                     });
         }
+    }
+
+    private void mockCredentials(MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"57Ic6reczFn78H1DTaaXkp\",\"name\":\"aws\",\"discriminator\":\"aws\"}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testDeleteContent(OutputType format, MockServerClient mock) {
+        mockCredentials(mock);
+        mock.when(
+                request().withMethod("DELETE").withPath("/data-links/v1-datalinkid/content")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("credentialsId", "57Ic6reczFn78H1DTaaXkp")
+                        .withBody(json("{\"files\": [\"a.csv\", \"b/c.csv\"], \"dirs\": [\"results/\"]}", MatchType.STRICT)),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"deletionFailures\": []}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "data-links", "delete-content", "-w", "75887156211589", "-i", "v1-datalinkid", "-c", "aws",
+                "--file", "a.csv", "--file", "b/c.csv", "--dir", "results/");
+
+        assertOutput(format, out, new DataLinkContentDeleted("v1-datalinkid", 75887156211589L, List.of("a.csv", "b/c.csv"), List.of("results/")));
+    }
+
+    @org.junit.jupiter.api.Test
+    void testDeleteContentPartialFailure(MockServerClient mock) {
+        mockCredentials(mock);
+        mock.when(
+                request().withMethod("DELETE").withPath("/data-links/v1-datalinkid/content"), exactly(1)
+        ).respond(
+                response().withStatusCode(500).withBody("{\"deletionFailures\": [{\"dataLinkItem\": {\"name\": \"a.csv\", \"type\": \"FILE\"}, \"errorMessage\": \"Access denied\"}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "data-links", "delete-content", "-w", "75887156211589", "-i", "v1-datalinkid", "-c", "aws", "--file", "a.csv");
+
+        assertEquals(1, out.exitCode);
+        assertTrue(out.stdErr.contains("Failed to delete some items from data link 'v1-datalinkid': 'a.csv': Access denied"), out.stdErr);
+    }
+
+    @org.junit.jupiter.api.Test
+    void testDeleteContentRequiresPaths(MockServerClient mock) {
+        ExecOut out = exec(mock, "data-links", "delete-content", "-w", "75887156211589", "-i", "v1-datalinkid", "-c", "aws");
+
+        assertEquals(1, out.exitCode);
+        assertTrue(out.stdErr.contains("Provide at least one --file or --dir to delete"), out.stdErr);
+        mock.verify(request().withMethod("DELETE"), VerificationTimes.never());
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testDownloadScript(OutputType format, MockServerClient mock) {
+        mockCredentials(mock);
+        String script = "aws s3 cp s3://bucket/results results --recursive &&\naws s3 cp s3://bucket/a.csv a.csv";
+        mock.when(
+                request().withMethod("GET").withPath("/data-links/v1-datalinkid/script/download")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("credentialsId", "57Ic6reczFn78H1DTaaXkp")
+                        .withQueryStringParameter("dirs", "results")
+                        .withQueryStringParameter("files", "a.csv"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(json(java.util.Map.of("script", script))).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "data-links", "download-script", "-w", "75887156211589", "-i", "v1-datalinkid", "-c", "aws",
+                "--dir", "results", "--file", "a.csv");
+
+        assertOutput(format, out, new DataLinkDownloadScript(script));
+        if (format == OutputType.console) {
+            assertEquals(script, out.stdOut);
+        }
+    }
+
+    @org.junit.jupiter.api.Test
+    void testDownloadScriptWholeDataLink(MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/data-links/v1-datalinkid/script/download")
+                        .withQueryStringParameter("workspaceId", "75887156211589"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"script\": \"aws s3 cp s3://bucket bucket --recursive\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "data-links", "download-script", "-w", "75887156211589", "-i", "v1-datalinkid");
+
+        assertEquals(0, out.exitCode, out.stdErr);
+        assertEquals("aws s3 cp s3://bucket bucket --recursive", out.stdOut);
+        mock.verify(request().withPath("/data-links/v1-datalinkid/script/download").withQueryStringParameter("files", ".*"), VerificationTimes.never());
     }
 }
