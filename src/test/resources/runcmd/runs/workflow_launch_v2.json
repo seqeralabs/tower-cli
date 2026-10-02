@@ -14,7 +14,7 @@
     "sessionId": "d77a5ac4-1a25-45d6-bab0-358605abc332",
     "configProfiles": null,
     "configText": null,
-    "towerConfig": null,
+    "towerConfig": "reports: {}",
     "paramsText": null,
     "preRunScript": null,
     "postRunScript": null,

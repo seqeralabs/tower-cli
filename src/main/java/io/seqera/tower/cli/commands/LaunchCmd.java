@@ -156,6 +156,7 @@ public class LaunchCmd extends AbstractRootCmd {
                 .userSecrets(coalesce(removeEmptyValues(adv().userSecrets), base.getUserSecrets()))
                 .workspaceSecrets(coalesce(removeEmptyValues(adv().workspaceSecrets), base.getWorkspaceSecrets()))
                 .configText(coalesce(readStringOrStdin(adv().config), base.getConfigText()))
+                .towerConfig(coalesce(readStringOrStdin(adv().towerConfig), base.getTowerConfig()))
                 .paramsText(coalesce(readStringOrStdin(paramsFile), base.getParamsText()))
                 .preRunScript(coalesce(readStringOrStdin(adv().preRunScript), base.getPreRunScript()))
                 .postRunScript(coalesce(readStringOrStdin(adv().postRunScript), base.getPostRunScript()))
@@ -282,6 +283,9 @@ public class LaunchCmd extends AbstractRootCmd {
 
         @Option(names = {"--config"}, description = "Nextflow configuration as text (overrides config files). Provide the path to a file containing the content. Use '-' to read from stdin.")
         public Path config;
+
+        @Option(names = {"--tower-config"}, description = "Seqera Platform configuration in tower.yml format. Overrides the pipeline's tower.yml for this run. Provide the path to a file containing the content. Use '-' to read from stdin.")
+        public Path towerConfig;
 
         @Option(names = {"--pre-run"}, description = "Add a script that executes in the nf-launch script prior to invoking Nextflow processes. See: https://docs.seqera.io/platform-cloud/launch/advanced#pre-and-post-run-scripts. Provide the path to a file containing the content. Use '-' to read from stdin.")
         public Path preRunScript;
