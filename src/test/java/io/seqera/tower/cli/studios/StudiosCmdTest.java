@@ -23,6 +23,7 @@ import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.StudiosCustomTemplateWithCondaException;
 import io.seqera.tower.cli.exceptions.StudiosTemplateNotFoundException;
 import io.seqera.tower.cli.exceptions.InvalidDataStudioParentCheckpointException;
+import io.seqera.tower.cli.exceptions.DataLinkNotFoundException;
 import io.seqera.tower.cli.exceptions.MultipleDataLinksFoundException;
 import io.seqera.tower.cli.exceptions.TowerRuntimeException;
 import io.seqera.tower.cli.responses.studios.StudiosCreated;
@@ -2912,6 +2913,99 @@ public class StudiosCmdTest extends BaseCmdTest {
 
         assertOutput(format, out, new StudioCheckpointUpdated("3e8370e7", "[organization1 / workspace1]", 1L, "before-upgrade"));
         mock.verify(request().withMethod("PUT").withPath("/studios/3e8370e7/checkpoints/1"), VerificationTimes.once());
+    }
+
+    private String withMountDataV2(String resource, String mountDataV2) {
+        return new String(loadResource(resource)).replace("\"mountData\": [", "\"mountDataV2\": " + mountDataV2 + ",\n    \"mountData\": [");
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testUpdateWithMountDataUriInsideDataLink(OutputType format, MockServerClient mock) {
+        mockWorkspace(mock);
+        // The studio currently mounts another data link through mountDataV2, which the platform gives precedence.
+        mock.when(
+                request().withMethod("GET").withPath("/studios/3e8370e7").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(withMountDataV2("studios/studios_view_response_studio_stopped",
+                        "[{\"dataLinkId\": \"v1-user-1ccf131810375d303bf0402dd8423433\", \"path\": null}]")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        // status check
+        mock.when(
+                request().withMethod("GET").withPath("/data-links")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("offset", "0")
+                        .withQueryStringParameter("max", "1"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("data/links/datalinks_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        // resource ref searches walking up from the folder to the data link root
+        mock.when(
+                request().withMethod("GET").withPath("/data-links").withQueryStringParameter("workspaceId", "75887156211589"), exactly(3)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("data/links/datalinks_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("PUT").withPath("/studios/3e8370e7").withQueryStringParameter("workspaceId", "75887156211589").withBody(json("""
+                           {
+                             "configuration": {
+                               "mountData": ["v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4"],
+                               "mountDataV2": [{"dataLinkId": "v1-cloud-c2875f38a7b5c8fe34a5b382b5f9e0c4", "path": "data/inputs"}]
+                             }
+                           }
+                           """)), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_update_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "update", "-w", "75887156211589", "-i", "3e8370e7",
+                "--mount-data-uris", "s3://a-test-bucket-eend-us-east-1/data/inputs/");
+
+        assertOutput(format, out, new StudioUpdated("3e8370e7", "3e8370e7", 75887156211589L, "[organization1 / workspace1]"));
+        for (String ref : List.of("s3://a-test-bucket-eend-us-east-1/data/inputs", "s3://a-test-bucket-eend-us-east-1/data", "s3://a-test-bucket-eend-us-east-1")) {
+            mock.verify(request().withMethod("GET").withPath("/data-links").withQueryStringParameter("search", "resourceRef:" + ref), VerificationTimes.once());
+        }
+    }
+
+    @Test
+    void testStartWithMountDataUriNotInAnyDataLink(MockServerClient mock) {
+        mockWorkspace(mock);
+        mock.when(
+                request().withMethod("GET").withPath("/studios/3e8370e7").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_view_response_studio_stopped")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/data-links").withQueryStringParameter("workspaceId", "75887156211589"), exactly(3)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("data/links/datalinks_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "studios", "start", "-w", "75887156211589", "-i", "3e8370e7", "--mount-data-uris", "s3://unknown-bucket/data");
+
+        assertEquals(errorMessage(out.app, new DataLinkNotFoundException("resourceRef:s3://unknown-bucket/data", 75887156211589L)), out.stdErr);
+        assertEquals(1, out.exitCode);
+        mock.verify(request().withMethod("PUT").withPath("/studios/3e8370e7/start"), VerificationTimes.never());
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testViewShowsMountPaths(OutputType format, MockServerClient mock) throws JsonProcessingException {
+        mockWorkspace(mock);
+        String studio = withMountDataV2("studios/studios_view_response",
+                "[{\"dataLinkId\": \"v1-user-1ccf131810375d303bf0402dd8423433\", \"path\": \"data/inputs\"}, {\"dataLinkId\": \"v1-user-1ccf131810375d303bf0402dd8423433\", \"path\": null}]");
+        mock.when(
+                request().withMethod("GET").withPath("/studios/3e8370e7").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(studio).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "view", "-w", "75887156211589", "-i", "3e8370e7");
+
+        assertOutput(format, out, new StudiosView(parseJson(studio, DataStudioDto.class), "[organization1 / workspace1]"));
+        if (format == OutputType.console) {
+            assertTrue(out.stdOut.contains("s3://aaa-my-bucket/data/inputs, s3://aaa-my-bucket"), out.stdOut);
+        }
     }
 
     @Test
