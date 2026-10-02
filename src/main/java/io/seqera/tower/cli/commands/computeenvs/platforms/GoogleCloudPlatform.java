@@ -104,7 +104,8 @@ public class GoogleCloudPlatform extends AbstractPlatform<GoogleCloudConfig> {
                     .network(adv.network)
                     .subnetworks(adv.subnetworks)
                     .networkTags(adv.networkTags)
-                    .usePrivateAddress(adv.usePrivateAddress);
+                    .usePrivateAddress(adv.usePrivateAddress)
+                    .projectId(adv.projectId);
         }
 
         // Common
@@ -186,6 +187,9 @@ public class GoogleCloudPlatform extends AbstractPlatform<GoogleCloudConfig> {
 
         @Option(names = {"--network"}, description = "Google Cloud VPC network name or URI. Required when using subnetworks or network tags. When omitted, the project's 'default' network is used.")
         public String network;
+
+        @Option(names = {"--project-id"}, description = "Google Cloud project ID. Set as google.project in the Nextflow configuration and used to qualify short --network and --subnetworks names.")
+        public String projectId;
 
         @Option(names = {"--subnetworks"}, split = ",", paramLabel = "<subnetwork>", description = "Google Cloud VPC subnetworks for instance placement. Comma-separated list of names or URIs in the same region as the compute environment; the first is used for basic placement while Intelligent Compute may use all of them. Requires --network.")
         public List<String> subnetworks;

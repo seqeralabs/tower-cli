@@ -106,7 +106,8 @@ public class AwsCloudPlatform extends AbstractPlatform<AwsCloudConfig> {
                     .vpcId(adv.vpcId)
                     .subnetId(adv.subnetId)
                     .subnetIds(adv.subnetIds)
-                    .securityGroups(adv.securityGroups);
+                    .securityGroups(adv.securityGroups)
+                    .logGroup(adv.logGroup);
         }
 
         // Common
@@ -185,6 +186,9 @@ public class AwsCloudPlatform extends AbstractPlatform<AwsCloudConfig> {
 
         @Option(names = {"--ec2-key-pair"}, description = "EC2 key pair name for SSH access to running instances. The key pair must already exist in the specified region.")
         public String ec2KeyPair;
+
+        @Option(names = {"--log-group"}, description = "CloudWatch Logs group where the compute environment logs are written. If absent, Platform uses /seqera/platform.")
+        public String logGroup;
 
         @Option(names = {"--image-id"}, description = "AMI ID for launching EC2 instances. If omitted, Seqera-maintained default AMI is used. Use Seqera AMIs for best performance.")
         public String imageId;

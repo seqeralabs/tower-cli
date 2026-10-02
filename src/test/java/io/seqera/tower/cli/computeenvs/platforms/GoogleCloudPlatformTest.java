@@ -128,6 +128,7 @@ public class GoogleCloudPlatformTest extends BaseCmdTest {
                                             "region": "europe-west1",
                                             "zone": "europe-west1-b",
                                             "instanceType": "n2-standard-4",
+                                            "projectId": "my-project",
                                             "imageId": "projects/my-project/global/images/my-image",
                                             "fusion2Enabled": true,
                                             "waveEnabled": true,
@@ -152,6 +153,7 @@ public class GoogleCloudPlatformTest extends BaseCmdTest {
                 "-r", "europe-west1",
                 "-z", "europe-west1-b",
                 "--instance-type", "n2-standard-4",
+                "--project-id", "my-project",
                 "--image-id", "projects/my-project/global/images/my-image",
                 "--arm64",
                 "--boot-disk-size", "100"
