@@ -32,8 +32,11 @@ import picocli.CommandLine.Option;
 )
 public class FederationSetupCmd extends AbstractCredentialsCmd {
 
-    @Option(names = {"-p", "--provider"}, description = "Credentials provider: 'aws' or 'google'.", required = true)
-    public String provider;
+    // Platform returns no values, rather than an error, for any other provider
+    public enum Provider { aws, google }
+
+    @Option(names = {"-p", "--provider"}, description = "Credentials provider: ${COMPLETION-CANDIDATES}.", required = true)
+    public Provider provider;
 
     @Mixin
     public WorkspaceOptionalOptions workspace;
@@ -41,7 +44,7 @@ public class FederationSetupCmd extends AbstractCredentialsCmd {
     @Override
     protected Response exec() throws ApiException {
         Long wspId = workspaceId(workspace.workspace);
-        CredentialsSetupValuesResponse response = credentialsApi().describeCredentialsSetup(provider, wspId);
-        return new CredentialsFederationSetup(provider, workspaceRef(wspId), response.getSetupValues());
+        CredentialsSetupValuesResponse response = credentialsApi().describeCredentialsSetup(provider.name(), wspId);
+        return new CredentialsFederationSetup(provider.name(), workspaceRef(wspId), response.getSetupValues());
     }
 }

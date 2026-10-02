@@ -21,14 +21,17 @@ import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.responses.CredentialsFederationSetup;
 import io.seqera.tower.model.CredentialsSetupValue;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
+import org.mockserver.verify.VerificationTimes;
 
 import java.util.List;
 
 import static io.seqera.tower.cli.commands.AbstractApiCmd.USER_WORKSPACE_NAME;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
@@ -58,13 +61,21 @@ class FederationSetupCmdTest extends BaseCmdTest {
     @EnumSource(OutputType.class)
     void testFederationSetupWithoutValues(OutputType format, MockServerClient mock) {
         mock.when(
-                request().withMethod("GET").withPath("/credentials/federation-setup").withQueryStringParameter("provider", "azure"), exactly(1)
+                request().withMethod("GET").withPath("/credentials/federation-setup").withQueryStringParameter("provider", "google"), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody("{\"setupValues\":[]}").withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(format, mock, "credentials", "federation-setup", "-p", "azure");
+        ExecOut out = exec(format, mock, "credentials", "federation-setup", "-p", "google");
 
-        assertOutput(format, out, new CredentialsFederationSetup("azure", USER_WORKSPACE_NAME, List.of()));
+        assertOutput(format, out, new CredentialsFederationSetup("google", USER_WORKSPACE_NAME, List.of()));
+    }
+
+    @Test
+    void testFederationSetupRejectsUnknownProvider(MockServerClient mock) {
+        ExecOut out = exec(mock, "credentials", "federation-setup", "-p", "azure");
+
+        assertEquals(2, out.exitCode);
+        mock.verify(request().withPath("/credentials/federation-setup"), VerificationTimes.never());
     }
 }
