@@ -2914,4 +2914,41 @@ public class StudiosCmdTest extends BaseCmdTest {
         mock.verify(request().withMethod("PUT").withPath("/studios/3e8370e7/checkpoints/1"), VerificationTimes.once());
     }
 
+    @Test
+    void testStartWithWaitShowsProgressWarnings(MockServerClient mock) {
+        mockWorkspace(mock);
+        String regionWarning = "Mounting data from regions that differ from the compute environment may result in increased costs.";
+        String checkpointWarning = "Checkpoint 2 could not be mounted.";
+        mock.when(
+                request().withMethod("GET").withPath("/studios/3e8370e7").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_view_response_studio_stopped")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("PUT").withPath("/studios/3e8370e7/start").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_start_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/studios/3e8370e7").withQueryStringParameter("workspaceId", "75887156211589"), exactly(2)
+        ).respond(
+                response().withStatusCode(200).withBody(new String(loadResource("studios/studios_view_response_studio_starting"))
+                        .replaceFirst("\"warnings\": null", "\"warnings\": [\"" + regionWarning + "\"]")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        // the region warning is still reported once the step succeeds, it must not be printed twice
+        mock.when(
+                request().withMethod("GET").withPath("/studios/3e8370e7").withQueryStringParameter("workspaceId", "75887156211589")
+        ).respond(
+                response().withStatusCode(200).withBody(new String(loadResource("studios/studios_view_response"))
+                        .replaceFirst("\"warnings\": null", "\"warnings\": [\"" + regionWarning + "\"]")
+                        .replaceFirst("\"warnings\": null", "\"warnings\": [\"" + checkpointWarning + "\"]")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "studios", "start", "-w", "75887156211589", "-i", "3e8370e7", "--wait", "RUNNING");
+
+        assertEquals(0, out.exitCode, out.stdErr);
+        assertEquals(1, out.stdOut.split(java.util.regex.Pattern.quote("Warning: " + regionWarning), -1).length - 1, out.stdOut);
+        assertTrue(out.stdOut.contains("Warning: " + checkpointWarning), out.stdOut);
+    }
+
 }
