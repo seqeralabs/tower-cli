@@ -35,6 +35,7 @@ import io.seqera.tower.cli.responses.pipelines.PipelinesDeleted;
 import io.seqera.tower.cli.responses.pipelines.PipelinesExport;
 import io.seqera.tower.cli.responses.pipelines.PipelinesList;
 import io.seqera.tower.cli.responses.pipelines.PipelinesUpdated;
+import io.seqera.tower.cli.responses.pipelines.PipelinesSchema;
 import io.seqera.tower.cli.responses.pipelines.PipelinesView;
 import io.seqera.tower.cli.utils.ModelHelper;
 import io.seqera.tower.cli.utils.PaginationInfo;
@@ -42,6 +43,7 @@ import io.seqera.tower.model.ComputeEnvComputeConfig;
 import io.seqera.tower.model.CreatePipelineRequest;
 import io.seqera.tower.model.LaunchDbDto;
 import io.seqera.tower.model.PipelineDbDto;
+import io.seqera.tower.model.PipelineSchemaAttributes;
 import io.seqera.tower.model.WorkflowLaunchRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
@@ -1995,6 +1997,54 @@ class PipelinesCmdTest extends BaseCmdTest {
     }
 
     // --- Version ID / Version Name wiring tests ---
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testSchema(OutputType format, MockServerClient mock) {
+        mock.reset();
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines/217997727159863"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"pipeline\":{\"pipelineId\":217997727159863,\"name\":\"sleep_one_minute\"}}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines/217997727159863/schema")
+                        .withQueryStringParameter("attributes", "schema"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"schema\":\"{\\\"title\\\":\\\"nf-sleep\\\"}\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "pipelines", "schema", "-i", "217997727159863");
+        assertOutput(format, out, new PipelinesSchema(PipelineSchemaAttributes.schema, "{\"title\":\"nf-sleep\"}"));
+        if (format == OutputType.console) {
+            assertEquals("{\"title\":\"nf-sleep\"}", out.stdOut);
+        }
+    }
+
+    @Test
+    void testSchemaParamsNotFound(MockServerClient mock) {
+        mock.reset();
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines/217997727159863"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"pipeline\":{\"pipelineId\":217997727159863,\"name\":\"sleep_one_minute\"}}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/pipelines/217997727159863/schema")
+                        .withQueryStringParameter("attributes", "params"), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(mock, "pipelines", "schema", "-i", "217997727159863", "--params");
+
+        assertEquals(errorMessage(out.app, new TowerException("No params found for pipeline 'sleep_one_minute'")), out.stdErr);
+        assertEquals(1, out.exitCode);
+    }
 
     @Test
     void testViewWithVersionId(MockServerClient mock) throws JsonProcessingException {
