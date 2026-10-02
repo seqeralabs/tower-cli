@@ -40,6 +40,7 @@ import org.mockserver.model.MediaType;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Collections;
 
 import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -197,6 +198,23 @@ class ManagedIdentitiesCmdTest extends BaseCmdTest {
                 parseJson(OWN_ROW, ListManagedCredentialsRespDto.class),
                 parseJson(MISSING_ROW, ListManagedCredentialsRespDto.class)
         )));
+    }
+
+    @Test
+    void testCredentialsListFetchesEveryPage(MockServerClient mock) {
+        mockIdentities(mock);
+        String fullPage = "{\"managedCredentials\":[" + String.join(",", Collections.nCopies(100, MISSING_ROW)) + "],\"totalSize\":101}";
+        mock.when(
+                request().withMethod("GET").withPath("/identities/31/credentials").withQueryStringParameter("offset", "0").withQueryStringParameter("max", "100"), exactly(1)
+        ).respond(response().withStatusCode(200).withBody(fullPage).withContentType(MediaType.APPLICATION_JSON));
+        mock.when(
+                request().withMethod("GET").withPath("/identities/31/credentials").withQueryStringParameter("offset", "100").withQueryStringParameter("max", "100"), exactly(1)
+        ).respond(response().withStatusCode(200).withBody("{\"managedCredentials\":[" + OWN_ROW + "],\"totalSize\":101}").withContentType(MediaType.APPLICATION_JSON));
+
+        ExecOut out = exec(OutputType.json, mock, "managed-identities", "credentials", "-o", "organization1", "-n", "hpc1");
+
+        assertEquals(0, out.exitCode, out.stdErr);
+        assertEquals(101, out.stdOut.split("\"userName\"", -1).length - 1, out.stdOut);
     }
 
     @ParameterizedTest
