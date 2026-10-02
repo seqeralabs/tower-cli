@@ -14,29 +14,18 @@
  * limitations under the License.
  */
 
-package io.seqera.tower.cli.commands;
+package io.seqera.tower.cli.commands.actions.triggers;
 
-import io.seqera.tower.cli.commands.actions.AddCmd;
-import io.seqera.tower.cli.commands.actions.DeleteCmd;
-import io.seqera.tower.cli.commands.actions.LabelsCmd;
-import io.seqera.tower.cli.commands.actions.ListCmd;
-import io.seqera.tower.cli.commands.actions.UpdateCmd;
-import io.seqera.tower.cli.commands.actions.ViewCmd;
-import io.seqera.tower.cli.commands.actions.triggers.TriggersCmd;
+import io.seqera.tower.cli.commands.AbstractRootCmd;
 import picocli.CommandLine;
 
 @CommandLine.Command(
-        name = "actions",
-        description = "Manage pipeline actions",
+        name = "triggers",
+        description = "View the trigger history of a pipeline action",
         subcommands = {
                 ListCmd.class,
                 ViewCmd.class,
-                DeleteCmd.class,
-                AddCmd.class,
-                UpdateCmd.class,
-                LabelsCmd.class,
-                TriggersCmd.class,
         }
 )
-public class ActionsCmd extends AbstractRootCmd {
+public class TriggersCmd extends AbstractRootCmd {
 }
