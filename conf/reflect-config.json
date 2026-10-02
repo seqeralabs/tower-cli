@@ -263,6 +263,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.SshKeysCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.StudiosCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
@@ -2004,6 +2010,52 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"io.seqera.tower.cli.commands.sshkeys.AbstractSshKeysCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.commands.sshkeys.AddCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"name"}, {"name":"publicKey"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.sshkeys.DeleteCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"ref"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.sshkeys.ListCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.sshkeys.SshKeyRefOptions",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"sshKey"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.sshkeys.SshKeyRefOptions$SshKeyRef",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"id"}, {"name":"name"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"io.seqera.tower.cli.commands.sshkeys.ViewCmd",
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true,
+  "fields":[{"name":"ref"}],
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"io.seqera.tower.cli.commands.studios.AbstractStudiosCmd",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true
@@ -2973,6 +3025,30 @@
 },
 {
   "name":"io.seqera.tower.cli.responses.secrets.SecretsList",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.sshkeys.SshKeyAdded",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.sshkeys.SshKeyDeleted",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.sshkeys.SshKeyView",
+  "allDeclaredFields":true,
+  "queryAllDeclaredMethods":true,
+  "queryAllDeclaredConstructors":true
+},
+{
+  "name":"io.seqera.tower.cli.responses.sshkeys.SshKeysList",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true
