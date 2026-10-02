@@ -34,6 +34,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Option;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Command(
@@ -87,8 +88,19 @@ public class CredentialsCmd extends AbstractManagedIdentitiesCmd {
                 .orElseThrow(() -> new TowerException(String.format("Member '%s' has no credentials for managed identity '%s'", userName, identity.getName())));
     }
 
+    // Platform returns one row per organization member, 50 by default and at most 100 per page
+    private static final int PAGE_SIZE = 100;
+
     private List<ListManagedCredentialsRespDto> listManagedCredentials(Long orgId, Long identityId, String search) throws ApiException {
-        return identitiesApi().listManagedCredentials(identityId, orgId, null, search, null, null).getManagedCredentials();
+        List<ListManagedCredentialsRespDto> all = new ArrayList<>();
+        List<ListManagedCredentialsRespDto> page;
+        do {
+            page = identitiesApi().listManagedCredentials(identityId, orgId, null, search, PAGE_SIZE, all.size()).getManagedCredentials();
+            if (page != null) {
+                all.addAll(page);
+            }
+        } while (page != null && page.size() == PAGE_SIZE);
+        return all;
     }
 
     public static CreateManagedCredentialsRequest createRequest(SSHSecurityKeys keys, String linuxUserName) {
