@@ -129,6 +129,56 @@ class AwsBatchForgePlatformTest extends BaseCmdTest {
     }
 
     @Test
+    void testAddWithDragenAndLogGroup(MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "aws-batch"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"6g0ER59L4ZoE5zpOmUP48D\",\"name\":\"aws\",\"discriminator\":\"aws\"}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/compute-envs")
+                        .withBody(JsonBody.json("""
+                                {"computeEnv":{"name":"demo","platform":"aws-batch","credentialsId":"6g0ER59L4ZoE5zpOmUP48D","config":{
+                                    "region":"eu-west-1","workDir":"s3://nextflow-ci/jordeu","logGroup":"/my/log-group",
+                                    "forge":{"type":"SPOT","maxCpus":123,"dragenEnabled":true,"dragenAmiId":"ami-0123456789abcdef0","dragenInstanceType":"f2.6xlarge"}}}}
+                                """)), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "compute-envs", "add", "aws-batch", "forge", "-n", "demo", "-r", "eu-west-1", "--work-dir", "s3://nextflow-ci/jordeu", "--max-cpus=123",
+                "--log-group", "/my/log-group", "--dragen", "--dragen-ami-id", "ami-0123456789abcdef0", "--dragen-instance-type", "f2.6xlarge");
+
+        assertEquals("", out.stdErr);
+        assertEquals(new ComputeEnvAdded("aws-batch", "isnEDBLvHDAIteOEF44ow", "demo", null, USER_WORKSPACE_NAME).toString(), out.stdOut);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testAddWithDragenMissingAmi(MockServerClient mock) {
+
+        ExecOut out = exec(mock, "compute-envs", "add", "aws-batch", "forge", "-n", "demo", "-r", "eu-west-1", "--work-dir", "s3://nextflow-ci/jordeu", "--max-cpus=123",
+                "--dragen", "--dragen-instance-type", "f2.6xlarge");
+
+        assertEquals(errorMessage(out.app, new TowerException("DRAGEN requires '--dragen-ami-id' and '--dragen-instance-type'")), out.stdErr);
+        assertEquals("", out.stdOut);
+        assertEquals(1, out.exitCode);
+    }
+
+    @Test
+    void testAddWithDragenSettingsWithoutDragen(MockServerClient mock) {
+
+        ExecOut out = exec(mock, "compute-envs", "add", "aws-batch", "forge", "-n", "demo", "-r", "eu-west-1", "--work-dir", "s3://nextflow-ci/jordeu", "--max-cpus=123",
+                "--dragen-ami-id", "ami-0123456789abcdef0");
+
+        assertEquals(errorMessage(out.app, new TowerException("DRAGEN AMI ID and instance type require '--dragen'")), out.stdErr);
+        assertEquals("", out.stdOut);
+        assertEquals(1, out.exitCode);
+    }
+
+    @Test
     void testAddWithEnvVars(MockServerClient mock) {
 
         mock.when(
