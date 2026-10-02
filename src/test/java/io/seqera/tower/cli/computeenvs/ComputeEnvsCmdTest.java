@@ -29,6 +29,8 @@ import io.seqera.tower.cli.exceptions.InvalidResponseException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.computeenvs.ComputeEnvAdded;
 import io.seqera.tower.cli.responses.computeenvs.ComputeEnvDeleted;
+import io.seqera.tower.cli.responses.computeenvs.ComputeEnvDisabled;
+import io.seqera.tower.cli.responses.computeenvs.ComputeEnvEnabled;
 import io.seqera.tower.cli.responses.computeenvs.ComputeEnvExport;
 import io.seqera.tower.cli.responses.computeenvs.ComputeEnvList;
 import io.seqera.tower.cli.responses.computeenvs.ComputeEnvUpdated;
@@ -807,5 +809,86 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
         assertEquals("", out.stdErr);
         assertEquals(1, out.exitCode);
         assertEquals(new ComputeEnvValidated("isnEDBLvHDAIteOEF44ow", "demo", USER_WORKSPACE_NAME, ComputeEnvStatus.INVALID, false, "Work directory not accessible").toString(), out.stdOut);
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testEnable(OutputType format, MockServerClient mock) {
+        mock.when(
+                request().withMethod("POST").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2/enable"), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(format, mock, "compute-envs", "enable", "-i", "vYOK4vn7spw7bHHWBDXZ2");
+        assertOutput(format, out, new ComputeEnvEnabled("vYOK4vn7spw7bHHWBDXZ2", USER_WORKSPACE_NAME));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testDisableByName(OutputType format, MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_envs_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/3xkkzYH2nbD3nZjrzKm0oR"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnv\":{\"id\":\"3xkkzYH2nbD3nZjrzKm0oR\",\"name\":\"ce1\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\"}}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/compute-envs/3xkkzYH2nbD3nZjrzKm0oR/disable"), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(format, mock, "compute-envs", "disable", "-n", "ce1");
+        assertOutput(format, out, new ComputeEnvDisabled("3xkkzYH2nbD3nZjrzKm0oR", USER_WORKSPACE_NAME));
+    }
+
+    @Test
+    void testDisableInWorkspace(MockServerClient mock) {
+        mock.when(
+                request().withMethod("POST").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2/disable")
+                        .withQueryStringParameter("workspaceId", "75887156211590"), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "compute-envs", "disable", "-i", "vYOK4vn7spw7bHHWBDXZ2", "-w", "75887156211590");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        assertEquals(new ComputeEnvDisabled("vYOK4vn7spw7bHHWBDXZ2", "[organization2 / workspace2]").toString(), out.stdOut);
+    }
+
+    @Test
+    void testEnableRejected(MockServerClient mock) {
+        mock.when(
+                request().withMethod("POST").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2/enable"), exactly(1)
+        ).respond(
+                response().withStatusCode(400).withBody("{\"message\":\"Compute environment cannot be enabled - current status: AVAILABLE\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "compute-envs", "enable", "-i", "vYOK4vn7spw7bHHWBDXZ2");
+
+        assertEquals(errorMessage(out.app, new ApiException(400, "", null, "{\"message\":\"Compute environment cannot be enabled - current status: AVAILABLE\"}")), out.stdErr);
+        assertEquals("", out.stdOut);
+        assertEquals(1, out.exitCode);
     }
 }
