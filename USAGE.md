@@ -720,6 +720,14 @@ These commands act on an organization (`-o`/`--organization`). Most require the 
 
 ## Personal access
 
+### SSH keys
+
+Run `tw ssh-keys -h` to view the supported operations: `list`, `add`, `view`, and `delete`. SSH keys belong to your user account. Use `-k -` to read the public key from stdin.
+
+```bash
+tw ssh-keys add -n laptop -k ~/.ssh/id_ed25519.pub
+```
+
 ### Access tokens
 
 Run `tw access-tokens -h` to view the supported operations: `list`, `add`, and `delete`. The token value is only shown when the token is created.
