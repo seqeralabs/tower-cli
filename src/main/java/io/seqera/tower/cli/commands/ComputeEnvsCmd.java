@@ -18,6 +18,8 @@ package io.seqera.tower.cli.commands;
 
 import io.seqera.tower.cli.commands.computeenvs.AddCmd;
 import io.seqera.tower.cli.commands.computeenvs.DeleteCmd;
+import io.seqera.tower.cli.commands.computeenvs.DisableCmd;
+import io.seqera.tower.cli.commands.computeenvs.EnableCmd;
 import io.seqera.tower.cli.commands.computeenvs.ExportCmd;
 import io.seqera.tower.cli.commands.computeenvs.ImportCmd;
 import io.seqera.tower.cli.commands.computeenvs.ListCmd;
@@ -41,6 +43,8 @@ import picocli.CommandLine.Command;
                 ImportCmd.class,
                 PrimaryCmd.class,
                 ValidateCmd.class,
+                EnableCmd.class,
+                DisableCmd.class,
         }
 )
 public class ComputeEnvsCmd extends AbstractRootCmd {
