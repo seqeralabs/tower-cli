@@ -32,6 +32,7 @@ import io.seqera.tower.cli.responses.studios.StudioCheckpointsList;
 import io.seqera.tower.cli.responses.studios.StudioDeleted;
 import io.seqera.tower.cli.responses.studios.StudioCheckpointUpdated;
 import io.seqera.tower.cli.responses.studios.StudioLifespanExtended;
+import io.seqera.tower.cli.responses.studios.StudioLog;
 import io.seqera.tower.cli.responses.studios.StudioStarred;
 import io.seqera.tower.cli.responses.studios.StudioStartSubmitted;
 import io.seqera.tower.cli.responses.studios.StudioStopSubmitted;
@@ -42,6 +43,7 @@ import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.model.DataStudioCheckpointDto;
 import io.seqera.tower.model.DataStudioDto;
 import io.seqera.tower.model.DataStudioTemplatesListResponse;
+import io.seqera.tower.model.LogPage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -3140,5 +3142,50 @@ public class StudiosCmdTest extends BaseCmdTest {
         if (format == OutputType.console) {
             assertTrue(out.stdOut.contains("s3://aaa-my-bucket/data/inputs, s3://aaa-my-bucket"), out.stdOut);
         }
+    }
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testLogs(OutputType format, MockServerClient mock) throws JsonProcessingException {
+        mockWorkspace(mock);
+        String logPage = """
+                {
+                  "entries": ["Starting studio", "Studio ready"],
+                  "forwardToken": "f/123",
+                  "rewindToken": "b/123",
+                  "pending": false,
+                  "truncated": false
+                }
+                """;
+        mock.when(
+                request().withMethod("GET").withPath("/studios/3e8370e7/log")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("next", "f/100")
+                        .withQueryStringParameter("maxLength", "500"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"log\": " + logPage + "}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "logs", "-w", "75887156211589", "-i", "3e8370e7", "--next", "f/100", "--max-length", "500");
+
+        assertOutput(format, out, new StudioLog("3e8370e7", "[organization1 / workspace1]", parseJson(logPage, LogPage.class)));
+        if (format == OutputType.console) {
+            assertTrue(out.stdOut.contains(String.format("Starting studio%nStudio ready")), out.stdOut);
+            assertTrue(out.stdOut.contains("--next f/123"), out.stdOut);
+        }
+    }
+
+    @Test
+    void testLogsPending(MockServerClient mock) {
+        mockWorkspace(mock);
+        mock.when(
+                request().withMethod("GET").withPath("/studios/3e8370e7/log").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"log\": {\"entries\": [], \"pending\": true}}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "studios", "logs", "-w", "75887156211589", "-i", "3e8370e7");
+
+        assertEquals(0, out.exitCode);
+        assertTrue(out.stdOut.contains("Waiting for the output log"), out.stdOut);
     }
 }
