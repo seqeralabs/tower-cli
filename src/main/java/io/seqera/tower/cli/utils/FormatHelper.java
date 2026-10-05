@@ -372,6 +372,14 @@ public class FormatHelper {
         return text.length() > maxLength ? text.substring(0, maxLength) + "..." : text;
     }
 
+    /**
+     * Strips control characters, except newlines and tabs, from text that comes from outside
+     * Platform, such as an action trigger event, so it cannot inject terminal escape sequences.
+     */
+    public static String formatUntrusted(String value) {
+        return value == null ? null : value.replaceAll("[\\p{Cc}&&[^\\n\\t]]", "");
+    }
+
     public static String formatLargeStringWithEllipsis(String largeString, int maxLength) {
         if (largeString == null) {
             return "NA";

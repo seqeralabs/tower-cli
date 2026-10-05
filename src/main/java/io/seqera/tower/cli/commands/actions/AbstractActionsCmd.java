@@ -19,18 +19,30 @@ package io.seqera.tower.cli.commands.actions;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.exceptions.ActionNotFoundException;
+import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.model.ActionQueryAttribute;
 import io.seqera.tower.model.DescribeActionResponse;
 import io.seqera.tower.model.ListActionsResponse;
 import io.seqera.tower.model.ListActionsResponseActionInfo;
+import io.seqera.tower.model.WorkflowStatus;
 import picocli.CommandLine;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 @CommandLine.Command
 public abstract class AbstractActionsCmd extends AbstractApiCmd {
+
+    // The run states a pipeline-status action can fire on: the ones a run stops in.
+    private static final EnumSet<WorkflowStatus> TRIGGER_RUN_STATUSES = EnumSet.of(WorkflowStatus.SUCCEEDED, WorkflowStatus.FAILED, WorkflowStatus.CANCELLED);
+
+    protected static void checkTriggerRunStatus(WorkflowStatus runStatus) throws TowerException {
+        if (runStatus != null && !TRIGGER_RUN_STATUSES.contains(runStatus)) {
+            throw new TowerException(String.format("Run status '%s' cannot trigger an action. Use SUCCEEDED, FAILED or CANCELLED", runStatus));
+        }
+    }
 
     protected ListActionsResponseActionInfo actionByName(Long workspaceId, String actionName) throws ApiException {
         ListActionsResponse listActionResponse = actionsApi().listActions(workspaceId, NO_ACTION_ATTRIBUTES);
@@ -49,6 +61,12 @@ public abstract class AbstractActionsCmd extends AbstractApiCmd {
         }
 
         return listActionsResponseActionInfos.stream().findFirst().orElse(null);
+    }
+
+    protected String actionId(ActionRefOptions actionRefOptions, Long wspId) throws ApiException {
+        return actionRefOptions.action.actionId != null
+                ? actionRefOptions.action.actionId
+                : actionByName(wspId, actionRefOptions.action.actionName).getId();
     }
 
     protected DescribeActionResponse fetchDescribeActionResponse(ActionRefOptions actionRefOptions, Long wspId, ActionQueryAttribute... attributes) throws ApiException {
