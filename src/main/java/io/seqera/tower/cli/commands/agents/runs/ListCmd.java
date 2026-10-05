@@ -38,7 +38,7 @@ public class ListCmd extends AbstractApiCmd {
     @Mixin
     public WorkspaceRequiredOptions workspace;
 
-    @Option(names = {"-f", "--filter"}, description = "Optional filter criteria, allowing the keywords: `status` (pending, running, completed, failed), `agentConfigId`, `workflowId` and `sourcePipelineId`. Free text is not supported. Example keyword usage: -f status:failed.")
+    @Option(names = {"-f", "--filter"}, description = "Optional filter criteria, allowing the keywords: `status` (pending, running, completed, failed), `agentConfigId`, `workflowId`, `sourcePipelineId`, `serviceAccountId` and `serviceAccountName`. Free text is not supported. Example keyword usage: -f status:failed.")
     public String filter;
 
     @Mixin
