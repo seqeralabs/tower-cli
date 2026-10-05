@@ -22,6 +22,7 @@ import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.datasets.DatasetUpdate;
 import io.seqera.tower.model.DatasetDto;
+import io.seqera.tower.model.LinkVersionRequest;
 import io.seqera.tower.model.UpdateDatasetRequest;
 import picocli.CommandLine;
 
@@ -46,15 +47,21 @@ public class UpdateCmd extends AbstractDatasetsCmd {
     @CommandLine.Option(names = {"--header"}, description = "Treat first row as header")
     public boolean header = false;
 
-    @CommandLine.Option(names = {"-f", "--file"}, description = "Data file to upload")
+    @CommandLine.Option(names = {"-f", "--file"}, description = "Data file to upload as a new version")
     Path fileName = null;
+
+    @CommandLine.Option(names = {"--url"}, description = "Public HTTP or HTTPS URL of a CSV or TSV file to link as a new version. Only for datasets created with --url.")
+    public String url;
 
     @CommandLine.Mixin
     public WorkspaceRequiredOptions workspace;
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        if (fileName == null && header) {
+        if (fileName != null && url != null) {
+            throw new TowerException("Provide either a --file to upload or a --url to link, not both");
+        }
+        if (fileName == null && url == null && header) {
             throw new TowerException("Please provide a new file version to upload or remove the --header option");
         }
 
@@ -68,6 +75,9 @@ public class UpdateCmd extends AbstractDatasetsCmd {
 
         if (fileName != null) {
             datasetsApi().uploadDatasetV2(dataset.getId(), wspId, header, fileName.toFile());
+        }
+        if (url != null) {
+            datasetsApi().linkDatasetVersion(dataset.getId(), new LinkVersionRequest().url(url).hasHeader(header), wspId);
         }
 
         return new DatasetUpdate(dataset.getName(), workspace.workspace, dataset.getId());
