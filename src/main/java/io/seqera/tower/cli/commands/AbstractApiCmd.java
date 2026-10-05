@@ -29,6 +29,7 @@ import io.seqera.tower.api.Ga4ghApi;
 import io.seqera.tower.api.IdentitiesApi;
 import io.seqera.tower.api.LabelsApi;
 import io.seqera.tower.api.LaunchApi;
+import io.seqera.tower.api.NextflowApi;
 import io.seqera.tower.api.OrgsApi;
 import io.seqera.tower.api.PipelineSchemasApi;
 import io.seqera.tower.api.PipelineSecretsApi;
@@ -130,6 +131,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     private IdentitiesApi identitiesApi;
     private LabelsApi labelsApi;
     private LaunchApi launchApi;
+    private NextflowApi nextflowApi;
     private OrgsApi orgsApi;
     private PipelinesApi pipelinesApi;
     private PipelineSchemasApi pipelineSchemasApi;
@@ -246,6 +248,10 @@ public abstract class AbstractApiCmd extends AbstractCmd {
 
     protected LaunchApi launchApi() throws ApiException {
         return launchApi == null ? new LaunchApi(apiClient()) : launchApi;
+    }
+
+    protected NextflowApi nextflowApi() throws ApiException {
+        return nextflowApi == null ? new NextflowApi(apiClient()) : nextflowApi;
     }
 
     protected OrgsApi orgsApi() throws ApiException {

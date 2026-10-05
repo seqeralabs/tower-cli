@@ -40,7 +40,7 @@ public class NullableLaunchOptions {
     @Option(names = {"--syntax-parser"}, description = "Nextflow language syntax parser version: 'v1' (legacy) or 'v2'. Takes precedence over the value stored in the launch configuration.")
     public SyntaxParserEnum syntaxParser;
 
-    @Option(names = {"--nextflow-version"}, description = "Nextflow version to run the workflow with. Must exist in the Platform version catalog and meet the minimum required by the compute environment. Takes precedence over the value stored in the launch configuration.")
+    @Option(names = {"--nextflow-version"}, description = "Nextflow version to run the workflow with. Must exist in the Platform version catalog and meet the minimum required by the compute environment (see 'tw info versions'). Takes precedence over the value stored in the launch configuration.")
     public String nextflowVersion;
 
     @Option(names = {"--output-dir"}, description = "Per-run output directory, passed to Nextflow as '-output-dir'. Requires Nextflow 24.10.0 or later and the workflow outputs syntax. Takes precedence over the value stored in the launch configuration.")
