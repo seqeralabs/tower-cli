@@ -82,6 +82,10 @@ public class GoogleCloudPlatform extends AbstractPlatform<GoogleCloudConfig> {
                     .nvmeEnabled(sched.nvmeEnabled)
                     .maxCpusPerUser(sched.maxCpusPerUser)
                     .maxSpotAttempts(sched.maxSpotAttempts);
+            // billingExportTable is JsonNullable: setting null would send an explicit null.
+            if (sched.billingExportTable != null) {
+                schedConfig.billingExportTable(sched.billingExportTable);
+            }
             config.schedConfig(schedConfig);
         }
 
@@ -160,6 +164,9 @@ public class GoogleCloudPlatform extends AbstractPlatform<GoogleCloudConfig> {
 
         @Option(names = {"--max-spot-attempts"}, description = "Total spot attempts for a task, including the first, before giving up on spot capacity (1-10). With SPOT_FIRST, the task then falls back to on-demand. Only valid with the SPOT and SPOT_FIRST provisioning models.")
         public Integer maxSpotAttempts;
+
+        @Option(names = {"--billing-export-table"}, description = "Fully-qualified BigQuery table holding the Cloud Billing export, as project.dataset.table. Enables cost reporting for this compute environment. Costs are unavailable for runs that predate the export.")
+        public String billingExportTable;
     }
 
     public static class AdvancedOptions {
