@@ -36,6 +36,7 @@ import io.seqera.tower.api.PipelineSecretsApi;
 import io.seqera.tower.api.PipelineVersionsApi;
 import io.seqera.tower.api.PipelinesApi;
 import io.seqera.tower.api.PlatformsApi;
+import io.seqera.tower.api.RolesApi;
 import io.seqera.tower.api.ServiceInfoApi;
 import io.seqera.tower.api.SshKeysApi;
 import io.seqera.tower.api.StudiosApi;
@@ -136,6 +137,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     private PipelineSecretsApi pipelineSecretsApi;
     private PipelineVersionsApi pipelineVersionsApi;
     private PlatformsApi platformsApi;
+    private RolesApi rolesApi;
     private ServiceInfoApi serviceInfoApi;
     private SshKeysApi sshKeysApi;
     private StudiosApi studiosApi;
@@ -265,6 +267,10 @@ public abstract class AbstractApiCmd extends AbstractCmd {
 
     protected PlatformsApi platformsApi() throws ApiException {
         return platformsApi == null ? new PlatformsApi(apiClient()) : platformsApi;
+    }
+
+    protected RolesApi rolesApi() throws ApiException {
+        return rolesApi == null ? new RolesApi(apiClient()) : rolesApi;
     }
 
     protected ServiceInfoApi serviceInfoApi() throws ApiException {
