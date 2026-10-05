@@ -6508,6 +6508,10 @@
   "queryAllDeclaredConstructors":true
 },
 {
+  "name":"java.net.HttpURLConnection",
+  "fields":[{"name":"method"}]
+},
+{
   "name":"java.net.UnknownHostException",
   "methods":[{"name":"<init>","parameterTypes":["java.lang.String"] }]
 },
@@ -7094,6 +7098,10 @@
 {
   "name":"sun.net.www.protocol.http.ntlm.NTLMAuthentication",
   "methods":[{"name":"<init>","parameterTypes":["boolean","java.lang.String","int","java.net.PasswordAuthentication"] }, {"name":"<init>","parameterTypes":["boolean","java.net.URL","java.net.PasswordAuthentication"] }, {"name":"isTrustedSite","parameterTypes":["java.net.URL"] }, {"name":"supportsTransparentAuth","parameterTypes":[] }]
+},
+{
+  "name":"sun.net.www.protocol.https.HttpsURLConnectionImpl",
+  "fields":[{"name":"delegate"}]
 },
 {
   "name":"sun.security.pkcs12.PKCS12KeyStore",

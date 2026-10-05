@@ -113,6 +113,8 @@ graalvmNative {
             buildArgs.add('-H:+AddAllCharsets')
             buildArgs.add('-H:EnableURLProtocols=https,http')
             buildArgs.add('-H:+ReportExceptionStackTraces')
+            // Native images enforce module encapsulation for setAccessible too, so the reflection entries alone are not enough
+            buildArgs.addAll(jerseyPatchOpens.collect { "--add-opens=${it}=ALL-UNNAMED" })
 
             javaLauncher = javaToolchains.launcherFor {
                 languageVersion = JavaLanguageVersion.of(25)
