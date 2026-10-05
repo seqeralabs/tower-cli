@@ -17,6 +17,8 @@
 package io.seqera.tower.cli;
 
 import io.seqera.tower.cli.commands.enums.OutputType;
+import io.seqera.tower.cli.responses.ComponentVersions;
+import io.seqera.tower.cli.responses.ComponentVersions.ComponentVersion;
 import io.seqera.tower.cli.responses.InfoResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -26,11 +28,13 @@ import org.mockserver.model.MediaType;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import static org.apache.commons.lang3.StringUtils.chop;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
@@ -154,6 +158,31 @@ public class InfoCmdTest extends BaseCmdTest {
         assertEquals("", out.stdErr);
         assertEquals(1, out.exitCode);
         assertEquals(chop(new InfoResponse(0,-1,-1, opts).toString()), out.stdOut);
+    }
+
+    @Test
+    void testVersions(MockServerClient mock) {
+        mock.reset();
+        mock.when(
+                request().withMethod("GET").withPath("/platform/versions"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("""
+                        {
+                            "nextflowVersions": [
+                                {"version": "25.10.1", "image": "nf-launcher:j21-25.10.1"},
+                                {"version": "26.04.6", "image": "nf-launcher:j21-26.04.6", "default": true}
+                            ]
+                        }""").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "info", "versions");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        assertEquals(chop(new ComponentVersions("nextflow", List.of(
+                new ComponentVersion("25.10.1", false),
+                new ComponentVersion("26.04.6", true))).toString()), out.stdOut);
+        assertTrue(out.stdOut.contains("26.04.6"), out.stdOut);
     }
 
     private String getCliVersion() throws IOException {
