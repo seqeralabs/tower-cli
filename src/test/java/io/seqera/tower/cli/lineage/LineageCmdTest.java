@@ -53,7 +53,7 @@ class LineageCmdTest extends BaseCmdTest {
               "type": "FileOutput",
               "recordUri": "s3://bucket/lineage/abc123/multiqc report.html.data.json",
               "data": {"path": "s3://bucket/results/multiqc report.html", "labels": ["qc"]},
-              "displayData": {"workspaceId": 75887156211589, "workflowId": "4abc", "runName": "happy_turing", "processName": "MULTIQC"}
+              "displayData": {"workspaceId": 75887156211589, "workflowId": "4abc", "runName": "happy_turing", "processName": "MULTIQC", "pipelineName": "nf-core/rnaseq"}
             }
             """;
 
@@ -88,10 +88,11 @@ class LineageCmdTest extends BaseCmdTest {
         mockWorkspace(mock);
         mock.when(request().withMethod("GET").withPath("/lineage/resolve")
                         .withQueryStringParameter("workspaceId", WSP_ID)
-                        .withQueryStringParameter("sessionId", "f1e2d3"), exactly(1))
+                        .withQueryStringParameter("sessionId", "f1e2d3")
+                        .withQueryStringParameter("runName", "happy_turing"), exactly(1))
                 .respond(response().withStatusCode(200).withBody("{\"lid\":\"lid://wf789\"}").withContentType(MediaType.APPLICATION_JSON));
 
-        ExecOut out = exec(format, mock, "lineage", "resolve", "-w", WSP_ID, "--session-id", "f1e2d3");
+        ExecOut out = exec(format, mock, "lineage", "resolve", "-w", WSP_ID, "--session-id", "f1e2d3", "--run-name", "happy_turing");
 
         assertOutput(format, out, new LineageResolved(WSP_REF, "lid://wf789"));
     }
@@ -111,8 +112,15 @@ class LineageCmdTest extends BaseCmdTest {
     }
 
     @Test
+    void testResolveRequiresRunNameWithSessionId(MockServerClient mock) {
+        ExecOut out = exec(mock, "lineage", "resolve", "-w", WSP_ID, "--session-id", "f1e2d3");
+
+        assertEquals(2, out.exitCode);
+    }
+
+    @Test
     void testResolveRejectsRunAndFilePath(MockServerClient mock) {
-        ExecOut out = exec(mock, "lineage", "resolve", "-w", WSP_ID, "--session-id", "f1e2d3", "--file-path", "/data/x");
+        ExecOut out = exec(mock, "lineage", "resolve", "-w", WSP_ID, "--session-id", "f1e2d3", "--run-name", "happy_turing", "--file-path", "/data/x");
 
         assertEquals(2, out.exitCode);
     }
