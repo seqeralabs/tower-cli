@@ -22,6 +22,7 @@ import io.seqera.tower.ApiResponse;
 import io.seqera.tower.Pair;
 import io.seqera.tower.api.ActionsApi;
 import io.seqera.tower.api.AvatarsApi;
+import io.seqera.tower.api.CompatibilityApi;
 import io.seqera.tower.api.ComputeEnvsApi;
 import io.seqera.tower.api.CredentialsApi;
 import io.seqera.tower.api.DataLinksApi;
@@ -124,6 +125,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
 
     private ActionsApi actionsApi;
     private AvatarsApi avatarsApi;
+    private CompatibilityApi compatibilityApi;
     private ComputeEnvsApi computeEnvsApi;
     private CredentialsApi credentialsApi;
     private DataLinksApi dataLinksApi;
@@ -213,6 +215,10 @@ public abstract class AbstractApiCmd extends AbstractCmd {
 
     protected AvatarsApi avatarsApi() throws ApiException {
         return avatarsApi == null ? new AvatarsApi(apiClient()) : avatarsApi;
+    }
+
+    protected CompatibilityApi compatibilityApi() throws ApiException {
+        return compatibilityApi == null ? new CompatibilityApi(apiClient()) : compatibilityApi;
     }
 
     protected ComputeEnvsApi computeEnvsApi() throws ApiException {
