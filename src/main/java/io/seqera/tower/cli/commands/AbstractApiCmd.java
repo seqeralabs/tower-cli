@@ -69,6 +69,7 @@ import io.seqera.tower.model.ComputeEnvQueryAttribute;
 import io.seqera.tower.model.ComputeEnvResponseDto;
 import io.seqera.tower.model.Credentials;
 import io.seqera.tower.model.DataStudioQueryAttribute;
+import io.seqera.tower.model.IdpGroupEntry;
 import io.seqera.tower.model.ListComputeEnvsResponseEntry;
 import io.seqera.tower.model.ListPipelineVersionsResponse;
 import io.seqera.tower.model.ListWorkspacesAndOrgResponse;
@@ -578,6 +579,14 @@ public abstract class AbstractApiCmd extends AbstractCmd {
                 .collect(Collectors.toList());
 
         return orgAndWorkspaceDbDtoList.stream().findFirst().orElseThrow(() -> new OrganizationNotFoundException(organizationRef));
+    }
+
+    protected IdpGroupEntry findIdpGroupByName(Long orgId, String displayName) throws ApiException {
+        return orgsApi().listOrganizationIdpGroups(orgId).getGroups()
+                .stream()
+                .filter(group -> Objects.equals(group.getDisplayName(), displayName))
+                .findFirst()
+                .orElseThrow(() -> new TowerException(String.format("IdP group '%s' not found in organization '%d'", displayName, orgId)));
     }
 
     protected List<Long> findOrCreateLabels(Long wspId, List<Label> labels) throws ApiException {
