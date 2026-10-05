@@ -242,4 +242,71 @@ public class AzCloudPlatformTest extends BaseCmdTest {
         assertEquals(0, out.exitCode);
         assertEquals(expected.toString(), out.stdOut);
     }
+
+    @Test
+    void testAddWithKeyVaultUrl(MockServerClient mock) throws IOException {
+        mock.reset();
+
+        // given
+        mock.when(
+                request()
+                        .withMethod("GET")
+                        .withPath("/credentials")
+                        .withQueryStringParameter("platformId", "azure-cloud"),
+                exactly(1)
+        ).respond(
+                response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("{\"credentials\":[{\"id\":\"6XfOhoztUq6de3Dw3X9LSb\",\"name\":\"azure\",\"description\":null,\"discriminator\":\"azure\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-08T18:20:46Z\",\"dateCreated\":\"2021-09-08T12:57:04Z\",\"lastUpdated\":\"2021-09-08T12:57:04Z\"}]}")
+        );
+
+        mock.when(
+                request()
+                        .withMethod("POST")
+                        .withPath("/compute-envs")
+                        .withBody(json("""
+                                {
+                                    "computeEnv": {
+                                        "name": "my-azure-cloud-kv",
+                                        "platform": "azure-cloud",
+                                        "config": {
+                                            "workDir": "az://my-container",
+                                            "region": "eastus",
+                                            "resourceGroup": "my-resource-group",
+                                            "fusion2Enabled": true,
+                                            "waveEnabled": true,
+                                            "keyVaultUrl": "https://my-vault.vault.azure.net",
+                                            "schedEnabled": true
+                                        },
+                                        "credentialsId": "6XfOhoztUq6de3Dw3X9LSb"
+                                    }
+                                }""")),
+                exactly(1)
+        ).respond(
+                response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}")
+        );
+
+        // when
+        ExecOut out = exec(mock, "compute-envs", "add", "azure-cloud",
+                "-n", "my-azure-cloud-kv",
+                "--work-dir",
+                "az://my-container",
+                "-r",
+                "eastus",
+                "--resource-group",
+                "my-resource-group",
+                "--sched-enabled",
+                "--key-vault-url", "https://my-vault.vault.azure.net"
+        );
+
+        // then
+        var expected = new ComputeEnvAdded("azure-cloud", "isnEDBLvHDAIteOEF44ow", "my-azure-cloud-kv", null, USER_WORKSPACE_NAME);
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        assertEquals(expected.toString(), out.stdOut);
+    }
 }
