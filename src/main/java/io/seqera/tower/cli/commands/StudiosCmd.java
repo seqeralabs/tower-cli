@@ -20,6 +20,7 @@ import io.seqera.tower.cli.commands.studios.AddCmd;
 import io.seqera.tower.cli.commands.studios.CheckpointsCmd;
 import io.seqera.tower.cli.commands.studios.DeleteCmd;
 import io.seqera.tower.cli.commands.studios.ExtendCmd;
+import io.seqera.tower.cli.commands.studios.LogsCmd;
 import io.seqera.tower.cli.commands.studios.RenameCheckpointCmd;
 import io.seqera.tower.cli.commands.studios.StarCmd;
 import io.seqera.tower.cli.commands.studios.UnstarCmd;
@@ -50,6 +51,7 @@ import picocli.CommandLine;
                 StarCmd.class,
                 UnstarCmd.class,
                 ExtendCmd.class,
+                LogsCmd.class,
         }
 )
 public class StudiosCmd extends AbstractRootCmd {
