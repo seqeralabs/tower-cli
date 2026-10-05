@@ -28,6 +28,7 @@ import io.seqera.tower.cli.utils.ModelHelper;
 import io.seqera.tower.model.ActionResponseDto;
 import io.seqera.tower.model.ActionSource;
 import io.seqera.tower.model.BucketActionRequest;
+import io.seqera.tower.model.CronActionRequest;
 import io.seqera.tower.model.UpdateActionRequest;
 import io.seqera.tower.model.WorkflowLaunchRequest;
 import picocli.CommandLine;
@@ -51,6 +52,12 @@ public class UpdateCmd extends AbstractActionsCmd {
 
     @CommandLine.Option(names = {"--new-name"}, description = "Updated action name. Must be unique per workspace. Names consist of alphanumeric, hyphen, and underscore characters.")
     public String newName;
+
+    @CommandLine.Option(names = {"--cron-expression"}, description = "Schedule of a cron action, as a standard 5-field cron expression.")
+    public String cronExpression;
+
+    @CommandLine.Option(names = {"--timezone"}, description = "IANA timezone the schedule of a cron action runs in.")
+    public String timezone;
 
     @CommandLine.Option(names = {"--marker-file"}, description = "Marker file of a bucket action, relative to the data link path.")
     public String markerFile;
@@ -114,6 +121,11 @@ public class UpdateCmd extends AbstractActionsCmd {
         UpdateActionRequest request = new UpdateActionRequest();
         request.setName(newName != null ? newName : actionName);
         request.setLaunch(workflowLaunchRequest);
+
+        if (cronExpression != null || timezone != null) {
+            requireSource(action, ActionSource.cron, "--cron-expression and --timezone");
+            request.setCron(new CronActionRequest().expression(cronExpression).timezone(timezone));
+        }
 
         if (markerFile != null || events != null) {
             requireSource(action, ActionSource.bucket, "--marker-file and --events");
