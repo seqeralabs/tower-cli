@@ -47,18 +47,23 @@ public class ResolveCmd extends AbstractLineageCmd {
         public String filePath;
     }
 
+    // A resumed run shares the session ID of its parent, so the run name is needed to pick one run
     public static class Run {
 
         @Option(names = {"--session-id"}, description = "Nextflow session ID of the run", required = true)
         public String sessionId;
+
+        @Option(names = {"--run-name"}, description = "Nextflow run name", required = true)
+        public String runName;
     }
 
     @Override
     protected Response exec() throws ApiException {
         Long wspId = workspaceId(workspace.workspace);
         String sessionId = source.run != null ? source.run.sessionId : null;
+        String runName = source.run != null ? source.run.runName : null;
 
-        String lid = lineageApi().resolveLineage(wspId, sessionId, null, source.filePath).getLid();
+        String lid = lineageApi().resolveLineage(wspId, sessionId, runName, source.filePath).getLid();
         return new LineageResolved(workspaceRef(wspId), lid);
     }
 }
