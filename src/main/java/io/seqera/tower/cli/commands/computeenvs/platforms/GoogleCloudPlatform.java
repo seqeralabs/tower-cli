@@ -82,6 +82,10 @@ public class GoogleCloudPlatform extends AbstractPlatform<GoogleCloudConfig> {
             if (sched.machineTypes != null) {
                 schedConfig.machineTypes(sched.machineTypes);
             }
+            // billingExportTable is JsonNullable: setting null would send an explicit null.
+            if (sched.billingExportTable != null) {
+                schedConfig.billingExportTable(sched.billingExportTable);
+            }
             config.schedConfig(schedConfig);
         }
 
@@ -148,6 +152,9 @@ public class GoogleCloudPlatform extends AbstractPlatform<GoogleCloudConfig> {
 
         @Option(names = {"--sched-machine-types"}, description = "Compute Engine machine types for compute nodes managed by the Seqera scheduler. Comma-separated list (e.g., n2-standard-4,c2-standard-8). Leave empty to let the scheduler select the most cost-effective types.", split = ",")
         public List<String> machineTypes;
+
+        @Option(names = {"--billing-export-table"}, description = "Fully-qualified BigQuery table holding the Cloud Billing export, as project.dataset.table. Enables cost reporting for this compute environment. Costs are unavailable for runs that predate the export.")
+        public String billingExportTable;
     }
 
     public static class AdvancedOptions {
