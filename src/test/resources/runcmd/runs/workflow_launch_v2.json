@@ -26,6 +26,7 @@
     "pullLatest": false,
     "stubRun": false,
     "nextflowVersion": "26.04.6",
+    "fusionVersion": "2.5",
     "outputDir": "/outputs",
     "syntaxParser": "v2",
     "resumeDir": "s3://fusionfs/scratch/5qRNYT6iAJfRbJ",

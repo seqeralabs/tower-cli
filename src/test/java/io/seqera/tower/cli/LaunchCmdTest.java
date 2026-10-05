@@ -168,6 +168,7 @@ class LaunchCmdTest extends BaseCmdTest {
                                     "pipeline":"https://github.com/nf-core/sarek",
                                     "syntaxParser":"v1",
                                     "nextflowVersion":"25.10.1",
+                                    "fusionVersion":"2.6",
                                     "outputDir":"/new-outputs"
                                 }
                             }"""
@@ -185,7 +186,7 @@ class LaunchCmdTest extends BaseCmdTest {
 
         // Run the command
         ExecOut out = exec(mock, "launch", "sarek", "--syntax-parser", "v1",
-                "--nextflow-version", "25.10.1", "--output-dir", "/new-outputs");
+                "--nextflow-version", "25.10.1", "--fusion-version", "2.6", "--output-dir", "/new-outputs");
 
         // Assert results
         assertEquals("", out.stdErr);
