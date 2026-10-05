@@ -70,7 +70,6 @@ public class ActionsView extends Response {
         addTriggerRows(table);
         table.addRow("Last event", FormatHelper.formatTime(action.getLastSeen()));
         table.addRow("Date created", FormatHelper.formatTime(action.getDateCreated()));
-        table.addRow("Last event", FormatHelper.formatTime(action.getLastSeen()));
         table.addRow("Labels", action.getLabels() == null || action.getLabels().isEmpty() ? "No labels found" : formatLabels(action.getLabels()));
 
         table.print();
