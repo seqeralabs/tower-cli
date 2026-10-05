@@ -64,9 +64,13 @@ class AgentsCmdTest extends BaseCmdTest {
               "description": "Debug failed runs",
               "agentInstructions": "Find the root cause",
               "agentInstructionsTemplateId": "debug-template",
+              "serviceAccountId": 42,
+              "serviceAccountName": "sa-agent",
+              "githubAppCredentialId": "cred1",
               "status": "active",
               "workspaceId": 75887156211589,
               "createdBy": 1264,
+              "createdByUserName": "jordi",
               "dateCreated": "2026-09-01T10:00:00Z",
               "lastUpdated": "2026-09-02T10:00:00Z"
             }
@@ -144,14 +148,16 @@ class AgentsCmdTest extends BaseCmdTest {
                                 {
                                   "name": "fix-failed-runs",
                                   "description": "Debug failed runs",
-                                  "agentInstructions": "Find the root cause"
+                                  "agentInstructions": "Find the root cause",
+                                  "serviceAccountId": 42,
+                                  "githubAppCredentialId": "cred1"
                                 }
                                 """)), exactly(1))
                 .respond(response().withStatusCode(200).withBody("{\"agent\":" + AGENT + "}").withContentType(MediaType.APPLICATION_JSON));
 
         String instructions = tempFile("Find the root cause", "instructions", ".md");
         ExecOut out = exec(format, mock, "agents", "add", "-w", WSP_ID, "-n", "fix-failed-runs", "-d", "Debug failed runs",
-                "--instructions-file", instructions);
+                "--instructions-file", instructions, "--service-account-id", "42", "--github-app-credentials-id", "cred1");
 
         assertOutput(format, out, new AgentAdded(WSP_REF, agent()));
     }
@@ -174,7 +180,9 @@ class AgentsCmdTest extends BaseCmdTest {
                                   "name": "new-name",
                                   "description": "Debug failed runs",
                                   "agentInstructions": "New instructions",
-                                  "agentInstructionsTemplateId": "debug-template"
+                                  "agentInstructionsTemplateId": "debug-template",
+                                  "serviceAccountId": 42,
+                                  "githubAppCredentialId": "cred1"
                                 }
                                 """)), exactly(1))
                 .respond(response().withStatusCode(200).withBody("{\"agent\":" + AGENT.replace("\"fix-failed-runs\"", "\"new-name\"") + "}").withContentType(MediaType.APPLICATION_JSON));
