@@ -21,6 +21,7 @@ import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.teams.TeamUpdated;
 import io.seqera.tower.model.TeamDbDto;
 import io.seqera.tower.model.UpdateTeamRequest;
+import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Option;
@@ -43,6 +44,17 @@ public class UpdateCmd extends AbstractTeamsCmd {
     @Option(names = {"-d", "--description"}, description = "New team description.")
     public String description;
 
+    @ArgGroup
+    IdpGroup idpGroup;
+
+    static class IdpGroup {
+        @Option(names = {"--idp-group"}, description = "Link the team to this IdP group (display name, see 'tw organizations idp-groups list'). Team membership is then managed by the IdP.")
+        String name;
+
+        @Option(names = {"--unlink-idp-group"}, description = "Remove the IdP group link so team members can be managed manually again.")
+        boolean unlink;
+    }
+
     @Override
     protected Response exec() throws ApiException {
         Long orgId = findOrganizationByRef(organizationRef).getOrgId();
@@ -53,6 +65,12 @@ public class UpdateCmd extends AbstractTeamsCmd {
                 .name(newName != null ? newName : team.getName())
                 .description(description != null ? description : team.getDescription())
                 .avatarId(avatarId(team.getAvatarUrl()));
+
+        if (idpGroup != null && idpGroup.unlink) {
+            request.idpGroupId(null);
+        } else if (idpGroup != null) {
+            request.idpGroupId(findIdpGroupByName(orgId, idpGroup.name).getId());
+        }
 
         teamsApi().updateOrganizationTeam(orgId, team.getTeamId(), request);
 
