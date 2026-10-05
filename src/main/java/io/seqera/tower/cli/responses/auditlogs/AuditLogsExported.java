@@ -1,0 +1,46 @@
+/*
+ * Copyright 2021-2026, Seqera.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
+package io.seqera.tower.cli.responses.auditlogs;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.seqera.tower.cli.responses.Response;
+
+import java.util.Map;
+
+public class AuditLogsExported extends Response {
+
+    public final String file;
+
+    @JsonIgnore
+    private final String csv;
+
+    public AuditLogsExported(String file, String csv) {
+        this.file = file;
+        this.csv = csv;
+    }
+
+    @Override
+    public Object getJSON() {
+        return file != null ? this : Map.of("csv", csv);
+    }
+
+    @Override
+    public String toString() {
+        return file != null ? ansi(String.format("%n  @|yellow Audit logs exported to '%s'|@%n", file)) : csv;
+    }
+}
