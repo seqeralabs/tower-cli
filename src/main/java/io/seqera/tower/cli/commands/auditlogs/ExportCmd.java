@@ -26,7 +26,6 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Option;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -50,11 +49,16 @@ public class ExportCmd extends AbstractApiCmd {
 
     @Override
     protected Response exec() throws ApiException, IOException {
-        File csv = adminApi().exportAuditLogsV2Csv(state ? List.of(AuditLogV2QueryAttribute.state) : null, filter.after, filter.before);
-        if (output == null) {
-            return new AuditLogsExported(null, Files.readString(csv.toPath()));
+        // The SDK downloads into a temp file; it holds installation-wide audit data, so never leave it behind
+        Path csv = adminApi().exportAuditLogsV2Csv(state ? List.of(AuditLogV2QueryAttribute.state) : null, filter.after, filter.before).toPath();
+        try {
+            if (output == null) {
+                return new AuditLogsExported(null, Files.readString(csv));
+            }
+            Files.move(csv, output, StandardCopyOption.REPLACE_EXISTING);
+            return new AuditLogsExported(output.toString(), null);
+        } finally {
+            Files.deleteIfExists(csv);
         }
-        Files.move(csv.toPath(), output, StandardCopyOption.REPLACE_EXISTING);
-        return new AuditLogsExported(output.toString(), null);
     }
 }
