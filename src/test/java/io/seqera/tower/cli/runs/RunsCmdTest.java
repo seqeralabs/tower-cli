@@ -676,6 +676,7 @@ class RunsCmdTest extends BaseCmdTest {
                             "pipelineSchemaId":42,
                             "resume":true,
                             "nextflowVersion":"26.04.6",
+                            "fusionVersion":"2.5",
                             "towerConfig":"reports: {}",
                             "outputDir":"/outputs",
                             "syntaxParser":"v2"
@@ -723,7 +724,7 @@ class RunsCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testRelaunchOverridingTowerConfig(MockServerClient mock) throws IOException {
+    void testRelaunchOverridingFusionVersionAndTowerConfig(MockServerClient mock) throws IOException {
         mock.reset();
 
         mock.when(
@@ -750,13 +751,13 @@ class RunsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(mock, "runs", "relaunch", "-i", "5mDfiUtqyptDib",
+        ExecOut out = exec(mock, "runs", "relaunch", "-i", "5mDfiUtqyptDib", "--fusion-version", "2.6",
                 "--tower-config", tempFile("reports: []", "tower", "yml"));
 
         assertEquals("", out.stdErr);
         assertEquals(0, out.exitCode);
         mock.verify(request().withMethod("POST").withPath("/workflow/launch")
-                .withBody(json("{\"launch\":{\"towerConfig\":\"reports: []\"}}")), VerificationTimes.exactly(1));
+                .withBody(json("{\"launch\":{\"fusionVersion\":\"2.6\",\"towerConfig\":\"reports: []\"}}")), VerificationTimes.exactly(1));
     }
 
     @Test

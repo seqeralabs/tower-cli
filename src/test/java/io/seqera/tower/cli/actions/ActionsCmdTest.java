@@ -375,7 +375,7 @@ class ActionsCmdTest extends BaseCmdTest {
     }
 
     @Test
-    void testAddWithTowerConfig(MockServerClient mock) throws IOException {
+    void testAddWithFusionVersionAndTowerConfig(MockServerClient mock) throws IOException {
         mock.reset();
 
         mock.when(
@@ -392,13 +392,13 @@ class ActionsCmdTest extends BaseCmdTest {
 
         mock.when(
                 request().withMethod("POST").withPath("/actions")
-                        .withBody(json("{\"launch\":{\"towerConfig\":\"reports: {}\"}}")), exactly(1)
+                        .withBody(json("{\"launch\":{\"fusionVersion\":\"2.6\",\"towerConfig\":\"reports: {}\"}}")), exactly(1)
         ).respond(
                 response().withStatusCode(200).withBody(loadResource("/actions/action_add")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         ExecOut out = exec(mock, "actions", "add", "github", "-n", "new-action", "--pipeline", "https://github.com/pditommaso/nf-sleep",
-                "--tower-config", tempFile("reports: {}", "tower", "yml"));
+                "--fusion-version", "2.6", "--tower-config", tempFile("reports: {}", "tower", "yml"));
 
         assertEquals("", out.stdErr);
         assertEquals(0, out.exitCode);
