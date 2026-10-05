@@ -45,6 +45,9 @@ public class AgentView extends Response {
         table.addRow("Name", agent.getName());
         table.addRow("Description", Objects.toString(agent.getDescription(), ""));
         table.addRow("Status", agent.getStatus() == null ? "NA" : agent.getStatus().getValue());
+        table.addRow("Service account", Objects.toString(agent.getServiceAccountName(), ""));
+        table.addRow("GitHub App credentials", Objects.toString(agent.getGithubAppCredentialId(), ""));
+        table.addRow("Created by", Objects.toString(agent.getCreatedByUserName(), ""));
         table.addRow("Created", formatDate(agent.getDateCreated()));
         table.addRow("Updated", formatDate(agent.getLastUpdated()));
         table.print();
