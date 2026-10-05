@@ -18,6 +18,7 @@ package io.seqera.tower.cli.commands;
 
 import io.seqera.tower.cli.commands.credentials.AddCmd;
 import io.seqera.tower.cli.commands.credentials.DeleteCmd;
+import io.seqera.tower.cli.commands.credentials.FederationSetupCmd;
 import io.seqera.tower.cli.commands.credentials.ListCmd;
 import io.seqera.tower.cli.commands.credentials.UpdateCmd;
 import io.seqera.tower.cli.commands.credentials.ValidateCmd;
@@ -32,7 +33,8 @@ import picocli.CommandLine.Command;
                 UpdateCmd.class,
                 DeleteCmd.class,
                 ListCmd.class,
-                ValidateCmd.class
+                ValidateCmd.class,
+                FederationSetupCmd.class
         }
 )
 public class CredentialsCmd extends AbstractRootCmd {
