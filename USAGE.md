@@ -805,6 +805,7 @@ tw audit-logs export --after 2026-09-01T00:00:00Z --before 2026-09-30T23:59:59Z 
 - `tw launch`, `tw pipelines add|update`, `tw runs relaunch`, and `tw actions add|update`: `--fusion-version` and `--tower-config`. List the versions you can launch with `tw info versions`.
 - `tw runs star|unstar`, `tw runs view log [--next <cursor>]`, and `tw runs delete -i <id>,<id>`.
 - `tw pipelines schema`: show a pipeline's parameter schema.
+- `tw actions add cron|bucket|pipeline-status` and `tw actions triggers list|view`.
 - `tw studios star|unstar|extend|logs|rename-checkpoint`. `--mount-data-uris` also accepts a folder inside a data link.
 - `tw data-links delete-content|download-script`.
 - `tw datasets add --url`, `tw datasets update --url`, and `tw datasets disable-version`.
