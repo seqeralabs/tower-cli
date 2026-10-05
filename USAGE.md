@@ -766,6 +766,16 @@ tw managed-identities add -o my-org -n hpc1 -p slurm -H login.hpc.example.com
 tw managed-identities credentials -o my-org -n hpc1 add -l my_linux_user -k ~/.ssh/id_rsa
 ```
 
+## Agents
+
+Run `tw agents -h` to view the supported operations: `list`, `view`, `add`, `update`, `delete`, `enable`, `disable`, `launch`, and `runs list|view`. Agents must be enabled for the organization.
+
+```bash
+tw agents add -w my-org/my-workspace -n triage --instructions-file triage.md
+tw agents launch -w my-org/my-workspace -n triage
+tw agents runs list -w my-org/my-workspace
+```
+
 ## Lineage
 
 Run `tw lineage -h` to view the supported operations: `resolve`, `view`, `search`, `upstream`, and `downstream`. Lineage must be enabled for the workspace.
