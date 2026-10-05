@@ -21,6 +21,7 @@ import io.seqera.tower.cli.commands.agents.AddCmd;
 import io.seqera.tower.cli.commands.agents.DeleteCmd;
 import io.seqera.tower.cli.commands.agents.DisableCmd;
 import io.seqera.tower.cli.commands.agents.EnableCmd;
+import io.seqera.tower.cli.commands.agents.LaunchCmd;
 import io.seqera.tower.cli.commands.agents.ListCmd;
 import io.seqera.tower.cli.commands.agents.UpdateCmd;
 import io.seqera.tower.cli.commands.agents.ViewCmd;
@@ -37,6 +38,7 @@ import picocli.CommandLine.Command;
                 DeleteCmd.class,
                 EnableCmd.class,
                 DisableCmd.class,
+                LaunchCmd.class,
         }
 )
 public class AgentsCmd extends AbstractRootCmd {
