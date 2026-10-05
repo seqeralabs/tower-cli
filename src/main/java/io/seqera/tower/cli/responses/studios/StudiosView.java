@@ -22,10 +22,15 @@ import io.seqera.tower.model.DataLinkDto;
 import io.seqera.tower.model.DataStudioConfiguration;
 import io.seqera.tower.model.DataStudioDto;
 import io.seqera.tower.model.DataStudioStatusInfo;
+import io.seqera.tower.model.MountData;
 import io.seqera.tower.model.StudioSshDetailsDto;
 import io.seqera.tower.model.UserInfo;
 
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static io.seqera.tower.cli.utils.FormatHelper.formatDescription;
 import static io.seqera.tower.cli.utils.FormatHelper.formatStudioStatus;
@@ -61,8 +66,7 @@ public class StudiosView extends Response {
         table.addRow("Allowed users", studio.getAllowedUsers() == null || studio.getAllowedUsers().isEmpty() ? "NA" : studio.getAllowedUsers()
                 .stream().map(u -> String.format("%s | %s", u.getUserName(), u.getEmail())).collect(java.util.stream.Collectors.joining(", ")));
         table.addRow("Template", studio.getTemplate() == null ? "NA" : studio.getTemplate().getRepository());
-        table.addRow("Mounted data", studio.getMountedDataLinks() == null ? "NA" : studio.getMountedDataLinks()
-                .stream().map(DataLinkDto::getResourceRef).collect(java.util.stream.Collectors.joining(", ")));
+        table.addRow("Mounted data", formatMountedData(studio.getMountedDataLinks(), config == null ? null : config.getMountDataV2()));
         table.addRow("Compute environment", studio.getComputeEnv() == null ? "NA" : studio.getComputeEnv().getName());
         table.addRow("Region", studio.getComputeEnv() == null ? "NA" : studio.getComputeEnv().getRegion());
         table.addRow("GPU allocated",  config == null ? "-" : String.valueOf(config.getGpu()));
@@ -92,5 +96,23 @@ public class StudiosView extends Response {
             out.println(String.format("%n  Conda Environment:%n%n%s%n", config.getCondaEnvironment().replaceAll("(?m)^", "     ")));
         }
 
+    }
+
+    private static String formatMountedData(List<DataLinkDto> mountedDataLinks, List<MountData> mounts) {
+        if (mountedDataLinks == null) {
+            return "NA";
+        }
+        if (mounts == null) {
+            return mountedDataLinks.stream().map(DataLinkDto::getResourceRef).collect(Collectors.joining(", "));
+        }
+        // mountedDataLinks lists each data link once per mount but without the mount path, which only the configuration has.
+        Map<String, String> resourceRefs = new HashMap<>();
+        mountedDataLinks.forEach(dataLink -> resourceRefs.putIfAbsent(dataLink.getId(), dataLink.getResourceRef()));
+        return mounts.stream()
+                .filter(mount -> resourceRefs.containsKey(mount.getDataLinkId()))
+                .map(mount -> mount.getPath() == null || mount.getPath().isEmpty()
+                        ? resourceRefs.get(mount.getDataLinkId())
+                        : resourceRefs.get(mount.getDataLinkId()) + "/" + mount.getPath())
+                .collect(Collectors.joining(", "));
     }
 }
