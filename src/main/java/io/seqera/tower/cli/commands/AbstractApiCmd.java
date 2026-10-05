@@ -18,6 +18,8 @@ package io.seqera.tower.cli.commands;
 
 import io.seqera.tower.ApiClient;
 import io.seqera.tower.ApiException;
+import io.seqera.tower.ApiResponse;
+import io.seqera.tower.Pair;
 import io.seqera.tower.api.ActionsApi;
 import io.seqera.tower.api.AvatarsApi;
 import io.seqera.tower.api.ComputeEnvsApi;
@@ -78,6 +80,7 @@ import org.glassfish.jersey.media.multipart.MultiPart;
 import picocli.CommandLine;
 
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.net.URLConnection;
@@ -316,6 +319,17 @@ public abstract class AbstractApiCmd extends AbstractCmd {
                 config.property(CommonProperties.PROVIDER_DEFAULT_DISABLE, "ALL");
 
                 return config;
+            }
+
+            @Override
+            public <T> ApiResponse<T> invokeAPI(String operation, String path, String method, List<Pair> queryParams, Object body, Map<String, String> headerParams, Map<String, String> cookieParams, Map<String, Object> formParams, String accept, String contentType, String[] authNames, GenericType<T> returnType, boolean isBodyNullable) throws ApiException {
+                // Some operations are missing their security requirement in the OpenAPI spec (e.g. the workflow
+                // star endpoints), so the generated SDK passes no auth names and skips authentication entirely,
+                // sending the request unauthenticated. Fall back to the only scheme this client uses.
+                if (authNames == null || authNames.length == 0) {
+                    authNames = new String[]{"BearerAuth"};
+                }
+                return super.invokeAPI(operation, path, method, queryParams, body, headerParams, cookieParams, formParams, accept, contentType, authNames, returnType, isBodyNullable);
             }
 
             @Override

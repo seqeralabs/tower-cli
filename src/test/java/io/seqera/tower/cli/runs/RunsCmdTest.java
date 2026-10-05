@@ -199,6 +199,34 @@ class RunsCmdTest extends BaseCmdTest {
     }
 
     @Test
+    void testStarSendsAuthorization(MockServerClient mock) {
+        mock.when(
+                request().withMethod("POST").withPath("/workflow/5dAZoXrcmZXRO4/star"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"workflowId\":\"5dAZoXrcmZXRO4\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        exec(mock, "runs", "star", "-i", "5dAZoXrcmZXRO4");
+
+        mock.verify(request().withMethod("POST").withPath("/workflow/5dAZoXrcmZXRO4/star")
+                .withHeader("Authorization", "Bearer " + token()), VerificationTimes.atLeast(1));
+    }
+
+    @Test
+    void testUnstarSendsAuthorization(MockServerClient mock) {
+        mock.when(
+                request().withMethod("DELETE").withPath("/workflow/5dAZoXrcmZXRO4/star"), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        exec(mock, "runs", "unstar", "-i", "5dAZoXrcmZXRO4");
+
+        mock.verify(request().withMethod("DELETE").withPath("/workflow/5dAZoXrcmZXRO4/star")
+                .withHeader("Authorization", "Bearer " + token()), VerificationTimes.atLeast(1));
+    }
+
+    @Test
     void testCancelForbidden(MockServerClient mock) {
         mock.when(
                 request().withMethod("POST").withPath("/workflow/5dAZoXrcmZXRO4/cancel"), exactly(1)
