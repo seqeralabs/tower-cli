@@ -26,11 +26,14 @@ import io.seqera.tower.cli.responses.actions.ActionUpdate;
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.cli.utils.ModelHelper;
 import io.seqera.tower.model.ActionResponseDto;
+import io.seqera.tower.model.ActionSource;
+import io.seqera.tower.model.BucketActionRequest;
 import io.seqera.tower.model.UpdateActionRequest;
 import io.seqera.tower.model.WorkflowLaunchRequest;
 import picocli.CommandLine;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 import static io.seqera.tower.cli.utils.ModelHelper.coalesce;
 
@@ -48,6 +51,12 @@ public class UpdateCmd extends AbstractActionsCmd {
 
     @CommandLine.Option(names = {"--new-name"}, description = "Updated action name. Must be unique per workspace. Names consist of alphanumeric, hyphen, and underscore characters.")
     public String newName;
+
+    @CommandLine.Option(names = {"--marker-file"}, description = "Marker file of a bucket action, relative to the data link path.")
+    public String markerFile;
+
+    @CommandLine.Option(names = {"--events"}, split = ",", description = "Comma-separated bucket events that trigger a bucket action: object:created, object:deleted.")
+    public List<String> events;
 
     @CommandLine.Mixin
     public WorkspaceOptionalOptions workspace;
@@ -106,6 +115,11 @@ public class UpdateCmd extends AbstractActionsCmd {
         request.setName(newName != null ? newName : actionName);
         request.setLaunch(workflowLaunchRequest);
 
+        if (markerFile != null || events != null) {
+            requireSource(action, ActionSource.bucket, "--marker-file and --events");
+            request.setBucket(new BucketActionRequest().markerFile(markerFile).events(events));
+        }
+
         try {
             actionsApi().updateAction(action.getId(), request, wspId);
         } catch (Exception e) {
@@ -125,5 +139,12 @@ public class UpdateCmd extends AbstractActionsCmd {
         }
 
         return new ActionUpdate(actionName, workspaceRef(wspId), action.getId());
+    }
+
+    // The API refuses a trigger block that does not match the action source, so say which options apply.
+    private static void requireSource(ActionResponseDto action, ActionSource source, String options) throws TowerException {
+        if (action.getSource() != source) {
+            throw new TowerException(String.format("Options %s apply only to %s actions, but action '%s' is a %s action", options, source, action.getName(), action.getSource()));
+        }
     }
 }
