@@ -16,6 +16,8 @@
 
 package io.seqera.tower.cli.members;
 
+import io.seqera.tower.model.ListUserRolesResponse;
+import io.seqera.tower.cli.responses.members.MemberRolesList;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
@@ -331,5 +333,31 @@ class MembersCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "members", "leave", "-o", "organization1");
         assertOutput(format, out, new MembersLeave("organization1"));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testRoles(OutputType format, MockServerClient mock) throws JsonProcessingException {
+        mock.when(request().withMethod("GET").withPath("/user-info"))
+                .respond(response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON));
+        mock.when(request().withMethod("GET").withPath("/user/1264/workspaces"))
+                .respond(response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON));
+        mock.when(request().withMethod("GET").withPath("/orgs/27736513644467/members").withQueryStringParameter("search", "julio"), exactly(1))
+                .respond(response().withStatusCode(200).withBody("""
+                        {"members": [{"memberId": 255080245994226, "userId": 4242, "userName": "julio", "email": "julio@seqera.io", "role": "member"}], "totalSize": 1}
+                        """).withContentType(MediaType.APPLICATION_JSON));
+        String body = """
+                {"user": {"memberId": 255080245994226, "userId": 4242, "userName": "julio", "email": "julio@seqera.io", "role": "member"},
+                 "userWorkspaces": [{"workspaceId": 75887156211589, "workspaceName": "workspace1", "participantId": 9,
+                   "roles": [{"role": "launch", "roleSourceType": "individual"},
+                             {"role": "maintain", "roleSourceType": "team", "sourceTeamId": 7, "sourceTeamName": "eng", "sourceTeamType": "regular"}],
+                   "permissions": [{"permission": "pipeline:launch", "roles": ["launch", "maintain"]}]}]}
+                """;
+        mock.when(request().withMethod("GET").withPath("/orgs/27736513644467/users/4242/roles"), exactly(1))
+                .respond(response().withStatusCode(200).withBody(body).withContentType(MediaType.APPLICATION_JSON));
+
+        ExecOut out = exec(format, mock, "members", "roles", "-o", "organization1", "-u", "julio");
+
+        assertOutput(format, out, new MemberRolesList("organization1", parseJson(body, ListUserRolesResponse.class)));
     }
 }
