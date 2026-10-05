@@ -37,6 +37,8 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
+import static io.seqera.tower.cli.utils.JsonHelper.prettyJson;
+
 /**
  * This is the class used by ExportCmd to structure CE data as JSON.
  * The class {@link ComputeConfig} does not include labels so this envelope
@@ -71,10 +73,11 @@ public final class ComputeEnvExportFormat {
     }
 
     public static String serialize(final ComputeEnvExportFormat ceExport) throws JsonProcessingException {
-        return buildMapper()
-                .writerWithDefaultPrettyPrinter()
+        String json = buildMapper()
+                .writer()
                 .withAttribute("labels", ceExport.getLabels())
                 .writeValueAsString(ceExport.getConfig());
+        return prettyJson(buildMapper().readTree(json));
     }
 
     private static ObjectMapper buildMapper() {

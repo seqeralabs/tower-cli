@@ -335,7 +335,7 @@ public class DumpCmd extends AbstractRunsCmd {
         while (added == max) {
 
             added = 0;
-            ListTasksResponse response = workflowsApi().listWorkflowTasks(workflowId, wspId, max, offset, null, null, null);
+            ListTasksResponse response = workflowsApi().listWorkflowTasks(workflowId, wspId, max, offset, null, null, null, null);
 
             if (response.getTasks() == null) {
                 throw new TowerException("No tasks found for workflow");

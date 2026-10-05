@@ -25,8 +25,6 @@ import io.seqera.tower.cli.responses.runs.RunLog;
 import io.seqera.tower.model.LogPage;
 import picocli.CommandLine;
 
-import java.util.List;
-
 @CommandLine.Command(
         name = "log",
         description = "Display the execution log of a pipeline run or task"
@@ -54,15 +52,8 @@ public class LogCmd extends AbstractRunsCmd {
 
         // Live streams (e.g. CloudWatch) return one page per call without flagging truncation; an empty page means
         // the end of what is available, even though the stream keeps returning a cursor
-        List<String> entries = entries(page);
-        boolean hasEntries = entries != null && !entries.isEmpty();
+        boolean hasEntries = page.getEntries() != null && !page.getEntries().isEmpty();
         String nextPage = hasEntries ? page.getForwardToken() : null;
-        return new RunLog(entries, Boolean.TRUE.equals(page.getTruncated()), page.getMessage(), nextPage);
-    }
-
-    // The API spec types LogPage.entries as an Iterator object, so the SDK exposes it as Object, but Platform sends a JSON
-    // array of strings, which Jackson deserializes as a List
-    private static List<String> entries(LogPage page) {
-        return page.getEntries() instanceof List<?> list ? list.stream().map(String::valueOf).toList() : null;
+        return new RunLog(page.getEntries(), Boolean.TRUE.equals(page.getTruncated()), page.getMessage(), nextPage);
     }
 }
