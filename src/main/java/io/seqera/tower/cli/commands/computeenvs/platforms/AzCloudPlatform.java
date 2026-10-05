@@ -92,6 +92,11 @@ public class AzCloudPlatform extends AbstractPlatform<AzCloudConfig> {
                     .logTableName(adv.logTableName)
                     .dataCollectionEndpoint(adv.dataCollectionEndpoint)
                     .dataCollectionRuleId(adv.dataCollectionRuleId);
+
+            // keyVaultUrl is JsonNullable: setting null would send an explicit null.
+            if (adv.keyVaultUrl != null) {
+                config.keyVaultUrl(adv.keyVaultUrl);
+            }
         }
 
         // Common
@@ -136,6 +141,9 @@ public class AzCloudPlatform extends AbstractPlatform<AzCloudConfig> {
 
         @Option(names = {"--instance-type"}, description = "Azure virtual machine size (e.g., Standard_D2s_v3, Standard_E4s_v3). If omitted, a default VM size is used.")
         public String instanceType;
+
+        @Option(names = {"--key-vault-url"}, description = "Azure Key Vault that stores pipeline secrets, in the form https://<vault-name>.vault.azure.net. Only used with --sched-enabled. If absent, the default Key Vault is used, if one is configured.")
+        public String keyVaultUrl;
 
         @Option(names = {"--log-table-name"}, description = "Custom table name in Log Analytics workspace for storing compute environment logs. Enables organized log management.")
         public String logTableName;
