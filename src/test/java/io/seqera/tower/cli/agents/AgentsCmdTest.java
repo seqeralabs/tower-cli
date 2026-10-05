@@ -23,6 +23,7 @@ import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.agents.AgentAdded;
 import io.seqera.tower.cli.responses.agents.AgentDeleted;
+import io.seqera.tower.cli.responses.agents.AgentLaunched;
 import io.seqera.tower.cli.responses.agents.AgentUpdated;
 import io.seqera.tower.cli.responses.agents.AgentView;
 import io.seqera.tower.cli.responses.agents.AgentsList;
@@ -33,6 +34,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
+import org.mockserver.matchers.MatchType;
 import org.mockserver.model.MediaType;
 
 import java.io.IOException;
@@ -212,5 +214,38 @@ class AgentsCmdTest extends BaseCmdTest {
         ExecOut out = exec(format, mock, "agents", "disable", "-w", WSP_ID, "-n", "fix-failed-runs");
 
         assertOutput(format, out, new AgentUpdated(WSP_REF, "fix-failed-runs", "disabled"));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testLaunchConfiguredAgent(OutputType format, MockServerClient mock) {
+        mockDescribe(mock);
+        mock.when(request().withMethod("POST").withPath("/agents/launch").withQueryStringParameter("workspaceId", WSP_ID)
+                        .withBody(json("{\"agentConfigId\":\"agt_1\",\"instructions\":\"Find the root cause\"}")), exactly(1))
+                .respond(response().withStatusCode(200).withBody("{\"agentRunId\":\"run_1\",\"status\":\"pending\"}").withContentType(MediaType.APPLICATION_JSON));
+
+        ExecOut out = exec(format, mock, "agents", "launch", "-w", WSP_ID, "-i", "agt_1");
+
+        assertOutput(format, out, new AgentLaunched(WSP_REF, "run_1", "pending"));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testLaunchAdHocInstructions(OutputType format, MockServerClient mock) {
+        mock.when(request().withMethod("POST").withPath("/agents/launch").withQueryStringParameter("workspaceId", WSP_ID)
+                        .withBody(json("{\"instructions\":\"Summarize last week runs\"}", MatchType.STRICT)), exactly(1))
+                .respond(response().withStatusCode(200).withBody("{\"agentRunId\":\"run_2\",\"status\":\"pending\"}").withContentType(MediaType.APPLICATION_JSON));
+
+        ExecOut out = exec(format, mock, "agents", "launch", "-w", WSP_ID, "--instructions", "Summarize last week runs");
+
+        assertOutput(format, out, new AgentLaunched(WSP_REF, "run_2", "pending"));
+    }
+
+    @Test
+    void testLaunchWithoutAgentOrInstructions(MockServerClient mock) {
+        ExecOut out = exec(mock, "agents", "launch", "-w", WSP_ID);
+
+        assertEquals(errorMessage(out.app, new TowerException("Specify an agent to launch (--id or --name) or the instructions to run (--instructions or --instructions-file)")), out.stdErr);
+        assertEquals(1, out.exitCode);
     }
 }
