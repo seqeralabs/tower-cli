@@ -28,19 +28,9 @@ plugins {
 
 apply plugin: 'dev.yumi.gradle.licenser'
 
-// define these in the `gradle.properties` file
-ext.githubUser = project.findProperty('github.packages.user')
-ext.githubToken = project.findProperty('github.packages.token')
-
 repositories {
     mavenCentral()
-    maven {
-        url = uri("https://maven.pkg.github.com/seqeralabs/tower-java-sdk")
-        credentials {
-            username = githubUser ?: System.getenv("GITHUB_USERNAME")
-            password = githubToken ?: System.getenv("GITHUB_TOKEN")
-        }
-    }
+    maven { url = 'https://s3-eu-west-1.amazonaws.com/maven.seqera.io/releases' }
 }
 
 dependencies {

@@ -38,9 +38,6 @@ jobs:
 
       - name: Tests
         run: ./gradlew cleanTest test
-        env:
-          GITHUB_USERNAME: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Tests reports
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -61,8 +58,6 @@ jobs:
       - name: Build Native Image
         run: ./gradlew nativeCompile
         env:
-          GITHUB_USERNAME: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PLATFORM: linux-x86_64
 
       - name: Upload linux native image artifact
@@ -75,8 +70,6 @@ jobs:
         run: ./gradlew cleanTest test
         env:
           TOWER_CLI: build/native/nativeCompile/tw
-          GITHUB_USERNAME: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Binary tests reports
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -106,9 +99,6 @@ jobs:
 
       - name: Tests
         run: ./gradlew cleanTest test
-        env:
-          GITHUB_USERNAME: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Tests reports
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -120,8 +110,6 @@ jobs:
       - name: Build Native Image
         run: ./gradlew nativeCompile
         env:
-          GITHUB_USERNAME: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PLATFORM: osx-x86_64
       - name: Codesign binary
         if: contains(github.event.head_commit.message, '[release]') && github.event.ref == 'refs/heads/master'
@@ -161,8 +149,6 @@ jobs:
         run: ./gradlew cleanTest test
         env:
           TOWER_CLI: build/native/nativeCompile/tw
-          GITHUB_USERNAME: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Binary tests reports
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -200,9 +186,6 @@ jobs:
 
       - name: Tests
         run: ./gradlew cleanTest test
-        env:
-          GITHUB_USERNAME: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Tests reports
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -214,8 +197,6 @@ jobs:
       - name: Build Native Image
         run: ./gradlew nativeCompile
         env:
-          GITHUB_USERNAME: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PLATFORM: osx-arm64
       - name: Codesign binary
         if: contains(github.event.head_commit.message, '[release]') && github.event.ref == 'refs/heads/master'
@@ -255,8 +236,6 @@ jobs:
         run: ./gradlew cleanTest test
         env:
           TOWER_CLI: build/native/nativeCompile/tw
-          GITHUB_USERNAME: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Binary tests reports
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -286,9 +265,6 @@ jobs:
 
       - name: Tests
         run: ./gradlew cleanTest test
-        env:
-          GITHUB_USERNAME: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Tests reports
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -307,8 +283,6 @@ jobs:
       - name: Build Native Image
         run: ./gradlew nativeCompile
         env:
-          GITHUB_USERNAME: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PLATFORM: windows-x86_64
 
       - name: Upload Windows native image artifact
@@ -321,8 +295,6 @@ jobs:
         run: ./gradlew cleanTest test
         env:
           TOWER_CLI: build/native/nativeCompile/tw.exe
-          GITHUB_USERNAME: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Binary tests reports
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
