@@ -59,7 +59,7 @@ public class BrowseCmd extends AbstractDataLinksCmd {
         String credId = credentialsRef != null ? credentialsByRef(null, wspId, credentialsRef) : null;
         String id = getDataLinkId(dataLinkRefOptions, wspId, credId);
 
-        DataLinkDto dataLink = dataLinksApi().describeDataLink(id, wspId, credId).getDataLink();
+        DataLinkDto dataLink = dataLinksApi().describeDataLink(id, wspId, credId, null).getDataLink();
         DataLinkContentResponse response;
 
         if (path != null)
