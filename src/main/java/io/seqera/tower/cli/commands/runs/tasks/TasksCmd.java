@@ -65,7 +65,7 @@ public class TasksCmd extends AbstractRunsCmd {
         Integer max = PaginationOptions.getMax(paginationOptions);
         Integer offset = PaginationOptions.getOffset(paginationOptions, max);
 
-        ListTasksResponse response = workflowsApi().listWorkflowTasks(parentCommand.id, wspId, max, offset, null, null, startsWith);
+        ListTasksResponse response = workflowsApi().listWorkflowTasks(parentCommand.id, wspId, max, offset, null, null, startsWith, null);
         List<Task> tasks = new ArrayList<>();
         for (DescribeTaskResponse describeTaskResponse : Objects.requireNonNull(response.getTasks())) {
             Task task = describeTaskResponse.getTask();

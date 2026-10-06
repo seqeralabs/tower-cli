@@ -32,7 +32,7 @@ import io.seqera.tower.cli.responses.CredentialsList;
 import io.seqera.tower.cli.responses.CredentialsValidated;
 import io.seqera.tower.model.Credentials;
 import io.seqera.tower.model.CredentialsStatus;
-import io.seqera.tower.model.DeleteCredentialsConflictResponseConflict;
+import io.seqera.tower.model.ConflictingResource;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -72,11 +72,11 @@ class CredentialsCmdTest extends BaseCmdTest {
             + "{\"type\":\"workflow\",\"id\":\"4Xa1b2c3\",\"name\":\"nf-hello\",\"url\":\"https://cloud.seqera.io/orgs/o/workspaces/w/watch/4Xa1b2c3\"},"
             + "{\"type\":\"studio\",\"id\":\"7Bc4d5e6\",\"name\":\"rnaseq-studio\"}]}";
 
-    private static List<DeleteCredentialsConflictResponseConflict> expectedConflicts() {
+    private static List<ConflictingResource> expectedConflicts() {
         return List.of(
-                new DeleteCredentialsConflictResponseConflict().type("workflow").id("4Xa1b2c3").name("nf-hello")
+                new ConflictingResource().type("workflow").id("4Xa1b2c3").name("nf-hello")
                         .url("https://cloud.seqera.io/orgs/o/workspaces/w/watch/4Xa1b2c3"),
-                new DeleteCredentialsConflictResponseConflict().type("studio").id("7Bc4d5e6").name("rnaseq-studio")
+                new ConflictingResource().type("studio").id("7Bc4d5e6").name("rnaseq-studio")
         );
     }
 

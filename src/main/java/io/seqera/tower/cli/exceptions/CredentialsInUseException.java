@@ -16,7 +16,7 @@
 
 package io.seqera.tower.cli.exceptions;
 
-import io.seqera.tower.model.DeleteCredentialsConflictResponseConflict;
+import io.seqera.tower.model.ConflictingResource;
 
 import java.util.List;
 
@@ -25,20 +25,20 @@ import java.util.List;
  */
 public class CredentialsInUseException extends TowerException {
 
-    private final List<DeleteCredentialsConflictResponseConflict> conflicts;
+    private final List<ConflictingResource> conflicts;
 
-    public CredentialsInUseException(String credentialsRef, List<DeleteCredentialsConflictResponseConflict> conflicts) {
+    public CredentialsInUseException(String credentialsRef, List<ConflictingResource> conflicts) {
         super(buildMessage(credentialsRef, conflicts));
         this.conflicts = conflicts;
     }
 
-    public List<DeleteCredentialsConflictResponseConflict> getConflicts() {
+    public List<ConflictingResource> getConflicts() {
         return conflicts;
     }
 
-    private static String buildMessage(String credentialsRef, List<DeleteCredentialsConflictResponseConflict> conflicts) {
+    private static String buildMessage(String credentialsRef, List<ConflictingResource> conflicts) {
         StringBuilder message = new StringBuilder(String.format("Credentials '%s' are used by running jobs and were not deleted:", credentialsRef));
-        for (DeleteCredentialsConflictResponseConflict conflict : conflicts) {
+        for (ConflictingResource conflict : conflicts) {
             message.append(String.format("%n  - %s '%s' (%s)", conflict.getType(), conflict.getName(), conflict.getId()));
             if (conflict.getUrl() != null) {
                 message.append(" ").append(conflict.getUrl());
