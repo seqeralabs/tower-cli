@@ -709,6 +709,26 @@ $ tw data-links browse -w seqeralabs/showcase -i v1-user-6d8f44c239e2a098b3e02e9
  FOLDER | technical/                                 | 0        
 ```
 
+## Agents
+
+Run `tw agents -h` to view the supported operations: `list`, `view`, `add`, `update`, `delete`, `enable`, `disable`, `launch`, and `runs list|view`. Agents must be enabled for the organization.
+
+```bash
+tw agents add -w my-org/my-workspace -n triage --instructions-file triage.md
+tw agents launch -w my-org/my-workspace -n triage
+tw agents runs list -w my-org/my-workspace
+```
+
+## Service accounts
+
+Run `tw service-accounts -h` to view the supported operations: `list`, `add`, `view`, `update`, and `delete`. Service accounts are non-human organization members. Add one to a workspace with `tw participants add -t MEMBER -n <name>`, or set one as an agent's identity with `tw agents add|update --service-account-id`.
+
+```bash
+tw service-accounts add -o my-org -n ci-bot -d "CI pipeline launcher"
+tw service-accounts list -o my-org
+tw service-accounts list -w my-org/my-workspace
+```
+
 [compute-envs]: https://docs.seqera.io/platform/latest/compute-envs/overview
 [credentials]: https://docs.seqera.io/platform/latest/credentials/overview
 [git-integration]: https://docs.seqera.io/platform/latest/git/overview

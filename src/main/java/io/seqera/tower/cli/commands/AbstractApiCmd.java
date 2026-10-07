@@ -19,6 +19,7 @@ package io.seqera.tower.cli.commands;
 import io.seqera.tower.ApiClient;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.api.ActionsApi;
+import io.seqera.tower.api.AgentsApi;
 import io.seqera.tower.api.AvatarsApi;
 import io.seqera.tower.api.ComputeEnvsApi;
 import io.seqera.tower.api.CredentialsApi;
@@ -33,6 +34,7 @@ import io.seqera.tower.api.PipelineSecretsApi;
 import io.seqera.tower.api.PipelineVersionsApi;
 import io.seqera.tower.api.PipelinesApi;
 import io.seqera.tower.api.PlatformsApi;
+import io.seqera.tower.api.ServiceAccountsApi;
 import io.seqera.tower.api.ServiceInfoApi;
 import io.seqera.tower.api.StudiosApi;
 import io.seqera.tower.api.TeamsApi;
@@ -122,6 +124,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     private PipelineSecretsApi pipelineSecretsApi;
     private PipelineVersionsApi pipelineVersionsApi;
     private PlatformsApi platformsApi;
+    private ServiceAccountsApi serviceAccountsApi;
     private ServiceInfoApi serviceInfoApi;
     private StudiosApi studiosApi;
     private TeamsApi teamsApi;
@@ -192,6 +195,10 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         return actionsApi == null ? new ActionsApi(apiClient()) : actionsApi;
     }
 
+    protected AgentsApi agentsApi() throws ApiException {
+        return new AgentsApi(apiClient());
+    }
+
     protected AvatarsApi avatarsApi() throws ApiException {
         return avatarsApi == null ? new AvatarsApi(apiClient()) : avatarsApi;
     }
@@ -246,6 +253,10 @@ public abstract class AbstractApiCmd extends AbstractCmd {
 
     protected PlatformsApi platformsApi() throws ApiException {
         return platformsApi == null ? new PlatformsApi(apiClient()) : platformsApi;
+    }
+
+    protected ServiceAccountsApi serviceAccountsApi() throws ApiException {
+        return serviceAccountsApi == null ? new ServiceAccountsApi(apiClient()) : serviceAccountsApi;
     }
 
     protected ServiceInfoApi serviceInfoApi() throws ApiException {

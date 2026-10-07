@@ -22,6 +22,7 @@ package io.seqera.tower.cli;
 
 import io.seqera.tower.cli.commands.AbstractCmd;
 import io.seqera.tower.cli.commands.ActionsCmd;
+import io.seqera.tower.cli.commands.AgentsCmd;
 import io.seqera.tower.cli.commands.CollaboratorsCmd;
 import io.seqera.tower.cli.commands.ComputeEnvsCmd;
 import io.seqera.tower.cli.commands.CredentialsCmd;
@@ -37,6 +38,7 @@ import io.seqera.tower.cli.commands.PipelinesCmd;
 import io.seqera.tower.cli.commands.PipelineSchemasCmd;
 import io.seqera.tower.cli.commands.RunsCmd;
 import io.seqera.tower.cli.commands.SecretsCmd;
+import io.seqera.tower.cli.commands.ServiceAccountsCmd;
 import io.seqera.tower.cli.commands.TeamsCmd;
 import io.seqera.tower.cli.commands.WorkspacesCmd;
 import io.seqera.tower.cli.commands.enums.OutputType;
@@ -57,6 +59,7 @@ import static picocli.AutoComplete.GenerateCompletion;
         description = "Seqera Platform CLI",
         subcommands = {
                 ActionsCmd.class,
+                AgentsCmd.class,
                 CollaboratorsCmd.class,
                 ComputeEnvsCmd.class,
                 CredentialsCmd.class,
@@ -76,6 +79,7 @@ import static picocli.AutoComplete.GenerateCompletion;
                 TeamsCmd.class,
                 WorkspacesCmd.class,
                 SecretsCmd.class,
+                ServiceAccountsCmd.class,
         }
 )
 public class Tower extends AbstractCmd {
