@@ -1,0 +1,17 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "enabledManagers": ["gradle", "gradle-wrapper", "github-actions"],
+  "schedule": ["after 10pm on sunday", "before 6am on monday"],
+  "packageRules": [
+    {
+      "matchManagers": ["gradle", "gradle-wrapper"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "gradle minor and patch"
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "groupName": "github actions"
+    }
+  ]
+}
