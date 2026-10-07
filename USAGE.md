@@ -713,10 +713,19 @@ $ tw data-links browse -w seqeralabs/showcase -i v1-user-6d8f44c239e2a098b3e02e9
 
 These commands act on an organization (`-o`/`--organization`). Most require the organization `OWNER` role.
 
+### Custom roles
+
+Run `tw roles -h` to view the supported operations: `list`, `view`, `add`, `update`, `delete`, and `permissions`. `tw participants update --role` accepts custom role names.
+
+```bash
+tw roles permissions -o my-org
+tw roles add -o my-org -n launcher -d "Launch only" -p <permission>,<permission>
+```
+
 ### Teams and quotas
 
 - `tw teams view|update|workspaces`: view a team, update its name or description, and list its workspaces.
-- `tw organizations quotas`: view organization quotas.
+- `tw organizations quotas` and `tw members roles -u <user>`: view organization quotas and a member's workspace roles.
 
 ## Personal access
 
@@ -756,9 +765,9 @@ tw managed-identities credentials -o my-org -n hpc1 add -l my_linux_user -k ~/.s
 - `tw launch`, `tw pipelines add|update`, `tw runs relaunch`, and `tw actions add|update`: `--tower-config`.
 - `tw runs star|unstar`, `tw runs view log [--next <cursor>]`, and `tw runs delete -i <id>,<id>`.
 - `tw pipelines schema`: show a pipeline's parameter schema.
-- `tw studios extend|rename-checkpoint`.
+- `tw studios extend|rename-checkpoint`. `--mount-data-uris` also accepts a folder inside a data link.
 - `tw data-links delete-content|download-script`.
-- `tw datasets disable-version`.
+- `tw datasets add --url`, `tw datasets update --url`, and `tw datasets disable-version`.
 
 [compute-envs]: https://docs.seqera.io/platform/latest/compute-envs/overview
 [credentials]: https://docs.seqera.io/platform/latest/credentials/overview
