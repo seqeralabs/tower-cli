@@ -772,12 +772,15 @@ tw lineage upstream -w my-org/my-workspace -i <lid>
   - AWS Cloud: `--log-group`. Google Cloud: `--project-id`.
   - HPC platforms: `--propagate-head-job-options`.
   - Seqera Compute: `--data-retention-policy`.
-- `tw launch`, `tw pipelines add|update`, `tw runs relaunch`, and `tw actions add|update`: `--tower-config`. List the Nextflow and Fusion versions you can launch with `tw info versions` (`-c fusion` for Fusion).
+  - Azure Cloud: `--key-vault-url`. Google Cloud: `--billing-export-table`.
+- `tw launch`, `tw pipelines add|update`, `tw runs relaunch`, and `tw actions add|update`: `--fusion-version` and `--tower-config`. List the Nextflow and Fusion versions you can launch with `tw info versions` (`-c fusion` for Fusion).
 - `tw runs star|unstar`, `tw runs view log [--next <cursor>]`, and `tw runs delete -i <id>,<id>`.
 - `tw pipelines schema`: show a pipeline's parameter schema.
 - `tw studios star|unstar|extend|logs|rename-checkpoint`. `--mount-data-uris` also accepts a folder inside a data link.
 - `tw data-links delete-content|download-script`.
 - `tw datasets add --url`, `tw datasets update --url`, and `tw datasets disable-version`.
+- `tw credentials federation-setup -p aws|google`: show the values to configure in your cloud provider before adding workload identity credentials.
+- `tw launch --wait` keeps polling through transient errors after a successful submit. If the run's status can't be checked, it exits with code 3 instead of 1.
 
 [compute-envs]: https://docs.seqera.io/platform/latest/compute-envs/overview
 [credentials]: https://docs.seqera.io/platform/latest/credentials/overview
