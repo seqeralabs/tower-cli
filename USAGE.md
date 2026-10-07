@@ -754,6 +754,16 @@ tw managed-identities add -o my-org -n hpc1 -p slurm -H login.hpc.example.com
 tw managed-identities credentials -o my-org -n hpc1 add -l my_linux_user -k ~/.ssh/id_rsa
 ```
 
+## Lineage
+
+Run `tw lineage -h` to view the supported operations: `resolve`, `view`, `search`, `upstream`, and `downstream`. Lineage must be enabled for the workspace.
+
+```bash
+tw lineage resolve -w my-org/my-workspace --file-path s3://bucket/results/out.bam
+tw lineage resolve -w my-org/my-workspace --session-id <session-id> --run-name <run-name>
+tw lineage upstream -w my-org/my-workspace -i <lid>
+```
+
 ## Other additions
 
 - `tw compute-envs enable|disable`: enable or disable a compute environment.
@@ -765,7 +775,7 @@ tw managed-identities credentials -o my-org -n hpc1 add -l my_linux_user -k ~/.s
 - `tw launch`, `tw pipelines add|update`, `tw runs relaunch`, and `tw actions add|update`: `--tower-config`. List the Nextflow and Fusion versions you can launch with `tw info versions` (`-c fusion` for Fusion).
 - `tw runs star|unstar`, `tw runs view log [--next <cursor>]`, and `tw runs delete -i <id>,<id>`.
 - `tw pipelines schema`: show a pipeline's parameter schema.
-- `tw studios star|unstar|extend|rename-checkpoint`. `--mount-data-uris` also accepts a folder inside a data link.
+- `tw studios star|unstar|extend|logs|rename-checkpoint`. `--mount-data-uris` also accepts a folder inside a data link.
 - `tw data-links delete-content|download-script`.
 - `tw datasets add --url`, `tw datasets update --url`, and `tw datasets disable-version`.
 
