@@ -128,21 +128,27 @@ public class AzBatchForgePlatform extends AbstractPlatform<AzBatchConfig> {
         }
 
         if (dualPool) {
-            AzBatchPoolConfig headPool = new AzBatchPoolConfig();
+            AzBatchPoolConfig headPool = new AzBatchPoolConfig()
+                    .autoScale(true);
             if (headPoolOpts != null) {
                 headPool.vmType(headPoolOpts.headVmType);
                 headPool.vmCount(headPoolOpts.headVmCount);
-                headPool.autoScale(headPoolOpts.headNoAutoScale != null ? !headPoolOpts.headNoAutoScale : null);
+                if (headPoolOpts.headNoAutoScale != null) {
+                    headPool.autoScale(!headPoolOpts.headNoAutoScale);
+                }
                 if (headPoolOpts.headBootDiskSizeGb != null) {
                     headPool.bootDiskSizeGB(headPoolOpts.headBootDiskSizeGb);
                 }
             }
 
-            AzBatchPoolConfig workerPool = new AzBatchPoolConfig();
+            AzBatchPoolConfig workerPool = new AzBatchPoolConfig()
+                    .autoScale(true);
             if (workerPoolOpts != null) {
                 workerPool.vmType(workerPoolOpts.workerVmType);
                 workerPool.vmCount(workerPoolOpts.workerVmCount);
-                workerPool.autoScale(workerPoolOpts.workerNoAutoScale != null ? !workerPoolOpts.workerNoAutoScale : null);
+                if (workerPoolOpts.workerNoAutoScale != null) {
+                    workerPool.autoScale(!workerPoolOpts.workerNoAutoScale);
+                }
                 if (workerPoolOpts.workerBootDiskSizeGb != null) {
                     workerPool.bootDiskSizeGB(workerPoolOpts.workerBootDiskSizeGb);
                 }
