@@ -14,34 +14,37 @@
  * limitations under the License.
  */
 
-package io.seqera.tower.cli.responses.teams;
+package io.seqera.tower.cli.responses.organizations;
 
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.utils.TableList;
-import io.seqera.tower.model.TeamDbDto;
+import io.seqera.tower.model.IdpGroupEntry;
 
 import java.io.PrintWriter;
+import java.util.List;
 
-public class TeamView extends Response {
+public class IdpGroupsList extends Response {
 
     public final String organizationName;
-    public final TeamDbDto team;
+    public final List<IdpGroupEntry> groups;
 
-    public TeamView(String organizationName, TeamDbDto team) {
+    public IdpGroupsList(String organizationName, List<IdpGroupEntry> groups) {
         this.organizationName = organizationName;
-        this.team = team;
+        this.groups = groups;
     }
 
     @Override
     public void toString(PrintWriter out) {
-        out.println(ansi(String.format("%n  @|bold Team '%s' at %s organization:|@%n", team.getName(), organizationName)));
-        TableList table = new TableList(out, 2);
+        out.println(ansi(String.format("%n  @|bold IdP groups for %s organization:|@%n", organizationName)));
+
+        if (groups == null || groups.isEmpty()) {
+            out.println(ansi("    @|yellow No IdP groups found|@"));
+            return;
+        }
+
+        TableList table = new TableList(out, 3, "ID", "Name", "Source");
         table.setPrefix("    ");
-        table.addRow("ID", team.getTeamId().toString());
-        table.addRow("Name", team.getName());
-        table.addRow("Description", team.getDescription());
-        table.addRow("Members", team.getMembersCount() == null ? null : team.getMembersCount().toString());
-        table.addRow("IdP group", team.getIdpGroupName());
+        groups.forEach(group -> table.addRow(group.getId().toString(), group.getDisplayName(), group.getSource() == null ? null : group.getSource().toString()));
         table.print();
         out.println("");
     }
