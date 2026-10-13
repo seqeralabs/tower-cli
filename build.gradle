@@ -8,10 +8,10 @@ buildscript {
     dependencies {
         classpath 'dev.yumi:yumi-gradle-licenser:4.0.0'
         constraints {
-            classpath('org.apache.logging.log4j:log4j-core:2.25.4') {
+            classpath('org.apache.logging.log4j:log4j-core:2.26.1') {
                 because 'GHSA-445c-vh5m-36rj, GHSA-6hg6-v5c8-fphq, GHSA-3pxv-7cmr-fjr4'
             }
-            classpath('org.codehaus.plexus:plexus-utils:4.0.3') {
+            classpath('org.codehaus.plexus:plexus-utils:4.1.0') {
                 because 'GHSA-6fmv-xxpf-w3cw'
             }
         }
