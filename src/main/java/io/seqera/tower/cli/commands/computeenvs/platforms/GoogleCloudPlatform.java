@@ -75,13 +75,11 @@ public class GoogleCloudPlatform extends AbstractPlatform<GoogleCloudConfig> {
                 .zone(zone);
 
         if (sched != null) {
-            SchedConfig schedConfig = new SchedConfig();
-            if (sched.provisioningModel != null) {
-                schedConfig.provisioningModel(sched.provisioningModel);
-            }
-            if (sched.machineTypes != null) {
-                schedConfig.machineTypes(sched.machineTypes);
-            }
+            SchedConfig schedConfig = new SchedConfig()
+                    .provisioningModel(sched.provisioningModel)
+                    .machineTypes(sched.machineTypes)
+                    .predictionModel(sched.predictionModel)
+                    .nvmeEnabled(sched.nvmeEnabled);
             // billingExportTable is JsonNullable: setting null would send an explicit null.
             if (sched.billingExportTable != null) {
                 schedConfig.billingExportTable(sched.billingExportTable);
@@ -155,6 +153,12 @@ public class GoogleCloudPlatform extends AbstractPlatform<GoogleCloudConfig> {
 
         @Option(names = {"--billing-export-table"}, description = "Fully-qualified BigQuery table holding the Cloud Billing export, as project.dataset.table. Enables cost reporting for this compute environment. Costs are unavailable for runs that predate the export.")
         public String billingExportTable;
+
+        @Option(names = {"--prediction-model"}, description = "Model the Seqera scheduler uses to predict task resource requirements. Suggested values: none, qr/v1, qr/v2, qr/v3. If absent, the scheduler default (none) applies.")
+        public String predictionModel;
+
+        @Option(names = {"--nvme-storage"}, description = "Restrict the Seqera scheduler to Compute Engine machine types that provide local SSD (NVMe) storage for faster I/O.")
+        public Boolean nvmeEnabled;
     }
 
     public static class AdvancedOptions {

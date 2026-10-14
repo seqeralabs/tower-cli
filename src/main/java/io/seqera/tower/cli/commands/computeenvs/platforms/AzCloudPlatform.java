@@ -69,13 +69,11 @@ public class AzCloudPlatform extends AbstractPlatform<AzCloudConfig> {
                 .resourceGroup(resourceGroup);
 
         if (sched != null) {
-            SchedConfig schedConfig = new SchedConfig();
-            if (sched.provisioningModel != null) {
-                schedConfig.provisioningModel(sched.provisioningModel);
-            }
-            if (sched.machineTypes != null) {
-                schedConfig.machineTypes(sched.machineTypes);
-            }
+            SchedConfig schedConfig = new SchedConfig()
+                    .provisioningModel(sched.provisioningModel)
+                    .machineTypes(sched.machineTypes)
+                    .predictionModel(sched.predictionModel)
+                    .nvmeEnabled(sched.nvmeEnabled);
             config.schedConfig(schedConfig);
         }
 
@@ -118,6 +116,12 @@ public class AzCloudPlatform extends AbstractPlatform<AzCloudConfig> {
 
         @Option(names = {"--sched-machine-types"}, description = "Azure VM sizes for compute nodes managed by the Seqera scheduler. Comma-separated list (e.g., Standard_D4s_v3,Standard_E4s_v3). Leave empty to let the scheduler select the most cost-effective sizes.", split = ",")
         public List<String> machineTypes;
+
+        @Option(names = {"--prediction-model"}, description = "Model the Seqera scheduler uses to predict task resource requirements. Suggested values: none, qr/v1, qr/v2, qr/v3. If absent, the scheduler default (none) applies.")
+        public String predictionModel;
+
+        @Option(names = {"--nvme-storage"}, description = "Restrict the Seqera scheduler to Azure VM sizes that provide local SSD storage for faster I/O.")
+        public Boolean nvmeEnabled;
     }
 
     public static class AdvancedOptions {

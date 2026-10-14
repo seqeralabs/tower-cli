@@ -451,4 +451,76 @@ public class GoogleCloudPlatformTest extends BaseCmdTest {
         assertEquals(0, out.exitCode);
         assertEquals(expected.toString(), out.stdOut);
     }
+
+    @Test
+    void testAddWithIntelligentComputeOptions(MockServerClient mock) throws IOException {
+        mock.reset();
+
+        // given
+        mock.when(
+                request()
+                        .withMethod("GET")
+                        .withPath("/credentials")
+                        .withQueryStringParameter("platformId", "google-cloud"),
+                exactly(1)
+        ).respond(
+                response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("{\"credentials\":[{\"id\":\"6XfOhoztUq6de3Dw3X9LSb\",\"name\":\"google\",\"description\":null,\"discriminator\":\"google\",\"baseUrl\":null,\"category\":null,\"deleted\":null,\"lastUsed\":\"2021-09-08T18:20:46Z\",\"dateCreated\":\"2021-09-08T12:57:04Z\",\"lastUpdated\":\"2021-09-08T12:57:04Z\"}]}")
+        );
+
+        mock.when(
+                request()
+                        .withMethod("POST")
+                        .withPath("/compute-envs")
+                        .withBody(json("""
+                                {
+                                    "computeEnv": {
+                                        "name": "my-google-cloud-ic",
+                                        "platform": "google-cloud",
+                                        "config": {
+                                            "workDir": "gs://my-bucket",
+                                            "region": "us-central1",
+                                            "zone": "us-central1-a",
+                                            "fusion2Enabled": true,
+                                            "waveEnabled": true,
+                                            "schedEnabled": true,
+                                            "schedConfig": {
+                                                "predictionModel": "qr/v3",
+                                                "nvmeEnabled": true
+                                            }
+                                        },
+                                        "credentialsId": "6XfOhoztUq6de3Dw3X9LSb"
+                                    }
+                                }""")),
+                exactly(1)
+        ).respond(
+                response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}")
+        );
+
+        // when
+        ExecOut out = exec(mock, "compute-envs", "add", "google-cloud",
+                "-n", "my-google-cloud-ic",
+                "--work-dir",
+                "gs://my-bucket",
+                "-r",
+                "us-central1",
+                "-z",
+                "us-central1-a",
+                "--sched-enabled",
+                "--prediction-model",
+                "qr/v3",
+                "--nvme-storage"
+        );
+
+        // then
+        var expected = new ComputeEnvAdded("google-cloud", "isnEDBLvHDAIteOEF44ow", "my-google-cloud-ic", null, USER_WORKSPACE_NAME);
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        assertEquals(expected.toString(), out.stdOut);
+    }
 }

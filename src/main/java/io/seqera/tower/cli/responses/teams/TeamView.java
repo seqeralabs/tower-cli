@@ -41,6 +41,7 @@ public class TeamView extends Response {
         table.addRow("Name", team.getName());
         table.addRow("Description", team.getDescription());
         table.addRow("Members", team.getMembersCount() == null ? null : team.getMembersCount().toString());
+        table.addRow("IdP group", team.getIdpGroupName());
         table.print();
         out.println("");
     }
