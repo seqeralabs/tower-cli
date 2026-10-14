@@ -15,6 +15,7 @@ shadowVersion = "9.6.1"
 slf4jVersion = "2.0.20"
 towerJavaSdkVersion = "1.236.0"
 xzVersion = "1.12"
+yumiLicenserVersion = "4.0.0"
 
 [libraries]
 classgraph = { group = "io.github.classgraph", name = "classgraph", version.ref = "classgraphVersion" }
@@ -43,8 +44,6 @@ towerJavaSdk = { group = "io.seqera.tower", name = "tower-java-sdk", version.ref
 xz = { group = "org.tukaani", name = "xz", version.ref = "xzVersion" }
 
 [plugins]
-# yumi-gradle-licenser is applied via the buildscript {} block in build.gradle so
-# we can constrain its transitive dependencies. Its version is pinned directly in
-# build.gradle's buildscript classpath.
 graalvmNative = { id = "org.graalvm.buildtools.native", version.ref = "graalvmNativeVersion" }
 shadow = { id = "com.gradleup.shadow", version.ref = "shadowVersion" }
+yumiLicenser = { id = "dev.yumi.gradle.licenser", version.ref = "yumiLicenserVersion" }
