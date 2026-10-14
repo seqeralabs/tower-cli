@@ -12,6 +12,11 @@
       "matchManagers": ["github-actions"],
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
       "groupName": "github actions"
+    },
+    {
+      "description": "picocli-codegen 4.7.x rejects the @ArgGroup in VersionRefOptions; hold at 4.6.x until it compiles (see #583, #616)",
+      "matchPackageNames": ["info.picocli:picocli", "info.picocli:picocli-codegen"],
+      "allowedVersions": "<4.7.0"
     }
   ]
 }
