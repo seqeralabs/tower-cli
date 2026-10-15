@@ -23,6 +23,7 @@ import io.seqera.tower.cli.commands.labels.LabelsOptionalOptions;
 import io.seqera.tower.cli.exceptions.InvalidDataStudioParentCheckpointException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
+import io.seqera.tower.cli.responses.studios.StudioSsh;
 import io.seqera.tower.cli.responses.studios.StudiosCreated;
 import io.seqera.tower.model.DataStudioCheckpointDto;
 import io.seqera.tower.model.DataStudioConfiguration;
@@ -66,6 +67,9 @@ public class AddAsNewCmd extends AbstractStudiosCmd{
     @CommandLine.Option(names = {"--private"}, description = "Create a private studio that only you can access or manage (default: false)", defaultValue = "false")
     public Boolean isPrivate;
 
+    @CommandLine.Option(names = {"--ssh"}, arity = "0..1", fallbackValue = "true", paramLabel = "true|false", description = "Enable or disable SSH access to the new Studio. Bare --ssh or --ssh=true enables it, --ssh=false disables it. Omit to keep the parent Studio's setting. Requires SSH to be enabled for the workspace; otherwise Platform ignores it.")
+    public Boolean ssh;
+
     @CommandLine.Option(names = {"--allow-user"}, description = "User (numeric ID, username, or email), besides the creator, allowed to connect to and start this studio when it is private.")
     public String allowedUser;
 
@@ -89,7 +93,7 @@ public class AddAsNewCmd extends AbstractStudiosCmd{
         DataStudioCreateResponse response = studiosApi().createDataStudio(request, wspId, autoStart);
         DataStudioDto studioDto = response.getStudio();
         assert studioDto != null;
-        return new StudiosCreated(studioDto.getSessionId(), wspId, workspaceRef(wspId), baseWorkspaceUrl(wspId), autoStart);
+        return new StudiosCreated(studioDto.getSessionId(), wspId, workspaceRef(wspId), baseWorkspaceUrl(wspId), autoStart, StudioSsh.commandOf(studioDto));
     }
 
     DataStudioCreateRequest prepareRequest(DataStudioDto parentDataStudio, String parentCheckpointId, Long wspId) throws ApiException {
@@ -122,6 +126,9 @@ public class AddAsNewCmd extends AbstractStudiosCmd{
         request.setComputeEnvId(Objects.requireNonNull(parentDataStudio.getComputeEnv()).getId());
 
         DataStudioConfiguration newConfig = studioConfigurationFrom(workspaceId(workspace.workspace), parentDataStudio, studioConfigOptions);
+        if (ssh != null) {
+            newConfig.setSshEnabled(ssh);
+        }
 
         request.setConfiguration(newConfig);
         return request;
@@ -139,6 +146,6 @@ public class AddAsNewCmd extends AbstractStudiosCmd{
         }
 
         StudiosCreated createdResponse = ((StudiosCreated) response);
-        return onBeforeExit(exitCode, createdResponse.sessionId, createdResponse.workspaceId, wait);
+        return onBeforeExit(exitCode, createdResponse.sessionId, createdResponse.workspaceId, wait, createdResponse.sshCommand == null);
     }
 }

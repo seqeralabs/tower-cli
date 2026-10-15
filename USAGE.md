@@ -777,6 +777,7 @@ tw lineage upstream -w my-org/my-workspace -i <lid>
 - `tw runs star|unstar`, `tw runs view log [--next <cursor>]`, and `tw runs delete -i <id>,<id>`.
 - `tw pipelines schema`: show a pipeline's parameter schema.
 - `tw studios star|unstar|extend|logs|rename-checkpoint`. `--mount-data-uris` also accepts a folder inside a data link.
+- `tw studios add|add-as-new|start|update --ssh[=true|false]`: enable or disable SSH access to a Studio. SSH must be enabled for the workspace, otherwise Platform ignores the option. When SSH is enabled, `add`, `start` and `view` print the ready-to-use SSH command.
 - `tw data-links delete-content|download-script`.
 - `tw datasets add --url`, `tw datasets update --url`, and `tw datasets disable-version`.
 - `tw credentials federation-setup -p aws|google`: show the values to configure in your cloud provider before adding workload identity credentials.

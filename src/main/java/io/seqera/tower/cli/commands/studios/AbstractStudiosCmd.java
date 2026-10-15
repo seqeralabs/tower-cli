@@ -30,6 +30,7 @@ import io.seqera.tower.cli.commands.data.links.DataLinkService;
 import io.seqera.tower.cli.commands.labels.Label;
 import io.seqera.tower.cli.exceptions.MemberNotFoundException;
 import io.seqera.tower.cli.exceptions.StudioNotFoundException;
+import io.seqera.tower.cli.responses.studios.StudioSsh;
 import io.seqera.tower.model.DataStudioConfiguration;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.model.DataStudioDto;
@@ -42,6 +43,7 @@ import io.seqera.tower.model.ListMembersResponse;
 import io.seqera.tower.model.MemberDbDto;
 import io.seqera.tower.model.MountData;
 
+import static io.seqera.tower.cli.utils.FormatHelper.ansi;
 import static io.seqera.tower.cli.utils.ResponseHelper.waitStatus;
 import static io.seqera.tower.model.DataStudioProgressStepStatus.ERRORED;
 import static io.seqera.tower.model.DataStudioProgressStepStatus.IN_PROGRESS;
@@ -49,6 +51,8 @@ import static io.seqera.tower.model.DataStudioProgressStepStatus.IN_PROGRESS;
 public class AbstractStudiosCmd extends AbstractApiCmd {
 
     private static final Integer DEFAULT_MAX_TEMPLATES_TO_QUERY = 20;
+    private DataStudioDto lastPolledStudio;
+
     protected String getSessionId(StudioRefOptions studioRefOptions, Long wspId) throws ApiException {
         return studioRefOptions.studio.sessionId != null
                 ? studioRefOptions.studio.sessionId
@@ -134,10 +138,18 @@ public class AbstractStudiosCmd extends AbstractApiCmd {
     }
 
     protected Integer onBeforeExit(int exitCode, String sessionId, Long workspaceId, DataStudioStatus targetStatus) {
+        return onBeforeExit(exitCode, sessionId, workspaceId, targetStatus, false);
+    }
+
+    /**
+     * Waits for the target status. With {@code showSshCommand}, prints the SSH command from the last studio
+     * fetched by the wait loop, for when the initial response came back before Platform had SSH details.
+     */
+    protected Integer onBeforeExit(int exitCode, String sessionId, Long workspaceId, DataStudioStatus targetStatus, boolean showSshCommand) {
         boolean showProgress = app().output != OutputType.json;
 
         try {
-            return waitStatus(
+            Integer result = waitStatus(
                     app().getOut(),
                     showProgress,
                     new ProgressStepMessageSupplier(sessionId, workspaceId),
@@ -146,6 +158,11 @@ public class AbstractStudiosCmd extends AbstractApiCmd {
                     () -> checkStudioStatus(sessionId, workspaceId),
                     DataStudioStatus.stopped, DataStudioStatus.errored, DataStudioStatus.running
             );
+            String sshCommand = StudioSsh.commandOf(lastPolledStudio);
+            if (showSshCommand && showProgress && sshCommand != null && Integer.valueOf(0).equals(result)) {
+                app().getOut().println(ansi(String.format("%n  SSH: @|bold %s|@", sshCommand)));
+            }
+            return result;
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             return exitCode;
@@ -153,7 +170,8 @@ public class AbstractStudiosCmd extends AbstractApiCmd {
     }
 
     protected DataStudioStatus checkStudioStatus(String sessionId, Long workspaceId) throws ApiException {
-        DataStudioStatusInfo statusInfo = studiosApi().describeDataStudio(sessionId, workspaceId).getStatusInfo();
+        lastPolledStudio = studiosApi().describeDataStudio(sessionId, workspaceId);
+        DataStudioStatusInfo statusInfo = lastPolledStudio.getStatusInfo();
         return statusInfo == null ? null : statusInfo.getStatus();
     }
 

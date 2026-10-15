@@ -25,22 +25,26 @@ public class StudiosCreated extends Response {
     public final Long workspaceId;
     public final boolean autoStart;
     public final String studioUrl;
-
+    public final String sshCommand;
 
     public StudiosCreated(String sessionId, Long workspaceId, String workspaceRef, String baseWorkspaceUrl, boolean autoStart) {
+        this(sessionId, workspaceId, workspaceRef, baseWorkspaceUrl, autoStart, null);
+    }
+
+    public StudiosCreated(String sessionId, Long workspaceId, String workspaceRef, String baseWorkspaceUrl, boolean autoStart, String sshCommand) {
         this.sessionId = sessionId;
         this.workspaceRef = workspaceRef;
         this.workspaceId = workspaceId;
         this.autoStart = autoStart;
         this.studioUrl = String.format("%s/studios/%s/connect", baseWorkspaceUrl, sessionId);
+        this.sshCommand = sshCommand;
     }
 
     @Override
     public String toString() {
-        if (autoStart){
-            return ansi(String.format("%n  @|yellow Studio %s CREATED at %s workspace and auto started.|@%n%n  To connect to this studio session, copy and paste the following URL in your browser:%n%n    @|bold %s|@%n", sessionId, workspaceRef, studioUrl));
-        } else {
-            return ansi(String.format("%n  @|yellow Studio %s CREATED at %s workspace.|@%n", sessionId, workspaceRef));
-        }
+        String created = autoStart
+                ? String.format("%n  @|yellow Studio %s CREATED at %s workspace and auto started.|@%n%n  To connect to this studio session, copy and paste the following URL in your browser:%n%n    @|bold %s|@%n", sessionId, workspaceRef, studioUrl)
+                : String.format("%n  @|yellow Studio %s CREATED at %s workspace.|@%n", sessionId, workspaceRef);
+        return ansi(created + StudioSsh.commandLine(sshCommand));
     }
 }

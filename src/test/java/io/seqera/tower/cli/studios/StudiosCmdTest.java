@@ -55,11 +55,13 @@ import java.util.List;
 
 import org.mockserver.client.MockServerClient;
 import org.mockserver.matchers.MatchType;
+import org.mockserver.model.HttpRequest;
 import org.mockserver.model.MediaType;
 import org.mockserver.verify.VerificationTimes;
 
 import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
@@ -3187,5 +3189,305 @@ public class StudiosCmdTest extends BaseCmdTest {
 
         assertEquals(0, out.exitCode);
         assertTrue(out.stdOut.contains("Waiting for the output log"), out.stdOut);
+    }
+
+    private static final String SSH_COMMAND = "ssh john@a3e8370e7@connect.dev-tower.com -p 2222";
+
+    private void mockUserAndWorkspaces(MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath("/user-info")
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces")
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+    }
+
+    private void mockAddPrerequisites(MockServerClient mock) {
+        mockUserAndWorkspaces(mock);
+        mock.when(
+                request().withMethod("GET").withPath("/studios/templates")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("max", "20")
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_templates_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs")
+                        .withQueryStringParameter("status", "AVAILABLE")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2")
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
+        );
+    }
+
+    private void mockStudioDescribe(MockServerClient mock, String resource) {
+        mock.when(
+                request().withMethod("GET").withPath("/studios/3e8370e7").withQueryStringParameter("workspaceId", "75887156211589")
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource(resource)).withContentType(MediaType.APPLICATION_JSON)
+        );
+    }
+
+    private String recordedBody(MockServerClient mock, String method, String path) {
+        HttpRequest[] recorded = mock.retrieveRecordedRequests(request().withMethod(method).withPath(path));
+        assertEquals(1, recorded.length);
+        return recorded[0].getBodyAsString();
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAddWithSshFalse(OutputType format, MockServerClient mock) {
+        mockAddPrerequisites(mock);
+        mock.when(
+                request().withMethod("POST").withPath("/studios")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withBody(json("""
+                           {
+                             "configuration": {
+                               "sshEnabled": false
+                             }
+                           }
+                           """)), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_created_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t", "cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot", "-c", "demo", "--ssh=false");
+
+        assertOutput(format, out, new StudiosCreated("3e8370e7", 75887156211589L, "[organization1 / workspace1]",
+                "http://localhost:" + mock.getPort() + "/orgs/organization1/workspaces/workspace1", false));
+    }
+
+    @Test
+    void testAddWithoutSshDoesNotSendSshEnabled(MockServerClient mock) {
+        mockAddPrerequisites(mock);
+        mock.when(
+                request().withMethod("POST").withPath("/studios").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_created_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t", "cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot", "-c", "demo");
+
+        assertEquals(0, out.exitCode, out.stdErr);
+        assertFalse(recordedBody(mock, "POST", "/studios").contains("sshEnabled"));
+        assertFalse(out.stdOut.contains("SSH:"), out.stdOut);
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAddWithSshPrintsSshCommand(OutputType format, MockServerClient mock) {
+        mockAddPrerequisites(mock);
+        mock.when(
+                request().withMethod("POST").withPath("/studios")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withBody(json("""
+                           {
+                             "configuration": {
+                               "sshEnabled": true
+                             }
+                           }
+                           """)), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_created_with_ssh_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t", "cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot", "-c", "demo", "--ssh");
+
+        assertOutput(format, out, new StudiosCreated("3e8370e7", 75887156211589L, "[organization1 / workspace1]",
+                "http://localhost:" + mock.getPort() + "/orgs/organization1/workspaces/workspace1", false, SSH_COMMAND));
+        assertTrue(out.stdOut.contains(SSH_COMMAND), out.stdOut);
+    }
+
+    @Test
+    void testAddWithAutoStartAndWaitPrintsSshCommandFromWaitLoop(MockServerClient mock) {
+        mockAddPrerequisites(mock);
+        mock.when(
+                request().withMethod("POST").withPath("/studios")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("autostart", "true"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_created_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+        mockStudioDescribe(mock, "studios/studios_view_response_with_ssh");
+
+        ExecOut out = exec(mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t", "cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot",
+                "-c", "demo", "--ssh", "-a", "--wait", "running");
+
+        assertEquals(0, out.exitCode, out.stdErr);
+        assertTrue(out.stdOut.contains("SSH: " + SSH_COMMAND), out.stdOut);
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAddAsNewWithSshFalse(OutputType format, MockServerClient mock) {
+        mockUserAndWorkspaces(mock);
+        mockStudioDescribe(mock, "studios/studios_view_response_studio_stopped_with_ssh");
+        mock.when(
+                request().withMethod("GET").withPath("/studios/3e8370e7/checkpoints")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withQueryStringParameter("max", "1"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"checkpoints\":[],\"totalSize\":0}").withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("POST").withPath("/studios")
+                        .withQueryStringParameter("workspaceId", "75887156211589")
+                        .withBody(json("""
+                           {
+                             "configuration": {
+                               "sshEnabled": false
+                             }
+                           }
+                           """)), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_start_as_new_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "add-as-new", "-pid", "3e8370e7", "-n", "child-studio-a66d", "-w", "75887156211589", "--ssh=false");
+
+        assertOutput(format, out, new StudiosCreated("8aebf1b8", 75887156211589L, "[organization1 / workspace1]",
+                "http://localhost:" + mock.getPort() + "/orgs/organization1/workspaces/workspace1", false));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testStartWithSsh(OutputType format, MockServerClient mock) {
+        mockUserAndWorkspaces(mock);
+        mockStudioDescribe(mock, "studios/studios_view_response_studio_stopped");
+        mock.when(
+                request().withMethod("PUT").withPath("/studios/3e8370e7/start").withQueryStringParameter("workspaceId", "75887156211589").withBody(json("""
+                           {
+                             "configuration": {
+                               "sshEnabled": true
+                             }
+                           }
+                           """)), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_start_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "start", "-w", "75887156211589", "-i", "3e8370e7", "--ssh");
+
+        assertOutput(format, out, new StudioStartSubmitted("3e8370e7", "3e8370e7", 75887156211589L,
+                "[organization1 / workspace1]", "http://localhost:" + mock.getPort() + "/orgs/organization1/workspaces/workspace1", true));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testStartWithSshFalseDoesNotPrintSshCommand(OutputType format, MockServerClient mock) {
+        mockUserAndWorkspaces(mock);
+        mockStudioDescribe(mock, "studios/studios_view_response_studio_stopped_with_ssh");
+        mock.when(
+                request().withMethod("PUT").withPath("/studios/3e8370e7/start").withQueryStringParameter("workspaceId", "75887156211589").withBody(json("""
+                           {
+                             "configuration": {
+                               "sshEnabled": false
+                             }
+                           }
+                           """)), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_start_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "start", "-w", "75887156211589", "-i", "3e8370e7", "--ssh=false");
+
+        assertOutput(format, out, new StudioStartSubmitted("3e8370e7", "3e8370e7", 75887156211589L,
+                "[organization1 / workspace1]", "http://localhost:" + mock.getPort() + "/orgs/organization1/workspaces/workspace1", true));
+        assertFalse(out.stdOut.contains(SSH_COMMAND), out.stdOut);
+    }
+
+    @Test
+    void testStartWithoutSshDoesNotSendSshEnabled(MockServerClient mock) {
+        mockUserAndWorkspaces(mock);
+        mockStudioDescribe(mock, "studios/studios_view_response_studio_stopped");
+        mock.when(
+                request().withMethod("PUT").withPath("/studios/3e8370e7/start").withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_start_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "studios", "start", "-w", "75887156211589", "-i", "3e8370e7");
+
+        assertEquals(0, out.exitCode, out.stdErr);
+        assertFalse(recordedBody(mock, "PUT", "/studios/3e8370e7/start").contains("sshEnabled"));
+        assertFalse(out.stdOut.contains("SSH:"), out.stdOut);
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testStartPrintsSshCommand(OutputType format, MockServerClient mock) {
+        mockUserAndWorkspaces(mock);
+        mockStudioDescribe(mock, "studios/studios_view_response_studio_stopped_with_ssh");
+        mock.when(
+                request().withMethod("PUT").withPath("/studios/3e8370e7/start").withQueryStringParameter("workspaceId", "75887156211589").withBody(json("""
+                           {
+                             "configuration": {
+                               "sshEnabled": true
+                             }
+                           }
+                           """)), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_start_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "studios", "start", "-w", "75887156211589", "-i", "3e8370e7");
+
+        assertOutput(format, out, new StudioStartSubmitted("3e8370e7", "3e8370e7", 75887156211589L,
+                "[organization1 / workspace1]", "http://localhost:" + mock.getPort() + "/orgs/organization1/workspaces/workspace1", true, SSH_COMMAND));
+        assertTrue(out.stdOut.contains(SSH_COMMAND), out.stdOut);
+    }
+
+    @Test
+    void testUpdateWithSshFalse(MockServerClient mock) {
+        mockUserAndWorkspaces(mock);
+        mockStudioDescribe(mock, "studios/studios_view_response_studio_stopped_with_ssh");
+        mock.when(
+                request().withMethod("PUT").withPath("/studios/3e8370e7").withQueryStringParameter("workspaceId", "75887156211589").withBody(json("""
+                           {
+                             "configuration": {
+                               "sshEnabled": false
+                             }
+                           }
+                           """)), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("studios/studios_update_response")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "studios", "update", "-w", "75887156211589", "-i", "3e8370e7", "--ssh=false");
+
+        assertOutput(OutputType.console, out, new StudioUpdated("3e8370e7", "3e8370e7", 75887156211589L, "[organization1 / workspace1]"));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testViewShowsSshCommand(OutputType format, MockServerClient mock) {
+        mockUserAndWorkspaces(mock);
+        mockStudioDescribe(mock, "studios/studios_view_response_with_ssh");
+
+        ExecOut out = exec(format, mock, "studios", "view", "-w", "75887156211589", "-i", "3e8370e7");
+
+        assertEquals(0, out.exitCode, out.stdErr);
+        assertTrue(out.stdOut.contains(SSH_COMMAND), out.stdOut);
+    }
+
+    @Test
+    void testViewWithoutSshDetailsShowsNoSshCommand(MockServerClient mock) {
+        mockUserAndWorkspaces(mock);
+        mockStudioDescribe(mock, "studios/studios_view_response");
+
+        ExecOut out = exec(mock, "studios", "view", "-w", "75887156211589", "-i", "3e8370e7");
+
+        assertEquals(0, out.exitCode, out.stdErr);
+        assertFalse(out.stdOut.contains("SSH command"), out.stdOut);
     }
 }

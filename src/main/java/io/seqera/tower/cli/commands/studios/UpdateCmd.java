@@ -56,7 +56,7 @@ public class UpdateCmd extends AbstractStudiosCmd {
     @CommandLine.Option(names = {"--new-name"}, description = "Optional new name for the studio.")
     public String newName;
 
-    @CommandLine.Option(names = {"--ssh"}, description = "Optional override to enable or disable SSH connectivity to the studio.")
+    @CommandLine.Option(names = {"--ssh"}, arity = "0..1", fallbackValue = "true", paramLabel = "true|false", description = "Enable or disable SSH access to the Studio. Bare --ssh or --ssh=true enables it, --ssh=false disables it. Omit to keep the Studio's current setting. Requires SSH to be enabled for the workspace; otherwise Platform ignores it.")
     public Boolean ssh;
 
     @CommandLine.Option(names = {"-c", "--compute-env"}, description = "Move the studio to a different (compatible) compute environment. Only allowed while the studio is stopped.")

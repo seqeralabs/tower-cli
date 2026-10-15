@@ -28,20 +28,26 @@ public class StudioStartSubmitted extends Response {
     public final Long workspaceId;
     public final String workspaceRef;
     public final Boolean jobSubmitted;
+    public final String sshCommand;
 
     public StudioStartSubmitted(String sessionId, String userSuppliedStudioIdentifier, Long workspaceId, String workspaceRef, String baseWorkspaceUrl, Boolean jobSubmitted) {
+        this(sessionId, userSuppliedStudioIdentifier, workspaceId, workspaceRef, baseWorkspaceUrl, jobSubmitted, null);
+    }
+
+    public StudioStartSubmitted(String sessionId, String userSuppliedStudioIdentifier, Long workspaceId, String workspaceRef, String baseWorkspaceUrl, Boolean jobSubmitted, String sshCommand) {
         this.sessionId = sessionId;
         this.userSuppliedStudioIdentifier = userSuppliedStudioIdentifier;
         this.workspaceId = workspaceId;
         this.workspaceRef = workspaceRef;
         this.studioUrl = String.format("%s/studios/%s/connect", baseWorkspaceUrl, sessionId);
         this.jobSubmitted = jobSubmitted;
+        this.sshCommand = sshCommand;
     }
 
     @Override
     public String toString() {
         String isSuccess = jobSubmitted ? "successfully submitted" : "failed to submit";
-        return ansi(String.format("%n  @|yellow Studio %s START %s at %s workspace.|@%n%n  To connect to this studio session, copy and paste the following URL in your browser:%n%n    @|bold %s|@%n", userSuppliedStudioIdentifier, isSuccess, workspaceRef, studioUrl));
+        return ansi(String.format("%n  @|yellow Studio %s START %s at %s workspace.|@%n%n  To connect to this studio session, copy and paste the following URL in your browser:%n%n    @|bold %s|@%n", userSuppliedStudioIdentifier, isSuccess, workspaceRef, studioUrl) + StudioSsh.commandLine(sshCommand));
     }
 
 }

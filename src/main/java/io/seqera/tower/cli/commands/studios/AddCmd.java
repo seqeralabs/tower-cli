@@ -24,6 +24,7 @@ import io.seqera.tower.cli.exceptions.StudiosCustomTemplateWithCondaException;
 import io.seqera.tower.cli.exceptions.StudiosTemplateNotFoundException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
+import io.seqera.tower.cli.responses.studios.StudioSsh;
 import io.seqera.tower.cli.responses.studios.StudiosCreated;
 import io.seqera.tower.cli.utils.FilesHelper;
 import io.seqera.tower.model.ComputeEnvResponseDto;
@@ -79,7 +80,7 @@ public class AddCmd extends AbstractStudiosCmd{
     @CommandLine.Option(names = {"--spot"}, description = "Launch the studio on spot instances (default: provider/compute environment default).")
     public Boolean spot;
 
-    @CommandLine.Option(names = {"--ssh"}, description = "Enable SSH connectivity to the studio (default: false).")
+    @CommandLine.Option(names = {"--ssh"}, arity = "0..1", fallbackValue = "true", paramLabel = "true|false", description = "Enable SSH access to the Studio (default: disabled, unless the Git repository's Studio configuration enables it). Bare --ssh or --ssh=true enables it, --ssh=false disables it. Requires SSH to be enabled for the workspace; otherwise Platform ignores it.")
     public Boolean ssh;
 
     @CommandLine.Option(names = {"--allow-user"}, description = "User (numeric ID, username, or email), besides the creator, allowed to connect to and start this studio when it is private.")
@@ -100,7 +101,7 @@ public class AddCmd extends AbstractStudiosCmd{
         DataStudioCreateResponse response = studiosApi().createDataStudio(request, wspId, autoStart);
         DataStudioDto studioDto = response.getStudio();
         assert studioDto != null;
-        return new StudiosCreated(studioDto.getSessionId(), wspId, workspaceRef(wspId), baseWorkspaceUrl(wspId), autoStart);
+        return new StudiosCreated(studioDto.getSessionId(), wspId, workspaceRef(wspId), baseWorkspaceUrl(wspId), autoStart, StudioSsh.commandOf(studioDto));
     }
 
     private void templateValidation(StudioTemplateOptions templateOptions, StudioRemoteConfigOptions remoteConfigOptions, Path condaEnv, Long wspId) throws ApiException {
@@ -191,6 +192,6 @@ public class AddCmd extends AbstractStudiosCmd{
         }
 
         StudiosCreated createdResponse = ((StudiosCreated) response);
-        return onBeforeExit(exitCode, createdResponse.sessionId, createdResponse.workspaceId, wait);
+        return onBeforeExit(exitCode, createdResponse.sessionId, createdResponse.workspaceId, wait, createdResponse.sshCommand == null);
     }
 }

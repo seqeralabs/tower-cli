@@ -24,6 +24,7 @@ import io.seqera.tower.cli.commands.labels.Label;
 import io.seqera.tower.cli.commands.labels.LabelsOptionalOptions;
 import io.seqera.tower.cli.exceptions.StudioNotFoundException;
 import io.seqera.tower.cli.responses.Response;
+import io.seqera.tower.cli.responses.studios.StudioSsh;
 import io.seqera.tower.cli.responses.studios.StudioStartSubmitted;
 import io.seqera.tower.model.DataStudioConfiguration;
 import io.seqera.tower.model.DataStudioDto;
@@ -61,7 +62,7 @@ public class StartCmd extends AbstractStudiosCmd {
     @CommandLine.Option(names = {"--spot"}, description = "Optional override to launch the studio on spot instances.")
     public Boolean spot;
 
-    @CommandLine.Option(names = {"--ssh"}, description = "Optional override to enable SSH connectivity to the studio.")
+    @CommandLine.Option(names = {"--ssh"}, arity = "0..1", fallbackValue = "true", paramLabel = "true|false", description = "Enable or disable SSH access to the Studio. Bare --ssh or --ssh=true enables it, --ssh=false disables it. Omit to keep the Studio's current setting. Requires SSH to be enabled for the workspace; otherwise Platform ignores it.")
     public Boolean ssh;
 
     @CommandLine.Option(names = {"--allow-user"}, description = "Override the user (numeric ID, username, or email), besides the creator, allowed to connect to and start this studio when it is private. Omit to leave the allow list unchanged. Only the studio creator may change it.")
@@ -78,7 +79,9 @@ public class StartCmd extends AbstractStudiosCmd {
 
             DataStudioStartResponse response = studiosApi().startDataStudio(studioDto.getSessionId(), request, wspId);
 
-            return new StudioStartSubmitted(studioDto.getSessionId(), studioRefOptions.getStudioIdentifier(), wspId, workspaceRef(wspId), baseWorkspaceUrl(wspId), response.getJobSubmitted());
+            // The studio was fetched before the start request, so its SSH details are stale if --ssh changes the setting.
+            String sshCommand = ssh == null || ssh ? StudioSsh.commandOf(studioDto) : null;
+            return new StudioStartSubmitted(studioDto.getSessionId(), studioRefOptions.getStudioIdentifier(), wspId, workspaceRef(wspId), baseWorkspaceUrl(wspId), response.getJobSubmitted(), sshCommand);
         } catch (ApiException e) {
             if (e.getCode() == 404) {
                 throw new StudioNotFoundException(studioRefOptions.getStudioIdentifier(), workspace.workspace);
@@ -101,7 +104,7 @@ public class StartCmd extends AbstractStudiosCmd {
             return exitCode;
         }
 
-        return onBeforeExit(exitCode, submitted.sessionId, submitted.workspaceId, wait);
+        return onBeforeExit(exitCode, submitted.sessionId, submitted.workspaceId, wait, submitted.sshCommand == null && !FALSE.equals(ssh));
     }
 
     private DataStudioStartRequest getStartRequestWithOverridesApplied(DataStudioDto studioDto) throws ApiException {
