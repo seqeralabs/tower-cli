@@ -205,7 +205,19 @@ public class RunView extends Response {
             tableStats.addRow("Total Memory", String.format("%.2f GB", stats.get("totalMemory")));
             tableStats.addRow("Read", String.format("%.2f GB", stats.get("read")));
             tableStats.addRow("Write", String.format("%.2f GB", stats.get("write")));
-            tableStats.addRow("Estimated Cost", String.format("$%.2f", stats.get("cost")));
+            if (stats.containsKey("cost")) {
+                tableStats.addRow("Estimated Cost", String.format("$%.2f", stats.get("cost")));
+            }
+            if (stats.containsKey("provisioningModel")) {
+                tableStats.addRow("Provisioning Model", stats.get("provisioningModel").toString());
+            }
+            if (stats.containsKey("instancesProvisioned")) {
+                tableStats.addRow("Instances Provisioned", stats.get("instancesProvisioned").toString());
+            }
+            if (stats.containsKey("instancesSpot") && stats.containsKey("instancesOnDemand")) {
+                tableStats.addRow("Instances (Spot / On-Demand / Unknown)", String.format("%s / %s / %s",
+                        stats.get("instancesSpot"), stats.get("instancesOnDemand"), stats.getOrDefault("instancesUnknown", 0)));
+            }
             tableStats.print();
         }
 

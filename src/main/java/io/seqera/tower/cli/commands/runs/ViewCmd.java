@@ -153,6 +153,16 @@ public class ViewCmd extends AbstractRunsCmd {
                 stats.put("write", progress.getWorkflowProgress().getWriteBytes() / 1024 / 1024 / 1024D);
                 stats.put("cost", progress.getWorkflowProgress().getCost());
             }
+            if (workflowResponse.getProvisioningModel() != null)
+                stats.put("provisioningModel", workflowResponse.getProvisioningModel());
+            if (workflowResponse.getInstancesProvisioned() != null)
+                stats.put("instancesProvisioned", workflowResponse.getInstancesProvisioned());
+            if (workflowResponse.getInstancesSpot() != null)
+                stats.put("instancesSpot", workflowResponse.getInstancesSpot());
+            if (workflowResponse.getInstancesOnDemand() != null)
+                stats.put("instancesOnDemand", workflowResponse.getInstancesOnDemand());
+            if (workflowResponse.getInstancesUnknown() != null)
+                stats.put("instancesUnknown", workflowResponse.getInstancesUnknown());
         }
 
         Map<String, Object> load = new HashMap<>();
