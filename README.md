@@ -154,7 +154,7 @@ tw CLI is a platform binary executable created by a native compilation from Java
     ```
 
    The GraalVM reflection metadata generation relies on code paths being executed with the [Tracing Agent](https://www.graalvm.org/jdk21/reference-manual/native-image/metadata/AutomaticMetadataCollection/#tracing-agent) to dynamically
-   capture various execution paths and update the `reflect-config.json` and `resource-config.json` files. This is a utility task that uses reflection to make calls to all classes in the Tower SDK package in order to capture and generate
+   capture various execution paths and update the `conf/reachability-metadata.json` file (the unified GraalVM reachability metadata format, which replaces the legacy `reflect-config.json`, `resource-config.json`, etc.). This is a utility task that uses reflection to make calls to all classes in the Tower SDK package in order to capture and generate
    methods reflection metadata of any new fields/classes in Tower SDK.
 
    Additionally, for more complete coverage, run the test suite with the Tracing Agent enabled:

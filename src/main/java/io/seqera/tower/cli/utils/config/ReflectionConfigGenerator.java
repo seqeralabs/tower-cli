@@ -25,7 +25,7 @@ import java.lang.reflect.*;
 
 /**
  * The GraalVM reflection metadata generation relies on code paths being executed with the tracing agent
- * to dynamically capture various execution paths and update the `reflect-config.json`.
+ * to dynamically capture various execution paths and update the `reachability-metadata.json`.
  * <a href="https://www.graalvm.org/jdk21/reference-manual/native-image/metadata/AutomaticMetadataCollection/#tracing-agent">...</a>
  *
  * This is a utility class that uses reflection to make calls to constructor and methods of all classes in the Tower SDK model package,
