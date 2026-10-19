@@ -53841,6 +53841,17 @@
       ]
     },
     {
+      "type": "org.glassfish.jersey.inject.hk2.JerseyClassAnalyzer",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "org.glassfish.hk2.api.ServiceLocator"
+          ]
+        }
+      ]
+    },
+    {
       "type": "org.glassfish.jersey.inject.hk2.JerseyErrorService",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,

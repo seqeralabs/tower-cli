@@ -11,6 +11,9 @@
     },
     {
       "includeClasses": "io.seqera.tower.cli.responses.**"
+    },
+    {
+      "includeClasses": "org.glassfish.jersey.inject.hk2.**"
     }
   ]
 }
