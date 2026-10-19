@@ -1,5 +1,5 @@
 [versions]
-classgraphVersion = "4.8.197"
+classgraphVersion = "4.8.199"
 commonsCompressVersion = "1.28.0"
 commonsIoVersion = "2.22.0"
 graalvmNativeVersion = "0.11.5"
