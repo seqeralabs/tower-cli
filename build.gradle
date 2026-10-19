@@ -159,6 +159,11 @@ tasks.named('test') {
     // Use junit platform for unit tests
     useJUnitPlatform()
     dependsOn tasks.named('checkLicenses')
+    // Log the full stack trace (and the assertion message) of failing tests
+    testLogging {
+        events 'failed'
+        exceptionFormat = 'full'
+    }
     // Run tests with GraalVM Tracing Agent enabled
     if (System.getProperty('tracing-agent')?.toBoolean()) {
         jvmArgs = ["-agentlib:native-image-agent=access-filter-file=conf/access-filter-file.json,config-merge-dir=conf/"]
