@@ -27,6 +27,8 @@ dependencies {
     // Compile-time deps of the generated API v2 client (src/generated/java); already on the runtime classpath via tower-java-sdk
     implementation(libs.jsr305)
     implementation(libs.jacksonDatatypeJsr310)
+    // The v2 API updates with PATCH, which Jersey's default HttpURLConnection connector cannot send on current JDKs
+    implementation(libs.jerseyApacheConnector)
     // Upgrade transitive Jersey client dependencies to non-vulnerable 2.x version
     implementation(libs.jerseyClient)
     implementation(libs.jerseyMediaMultipart)

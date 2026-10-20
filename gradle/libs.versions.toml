@@ -27,6 +27,7 @@ jsr305 = { group = "com.google.code.findbugs", name = "jsr305", version = "3.0.2
 jacksonDatatypeJsr310 = { group = "com.fasterxml.jackson.datatype", name = "jackson-datatype-jsr310" }
 javaxAnnotation = { group = "javax.annotation", name = "javax.annotation-api", version.ref = "javaxAnnotationVersion" }
 jerseyClient = { group = "org.glassfish.jersey.core", name = "jersey-client", version.ref = "jerseyVersion" }
+jerseyApacheConnector = { group = "org.glassfish.jersey.connectors", name = "jersey-apache-connector", version.ref = "jerseyVersion" }
 jerseyHk2 = { group = "org.glassfish.jersey.inject", name = "jersey-hk2", version.ref = "jerseyVersion" }
 jerseyMediaJsonJackson = { group = "org.glassfish.jersey.media", name = "jersey-media-json-jackson", version.ref = "jerseyVersion" }
 jerseyMediaMultipart = { group = "org.glassfish.jersey.media", name = "jersey-media-multipart", version.ref = "jerseyVersion" }

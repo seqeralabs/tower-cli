@@ -19,6 +19,7 @@ package io.seqera.tower.cli.commands;
 import io.seqera.tower.ApiClient;
 import io.seqera.tower.cli.commands.computeenvs.ComputeEnvsClient;
 import io.seqera.tower.v2.api.ComputeEnvironmentsApi;
+import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.ApiResponse;
 import io.seqera.tower.Pair;
@@ -229,6 +230,9 @@ public abstract class AbstractApiCmd extends AbstractCmd {
                 public ClientConfig getDefaultClientConfig() {
                     ClientConfig config = super.getDefaultClientConfig();
                     config.property(CommonProperties.PROVIDER_DEFAULT_DISABLE, "ALL");
+                    // v2 updates are PATCH requests: HttpURLConnection (Jersey's default connector) only sends them
+                    // through a reflective workaround that the JDK module system blocks
+                    config.connectorProvider(new ApacheConnectorProvider());
                     return config;
                 }
 
