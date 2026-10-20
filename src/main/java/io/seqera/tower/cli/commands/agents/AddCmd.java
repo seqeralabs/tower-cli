@@ -48,8 +48,8 @@ public class AddCmd extends AbstractAgentsCmd {
     @ArgGroup(multiplicity = "1")
     public AgentInstructionsOptions instructions;
 
-    @Option(names = {"--service-account-id"}, description = "Service account user ID. The agent runs with the permissions of this service account in the workspace.")
-    public Long serviceAccountId;
+    @ArgGroup(multiplicity = "1")
+    public AgentServiceAccountOptions serviceAccount;
 
     @Option(names = {"--github-app-credentials-id"}, description = "GitHub App credentials identifier. Lets the agent clone, commit, and push using these credentials.")
     public String githubAppCredentialsId;
@@ -61,7 +61,7 @@ public class AddCmd extends AbstractAgentsCmd {
                 .name(name)
                 .description(description)
                 .agentInstructions(instructions.read())
-                .serviceAccountId(serviceAccountId)
+                .serviceAccountId(serviceAccountId(serviceAccount, wspId))
                 .githubAppCredentialId(githubAppCredentialsId);
 
         AgentDbDto agent = agentsApi().createAgent(request, wspId).getAgent();

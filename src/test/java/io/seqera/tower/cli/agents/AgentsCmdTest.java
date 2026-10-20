@@ -162,6 +162,30 @@ class AgentsCmdTest extends BaseCmdTest {
         assertOutput(format, out, new AgentAdded(WSP_REF, agent()));
     }
 
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAddWithServiceAccountName(OutputType format, MockServerClient mock) throws IOException {
+        mock.when(request().withMethod("GET").withPath("/orgs/27736513644467/service-accounts"), exactly(1))
+                .respond(response().withStatusCode(200).withBody("{\"serviceAccounts\": [{\"id\": 42, \"name\": \"sa-agent\", \"memberId\": 21}], \"totalSize\": 1}").withContentType(MediaType.APPLICATION_JSON));
+        mock.when(request().withMethod("POST").withPath("/agents").withQueryStringParameter("workspaceId", WSP_ID)
+                        .withBody(json("{\"name\": \"fix-failed-runs\", \"serviceAccountId\": 42}")), exactly(1))
+                .respond(response().withStatusCode(200).withBody("{\"agent\":" + AGENT + "}").withContentType(MediaType.APPLICATION_JSON));
+
+        String instructions = tempFile("Find the root cause", "instructions", ".md");
+        ExecOut out = exec(format, mock, "agents", "add", "-w", WSP_ID, "-n", "fix-failed-runs",
+                "--instructions-file", instructions, "--service-account", "sa-agent");
+
+        assertOutput(format, out, new AgentAdded(WSP_REF, agent()));
+    }
+
+    @Test
+    void testAddRequiresServiceAccount(MockServerClient mock) throws IOException {
+        String instructions = tempFile("Find the root cause", "instructions", ".md");
+        ExecOut out = exec(mock, "agents", "add", "-w", WSP_ID, "-n", "fix-failed-runs", "--instructions-file", instructions);
+
+        assertEquals(2, out.exitCode);
+    }
+
     @Test
     void testAddRequiresInstructions(MockServerClient mock) {
         ExecOut out = exec(mock, "agents", "add", "-w", WSP_ID, "-n", "fix-failed-runs");

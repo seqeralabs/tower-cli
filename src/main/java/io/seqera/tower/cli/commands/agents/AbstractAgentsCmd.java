@@ -21,6 +21,7 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.model.AgentDbDto;
+import io.seqera.tower.model.ServiceAccountDto;
 import picocli.CommandLine.Command;
 
 @Command
@@ -32,6 +33,20 @@ public abstract class AbstractAgentsCmd extends AbstractApiCmd {
     protected AgentDbDto fetchAgent(AgentRefOptions.AgentRef ref, Long wspId) throws ApiException {
         String agentId = ref.id != null ? ref.id : agentByName(ref.name, wspId).getId();
         return agentsApi().describeAgent(agentId, wspId).getAgent();
+    }
+
+    protected Long serviceAccountId(AgentServiceAccountOptions serviceAccount, Long wspId) throws ApiException {
+        if (serviceAccount == null) {
+            return null;
+        }
+        if (serviceAccount.id != null) {
+            return serviceAccount.id;
+        }
+        ServiceAccountDto sa = findServiceAccountByName(orgId(wspId), serviceAccount.name);
+        if (sa == null) {
+            throw new TowerException(String.format("Service account '%s' not found in organization '%s'", serviceAccount.name, orgName(wspId)));
+        }
+        return sa.getId();
     }
 
     private AgentDbDto agentByName(String name, Long wspId) throws ApiException {
