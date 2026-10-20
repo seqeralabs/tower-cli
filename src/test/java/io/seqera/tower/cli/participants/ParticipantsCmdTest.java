@@ -42,6 +42,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
+import static org.mockserver.model.JsonBody.json;
 
 class ParticipantsCmdTest extends BaseCmdTest {
 
@@ -685,5 +686,46 @@ class ParticipantsCmdTest extends BaseCmdTest {
                 "    \"teamAvatarUrl\": null,\n" +
                 "    \"userAvatarUrl\": null\n" +
                 "  }", ParticipantResponseDto.class), "workspace1"));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAddServiceAccountParticipant(OutputType format, MockServerClient mock) throws JsonProcessingException {
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/orgs/27736513644467/members"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"members\": [], \"totalSize\": 0}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/orgs/27736513644467/service-accounts"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"serviceAccounts\": [{\"id\": 11, \"name\": \"ci-bot\", \"memberId\": 21}], \"totalSize\": 1}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        String participant = "{\"participantId\": 31, \"memberId\": 21, \"userName\": \"ci-bot\", \"orgRole\": \"service_account\", \"wspRole\": \"view\", \"type\": \"MEMBER\"}";
+
+        mock.when(
+                request().withMethod("PUT").withPath("/orgs/27736513644467/workspaces/75887156211589/participants/add")
+                        .withBody(json("{\"memberId\": 21}")), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"participant\": " + participant + "}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "participants", "add", "-w", "75887156211589", "-n", "ci-bot", "-t", "MEMBER");
+
+        assertOutput(format, out, new ParticipantAdded(parseJson(participant, ParticipantResponseDto.class), "workspace1"));
     }
 }

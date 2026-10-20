@@ -26,6 +26,7 @@ import io.seqera.tower.cli.responses.participants.ParticipantAdded;
 import io.seqera.tower.model.AddParticipantRequest;
 import io.seqera.tower.model.AddParticipantResponse;
 import io.seqera.tower.model.ParticipantType;
+import io.seqera.tower.model.ServiceAccountDto;
 import picocli.CommandLine;
 
 import java.io.IOException;
@@ -37,7 +38,7 @@ import java.util.Objects;
 )
 public class AddCmd extends AbstractParticipantsCmd {
 
-    @CommandLine.Option(names = {"-n", "--name"}, description = "Team name, username or email for existing organization member.", required = true)
+    @CommandLine.Option(names = {"-n", "--name"}, description = "Team name, username or email for existing organization member, or service account name.", required = true)
     public String name;
 
     @CommandLine.Option(names = {"-t", "--type"}, description = "Type of participant (MEMBER, COLLABORATOR or TEAM).", required = true)
@@ -59,7 +60,12 @@ public class AddCmd extends AbstractParticipantsCmd {
             try {
                 request.setMemberId(findOrganizationMemberByName(orgId(wspId), name).getMemberId());
             } catch (MemberNotFoundException e) {
-                request.setUserNameOrEmail(name);
+                ServiceAccountDto serviceAccount = tryFindServiceAccount(orgId(wspId), name);
+                if (serviceAccount != null) {
+                    request.setMemberId(serviceAccount.getMemberId());
+                } else {
+                    request.setUserNameOrEmail(name);
+                }
             }
         } else if (Objects.equals(type, ParticipantType.TEAM)) {
             request.setTeamId(findOrganizationTeamByName(orgId(wspId), name).getTeamId());
@@ -78,6 +84,18 @@ public class AddCmd extends AbstractParticipantsCmd {
         AddParticipantResponse response = workspacesApi().createWorkspaceParticipant(orgId(wspId), wspId, request);
 
         return new ParticipantAdded(response.getParticipant(), workspaceName(wspId));
+    }
+
+    // Service accounts aren't returned by the organization members list, and the platform rejects
+    // them by user name, so they must be added by their member ID
+    private ServiceAccountDto tryFindServiceAccount(Long orgId, String name) {
+        if (name.contains("@")) return null;
+        try {
+            return findServiceAccountByName(orgId, name);
+        } catch (ApiException ignored) {
+            // Service accounts disabled or not visible to the caller: fall back to adding by user name
+            return null;
+        }
     }
 
     private void tryDeleteParticipant(Long wspId, String participantName, ParticipantType type) throws ApiException {
