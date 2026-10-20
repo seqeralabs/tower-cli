@@ -49,8 +49,22 @@ dependencies {
 
 }
 
+// Platform API v2 client, generated (not hand-written) from the v2 OpenAPI contract with:
+//   openapi-generator-cli 7.17.0 generate -g java --library jersey2 -i seqera-api-v2.yml \
+//     --api-package io.seqera.tower.v2.api --model-package io.seqera.tower.v2.model --invoker-package io.seqera.tower.v2 \
+//     --additional-properties=openApiNullable=false,dateLibrary=java8,useOneOfDiscriminatorLookup=true,hideGenerationTimestamp=true
+// Source spec: seqeralabs/platform PR #13079 (bb3d869e), tower-api-v2/generated/openapi/seqera-api-v2.yml
+sourceSets {
+    main {
+        java {
+            srcDir 'src/generated/java'
+        }
+    }
+}
+
 license {
     rule(file('HEADER.txt'))
+    exclude('io/seqera/tower/v2/**')
     exclude('**/*.properties')
     exclude('**/*.xml')
     exclude('**/*.json')
