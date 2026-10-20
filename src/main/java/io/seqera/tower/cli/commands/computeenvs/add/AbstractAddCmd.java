@@ -103,6 +103,7 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
 
         Long wspId = workspaceId(workspace.workspace);
 
+        // KEPT: no server equivalent (tower-cli:rule-6) - v2 takes resourceLabelIds only, label names are resolved/created client-side
         List<Long> labelIds = findOrCreateLabels(wspId, labels);
 
         String credsId = credentialsRef == null ? findWorkspaceCredentials(platform, wspId) : credentialsByRef(platform, wspId, credentialsRef);
@@ -120,7 +121,9 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
         return new ComputeEnvAdded(platform.getValue(), computeEnvId, name, wspId, workspaceRef(wspId));
     }
 
+    // KEPT: no server equivalent (tower-cli:rule-4) - default credentials: the single credential of the platform type
     private String findWorkspaceCredentials(PlatformEnum type, Long wspId) throws ApiException {
+        // KEPT: no server equivalent (tower-cli:rule-5) - Seqera Compute sends no credentials
         if (type == PlatformEnum.SEQERACOMPUTE_PLATFORM) {
             // seqera-compute handles credentials automatically
             return null;

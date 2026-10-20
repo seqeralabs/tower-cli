@@ -120,10 +120,12 @@ public class GoogleCloudPlatform extends AbstractPlatform<GoogleCloudConfig> {
 
     private static void validateNetworkTags(List<String> tags, String network) {
         if (network == null || network.isEmpty()) {
+            // KEPT: no server equivalent (tower-cli:rule-16)
             throw new TowerRuntimeException("Network tags require VPC configuration: set the '--network' option to use network tags.");
         }
 
         if (tags.size() > MAX_NETWORK_TAGS) {
+            // KEPT: no server equivalent (tower-cli:rule-16)
             throw new TowerRuntimeException(String.format("Too many network tags: maximum is %d, provided %d.", MAX_NETWORK_TAGS, tags.size()));
         }
 

@@ -125,6 +125,7 @@ public class ComputeEnvsClient {
      */
     public void update(Long workspaceId, ComputeEnvResponseDto current, String newName, String description) throws ApiException {
         if (workspaceId == null) {
+            // v1 only (tower-cli:rule-2, tower-cli:rule-3): pre-validate the name, then PUT the full name/description
             if (newName != null) {
                 try {
                     v1.validateComputeEnvName(null, newName);
@@ -138,7 +139,8 @@ public class ComputeEnvsClient {
             v1.updateComputeEnv(current.getId(), req, null);
             return;
         }
-        // v2 PATCH writes only the fields carried in the body; it validates the name and rejects a duplicate with 409.
+        // tower-cli:rule-2 and tower-cli:rule-3 deleted for v2: PATCH writes only the fields carried in the body
+        // (no coalescing with current values), validates the name pattern and rejects a duplicate name with 409.
         ComputeEnvPatchModel patch = new ComputeEnvPatchModel().name(newName).description(description);
         v2(() -> v2.updateComputeEnv(wsp(workspaceId), current.getId(), patch, null, null));
     }
@@ -165,6 +167,8 @@ public class ComputeEnvsClient {
         try {
             return ComputeEnvV2Mapper.toV1(v2(() -> v2.getComputeEnv(wsp(workspaceId), computeEnvId, null)).getStatus());
         } catch (ApiException e) {
+            // KEPT: no server equivalent (tower-cli:rule-20) - added for v2, which has no DELETED status and rejects
+            // reading a deleted compute environment with 403
             if (e.getCode() == 403) {
                 return ComputeEnvStatus.DELETED;
             }

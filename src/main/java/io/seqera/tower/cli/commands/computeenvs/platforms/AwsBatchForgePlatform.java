@@ -42,6 +42,7 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
     @Option(names = {"--max-cpus"}, description = "Maximum CPUs provisioned by Batch Forge. Defines the upper limit for auto-scaling compute capacity.", required = true)
     public Integer maxCpus;
 
+    // KEPT: no server equivalent (tower-cli:rule-19)
     @Option(names = {"--provisioning-model"}, description = "Instance provisioning model. EC2 uses on-demand instances for reliability. SPOT uses interruptible instances for cost savings. Default: SPOT.", required = true, defaultValue = "SPOT")
     public TypeEnum provisioningModel;
 
@@ -142,6 +143,7 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
 
     private Boolean isFusionV2Enabled() throws TowerException {
         // TODO: delete this validation once wave is no longer a requirement for Fusion V2
+        // KEPT: no server equivalent (tower-cli:rule-8)
         if (fusionV2 && !wave) throw new TowerException("Fusion v2 requires Wave service");
         return fusionV2;
     }
@@ -150,6 +152,7 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
 
         // TODO: delete this once fusion v1 is completely removed
         if (fusion) {
+            // KEPT: no server equivalent (tower-cli:rule-9)
             throw new TowerException("Fusion v1 is deprecated, please use '--fusion-v2' instead");
         }
 
@@ -200,9 +203,11 @@ public class AwsBatchForgePlatform extends AbstractPlatform<AwsBatchConfig> {
     private void validateDragen() throws TowerException {
         boolean dragenSettings = adv().dragenAmiId != null || adv().dragenInstanceType != null;
         if (!adv().dragen && dragenSettings) {
+            // KEPT: no server equivalent (tower-cli:rule-10)
             throw new TowerException("DRAGEN AMI ID and instance type require '--dragen'");
         }
         if (adv().dragen && (adv().dragenAmiId == null || adv().dragenInstanceType == null)) {
+            // KEPT: no server equivalent (tower-cli:rule-10)
             throw new TowerException("DRAGEN requires '--dragen-ami-id' and '--dragen-instance-type'");
         }
     }

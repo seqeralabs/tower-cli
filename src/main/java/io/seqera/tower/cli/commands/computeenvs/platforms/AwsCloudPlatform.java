@@ -83,9 +83,11 @@ public class AwsCloudPlatform extends AbstractPlatform<AwsCloudConfig> {
         // Advanced
         if (adv != null) {
             if (adv.ebsKmsKeyId != null && !Boolean.TRUE.equals(adv.ebsEncrypted)) {
+                // KEPT: no server equivalent (tower-cli:rule-11)
                 throw new TowerRuntimeException("EBS KMS key requires EBS encryption to be enabled (--ebs-encryption).");
             }
 
+            // KEPT: no server equivalent (tower-cli:rule-12)
             if (adv.subnetId != null && adv.subnetIds != null) {
                 throw new TowerRuntimeException("Options --subnet-id and --subnet-ids are mutually exclusive; use --subnet-ids.");
             }

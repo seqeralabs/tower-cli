@@ -73,6 +73,7 @@ public class GoogleBatchPlatform extends AbstractPlatform<GoogleBatchConfig> {
         GoogleBatchConfig config = new GoogleBatchConfig();
 
         if (fusionSnapshots && !fusionV2) {
+            // KEPT: no server equivalent (tower-cli:rule-13)
             throw new TowerRuntimeException("Fusion Snapshots requires Fusion v2 to be enabled (--fusion-v2).");
         }
 
@@ -121,19 +122,23 @@ public class GoogleBatchPlatform extends AbstractPlatform<GoogleBatchConfig> {
 
     private static void validateMachineTypeFormat(String machineType) {
         if (!MACHINE_TYPE_PATTERN.matcher(machineType).matches()) {
+            // KEPT: no server equivalent (tower-cli:rule-14)
             throw new TowerRuntimeException(String.format("Invalid machine type '%s': must contain only lowercase letters, numbers, and hyphens.", machineType));
         }
     }
 
     private static void validateMachineTypes(AdvancedOptions adv) {
+        // KEPT: no server equivalent (tower-cli:rule-14)
         if (adv.headJobMachineType != null && adv.headJobInstanceTemplate != null) {
             throw new TowerRuntimeException("Head job machine type and head job instance template are mutually exclusive -- specify only one.");
         }
+        // KEPT: no server equivalent (tower-cli:rule-14)
         if (adv.computeJobsMachineType != null && !adv.computeJobsMachineType.isEmpty() && adv.computeJobInstanceTemplate != null) {
             throw new TowerRuntimeException("Compute jobs machine type and compute jobs instance template are mutually exclusive -- specify only one.");
         }
         if (adv.headJobMachineType != null) {
             if (adv.headJobMachineType.contains("*")) {
+                // KEPT: no server equivalent (tower-cli:rule-14)
                 throw new TowerRuntimeException("Wildcard machine type families are not supported for the head job -- select a specific machine type instead.");
             }
             validateMachineTypeFormat(adv.headJobMachineType);
@@ -147,16 +152,19 @@ public class GoogleBatchPlatform extends AbstractPlatform<GoogleBatchConfig> {
 
     private static void validateBootDiskImage(String bootDiskImage) {
         if (bootDiskImage != null && !BOOT_DISK_IMAGE_PATTERN.matcher(bootDiskImage).matches()) {
+            // KEPT: no server equivalent (tower-cli:rule-15)
             throw new TowerRuntimeException("Invalid boot disk image format. Use projects/{PROJECT}/global/images/{IMAGE}, projects/{PROJECT}/global/images/family/{FAMILY}, or a Batch image name (e.g., batch-debian).");
         }
     }
 
     private static void validateNetworkTags(List<String> tags, String network) {
         if (network == null || network.isEmpty()) {
+            // KEPT: no server equivalent (tower-cli:rule-16)
             throw new TowerRuntimeException("Network tags require VPC configuration: set the '--network' option to use network tags.");
         }
 
         if (tags.size() > MAX_NETWORK_TAGS) {
+            // KEPT: no server equivalent (tower-cli:rule-16)
             throw new TowerRuntimeException(String.format("Too many network tags: maximum is %d, provided %d.", MAX_NETWORK_TAGS, tags.size()));
         }
 

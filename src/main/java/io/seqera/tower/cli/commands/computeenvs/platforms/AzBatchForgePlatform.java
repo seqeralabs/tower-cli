@@ -172,6 +172,7 @@ public class AzBatchForgePlatform extends AbstractPlatform<AzBatchConfig> {
                 if (credentialsNameToId.containsKey(name)) {
                     forge.addContainerRegIdsItem(credentialsNameToId.get(name));
                 } else {
+                    // KEPT: no server equivalent (tower-cli:rule-17)
                     throw new CredentialsNotFoundException(name, workspaceId);
                 }
             }

@@ -106,6 +106,7 @@ public class AwsBatchManualPlatform extends AbstractPlatform<AwsBatchConfig> {
 
     private Boolean isFusionV2Enabled() throws TowerException {
         // TODO: delete this validation once wave is no longer a requirement for Fusion V2
+        // KEPT: no server equivalent (tower-cli:rule-8)
         if (fusionV2 && !wave) throw new TowerException("Fusion v2 requires Wave service");
         return fusionV2;
     }

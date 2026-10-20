@@ -96,6 +96,7 @@ public abstract class AbstractPlatform<T extends ComputeConfig> implements Platf
 
     protected static Boolean propagateHeadJobOptions(Boolean propagate, String headJobOptions) throws TowerException {
         if (Boolean.TRUE.equals(propagate) && headJobOptions == null) {
+            // KEPT: no server equivalent (tower-cli:rule-7)
             throw new TowerException("'--propagate-head-job-options' requires '--head-job-options'");
         }
         return propagate;

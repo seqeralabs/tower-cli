@@ -59,6 +59,7 @@ public class ExportCmd extends AbstractComputeEnvCmd {
         computeEnv.setPlatform(ce.getPlatform() != null ? PlatformEnum.fromValue(ce.getPlatform().getValue()) : null);
         computeEnv.setConfig(ce.getConfig());
 
+        // KEPT: no server equivalent (tower-cli:rule-18)
         // Remove forged resources
         if (computeEnv.getConfig() instanceof AwsBatchConfig) {
             AwsBatchConfig awsCfg = (AwsBatchConfig) computeEnv.getConfig();

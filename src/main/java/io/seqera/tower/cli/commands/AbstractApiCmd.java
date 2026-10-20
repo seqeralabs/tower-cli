@@ -674,6 +674,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         throw new WorkspaceNotFoundException(workspaceName, orgName);
     }
 
+    // KEPT: no server equivalent (tower-cli:rule-1) - the v2 list filter has no `name` field, so a name is resolved client-side
     private void loadAvailableComputeEnvs(Long workspaceId) throws ApiException {
         if (availableComputeEnvsNameToId == null) {
             availableComputeEnvsNameToId = new HashMap<>();
