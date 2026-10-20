@@ -1361,17 +1361,15 @@ public class StudiosCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("GET").withPath("/compute-envs")
-                        .withQueryStringParameter("status", "AVAILABLE")
-                        .withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+                request().withMethod("GET").withPath("/v2/workspaces/75887156211589/compute-envs").withQueryStringParameter("filter", "status == \"AVAILABLE\""), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody("{\"items\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"description\":null,\"status\":\"AVAILABLE\",\"message\":null,\"primary\":true,\"credentialsId\":null,\"managedIdentityId\":null,\"fusionMetricsCollectionEnabled\":null,\"resourceLabels\":null,\"resources\":null,\"lastUsedAt\":null,\"createdAt\":null,\"updatedAt\":null,\"config\":{\"platform\":\"AWS_BATCH\"}}],\"nextPageToken\":null,\"totalSize\":1}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
-                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+                request().withMethod("GET").withPath("/v2/workspaces/75887156211589/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResource("compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(loadResource("v2/compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
@@ -1412,17 +1410,15 @@ public class StudiosCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("GET").withPath("/compute-envs")
-                        .withQueryStringParameter("status", "AVAILABLE")
-                        .withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+                request().withMethod("GET").withPath("/v2/workspaces/75887156211589/compute-envs").withQueryStringParameter("filter", "status == \"AVAILABLE\""), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody("{\"items\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"description\":null,\"status\":\"AVAILABLE\",\"message\":null,\"primary\":true,\"credentialsId\":null,\"managedIdentityId\":null,\"fusionMetricsCollectionEnabled\":null,\"resourceLabels\":null,\"resources\":null,\"lastUsedAt\":null,\"createdAt\":null,\"updatedAt\":null,\"config\":{\"platform\":\"AWS_BATCH\"}}],\"nextPageToken\":null,\"totalSize\":1}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
-                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+                request().withMethod("GET").withPath("/v2/workspaces/75887156211589/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResource("compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(loadResource("v2/compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
@@ -1499,17 +1495,15 @@ public class StudiosCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("GET").withPath("/compute-envs")
-                        .withQueryStringParameter("status", "AVAILABLE")
-                        .withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+                request().withMethod("GET").withPath("/v2/workspaces/75887156211589/compute-envs").withQueryStringParameter("filter", "status == \"AVAILABLE\""), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody("{\"items\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"description\":null,\"status\":\"AVAILABLE\",\"message\":null,\"primary\":true,\"credentialsId\":null,\"managedIdentityId\":null,\"fusionMetricsCollectionEnabled\":null,\"resourceLabels\":null,\"resources\":null,\"lastUsedAt\":null,\"createdAt\":null,\"updatedAt\":null,\"config\":{\"platform\":\"AWS_BATCH\"}}],\"nextPageToken\":null,\"totalSize\":1}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
-                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+                request().withMethod("GET").withPath("/v2/workspaces/75887156211589/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResource("compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(loadResource("v2/compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         // Assert only the allow-list fields are sent; the rest of the create body is covered by other tests.
@@ -1559,17 +1553,15 @@ public class StudiosCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("GET").withPath("/compute-envs")
-                        .withQueryStringParameter("status", "AVAILABLE")
-                        .withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+                request().withMethod("GET").withPath("/v2/workspaces/75887156211589/compute-envs").withQueryStringParameter("filter", "status == \"AVAILABLE\""), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody("{\"items\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"description\":null,\"status\":\"AVAILABLE\",\"message\":null,\"primary\":true,\"credentialsId\":null,\"managedIdentityId\":null,\"fusionMetricsCollectionEnabled\":null,\"resourceLabels\":null,\"resources\":null,\"lastUsedAt\":null,\"createdAt\":null,\"updatedAt\":null,\"config\":{\"platform\":\"AWS_BATCH\"}}],\"nextPageToken\":null,\"totalSize\":1}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
-                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+                request().withMethod("GET").withPath("/v2/workspaces/75887156211589/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResource("compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(loadResource("v2/compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         // Resolution: the email is not a full member, so the resolver falls back to collaborators,
@@ -1633,17 +1625,15 @@ public class StudiosCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("GET").withPath("/compute-envs")
-                        .withQueryStringParameter("status", "AVAILABLE")
-                        .withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+                request().withMethod("GET").withPath("/v2/workspaces/75887156211589/compute-envs").withQueryStringParameter("filter", "status == \"AVAILABLE\""), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody("{\"items\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"description\":null,\"status\":\"AVAILABLE\",\"message\":null,\"primary\":true,\"credentialsId\":null,\"managedIdentityId\":null,\"fusionMetricsCollectionEnabled\":null,\"resourceLabels\":null,\"resources\":null,\"lastUsedAt\":null,\"createdAt\":null,\"updatedAt\":null,\"config\":{\"platform\":\"AWS_BATCH\"}}],\"nextPageToken\":null,\"totalSize\":1}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
-                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+                request().withMethod("GET").withPath("/v2/workspaces/75887156211589/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResource("compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(loadResource("v2/compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
@@ -1735,17 +1725,15 @@ public class StudiosCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("GET").withPath("/compute-envs")
-                        .withQueryStringParameter("status", "AVAILABLE")
-                        .withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+                request().withMethod("GET").withPath("/v2/workspaces/75887156211589/compute-envs").withQueryStringParameter("filter", "status == \"AVAILABLE\""), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody("{\"items\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"description\":null,\"status\":\"AVAILABLE\",\"message\":null,\"primary\":true,\"credentialsId\":null,\"managedIdentityId\":null,\"fusionMetricsCollectionEnabled\":null,\"resourceLabels\":null,\"resources\":null,\"lastUsedAt\":null,\"createdAt\":null,\"updatedAt\":null,\"config\":{\"platform\":\"AWS_BATCH\"}}],\"nextPageToken\":null,\"totalSize\":1}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
-                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+                request().withMethod("GET").withPath("/v2/workspaces/75887156211589/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResource("compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(loadResource("v2/compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(request().withMethod("POST").withPath("/studios")
@@ -1897,17 +1885,15 @@ public class StudiosCmdTest extends BaseCmdTest {
         );
 
         mock.when(
-                request().withMethod("GET").withPath("/compute-envs")
-                        .withQueryStringParameter("status", "AVAILABLE")
-                        .withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+                request().withMethod("GET").withPath("/v2/workspaces/75887156211589/compute-envs").withQueryStringParameter("filter", "status == \"AVAILABLE\""), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody("{\"items\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"description\":null,\"status\":\"AVAILABLE\",\"message\":null,\"primary\":true,\"credentialsId\":null,\"managedIdentityId\":null,\"fusionMetricsCollectionEnabled\":null,\"resourceLabels\":null,\"resources\":null,\"lastUsedAt\":null,\"createdAt\":null,\"updatedAt\":null,\"config\":{\"platform\":\"AWS_BATCH\"}}],\"nextPageToken\":null,\"totalSize\":1}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
-                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+                request().withMethod("GET").withPath("/v2/workspaces/75887156211589/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResource("compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(loadResource("v2/compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
@@ -2552,16 +2538,14 @@ public class StudiosCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("studios/studios_templates_response")).withContentType(MediaType.APPLICATION_JSON)
         );
         mock.when(
-                request().withMethod("GET").withPath("/compute-envs")
-                        .withQueryStringParameter("status", "AVAILABLE")
-                        .withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+                request().withMethod("GET").withPath("/v2/workspaces/75887156211589/compute-envs").withQueryStringParameter("filter", "status == \"AVAILABLE\""), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody("{\"items\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"description\":null,\"status\":\"AVAILABLE\",\"message\":null,\"primary\":true,\"credentialsId\":null,\"managedIdentityId\":null,\"fusionMetricsCollectionEnabled\":null,\"resourceLabels\":null,\"resources\":null,\"lastUsedAt\":null,\"createdAt\":null,\"updatedAt\":null,\"config\":{\"platform\":\"AWS_BATCH\"}}],\"nextPageToken\":null,\"totalSize\":1}").withContentType(MediaType.APPLICATION_JSON)
         );
         mock.when(
-                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+                request().withMethod("GET").withPath("/v2/workspaces/75887156211589/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResource("compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(loadResource("v2/compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
         );
         mock.when(
                 request().withMethod("POST").withPath("/studios")
@@ -2606,16 +2590,14 @@ public class StudiosCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("studios/studios_templates_response")).withContentType(MediaType.APPLICATION_JSON)
         );
         mock.when(
-                request().withMethod("GET").withPath("/compute-envs")
-                        .withQueryStringParameter("status", "AVAILABLE")
-                        .withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+                request().withMethod("GET").withPath("/v2/workspaces/75887156211589/compute-envs").withQueryStringParameter("filter", "status == \"AVAILABLE\""), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody("{\"items\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"description\":null,\"status\":\"AVAILABLE\",\"message\":null,\"primary\":true,\"credentialsId\":null,\"managedIdentityId\":null,\"fusionMetricsCollectionEnabled\":null,\"resourceLabels\":null,\"resources\":null,\"lastUsedAt\":null,\"createdAt\":null,\"updatedAt\":null,\"config\":{\"platform\":\"AWS_BATCH\"}}],\"nextPageToken\":null,\"totalSize\":1}").withContentType(MediaType.APPLICATION_JSON)
         );
         mock.when(
-                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+                request().withMethod("GET").withPath("/v2/workspaces/75887156211589/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResource("compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(loadResource("v2/compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
         );
         mock.when(
                 request().withMethod("POST").withPath("/studios")
@@ -2658,16 +2640,14 @@ public class StudiosCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("studios/studios_view_response_studio_stopped")).withContentType(MediaType.APPLICATION_JSON)
         );
         mock.when(
-                request().withMethod("GET").withPath("/compute-envs")
-                        .withQueryStringParameter("status", "AVAILABLE")
-                        .withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+                request().withMethod("GET").withPath("/v2/workspaces/75887156211589/compute-envs").withQueryStringParameter("filter", "status == \"AVAILABLE\""), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody("{\"items\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"description\":null,\"status\":\"AVAILABLE\",\"message\":null,\"primary\":true,\"credentialsId\":null,\"managedIdentityId\":null,\"fusionMetricsCollectionEnabled\":null,\"resourceLabels\":null,\"resources\":null,\"lastUsedAt\":null,\"createdAt\":null,\"updatedAt\":null,\"config\":{\"platform\":\"AWS_BATCH\"}}],\"nextPageToken\":null,\"totalSize\":1}").withContentType(MediaType.APPLICATION_JSON)
         );
         mock.when(
-                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+                request().withMethod("GET").withPath("/v2/workspaces/75887156211589/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResource("compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(loadResource("v2/compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
         );
         mock.when(
                 request().withMethod("PUT").withPath("/studios/3e8370e7").withQueryStringParameter("workspaceId", "75887156211589").withBody(json("""
@@ -2704,16 +2684,14 @@ public class StudiosCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("studios/studios_view_response_studio_stopped")).withContentType(MediaType.APPLICATION_JSON)
         );
         mock.when(
-                request().withMethod("GET").withPath("/compute-envs")
-                        .withQueryStringParameter("status", "AVAILABLE")
-                        .withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+                request().withMethod("GET").withPath("/v2/workspaces/75887156211589/compute-envs").withQueryStringParameter("filter", "status == \"AVAILABLE\""), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody("{\"items\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"description\":null,\"status\":\"AVAILABLE\",\"message\":null,\"primary\":true,\"credentialsId\":null,\"managedIdentityId\":null,\"fusionMetricsCollectionEnabled\":null,\"resourceLabels\":null,\"resources\":null,\"lastUsedAt\":null,\"createdAt\":null,\"updatedAt\":null,\"config\":{\"platform\":\"AWS_BATCH\"}}],\"nextPageToken\":null,\"totalSize\":1}").withContentType(MediaType.APPLICATION_JSON)
         );
         mock.when(
-                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+                request().withMethod("GET").withPath("/v2/workspaces/75887156211589/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResource("compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(loadResource("v2/compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
         );
         // The update is rejected because the target CE is not compatible.
         mock.when(
@@ -2757,16 +2735,14 @@ public class StudiosCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("studios/studios_templates_response")).withContentType(MediaType.APPLICATION_JSON)
         );
         mock.when(
-                request().withMethod("GET").withPath("/compute-envs")
-                        .withQueryStringParameter("status", "AVAILABLE")
-                        .withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+                request().withMethod("GET").withPath("/v2/workspaces/75887156211589/compute-envs").withQueryStringParameter("filter", "status == \"AVAILABLE\""), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody("{\"items\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"description\":null,\"status\":\"AVAILABLE\",\"message\":null,\"primary\":true,\"credentialsId\":null,\"managedIdentityId\":null,\"fusionMetricsCollectionEnabled\":null,\"resourceLabels\":null,\"resources\":null,\"lastUsedAt\":null,\"createdAt\":null,\"updatedAt\":null,\"config\":{\"platform\":\"AWS_BATCH\"}}],\"nextPageToken\":null,\"totalSize\":1}").withContentType(MediaType.APPLICATION_JSON)
         );
         mock.when(
-                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+                request().withMethod("GET").withPath("/v2/workspaces/75887156211589/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResource("compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(loadResource("v2/compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
         );
         mock.when(
                 request().withMethod("POST").withPath("/studios")
@@ -2806,16 +2782,14 @@ public class StudiosCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
         );
         mock.when(
-                request().withMethod("GET").withPath("/compute-envs")
-                        .withQueryStringParameter("status", "AVAILABLE")
-                        .withQueryStringParameter("workspaceId", "75887156211589"), exactly(1)
+                request().withMethod("GET").withPath("/v2/workspaces/75887156211589/compute-envs").withQueryStringParameter("filter", "status == \"AVAILABLE\""), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"message\":null,\"lastUsed\":null,\"primary\":true,\"workspaceName\":null,\"visibility\":null}]}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody("{\"items\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"description\":null,\"status\":\"AVAILABLE\",\"message\":null,\"primary\":true,\"credentialsId\":null,\"managedIdentityId\":null,\"fusionMetricsCollectionEnabled\":null,\"resourceLabels\":null,\"resources\":null,\"lastUsedAt\":null,\"createdAt\":null,\"updatedAt\":null,\"config\":{\"platform\":\"AWS_BATCH\"}}],\"nextPageToken\":null,\"totalSize\":1}").withContentType(MediaType.APPLICATION_JSON)
         );
         mock.when(
-                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+                request().withMethod("GET").withPath("/v2/workspaces/75887156211589/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResource("compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(loadResource("v2/compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
         );
         mock.when(
                 request().withMethod("POST").withPath("/studios")

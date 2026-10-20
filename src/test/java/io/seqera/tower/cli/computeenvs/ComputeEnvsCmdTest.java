@@ -49,6 +49,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
+import org.mockserver.matchers.MatchType;
 import org.mockserver.model.JsonBody;
 import org.mockserver.model.MediaType;
 
@@ -567,13 +568,13 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
     void testPrimarySetAzure(OutputType format, MockServerClient mock) throws JsonProcessingException {
 
         mock.when(
-                request().withMethod("GET").withPath("/compute-envs/lkasjdlkfwerjbEcrycwrSSe").withQueryStringParameter("workspaceId", "75887156211590"), exactly(1)
+                request().withMethod("GET").withPath("/v2/workspaces/75887156211590/compute-envs/lkasjdlkfwerjbEcrycwrSSe"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody("{\"computeEnv\":{\"id\":\"lkasjdlkfwerjbEcrycwrSSe\",\"name\":\"demo\",\"description\":null,\"platform\":\"azure-batch\",\"config\":{\"workDir\":\"az://scratch/work\",\"preRunScript\":null,\"postRunScript\":null,\"region\":\"eastus\",\"headPool\":null,\"autoPoolMode\":null,\"forge\":{\"vmType\":\"Standard_D4_v3\",\"vmCount\":1,\"autoScale\":true,\"disposeOnDeletion\":true},\"tokenDuration\":null,\"deleteJobsOnCompletionEnabled\":true,\"deletePoolsOnCompletion\":null,\"environment\":null,\"discriminator\":\"azure-batch\"},\"dateCreated\":\"2021-12-03T07:20:26Z\",\"lastUpdated\":\"2021-12-03T07:20:27Z\",\"lastUsed\":null,\"deleted\":null,\"status\":\"AVAILABLE\",\"message\":null,\"primary\":null,\"credentialsId\":\"XXbouwqopeiruiopqDplGsgEJxad\"}}").withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody("{\"id\":\"lkasjdlkfwerjbEcrycwrSSe\",\"name\":\"demo\",\"description\":null,\"status\":\"AVAILABLE\",\"message\":null,\"primary\":false,\"credentialsId\":\"XXbouwqopeiruiopqDplGsgEJxad\",\"managedIdentityId\":null,\"fusionMetricsCollectionEnabled\":null,\"resourceLabels\":null,\"resources\":null,\"lastUsedAt\":null,\"createdAt\":\"2021-12-03T07:20:26Z\",\"updatedAt\":\"2021-12-03T07:20:27Z\",\"config\":{\"platform\":\"AZURE_BATCH\",\"workDir\":\"az://scratch/work\",\"region\":\"eastus\",\"forge\":{\"vmType\":\"Standard_D4_v3\",\"vmCount\":1,\"autoScale\":true,\"disposeOnDeletion\":true},\"deleteJobsOnCompletionEnabled\":true}}").withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
-                request().withMethod("POST").withPath("/compute-envs/lkasjdlkfwerjbEcrycwrSSe/primary"), exactly(1)
+                request().withMethod("POST").withPath("/v2/workspaces/75887156211590/compute-envs/lkasjdlkfwerjbEcrycwrSSe/set-primary"), exactly(1)
         ).respond(
                 response().withStatusCode(204)
         );
@@ -601,30 +602,22 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
     void testUpdateName(OutputType format, MockServerClient mock) {
 
         mock.when(
-                request().withMethod("GET").withPath("/compute-envs/validate")
-                        .withQueryStringParameter("name", "testCE")
-                        .withQueryStringParameter("workspaceId", "75887156211590"),
-                exactly(1)
+                request().withMethod("GET").withPath("/v2/workspaces/75887156211590/compute-envs"), exactly(1)
         ).respond(
-                response().withStatusCode(204)
+                response().withStatusCode(200).withBody(loadResource("v2/compute_envs_page")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
-                request().withMethod("GET").withPath("/compute-envs"), exactly(1)
+                request().withMethod("GET").withPath("/v2/workspaces/75887156211590/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResource("compute_envs_list")).withContentType(MediaType.APPLICATION_JSON)
+                response().withStatusCode(200).withBody(loadResource("v2/compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
-                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+                request().withMethod("PATCH").withPath("/v2/workspaces/75887156211590/compute-envs/vYOK4vn7spw7bHHWBDXZ2")
+                        .withBody(new JsonBody("{\"name\":\"testCE\"}", MatchType.ONLY_MATCHING_FIELDS)), exactly(1)
         ).respond(
-                response().withStatusCode(200).withBody(loadResource("compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
-        );
-
-        mock.when(
-                request().withMethod("PUT").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
-        ).respond(
-                response().withStatusCode(204)
+                response().withStatusCode(200).withBody(loadResource("v2/compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
@@ -689,12 +682,22 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
     void testUpdateInvalidName(OutputType format, MockServerClient mock) {
 
         mock.when(
-                request().withMethod("GET").withPath("/compute-envs/validate")
-                        .withQueryStringParameter("name", "testCE")
-                        .withQueryStringParameter("workspaceId", "75887156211590"),
-                exactly(1)
+                request().withMethod("GET").withPath("/v2/workspaces/75887156211590/compute-envs"), exactly(1)
         ).respond(
-                response().withStatusCode(400)
+                response().withStatusCode(200).withBody(loadResource("v2/compute_envs_page")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/v2/workspaces/75887156211590/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("v2/compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // v2 validates the new name on PATCH itself (there is no separate name-validation call)
+        mock.when(
+                request().withMethod("PATCH").withPath("/v2/workspaces/75887156211590/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+        ).respond(
+                response().withStatusCode(409).withBody("{\"type\":\"about:blank\",\"title\":\"Conflict\",\"status\":409,\"detail\":\"A compute environment named 'testCE' already exists\"}").withContentType(MediaType.parse("application/problem+json"))
         );
 
         mock.when(
@@ -711,7 +714,7 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "compute-envs", "update", "-n", "demo", "-w", "75887156211590", "--new-name", "testCE");
 
-        assertEquals(errorMessage(out.app, new InvalidResponseException("Compute environment name 'testCE' is not valid")), out.stdErr);
+        assertEquals(errorMessage(out.app, new ApiException(409, "", null, "{\"detail\":\"A compute environment named 'testCE' already exists\"}")), out.stdErr);
         assertEquals("", out.stdOut);
         assertEquals(1, out.exitCode);
     }
@@ -852,8 +855,7 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
     @Test
     void testDisableInWorkspace(MockServerClient mock) {
         mock.when(
-                request().withMethod("POST").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2/disable")
-                        .withQueryStringParameter("workspaceId", "75887156211590"), exactly(1)
+                request().withMethod("POST").withPath("/v2/workspaces/75887156211590/compute-envs/vYOK4vn7spw7bHHWBDXZ2/disable"), exactly(1)
         ).respond(
                 response().withStatusCode(204)
         );

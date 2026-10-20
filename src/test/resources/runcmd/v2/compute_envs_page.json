@@ -1,0 +1,63 @@
+{
+  "items": [
+    {
+      "id": "3xkkzYH2nbD3nZjrzKm0oR",
+      "name": "ce1",
+      "description": null,
+      "status": "AVAILABLE",
+      "message": null,
+      "primary": true,
+      "credentialsId": null,
+      "managedIdentityId": null,
+      "fusionMetricsCollectionEnabled": null,
+      "resourceLabels": null,
+      "resources": null,
+      "lastUsedAt": "2021-10-06T08:08:53Z",
+      "createdAt": null,
+      "updatedAt": null,
+      "config": {
+        "platform": "AWS_BATCH"
+      }
+    },
+    {
+      "id": "3xkkzYH2nbD3nZjrzKm0oS",
+      "name": "ce2",
+      "description": null,
+      "status": "AVAILABLE",
+      "message": null,
+      "primary": true,
+      "credentialsId": null,
+      "managedIdentityId": null,
+      "fusionMetricsCollectionEnabled": null,
+      "resourceLabels": null,
+      "resources": null,
+      "lastUsedAt": "2021-10-06T08:08:53Z",
+      "createdAt": null,
+      "updatedAt": null,
+      "config": {
+        "platform": "AWS_BATCH"
+      }
+    },
+    {
+      "id": "vYOK4vn7spw7bHHWBDXZ2",
+      "name": "demo",
+      "description": null,
+      "status": "AVAILABLE",
+      "message": null,
+      "primary": true,
+      "credentialsId": null,
+      "managedIdentityId": null,
+      "fusionMetricsCollectionEnabled": null,
+      "resourceLabels": null,
+      "resources": null,
+      "lastUsedAt": "2021-10-06T08:08:53Z",
+      "createdAt": null,
+      "updatedAt": null,
+      "config": {
+        "platform": "AWS_BATCH"
+      }
+    }
+  ],
+  "nextPageToken": null,
+  "totalSize": 3
+}

@@ -500,101 +500,18 @@ class LaunchCmdTest extends BaseCmdTest {
     void testSubmitToAWorkspace(MockServerClient mock) {
 
         mock.when(
-                request().withMethod("GET").withPath("/compute-envs").withQueryStringParameter("status", "AVAILABLE").withQueryStringParameter("workspaceId", "222756650686576"), exactly(1)
+                request().withMethod("GET").withPath("/v2/workspaces/222756650686576/compute-envs").withQueryStringParameter("filter", "status == \"AVAILABLE\""), exactly(1)
         ).respond(
                 response().withStatusCode(200)
-                        .withBody("""
-                            {
-                                "computeEnvs":[
-                                    {
-                                        "id":"4iqCDE6C2Stq0jzBsHJvHn",
-                                        "name":"aws",
-                                        "platform":"aws-batch",
-                                        "status":"AVAILABLE",
-                                        "message":null,
-                                        "lastUsed":null,
-                                        "primary":true,
-                                        "workspaceName":"cli",
-                                        "visibility":"PRIVATE"
-                                    }
-                                ]
-                            }"""
-                        )
+                        .withBody("{\"items\":[{\"id\":\"4iqCDE6C2Stq0jzBsHJvHn\",\"name\":\"aws\",\"description\":null,\"status\":\"AVAILABLE\",\"message\":null,\"primary\":true,\"credentialsId\":null,\"managedIdentityId\":null,\"fusionMetricsCollectionEnabled\":null,\"resourceLabels\":null,\"resources\":null,\"lastUsedAt\":null,\"createdAt\":null,\"updatedAt\":null,\"config\":{\"platform\":\"AWS_BATCH\"}}],\"nextPageToken\":null,\"totalSize\":1}")
                         .withContentType(MediaType.APPLICATION_JSON)
         );
 
         mock.when(
-                request().withMethod("GET").withPath("/compute-envs/4iqCDE6C2Stq0jzBsHJvHn").withQueryStringParameter("workspaceId", "222756650686576"), exactly(1)
+                request().withMethod("GET").withPath("/v2/workspaces/222756650686576/compute-envs/4iqCDE6C2Stq0jzBsHJvHn"), exactly(1)
         ).respond(
                 response().withStatusCode(200)
-                        .withBody("""
-                            {
-                                "computeEnv":{
-                                    "id":"4iqCDE6C2Stq0jzBsHJvHn",
-                                    "name":"aws",
-                                    "description":null,
-                                    "platform":"aws-batch",
-                                    "config":{
-                                        "region":"eu-west-1",
-                                        "computeQueue":"TowerForge-4iqCDE6C2Stq0jzBsHJvHn-work",
-                                        "computeJobRole":null,
-                                        "headQueue":"TowerForge-4iqCDE6C2Stq0jzBsHJvHn-head",
-                                        "headJobRole":null,
-                                        "cliPath":"/home/ec2-user/miniconda/bin/aws",
-                                        "volumes":[],
-                                        "workDir":"s3://nextflow-ci/jordeu",
-                                        "preRunScript":null,
-                                        "postRunScript":null,
-                                        "headJobCpus":null,
-                                        "headJobMemoryMb":null,
-                                        "forge":{
-                                            "type":"SPOT",
-                                            "minCpus":0,
-                                            "maxCpus":123,
-                                            "gpuEnabled":false,
-                                            "ebsAutoScale":true,
-                                            "instanceTypes":[],
-                                            "allocStrategy":null,
-                                            "imageId":null,
-                                            "vpcId":null,
-                                            "subnets":[],
-                                            "securityGroups":[],
-                                            "fsxMount":null,
-                                            "fsxName":null,
-                                            "fsxSize":null,
-                                            "disposeOnDeletion":true,
-                                            "ec2KeyPair":null,
-                                            "allowBuckets":[],
-                                            "ebsBlockSize":null,
-                                            "fusionEnabled":false,
-                                            "bidPercentage":null,
-                                            "efsCreate":false,
-                                            "efsId":null,
-                                            "efsMount":null
-                                        },
-                                        "forgedResources":[
-                                            {"IamRole":"arn:aws:iam::195996028523:role/TowerForge-4iqCDE6C2Stq0jzBsHJvHn-ServiceRole"},
-                                            {"IamRole":"arn:aws:iam::195996028523:role/TowerForge-4iqCDE6C2Stq0jzBsHJvHn-FleetRole"},
-                                            {"IamInstanceProfile":"arn:aws:iam::195996028523:instance-profile/TowerForge-4iqCDE6C2Stq0jzBsHJvHn-InstanceRole"},
-                                            {"Ec2LaunchTemplate":"TowerForge-4iqCDE6C2Stq0jzBsHJvHn"},
-                                            {"BatchEnv":"arn:aws:batch:eu-west-1:195996028523:compute-environment/TowerForge-4iqCDE6C2Stq0jzBsHJvHn-head"},
-                                            {"BatchQueue":"arn:aws:batch:eu-west-1:195996028523:job-queue/TowerForge-4iqCDE6C2Stq0jzBsHJvHn-head"},
-                                            {"BatchEnv":"arn:aws:batch:eu-west-1:195996028523:compute-environment/TowerForge-4iqCDE6C2Stq0jzBsHJvHn-work"},
-                                            {"BatchQueue":"arn:aws:batch:eu-west-1:195996028523:job-queue/TowerForge-4iqCDE6C2Stq0jzBsHJvHn-work"}
-                                        ],
-                                        "discriminator":"aws-batch"
-                                    },
-                                    "dateCreated":"2021-09-09T08:53:37Z",
-                                    "lastUpdated":"2021-09-09T08:54:13Z",
-                                    "lastUsed":null,
-                                    "deleted":null,
-                                    "status":"AVAILABLE",
-                                    "message":null,
-                                    "primary":null,
-                                    "credentialsId":"3WzBlcFy1nSE9dSqFT1xPS"
-                                }
-                            }"""
-                        )
+                        .withBody("{\"id\":\"4iqCDE6C2Stq0jzBsHJvHn\",\"name\":\"aws\",\"description\":null,\"status\":\"AVAILABLE\",\"message\":null,\"primary\":false,\"credentialsId\":\"3WzBlcFy1nSE9dSqFT1xPS\",\"managedIdentityId\":null,\"fusionMetricsCollectionEnabled\":null,\"resourceLabels\":null,\"resources\":null,\"lastUsedAt\":null,\"createdAt\":\"2021-09-09T08:53:37Z\",\"updatedAt\":\"2021-09-09T08:54:13Z\",\"config\":{\"platform\":\"AWS_BATCH\",\"region\":\"eu-west-1\",\"computeQueue\":\"TowerForge-4iqCDE6C2Stq0jzBsHJvHn-work\",\"headQueue\":\"TowerForge-4iqCDE6C2Stq0jzBsHJvHn-head\",\"cliPath\":\"/home/ec2-user/miniconda/bin/aws\",\"volumes\":[],\"workDir\":\"s3://nextflow-ci/jordeu\",\"forge\":{\"type\":\"SPOT\",\"minCpus\":0,\"maxCpus\":123,\"gpuEnabled\":false,\"ebsAutoScale\":true,\"instanceTypes\":[],\"allocStrategy\":null,\"imageId\":null,\"vpcId\":null,\"subnets\":[],\"securityGroups\":[],\"fsxMount\":null,\"fsxName\":null,\"fsxSize\":null,\"disposeOnDeletion\":true,\"ec2KeyPair\":null,\"allowBuckets\":[],\"ebsBlockSize\":null,\"fusionEnabled\":false,\"bidPercentage\":null,\"efsCreate\":false,\"efsId\":null,\"efsMount\":null}}}")
                         .withContentType(MediaType.APPLICATION_JSON)
         );
 
