@@ -80,6 +80,16 @@ final class ComputeEnvV2Mapper {
     private static final Map<String, String> V2_TO_V1_FIELD = V1_TO_V2_FIELD.entrySet().stream()
             .collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
 
+    // Enum values spelled differently by the two contracts, per field name (v1 value -> v2 value).
+    private static final Map<String, Map<String, String>> V1_TO_V2_VALUE = Map.of(
+            "podCleanup", Map.of("on_success", "ON_SUCCESS", "always", "ALWAYS", "never", "NEVER"),
+            "provisioningModel", Map.of("spot", "SPOT", "spotFirst", "SPOT_FIRST", "ondemand", "ON_DEMAND")
+    );
+
+    private static final Map<String, Map<String, String>> V2_TO_V1_VALUE = V1_TO_V2_VALUE.entrySet().stream()
+            .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().entrySet().stream()
+                    .collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey))));
+
     // Server-populated v1 fields an exported config may carry; the server never read them on create.
     private static final List<String> V1_SERVER_POPULATED = List.of("forgedResources", "deletedResources");
 
@@ -107,10 +117,11 @@ final class ComputeEnvV2Mapper {
         }
         tree.remove("discriminator");
         tree.remove(V1_SERVER_POPULATED);
-        rename(tree, V1_TO_V2_FIELD);
+        rename(tree, V1_TO_V2_FIELD, V1_TO_V2_VALUE);
         tree.put("platform", platform);
 
-        // Fail loudly rather than silently drop a setting the v2 contract cannot carry.
+        // KEPT: no server equivalent (tower-cli:rule-21) - added for v2: fail loudly rather than silently drop a setting
+        // the v2 contract cannot carry (e.g. Google Cloud zone, Azure Cloud resource group, AWS Cloud subnetId).
         ObjectMapper strict = v2Mapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true);
         try {
             return strict.treeToValue(tree, ComputeEnvConfigWriteModel.class);
@@ -169,7 +180,7 @@ final class ComputeEnvV2Mapper {
         ObjectNode tree = v2Mapper().valueToTree(ce.getConfig());
         String platform = tree.path("platform").asText(null);
         tree.remove("platform");
-        rename(tree, V2_TO_V1_FIELD);
+        rename(tree, V2_TO_V1_FIELD, V2_TO_V1_VALUE);
         tree.put("discriminator", V2_TO_V1_PLATFORM.getOrDefault(platform, platform));
         try {
             return v1Mapper().treeToValue(tree, ComputeConfig.class);
@@ -193,7 +204,7 @@ final class ComputeEnvV2Mapper {
         return result;
     }
 
-    private static void rename(JsonNode node, Map<String, String> names) {
+    private static void rename(JsonNode node, Map<String, String> names, Map<String, Map<String, String>> values) {
         if (node instanceof ObjectNode) {
             ObjectNode obj = (ObjectNode) node;
             for (Map.Entry<String, String> name : names.entrySet()) {
@@ -201,12 +212,18 @@ final class ComputeEnvV2Mapper {
                     obj.set(name.getValue(), obj.remove(name.getKey()));
                 }
             }
+            for (Map.Entry<String, Map<String, String>> field : values.entrySet()) {
+                JsonNode value = obj.get(field.getKey());
+                if (value != null && value.isTextual() && field.getValue().containsKey(value.asText())) {
+                    obj.put(field.getKey(), field.getValue().get(value.asText()));
+                }
+            }
             for (Iterator<JsonNode> it = obj.elements(); it.hasNext(); ) {
-                rename(it.next(), names);
+                rename(it.next(), names, values);
             }
         } else if (node instanceof ArrayNode) {
             for (JsonNode child : node) {
-                rename(child, names);
+                rename(child, names, values);
             }
         }
     }
