@@ -17,6 +17,8 @@
 package io.seqera.tower.cli.commands;
 
 import io.seqera.tower.ApiClient;
+import io.seqera.tower.cli.commands.computeenvs.ComputeEnvsClient;
+import io.seqera.tower.v2.api.ComputeEnvironmentsApi;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.ApiResponse;
 import io.seqera.tower.Pair;
@@ -67,6 +69,7 @@ import io.seqera.tower.model.ActionQueryAttribute;
 import io.seqera.tower.model.ComputeEnvComputeConfig;
 import io.seqera.tower.model.ComputeEnvQueryAttribute;
 import io.seqera.tower.model.ComputeEnvResponseDto;
+import io.seqera.tower.model.ComputeEnvStatus;
 import io.seqera.tower.model.Credentials;
 import io.seqera.tower.model.DataStudioQueryAttribute;
 import io.seqera.tower.model.ListComputeEnvsResponseEntry;
@@ -124,6 +127,8 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     public static final List<DataStudioQueryAttribute> NO_STUDIO_ATTRIBUTES = Collections.EMPTY_LIST;
 
     private ApiClient apiClient;
+    private io.seqera.tower.v2.ApiClient apiClientV2;
+    private ComputeEnvsClient computeEnvsClient;
 
     private ActionsApi actionsApi;
     private AvatarsApi avatarsApi;
@@ -209,6 +214,47 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         }
 
         return apiClient;
+    }
+
+    /**
+     * Client of the Platform API v2, configured like the v1 client (base URL, token, user agent, debug logging).
+     */
+    private io.seqera.tower.v2.ApiClient apiClientV2() throws ApiException {
+        if (apiClientV2 == null) {
+            // Reuse the v1 checks (HTTPS unless '--insecure', token present)
+            apiClient();
+
+            io.seqera.tower.v2.ApiClient client = new io.seqera.tower.v2.ApiClient() {
+                @Override
+                public ClientConfig getDefaultClientConfig() {
+                    ClientConfig config = super.getDefaultClientConfig();
+                    config.property(CommonProperties.PROVIDER_DEFAULT_DISABLE, "ALL");
+                    return config;
+                }
+
+                @Override
+                protected void applyDebugSetting(ClientConfig clientConfig) {
+                    if (app().verbose) {
+                        clientConfig.register(new LoggingFeature(Logger.getLogger(LoggingFeature.DEFAULT_LOGGER_NAME), java.util.logging.Level.INFO, LoggingFeature.Verbosity.PAYLOAD_ANY, 1024 * 50 /* Log payloads up to 50K */));
+                        clientConfig.property(LoggingFeature.LOGGING_FEATURE_VERBOSITY, LoggingFeature.Verbosity.PAYLOAD_ANY);
+                    }
+                }
+            };
+            client.setServerIndex(null);
+            client.setBasePath(app().url);
+            client.setBearerToken(app().token);
+            Properties props = getCliProperties();
+            client.setUserAgent(String.format("tw/%s (%s)", props.get("version"), props.get("platform")));
+            apiClientV2 = client;
+        }
+        return apiClientV2;
+    }
+
+    protected ComputeEnvsClient computeEnvsClient() throws ApiException {
+        if (computeEnvsClient == null) {
+            computeEnvsClient = new ComputeEnvsClient(computeEnvsApi(), new ComputeEnvironmentsApi(apiClientV2()));
+        }
+        return computeEnvsClient;
     }
 
     protected ActionsApi actionsApi() throws ApiException {
@@ -481,7 +527,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
             throw new ComputeEnvNotFoundException(ref, workspaceId);
         }
 
-        return computeEnvsApi().describeComputeEnv(ceId, workspaceId, NO_CE_ATTRIBUTES).getComputeEnv();
+        return computeEnvsClient().describe(workspaceId, ceId, false);
     }
 
     protected ComputeEnvResponseDto primaryComputeEnv(Long workspaceId) throws ApiException {
@@ -493,7 +539,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
             throw new NoComputeEnvironmentException(workspaceRef(workspaceId));
         }
 
-        return computeEnvsApi().describeComputeEnv(primaryComputeEnvId, workspaceId, NO_CE_ATTRIBUTES).getComputeEnv();
+        return computeEnvsClient().describe(workspaceId, primaryComputeEnvId, false);
     }
 
     protected String credentialsByRef(ComputeEnvComputeConfig.PlatformEnum type, Long wspId, String credentialsRef) throws ApiException {
@@ -628,7 +674,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         if (availableComputeEnvsNameToId == null) {
             availableComputeEnvsNameToId = new HashMap<>();
             availableComputeEnvsIdToName = new HashMap<>();
-            for (ListComputeEnvsResponseEntry ce : computeEnvsApi().listComputeEnvs("AVAILABLE", workspaceId, List.of()).getComputeEnvs()) {
+            for (ListComputeEnvsResponseEntry ce : computeEnvsClient().list(workspaceId, ComputeEnvStatus.AVAILABLE)) {
 
                 if (ce.getPrimary() != null && ce.getPrimary()) {
                     primaryComputeEnvId = ce.getId();

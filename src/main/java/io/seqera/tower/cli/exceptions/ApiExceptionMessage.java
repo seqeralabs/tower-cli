@@ -20,11 +20,22 @@ public class ApiExceptionMessage {
 
     private String message;
 
+    // Platform API v2 errors are problem documents (RFC 9457), whose human-readable explanation is `detail`
+    private String detail;
+
     public String getMessage() {
-        return message;
+        return message != null ? message : detail;
     }
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getDetail() {
+        return detail;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
     }
 }
