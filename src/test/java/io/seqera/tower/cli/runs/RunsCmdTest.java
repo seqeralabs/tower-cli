@@ -60,6 +60,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.matchers.MatchType;
+import org.mockserver.matchers.Times;
 import org.mockserver.model.MediaType;
 import org.mockserver.verify.VerificationTimes;
 
@@ -585,6 +586,83 @@ class RunsCmdTest extends BaseCmdTest {
                 utilization,
                 baseUserUrl(mock, USER_WORKSPACE_NAME)
         ));
+    }
+
+    private void mockViewWithInstanceSplit(MockServerClient mock, String extraFields) {
+        String body = new String(loadResource("workflow_view"), StandardCharsets.UTF_8)
+                .replaceFirst("\\{\\s*\"workflow\":", "{" + extraFields + "\"workflow\":");
+
+        mock.when(
+                request().withMethod("GET").withPath("/workflow/5mDfiUtqyptDib"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(body).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/workflow/5mDfiUtqyptDib/progress"), Times.unlimited()
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workflow_progress")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/workflow/5mDfiUtqyptDib/launch"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("launch_view")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/3xkkzYH2nbD3nZjrzKm0oR"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_env_view")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+    }
+
+    @Test
+    void testViewStatsWithInstanceSplit(MockServerClient mock) {
+        mockViewWithInstanceSplit(mock, "\"provisioningModel\": \"spotFirst\", \"instancesProvisioned\": 10, "
+                + "\"instancesSpot\": 7, \"instancesOnDemand\": 2, \"instancesUnknown\": 1,");
+
+        ExecOut out = exec(mock, "runs", "view", "-i", "5mDfiUtqyptDib", "--stats");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        assertTrue(out.stdOut.contains("Provisioning Model") && out.stdOut.contains("spotFirst"), out.stdOut);
+        assertTrue(out.stdOut.contains("Instances Provisioned") && out.stdOut.contains("10"), out.stdOut);
+        assertTrue(out.stdOut.contains("Instances (Spot / On-Demand / Unknown)") && out.stdOut.contains("7 / 2 / 1"), out.stdOut);
+    }
+
+    @Test
+    void testViewStatsWithInstanceSplitJson(MockServerClient mock) throws JsonProcessingException {
+        mockViewWithInstanceSplit(mock, "\"provisioningModel\": \"spotFirst\", \"instancesProvisioned\": 10, "
+                + "\"instancesSpot\": 7, \"instancesOnDemand\": 2, \"instancesUnknown\": 1,");
+
+        ExecOut out = exec(OutputType.json, mock, "runs", "view", "-i", "5mDfiUtqyptDib", "--stats");
+
+        assertEquals(0, out.exitCode);
+        Map<String, Object> stats = (Map<String, Object>) JsonHelper.parseJson(out.stdOut, Map.class).get("stats");
+        assertEquals("spotFirst", stats.get("provisioningModel"));
+        assertEquals(10, stats.get("instancesProvisioned"));
+        assertEquals(7, stats.get("instancesSpot"));
+        assertEquals(2, stats.get("instancesOnDemand"));
+        assertEquals(1, stats.get("instancesUnknown"));
+    }
+
+    @Test
+    void testViewStatsWithoutInstanceSplit(MockServerClient mock) {
+        mockViewWithInstanceSplit(mock, "");
+
+        ExecOut out = exec(mock, "runs", "view", "-i", "5mDfiUtqyptDib", "--stats");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        assertTrue(out.stdOut.contains("Estimated Cost"), out.stdOut);
+        assertTrue(!out.stdOut.contains("Provisioning Model") && !out.stdOut.contains("Instances"), out.stdOut);
     }
 
     @Test

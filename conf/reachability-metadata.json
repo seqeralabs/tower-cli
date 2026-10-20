@@ -7387,6 +7387,14 @@
           "parameterTypes": []
         },
         {
+          "name": "getGithubAppCredentialName",
+          "parameterTypes": []
+        },
+        {
+          "name": "getGithubAppCredentialName_JsonNullable",
+          "parameterTypes": []
+        },
+        {
           "name": "getId",
           "parameterTypes": []
         },
@@ -7440,6 +7448,12 @@
         },
         {
           "name": "githubAppCredentialId",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "githubAppCredentialName",
           "parameterTypes": [
             "java.lang.String"
           ]
@@ -7546,6 +7560,18 @@
         },
         {
           "name": "setGithubAppCredentialId_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "setGithubAppCredentialName",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setGithubAppCredentialName_JsonNullable",
           "parameterTypes": [
             "org.openapitools.jackson.nullable.JsonNullable"
           ]
@@ -31750,6 +31776,12 @@
           ]
         },
         {
+          "name": "fusionSnapshots",
+          "parameterTypes": [
+            "java.lang.Boolean"
+          ]
+        },
+        {
           "name": "fusionVersion",
           "parameterTypes": [
             "java.lang.String"
@@ -31777,6 +31809,14 @@
         },
         {
           "name": "getEntryName",
+          "parameterTypes": []
+        },
+        {
+          "name": "getFusionSnapshots",
+          "parameterTypes": []
+        },
+        {
+          "name": "getFusionSnapshots_JsonNullable",
           "parameterTypes": []
         },
         {
@@ -31833,6 +31873,14 @@
         },
         {
           "name": "getOutputDir_JsonNullable",
+          "parameterTypes": []
+        },
+        {
+          "name": "getOverrideNextflowFusionVersion",
+          "parameterTypes": []
+        },
+        {
+          "name": "getOverrideNextflowFusionVersion_JsonNullable",
           "parameterTypes": []
         },
         {
@@ -31986,6 +32034,12 @@
           ]
         },
         {
+          "name": "overrideNextflowFusionVersion",
+          "parameterTypes": [
+            "java.lang.Boolean"
+          ]
+        },
+        {
           "name": "paramsText",
           "parameterTypes": [
             "java.lang.String"
@@ -32094,6 +32148,18 @@
           ]
         },
         {
+          "name": "setFusionSnapshots",
+          "parameterTypes": [
+            "java.lang.Boolean"
+          ]
+        },
+        {
+          "name": "setFusionSnapshots_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
           "name": "setFusionVersion",
           "parameterTypes": [
             "java.lang.String"
@@ -32173,6 +32239,18 @@
         },
         {
           "name": "setOutputDir_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "setOverrideNextflowFusionVersion",
+          "parameterTypes": [
+            "java.lang.Boolean"
+          ]
+        },
+        {
+          "name": "setOverrideNextflowFusionVersion_JsonNullable",
           "parameterTypes": [
             "org.openapitools.jackson.nullable.JsonNullable"
           ]
@@ -32961,6 +33039,16 @@
       ]
     },
     {
+      "type": "io.seqera.tower.model.LineageEventDeliveryStatus",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true
+    },
+    {
+      "type": "io.seqera.tower.model.LineageProvisioningMode",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true
+    },
+    {
       "type": "io.seqera.tower.model.LineageRecordResponse",
       "methods": [
         {
@@ -33118,6 +33206,593 @@
         {
           "name": "toString",
           "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.seqera.tower.model.LineageWorkspaceConfigStatus",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true
+    },
+    {
+      "type": "io.seqera.tower.model.LineageWorkspaceSettingsRequest",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        },
+        {
+          "name": "credentialsId",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "equals",
+          "parameterTypes": [
+            "java.lang.Object"
+          ]
+        },
+        {
+          "name": "equalsNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable",
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "getCredentialsId",
+          "parameterTypes": []
+        },
+        {
+          "name": "getLineageDefault",
+          "parameterTypes": []
+        },
+        {
+          "name": "getProvisioningMode",
+          "parameterTypes": []
+        },
+        {
+          "name": "getProvisioningMode_JsonNullable",
+          "parameterTypes": []
+        },
+        {
+          "name": "getQueueArn",
+          "parameterTypes": []
+        },
+        {
+          "name": "getQueueArn_JsonNullable",
+          "parameterTypes": []
+        },
+        {
+          "name": "getRegion",
+          "parameterTypes": []
+        },
+        {
+          "name": "getStoreName",
+          "parameterTypes": []
+        },
+        {
+          "name": "getStoreName_JsonNullable",
+          "parameterTypes": []
+        },
+        {
+          "name": "getTopicArn",
+          "parameterTypes": []
+        },
+        {
+          "name": "getTopicArn_JsonNullable",
+          "parameterTypes": []
+        },
+        {
+          "name": "hashCode",
+          "parameterTypes": []
+        },
+        {
+          "name": "hashCodeNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "lineageDefault",
+          "parameterTypes": [
+            "java.lang.Boolean"
+          ]
+        },
+        {
+          "name": "provisioningMode",
+          "parameterTypes": [
+            "io.seqera.tower.model.LineageProvisioningMode"
+          ]
+        },
+        {
+          "name": "queueArn",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "region",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setCredentialsId",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setLineageDefault",
+          "parameterTypes": [
+            "java.lang.Boolean"
+          ]
+        },
+        {
+          "name": "setProvisioningMode",
+          "parameterTypes": [
+            "io.seqera.tower.model.LineageProvisioningMode"
+          ]
+        },
+        {
+          "name": "setProvisioningMode_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "setQueueArn",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setQueueArn_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "setRegion",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setStoreName",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setStoreName_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "setTopicArn",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setTopicArn_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "storeName",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "toIndentedString",
+          "parameterTypes": [
+            "java.lang.Object"
+          ]
+        },
+        {
+          "name": "toString",
+          "parameterTypes": []
+        },
+        {
+          "name": "topicArn",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "io.seqera.tower.model.LineageWorkspaceSettingsResponse",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        },
+        {
+          "name": "credentialsId",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "equals",
+          "parameterTypes": [
+            "java.lang.Object"
+          ]
+        },
+        {
+          "name": "equalsNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable",
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "eventDelivery",
+          "parameterTypes": [
+            "io.seqera.tower.model.LineageEventDeliveryStatus"
+          ]
+        },
+        {
+          "name": "getCredentialsId",
+          "parameterTypes": []
+        },
+        {
+          "name": "getEventDelivery",
+          "parameterTypes": []
+        },
+        {
+          "name": "getEventDelivery_JsonNullable",
+          "parameterTypes": []
+        },
+        {
+          "name": "getLineageDefault",
+          "parameterTypes": []
+        },
+        {
+          "name": "getMessage",
+          "parameterTypes": []
+        },
+        {
+          "name": "getMessage_JsonNullable",
+          "parameterTypes": []
+        },
+        {
+          "name": "getOrgId",
+          "parameterTypes": []
+        },
+        {
+          "name": "getProvider",
+          "parameterTypes": []
+        },
+        {
+          "name": "getProvider_JsonNullable",
+          "parameterTypes": []
+        },
+        {
+          "name": "getProvisioned",
+          "parameterTypes": []
+        },
+        {
+          "name": "getProvisioningMode",
+          "parameterTypes": []
+        },
+        {
+          "name": "getQueueArn",
+          "parameterTypes": []
+        },
+        {
+          "name": "getQueueArn_JsonNullable",
+          "parameterTypes": []
+        },
+        {
+          "name": "getRegion",
+          "parameterTypes": []
+        },
+        {
+          "name": "getStatus",
+          "parameterTypes": []
+        },
+        {
+          "name": "getStatus_JsonNullable",
+          "parameterTypes": []
+        },
+        {
+          "name": "getStoreName",
+          "parameterTypes": []
+        },
+        {
+          "name": "getStoreName_JsonNullable",
+          "parameterTypes": []
+        },
+        {
+          "name": "getStoreUri",
+          "parameterTypes": []
+        },
+        {
+          "name": "getStoreUri_JsonNullable",
+          "parameterTypes": []
+        },
+        {
+          "name": "getTopicArn",
+          "parameterTypes": []
+        },
+        {
+          "name": "getTopicArn_JsonNullable",
+          "parameterTypes": []
+        },
+        {
+          "name": "getWebhookUrl",
+          "parameterTypes": []
+        },
+        {
+          "name": "getWebhookUrl_JsonNullable",
+          "parameterTypes": []
+        },
+        {
+          "name": "getWspId",
+          "parameterTypes": []
+        },
+        {
+          "name": "hashCode",
+          "parameterTypes": []
+        },
+        {
+          "name": "hashCodeNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "lineageDefault",
+          "parameterTypes": [
+            "java.lang.Boolean"
+          ]
+        },
+        {
+          "name": "message",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "orgId",
+          "parameterTypes": [
+            "java.lang.Long"
+          ]
+        },
+        {
+          "name": "provider",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "provisioned",
+          "parameterTypes": [
+            "java.lang.Boolean"
+          ]
+        },
+        {
+          "name": "provisioningMode",
+          "parameterTypes": [
+            "io.seqera.tower.model.LineageProvisioningMode"
+          ]
+        },
+        {
+          "name": "queueArn",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "region",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setCredentialsId",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setEventDelivery",
+          "parameterTypes": [
+            "io.seqera.tower.model.LineageEventDeliveryStatus"
+          ]
+        },
+        {
+          "name": "setEventDelivery_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "setLineageDefault",
+          "parameterTypes": [
+            "java.lang.Boolean"
+          ]
+        },
+        {
+          "name": "setMessage",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setMessage_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "setOrgId",
+          "parameterTypes": [
+            "java.lang.Long"
+          ]
+        },
+        {
+          "name": "setProvider",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setProvider_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "setProvisioned",
+          "parameterTypes": [
+            "java.lang.Boolean"
+          ]
+        },
+        {
+          "name": "setProvisioningMode",
+          "parameterTypes": [
+            "io.seqera.tower.model.LineageProvisioningMode"
+          ]
+        },
+        {
+          "name": "setQueueArn",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setQueueArn_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "setRegion",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setStatus",
+          "parameterTypes": [
+            "io.seqera.tower.model.LineageWorkspaceConfigStatus"
+          ]
+        },
+        {
+          "name": "setStatus_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "setStoreName",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setStoreName_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "setStoreUri",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setStoreUri_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "setTopicArn",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setTopicArn_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "setWebhookUrl",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setWebhookUrl_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "setWspId",
+          "parameterTypes": [
+            "java.lang.Long"
+          ]
+        },
+        {
+          "name": "status",
+          "parameterTypes": [
+            "io.seqera.tower.model.LineageWorkspaceConfigStatus"
+          ]
+        },
+        {
+          "name": "storeName",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "storeUri",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "toIndentedString",
+          "parameterTypes": [
+            "java.lang.Object"
+          ]
+        },
+        {
+          "name": "toString",
+          "parameterTypes": []
+        },
+        {
+          "name": "topicArn",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "webhookUrl",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "wspId",
+          "parameterTypes": [
+            "java.lang.Long"
+          ]
         }
       ]
     },
@@ -50238,7 +50913,23 @@
           "parameterTypes": []
         },
         {
+          "name": "getInstancesOnDemand",
+          "parameterTypes": []
+        },
+        {
           "name": "getInstancesProvisioned",
+          "parameterTypes": []
+        },
+        {
+          "name": "getInstancesSpot",
+          "parameterTypes": []
+        },
+        {
+          "name": "getInstancesUnknown",
+          "parameterTypes": []
+        },
+        {
+          "name": "getProvisioningModel",
           "parameterTypes": []
         },
         {
@@ -50250,9 +50941,33 @@
           "parameterTypes": []
         },
         {
+          "name": "instancesOnDemand",
+          "parameterTypes": [
+            "java.lang.Integer"
+          ]
+        },
+        {
           "name": "instancesProvisioned",
           "parameterTypes": [
             "java.lang.Integer"
+          ]
+        },
+        {
+          "name": "instancesSpot",
+          "parameterTypes": [
+            "java.lang.Integer"
+          ]
+        },
+        {
+          "name": "instancesUnknown",
+          "parameterTypes": [
+            "java.lang.Integer"
+          ]
+        },
+        {
+          "name": "provisioningModel",
+          "parameterTypes": [
+            "java.lang.String"
           ]
         },
         {
@@ -50286,9 +51001,33 @@
           ]
         },
         {
+          "name": "setInstancesOnDemand",
+          "parameterTypes": [
+            "java.lang.Integer"
+          ]
+        },
+        {
           "name": "setInstancesProvisioned",
           "parameterTypes": [
             "java.lang.Integer"
+          ]
+        },
+        {
+          "name": "setInstancesSpot",
+          "parameterTypes": [
+            "java.lang.Integer"
+          ]
+        },
+        {
+          "name": "setInstancesUnknown",
+          "parameterTypes": [
+            "java.lang.Integer"
+          ]
+        },
+        {
+          "name": "setProvisioningModel",
+          "parameterTypes": [
+            "java.lang.String"
           ]
         },
         {
@@ -51131,6 +51870,12 @@
           ]
         },
         {
+          "name": "fusionSnapshots",
+          "parameterTypes": [
+            "java.lang.Boolean"
+          ]
+        },
+        {
           "name": "fusionVersion",
           "parameterTypes": [
             "java.lang.String"
@@ -51174,6 +51919,14 @@
         },
         {
           "name": "getEntryName_JsonNullable",
+          "parameterTypes": []
+        },
+        {
+          "name": "getFusionSnapshots",
+          "parameterTypes": []
+        },
+        {
+          "name": "getFusionSnapshots_JsonNullable",
           "parameterTypes": []
         },
         {
@@ -51253,6 +52006,14 @@
           "parameterTypes": []
         },
         {
+          "name": "getOverrideNextflowFusionVersion",
+          "parameterTypes": []
+        },
+        {
+          "name": "getOverrideNextflowFusionVersion_JsonNullable",
+          "parameterTypes": []
+        },
+        {
           "name": "getParamsText",
           "parameterTypes": []
         },
@@ -51309,7 +52070,15 @@
           "parameterTypes": []
         },
         {
+          "name": "getResumeCommitId_JsonNullable",
+          "parameterTypes": []
+        },
+        {
           "name": "getResumeDir",
+          "parameterTypes": []
+        },
+        {
+          "name": "getResumeDir_JsonNullable",
           "parameterTypes": []
         },
         {
@@ -51434,6 +52203,12 @@
           "name": "outputDir",
           "parameterTypes": [
             "java.lang.String"
+          ]
+        },
+        {
+          "name": "overrideNextflowFusionVersion",
+          "parameterTypes": [
+            "java.lang.Boolean"
           ]
         },
         {
@@ -51575,6 +52350,18 @@
           ]
         },
         {
+          "name": "setFusionSnapshots",
+          "parameterTypes": [
+            "java.lang.Boolean"
+          ]
+        },
+        {
+          "name": "setFusionSnapshots_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
           "name": "setFusionVersion",
           "parameterTypes": [
             "java.lang.String"
@@ -51689,6 +52476,18 @@
           ]
         },
         {
+          "name": "setOverrideNextflowFusionVersion",
+          "parameterTypes": [
+            "java.lang.Boolean"
+          ]
+        },
+        {
+          "name": "setOverrideNextflowFusionVersion_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
           "name": "setParamsText",
           "parameterTypes": [
             "java.lang.String"
@@ -51773,9 +52572,21 @@
           ]
         },
         {
+          "name": "setResumeCommitId_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
           "name": "setResumeDir",
           "parameterTypes": [
             "java.lang.String"
+          ]
+        },
+        {
+          "name": "setResumeDir_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
           ]
         },
         {
