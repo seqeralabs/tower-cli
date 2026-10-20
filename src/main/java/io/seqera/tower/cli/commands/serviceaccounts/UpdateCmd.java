@@ -37,16 +37,16 @@ public class UpdateCmd extends AbstractServiceAccountsCmd {
     @Mixin
     ServiceAccountRefOptions ref;
 
-    @Option(names = {"--new-name"}, description = "New service account name. Must be unique across all Platform users.")
+    @Option(names = {"--new-name"}, description = "New service account name. Must be unique across all Platform users. Use 2 to 39 lowercase letters, numbers, and dashes, starting and ending with a letter or number, with no consecutive dashes. Some names are reserved.")
     public String newName;
 
-    @Option(names = {"-d", "--description"}, description = "New service account description (max 1000 characters).")
+    @Option(names = {"-d", "--description"}, description = "New service account description (max 1000 characters). Pass an empty string to clear it.")
     public String description;
 
     @Override
     protected Response exec() throws ApiException {
         Long orgId = findOrganizationByRef(organizationRef).getOrgId();
-        ServiceAccountDto sa = fetchServiceAccount(orgId, ref);
+        ServiceAccountDto sa = fetchServiceAccount(organizationRef, orgId, ref);
 
         // PATCH semantics: fields left null are not changed
         UpdateServiceAccountRequest request = new UpdateServiceAccountRequest()

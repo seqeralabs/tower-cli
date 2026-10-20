@@ -38,6 +38,6 @@ public class ViewCmd extends AbstractServiceAccountsCmd {
     @Override
     protected Response exec() throws ApiException {
         Long orgId = findOrganizationByRef(organizationRef).getOrgId();
-        return new ServiceAccountView(organizationRef, fetchServiceAccount(orgId, ref));
+        return new ServiceAccountView(organizationRef, fetchServiceAccount(organizationRef, orgId, ref));
     }
 }

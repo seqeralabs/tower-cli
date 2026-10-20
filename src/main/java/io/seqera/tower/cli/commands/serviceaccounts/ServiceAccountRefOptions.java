@@ -26,7 +26,7 @@ public class ServiceAccountRefOptions {
 
     public static class ServiceAccountRef {
 
-        @Option(names = {"-i", "--id"}, description = "Service account numeric identifier.")
+        @Option(names = {"-i", "--id"}, description = "Service account numeric identifier, as shown in the ID column of 'tw service-accounts list' (not the member ID).")
         public Long id;
 
         @Option(names = {"-n", "--name"}, description = "Service account name.")

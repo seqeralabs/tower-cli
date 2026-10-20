@@ -721,7 +721,9 @@ tw agents runs list -w my-org/my-workspace
 
 ## Service accounts
 
-Run `tw service-accounts -h` to view the supported operations: `list`, `add`, `view`, `update`, and `delete`. Service accounts are non-human organization members. Add one to a workspace with `tw participants add -t MEMBER -n <name>` (it gets the `VIEW` role; change it with `tw participants update -t MEMBER -n <name> -r <role>`), or set one as an agent's identity with `tw agents add|update --service-account-id`.
+Run `tw service-accounts -h` to view the supported operations: `list`, `add`, `view`, `update`, and `delete`. Service accounts are non-human organization members. Add one to a workspace with `tw participants add -t MEMBER -n <name>` (it gets the `VIEW` role; change it with `tw participants update -t MEMBER -n <name> -r <role>`), or set one as an agent's identity with `tw agents add|update --service-account <name>` or `--service-account-id <id>`.
+
+> **Note**: All `tw service-accounts` operations except `list -w` require the organization owner role. So does looking up a service account by name in `tw participants add` and `tw agents add|update --service-account`. A service account still bound to active agents can't be deleted: bind those agents to another service account or disable them first.
 
 ```bash
 tw service-accounts add -o my-org -n ci-bot -d "CI pipeline launcher"

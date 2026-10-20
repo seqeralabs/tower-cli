@@ -173,7 +173,7 @@ class ServiceAccountsCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(mock, "service-accounts", "view", "-o", "organization1", "-n", "missing");
 
-        assertEquals(errorMessage(out.app, new TowerException("Service account 'missing' not found in organization '27736513644467'")), out.stdErr);
+        assertEquals(errorMessage(out.app, new TowerException("Service account 'missing' not found in organization 'organization1'")), out.stdErr);
         assertEquals(1, out.exitCode);
     }
 
@@ -215,5 +215,24 @@ class ServiceAccountsCmdTest extends BaseCmdTest {
         ExecOut out = exec(format, mock, "service-accounts", "delete", "-o", "organization1", "-n", "ci-bot");
 
         assertOutput(format, out, new ServiceAccountDeleted("organization1", ciBot()));
+    }
+
+    @Test
+    void testDeleteBoundToAgents(MockServerClient mock) {
+        mock.when(
+                request().withMethod("GET").withPath(ORG_PATH + "/11"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"serviceAccount\": " + CI_BOT + "}").withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("DELETE").withPath(ORG_PATH + "/11"), exactly(1)
+        ).respond(
+                response().withStatusCode(409).withBody("{\"message\": \"Service account is bound to active agents\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "service-accounts", "delete", "-o", "organization1", "-i", "11");
+
+        assertEquals(errorMessage(out.app, new TowerException("Service account 'ci-bot' is bound to active agents. Bind those agents to another service account with 'tw agents update --service-account', or disable them with 'tw agents disable', then try again")), out.stdErr);
+        assertEquals(1, out.exitCode);
     }
 }

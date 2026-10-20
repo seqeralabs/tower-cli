@@ -27,13 +27,13 @@ public abstract class AbstractServiceAccountsCmd extends AbstractApiCmd {
 
     public static final String ORGANIZATION_DESCRIPTION = "Organization name or numeric ID. Specify either the unique organization name or the numeric organization ID returned by 'tw organizations list'.";
 
-    protected ServiceAccountDto fetchServiceAccount(Long orgId, ServiceAccountRefOptions ref) throws ApiException {
+    protected ServiceAccountDto fetchServiceAccount(String organizationRef, Long orgId, ServiceAccountRefOptions ref) throws ApiException {
         if (ref.serviceAccount.id != null) {
             return serviceAccountsApi().describeServiceAccount(orgId, ref.serviceAccount.id).getServiceAccount();
         }
         ServiceAccountDto sa = findServiceAccountByName(orgId, ref.serviceAccount.name);
         if (sa == null) {
-            throw new TowerException(String.format("Service account '%s' not found in organization '%d'", ref.serviceAccount.name, orgId));
+            throw new TowerException(String.format("Service account '%s' not found in organization '%s'", ref.serviceAccount.name, organizationRef));
         }
         return sa;
     }
