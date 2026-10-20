@@ -42,7 +42,7 @@ public class DisableCmd extends AbstractComputeEnvCmd {
                 ? computeEnvRefOptions.computeEnv.computeEnvId
                 : computeEnvByName(wspId, computeEnvRefOptions.computeEnv.computeEnvName).getId();
 
-        computeEnvsApi().disableComputeEnv(id, wspId, null);
+        computeEnvsClient().disable(wspId, id);
         return new ComputeEnvDisabled(id, workspaceRef(wspId));
     }
 }

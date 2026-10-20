@@ -26,7 +26,6 @@ import io.seqera.tower.model.ComputeEnvStatus;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
-import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 import static io.seqera.tower.cli.utils.ResponseHelper.waitStatus;
@@ -58,7 +57,7 @@ public class DeleteCmd extends AbstractComputeEnvCmd {
             id = computeEnv.getId();
         }
 
-        computeEnvsApi().deleteComputeEnv(id, wspId, null);
+        computeEnvsClient().delete(wspId, id);
         return new ComputeEnvDeleted(id, workspaceRef(wspId), wspId);
     }
 
@@ -87,6 +86,6 @@ public class DeleteCmd extends AbstractComputeEnvCmd {
     }
 
     private ComputeEnvStatus checkComputeEnvStatus(String computeEnvId, Long workspaceId) throws ApiException {
-        return computeEnvsApi().describeComputeEnv(computeEnvId, workspaceId, Collections.emptyList()).getComputeEnv().getStatus();
+        return computeEnvsClient().status(workspaceId, computeEnvId);
     }
 }

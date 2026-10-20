@@ -20,12 +20,10 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.computeenvs.ComputeEnvList;
-import io.seqera.tower.model.ListComputeEnvsResponse;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
 import java.io.IOException;
-import java.util.List;
 
 @Command(
         name = "list",
@@ -40,7 +38,6 @@ public class ListCmd extends AbstractComputeEnvCmd {
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
         
-        ListComputeEnvsResponse response = computeEnvsApi().listComputeEnvs(null, wspId, List.of());
-        return new ComputeEnvList(workspaceRef(wspId), response.getComputeEnvs(), baseWorkspaceUrl(wspId));
+        return new ComputeEnvList(workspaceRef(wspId), computeEnvsClient().list(wspId, null), baseWorkspaceUrl(wspId));
     }
 }

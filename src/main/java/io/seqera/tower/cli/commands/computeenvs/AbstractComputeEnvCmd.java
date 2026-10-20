@@ -19,7 +19,6 @@ package io.seqera.tower.cli.commands.computeenvs;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.exceptions.ComputeEnvNotFoundException;
-import io.seqera.tower.model.ComputeEnvQueryAttribute;
 import io.seqera.tower.model.ComputeEnvResponseDto;
 import io.seqera.tower.model.ListComputeEnvsResponseEntry;
 import picocli.CommandLine.Command;
@@ -46,18 +45,19 @@ public abstract class AbstractComputeEnvCmd extends AbstractApiCmd {
 
     protected ComputeEnvResponseDto computeEnvByName(Long workspaceId, String name) throws ApiException {
 
-        List<ListComputeEnvsResponseEntry> computeEnvs = computeEnvsApi().listComputeEnvs(null, workspaceId, List.of()).getComputeEnvs();
+        // KEPT: no server equivalent (tower-cli:rule-1) - the v2 list filter has no `name` field, so the name is resolved client-side
+        List<ListComputeEnvsResponseEntry> computeEnvs = computeEnvsClient().list(workspaceId, null);
         ListComputeEnvsResponseEntry entry = computeEnvs
                 .stream()
                 .filter(ce -> name.equals(ce.getName()))
                 .findFirst()
                 .orElseThrow(() -> new ComputeEnvNotFoundException(name, workspaceId));
 
-        return computeEnvsApi().describeComputeEnv(entry.getId(), workspaceId, List.of(ComputeEnvQueryAttribute.labels)).getComputeEnv();
+        return computeEnvsClient().describe(workspaceId, entry.getId(), true);
     }
 
     private ComputeEnvResponseDto computeEnvById(Long workspaceId, String id) throws ApiException {
-        return computeEnvsApi().describeComputeEnv(id, workspaceId, List.of(ComputeEnvQueryAttribute.labels)).getComputeEnv();
+        return computeEnvsClient().describe(workspaceId, id, true);
     }
 }
 

@@ -39,7 +39,7 @@ public class SetCmd extends AbstractComputeEnvsPrimaryCmd {
         Long wspId = workspaceId(workspace.workspace);
         ComputeEnvResponseDto ce = fetchComputeEnv(computeEnvRefOptions, wspId);
 
-        computeEnvsApi().updateComputeEnvPrimary(ce.getId(), wspId, null);
+        computeEnvsClient().setPrimary(wspId, ce.getId());
 
         return new ComputeEnvsPrimarySet(workspaceRef(wspId), ce);
     }

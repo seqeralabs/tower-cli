@@ -45,7 +45,7 @@ public class ValidateCmd extends AbstractComputeEnvCmd {
         Long wspId = workspaceId(workspace.workspace);
         ComputeEnvResponseDto computeEnv = fetchComputeEnv(computeEnvRefOptions, wspId);
 
-        ValidateComputeEnvResponse response = computeEnvsApi().validateComputeEnv(computeEnv.getId(), wspId, force, null);
+        ValidateComputeEnvResponse response = computeEnvsClient().validate(wspId, computeEnv.getId(), force);
 
         return new ComputeEnvValidated(
                 computeEnv.getId(),

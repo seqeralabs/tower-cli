@@ -86,7 +86,7 @@ public class ImportCmd extends AbstractAddCmd {
     private void tryDeleteCE(String name, Long wspId) throws ApiException {
         try {
             ComputeEnvResponseDto ce = computeEnvByRef(wspId, name);
-            computeEnvsApi().deleteComputeEnv(ce.getId(), wspId, null);
+            computeEnvsClient().delete(wspId, ce.getId());
         } catch (ComputeEnvNotFoundException ignored) {}
     }
 

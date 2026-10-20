@@ -29,15 +29,12 @@ import io.seqera.tower.model.ComputeConfig;
 import io.seqera.tower.model.ComputeEnvComputeConfig;
 import io.seqera.tower.model.ComputeEnvComputeConfig.PlatformEnum;
 import io.seqera.tower.model.ComputeEnvStatus;
-import io.seqera.tower.model.CreateComputeEnvRequest;
-import io.seqera.tower.model.CreateComputeEnvResponse;
 import io.seqera.tower.model.Credentials;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 import static io.seqera.tower.cli.utils.ResponseHelper.waitStatus;
@@ -95,7 +92,7 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
     }
 
     private ComputeEnvStatus checkComputeEnvStatus(String computeEnvId, Long workspaceId) throws ApiException {
-        return computeEnvsApi().describeComputeEnv(computeEnvId, workspaceId, Collections.emptyList()).getComputeEnv().getStatus();
+        return computeEnvsClient().status(workspaceId, computeEnvId);
     }
 
     protected ComputeEnvAdded addComputeEnv(PlatformEnum platform, ComputeConfig config) throws ApiException {
@@ -110,21 +107,17 @@ public abstract class AbstractAddCmd extends AbstractApiCmd {
 
         String credsId = credentialsRef == null ? findWorkspaceCredentials(platform, wspId) : credentialsByRef(platform, wspId, credentialsRef);
 
-        CreateComputeEnvRequest request =  new CreateComputeEnvRequest()
-                .computeEnv(
-                        new ComputeEnvComputeConfig()
-                                .name(name)
-                                .description(description)
-                                .platform(platform)
-                                .credentialsId(credsId)
-                                .config(config)
-                                .fusionMetricsCollectionEnabled(fusionMetricsCollectionEnabled())
-                )
-                .labelIds(labelIds);
+        ComputeEnvComputeConfig computeEnv = new ComputeEnvComputeConfig()
+                .name(name)
+                .description(description)
+                .platform(platform)
+                .credentialsId(credsId)
+                .config(config)
+                .fusionMetricsCollectionEnabled(fusionMetricsCollectionEnabled());
 
-        CreateComputeEnvResponse resp = computeEnvsApi().createComputeEnv(request, wspId);
+        String computeEnvId = computeEnvsClient().create(wspId, computeEnv, labelIds);
 
-        return new ComputeEnvAdded(platform.getValue(), resp.getComputeEnvId(), name, wspId, workspaceRef(wspId));
+        return new ComputeEnvAdded(platform.getValue(), computeEnvId, name, wspId, workspaceRef(wspId));
     }
 
     private String findWorkspaceCredentials(PlatformEnum type, Long wspId) throws ApiException {

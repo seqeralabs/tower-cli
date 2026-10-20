@@ -42,7 +42,7 @@ public class EnableCmd extends AbstractComputeEnvCmd {
                 ? computeEnvRefOptions.computeEnv.computeEnvId
                 : computeEnvByName(wspId, computeEnvRefOptions.computeEnv.computeEnvName).getId();
 
-        computeEnvsApi().enableComputeEnv(id, wspId, null);
+        computeEnvsClient().enable(wspId, id);
         return new ComputeEnvEnabled(id, workspaceRef(wspId));
     }
 }

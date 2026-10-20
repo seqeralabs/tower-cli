@@ -18,11 +18,9 @@ package io.seqera.tower.cli.commands.computeenvs;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.WorkspaceOptionalOptions;
-import io.seqera.tower.cli.exceptions.InvalidResponseException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.computeenvs.ComputeEnvUpdated;
 import io.seqera.tower.model.ComputeEnvResponseDto;
-import io.seqera.tower.model.UpdateComputeEnvRequest;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Option;
@@ -51,21 +49,9 @@ public class UpdateCmd extends AbstractComputeEnvCmd {
     protected Response exec() throws ApiException, IOException {
         Long wspId = workspaceId(workspace.workspace);
 
-        if (newName != null) {
-            try {
-                computeEnvsApi().validateComputeEnvName(wspId, newName);
-            } catch (ApiException ex) {
-                throw new InvalidResponseException(String.format("Compute environment name '%s' is not valid", newName));
-            }
-        }
         ComputeEnvResponseDto ce = describeCE(computeEnvRefOptions, wspId);
 
-
-        UpdateComputeEnvRequest req = new UpdateComputeEnvRequest()
-                .name(newName != null ? newName : ce.getName())
-                .description(description != null ? description : ce.getDescription());
-
-        computeEnvsApi().updateComputeEnv(ce.getId(), req, wspId);
+        computeEnvsClient().update(wspId, ce, newName, description);
 
 
         return new ComputeEnvUpdated(workspaceRef(wspId), ce.getName());

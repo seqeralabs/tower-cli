@@ -216,7 +216,7 @@ public class LaunchCmd extends AbstractRootCmd {
         }
 
         if (launchRequest.getWorkDir() == null) {
-            ComputeEnvResponseDto ce = computeEnvsApi().describeComputeEnv(launchRequest.getComputeEnvId(), wspId, NO_CE_ATTRIBUTES).getComputeEnv();
+            ComputeEnvResponseDto ce = computeEnvsClient().describe(wspId, launchRequest.getComputeEnvId(), false);
             launchRequest.workDir(ce.getConfig().getWorkDir());
         }
 
