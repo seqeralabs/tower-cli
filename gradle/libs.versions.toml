@@ -23,6 +23,8 @@ commonsCompress = { group = "org.apache.commons", name = "commons-compress", ver
 commonsIo = { group = "commons-io", name = "commons-io", version.ref = "commonsIoVersion" }
 jacksonBom = { group = "com.fasterxml.jackson", name = "jackson-bom", version.ref = "jacksonBomVersion" }
 jakartaAnnotation = { group = "jakarta.annotation", name = "jakarta.annotation-api", version.ref = "jakartaAnnotationVersion" }
+jsr305 = { group = "com.google.code.findbugs", name = "jsr305", version = "3.0.2" }
+jacksonDatatypeJsr310 = { group = "com.fasterxml.jackson.datatype", name = "jackson-datatype-jsr310" }
 javaxAnnotation = { group = "javax.annotation", name = "javax.annotation-api", version.ref = "javaxAnnotationVersion" }
 jerseyClient = { group = "org.glassfish.jersey.core", name = "jersey-client", version.ref = "jerseyVersion" }
 jerseyHk2 = { group = "org.glassfish.jersey.inject", name = "jersey-hk2", version.ref = "jerseyVersion" }
