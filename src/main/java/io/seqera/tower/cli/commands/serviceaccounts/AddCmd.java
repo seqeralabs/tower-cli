@@ -33,7 +33,7 @@ public class AddCmd extends AbstractServiceAccountsCmd {
     @Option(names = {"-o", "--organization"}, description = ORGANIZATION_DESCRIPTION, required = true)
     public String organizationRef;
 
-    @Option(names = {"-n", "--name"}, description = "Service account name. Must be unique across all Platform users. Use only lowercase letters, numbers, and dashes (max 40 characters).", required = true)
+    @Option(names = {"-n", "--name"}, description = "Service account name. Must be unique across all Platform users. Use 2 to 39 lowercase letters, numbers, and dashes, starting and ending with a letter or number, with no consecutive dashes. Some names are reserved.", required = true)
     public String name;
 
     @Option(names = {"-d", "--description"}, description = "Service account description (max 1000 characters).")

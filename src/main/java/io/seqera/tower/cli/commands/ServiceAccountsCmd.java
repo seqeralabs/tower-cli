@@ -25,7 +25,7 @@ import picocli.CommandLine.Command;
 
 @Command(
         name = "service-accounts",
-        description = "Manage organization service accounts",
+        description = "Manage organization service accounts. All operations except 'list -w' require the organization owner role.",
         subcommands = {
                 ListCmd.class,
                 AddCmd.class,
