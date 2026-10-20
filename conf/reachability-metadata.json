@@ -665,7 +665,7 @@
           "name": "name"
         },
         {
-          "name": "serviceAccountId"
+          "name": "serviceAccount"
         },
         {
           "name": "workspace"
@@ -711,6 +711,23 @@
     },
     {
       "type": "io.seqera.tower.cli.commands.agents.AgentRefOptions$AgentRef",
+      "fields": [
+        {
+          "name": "id"
+        },
+        {
+          "name": "name"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.seqera.tower.cli.commands.agents.AgentServiceAccountOptions",
       "fields": [
         {
           "name": "id"
@@ -836,7 +853,7 @@
           "name": "ref"
         },
         {
-          "name": "serviceAccountId"
+          "name": "serviceAccount"
         },
         {
           "name": "workspace"

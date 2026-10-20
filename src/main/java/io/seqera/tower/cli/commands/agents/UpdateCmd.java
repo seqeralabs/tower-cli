@@ -53,8 +53,8 @@ public class UpdateCmd extends AbstractAgentsCmd {
     @ArgGroup
     public AgentInstructionsOptions instructions;
 
-    @Option(names = {"--service-account-id"}, description = "Service account user ID. The agent runs with the permissions of this service account in the workspace.")
-    public Long serviceAccountId;
+    @ArgGroup
+    public AgentServiceAccountOptions serviceAccount;
 
     @Option(names = {"--github-app-credentials-id"}, description = "GitHub App credentials identifier. Lets the agent clone, commit, and push using these credentials.")
     public String githubAppCredentialsId;
@@ -70,7 +70,7 @@ public class UpdateCmd extends AbstractAgentsCmd {
                 .description(coalesce(description, agent.getDescription()))
                 .agentInstructions(instructions != null ? instructions.read() : agent.getAgentInstructions())
                 .agentInstructionsTemplateId(agent.getAgentInstructionsTemplateId())
-                .serviceAccountId(coalesce(serviceAccountId, agent.getServiceAccountId()))
+                .serviceAccountId(coalesce(serviceAccountId(serviceAccount, wspId), agent.getServiceAccountId()))
                 .githubAppCredentialId(coalesce(githubAppCredentialsId, agent.getGithubAppCredentialId()));
 
         AgentDbDto updated = agentsApi().updateAgent(agent.getId(), request, wspId).getAgent();
