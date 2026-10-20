@@ -18,13 +18,9 @@ package io.seqera.tower.cli.commands.serviceaccounts;
 
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.AbstractApiCmd;
-import io.seqera.tower.cli.commands.global.PaginationOptions;
 import io.seqera.tower.cli.exceptions.TowerException;
-import io.seqera.tower.model.ListServiceAccountsResponse;
 import io.seqera.tower.model.ServiceAccountDto;
 import picocli.CommandLine.Command;
-
-import java.util.List;
 
 @Command
 public abstract class AbstractServiceAccountsCmd extends AbstractApiCmd {
@@ -35,23 +31,10 @@ public abstract class AbstractServiceAccountsCmd extends AbstractApiCmd {
         if (ref.serviceAccount.id != null) {
             return serviceAccountsApi().describeServiceAccount(orgId, ref.serviceAccount.id).getServiceAccount();
         }
-        return serviceAccountByName(orgId, ref.serviceAccount.name);
-    }
-
-    private ServiceAccountDto serviceAccountByName(Long orgId, String name) throws ApiException {
-        int offset = 0;
-        while (true) {
-            ListServiceAccountsResponse page = serviceAccountsApi().listServiceAccounts(orgId, offset, PaginationOptions.MAX);
-            List<ServiceAccountDto> items = page.getServiceAccounts();
-            for (ServiceAccountDto sa : items) {
-                if (name.equals(sa.getName())) {
-                    return sa;
-                }
-            }
-            offset += items.size();
-            if (items.isEmpty() || offset >= page.getTotalSize()) {
-                throw new TowerException(String.format("Service account '%s' not found in organization '%d'", name, orgId));
-            }
+        ServiceAccountDto sa = findServiceAccountByName(orgId, ref.serviceAccount.name);
+        if (sa == null) {
+            throw new TowerException(String.format("Service account '%s' not found in organization '%d'", ref.serviceAccount.name, orgId));
         }
+        return sa;
     }
 }
