@@ -721,7 +721,7 @@ tw agents runs list -w my-org/my-workspace
 
 ## Service accounts
 
-Run `tw service-accounts -h` to view the supported operations: `list`, `add`, `view`, `update`, and `delete`. Service accounts are non-human organization members. Add one to a workspace with `tw participants add -t MEMBER -n <name>`, or set one as an agent's identity with `tw agents add|update --service-account-id`.
+Run `tw service-accounts -h` to view the supported operations: `list`, `add`, `view`, `update`, and `delete`. Service accounts are non-human organization members. Add one to a workspace with `tw participants add -t MEMBER -n <name>` (it gets the `VIEW` role; change it with `tw participants update -t MEMBER -n <name> -r <role>`), or set one as an agent's identity with `tw agents add|update --service-account-id`.
 
 ```bash
 tw service-accounts add -o my-org -n ci-bot -d "CI pipeline launcher"
