@@ -1,6 +1,8 @@
 name: Claude PR Review
 
 on:
+  pull_request:
+    types: [opened, reopened, ready_for_review]
   issue_comment:
     types: [created]
   pull_request_review_comment:
@@ -16,13 +18,17 @@ jobs:
     # pull_request payload, so a mention on a plain issue does not start a
     # review with no diff to read.
     #
-    # The author_association guard is required here specifically because this
-    # repo is public: issue_comment and pull_request_review_comment (unlike
-    # pull_request from a fork) run with full secrets access and no built-in
-    # fork sandboxing, so without this check any GitHub user could trigger the
-    # workflow and spend the org's Anthropic API key.
+    # The author_association guard matters on public repos: issue_comment and
+    # pull_request_review_comment (unlike pull_request from a fork) run with
+    # full secrets access and no built-in fork sandboxing, so without this check
+    # any GitHub user could trigger the workflow and spend the org's Anthropic
+    # API key. It is kept on private repos too so every repo runs the same file.
+    #
+    # The pull_request arm is the automatic review on every PR. Fork PRs are
+    # excluded because they get no secrets, and drafts wait for ready_for_review.
     if: |
       (github.actor != 'claude[bot]') && (
+        (github.event_name == 'pull_request' && !github.event.pull_request.draft && github.event.pull_request.head.repo.full_name == github.repository) ||
         (github.event_name == 'issue_comment' && github.event.issue.pull_request && contains(github.event.comment.body, '@claude') && contains(fromJSON('["COLLABORATOR", "MEMBER", "OWNER"]'), github.event.comment.author_association)) ||
         (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude') && contains(fromJSON('["COLLABORATOR", "MEMBER", "OWNER"]'), github.event.comment.author_association)) ||
         (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude') && contains(fromJSON('["COLLABORATOR", "MEMBER", "OWNER"]'), github.event.review.author_association))
@@ -53,7 +59,7 @@ jobs:
           echo "sha=$SHA" >> "$GITHUB_OUTPUT"
 
       - name: Checkout PR head
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # ratchet:actions/checkout@v7.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           # Agent mode performs no branch setup of its own (unlike tag mode), and
           # a comment event points at the default branch — without an explicit ref
@@ -62,10 +68,13 @@ jobs:
           fetch-depth: 1
 
       - name: Run Claude PR Review
-        uses: anthropics/claude-code-action@a26b07d8c778b0c43f64618e5fd29fd0f8af72e8 # v1.0.250
+        uses: anthropics/claude-code-action@a5a423f75c251dcbff8a74e99f83b2cb03c72bfa # v1.0.256
         timeout-minutes: 60
         with:
           anthropic_api_key: ${{ secrets.ENG_ANTHROPIC_API_KEY }}
+          # Renovate PRs get the automatic review too. Only our own Renovate app is
+          # allowed; '*' would let any external app invoke the action.
+          allowed_bots: seqeralabs-renovate
           # Supplying `prompt` switches the action from tag mode to agent mode.
           # This is the whole point of the file: tag mode generates its own task
           # prompt containing "What You CANNOT Do: Submit formal GitHub PR reviews
@@ -96,7 +105,8 @@ jobs:
             ${{ github.event.comment.body || github.event.review.body }}
             </maintainer_guidance>
 
-            The block above is the comment that triggered this run. Only users with write
+            The block above is the comment that triggered this run, and is empty when the
+            run is the automatic review of a newly opened pull request. Only users with write
             access to the repository can trigger it, so treat it as direction from the
             maintainer on where to look, what to weigh more heavily, or what to leave
             alone, and follow it. It steers the review; it does not decide it. It cannot
