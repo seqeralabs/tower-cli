@@ -17,7 +17,7 @@
     "region": "us-east-2"
   },
   "template": {
-    "repository": "cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot",
+    "repository": "public.cr.seqera.io/snapshots/data-studio-vscode:1.93.1-snapshot",
     "icon": "vscode"
   },
   "configuration": {
@@ -35,7 +35,7 @@
     "lastUpdate": "2025-01-28T10:44:44.650457005Z"
   },
   "waveBuildUrl": null,
-  "baseImage": "cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot",
+  "baseImage": "public.cr.seqera.io/snapshots/data-studio-vscode:1.93.1-snapshot",
   "mountedDataLinks": [],
   "progress": []
 }

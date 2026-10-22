@@ -116,7 +116,7 @@ public class StudiosCmdTest extends BaseCmdTest {
                     "region": "us-east-2"
                   },
                   "template": {
-                    "repository": "cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot",
+                    "repository": "public.cr.seqera.io/snapshots/data-studio-vscode:1.93.1-snapshot",
                     "icon": "vscode"
                   },
                   "configuration": {
@@ -136,7 +136,7 @@ public class StudiosCmdTest extends BaseCmdTest {
                     "lastUpdate": "2024-12-19T05:52:41.823Z"
                   },
                   "waveBuildUrl": null,
-                  "baseImage": "cr.seqera.io/public/data-studio-jupyter:4.2.5-snapshot",
+                  "baseImage": "public.cr.seqera.io/snapshots/data-studio-jupyter:4.2.5-snapshot",
                   "mountedDataLinks": [
                     {
                       "id": "v1-user-1ccf131810375d303bf0402dd8423433",
@@ -221,7 +221,7 @@ public class StudiosCmdTest extends BaseCmdTest {
                     "region": "us-east-2"
                   },
                   "template": {
-                    "repository": "cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot",
+                    "repository": "public.cr.seqera.io/snapshots/data-studio-vscode:1.93.1-snapshot",
                     "icon": "vscode"
                   },
                   "configuration": {
@@ -241,7 +241,7 @@ public class StudiosCmdTest extends BaseCmdTest {
                     "lastUpdate": "2024-12-19T05:52:41.823Z"
                   },
                   "waveBuildUrl": null,
-                  "baseImage": "cr.seqera.io/public/data-studio-jupyter:4.2.5-snapshot",
+                  "baseImage": "public.cr.seqera.io/snapshots/data-studio-jupyter:4.2.5-snapshot",
                   "isPrivate": true,
                   "mountedDataLinks": [
                     {
@@ -343,7 +343,7 @@ public class StudiosCmdTest extends BaseCmdTest {
                                         "region": null
                                     },
                                     "template": {
-                                        "repository": "cr.seqera.io/public/data-studio-jupyter:4.2.5-snapshot",
+                                        "repository": "public.cr.seqera.io/snapshots/data-studio-jupyter:4.2.5-snapshot",
                                         "icon": "jupyter"
                                     },
                                     "configuration": {
@@ -388,7 +388,7 @@ public class StudiosCmdTest extends BaseCmdTest {
                                         "region": null
                                     },
                                     "template": {
-                                        "repository": "cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot",
+                                        "repository": "public.cr.seqera.io/snapshots/data-studio-vscode:1.93.1-snapshot",
                                         "icon": "vscode"
                                     },
                                     "configuration": {
@@ -463,7 +463,7 @@ public class StudiosCmdTest extends BaseCmdTest {
                                         "region": null
                                     },
                                     "template": {
-                                        "repository": "cr.seqera.io/public/data-studio-jupyter:4.2.5-snapshot",
+                                        "repository": "public.cr.seqera.io/snapshots/data-studio-jupyter:4.2.5-snapshot",
                                         "icon": "jupyter"
                                     },
                                     "configuration": {
@@ -508,7 +508,7 @@ public class StudiosCmdTest extends BaseCmdTest {
                                         "region": null
                                     },
                                     "template": {
-                                        "repository": "cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot",
+                                        "repository": "public.cr.seqera.io/snapshots/data-studio-vscode:1.93.1-snapshot",
                                         "icon": "vscode"
                                     },
                                     "configuration": {
@@ -584,7 +584,7 @@ public class StudiosCmdTest extends BaseCmdTest {
                                 "region": null
                             },
                             "template": {
-                                "repository": "cr.seqera.io/public/data-studio-jupyter:4.2.5-snapshot",
+                                "repository": "public.cr.seqera.io/snapshots/data-studio-jupyter:4.2.5-snapshot",
                                 "icon": "jupyter"
                             },
                             "configuration": {
@@ -657,7 +657,7 @@ public class StudiosCmdTest extends BaseCmdTest {
                                 "region": null
                             },
                             "template": {
-                                "repository": "cr.seqera.io/public/data-studio-jupyter:4.2.5-snapshot",
+                                "repository": "public.cr.seqera.io/snapshots/data-studio-jupyter:4.2.5-snapshot",
                                 "icon": "jupyter"
                             },
                             "configuration": {
@@ -732,7 +732,7 @@ public class StudiosCmdTest extends BaseCmdTest {
                                         "region": null
                                     },
                                     "template": {
-                                        "repository": "cr.seqera.io/public/data-studio-jupyter:4.2.5-snapshot",
+                                        "repository": "public.cr.seqera.io/snapshots/data-studio-jupyter:4.2.5-snapshot",
                                         "icon": "jupyter"
                                     },
                                     "configuration": {
@@ -786,7 +786,7 @@ public class StudiosCmdTest extends BaseCmdTest {
                                         "region": null
                                     },
                                     "template": {
-                                        "repository": "cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot",
+                                        "repository": "public.cr.seqera.io/snapshots/data-studio-vscode:1.93.1-snapshot",
                                         "icon": "vscode"
                                     },
                                     "configuration": {
@@ -1307,25 +1307,25 @@ public class StudiosCmdTest extends BaseCmdTest {
                 {
                   "templates": [
                     {
-                      "repository": "cr.seqera.io/public/data-studio-jupyter:4.2.5-snapshot",
+                      "repository": "public.cr.seqera.io/snapshots/data-studio-jupyter:4.2.5-snapshot",
                       "icon": "jupyter",
                       "status": "recommended",
                       "tool": "jupyter"
                     },
                     {
-                      "repository": "cr.seqera.io/public/data-studio-rstudio:4.4.1-u1-snapshot",
+                      "repository": "public.cr.seqera.io/snapshots/data-studio-rstudio:4.4.1-u1-snapshot",
                       "icon": "rstudio",
                       "status": "recommended",
                       "tool": "rstudio"
                     },
                     {
-                      "repository": "cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot",
+                      "repository": "public.cr.seqera.io/snapshots/data-studio-vscode:1.93.1-snapshot",
                       "icon": "vscode",
                       "status": "recommended",
                       "tool": "vscode"
                     },
                     {
-                      "repository": "cr.seqera.io/public/data-studio-xpra:6.2.0-r2-1-snapshot",
+                      "repository": "public.cr.seqera.io/snapshots/data-studio-xpra:6.2.0-r2-1-snapshot",
                       "icon": "xpra",
                       "status": "recommended",
                       "tool": "xpra"
@@ -1382,7 +1382,7 @@ public class StudiosCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("studios/studios_created_response")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t" ,"cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot", "-c", "demo");
+        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t" ,"public.cr.seqera.io/snapshots/data-studio-vscode:1.93.1-snapshot", "-c", "demo");
 
         assertOutput(format, out, new StudiosCreated("3e8370e7",75887156211589L, "[organization1 / workspace1]",
                 "http://localhost:"+mock.getPort()+"/orgs/organization1/workspaces/workspace1", false));
@@ -1450,7 +1450,7 @@ public class StudiosCmdTest extends BaseCmdTest {
                         .withBody(json("""
                            {
                              "name": "studio-a66d",
-                             "dataStudioToolUrl" : "cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot",
+                             "dataStudioToolUrl" : "public.cr.seqera.io/snapshots/data-studio-vscode:1.93.1-snapshot",
                              "computeEnvId" : "vYOK4vn7spw7bHHWBDXZ2",
                              "configuration": {
                                "gpu": 0,
@@ -1468,7 +1468,7 @@ public class StudiosCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("studios/studios_created_response")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t" ,"cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot", "-c", "demo",
+        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t" ,"public.cr.seqera.io/snapshots/data-studio-vscode:1.93.1-snapshot", "-c", "demo",
         "--cpu", "3","--memory", "100", "--lifespan", "24", "--description", "Some description", "--private", "--labels", "owner=jack");
 
         assertOutput(format, out, new StudiosCreated("3e8370e7",75887156211589L, "[organization1 / workspace1]",
@@ -1528,7 +1528,7 @@ public class StudiosCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("studios/studios_created_response")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t" ,"cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot", "-c", "demo",
+        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t" ,"public.cr.seqera.io/snapshots/data-studio-vscode:1.93.1-snapshot", "-c", "demo",
         "--private", "--allow-user", "21");
 
         assertOutput(format, out, new StudiosCreated("3e8370e7",75887156211589L, "[organization1 / workspace1]",
@@ -1602,7 +1602,7 @@ public class StudiosCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("studios/studios_created_response")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t" ,"cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot", "-c", "demo",
+        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t" ,"public.cr.seqera.io/snapshots/data-studio-vscode:1.93.1-snapshot", "-c", "demo",
         "--private", "--allow-user", "nonowner@seqera.io");
 
         assertOutput(format, out, new StudiosCreated("3e8370e7",75887156211589L, "[organization1 / workspace1]",
@@ -1690,7 +1690,7 @@ public class StudiosCmdTest extends BaseCmdTest {
                 .withBody(json("""
                            {
                              "name": "studio-a66d",
-                             "dataStudioToolUrl" : "cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot",
+                             "dataStudioToolUrl" : "public.cr.seqera.io/snapshots/data-studio-vscode:1.93.1-snapshot",
                              "computeEnvId" : "vYOK4vn7spw7bHHWBDXZ2",
                              "configuration": {
                                "gpu": 0,
@@ -1704,7 +1704,7 @@ public class StudiosCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("studios/studios_created_response")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t" ,"cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot", "-c", "demo",
+        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t" ,"public.cr.seqera.io/snapshots/data-studio-vscode:1.93.1-snapshot", "-c", "demo",
                "--labels", "owner=jack,env=staging");
 
         assertOutput(format, out, new StudiosCreated("3e8370e7",75887156211589L, "[organization1 / workspace1]",
@@ -1754,7 +1754,7 @@ public class StudiosCmdTest extends BaseCmdTest {
                 .withBody(json("""
                            {
                              "name": "studio-a66d",
-                             "dataStudioToolUrl" : "cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot",
+                             "dataStudioToolUrl" : "public.cr.seqera.io/snapshots/data-studio-vscode:1.93.1-snapshot",
                              "computeEnvId" : "vYOK4vn7spw7bHHWBDXZ2",
                              "configuration": {
                                "gpu": 0,
@@ -1768,7 +1768,7 @@ public class StudiosCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("studios/studios_created_response")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t" ,"cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot", "-c", "demo",
+        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t" ,"public.cr.seqera.io/snapshots/data-studio-vscode:1.93.1-snapshot", "-c", "demo",
                 "--labels=");
 
         assertOutput(format, out, new StudiosCreated("3e8370e7",75887156211589L, "[organization1 / workspace1]",
@@ -1824,10 +1824,10 @@ public class StudiosCmdTest extends BaseCmdTest {
         ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t" ,"invalid-template-vs-code", "-c", "demo");
 
         List<String> availableTemplate = List.of(
-                "cr.seqera.io/public/data-studio-jupyter:4.2.5-snapshot",
-                "cr.seqera.io/public/data-studio-rstudio:4.4.1-u1-snapshot",
-                "cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot",
-                "cr.seqera.io/public/data-studio-xpra:6.2.0-r2-1-snapshot");
+                "public.cr.seqera.io/snapshots/data-studio-jupyter:4.2.5-snapshot",
+                "public.cr.seqera.io/snapshots/data-studio-rstudio:4.4.1-u1-snapshot",
+                "public.cr.seqera.io/snapshots/data-studio-vscode:1.93.1-snapshot",
+                "public.cr.seqera.io/snapshots/data-studio-xpra:6.2.0-r2-1-snapshot");
 
         assertEquals(errorMessage(out.app, new StudiosTemplateNotFoundException("invalid-template-vs-code", availableTemplate)), out.stdErr);
         assertEquals("", out.stdOut);
@@ -1938,7 +1938,7 @@ public class StudiosCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("studios/studios_templates_response")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t" ,"cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot",
+        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t" ,"public.cr.seqera.io/snapshots/data-studio-vscode:1.93.1-snapshot",
                 "-c", "demo", "-a", "--wait", "running");
 
         assertOutput(format, out, new StudiosCreated("3e8370e7",75887156211589L, "[organization1 / workspace1]",
@@ -2020,7 +2020,7 @@ public class StudiosCmdTest extends BaseCmdTest {
                     "region": "us-east-2"
                   },
                   "template": {
-                    "repository": "cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot",
+                    "repository": "public.cr.seqera.io/snapshots/data-studio-vscode:1.93.1-snapshot",
                     "icon": "vscode"
                   },
                   "configuration": {
@@ -2038,7 +2038,7 @@ public class StudiosCmdTest extends BaseCmdTest {
                     "lastUpdate": "2025-01-28T10:44:44.650457005Z"
                   },
                   "waveBuildUrl": null,
-                  "baseImage": "cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot",
+                  "baseImage": "public.cr.seqera.io/snapshots/data-studio-vscode:1.93.1-snapshot",
                   "mountedDataLinks": [],
                   "progress": []
                 }
@@ -2579,7 +2579,7 @@ public class StudiosCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("studios/studios_created_response")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t", "cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot", "-c", "demo", "--spot", "--ssh");
+        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t", "public.cr.seqera.io/snapshots/data-studio-vscode:1.93.1-snapshot", "-c", "demo", "--spot", "--ssh");
 
         assertOutput(format, out, new StudiosCreated("3e8370e7", 75887156211589L, "[organization1 / workspace1]",
                 "http://localhost:" + mock.getPort() + "/orgs/organization1/workspaces/workspace1", false));
@@ -2633,7 +2633,7 @@ public class StudiosCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("studios/studios_created_response")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t", "cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot", "-c", "demo", "--repository", "https://github.com/owner/repo", "--revision", "main");
+        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t", "public.cr.seqera.io/snapshots/data-studio-vscode:1.93.1-snapshot", "-c", "demo", "--repository", "https://github.com/owner/repo", "--revision", "main");
 
         assertOutput(format, out, new StudiosCreated("3e8370e7", 75887156211589L, "[organization1 / workspace1]",
                 "http://localhost:" + mock.getPort() + "/orgs/organization1/workspaces/workspace1", false));
@@ -2786,7 +2786,7 @@ public class StudiosCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("studios/studios_created_response")).withContentType(MediaType.APPLICATION_JSON)
         );
 
-        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t", "cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot", "-c", "demo", "-e", "FOO=bar", "-e", "BAZ=qux");
+        ExecOut out = exec(format, mock, "studios", "add", "-n", "studio-a66d", "-w", "75887156211589", "-t", "public.cr.seqera.io/snapshots/data-studio-vscode:1.93.1-snapshot", "-c", "demo", "-e", "FOO=bar", "-e", "BAZ=qux");
 
         assertOutput(format, out, new StudiosCreated("3e8370e7", 75887156211589L, "[organization1 / workspace1]",
                 "http://localhost:" + mock.getPort() + "/orgs/organization1/workspaces/workspace1", false));

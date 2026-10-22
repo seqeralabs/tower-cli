@@ -17,7 +17,7 @@
     "region": "us-east-2"
   },
   "template": {
-    "repository": "cr.seqera.io/public/data-studio-vscode:1.93.1-snapshot",
+    "repository": "public.cr.seqera.io/snapshots/data-studio-vscode:1.93.1-snapshot",
     "icon": "vscode"
   },
   "configuration": {
@@ -37,7 +37,7 @@
     "lastUpdate": "2024-12-19T05:52:41.823Z"
   },
   "waveBuildUrl": null,
-  "baseImage": "cr.seqera.io/public/data-studio-jupyter:4.2.5-snapshot",
+  "baseImage": "public.cr.seqera.io/snapshots/data-studio-jupyter:4.2.5-snapshot",
   "mountedDataLinks": [
     {
       "id": "v1-user-1ccf131810375d303bf0402dd8423433",
