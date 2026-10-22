@@ -36,6 +36,20 @@ jobs:
           native-image-musl: 'true'
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
+      # native-image embeds the build JDK trust store into the binary: drop the Comodo AAA root,
+      # which chains to the compromised eMudhra intermediates (CVE-2026-91403)
+      - name: Remove distrusted CA roots
+        shell: bash
+        run: |
+          # JDK-bundled entries carry a " [jdk]" suffix in their alias
+          alias="comodoaaaca [jdk]"
+          if keytool -list -cacerts -storepass changeit -alias "$alias" >/dev/null 2>&1; then
+            keytool -delete -cacerts -storepass changeit -alias "$alias"
+            echo "Removed '$alias' from the GraalVM trust store"
+          else
+            echo "'$alias' not present in the GraalVM trust store"
+          fi
+
       - name: Tests
         run: ./gradlew cleanTest test
 
@@ -59,6 +73,19 @@ jobs:
         run: ./gradlew nativeCompile
         env:
           PLATFORM: linux-x86_64
+
+      - name: Check embedded trust store
+        shell: bash
+        run: |
+          # a root that must stay trusted: proves the embedded trust store is greppable
+          if ! LC_ALL=C grep -q -a "USERTrust RSA Certification Authority" build/native/nativeCompile/tw*; then
+            echo "::error::Trust store not found in the native binary, the CA check is not effective"
+            exit 1
+          fi
+          if LC_ALL=C grep -q -a "AAA Certificate Services" build/native/nativeCompile/tw*; then
+            echo "::error::Native binary still embeds the Comodo AAA root (CVE-2026-91403)"
+            exit 1
+          fi
 
       - name: Upload linux native image artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -97,6 +124,20 @@ jobs:
           distribution: 'graalvm'
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
+      # native-image embeds the build JDK trust store into the binary: drop the Comodo AAA root,
+      # which chains to the compromised eMudhra intermediates (CVE-2026-91403)
+      - name: Remove distrusted CA roots
+        shell: bash
+        run: |
+          # JDK-bundled entries carry a " [jdk]" suffix in their alias
+          alias="comodoaaaca [jdk]"
+          if keytool -list -cacerts -storepass changeit -alias "$alias" >/dev/null 2>&1; then
+            keytool -delete -cacerts -storepass changeit -alias "$alias"
+            echo "Removed '$alias' from the GraalVM trust store"
+          else
+            echo "'$alias' not present in the GraalVM trust store"
+          fi
+
       - name: Tests
         run: ./gradlew cleanTest test
 
@@ -111,6 +152,20 @@ jobs:
         run: ./gradlew nativeCompile
         env:
           PLATFORM: osx-x86_64
+
+      - name: Check embedded trust store
+        shell: bash
+        run: |
+          # a root that must stay trusted: proves the embedded trust store is greppable
+          if ! LC_ALL=C grep -q -a "USERTrust RSA Certification Authority" build/native/nativeCompile/tw*; then
+            echo "::error::Trust store not found in the native binary, the CA check is not effective"
+            exit 1
+          fi
+          if LC_ALL=C grep -q -a "AAA Certificate Services" build/native/nativeCompile/tw*; then
+            echo "::error::Native binary still embeds the Comodo AAA root (CVE-2026-91403)"
+            exit 1
+          fi
+
       - name: Codesign binary
         if: contains(github.event.head_commit.message, '[release]') && github.event.ref == 'refs/heads/master'
         env:
@@ -183,6 +238,20 @@ jobs:
           java --version
           native-image --version
 
+      # native-image embeds the build JDK trust store into the binary: drop the Comodo AAA root,
+      # which chains to the compromised eMudhra intermediates (CVE-2026-91403)
+      - name: Remove distrusted CA roots
+        shell: bash
+        run: |
+          # JDK-bundled entries carry a " [jdk]" suffix in their alias
+          alias="comodoaaaca [jdk]"
+          if keytool -list -cacerts -storepass changeit -alias "$alias" >/dev/null 2>&1; then
+            keytool -delete -cacerts -storepass changeit -alias "$alias"
+            echo "Removed '$alias' from the GraalVM trust store"
+          else
+            echo "'$alias' not present in the GraalVM trust store"
+          fi
+
       - name: Tests
         run: ./gradlew cleanTest test
 
@@ -197,6 +266,20 @@ jobs:
         run: ./gradlew nativeCompile
         env:
           PLATFORM: osx-arm64
+
+      - name: Check embedded trust store
+        shell: bash
+        run: |
+          # a root that must stay trusted: proves the embedded trust store is greppable
+          if ! LC_ALL=C grep -q -a "USERTrust RSA Certification Authority" build/native/nativeCompile/tw*; then
+            echo "::error::Trust store not found in the native binary, the CA check is not effective"
+            exit 1
+          fi
+          if LC_ALL=C grep -q -a "AAA Certificate Services" build/native/nativeCompile/tw*; then
+            echo "::error::Native binary still embeds the Comodo AAA root (CVE-2026-91403)"
+            exit 1
+          fi
+
       - name: Codesign binary
         if: contains(github.event.head_commit.message, '[release]') && github.event.ref == 'refs/heads/master'
         env:
@@ -262,6 +345,20 @@ jobs:
           distribution: 'graalvm'
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
+      # native-image embeds the build JDK trust store into the binary: drop the Comodo AAA root,
+      # which chains to the compromised eMudhra intermediates (CVE-2026-91403)
+      - name: Remove distrusted CA roots
+        shell: bash
+        run: |
+          # JDK-bundled entries carry a " [jdk]" suffix in their alias
+          alias="comodoaaaca [jdk]"
+          if keytool -list -cacerts -storepass changeit -alias "$alias" >/dev/null 2>&1; then
+            keytool -delete -cacerts -storepass changeit -alias "$alias"
+            echo "Removed '$alias' from the GraalVM trust store"
+          else
+            echo "'$alias' not present in the GraalVM trust store"
+          fi
+
       - name: Tests
         run: ./gradlew cleanTest test
 
@@ -283,6 +380,19 @@ jobs:
         run: ./gradlew nativeCompile
         env:
           PLATFORM: windows-x86_64
+
+      - name: Check embedded trust store
+        shell: bash
+        run: |
+          # a root that must stay trusted: proves the embedded trust store is greppable
+          if ! LC_ALL=C grep -q -a "USERTrust RSA Certification Authority" build/native/nativeCompile/tw*; then
+            echo "::error::Trust store not found in the native binary, the CA check is not effective"
+            exit 1
+          fi
+          if LC_ALL=C grep -q -a "AAA Certificate Services" build/native/nativeCompile/tw*; then
+            echo "::error::Native binary still embeds the Comodo AAA root (CVE-2026-91403)"
+            exit 1
+          fi
 
       - name: Upload Windows native image artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
