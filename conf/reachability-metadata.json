@@ -54701,6 +54701,14 @@
       "type": "java.math.BigDecimal[]"
     },
     {
+      "type": "java.net.HttpURLConnection",
+      "fields": [
+        {
+          "name": "method"
+        }
+      ]
+    },
+    {
       "type": "java.net.UnknownHostException",
       "methods": [
         {
@@ -55544,6 +55552,14 @@
         {
           "name": "supportsTransparentAuth",
           "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.net.www.protocol.https.HttpsURLConnectionImpl",
+      "fields": [
+        {
+          "name": "delegate"
         }
       ]
     },
