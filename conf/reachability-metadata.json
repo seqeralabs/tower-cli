@@ -229,6 +229,15 @@
       ]
     },
     {
+      "type": "io.seqera.tower.cli.commands.AgentsCmd",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "io.seqera.tower.cli.commands.CollaboratorsCmd",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
@@ -409,6 +418,15 @@
     {
       "type": "io.seqera.tower.cli.commands.SecretsCmd",
       "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.seqera.tower.cli.commands.ServiceAccountsCmd",
       "methods": [
         {
           "name": "<init>",
@@ -621,6 +639,289 @@
       "type": "io.seqera.tower.cli.commands.actions.add.AddTowerCmd",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.seqera.tower.cli.commands.agents.AbstractAgentsCmd"
+    },
+    {
+      "type": "io.seqera.tower.cli.commands.agents.AddCmd",
+      "fields": [
+        {
+          "name": "description"
+        },
+        {
+          "name": "githubAppCredentialsId"
+        },
+        {
+          "name": "instructions"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "serviceAccount"
+        },
+        {
+          "name": "workspace"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.seqera.tower.cli.commands.agents.AgentInstructionsOptions",
+      "fields": [
+        {
+          "name": "file"
+        },
+        {
+          "name": "text"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.seqera.tower.cli.commands.agents.AgentRefOptions",
+      "fields": [
+        {
+          "name": "agent"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.seqera.tower.cli.commands.agents.AgentRefOptions$AgentRef",
+      "fields": [
+        {
+          "name": "id"
+        },
+        {
+          "name": "name"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.seqera.tower.cli.commands.agents.AgentServiceAccountOptions",
+      "fields": [
+        {
+          "name": "id"
+        },
+        {
+          "name": "name"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.seqera.tower.cli.commands.agents.DeleteCmd",
+      "fields": [
+        {
+          "name": "ref"
+        },
+        {
+          "name": "workspace"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.seqera.tower.cli.commands.agents.DisableCmd",
+      "fields": [
+        {
+          "name": "ref"
+        },
+        {
+          "name": "workspace"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.seqera.tower.cli.commands.agents.EnableCmd",
+      "fields": [
+        {
+          "name": "ref"
+        },
+        {
+          "name": "workspace"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.seqera.tower.cli.commands.agents.LaunchCmd",
+      "fields": [
+        {
+          "name": "agentRef"
+        },
+        {
+          "name": "instructions"
+        },
+        {
+          "name": "workspace"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.seqera.tower.cli.commands.agents.ListCmd",
+      "fields": [
+        {
+          "name": "filter"
+        },
+        {
+          "name": "paginationOptions"
+        },
+        {
+          "name": "workspace"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.seqera.tower.cli.commands.agents.UpdateCmd",
+      "fields": [
+        {
+          "name": "description"
+        },
+        {
+          "name": "githubAppCredentialsId"
+        },
+        {
+          "name": "instructions"
+        },
+        {
+          "name": "newName"
+        },
+        {
+          "name": "ref"
+        },
+        {
+          "name": "serviceAccount"
+        },
+        {
+          "name": "workspace"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.seqera.tower.cli.commands.agents.ViewCmd",
+      "fields": [
+        {
+          "name": "ref"
+        },
+        {
+          "name": "workspace"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.seqera.tower.cli.commands.agents.runs.ListCmd",
+      "fields": [
+        {
+          "name": "filter"
+        },
+        {
+          "name": "paginationOptions"
+        },
+        {
+          "name": "workspace"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.seqera.tower.cli.commands.agents.runs.RunsCmd",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.seqera.tower.cli.commands.agents.runs.ViewCmd",
+      "fields": [
+        {
+          "name": "id"
+        },
+        {
+          "name": "workspace"
+        }
+      ],
       "methods": [
         {
           "name": "<init>",
@@ -3927,6 +4228,151 @@
       ]
     },
     {
+      "type": "io.seqera.tower.cli.commands.serviceaccounts.AbstractServiceAccountsCmd"
+    },
+    {
+      "type": "io.seqera.tower.cli.commands.serviceaccounts.AddCmd",
+      "fields": [
+        {
+          "name": "description"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "organizationRef"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.seqera.tower.cli.commands.serviceaccounts.DeleteCmd",
+      "fields": [
+        {
+          "name": "organizationRef"
+        },
+        {
+          "name": "ref"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.seqera.tower.cli.commands.serviceaccounts.ListCmd",
+      "fields": [
+        {
+          "name": "paginationOptions"
+        },
+        {
+          "name": "scope"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.seqera.tower.cli.commands.serviceaccounts.ListCmd$Scope",
+      "fields": [
+        {
+          "name": "organizationRef"
+        },
+        {
+          "name": "workspaceRef"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.seqera.tower.cli.commands.serviceaccounts.ServiceAccountRefOptions",
+      "fields": [
+        {
+          "name": "serviceAccount"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.seqera.tower.cli.commands.serviceaccounts.ServiceAccountRefOptions$ServiceAccountRef",
+      "fields": [
+        {
+          "name": "id"
+        },
+        {
+          "name": "name"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.seqera.tower.cli.commands.serviceaccounts.UpdateCmd",
+      "fields": [
+        {
+          "name": "description"
+        },
+        {
+          "name": "newName"
+        },
+        {
+          "name": "organizationRef"
+        },
+        {
+          "name": "ref"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.seqera.tower.cli.commands.serviceaccounts.ViewCmd",
+      "fields": [
+        {
+          "name": "organizationRef"
+        },
+        {
+          "name": "ref"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "io.seqera.tower.cli.commands.sshkeys.AbstractSshKeysCmd"
     },
     {
@@ -4751,6 +5197,38 @@
       "allDeclaredConstructors": true
     },
     {
+      "type": "io.seqera.tower.cli.responses.agents.AgentAdded",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "io.seqera.tower.cli.responses.agents.AgentDeleted",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "io.seqera.tower.cli.responses.agents.AgentLaunched",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "io.seqera.tower.cli.responses.agents.AgentRunView",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "io.seqera.tower.cli.responses.agents.AgentRunsList",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "io.seqera.tower.cli.responses.agents.AgentUpdated",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "io.seqera.tower.cli.responses.agents.AgentView",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "io.seqera.tower.cli.responses.agents.AgentsList",
+      "allDeclaredFields": true
+    },
+    {
       "type": "io.seqera.tower.cli.responses.collaborators.CollaboratorsList",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
@@ -5212,6 +5690,26 @@
     },
     {
       "type": "io.seqera.tower.cli.responses.secrets.SecretsList",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "io.seqera.tower.cli.responses.serviceaccounts.ServiceAccountAdded",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "io.seqera.tower.cli.responses.serviceaccounts.ServiceAccountDeleted",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "io.seqera.tower.cli.responses.serviceaccounts.ServiceAccountUpdated",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "io.seqera.tower.cli.responses.serviceaccounts.ServiceAccountView",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "io.seqera.tower.cli.responses.serviceaccounts.ServiceAccountsList",
       "allDeclaredFields": true
     },
     {
@@ -54180,6 +54678,14 @@
       "type": "java.math.BigDecimal[]"
     },
     {
+      "type": "java.net.HttpURLConnection",
+      "fields": [
+        {
+          "name": "method"
+        }
+      ]
+    },
+    {
       "type": "java.net.UnknownHostException",
       "methods": [
         {
@@ -55023,6 +55529,14 @@
         {
           "name": "supportsTransparentAuth",
           "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.net.www.protocol.https.HttpsURLConnectionImpl",
+      "fields": [
+        {
+          "name": "delegate"
         }
       ]
     },
