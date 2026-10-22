@@ -77,6 +77,11 @@ jobs:
       - name: Check embedded trust store
         shell: bash
         run: |
+          # a root that must stay trusted: proves the embedded trust store is greppable
+          if ! LC_ALL=C grep -q -a "USERTrust RSA Certification Authority" build/native/nativeCompile/tw*; then
+            echo "::error::Trust store not found in the native binary, the CA check is not effective"
+            exit 1
+          fi
           if LC_ALL=C grep -q -a "AAA Certificate Services" build/native/nativeCompile/tw*; then
             echo "::error::Native binary still embeds the Comodo AAA root (CVE-2026-91403)"
             exit 1
@@ -151,6 +156,11 @@ jobs:
       - name: Check embedded trust store
         shell: bash
         run: |
+          # a root that must stay trusted: proves the embedded trust store is greppable
+          if ! LC_ALL=C grep -q -a "USERTrust RSA Certification Authority" build/native/nativeCompile/tw*; then
+            echo "::error::Trust store not found in the native binary, the CA check is not effective"
+            exit 1
+          fi
           if LC_ALL=C grep -q -a "AAA Certificate Services" build/native/nativeCompile/tw*; then
             echo "::error::Native binary still embeds the Comodo AAA root (CVE-2026-91403)"
             exit 1
@@ -260,6 +270,11 @@ jobs:
       - name: Check embedded trust store
         shell: bash
         run: |
+          # a root that must stay trusted: proves the embedded trust store is greppable
+          if ! LC_ALL=C grep -q -a "USERTrust RSA Certification Authority" build/native/nativeCompile/tw*; then
+            echo "::error::Trust store not found in the native binary, the CA check is not effective"
+            exit 1
+          fi
           if LC_ALL=C grep -q -a "AAA Certificate Services" build/native/nativeCompile/tw*; then
             echo "::error::Native binary still embeds the Comodo AAA root (CVE-2026-91403)"
             exit 1
@@ -369,6 +384,11 @@ jobs:
       - name: Check embedded trust store
         shell: bash
         run: |
+          # a root that must stay trusted: proves the embedded trust store is greppable
+          if ! LC_ALL=C grep -q -a "USERTrust RSA Certification Authority" build/native/nativeCompile/tw*; then
+            echo "::error::Trust store not found in the native binary, the CA check is not effective"
+            exit 1
+          fi
           if LC_ALL=C grep -q -a "AAA Certificate Services" build/native/nativeCompile/tw*; then
             echo "::error::Native binary still embeds the Comodo AAA root (CVE-2026-91403)"
             exit 1
