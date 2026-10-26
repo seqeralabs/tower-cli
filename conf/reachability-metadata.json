@@ -14915,6 +14915,14 @@
           "parameterTypes": []
         },
         {
+          "name": "getBucketPolicies",
+          "parameterTypes": []
+        },
+        {
+          "name": "getBucketPolicies_JsonNullable",
+          "parameterTypes": []
+        },
+        {
           "name": "getConfig",
           "parameterTypes": []
         },
@@ -15102,6 +15110,12 @@
         },
         {
           "name": "setAwsAccountId_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "setBucketPolicies_JsonNullable",
           "parameterTypes": [
             "org.openapitools.jackson.nullable.JsonNullable"
           ]
@@ -20409,6 +20423,18 @@
           "parameterTypes": []
         },
         {
+          "name": "addAllowBucketsItem",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "allowBuckets",
+          "parameterTypes": [
+            "java.util.List"
+          ]
+        },
+        {
           "name": "credentialsId",
           "parameterTypes": [
             "java.lang.String"
@@ -20419,6 +20445,14 @@
           "parameterTypes": [
             "java.lang.Object"
           ]
+        },
+        {
+          "name": "getAllowBuckets",
+          "parameterTypes": []
+        },
+        {
+          "name": "getAllowBuckets_JsonNullable",
+          "parameterTypes": []
         },
         {
           "name": "getCredentialsId",
@@ -20435,6 +20469,18 @@
         {
           "name": "hashCode",
           "parameterTypes": []
+        },
+        {
+          "name": "setAllowBuckets",
+          "parameterTypes": [
+            "java.util.List"
+          ]
+        },
+        {
+          "name": "setAllowBuckets_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
         },
         {
           "name": "setCredentialsId",
@@ -43112,6 +43158,18 @@
           "parameterTypes": []
         },
         {
+          "name": "addAllowBucketsItem",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "allowBuckets",
+          "parameterTypes": [
+            "java.util.List"
+          ]
+        },
+        {
           "name": "defaultDataRetentionPolicy",
           "parameterTypes": [
             "java.lang.Boolean"
@@ -43135,6 +43193,10 @@
           "parameterTypes": [
             "java.lang.String"
           ]
+        },
+        {
+          "name": "getAllowBuckets",
+          "parameterTypes": []
         },
         {
           "name": "getCliPath",
@@ -43270,6 +43332,12 @@
           "name": "region",
           "parameterTypes": [
             "java.lang.String"
+          ]
+        },
+        {
+          "name": "setAllowBuckets",
+          "parameterTypes": [
+            "java.util.List"
           ]
         },
         {
