@@ -91,8 +91,12 @@ public class AwsBatchManualPlatform extends AbstractPlatform<AwsBatchConfig> {
                 .headJobCpus(adv().headJobCpus)
                 .headJobMemoryMb(adv().headJobMemoryMb)
                 .headJobRole(adv().headJobRole)
-                .secretsKmsKeyId(adv().secretsKmsKeyId)
                 .logGroup(adv().logGroup);
+
+        // secretsKmsKeyId is JsonNullable: setting null would send an explicit null.
+        if (adv().secretsKmsKeyId != null) {
+            config.secretsKmsKeyId(adv().secretsKmsKeyId);
+        }
 
                 // Common
                 config.workDir(workDir)

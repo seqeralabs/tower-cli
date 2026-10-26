@@ -11079,6 +11079,10 @@
           "parameterTypes": []
         },
         {
+          "name": "getSecretsKmsKeyId_JsonNullable",
+          "parameterTypes": []
+        },
+        {
           "name": "getSecurityGroups",
           "parameterTypes": []
         },
@@ -11420,6 +11424,12 @@
           "name": "setSecretsKmsKeyId",
           "parameterTypes": [
             "java.lang.String"
+          ]
+        },
+        {
+          "name": "setSecretsKmsKeyId_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
           ]
         },
         {
