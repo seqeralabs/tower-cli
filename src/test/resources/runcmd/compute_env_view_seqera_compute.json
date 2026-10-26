@@ -1,0 +1,39 @@
+{
+  "computeEnv": {
+    "id": "4Dc8xkUWgzwlVuTkKvd3ex",
+    "name": "seqera-compute",
+    "description": null,
+    "platform": "seqeracompute-platform",
+    "config": {
+      "region": "eu-west-1",
+      "workDir": "s3://seqera-compute-4dc8xkuwgzwlvutkkvd3ex/work",
+      "allowBuckets": [
+        "s3://customer-inputs",
+        "s3://customer-results/runs"
+      ],
+      "defaultDataRetentionPolicy": true,
+      "instanceTypeSize": "SMALL",
+      "forgedResources": [
+        {
+          "IamInstanceProfile": "arn:aws:iam::123456789012:instance-profile/SeqeraCompute-4Dc8xkUWgzwlVuTkKvd3ex-InstanceRole"
+        },
+        {
+          "IamInstanceProfileCloud": "arn:aws:iam::123456789012:instance-profile/SeqeraCompute-4Dc8xkUWgzwlVuTkKvd3ex-InstanceRoleCloud"
+        }
+      ],
+      "discriminator": "seqeracompute-platform"
+    },
+    "bucketPolicies": {
+      "s3://customer-inputs": "{\n    \"Version\": \"2012-10-17\",\n    \"Statement\": [\n        {\n            \"Sid\": \"SeqeraComputeListBucket\",\n            \"Effect\": \"Allow\",\n            \"Principal\": {\n                \"AWS\": \"arn:aws:iam::123456789012:root\"\n            },\n            \"Action\": \"s3:ListBucket\",\n            \"Resource\": \"arn:aws:s3:::customer-inputs\",\n            \"Condition\": {\n                \"ArnEquals\": {\n                    \"aws:PrincipalArn\": [\n                        \"arn:aws:iam::123456789012:role/SeqeraCompute-4Dc8xkUWgzwlVuTkKvd3ex-InstanceRole\",\n                        \"arn:aws:iam::123456789012:role/SeqeraCompute-4Dc8xkUWgzwlVuTkKvd3ex-InstanceRoleCloud\"\n                    ]\n                }\n            }\n        },\n        {\n            \"Sid\": \"SeqeraComputeObjectAccess\",\n            \"Effect\": \"Allow\",\n            \"Principal\": {\n                \"AWS\": \"arn:aws:iam::123456789012:root\"\n            },\n            \"Action\": [\n                \"s3:*Object\",\n                \"s3:AbortMultipartUpload\",\n                \"s3:PutObjectTagging\",\n                \"s3:GetObjectTagging\"\n            ],\n            \"Resource\": [\n                \"arn:aws:s3:::customer-inputs/*\"\n            ],\n            \"Condition\": {\n                \"ArnEquals\": {\n                    \"aws:PrincipalArn\": [\n                        \"arn:aws:iam::123456789012:role/SeqeraCompute-4Dc8xkUWgzwlVuTkKvd3ex-InstanceRole\",\n                        \"arn:aws:iam::123456789012:role/SeqeraCompute-4Dc8xkUWgzwlVuTkKvd3ex-InstanceRoleCloud\"\n                    ]\n                }\n            }\n        }\n    ]\n}",
+      "s3://customer-results": "{\n    \"Version\": \"2012-10-17\",\n    \"Statement\": [\n        {\n            \"Sid\": \"SeqeraComputeListBucket\",\n            \"Effect\": \"Allow\",\n            \"Principal\": {\n                \"AWS\": \"arn:aws:iam::123456789012:root\"\n            },\n            \"Action\": \"s3:ListBucket\",\n            \"Resource\": \"arn:aws:s3:::customer-results\",\n            \"Condition\": {\n                \"ArnEquals\": {\n                    \"aws:PrincipalArn\": [\n                        \"arn:aws:iam::123456789012:role/SeqeraCompute-4Dc8xkUWgzwlVuTkKvd3ex-InstanceRole\",\n                        \"arn:aws:iam::123456789012:role/SeqeraCompute-4Dc8xkUWgzwlVuTkKvd3ex-InstanceRoleCloud\"\n                    ]\n                }\n            }\n        },\n        {\n            \"Sid\": \"SeqeraComputeObjectAccess\",\n            \"Effect\": \"Allow\",\n            \"Principal\": {\n                \"AWS\": \"arn:aws:iam::123456789012:root\"\n            },\n            \"Action\": [\n                \"s3:*Object\",\n                \"s3:AbortMultipartUpload\",\n                \"s3:PutObjectTagging\",\n                \"s3:GetObjectTagging\"\n            ],\n            \"Resource\": [\n                \"arn:aws:s3:::customer-results/runs/*\"\n            ],\n            \"Condition\": {\n                \"ArnEquals\": {\n                    \"aws:PrincipalArn\": [\n                        \"arn:aws:iam::123456789012:role/SeqeraCompute-4Dc8xkUWgzwlVuTkKvd3ex-InstanceRole\",\n                        \"arn:aws:iam::123456789012:role/SeqeraCompute-4Dc8xkUWgzwlVuTkKvd3ex-InstanceRoleCloud\"\n                    ]\n                }\n            }\n        }\n    ]\n}"
+    },
+    "dateCreated": "2026-10-21T13:10:00Z",
+    "lastUpdated": "2026-10-21T13:14:00Z",
+    "lastUsed": null,
+    "deleted": null,
+    "status": "AVAILABLE",
+    "message": null,
+    "primary": null,
+    "credentialsId": null
+  }
+}

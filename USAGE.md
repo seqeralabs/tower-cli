@@ -771,7 +771,7 @@ tw lineage upstream -w my-org/my-workspace -i <lid>
   - AWS Batch: CloudWatch log group and DRAGEN options.
   - AWS Cloud: `--log-group`. Google Cloud: `--project-id`.
   - HPC platforms: `--propagate-head-job-options`.
-  - Seqera Compute: `--data-retention-policy`.
+  - Seqera Compute: `--data-retention-policy` and `--allow-buckets`. `tw compute-envs view` shows the bucket policy to apply to each allowed bucket once the compute environment is available.
   - Azure Cloud: `--key-vault-url`. Google Cloud: `--billing-export-table`.
 - `tw launch`, `tw pipelines add|update`, `tw runs relaunch`, and `tw actions add|update`: `--fusion-version` and `--tower-config`. List the Nextflow and Fusion versions you can launch with `tw info versions` (`-c fusion` for Fusion).
 - `tw runs star|unstar`, `tw runs view log [--next <cursor>]`, and `tw runs delete -i <id>,<id>`.

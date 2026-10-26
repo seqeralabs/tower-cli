@@ -27,6 +27,7 @@ import io.seqera.tower.model.ComputeConfig;
 import io.seqera.tower.model.ComputeEnvResponseDto;
 
 import java.io.PrintWriter;
+import java.util.Map;
 
 import static io.seqera.tower.cli.utils.FormatHelper.formatComputeEnvId;
 import static io.seqera.tower.cli.utils.FormatHelper.formatComputeEnvStatus;
@@ -92,5 +93,18 @@ public class ComputeEnvView extends Response {
         table.print();
 
         out.println(String.format("%n  Configuration:%n%n%s%n", configJson.replaceAll("(?m)^", "     ")));
+
+        printBucketPolicies(out);
+    }
+
+    private void printBucketPolicies(PrintWriter out) {
+        Map<String, String> bucketPolicies = computeEnv.getBucketPolicies();
+        if (bucketPolicies == null || bucketPolicies.isEmpty()) {
+            return;
+        }
+
+        out.println(String.format("  Bucket policies (apply each one to its bucket to grant this compute environment access):%n"));
+        bucketPolicies.forEach((bucket, policy) ->
+                out.println(String.format("     %s%n%n%s%n", bucket, policy.replaceAll("(?m)^", "     "))));
     }
 }
