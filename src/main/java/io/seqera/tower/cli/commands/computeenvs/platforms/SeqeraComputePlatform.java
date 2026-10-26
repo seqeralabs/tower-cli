@@ -23,6 +23,7 @@ import io.seqera.tower.model.SeqeraComputeConfig;
 import picocli.CommandLine;
 
 import java.io.IOException;
+import java.util.List;
 
 public class SeqeraComputePlatform extends AbstractPlatform<SeqeraComputeConfig> {
 
@@ -38,6 +39,9 @@ public class SeqeraComputePlatform extends AbstractPlatform<SeqeraComputeConfig>
     @CommandLine.Option(names = {"--data-retention-policy"}, description = "Apply the automatic data retention policy to the S3 bucket created by Seqera Compute. Intermediate files are deleted after 28 days to manage storage cost.")
     public Boolean dataRetentionPolicy;
 
+    @CommandLine.Option(names = {"--allow-buckets"}, split = ",", paramLabel = "<bucket>", description = "S3 buckets or paths this compute environment can read and write, other than the work directory. Comma-separated list of up to 10 entries, in the format s3://bucket-name or s3://bucket-name/path. Each bucket needs a bucket policy, shown by 'tw compute-envs view' once the compute environment is available. Can't be changed after creation.")
+    public List<String> allowBuckets;
+
     public SeqeraComputePlatform() {
         super(PlatformEnum.SEQERACOMPUTE_PLATFORM);
     }
@@ -51,7 +55,8 @@ public class SeqeraComputePlatform extends AbstractPlatform<SeqeraComputeConfig>
         // be overridden.
 
         config.region(region)
-                .defaultDataRetentionPolicy(dataRetentionPolicy);
+                .defaultDataRetentionPolicy(dataRetentionPolicy)
+                .allowBuckets(allowBuckets);
 
         if (instanceTypeSize != null) {
             config.instanceTypeSize(instanceTypeSize);

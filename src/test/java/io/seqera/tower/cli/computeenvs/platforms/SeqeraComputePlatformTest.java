@@ -76,6 +76,48 @@ public class SeqeraComputePlatformTest extends BaseCmdTest {
     }
 
     @Test
+    void testAddWithAllowBuckets(MockServerClient mock) {
+        mock.reset();
+
+        // given
+        mock.when(
+                request()
+                        .withMethod("POST")
+                        .withPath("/compute-envs")
+                        .withBody(json("""
+                                {
+                                    "computeEnv": {
+                                        "name": "my-compute-env",
+                                        "platform": "seqeracompute-platform",
+                                        "config": {
+                                            "region": "eu-west-1",
+                                            "allowBuckets": ["s3://customer-inputs", "s3://customer-results/runs"]
+                                        }
+                                    }
+                                }""")),
+                exactly(1)
+        ).respond(
+                response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}")
+        );
+
+        // when
+        ExecOut out = exec(mock, "compute-envs", "add", "seqera-compute",
+                "--name", "my-compute-env",
+                "--region", "eu-west-1",
+                "--allow-buckets", "s3://customer-inputs,s3://customer-results/runs"
+        );
+
+        // then
+        var expected = new ComputeEnvAdded("seqeracompute-platform", "isnEDBLvHDAIteOEF44ow", "my-compute-env", null, USER_WORKSPACE_NAME);
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        assertEquals(expected.toString(), out.stdOut);
+    }
+
+    @Test
     void testAddWithOptions(MockServerClient mock) throws IOException {
         mock.reset();
 
