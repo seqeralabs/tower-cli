@@ -45,6 +45,7 @@ import io.seqera.tower.model.ComputeEnvResponseDto;
 import io.seqera.tower.model.ComputeEnvStatus;
 import io.seqera.tower.model.ForgeConfig;
 import io.seqera.tower.model.ListComputeEnvsResponseEntry;
+import io.seqera.tower.model.SeqeraComputeConfig;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -62,6 +63,7 @@ import static io.seqera.tower.cli.commands.AbstractApiCmd.USER_WORKSPACE_NAME;
 import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
 import static org.apache.commons.lang3.StringUtils.chop;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
@@ -252,6 +254,96 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
                 computeEnv,
                 baseUserUrl(mock, USER_WORKSPACE_NAME)
         ));
+    }
+
+    @Test
+    void testViewSeqeraComputeShowsBucketPolicies(MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/4Dc8xkUWgzwlVuTkKvd3ex"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_env_view_seqera_compute")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "compute-envs", "view", "-i", "4Dc8xkUWgzwlVuTkKvd3ex");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        assertTrue(out.stdOut.contains("\"s3://customer-results/runs\""), "allowBuckets is part of the configuration");
+        assertTrue(out.stdOut.contains("Bucket policies"));
+        assertTrue(out.stdOut.contains("     s3://customer-inputs\n"));
+        assertTrue(out.stdOut.contains("     s3://customer-results\n"));
+        assertTrue(out.stdOut.contains("\"Resource\": \"arn:aws:s3:::customer-inputs\""));
+        assertTrue(out.stdOut.contains("\"arn:aws:s3:::customer-results/runs/*\""));
+    }
+
+    @Test
+    void testViewSeqeraComputeJsonIncludesBucketPolicies(MockServerClient mock) throws JsonProcessingException {
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/4Dc8xkUWgzwlVuTkKvd3ex"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_env_view_seqera_compute")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(OutputType.json, mock, "compute-envs", "view", "-i", "4Dc8xkUWgzwlVuTkKvd3ex");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        ComputeEnvResponseDto computeEnv = parseJson(out.stdOut, ComputeEnvResponseDto.class);
+        assertEquals(List.of("s3://customer-inputs", "s3://customer-results"), List.copyOf(computeEnv.getBucketPolicies().keySet()));
+        assertEquals(List.of("s3://customer-inputs", "s3://customer-results/runs"), ((SeqeraComputeConfig) computeEnv.getConfig()).getAllowBuckets());
+    }
+
+    @Test
+    void testViewSeqeraComputeWithoutBucketPolicies(MockServerClient mock) {
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/4Dc8xkUWgzwlVuTkKvd3ex"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("""
+                        {
+                          "computeEnv": {
+                            "id": "4Dc8xkUWgzwlVuTkKvd3ex",
+                            "name": "seqera-compute",
+                            "platform": "seqeracompute-platform",
+                            "config": {
+                              "region": "eu-west-1",
+                              "allowBuckets": ["s3://customer-inputs"],
+                              "discriminator": "seqeracompute-platform"
+                            },
+                            "dateCreated": "2026-10-21T13:10:00Z",
+                            "lastUpdated": "2026-10-21T13:10:00Z",
+                            "status": "CREATING"
+                          }
+                        }
+                        """).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "compute-envs", "view", "-i", "4Dc8xkUWgzwlVuTkKvd3ex");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        assertTrue(out.stdOut.contains("\"s3://customer-inputs\""));
+        assertFalse(out.stdOut.contains("Bucket policies"));
     }
 
     @Test
