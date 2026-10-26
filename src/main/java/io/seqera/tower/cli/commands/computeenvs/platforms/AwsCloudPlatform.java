@@ -98,13 +98,17 @@ public class AwsCloudPlatform extends AbstractPlatform<AwsCloudConfig> {
                     .ebsBootSize(adv.ebsBootSize)
                     .ebsEncrypted(adv.ebsEncrypted)
                     .ebsKmsKeyId(adv.ebsKmsKeyId)
-                    .secretsKmsKeyId(adv.secretsKmsKeyId)
                     .instanceProfileArn(adv.instanceProfileArn)
                     .vpcId(adv.vpcId)
                     .subnetId(adv.subnetId)
                     .subnetIds(adv.subnetIds)
                     .securityGroups(adv.securityGroups)
                     .logGroup(adv.logGroup);
+
+            // secretsKmsKeyId is JsonNullable: setting null would send an explicit null.
+            if (adv.secretsKmsKeyId != null) {
+                config.secretsKmsKeyId(adv.secretsKmsKeyId);
+            }
         }
 
         // Common

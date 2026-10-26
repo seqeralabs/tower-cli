@@ -31,6 +31,7 @@ import java.io.IOException;
 
 import static io.seqera.tower.cli.commands.AbstractApiCmd.USER_WORKSPACE_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
@@ -57,6 +58,30 @@ class AwsBatchForgePlatformTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "compute-envs", "add", "aws-batch", "forge", "-n", "demo", "-r", "eu-west-1", "--work-dir", "s3://nextflow-ci/jordeu", "--max-cpus=123", "--fusion-v2", "--wave");
         assertOutput(format, out, new ComputeEnvAdded("aws-batch", "isnEDBLvHDAIteOEF44ow", "demo", null, USER_WORKSPACE_NAME));
+    }
+
+    @Test
+    void testAddWithoutSecretsKmsKeyOmitsIt(MockServerClient mock) {
+        mock.reset();
+
+        mock.when(
+                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "aws-batch"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":[{\"id\":\"6g0ER59L4ZoE5zpOmUP48D\",\"name\":\"aws\",\"discriminator\":\"aws\"}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+        mock.when(
+                request().withMethod("POST").withPath("/compute-envs"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "compute-envs", "add", "aws-batch", "forge", "-n", "demo", "-r", "eu-west-1", "--work-dir", "s3://nextflow-ci/jordeu", "--max-cpus=123");
+
+        // secretsKmsKeyId is JsonNullable, so an unset value must be omitted, not sent as null
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        String body = mock.retrieveRecordedRequests(request().withMethod("POST").withPath("/compute-envs"))[0].getBodyAsString();
+        assertFalse(body.contains("secretsKmsKeyId"), body);
     }
 
     @Test

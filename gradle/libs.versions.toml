@@ -13,7 +13,7 @@ mockserverVersion = "5.15.0"
 picocliVersion = "4.6.3"
 shadowVersion = "9.6.1"
 slf4jVersion = "2.0.20"
-towerJavaSdkVersion = "1.250.0"
+towerJavaSdkVersion = "1.251.0"
 xzVersion = "1.12"
 yumiLicenserVersion = "4.0.0"
 

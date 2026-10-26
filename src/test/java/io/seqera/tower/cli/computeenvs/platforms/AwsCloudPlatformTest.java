@@ -29,6 +29,7 @@ import java.io.IOException;
 
 import static io.seqera.tower.cli.commands.AbstractApiCmd.USER_WORKSPACE_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
@@ -93,6 +94,38 @@ public class AwsCloudPlatformTest extends BaseCmdTest {
         // then
         var expected = new ComputeEnvAdded("aws-cloud", "isnEDBLvHDAIteOEF44ow", "my-aws-cloud-ce", null, USER_WORKSPACE_NAME);
         assertOutput(format, out, expected);
+    }
+
+    @Test
+    void testAddWithoutSecretsKmsKeyOmitsIt(MockServerClient mock) {
+        mock.reset();
+
+        // given
+        mock.when(
+                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "aws-cloud"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("{\"credentials\":[{\"id\":\"6XfOhoztUq6de3Dw3X9LSb\",\"name\":\"aws\",\"discriminator\":\"aws\"}]}")
+        );
+        mock.when(
+                request().withMethod("POST").withPath("/compute-envs"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withContentType(MediaType.APPLICATION_JSON).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}")
+        );
+
+        // when
+        ExecOut out = exec(mock, "compute-envs", "add", "aws-cloud",
+                "--name", "my-aws-cloud-ce",
+                "--work-dir", "s3://my-bucket",
+                "--region", "us-east-1",
+                "--instance-type", "t3.medium"
+        );
+
+        // then: secretsKmsKeyId is JsonNullable, so an unset value must be omitted, not sent as null
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        String body = mock.retrieveRecordedRequests(request().withMethod("POST").withPath("/compute-envs"))[0].getBodyAsString();
+        assertFalse(body.contains("secretsKmsKeyId"), body);
     }
 
     @Test
