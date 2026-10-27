@@ -277,8 +277,8 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
         assertEquals(0, out.exitCode);
         assertTrue(out.stdOut.contains("\"s3://customer-results/runs\""), "allowBuckets is part of the configuration");
         assertTrue(out.stdOut.contains("Bucket policies"));
-        assertTrue(out.stdOut.contains("     s3://customer-inputs\n"));
-        assertTrue(out.stdOut.contains("     s3://customer-results\n"));
+        assertTrue(out.stdOut.contains("     s3://customer-inputs" + System.lineSeparator()));
+        assertTrue(out.stdOut.contains("     s3://customer-results" + System.lineSeparator()));
         assertTrue(out.stdOut.contains("\"Resource\": \"arn:aws:s3:::customer-inputs\""));
         assertTrue(out.stdOut.contains("\"arn:aws:s3:::customer-results/runs/*\""));
     }

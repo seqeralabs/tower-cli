@@ -5456,6 +5456,46 @@
             "java.lang.String",
             "java.lang.Boolean"
           ]
+        },
+        {
+          "name": "equals",
+          "parameterTypes": [
+            "java.lang.Object"
+          ]
+        },
+        {
+          "name": "getActualInstance",
+          "parameterTypes": []
+        },
+        {
+          "name": "getActualInstanceRecursively",
+          "parameterTypes": []
+        },
+        {
+          "name": "getSchemaType",
+          "parameterTypes": []
+        },
+        {
+          "name": "getSchemas",
+          "parameterTypes": []
+        },
+        {
+          "name": "hashCode",
+          "parameterTypes": []
+        },
+        {
+          "name": "isNullable",
+          "parameterTypes": []
+        },
+        {
+          "name": "setActualInstance",
+          "parameterTypes": [
+            "java.lang.Object"
+          ]
+        },
+        {
+          "name": "toString",
+          "parameterTypes": []
         }
       ]
     },
@@ -9251,6 +9291,24 @@
         {
           "name": "<init>",
           "parameterTypes": [
+            "io.seqera.tower.model.AgentImage"
+          ]
+        },
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "io.seqera.tower.model.AgentRunImage"
+          ]
+        },
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "io.seqera.tower.model.AiChatThreadImage"
+          ]
+        },
+        {
+          "name": "<init>",
+          "parameterTypes": [
             "io.seqera.tower.model.ComputeEnvImage"
           ]
         },
@@ -9460,6 +9518,18 @@
         },
         {
           "name": "getActualInstance",
+          "parameterTypes": []
+        },
+        {
+          "name": "getAgentImage",
+          "parameterTypes": []
+        },
+        {
+          "name": "getAgentRunImage",
+          "parameterTypes": []
+        },
+        {
+          "name": "getAiChatThreadImage",
           "parameterTypes": []
         },
         {
@@ -10999,6 +11069,22 @@
           "parameterTypes": []
         },
         {
+          "name": "getGlobalCacheEnabled",
+          "parameterTypes": []
+        },
+        {
+          "name": "getGlobalCacheEnabled_JsonNullable",
+          "parameterTypes": []
+        },
+        {
+          "name": "getGlobalCachePath",
+          "parameterTypes": []
+        },
+        {
+          "name": "getGlobalCachePath_JsonNullable",
+          "parameterTypes": []
+        },
+        {
           "name": "getGpuEnabled",
           "parameterTypes": []
         },
@@ -11109,6 +11195,18 @@
         {
           "name": "getWorkDir",
           "parameterTypes": []
+        },
+        {
+          "name": "globalCacheEnabled",
+          "parameterTypes": [
+            "java.lang.Boolean"
+          ]
+        },
+        {
+          "name": "globalCachePath",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
         },
         {
           "name": "gpuEnabled",
@@ -11302,6 +11400,30 @@
         },
         {
           "name": "setFusionVersion_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "setGlobalCacheEnabled",
+          "parameterTypes": [
+            "java.lang.Boolean"
+          ]
+        },
+        {
+          "name": "setGlobalCacheEnabled_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "setGlobalCachePath",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setGlobalCachePath_JsonNullable",
           "parameterTypes": [
             "org.openapitools.jackson.nullable.JsonNullable"
           ]
@@ -12157,6 +12279,22 @@
           "parameterTypes": []
         },
         {
+          "name": "getGlobalCacheEnabled",
+          "parameterTypes": []
+        },
+        {
+          "name": "getGlobalCacheEnabled_JsonNullable",
+          "parameterTypes": []
+        },
+        {
+          "name": "getGlobalCachePath",
+          "parameterTypes": []
+        },
+        {
+          "name": "getGlobalCachePath_JsonNullable",
+          "parameterTypes": []
+        },
+        {
           "name": "getInstanceType",
           "parameterTypes": []
         },
@@ -12223,6 +12361,18 @@
         {
           "name": "getWaveEnabled",
           "parameterTypes": []
+        },
+        {
+          "name": "globalCacheEnabled",
+          "parameterTypes": [
+            "java.lang.Boolean"
+          ]
+        },
+        {
+          "name": "globalCachePath",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
         },
         {
           "name": "hashCode",
@@ -12350,6 +12500,30 @@
         },
         {
           "name": "setFusionVersion_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "setGlobalCacheEnabled",
+          "parameterTypes": [
+            "java.lang.Boolean"
+          ]
+        },
+        {
+          "name": "setGlobalCacheEnabled_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "setGlobalCachePath",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setGlobalCachePath_JsonNullable",
           "parameterTypes": [
             "org.openapitools.jackson.nullable.JsonNullable"
           ]
@@ -14854,6 +15028,12 @@
         {
           "name": "<init>",
           "parameterTypes": []
+        },
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.util.Map"
+          ]
         },
         {
           "name": "addLabelsItem",
@@ -21291,6 +21471,12 @@
           ]
         },
         {
+          "name": "allowedToConnect",
+          "parameterTypes": [
+            "java.lang.Boolean"
+          ]
+        },
+        {
           "name": "allowedUsers",
           "parameterTypes": [
             "java.util.List"
@@ -21359,6 +21545,10 @@
         },
         {
           "name": "getActiveConnections",
+          "parameterTypes": []
+        },
+        {
+          "name": "getAllowedToConnect",
           "parameterTypes": []
         },
         {
@@ -21591,6 +21781,12 @@
           "name": "setActiveConnections",
           "parameterTypes": [
             "java.util.List"
+          ]
+        },
+        {
+          "name": "setAllowedToConnect",
+          "parameterTypes": [
+            "java.lang.Boolean"
           ]
         },
         {
@@ -28087,6 +28283,22 @@
           "parameterTypes": []
         },
         {
+          "name": "getGlobalCacheEnabled",
+          "parameterTypes": []
+        },
+        {
+          "name": "getGlobalCacheEnabled_JsonNullable",
+          "parameterTypes": []
+        },
+        {
+          "name": "getGlobalCachePath",
+          "parameterTypes": []
+        },
+        {
+          "name": "getGlobalCachePath_JsonNullable",
+          "parameterTypes": []
+        },
+        {
           "name": "getHeadJobCpus",
           "parameterTypes": []
         },
@@ -28209,6 +28421,18 @@
         {
           "name": "getWorkDir",
           "parameterTypes": []
+        },
+        {
+          "name": "globalCacheEnabled",
+          "parameterTypes": [
+            "java.lang.Boolean"
+          ]
+        },
+        {
+          "name": "globalCachePath",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
         },
         {
           "name": "hashCode",
@@ -28427,6 +28651,30 @@
         },
         {
           "name": "setFusionVersion_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "setGlobalCacheEnabled",
+          "parameterTypes": [
+            "java.lang.Boolean"
+          ]
+        },
+        {
+          "name": "setGlobalCacheEnabled_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "setGlobalCachePath",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setGlobalCachePath_JsonNullable",
           "parameterTypes": [
             "org.openapitools.jackson.nullable.JsonNullable"
           ]
@@ -28826,6 +29074,22 @@
           "parameterTypes": []
         },
         {
+          "name": "getGlobalCacheEnabled",
+          "parameterTypes": []
+        },
+        {
+          "name": "getGlobalCacheEnabled_JsonNullable",
+          "parameterTypes": []
+        },
+        {
+          "name": "getGlobalCachePath",
+          "parameterTypes": []
+        },
+        {
+          "name": "getGlobalCachePath_JsonNullable",
+          "parameterTypes": []
+        },
+        {
           "name": "getGpuEnabled",
           "parameterTypes": []
         },
@@ -28904,6 +29168,18 @@
         {
           "name": "getZone",
           "parameterTypes": []
+        },
+        {
+          "name": "globalCacheEnabled",
+          "parameterTypes": [
+            "java.lang.Boolean"
+          ]
+        },
+        {
+          "name": "globalCachePath",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
         },
         {
           "name": "gpuEnabled",
@@ -29013,6 +29289,30 @@
         },
         {
           "name": "setFusionVersion_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "setGlobalCacheEnabled",
+          "parameterTypes": [
+            "java.lang.Boolean"
+          ]
+        },
+        {
+          "name": "setGlobalCacheEnabled_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "setGlobalCachePath",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setGlobalCachePath_JsonNullable",
           "parameterTypes": [
             "org.openapitools.jackson.nullable.JsonNullable"
           ]
@@ -31884,6 +32184,10 @@
           "parameterTypes": []
         },
         {
+          "name": "getGlobalCachePath",
+          "parameterTypes": []
+        },
+        {
           "name": "getHeadJobCpus",
           "parameterTypes": []
         },
@@ -32018,6 +32322,12 @@
         {
           "name": "getWorkspaceSecrets",
           "parameterTypes": []
+        },
+        {
+          "name": "globalCachePath",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
         },
         {
           "name": "hashCode",
@@ -32225,6 +32535,12 @@
           "name": "setFusionVersion_JsonNullable",
           "parameterTypes": [
             "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "setGlobalCachePath",
+          "parameterTypes": [
+            "java.lang.String"
           ]
         },
         {
@@ -37793,6 +38109,10 @@
           "parameterTypes": []
         },
         {
+          "name": "getNextflowFeatureDefaultVersions",
+          "parameterTypes": []
+        },
+        {
           "name": "getNextflowFeatureMinVersions",
           "parameterTypes": []
         },
@@ -37811,6 +38131,12 @@
         {
           "name": "hashCode",
           "parameterTypes": []
+        },
+        {
+          "name": "nextflowFeatureDefaultVersions",
+          "parameterTypes": [
+            "java.util.Map"
+          ]
         },
         {
           "name": "nextflowFeatureMinVersions",
@@ -37837,6 +38163,13 @@
           ]
         },
         {
+          "name": "putNextflowFeatureDefaultVersionsItem",
+          "parameterTypes": [
+            "java.lang.String",
+            "java.lang.String"
+          ]
+        },
+        {
           "name": "putNextflowFeatureMinVersionsItem",
           "parameterTypes": [
             "java.lang.String",
@@ -37854,6 +38187,12 @@
           "name": "setCatalogEnabled",
           "parameterTypes": [
             "java.lang.Boolean"
+          ]
+        },
+        {
+          "name": "setNextflowFeatureDefaultVersions",
+          "parameterTypes": [
+            "java.util.Map"
           ]
         },
         {
@@ -43237,6 +43576,22 @@
           "parameterTypes": []
         },
         {
+          "name": "getGlobalCacheEnabled",
+          "parameterTypes": []
+        },
+        {
+          "name": "getGlobalCacheEnabled_JsonNullable",
+          "parameterTypes": []
+        },
+        {
+          "name": "getGlobalCachePath",
+          "parameterTypes": []
+        },
+        {
+          "name": "getGlobalCachePath_JsonNullable",
+          "parameterTypes": []
+        },
+        {
           "name": "getHeadJobOptions",
           "parameterTypes": []
         },
@@ -43279,6 +43634,18 @@
         {
           "name": "getUserName",
           "parameterTypes": []
+        },
+        {
+          "name": "globalCacheEnabled",
+          "parameterTypes": [
+            "java.lang.Boolean"
+          ]
+        },
+        {
+          "name": "globalCachePath",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
         },
         {
           "name": "hashCode",
@@ -43364,6 +43731,30 @@
         },
         {
           "name": "setFusionVersion_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "setGlobalCacheEnabled",
+          "parameterTypes": [
+            "java.lang.Boolean"
+          ]
+        },
+        {
+          "name": "setGlobalCacheEnabled_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "setGlobalCachePath",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setGlobalCachePath_JsonNullable",
           "parameterTypes": [
             "org.openapitools.jackson.nullable.JsonNullable"
           ]
@@ -52016,6 +52407,14 @@
           "parameterTypes": []
         },
         {
+          "name": "getGlobalCachePath",
+          "parameterTypes": []
+        },
+        {
+          "name": "getGlobalCachePath_JsonNullable",
+          "parameterTypes": []
+        },
+        {
           "name": "getHeadJobCpus",
           "parameterTypes": []
         },
@@ -52218,6 +52617,12 @@
         {
           "name": "getWorkspaceSecrets_JsonNullable",
           "parameterTypes": []
+        },
+        {
+          "name": "globalCachePath",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
         },
         {
           "name": "hashCode",
@@ -52447,6 +52852,18 @@
         },
         {
           "name": "setFusionVersion_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "setGlobalCachePath",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setGlobalCachePath_JsonNullable",
           "parameterTypes": [
             "org.openapitools.jackson.nullable.JsonNullable"
           ]
@@ -53049,6 +53466,14 @@
           "parameterTypes": []
         },
         {
+          "name": "getGlobalCachePath",
+          "parameterTypes": []
+        },
+        {
+          "name": "getGlobalCachePath_JsonNullable",
+          "parameterTypes": []
+        },
+        {
           "name": "getLogFile",
           "parameterTypes": []
         },
@@ -53127,6 +53552,12 @@
         {
           "name": "getWave_JsonNullable",
           "parameterTypes": []
+        },
+        {
+          "name": "globalCachePath",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
         },
         {
           "name": "hashCode",
@@ -53212,6 +53643,18 @@
         },
         {
           "name": "setFusion_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "setGlobalCachePath",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setGlobalCachePath_JsonNullable",
           "parameterTypes": [
             "org.openapitools.jackson.nullable.JsonNullable"
           ]
