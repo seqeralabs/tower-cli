@@ -61,7 +61,7 @@ public class InfoCmdTest extends BaseCmdTest {
         Map<String, String> opts = new HashMap<>();
         opts.put("cliVersion", getCliVersion() );
         opts.put("cliApiVersion", getCliApiVersion());
-        opts.put("towerApiVersion", "1.242.0");
+        opts.put("towerApiVersion", "1.247.0");
         opts.put("towerVersion", "22.3.0-torricelli");
         opts.put("towerApiEndpoint", "http://localhost:"+mock.getPort());
         opts.put("userName", "jordi");
@@ -91,7 +91,7 @@ public class InfoCmdTest extends BaseCmdTest {
         Map<String, String> opts = new HashMap<>();
         opts.put("cliVersion", getCliVersion() );
         opts.put("cliApiVersion", getCliApiVersion());
-        opts.put("towerApiVersion", "1.242.0");
+        opts.put("towerApiVersion", "1.247.0");
         opts.put("towerVersion", "22.3.0-torricelli");
         opts.put("towerApiEndpoint", "http://localhost:"+mock.getPort());
         opts.put("userName", null);
