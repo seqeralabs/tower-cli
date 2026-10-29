@@ -331,6 +331,8 @@ public class FormatHelper {
                 return ansi("@|fg(green) MEMBER|@");
             case owner:
                 return ansi("@|fg(magenta) OWNER|@");
+            case service_account:
+                return ansi("@|fg(cyan) SERVICE_ACCOUNT|@");
             default:
                 return role.toString();
         }

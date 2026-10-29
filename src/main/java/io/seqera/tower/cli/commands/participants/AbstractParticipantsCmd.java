@@ -88,7 +88,12 @@ public class AbstractParticipantsCmd extends AbstractApiCmd {
         ListParticipantsResponse listParticipantsResponse = workspacesApi().listWorkspaceParticipants(organizationId, workspaceId, null, null, name);
 
         if (listParticipantsResponse.getParticipants() != null) {
-            ParticipantResponseDto participant = listParticipantsResponse.getParticipants().stream().filter(it -> it.getType() == type).findFirst().orElse(null);
+            // The search matches substrings, so 'ci-bot' would also return 'ci-bot-staging'
+            ParticipantResponseDto participant = listParticipantsResponse.getParticipants().stream()
+                    .filter(it -> it.getType() == type)
+                    .filter(it -> Objects.equals(it.getUserName(), name) || Objects.equals(it.getTeamName(), name) || name.equalsIgnoreCase(it.getEmail()))
+                    .findFirst()
+                    .orElse(null);
 
             if (participant != null) {
                 return participant;
