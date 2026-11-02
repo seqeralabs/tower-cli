@@ -198,7 +198,7 @@ public class GoogleBatchPlatform extends AbstractPlatform<GoogleBatchConfig> {
         @Option(names = {"--head-job-cpus"}, description = "Number of CPUs allocated to the Nextflow head job. Controls the compute resources for the main workflow orchestration process.")
         public Integer headJobCpus;
 
-        @Option(names = {"--head-job-memory"}, description = "Memory allocation for the Nextflow head job in megabytes. Value must be a multiple of 256 MiB and from 0.5 GB to 8 GB per CPU.")
+        @Option(names = {"--head-job-memory"}, description = "Memory allocation for the Nextflow head job in megabytes. Minimum 3584 MiB. Defaults to 3584 MiB if not specified.")
         public Integer headJobMemoryMb;
 
         @Option(names = {"--service-account-email"}, description = "Google Cloud service account email for pipeline execution. Grants fine-grained IAM permissions to Nextflow jobs.")
