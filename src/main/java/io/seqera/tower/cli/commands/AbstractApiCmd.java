@@ -21,6 +21,7 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.ApiResponse;
 import io.seqera.tower.Pair;
 import io.seqera.tower.api.ActionsApi;
+import io.seqera.tower.api.AgentsApi;
 import io.seqera.tower.api.AvatarsApi;
 import io.seqera.tower.api.CompatibilityApi;
 import io.seqera.tower.api.ComputeEnvsApi;
@@ -40,6 +41,7 @@ import io.seqera.tower.api.PipelineVersionsApi;
 import io.seqera.tower.api.PipelinesApi;
 import io.seqera.tower.api.PlatformsApi;
 import io.seqera.tower.api.RolesApi;
+import io.seqera.tower.api.ServiceAccountsApi;
 import io.seqera.tower.api.ServiceInfoApi;
 import io.seqera.tower.api.SshKeysApi;
 import io.seqera.tower.api.StudiosApi;
@@ -50,6 +52,7 @@ import io.seqera.tower.api.UsersApi;
 import io.seqera.tower.api.WorkflowsApi;
 import io.seqera.tower.api.WorkspacesApi;
 import io.seqera.tower.cli.Tower;
+import io.seqera.tower.cli.commands.global.PaginationOptions;
 import io.seqera.tower.cli.commands.labels.Label;
 import io.seqera.tower.cli.commands.labels.LabelsFinder;
 import io.seqera.tower.cli.commands.pipelines.versions.VersionRefOptions;
@@ -71,13 +74,16 @@ import io.seqera.tower.model.Credentials;
 import io.seqera.tower.model.DataStudioQueryAttribute;
 import io.seqera.tower.model.ListComputeEnvsResponseEntry;
 import io.seqera.tower.model.ListPipelineVersionsResponse;
+import io.seqera.tower.model.ListServiceAccountsResponse;
 import io.seqera.tower.model.ListWorkspacesAndOrgResponse;
 import io.seqera.tower.model.OrgAndWorkspaceDto;
 import io.seqera.tower.model.PipelineDbDto;
 import io.seqera.tower.model.PipelineQueryAttribute;
 import io.seqera.tower.model.PipelineVersionFullInfoDto;
+import io.seqera.tower.model.ServiceAccountDto;
 import io.seqera.tower.model.UserResponseDto;
 import io.seqera.tower.model.WorkflowQueryAttribute;
+import jakarta.annotation.Nullable;
 import org.glassfish.jersey.CommonProperties;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.logging.LoggingFeature;
@@ -144,6 +150,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
     private PipelineVersionsApi pipelineVersionsApi;
     private PlatformsApi platformsApi;
     private RolesApi rolesApi;
+    private ServiceAccountsApi serviceAccountsApi;
     private ServiceInfoApi serviceInfoApi;
     private SshKeysApi sshKeysApi;
     private StudiosApi studiosApi;
@@ -213,6 +220,10 @@ public abstract class AbstractApiCmd extends AbstractCmd {
 
     protected ActionsApi actionsApi() throws ApiException {
         return actionsApi == null ? new ActionsApi(apiClient()) : actionsApi;
+    }
+
+    protected AgentsApi agentsApi() throws ApiException {
+        return new AgentsApi(apiClient());
     }
 
     protected AvatarsApi avatarsApi() throws ApiException {
@@ -289,6 +300,10 @@ public abstract class AbstractApiCmd extends AbstractCmd {
 
     protected RolesApi rolesApi() throws ApiException {
         return rolesApi == null ? new RolesApi(apiClient()) : rolesApi;
+    }
+
+    protected ServiceAccountsApi serviceAccountsApi() throws ApiException {
+        return serviceAccountsApi == null ? new ServiceAccountsApi(apiClient()) : serviceAccountsApi;
     }
 
     protected ServiceInfoApi serviceInfoApi() throws ApiException {
@@ -578,6 +593,24 @@ public abstract class AbstractApiCmd extends AbstractCmd {
                 .collect(Collectors.toList());
 
         return orgAndWorkspaceDbDtoList.stream().findFirst().orElseThrow(() -> new OrganizationNotFoundException(organizationRef));
+    }
+
+    @Nullable
+    protected ServiceAccountDto findServiceAccountByName(Long orgId, String name) throws ApiException {
+        int offset = 0;
+        while (true) {
+            ListServiceAccountsResponse page = serviceAccountsApi().listServiceAccounts(orgId, offset, PaginationOptions.MAX);
+            List<ServiceAccountDto> items = page.getServiceAccounts();
+            for (ServiceAccountDto sa : items) {
+                if (name.equals(sa.getName())) {
+                    return sa;
+                }
+            }
+            offset += items.size();
+            if (items.isEmpty() || offset >= page.getTotalSize()) {
+                return null;
+            }
+        }
     }
 
     protected List<Long> findOrCreateLabels(Long wspId, List<Label> labels) throws ApiException {
