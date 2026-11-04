@@ -32,6 +32,7 @@ public class TeamsList extends Response {
 
     public final String organizationName;
     public final List<TeamDbDto> teams;
+    public final Long totalSize;
 
     @JsonIgnore
     private String baseOrgUrl;
@@ -45,6 +46,7 @@ public class TeamsList extends Response {
         this.teams = teams;
         this.baseOrgUrl = baseOrgUrl;
         this.paginationInfo = paginationInfo;
+        this.totalSize = paginationInfo == null ? null : paginationInfo.getTotalSize();
     }
 
     @Override

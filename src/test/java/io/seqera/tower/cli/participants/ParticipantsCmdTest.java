@@ -19,6 +19,7 @@ package io.seqera.tower.cli.participants;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
+import io.seqera.tower.cli.commands.global.PaginationOptions;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.participants.ParticipantAdded;
 import io.seqera.tower.cli.responses.participants.ParticipantDeleted;
@@ -144,7 +145,7 @@ class ParticipantsCmdTest extends BaseCmdTest {
                                 "      \"type\": \"TEAM\",\n" +
                                 "      \"teamAvatarUrl\": null,\n" +
                                 "      \"userAvatarUrl\": null\n" +
-                                "    }", ParticipantResponseDto.class)), null));
+                                "    }", ParticipantResponseDto.class)), PaginationInfo.from(new PaginationOptions(), 4L)));
     }
 
     @Test
@@ -248,7 +249,7 @@ class ParticipantsCmdTest extends BaseCmdTest {
                                 "      \"type\": \"TEAM\",\n" +
                                 "      \"teamAvatarUrl\": null,\n" +
                                 "      \"userAvatarUrl\": null\n" +
-                                "    }", ParticipantResponseDto.class)), PaginationInfo.from(1, 2, null, null)).toString()), out.stdOut);
+                                "    }", ParticipantResponseDto.class)), PaginationInfo.from(1, 2, null, 4L)).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
@@ -353,7 +354,7 @@ class ParticipantsCmdTest extends BaseCmdTest {
                                 "      \"type\": \"TEAM\",\n" +
                                 "      \"teamAvatarUrl\": null,\n" +
                                 "      \"userAvatarUrl\": null\n" +
-                                "    }", ParticipantResponseDto.class)), PaginationInfo.from(null, 2, 1, null)).toString()), out.stdOut);
+                                "    }", ParticipantResponseDto.class)), PaginationInfo.from(null, 2, 1, 4L)).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
     }
 
