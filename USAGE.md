@@ -791,7 +791,7 @@ tw lineage upstream -w my-org/my-workspace -i <lid>
 - `tw compute-envs enable|disable`: enable or disable a compute environment.
 - `tw compute-envs add`:
   - AWS Batch: CloudWatch log group and DRAGEN options.
-  - AWS Cloud: `--log-group`. Google Cloud: `--project-id`.
+  - AWS Cloud: `--log-group`, and `--subnet-ids` with several subnets from one VPC. The Nextflow head instance tries them in the given order and moves to the next one when a subnet or its Availability Zone has no capacity. Google Cloud: `--project-id`.
   - HPC platforms: `--propagate-head-job-options`.
   - Seqera Compute: `--data-retention-policy` and `--allow-buckets`. `tw compute-envs view` shows the bucket policy to apply to each allowed bucket once the compute environment is available.
   - Azure Cloud: `--key-vault-url`. Google Cloud: `--billing-export-table`.
