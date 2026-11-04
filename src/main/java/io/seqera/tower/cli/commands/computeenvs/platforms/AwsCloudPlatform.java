@@ -170,7 +170,7 @@ public class AwsCloudPlatform extends AbstractPlatform<AwsCloudConfig> {
         @Option(names = {"--subnet-id"}, description = "DEPRECATED - Use '--subnet-ids' instead. VPC subnet ID for instance placement. Determines network isolation and internet access configuration.")
         public String subnetId;
 
-        @Option(names = {"--subnet-ids"}, description = "VPC subnet IDs for instance placement. Comma-separated list; the first subnet is used for basic placement while Intelligent Compute may use all of them. Mutually exclusive with --subnet-id.", split = ",")
+        @Option(names = {"--subnet-ids"}, paramLabel = "<subnet>", description = "VPC subnet IDs for instance placement. Comma-separated list of subnets from a single VPC. The Nextflow head instance tries them in the given order, moving to the next one when a subnet or its Availability Zone has no capacity, so list subnets in different Availability Zones for resilience. With Intelligent Compute (--sched-enabled), task instances can use any of them. Mutually exclusive with --subnet-id.", split = ",")
         public List<String> subnetIds;
 
         @Option(names = {"--vpc-id"}, description = "VPC ID used to scope subnet and security-group selection. Determines the network in which EC2 instances are launched.")
