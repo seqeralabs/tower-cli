@@ -16,6 +16,9 @@
 
 package io.seqera.tower.cli.computeenvs.platforms;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.responses.computeenvs.ComputeEnvAdded;
@@ -26,6 +29,7 @@ import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 
 import java.io.IOException;
+import java.util.List;
 
 import static io.seqera.tower.cli.commands.AbstractApiCmd.USER_WORKSPACE_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -301,6 +305,72 @@ public class AwsCloudPlatformTest extends BaseCmdTest {
         assertEquals("", out.stdOut);
         assertEquals(1, out.exitCode);
         assertTrue(out.stdErr.contains("mutually exclusive"));
+    }
+
+    @Test
+    void testAddKeepsSubnetOrder(MockServerClient mock) throws IOException {
+        mock.reset();
+
+        // given
+        mock.when(
+                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "aws-cloud"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("{\"credentials\":[{\"id\":\"6XfOhoztUq6de3Dw3X9LSb\",\"name\":\"aws\",\"discriminator\":\"aws\"}]}")
+        );
+        mock.when(
+                request().withMethod("POST").withPath("/compute-envs"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withContentType(MediaType.APPLICATION_JSON).withBody("{\"computeEnvId\":\"isnEDBLvHDAIteOEF44ow\"}")
+        );
+
+        // when
+        ExecOut out = exec(mock, "compute-envs", "add", "aws-cloud",
+                "-n", "my-aws-cloud-multi-subnet",
+                "--work-dir", "s3://my-bucket",
+                "-r", "eu-west-1",
+                "--subnet-ids", "subnet-c,subnet-a,subnet-b"
+        );
+
+        // then: the head instance tries the subnets in this order, so it must reach Platform unchanged
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        String body = mock.retrieveRecordedRequests(request().withMethod("POST").withPath("/compute-envs"))[0].getBodyAsString();
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode subnetIds = mapper.readTree(body).at("/computeEnv/config/subnetIds");
+        assertEquals(List.of("subnet-c", "subnet-a", "subnet-b"), mapper.treeToValue(subnetIds, List.class));
+    }
+
+    @Test
+    void testAddShowsSubnetValidationError(MockServerClient mock) {
+        mock.reset();
+
+        // given
+        mock.when(
+                request().withMethod("GET").withPath("/credentials").withQueryStringParameter("platformId", "aws-cloud"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("{\"credentials\":[{\"id\":\"6XfOhoztUq6de3Dw3X9LSb\",\"name\":\"aws\",\"discriminator\":\"aws\"}]}")
+        );
+        String apiError = "{\"message\":\"The subnets belong to different VPCs: subnet-a (vpc-1), subnet-b (vpc-2). Select subnets from a single VPC.\"}";
+        mock.when(
+                request().withMethod("POST").withPath("/compute-envs"), exactly(1)
+        ).respond(
+                response().withStatusCode(400).withContentType(MediaType.APPLICATION_JSON).withBody(apiError)
+        );
+
+        // when
+        ExecOut out = exec(mock, "compute-envs", "add", "aws-cloud",
+                "-n", "my-aws-cloud-multi-subnet",
+                "--work-dir", "s3://my-bucket",
+                "-r", "eu-west-1",
+                "--subnet-ids", "subnet-a,subnet-b"
+        );
+
+        // then: Platform validates the subnets, and its message tells the user what to fix
+        assertEquals("", out.stdOut);
+        assertEquals(1, out.exitCode);
+        assertEquals(errorMessage(out.app, new ApiException(400, "", null, apiError)), out.stdErr);
     }
 
     @Test
