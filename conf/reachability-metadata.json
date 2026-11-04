@@ -12594,6 +12594,14 @@
           "parameterTypes": []
         },
         {
+          "name": "getLowPriority",
+          "parameterTypes": []
+        },
+        {
+          "name": "getLowPriority_JsonNullable",
+          "parameterTypes": []
+        },
+        {
           "name": "getVmCount",
           "parameterTypes": []
         },
@@ -12612,6 +12620,12 @@
           ]
         },
         {
+          "name": "lowPriority",
+          "parameterTypes": [
+            "java.lang.Boolean"
+          ]
+        },
+        {
           "name": "setAutoScale",
           "parameterTypes": [
             "java.lang.Boolean"
@@ -12625,6 +12639,18 @@
         },
         {
           "name": "setBootDiskSizeGB_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "setLowPriority",
+          "parameterTypes": [
+            "java.lang.Boolean"
+          ]
+        },
+        {
+          "name": "setLowPriority_JsonNullable",
           "parameterTypes": [
             "org.openapitools.jackson.nullable.JsonNullable"
           ]
@@ -20970,6 +20996,10 @@
           "parameterTypes": []
         },
         {
+          "name": "getStatusReason",
+          "parameterTypes": []
+        },
+        {
           "name": "hashCode",
           "parameterTypes": []
         },
@@ -21040,9 +21070,21 @@
           ]
         },
         {
+          "name": "setStatusReason",
+          "parameterTypes": [
+            "io.seqera.tower.model.StudioCheckpointStatusReason"
+          ]
+        },
+        {
           "name": "status",
           "parameterTypes": [
             "io.seqera.tower.model.StudioCheckpointStatus"
+          ]
+        },
+        {
+          "name": "statusReason",
+          "parameterTypes": [
+            "io.seqera.tower.model.StudioCheckpointStatusReason"
           ]
         },
         {
@@ -21987,6 +22029,12 @@
           ]
         },
         {
+          "name": "checkpointRecovery",
+          "parameterTypes": [
+            "io.seqera.tower.model.DataStudioDtoCheckpointRecovery"
+          ]
+        },
+        {
           "name": "computeEnv",
           "parameterTypes": [
             "io.seqera.tower.model.DataStudioComputeEnvDto"
@@ -22063,6 +22111,14 @@
         },
         {
           "name": "getBaseImage_JsonNullable",
+          "parameterTypes": []
+        },
+        {
+          "name": "getCheckpointRecovery",
+          "parameterTypes": []
+        },
+        {
+          "name": "getCheckpointRecovery_JsonNullable",
           "parameterTypes": []
         },
         {
@@ -22307,6 +22363,18 @@
         },
         {
           "name": "setBaseImage_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "setCheckpointRecovery",
+          "parameterTypes": [
+            "io.seqera.tower.model.DataStudioDtoCheckpointRecovery"
+          ]
+        },
+        {
+          "name": "setCheckpointRecovery_JsonNullable",
           "parameterTypes": [
             "org.openapitools.jackson.nullable.JsonNullable"
           ]
@@ -23762,6 +23830,12 @@
           ]
         },
         {
+          "name": "failOnIncompleteCheckpoint",
+          "parameterTypes": [
+            "java.lang.Boolean"
+          ]
+        },
+        {
           "name": "getAllowedUserIds",
           "parameterTypes": []
         },
@@ -23791,6 +23865,14 @@
         },
         {
           "name": "getDescription_JsonNullable",
+          "parameterTypes": []
+        },
+        {
+          "name": "getFailOnIncompleteCheckpoint",
+          "parameterTypes": []
+        },
+        {
+          "name": "getFailOnIncompleteCheckpoint_JsonNullable",
           "parameterTypes": []
         },
         {
@@ -23883,6 +23965,18 @@
         },
         {
           "name": "setDescription_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "setFailOnIncompleteCheckpoint",
+          "parameterTypes": [
+            "java.lang.Boolean"
+          ]
+        },
+        {
+          "name": "setFailOnIncompleteCheckpoint_JsonNullable",
           "parameterTypes": [
             "org.openapitools.jackson.nullable.JsonNullable"
           ]
@@ -44772,6 +44866,12 @@
           "parameterTypes": []
         },
         {
+          "name": "clientCredentials",
+          "parameterTypes": [
+            "io.seqera.tower.model.ClientCredentialsSummary"
+          ]
+        },
+        {
           "name": "createdAt",
           "parameterTypes": [
             "java.time.OffsetDateTime"
@@ -44795,6 +44895,14 @@
             "org.openapitools.jackson.nullable.JsonNullable",
             "org.openapitools.jackson.nullable.JsonNullable"
           ]
+        },
+        {
+          "name": "getClientCredentials",
+          "parameterTypes": []
+        },
+        {
+          "name": "getClientCredentials_JsonNullable",
+          "parameterTypes": []
         },
         {
           "name": "getCreatedAt",
@@ -44850,6 +44958,18 @@
           "name": "name",
           "parameterTypes": [
             "java.lang.String"
+          ]
+        },
+        {
+          "name": "setClientCredentials",
+          "parameterTypes": [
+            "io.seqera.tower.model.ClientCredentialsSummary"
+          ]
+        },
+        {
+          "name": "setClientCredentials_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
           ]
         },
         {
@@ -45852,10 +45972,20 @@
           ]
         },
         {
+          "name": "dag",
+          "parameterTypes": [
+            "io.seqera.tower.model.WorkflowDagInput"
+          ]
+        },
+        {
           "name": "equals",
           "parameterTypes": [
             "java.lang.Object"
           ]
+        },
+        {
+          "name": "getDag",
+          "parameterTypes": []
         },
         {
           "name": "getLaunchId",
@@ -45887,6 +46017,12 @@
           "name": "processNames",
           "parameterTypes": [
             "java.util.List"
+          ]
+        },
+        {
+          "name": "setDag",
+          "parameterTypes": [
+            "io.seqera.tower.model.WorkflowDagInput"
           ]
         },
         {
@@ -56456,6 +56592,60 @@
           ]
         }
       ]
+    },
+    {
+      "type": "io.seqera.tower.model.ClientCredentialsStatus",
+      "allDeclaredConstructors": true,
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true
+    },
+    {
+      "type": "io.seqera.tower.model.ClientCredentialsSummary",
+      "allDeclaredConstructors": true,
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true
+    },
+    {
+      "type": "io.seqera.tower.model.DataStudioDtoCheckpointRecovery",
+      "allDeclaredConstructors": true,
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true
+    },
+    {
+      "type": "io.seqera.tower.model.DataStudioDtoIncompleteCheckpoint",
+      "allDeclaredConstructors": true,
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true
+    },
+    {
+      "type": "io.seqera.tower.model.DataStudioDtoVerifiedCheckpoint",
+      "allDeclaredConstructors": true,
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true
+    },
+    {
+      "type": "io.seqera.tower.model.StudioCheckpointStatusReason",
+      "allDeclaredConstructors": true,
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true
+    },
+    {
+      "type": "io.seqera.tower.model.WorkflowDagInput",
+      "allDeclaredConstructors": true,
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true
+    },
+    {
+      "type": "io.seqera.tower.model.WorkflowDagInputEdge",
+      "allDeclaredConstructors": true,
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true
+    },
+    {
+      "type": "io.seqera.tower.model.WorkflowDagInputVertex",
+      "allDeclaredConstructors": true,
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true
     }
   ],
   "resources": [
