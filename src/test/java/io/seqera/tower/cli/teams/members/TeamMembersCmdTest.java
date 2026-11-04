@@ -22,15 +22,21 @@ import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.responses.teams.members.TeamMemberDeleted;
 import io.seqera.tower.cli.responses.teams.members.TeamMembersAdd;
 import io.seqera.tower.cli.responses.teams.members.TeamMembersList;
+import io.seqera.tower.model.ListMembersResponse;
 import io.seqera.tower.model.MemberDbDto;
+import io.seqera.tower.model.OrgRole;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.LongStream;
 
 import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
+import static io.seqera.tower.cli.utils.JsonHelper.prettyJson;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
@@ -171,5 +177,49 @@ class TeamMembersCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "teams", "members", "-o", "organization1", "-t", "team1", "delete", "-m", "julio2");
         assertOutput(format, out, new TeamMemberDeleted("team1", "julio2"));
+    }
+
+    @Test
+    void testListPagesThroughEveryMember(MockServerClient mock) throws JsonProcessingException {
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/orgs/27736513644467/teams"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("teams/teams_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        List<MemberDbDto> members = LongStream.range(0, 101)
+                .mapToObj(i -> new MemberDbDto().memberId(i).userName("user" + i).email("user" + i + "@seqera.io").role(OrgRole.member))
+                .toList();
+
+        mock.when(
+                request().withMethod("GET").withPath("/orgs/27736513644467/teams/267477500890054/members")
+                        .withQueryStringParameter("max", "100")
+                        .withQueryStringParameter("offset", "0"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(prettyJson(new ListMembersResponse().members(members.subList(0, 100)).totalSize(101L))).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/orgs/27736513644467/teams/267477500890054/members")
+                        .withQueryStringParameter("max", "100")
+                        .withQueryStringParameter("offset", "100"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(prettyJson(new ListMembersResponse().members(members.subList(100, 101)).totalSize(101L))).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(OutputType.json, mock, "teams", "members", "-o", "organization1", "-t", "team1");
+        assertOutput(OutputType.json, out, new TeamMembersList("team1", members));
     }
 }
