@@ -27,7 +27,12 @@ import io.seqera.tower.cli.responses.participants.ParticipantLeft;
 import io.seqera.tower.cli.responses.participants.ParticipantUpdated;
 import io.seqera.tower.cli.responses.participants.ParticipantsList;
 import io.seqera.tower.cli.utils.PaginationInfo;
+import io.seqera.tower.model.ListMembersResponse;
+import io.seqera.tower.model.ListParticipantsResponse;
+import io.seqera.tower.model.MemberDbDto;
+import io.seqera.tower.model.OrgRole;
 import io.seqera.tower.model.ParticipantResponseDto;
+import io.seqera.tower.model.ParticipantType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -38,11 +43,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
+import static io.seqera.tower.cli.utils.JsonHelper.prettyJson;
 import static org.apache.commons.lang3.StringUtils.chop;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
+import static org.mockserver.model.JsonBody.json;
 
 class ParticipantsCmdTest extends BaseCmdTest {
 
@@ -663,8 +670,9 @@ class ParticipantsCmdTest extends BaseCmdTest {
                 response().withStatusCode(200).withBody(loadResource("participants/participant_add")).withContentType(MediaType.APPLICATION_JSON)
         );
 
+        // julio's participant, not jfernandez74's, which the mocked search also returns and lists first
         mock.when(
-                request().withMethod("DELETE").withPath("/orgs/27736513644467/workspaces/75887156211589/participants/48516118433516"), exactly(1)
+                request().withMethod("DELETE").withPath("/orgs/27736513644467/workspaces/75887156211589/participants/36791779798370"), exactly(1)
         ).respond(
                 response().withStatusCode(204)
         );
@@ -686,5 +694,75 @@ class ParticipantsCmdTest extends BaseCmdTest {
                 "    \"teamAvatarUrl\": null,\n" +
                 "    \"userAvatarUrl\": null\n" +
                 "  }", ParticipantResponseDto.class), "workspace1"));
+    }
+
+    @Test
+    void testDeleteMemberParticipantIgnoresPartialMatches(MockServerClient mock) throws JsonProcessingException {
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // The search matches 'dan' inside 'aidan', and sorts aidan first
+        mock.when(
+                request().withMethod("GET").withPath("/orgs/27736513644467/workspaces/75887156211589/participants").withQueryStringParameter("search", "dan"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(prettyJson(new ListParticipantsResponse().totalSize(2L).participants(List.of(
+                        new ParticipantResponseDto().participantId(1L).memberId(11L).userName("aidan").email("aidan@seqera.io").type(ParticipantType.MEMBER).wspRole("launch"),
+                        new ParticipantResponseDto().participantId(2L).memberId(22L).userName("dan").email("dan@seqera.io").type(ParticipantType.MEMBER).wspRole("launch")
+                )))).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("DELETE").withPath("/orgs/27736513644467/workspaces/75887156211589/participants/2"), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(OutputType.console, mock, "participants", "delete", "-w", "75887156211589", "-n", "dan", "-t", "MEMBER");
+        assertOutput(OutputType.console, out, new ParticipantDeleted("dan", "workspace1"));
+    }
+
+    @Test
+    void testAddMemberParticipantIgnoresPartialMatches(MockServerClient mock) throws JsonProcessingException {
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/orgs/27736513644467/members").withQueryStringParameter("search", "dan"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(prettyJson(new ListMembersResponse().totalSize(2L).members(List.of(
+                        new MemberDbDto().memberId(11L).userName("aidan").email("aidan@seqera.io").role(OrgRole.member),
+                        new MemberDbDto().memberId(22L).userName("dan").email("dan@seqera.io").role(OrgRole.member)
+                )))).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("PUT").withPath("/orgs/27736513644467/workspaces/75887156211589/participants/add")
+                        .withBody(json("{\"memberId\": 22}")), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("participants/participant_add")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(OutputType.console, mock, "participants", "add", "-w", "75887156211589", "-n", "dan", "-t", "MEMBER");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
     }
 }

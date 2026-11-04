@@ -17,6 +17,7 @@
 package io.seqera.tower.cli.members;
 
 import io.seqera.tower.model.ListUserRolesResponse;
+import io.seqera.tower.model.ListMembersResponse;
 import io.seqera.tower.cli.responses.members.MemberRolesList;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
@@ -30,6 +31,7 @@ import io.seqera.tower.cli.responses.members.MembersList;
 import io.seqera.tower.cli.responses.members.MembersUpdate;
 import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.model.MemberDbDto;
+import io.seqera.tower.model.OrgRole;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -37,8 +39,10 @@ import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
+import static io.seqera.tower.cli.utils.JsonHelper.prettyJson;
 import static org.apache.commons.lang3.StringUtils.chop;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.matchers.Times.exactly;
@@ -361,5 +365,39 @@ class MembersCmdTest extends BaseCmdTest {
         ExecOut out = exec(format, mock, "members", "roles", "-o", "organization1", "-u", "julio");
 
         assertOutput(format, out, new MemberRolesList("organization1", parseJson(body, ListUserRolesResponse.class)));
+    }
+
+    @Test
+    void testDeleteIgnoresPartialMatches(MockServerClient mock) throws JsonProcessingException {
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user/1264/workspaces"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("workspaces/workspaces_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        // The search matches 'dan' inside 'aidan', which used to fail with a multiple-members error
+        mock.when(
+                request().withMethod("GET").withPath("/orgs/27736513644467/members").withQueryStringParameter("search", "dan"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(prettyJson(new ListMembersResponse().totalSize(2L).members(List.of(
+                        new MemberDbDto().memberId(11L).userName("aidan").email("aidan@seqera.io").role(OrgRole.member),
+                        new MemberDbDto().memberId(22L).userName("dan").email("dan@seqera.io").role(OrgRole.member)
+                )))).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("DELETE").withPath("/orgs/27736513644467/members/22"), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(OutputType.console, mock, "members", "delete", "-o", "organization1", "-u", "dan");
+        assertOutput(OutputType.console, out, new MembersDeleted("dan", "organization1"));
     }
 }

@@ -21,6 +21,7 @@ import io.seqera.tower.cli.commands.AbstractApiCmd;
 import io.seqera.tower.cli.exceptions.MemberNotFoundException;
 import io.seqera.tower.cli.exceptions.ParticipantNotFoundException;
 import io.seqera.tower.cli.exceptions.TeamNotFoundException;
+import io.seqera.tower.cli.utils.Paginator;
 import io.seqera.tower.model.ListMembersResponse;
 import io.seqera.tower.model.ListParticipantsResponse;
 import io.seqera.tower.model.ListTeamResponse;
@@ -38,64 +39,46 @@ public class AbstractParticipantsCmd extends AbstractApiCmd {
     public AbstractParticipantsCmd() {
     }
 
+    // The list endpoints search usernames, emails, names and team names by substring, so every lookup below
+    // pages through the results and keeps only an exact match. Taking the first result could pick 'aidan' for 'dan'.
     protected MemberDbDto findOrganizationMemberByName(Long orgId, String name) throws ApiException {
-        ListMembersResponse listMembersResponse = orgsApi().listOrganizationMembers(orgId, null, null, name);
-
-        MemberDbDto member;
-
-        if (listMembersResponse.getMembers() != null) {
-            member = listMembersResponse.getMembers().stream().findFirst().orElse(null);
-
-            if (member != null) {
-                return member;
-            }
-        }
-
-        throw new MemberNotFoundException(orgId, name);
+        return Paginator.findFirst(
+                (max, offset) -> orgsApi().listOrganizationMembers(orgId, max, offset, name),
+                ListMembersResponse::getMembers,
+                ListMembersResponse::getTotalSize,
+                it -> isUser(it.getUserName(), it.getEmail(), name)
+        ).orElseThrow(() -> new MemberNotFoundException(orgId, name));
     }
 
     protected MemberDbDto findOrganizationCollaboratorByName(Long orgId, String name) throws ApiException {
-        ListMembersResponse listCollaboratorsResponse = orgsApi().listOrganizationCollaborators(orgId, null, null, name);
-
-        MemberDbDto member;
-
-        if (listCollaboratorsResponse.getMembers() != null) {
-            member = listCollaboratorsResponse.getMembers().stream().findFirst().orElse(null);
-
-            if (member != null) {
-                return member;
-            }
-        }
-
-        throw new MemberNotFoundException(orgId, name);
+        return Paginator.findFirst(
+                (max, offset) -> orgsApi().listOrganizationCollaborators(orgId, max, offset, name),
+                ListMembersResponse::getMembers,
+                ListMembersResponse::getTotalSize,
+                it -> isUser(it.getUserName(), it.getEmail(), name)
+        ).orElseThrow(() -> new MemberNotFoundException(orgId, name));
     }
 
     protected TeamDbDto findOrganizationTeamByName(Long orgId, String name) throws ApiException {
-        ListTeamResponse listTeamResponse = teamsApi().listOrganizationTeams(orgId, null, null, name);
-
-        if (listTeamResponse.getTeams() != null) {
-            TeamDbDto team = listTeamResponse.getTeams().stream().filter(it -> Objects.equals(it.getName(), name)).findFirst().orElse(null);
-
-            if (team != null) {
-                return team;
-            }
-        }
-
-        throw new TeamNotFoundException(orgId, name);
+        return Paginator.findFirst(
+                (max, offset) -> teamsApi().listOrganizationTeams(orgId, max, offset, name),
+                ListTeamResponse::getTeams,
+                ListTeamResponse::getTotalSize,
+                it -> Objects.equals(it.getName(), name)
+        ).orElseThrow(() -> new TeamNotFoundException(orgId, name));
     }
 
     protected ParticipantResponseDto findWorkspaceParticipant(Long organizationId, Long workspaceId, String name, ParticipantType type) throws ApiException {
-        ListParticipantsResponse listParticipantsResponse = workspacesApi().listWorkspaceParticipants(organizationId, workspaceId, null, null, name);
+        return Paginator.findFirst(
+                (max, offset) -> workspacesApi().listWorkspaceParticipants(organizationId, workspaceId, max, offset, name),
+                ListParticipantsResponse::getParticipants,
+                ListParticipantsResponse::getTotalSize,
+                it -> it.getType() == type && (Objects.equals(it.getTeamName(), name) || isUser(it.getUserName(), it.getEmail(), name))
+        ).orElseThrow(() -> new ParticipantNotFoundException(workspaceId, name));
+    }
 
-        if (listParticipantsResponse.getParticipants() != null) {
-            ParticipantResponseDto participant = listParticipantsResponse.getParticipants().stream().filter(it -> it.getType() == type).findFirst().orElse(null);
-
-            if (participant != null) {
-                return participant;
-            }
-        }
-
-        throw new ParticipantNotFoundException(workspaceId, name);
+    private static boolean isUser(String userName, String email, String name) {
+        return name.equalsIgnoreCase(userName) || name.equalsIgnoreCase(email);
     }
 
     protected void deleteParticipantByNameAndType(Long wspId, String participantName, ParticipantType type) throws ParticipantNotFoundException, ApiException {
