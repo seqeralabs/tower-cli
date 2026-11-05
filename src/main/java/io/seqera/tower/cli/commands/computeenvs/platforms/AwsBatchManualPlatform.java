@@ -125,7 +125,7 @@ public class AwsBatchManualPlatform extends AbstractPlatform<AwsBatchConfig> {
         @Option(names = {"--head-job-cpus"}, description = "Number of CPUs allocated to the Nextflow head job. Controls the compute resources for the main workflow orchestration process.")
         public Integer headJobCpus;
 
-        @Option(names = {"--head-job-memory"}, description = "Memory allocation for the Nextflow head job in megabytes. Determines available memory for workflow orchestration.")
+        @Option(names = {"--head-job-memory"}, description = "Memory allocation for the Nextflow head job in megabytes. Minimum 3584 MiB. Defaults to 3584 MiB per head job CPU.")
         public Integer headJobMemoryMb;
 
         @Option(names = {"--head-job-role"}, description = "IAM role ARN to grant fine-grained permissions to the Nextflow head job. Enables secure access to AWS resources.")
