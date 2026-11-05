@@ -7945,6 +7945,10 @@
           "parameterTypes": []
         },
         {
+          "name": "getSandboxAutoChange",
+          "parameterTypes": []
+        },
+        {
           "name": "getServiceAccountId",
           "parameterTypes": []
         },
@@ -7962,6 +7966,22 @@
         },
         {
           "name": "getStatus",
+          "parameterTypes": []
+        },
+        {
+          "name": "getStudioSandbox",
+          "parameterTypes": []
+        },
+        {
+          "name": "getStudioSandboxName",
+          "parameterTypes": []
+        },
+        {
+          "name": "getStudioSandboxName_JsonNullable",
+          "parameterTypes": []
+        },
+        {
+          "name": "getStudioSandbox_JsonNullable",
           "parameterTypes": []
         },
         {
@@ -8022,6 +8042,12 @@
           "name": "name",
           "parameterTypes": [
             "java.lang.String"
+          ]
+        },
+        {
+          "name": "sandboxAutoChange",
+          "parameterTypes": [
+            "java.lang.Boolean"
           ]
         },
         {
@@ -8133,6 +8159,12 @@
           ]
         },
         {
+          "name": "setSandboxAutoChange",
+          "parameterTypes": [
+            "java.lang.Boolean"
+          ]
+        },
+        {
           "name": "setServiceAccountId",
           "parameterTypes": [
             "java.lang.Long"
@@ -8160,6 +8192,30 @@
           "name": "setStatus",
           "parameterTypes": [
             "io.seqera.tower.model.AgentStatus"
+          ]
+        },
+        {
+          "name": "setStudioSandbox",
+          "parameterTypes": [
+            "io.seqera.tower.model.AgentStudioSandbox"
+          ]
+        },
+        {
+          "name": "setStudioSandboxName",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setStudioSandboxName_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "setStudioSandbox_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
           ]
         },
         {
@@ -8196,6 +8252,18 @@
           "name": "status",
           "parameterTypes": [
             "io.seqera.tower.model.AgentStatus"
+          ]
+        },
+        {
+          "name": "studioSandbox",
+          "parameterTypes": [
+            "io.seqera.tower.model.AgentStudioSandbox"
+          ]
+        },
+        {
+          "name": "studioSandboxName",
+          "parameterTypes": [
+            "java.lang.String"
           ]
         },
         {
@@ -16776,11 +16844,23 @@
           "parameterTypes": []
         },
         {
+          "name": "getSandboxAutoChange",
+          "parameterTypes": []
+        },
+        {
           "name": "getServiceAccountId",
           "parameterTypes": []
         },
         {
           "name": "getServiceAccountId_JsonNullable",
+          "parameterTypes": []
+        },
+        {
+          "name": "getStudioSandbox",
+          "parameterTypes": []
+        },
+        {
+          "name": "getStudioSandbox_JsonNullable",
           "parameterTypes": []
         },
         {
@@ -16815,6 +16895,12 @@
           "name": "name",
           "parameterTypes": [
             "java.lang.String"
+          ]
+        },
+        {
+          "name": "sandboxAutoChange",
+          "parameterTypes": [
+            "java.lang.Boolean"
           ]
         },
         {
@@ -16872,6 +16958,12 @@
           ]
         },
         {
+          "name": "setSandboxAutoChange",
+          "parameterTypes": [
+            "java.lang.Boolean"
+          ]
+        },
+        {
           "name": "setServiceAccountId",
           "parameterTypes": [
             "java.lang.Long"
@@ -16879,6 +16971,18 @@
         },
         {
           "name": "setServiceAccountId_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "setStudioSandbox",
+          "parameterTypes": [
+            "io.seqera.tower.model.AgentStudioSandbox"
+          ]
+        },
+        {
+          "name": "setStudioSandbox_JsonNullable",
           "parameterTypes": [
             "org.openapitools.jackson.nullable.JsonNullable"
           ]
@@ -16899,6 +17003,12 @@
           "name": "setTemplateId_JsonNullable",
           "parameterTypes": [
             "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "studioSandbox",
+          "parameterTypes": [
+            "io.seqera.tower.model.AgentStudioSandbox"
           ]
         },
         {
@@ -47941,11 +48051,23 @@
           "parameterTypes": []
         },
         {
+          "name": "getSandboxAutoChange",
+          "parameterTypes": []
+        },
+        {
           "name": "getServiceAccountId",
           "parameterTypes": []
         },
         {
           "name": "getServiceAccountId_JsonNullable",
+          "parameterTypes": []
+        },
+        {
+          "name": "getStudioSandbox",
+          "parameterTypes": []
+        },
+        {
+          "name": "getStudioSandbox_JsonNullable",
           "parameterTypes": []
         },
         {
@@ -47980,6 +48102,12 @@
           "name": "name",
           "parameterTypes": [
             "java.lang.String"
+          ]
+        },
+        {
+          "name": "sandboxAutoChange",
+          "parameterTypes": [
+            "java.lang.Boolean"
           ]
         },
         {
@@ -48037,6 +48165,12 @@
           ]
         },
         {
+          "name": "setSandboxAutoChange",
+          "parameterTypes": [
+            "java.lang.Boolean"
+          ]
+        },
+        {
           "name": "setServiceAccountId",
           "parameterTypes": [
             "java.lang.Long"
@@ -48044,6 +48178,18 @@
         },
         {
           "name": "setServiceAccountId_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "setStudioSandbox",
+          "parameterTypes": [
+            "io.seqera.tower.model.AgentStudioSandbox"
+          ]
+        },
+        {
+          "name": "setStudioSandbox_JsonNullable",
           "parameterTypes": [
             "org.openapitools.jackson.nullable.JsonNullable"
           ]
@@ -48064,6 +48210,12 @@
           "name": "setTemplateId_JsonNullable",
           "parameterTypes": [
             "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "studioSandbox",
+          "parameterTypes": [
+            "io.seqera.tower.model.AgentStudioSandbox"
           ]
         },
         {
@@ -56643,6 +56795,12 @@
     },
     {
       "type": "io.seqera.tower.model.WorkflowDagInputVertex",
+      "allDeclaredConstructors": true,
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true
+    },
+    {
+      "type": "io.seqera.tower.model.AgentStudioSandbox",
       "allDeclaredConstructors": true,
       "allDeclaredFields": true,
       "allDeclaredMethods": true
