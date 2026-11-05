@@ -47,6 +47,7 @@ import java.util.List;
 
 import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
@@ -214,6 +215,45 @@ class AgentsCmdTest extends BaseCmdTest {
         ExecOut out = exec(format, mock, "agents", "update", "-w", WSP_ID, "-i", "agt_1", "--new-name", "new-name", "--instructions", "New instructions");
 
         assertOutput(format, out, new AgentUpdated(WSP_REF, "new-name", "updated"));
+    }
+
+    @Test
+    void testUpdateKeepsStudioSandbox(MockServerClient mock) {
+        String agentWithSandbox = AGENT.replace("\"status\": \"active\",",
+                "\"status\": \"active\", \"sandboxAutoChange\": true, \"studioSandbox\": {\"sessionId\": \"studio1\", \"workspaceId\": \"" + WSP_ID + "\"},");
+        mock.when(request().withMethod("GET").withPath("/agents/agt_1").withQueryStringParameter("workspaceId", WSP_ID), exactly(1))
+                .respond(response().withStatusCode(200).withBody("{\"agent\":" + agentWithSandbox + "}").withContentType(MediaType.APPLICATION_JSON));
+        // The API replaces the agent, so the sandbox set in the UI must be sent back or it is cleared
+        mock.when(request().withMethod("PUT").withPath("/agents/agt_1").withQueryStringParameter("workspaceId", WSP_ID)
+                        .withBody(json("""
+                                {
+                                  "name": "fix-failed-runs",
+                                  "description": "New description",
+                                  "sandboxAutoChange": true,
+                                  "studioSandbox": {"sessionId": "studio1", "workspaceId": "75887156211589"}
+                                }
+                                """)), exactly(1))
+                .respond(response().withStatusCode(200).withBody("{\"agent\":" + agentWithSandbox + "}").withContentType(MediaType.APPLICATION_JSON));
+
+        ExecOut out = exec(mock, "agents", "update", "-w", WSP_ID, "-i", "agt_1", "-d", "New description");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testUpdateWithoutStudioSandboxOmitsIt(MockServerClient mock) {
+        mockDescribe(mock);
+        mock.when(request().withMethod("PUT").withPath("/agents/agt_1").withQueryStringParameter("workspaceId", WSP_ID), exactly(1))
+                .respond(response().withStatusCode(200).withBody("{\"agent\":" + AGENT + "}").withContentType(MediaType.APPLICATION_JSON));
+
+        ExecOut out = exec(mock, "agents", "update", "-w", WSP_ID, "-i", "agt_1", "-d", "New description");
+
+        // then: studioSandbox is JsonNullable, so an unset value must be omitted, not sent as null
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        String body = mock.retrieveRecordedRequests(request().withMethod("PUT").withPath("/agents/agt_1"))[0].getBodyAsString();
+        assertFalse(body.contains("studioSandbox"), body);
     }
 
     @ParameterizedTest

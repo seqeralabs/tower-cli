@@ -71,7 +71,13 @@ public class UpdateCmd extends AbstractAgentsCmd {
                 .agentInstructions(instructions != null ? instructions.read() : agent.getAgentInstructions())
                 .agentInstructionsTemplateId(agent.getAgentInstructionsTemplateId())
                 .serviceAccountId(coalesce(serviceAccountId(serviceAccount, wspId), agent.getServiceAccountId()))
-                .githubAppCredentialId(coalesce(githubAppCredentialsId, agent.getGithubAppCredentialId()));
+                .githubAppCredentialId(coalesce(githubAppCredentialsId, agent.getGithubAppCredentialId()))
+                .sandboxAutoChange(agent.getSandboxAutoChange());
+
+        // studioSandbox is JsonNullable: setting null would send an explicit null.
+        if (agent.getStudioSandbox() != null) {
+            request.studioSandbox(agent.getStudioSandbox());
+        }
 
         AgentDbDto updated = agentsApi().updateAgent(agent.getId(), request, wspId).getAgent();
         return new AgentUpdated(workspaceRef(wspId), updated.getName(), "updated");
