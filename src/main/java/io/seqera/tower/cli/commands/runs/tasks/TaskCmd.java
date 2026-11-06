@@ -88,8 +88,9 @@ public class TaskCmd extends AbstractRunsCmd {
         map.put("id", task.getId() != null ? task.getId() : null);
         map.put("workDir", task.getWorkdir());
         map.put("status", task.getStatus().getValue());
-        if (task.getNumSpotInterruptions() != null)
+        if (task.getNumSpotInterruptions() != null) {
             map.put("numSpotInterruptions", task.getNumSpotInterruptions());
+        }
 
         return map;
     }
