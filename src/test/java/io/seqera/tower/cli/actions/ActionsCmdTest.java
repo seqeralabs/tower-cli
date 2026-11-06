@@ -36,6 +36,7 @@ import org.mockserver.matchers.MatchType;
 import org.mockserver.model.MediaType;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 
@@ -404,6 +405,36 @@ class ActionsCmdTest extends BaseCmdTest {
         assertEquals(0, out.exitCode);
     }
 
+    @Test
+    void testAddWithSecrets(MockServerClient mock) {
+        mock.reset();
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs").withQueryStringParameter("status", "AVAILABLE"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"computeEnvs\":[{\"id\":\"vYOK4vn7spw7bHHWBDXZ2\",\"name\":\"demo\",\"platform\":\"aws-batch\",\"status\":\"AVAILABLE\",\"primary\":true}]}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/vYOK4vn7spw7bHHWBDXZ2"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("compute_env_demo")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("POST").withPath("/actions")
+                        .withBody(json("{\"launch\":{\"workspaceSecrets\":[\"WSP_ONE\",\"WSP_TWO\"],\"userSecrets\":[\"USR_ONE\"]}}")), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("/actions/action_add")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "actions", "add", "github", "-n", "new-action", "--pipeline", "https://github.com/pditommaso/nf-sleep",
+                "--workspace-secrets", "WSP_ONE,WSP_TWO", "--user-secrets", "USR_ONE");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+    }
+
     @ParameterizedTest
     @EnumSource(OutputType.class)
     void testAddWithOverwrite(OutputType format, MockServerClient mock) {
@@ -515,6 +546,61 @@ class ActionsCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "actions", "update", "-n", "hello");
         assertOutput(format, out, new ActionUpdate("hello", USER_WORKSPACE_NAME, "57byWxhmUDLLWIF4J97XEP"));
+    }
+
+    @Test
+    void testUpdateWithSecrets(MockServerClient mock) {
+        mockUpdateLookups(mock, actionViewWithStoredSecrets());
+
+        mock.when(
+                request().withMethod("PUT").withPath("/actions/57byWxhmUDLLWIF4J97XEP")
+                        .withBody(json("{\"launch\":{\"workspaceSecrets\":[\"WSP_NEW\"],\"userSecrets\":[\"USR_NEW\"]}}")), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(mock, "actions", "update", "-n", "hello", "--workspace-secrets", "WSP_NEW", "--user-secrets", "USR_NEW");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testUpdateKeepsStoredSecrets(MockServerClient mock) {
+        mockUpdateLookups(mock, actionViewWithStoredSecrets());
+
+        mock.when(
+                request().withMethod("PUT").withPath("/actions/57byWxhmUDLLWIF4J97XEP")
+                        .withBody(json("{\"launch\":{\"workspaceSecrets\":[\"WSP_STORED\"],\"userSecrets\":[\"USR_STORED\"]}}")), exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(mock, "actions", "update", "-n", "hello", "--revision", "main");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+    }
+
+    private String actionViewWithStoredSecrets() {
+        return new String(loadResource("actions/action_view"), StandardCharsets.UTF_8)
+                .replace("\"launch\": {", "\"launch\": {\"workspaceSecrets\": [\"WSP_STORED\"], \"userSecrets\": [\"USR_STORED\"],");
+    }
+
+    private void mockUpdateLookups(MockServerClient mock, String actionView) {
+        mock.reset();
+
+        mock.when(
+                request().withMethod("GET").withPath("/actions"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("actions/actions_list")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/actions/57byWxhmUDLLWIF4J97XEP"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(actionView).withContentType(MediaType.APPLICATION_JSON)
+        );
     }
 
     @Test
