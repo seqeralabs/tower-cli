@@ -88,7 +88,7 @@ public class TaskView extends Response {
         tableGeneral.addRow("ID", general.get("id").toString());
         tableGeneral.addRow("Work directory", general.get("workDir").toString());
         tableGeneral.addRow("Status", general.get("status").toString());
-        // AWS and Google Batch report 0 on every task, so the row only appears when there were interruptions
+        // Most tasks report 0, so the row only appears when there were interruptions
         if (general.get("numSpotInterruptions") instanceof Integer interruptions && interruptions > 0) {
             tableGeneral.addRow("Spot interruptions", interruptions.toString());
         }
