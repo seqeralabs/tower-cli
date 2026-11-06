@@ -33,6 +33,7 @@ import picocli.CommandLine;
 import java.io.IOException;
 import java.util.Objects;
 import static io.seqera.tower.cli.utils.ModelHelper.coalesce;
+import static io.seqera.tower.cli.utils.ModelHelper.removeEmptyValues;
 
 @CommandLine.Command(
         name = "update",
@@ -98,7 +99,9 @@ public class UpdateCmd extends AbstractActionsCmd {
                 .pullLatest(coalesce(opts.pullLatest, action.getLaunch().getPullLatest()))
                 .stubRun(coalesce(opts.stubRun, action.getLaunch().getStubRun()))
                 .mainScript(coalesce(opts.mainScript, action.getLaunch().getMainScript()))
-                .entryName(coalesce(opts.entryName, action.getLaunch().getEntryName()));
+                .entryName(coalesce(opts.entryName, action.getLaunch().getEntryName()))
+                .userSecrets(coalesce(removeEmptyValues(opts.userSecrets), action.getLaunch().getUserSecrets()))
+                .workspaceSecrets(coalesce(removeEmptyValues(opts.workspaceSecrets), action.getLaunch().getWorkspaceSecrets()));
 
         opts.applyNullableOptions(workflowLaunchRequest);
 

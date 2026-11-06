@@ -38,6 +38,8 @@ import picocli.CommandLine;
 import java.io.IOException;
 import java.util.List;
 
+import static io.seqera.tower.cli.utils.ModelHelper.removeEmptyValues;
+
 public abstract class AbstractAddCmd extends AbstractActionsCmd {
 
     @CommandLine.Option(names = {"-n", "--name"}, description = "Action name.", required = true)
@@ -87,7 +89,9 @@ public abstract class AbstractAddCmd extends AbstractActionsCmd {
                 .pullLatest(opts.pullLatest)
                 .stubRun(opts.stubRun)
                 .mainScript(opts.mainScript)
-                .entryName(opts.entryName);
+                .entryName(opts.entryName)
+                .userSecrets(removeEmptyValues(opts.userSecrets))
+                .workspaceSecrets(removeEmptyValues(opts.workspaceSecrets));
 
         opts.applyNullableOptions(workflowLaunchRequest);
 
