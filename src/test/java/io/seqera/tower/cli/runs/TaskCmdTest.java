@@ -18,18 +18,25 @@ package io.seqera.tower.cli.runs;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.seqera.tower.cli.BaseCmdTest;
+import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.commands.runs.tasks.TaskCmd;
 import io.seqera.tower.cli.responses.runs.tasks.TaskView;
 import io.seqera.tower.model.Task;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import static io.seqera.tower.cli.utils.JsonHelper.parseJson;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
@@ -82,6 +89,50 @@ public class TaskCmdTest extends BaseCmdTest {
         assertEquals("", out.stdErr);
         assertEquals(StringUtils.chop(new TaskView(general, command, environment, times, resources, usage).toString()), out.stdOut);
         assertEquals(0, out.exitCode);
+    }
+
+    @Test
+    void testTaskDetailShowsSpotInterruptions(MockServerClient mock) {
+        mockTaskDetail(mock, "\"numSpotInterruptions\": 2,");
+
+        ExecOut out = exec(mock, "runs", "view", "-i", "5J9pBnWd6uoC3w", "task", "-t", "1");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        assertTrue(Pattern.compile("Spot interruptions\\s*\\|\\s*2\\s").matcher(out.stdOut).find(), out.stdOut);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"\"numSpotInterruptions\": 0,", ""})
+    void testTaskDetailHidesSpotInterruptionsWhenNone(String extraFields, MockServerClient mock) {
+        mockTaskDetail(mock, extraFields);
+
+        ExecOut out = exec(mock, "runs", "view", "-i", "5J9pBnWd6uoC3w", "task", "-t", "1");
+
+        assertEquals(0, out.exitCode);
+        assertFalse(out.stdOut.contains("Spot interruptions"), out.stdOut);
+    }
+
+    @Test
+    void testTaskDetailJsonKeepsSpotInterruptionsZero(MockServerClient mock) throws JsonProcessingException {
+        mockTaskDetail(mock, "\"numSpotInterruptions\": 0,");
+
+        ExecOut out = exec(OutputType.json, mock, "runs", "view", "-i", "5J9pBnWd6uoC3w", "task", "-t", "1");
+
+        assertEquals(0, out.exitCode);
+        Map<?, ?> general = (Map<?, ?>) parseJson(out.stdOut, Map.class).get("general");
+        assertEquals(0, general.get("numSpotInterruptions"));
+    }
+
+    private void mockTaskDetail(MockServerClient mock, String extraFields) {
+        String body = new String(loadResource("runs/task_detail"), StandardCharsets.UTF_8)
+                .replaceFirst("\"task\":\\s*\\{", "\"task\": {" + extraFields);
+
+        mock.when(
+                request().withMethod("GET").withPath("/workflow/5J9pBnWd6uoC3w/task/1"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(body).withContentType(MediaType.APPLICATION_JSON)
+        );
     }
 
     // FIXME: Workaround for Platform versions before 26.x returning exit as String. Remove once those versions are phased out (see #578).
