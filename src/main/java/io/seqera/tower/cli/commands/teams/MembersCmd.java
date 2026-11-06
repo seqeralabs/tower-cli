@@ -19,15 +19,17 @@ package io.seqera.tower.cli.commands.teams;
 import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.teams.members.AddCmd;
 import io.seqera.tower.cli.commands.teams.members.DeleteCmd;
-import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.teams.members.TeamMembersList;
+import io.seqera.tower.cli.utils.Paginator;
 import io.seqera.tower.model.ListMembersResponse;
+import io.seqera.tower.model.MemberDbDto;
 import io.seqera.tower.model.OrgAndWorkspaceDto;
 import io.seqera.tower.model.TeamDbDto;
 import picocli.CommandLine;
 
 import java.io.IOException;
+import java.util.List;
 
 @CommandLine.Command(
         name = "members",
@@ -49,15 +51,15 @@ public class MembersCmd extends AbstractTeamsCmd {
     protected Response exec() throws ApiException, IOException {
         OrgAndWorkspaceDto orgAndWorkspaceDbDto = findOrganizationByRef(organizationRef);
 
-        TeamDbDto team = findTeamByName(orgAndWorkspaceDbDto.getOrgId(), teamName);
+        Long orgId = orgAndWorkspaceDbDto.getOrgId();
+        TeamDbDto team = findTeamByName(orgId, teamName);
 
-        //TODO use pagination to get all the members
-        ListMembersResponse response = teamsApi().listOrganizationTeamMembers(orgAndWorkspaceDbDto.getOrgId(), team.getTeamId(), 100, 0, null);
+        List<MemberDbDto> members = Paginator.fetchAll(
+                (max, offset) -> teamsApi().listOrganizationTeamMembers(orgId, team.getTeamId(), max, offset, null),
+                ListMembersResponse::getMembers,
+                ListMembersResponse::getTotalSize
+        );
 
-        if (response == null) {
-            throw new TowerException(String.format("Team '%s' has no members", teamName));
-        }
-
-        return new TeamMembersList(teamName, response.getMembers());
+        return new TeamMembersList(teamName, members);
     }
 }
