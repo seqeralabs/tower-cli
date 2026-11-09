@@ -101,6 +101,7 @@ jobs:
           # Agent mode performs no branch setup of its own (unlike tag mode), and
           # a comment event points at the default branch — without an explicit ref
           # every file Claude reads would be master's copy, not the change's.
+          # Only the SHA vetted by the step above: never the mutable PR ref.
           ref: ${{ steps.resolve-sha.outputs.sha }}
           fetch-depth: 1
 
