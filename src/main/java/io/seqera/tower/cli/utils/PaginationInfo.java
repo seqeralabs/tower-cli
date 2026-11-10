@@ -33,6 +33,10 @@ public class PaginationInfo extends Response {
         this.totalSize = totalSize;
     }
 
+    public @Nullable Long getTotalSize() {
+        return totalSize;
+    }
+
     public static PaginationInfo from(final PaginationOptions paginationOptions) {
         return new PaginationInfo(paginationOptions, null);
     }

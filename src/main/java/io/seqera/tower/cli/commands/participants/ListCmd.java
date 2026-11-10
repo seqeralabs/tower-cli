@@ -22,6 +22,7 @@ import io.seqera.tower.cli.commands.global.WorkspaceRequiredOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.participants.ParticipantsList;
 import io.seqera.tower.cli.utils.PaginationInfo;
+import io.seqera.tower.model.ListParticipantsResponse;
 import io.seqera.tower.model.ParticipantResponseDto;
 import io.seqera.tower.model.ParticipantType;
 import picocli.CommandLine;
@@ -55,12 +56,14 @@ public class ListCmd extends AbstractParticipantsCmd {
 
         Long wspId = workspaceId(workspace.workspace);
 
-        List<ParticipantResponseDto> response = workspacesApi().listWorkspaceParticipants(orgId(wspId), wspId, max, offset, startsWith).getParticipants();
+        ListParticipantsResponse page = workspacesApi().listWorkspaceParticipants(orgId(wspId), wspId, max, offset, startsWith);
+        List<ParticipantResponseDto> response = page.getParticipants();
 
         if (response != null && type != null) {
             response = response.stream().filter(it -> it.getType() == type).collect(Collectors.toList());
         }
 
-        return new ParticipantsList(orgName(wspId), workspaceName(wspId), response, PaginationInfo.from(paginationOptions));
+        // totalSize counts participants of every type: --type filters each page after it is fetched
+        return new ParticipantsList(orgName(wspId), workspaceName(wspId), response, PaginationInfo.from(paginationOptions, page.getTotalSize()));
     }
 }

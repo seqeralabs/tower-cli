@@ -16,10 +16,13 @@
 
 package io.seqera.tower.cli.responses.members;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.seqera.tower.cli.responses.Response;
+import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.MemberDbDto;
 
+import jakarta.annotation.Nullable;
 import java.io.PrintWriter;
 import java.util.List;
 
@@ -29,10 +32,17 @@ public class MembersList extends Response {
 
     public final String orgName;
     public final List<MemberDbDto> members;
+    public final Long totalSize;
 
-    public MembersList(String orgName, List<MemberDbDto> members) {
+    @JsonIgnore
+    @Nullable
+    private PaginationInfo paginationInfo;
+
+    public MembersList(String orgName, List<MemberDbDto> members, @Nullable PaginationInfo paginationInfo) {
         this.orgName = orgName;
         this.members = members;
+        this.paginationInfo = paginationInfo;
+        this.totalSize = paginationInfo == null ? null : paginationInfo.getTotalSize();
     }
 
     @Override
@@ -51,6 +61,7 @@ public class MembersList extends Response {
         });
 
         table.print();
+        PaginationInfo.addFooter(out, paginationInfo);
         out.println("");
 
     }

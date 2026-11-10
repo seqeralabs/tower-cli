@@ -34,6 +34,7 @@ public class ParticipantsList extends Response {
     public final String organizationName;
     public final String workspaceName;
     public final List<ParticipantResponseDto> participants;
+    public final Long totalSize;
 
     @JsonIgnore
     @Nullable
@@ -44,6 +45,7 @@ public class ParticipantsList extends Response {
         this.workspaceName = workspaceName;
         this.participants = participants;
         this.paginationInfo = paginationInfo;
+        this.totalSize = paginationInfo == null ? null : paginationInfo.getTotalSize();
     }
 
     @Override

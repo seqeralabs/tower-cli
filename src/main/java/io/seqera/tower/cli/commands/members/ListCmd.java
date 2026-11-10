@@ -20,6 +20,7 @@ import io.seqera.tower.ApiException;
 import io.seqera.tower.cli.commands.global.PaginationOptions;
 import io.seqera.tower.cli.responses.Response;
 import io.seqera.tower.cli.responses.members.MembersList;
+import io.seqera.tower.cli.utils.PaginationInfo;
 import io.seqera.tower.model.ListMembersResponse;
 import io.seqera.tower.model.OrgAndWorkspaceDto;
 import picocli.CommandLine;
@@ -50,6 +51,6 @@ public class ListCmd extends AbstractMembersClass {
 
         ListMembersResponse response = orgsApi().listOrganizationMembers(orgAndWorkspaceDbDto.getOrgId(), max, offset, startsWith);
 
-        return new MembersList(organizationRef, response.getMembers());
+        return new MembersList(organizationRef, response.getMembers(), PaginationInfo.from(paginationOptions, response.getTotalSize()));
     }
 }
