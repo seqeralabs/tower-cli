@@ -58,6 +58,9 @@ public class UpdateCmd extends AbstractManagedIdentitiesCmd {
         Long orgId = findOrganizationByRef(organizationRef).getOrgId();
         ManagedIdentityDbDtoAbstractGridConfig current = findManagedIdentity(orgId, ref);
         AbstractGridConfig currentConfig = current.getConfig();
+        if (current.getPlatform() == null) {
+            throw new TowerException(String.format("Unable to update managed identity '%s': its platform is not supported by this CLI version", current.getName()));
+        }
 
         // Platform only applies the name, host and port, but needs the platform to read the config
         ManagedIdentityDbDtoAbstractGridConfig update = new ManagedIdentityDbDtoAbstractGridConfig()

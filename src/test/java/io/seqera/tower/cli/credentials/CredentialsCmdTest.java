@@ -172,6 +172,48 @@ class CredentialsCmdTest extends BaseCmdTest {
     }
 
     @Test
+    void testListWithTypesAddedAfterThisVersion(MockServerClient mock) {
+
+        // The list must be printed even if it has credentials of a type unknown by the SDK ('added-later'),
+        // which this CLI version cannot read in full
+        mock.when(
+                request().withMethod("GET").withPath("/credentials"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("""
+                        {
+                          "credentials": [
+                            {
+                              "id": "1aaaaaaaaaaaaaaaaaaaaa",
+                              "name": "new-type",
+                              "provider": "added-later",
+                              "keys": {"discriminator": "added-later", "someField": "x"}
+                            },
+                            {
+                              "id": "2bbbbbbbbbbbbbbbbbbbbb",
+                              "name": "ssh",
+                              "provider": "ssh"
+                            }
+                          ]
+                        }
+                        """).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "credentials", "list");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        assertTrue(out.stdOut.contains("new-type"), out.stdOut);
+        assertTrue(out.stdOut.contains("added-later"), out.stdOut);
+        assertTrue(out.stdOut.contains("ssh"), out.stdOut);
+    }
+
+    @Test
     void testListEmpty(MockServerClient mock) {
 
         mock.when(

@@ -116,7 +116,7 @@ public class UpdateCmd extends AbstractActionsCmd {
         }
 
         if (status != null) {
-            if (Objects.equals(action.getStatus().toString().toLowerCase(), status)) {
+            if (action.getStatus() != null && Objects.equals(action.getStatus().toString().toLowerCase(), status)) {
                 throw new TowerException(String.format("The action is already set to '%s'", status.toUpperCase()));
             }
 
