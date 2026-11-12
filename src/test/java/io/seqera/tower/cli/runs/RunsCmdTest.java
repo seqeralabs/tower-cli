@@ -802,6 +802,27 @@ class RunsCmdTest extends BaseCmdTest {
     }
 
     @Test
+    void testRelaunchWithCommitId(MockServerClient mock) {
+        mock.reset();
+
+        mock.when(request().withMethod("POST").withPath("/workflow/launch"), exactly(1))
+                .respond(response().withStatusCode(200).withBody(loadResource("workflow_launch")).withContentType(MediaType.APPLICATION_JSON));
+        mock.when(request().withMethod("GET").withPath("/workflow/5mDfiUtqyptDib"), exactly(1))
+                .respond(response().withStatusCode(200).withBody(loadResource("workflow_view")).withContentType(MediaType.APPLICATION_JSON));
+        mock.when(request().withMethod("GET").withPath("/workflow/5mDfiUtqyptDib/launch"), exactly(1))
+                .respond(response().withStatusCode(200).withBody(loadResource("runs/workflow_launch_v2")).withContentType(MediaType.APPLICATION_JSON));
+        mock.when(request().withMethod("GET").withPath("/user-info"), exactly(1))
+                .respond(response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON));
+
+        ExecOut out = exec(mock, "runs", "relaunch", "-i", "5mDfiUtqyptDib", "--commit-id", "abc123");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        mock.verify(request().withMethod("POST").withPath("/workflow/launch")
+                .withBody(json("{\"launch\":{\"commitId\":\"abc123\"}}")), VerificationTimes.exactly(1));
+    }
+
+    @Test
     void testRelaunchOverridingFusionVersionAndTowerConfig(MockServerClient mock) throws IOException {
         mock.reset();
 
