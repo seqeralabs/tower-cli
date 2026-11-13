@@ -118,7 +118,8 @@ public class RelaunchCmd extends AbstractRunsCmd {
                 .launchContainer(launchContainer)
                 // 'revision' above already carries the commit to run, so an inherited commitId would pin the
                 // relaunch to the original commit and ignore both the resume commit and '--revision'.
-                .commitId(null)
+                // Only an explicit '--commit-id' pins it, as in 'tw launch'.
+                .commitId(opts.commitId)
                 ;
 
         opts.applyNullableOptions(workflowLaunchRequest);
