@@ -22,6 +22,8 @@ import io.seqera.tower.model.ComputeEnvResponseDto;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.seqera.tower.cli.utils.FormatHelper.formatComputeEnvPlatform;
+
 public class ComputeEnvsPrimarySet extends Response {
 
     public final String workspaceRef;
@@ -38,7 +40,7 @@ public class ComputeEnvsPrimarySet extends Response {
 
         map.put("id", computeEnv.getId());
         map.put("name", computeEnv.getName());
-        map.put("platform", computeEnv.getPlatform().getValue());
+        map.put("platform", formatComputeEnvPlatform(computeEnv));
 
         return map;
     }

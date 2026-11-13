@@ -41,7 +41,7 @@ public class WorkspaceView extends Response {
         table.addRow("Name", workspace.getName());
         table.addRow("Full Name", workspace.getFullName());
         table.addRow("Description", workspace.getDescription());
-        table.addRow("Visibility", workspace.getVisibility().toString());
+        table.addRow("Visibility", FormatHelper.formatEnum(workspace.getVisibility()));
         table.addRow("Date Created", FormatHelper.formatTime(workspace.getDateCreated()));
         table.addRow("Last Updated", FormatHelper.formatTime(workspace.getLastUpdated()));
         table.print();

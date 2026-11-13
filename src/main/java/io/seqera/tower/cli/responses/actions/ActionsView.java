@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 
 import static io.seqera.tower.cli.utils.FormatHelper.formatActionId;
 import static io.seqera.tower.cli.utils.FormatHelper.formatActionStatus;
+import static io.seqera.tower.cli.utils.FormatHelper.formatEnum;
 import static io.seqera.tower.cli.utils.FormatHelper.formatLabels;
 import static io.seqera.tower.cli.utils.JsonHelper.prettyJson;
 
@@ -63,7 +64,7 @@ public class ActionsView extends Response {
         table.addRow("Name", action.getName());
         table.addRow("Status", formatActionStatus(action.getStatus()));
         table.addRow("Pipeline URL", action.getLaunch().getPipeline());
-        table.addRow("Source", action.getSource().toString());
+        table.addRow("Source", formatEnum(action.getSource()));
         table.addRow("Hook URL", action.getHookUrl());
         table.addRow("Last event", FormatHelper.formatTime(action.getLastSeen()));
         table.addRow("Date created", FormatHelper.formatTime(action.getDateCreated()));

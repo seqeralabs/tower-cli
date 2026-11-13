@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 
 import static io.seqera.tower.cli.utils.FormatHelper.formatActionId;
 import static io.seqera.tower.cli.utils.FormatHelper.formatActionStatus;
+import static io.seqera.tower.cli.utils.FormatHelper.formatEnum;
 import static io.seqera.tower.cli.utils.FormatHelper.formatLabels;
 
 public class ActionsList extends Response {
@@ -73,7 +74,7 @@ public class ActionsList extends Response {
                     element.getName(),
                     element.getEndpoint(),
                     formatActionStatus(element.getStatus()),
-                    element.getSource().toString()
+                    formatEnum(element.getSource())
             ));
             if (includeLabels) rows.add(formatLabels(element.getLabels()));
 
