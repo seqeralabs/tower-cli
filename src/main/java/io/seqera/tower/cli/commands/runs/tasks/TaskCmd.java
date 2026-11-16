@@ -91,6 +91,9 @@ public class TaskCmd extends AbstractRunsCmd {
         if (task.getNumSpotInterruptions() != null) {
             map.put("numSpotInterruptions", task.getNumSpotInterruptions());
         }
+        if (task.getErrorMessage() != null) {
+            map.put("errorMessage", task.getErrorMessage());
+        }
 
         return map;
     }
