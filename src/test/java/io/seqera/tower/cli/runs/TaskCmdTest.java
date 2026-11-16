@@ -124,8 +124,62 @@ public class TaskCmdTest extends BaseCmdTest {
         assertEquals(0, general.get("numSpotInterruptions"));
     }
 
+    // A Scheduler reason as Platform dev returned it for an Intelligent Compute run
+    private static final String SCHED_REASON = "No instance type can fit cpus=1024.0, memory=1792.0GB, gpus=0: region eu-west-1, catalog 621 -> runnable 611 -> machineTypes [c5ad, c5d, c6id, c8id, dl1, f1, f2, g4ad, g4dn, g5, g6, g6e, g6f, g7, g7e, gr6, i3, i3en, i4i, i7i, i7ie, m5ad, m5d, m5dn, m6id, m6idn, m8id, m8idb, m8idn, p3dn, p4d, p4de, p5, p5e, p5en, r5ad, r5d, r5dn, r6id, r6idn, r8id, r8idb, r8idn, x2idn, x2iedn, x8aedz, z1d, c6gd, c7gd, c8gd, c9gd, i8g, i8ge, im4gn, is4gen, m6gd, m7gd, m8gd, m9gd, r6gd, r7gd, r8gd, r9gd, x2gd] 224 -> local-ssd 224";
+
+    @Test
+    void testTaskDetailShowsFailureReason(MockServerClient mock) {
+        mockTaskDetail(mock, "FAILED", "\"errorMessage\": \"" + SCHED_REASON + "\",");
+
+        ExecOut out = exec(mock, "runs", "view", "-i", "5J9pBnWd6uoC3w", "task", "-t", "1");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        assertTrue(out.stdOut.contains("Failure reason"), out.stdOut);
+        // On a line of its own, not in the General table
+        assertTrue(out.stdOut.lines().anyMatch(line -> line.equals("     " + SCHED_REASON)), out.stdOut);
+    }
+
+    @Test
+    void testTaskDetailLabelsAbortedTaskReason(MockServerClient mock) {
+        mockTaskDetail(mock, "ABORTED", "\"errorMessage\": \"Stopped because the run was cancelled.\",");
+
+        ExecOut out = exec(mock, "runs", "view", "-i", "5J9pBnWd6uoC3w", "task", "-t", "1");
+
+        assertEquals(0, out.exitCode);
+        assertFalse(out.stdOut.contains("Failure reason"), out.stdOut);
+        assertTrue(out.stdOut.contains("Reason"), out.stdOut);
+        assertTrue(out.stdOut.lines().anyMatch(line -> line.equals("     Stopped because the run was cancelled.")), out.stdOut);
+    }
+
+    @Test
+    void testTaskDetailHidesReasonWhenNone(MockServerClient mock) {
+        mockTaskDetail(mock, "FAILED", "");
+
+        ExecOut out = exec(mock, "runs", "view", "-i", "5J9pBnWd6uoC3w", "task", "-t", "1");
+
+        assertEquals(0, out.exitCode);
+        assertFalse(out.stdOut.toLowerCase().contains("reason"), out.stdOut);
+    }
+
+    @Test
+    void testTaskDetailJsonIncludesFailureReason(MockServerClient mock) throws JsonProcessingException {
+        mockTaskDetail(mock, "FAILED", "\"errorMessage\": \"" + SCHED_REASON + "\",");
+
+        ExecOut out = exec(OutputType.json, mock, "runs", "view", "-i", "5J9pBnWd6uoC3w", "task", "-t", "1");
+
+        assertEquals(0, out.exitCode);
+        Map<?, ?> general = (Map<?, ?>) parseJson(out.stdOut, Map.class).get("general");
+        assertEquals(SCHED_REASON, general.get("errorMessage"));
+    }
+
     private void mockTaskDetail(MockServerClient mock, String extraFields) {
+        mockTaskDetail(mock, "COMPLETED", extraFields);
+    }
+
+    private void mockTaskDetail(MockServerClient mock, String status, String extraFields) {
         String body = new String(loadResource("runs/task_detail"), StandardCharsets.UTF_8)
+                .replaceFirst("\"status\": \"COMPLETED\"", "\"status\": \"" + status + "\"")
                 .replaceFirst("\"task\":\\s*\\{", "\"task\": {" + extraFields);
 
         mock.when(

@@ -94,6 +94,15 @@ public class TaskView extends Response {
         }
         tableGeneral.print();
 
+        // A block rather than a row: Scheduler reasons run to hundreds of characters
+        if (general.get("errorMessage") instanceof String reason && !reason.isBlank()) {
+            // An aborted task was stopped because of something else, so it didn't fail itself
+            String label = "ABORTED".equals(general.get("status")) ? "Reason" : "Failure reason";
+            out.println(ansi(String.format("%n     @|bold %s|@", label)));
+            out.println("    " + "-".repeat(label.length() + 2));
+            out.println(String.format("     %s", reason.trim().replaceAll("\n", String.format("%n     "))));
+        }
+
         if (command != null) {
             out.println(ansi(String.format("%n     @|bold Command|@")));
             out.println(ansi("    ---------"));
