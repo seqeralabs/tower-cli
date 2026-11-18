@@ -66,6 +66,7 @@ import io.seqera.tower.cli.exceptions.StatusCheckFailedException;
 import io.seqera.tower.cli.exceptions.TowerException;
 import io.seqera.tower.cli.exceptions.WorkspaceNotFoundException;
 import io.seqera.tower.cli.responses.Response;
+import io.seqera.tower.cli.utils.ForwardCompatibility;
 import io.seqera.tower.model.ActionQueryAttribute;
 import io.seqera.tower.model.ComputeEnvComputeConfig;
 import io.seqera.tower.model.ComputeEnvQueryAttribute;
@@ -207,6 +208,9 @@ public abstract class AbstractApiCmd extends AbstractCmd {
                     io.seqera.tower.model.Task.class,
                     io.seqera.tower.cli.utils.TaskExitMixin.class
             );
+
+            // Read values added to the API after this CLI version was released instead of failing on them
+            ForwardCompatibility.configure(client.getJSON().getMapper());
 
             // Set HTTP Agent header
             Properties props = getCliProperties();

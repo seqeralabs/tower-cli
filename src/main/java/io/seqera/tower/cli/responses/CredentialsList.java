@@ -54,7 +54,7 @@ public class CredentialsList extends Response {
         table.setPrefix("    ");
         credentials.forEach(element -> table.addRow(
                 formatCredentialsId(element.getId(), baseWorkspaceUrl),
-                element.getProvider().getValue(),
+                providerName(element),
                 element.getName(),
                 formatTime(element.getLastUsed())
         ));
@@ -62,4 +62,18 @@ public class CredentialsList extends Response {
         table.print();
         out.println("");
     }
+
+    // The provider is null when it is a type added after this CLI version was released
+    private static String providerName(Credentials credentials) {
+        if (credentials.getProvider() != null) {
+            return credentials.getProvider().getValue();
+        }
+
+        if (credentials.getKeys() != null && credentials.getKeys().getDiscriminator() != null) {
+            return credentials.getKeys().getDiscriminator();
+        }
+
+        return "UNKNOWN";
+    }
+
 }

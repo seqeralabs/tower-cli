@@ -25,7 +25,8 @@ import io.seqera.tower.model.DataLinkDto;
 import jakarta.annotation.Nullable;
 import java.io.PrintWriter;
 import java.util.List;
-import java.util.Objects;
+
+import static io.seqera.tower.cli.utils.FormatHelper.formatEnum;
 
 public class DataLinksList extends Response {
 
@@ -64,7 +65,7 @@ public class DataLinksList extends Response {
 
         dataLinks.forEach(dl -> table.addRow(
                 dl.getId(),
-                Objects.requireNonNull(dl.getProvider()).toString(),
+                formatEnum(dl.getProvider()),
                 dl.getName(),
                 dl.getResourceRef(),
                 dl.getRegion()

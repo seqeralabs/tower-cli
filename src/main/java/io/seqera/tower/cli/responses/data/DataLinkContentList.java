@@ -23,7 +23,8 @@ import io.seqera.tower.model.DataLinkItem;
 
 import java.io.PrintWriter;
 import java.util.List;
-import java.util.Objects;
+
+import static io.seqera.tower.cli.utils.FormatHelper.formatEnum;
 
 public class DataLinkContentList extends Response {
 
@@ -48,7 +49,7 @@ public class DataLinkContentList extends Response {
         items.forEach(item -> {
             long size = item.getSize() != null ? item.getSize() : 0L;
             table.addRow(
-                    Objects.requireNonNull(item.getType()).getValue(),
+                    formatEnum(item.getType()),
                     item.getName(),
                     String.valueOf(size)
             );

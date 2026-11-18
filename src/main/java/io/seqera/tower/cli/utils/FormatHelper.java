@@ -301,6 +301,29 @@ public class FormatHelper {
     }
 
 
+    /**
+     * Formats an enum value read from an API response.
+     *
+     * @param value the enum value, {@code null} when the API returns one added after this CLI version was released
+     * @return the text of the value, or "UNKNOWN" when it is {@code null}
+     */
+    public static String formatEnum(Enum<?> value) {
+        return value == null ? "UNKNOWN" : value.toString();
+    }
+
+    public static String formatComputeEnvPlatform(ComputeEnvResponseDto computeEnv) {
+        if (computeEnv.getPlatform() != null) {
+            return computeEnv.getPlatform().getValue();
+        }
+
+        ComputeConfig config = computeEnv.getConfig();
+        if (config != null && config.getDiscriminator() != null) {
+            return config.getDiscriminator();
+        }
+
+        return "UNKNOWN";
+    }
+
     public static String formatParticipantType(ParticipantType participantType) {
         if (participantType == null) {
             return "NA";

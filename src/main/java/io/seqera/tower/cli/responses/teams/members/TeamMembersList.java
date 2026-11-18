@@ -23,6 +23,8 @@ import io.seqera.tower.model.MemberDbDto;
 import java.io.PrintWriter;
 import java.util.List;
 
+import static io.seqera.tower.cli.utils.FormatHelper.formatEnum;
+
 public class TeamMembersList extends Response {
     public final String teamName;
     public final List<MemberDbDto> members;
@@ -44,7 +46,7 @@ public class TeamMembersList extends Response {
         TableList table = new TableList(out, 4, "Member ID", "Username", "Email", "Role").sortBy(0);
         table.setPrefix("    ");
         members.forEach(element -> {
-            table.addRow(element.getMemberId().toString(), element.getUserName(), element.getEmail(), element.getRole().toString());
+            table.addRow(element.getMemberId().toString(), element.getUserName(), element.getEmail(), formatEnum(element.getRole()));
         });
 
         table.print();

@@ -21,7 +21,8 @@ import io.seqera.tower.cli.utils.TableList;
 import io.seqera.tower.model.DataLinkDto;
 
 import java.io.PrintWriter;
-import java.util.Objects;
+
+import static io.seqera.tower.cli.utils.FormatHelper.formatEnum;
 
 public class DataLinkView extends Response {
 
@@ -43,7 +44,7 @@ public class DataLinkView extends Response {
 
         table.addRow(
                 dataLink.getId(),
-                Objects.requireNonNull(dataLink.getProvider()).toString(),
+                formatEnum(dataLink.getProvider()),
                 dataLink.getName(),
                 dataLink.getResourceRef(),
                 dataLink.getRegion()

@@ -163,6 +163,32 @@ class ComputeEnvsCmdTest extends BaseCmdTest {
     }
 
 
+    @Test
+    void testViewPlatformAddedAfterThisVersion(MockServerClient mock) {
+
+        // A compute environment of a platform unknown by the SDK must still be shown: its platform enum is
+        // read as null, so the platform name is taken from the config discriminator
+        String body = new String(loadResource("compute_env_view"), StandardCharsets.UTF_8).replace("\"aws-batch\"", "\"added-later-platform\"");
+
+        mock.when(
+                request().withMethod("GET").withPath("/compute-envs/isnEDBLvHDAIteOEF44ow"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(body).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request().withMethod("GET").withPath("/user-info"), exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody(loadResource("user")).withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(mock, "compute-envs", "view", "-i", "isnEDBLvHDAIteOEF44ow");
+
+        assertEquals("", out.stdErr);
+        assertEquals(0, out.exitCode);
+        assertTrue(out.stdOut.contains("added-later-platform"), out.stdOut);
+    }
+
     @ParameterizedTest
     @EnumSource(OutputType.class)
     void testViewAwsForge(OutputType format, MockServerClient mock) throws JsonProcessingException {
