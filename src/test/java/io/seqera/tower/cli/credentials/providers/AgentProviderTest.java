@@ -22,14 +22,15 @@ package io.seqera.tower.cli.credentials.providers;
 import io.seqera.tower.cli.BaseCmdTest;
 import io.seqera.tower.cli.commands.enums.OutputType;
 import io.seqera.tower.cli.responses.CredentialsAdded;
+import io.seqera.tower.cli.responses.CredentialsUpdated;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.MediaType;
 
-import java.io.IOException;
-
 import static io.seqera.tower.cli.commands.AbstractApiCmd.USER_WORKSPACE_NAME;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockserver.matchers.Times.exactly;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
@@ -37,9 +38,14 @@ import static org.mockserver.model.JsonBody.json;
 
 class AgentProviderTest extends BaseCmdTest {
 
+    @BeforeEach
+    void init(MockServerClient mock) {
+        mock.reset();
+    }
+
     @ParameterizedTest
     @EnumSource(OutputType.class)
-    void testAdd(OutputType format, MockServerClient mock) throws IOException {
+    void testAdd(OutputType format, MockServerClient mock) {
 
         mock.when(
                 request()
@@ -53,6 +59,84 @@ class AgentProviderTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "credentials", "add", "agent", "-n", "agent_test", "--connection-id", "connection_id", "--work-dir", "/work");
         assertOutput(format, out, new CredentialsAdded("TW_AGENT", "1cz5A8cuBkB5iJliCwJCFJ", "agent_test", USER_WORKSPACE_NAME));
+
+        String body = mock.retrieveRecordedRequests(request().withMethod("POST").withPath("/credentials"))[0].getBodyAsString();
+        assertFalse(body.contains("shared"), body);
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testAddShared(OutputType format, MockServerClient mock) {
+
+        mock.when(
+                request()
+                        .withMethod("POST")
+                        .withPath("/credentials")
+                        .withBody(json("{\"credentials\":{\"keys\":{\"connectionId\":\"connection_id\",\"workDir\":\"/work\",\"shared\":true},\"name\":\"agent_test\",\"provider\":\"tw-agent\"}}")),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentialsId\":\"1cz5A8cuBkB5iJliCwJCFJ\"}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        ExecOut out = exec(format, mock, "credentials", "add", "agent", "-n", "agent_test", "--connection-id", "connection_id", "--work-dir", "/work", "--shared");
+        assertOutput(format, out, new CredentialsAdded("TW_AGENT", "1cz5A8cuBkB5iJliCwJCFJ", "agent_test", USER_WORKSPACE_NAME));
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testUpdate(OutputType format, MockServerClient mock) {
+
+        mock.when(
+                request()
+                        .withMethod("GET")
+                        .withPath("/credentials/1cz5A8cuBkB5iJliCwJCFJ"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":{\"id\":\"1cz5A8cuBkB5iJliCwJCFJ\",\"name\":\"agent_test\",\"provider\":\"tw-agent\"}}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request()
+                        .withMethod("PUT")
+                        .withPath("/credentials/1cz5A8cuBkB5iJliCwJCFJ")
+                        .withBody(json("{\"credentials\":{\"keys\":{\"connectionId\":\"connection_id\",\"workDir\":\"/work\"},\"id\":\"1cz5A8cuBkB5iJliCwJCFJ\",\"name\":\"agent_test\",\"provider\":\"tw-agent\"}}")),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(format, mock, "credentials", "update", "agent", "-i", "1cz5A8cuBkB5iJliCwJCFJ", "--connection-id", "connection_id", "--work-dir", "/work");
+        assertOutput(format, out, new CredentialsUpdated("TW_AGENT", "agent_test", USER_WORKSPACE_NAME));
+
+        String body = mock.retrieveRecordedRequests(request().withMethod("PUT").withPath("/credentials/1cz5A8cuBkB5iJliCwJCFJ"))[0].getBodyAsString();
+        assertFalse(body.contains("shared"), body);
+    }
+
+    @ParameterizedTest
+    @EnumSource(OutputType.class)
+    void testUpdateShared(OutputType format, MockServerClient mock) {
+
+        mock.when(
+                request()
+                        .withMethod("GET")
+                        .withPath("/credentials/1cz5A8cuBkB5iJliCwJCFJ"),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(200).withBody("{\"credentials\":{\"id\":\"1cz5A8cuBkB5iJliCwJCFJ\",\"name\":\"agent_test\",\"provider\":\"tw-agent\"}}").withContentType(MediaType.APPLICATION_JSON)
+        );
+
+        mock.when(
+                request()
+                        .withMethod("PUT")
+                        .withPath("/credentials/1cz5A8cuBkB5iJliCwJCFJ")
+                        .withBody(json("{\"credentials\":{\"keys\":{\"connectionId\":\"connection_id\",\"workDir\":\"/work\",\"shared\":true},\"id\":\"1cz5A8cuBkB5iJliCwJCFJ\",\"name\":\"agent_test\",\"provider\":\"tw-agent\"}}")),
+                exactly(1)
+        ).respond(
+                response().withStatusCode(204)
+        );
+
+        ExecOut out = exec(format, mock, "credentials", "update", "agent", "-i", "1cz5A8cuBkB5iJliCwJCFJ", "--connection-id", "connection_id", "--work-dir", "/work", "--shared");
+        assertOutput(format, out, new CredentialsUpdated("TW_AGENT", "agent_test", USER_WORKSPACE_NAME));
     }
 
 }

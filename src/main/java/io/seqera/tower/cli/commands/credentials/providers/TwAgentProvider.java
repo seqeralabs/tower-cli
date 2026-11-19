@@ -30,6 +30,9 @@ public class TwAgentProvider extends AbstractProvider<AgentSecurityKeys> {
     @Option(names = {"--work-dir"}, description = "Default work directory path for workflow execution on the agent. Must be accessible to the agent process. Default: $TW_AGENT_WORK.", defaultValue = "$TW_AGENT_WORK")
     public String workDir;
 
+    @Option(names = {"--shared"}, description = "When enabled, all workspace users can access the same Tower Agent instance.")
+    public Boolean shared;
+
     public TwAgentProvider() {
         super(ProviderEnum.TW_AGENT);
     }
@@ -38,6 +41,7 @@ public class TwAgentProvider extends AbstractProvider<AgentSecurityKeys> {
     public AgentSecurityKeys securityKeys() throws IOException {
         return new AgentSecurityKeys()
                 .connectionId(connectionId)
-                .workDir(workDir);
+                .workDir(workDir)
+                .shared(shared);
     }
 }
