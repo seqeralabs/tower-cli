@@ -53,7 +53,7 @@ import io.seqera.tower.model.ServiceInfo;
 import io.seqera.tower.model.ServiceInfoResponse;
 import io.seqera.tower.model.Task;
 import io.seqera.tower.model.WorkflowLoad;
-import io.seqera.tower.model.WorkflowMaxDbDto;
+import io.seqera.tower.model.WorkflowDescribeResponseDto;
 import io.seqera.tower.model.WorkflowMetrics;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -465,7 +465,7 @@ class RunsCmdTest extends BaseCmdTest {
 
         ExecOut out = exec(format, mock, "runs", "view", "-i", "5mDfiUtqyptDib");
 
-        WorkflowMaxDbDto workflow = parseJson("""
+        WorkflowDescribeResponseDto workflow = parseJson("""
                 {
                     "id": "5mDfiUtqyptDib",
                     "submit": "2021-09-22T05:45:44Z",
@@ -513,7 +513,7 @@ class RunsCmdTest extends BaseCmdTest {
                     "outFile": null,
                     "operationId": null,
                     "ownerId": 9
-                  }""", WorkflowMaxDbDto.class);
+                  }""", WorkflowDescribeResponseDto.class);
 
         WorkflowLoad workflowLoad = parseJson("""
                 {
@@ -1092,7 +1092,7 @@ class RunsCmdTest extends BaseCmdTest {
 
         // workflow.json
         {
-            WorkflowMaxDbDto actual = fromJSON(workflowJsonContent.get(), WorkflowMaxDbDto.class);
+            WorkflowDescribeResponseDto actual = fromJSON(workflowJsonContent.get(), WorkflowDescribeResponseDto.class);
             // The dump omits explicit nulls, so compare JSON instead of JsonNullable-aware equals
             assertEquals(JsonHelper.prettyJson(sampleDescribeWorkflow.getWorkflow()), JsonHelper.prettyJson(actual));
         }
