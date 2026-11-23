@@ -44209,6 +44209,12 @@
           "parameterTypes": []
         },
         {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.Boolean"
+          ]
+        },
+        {
           "name": "addAllowBucketsItem",
           "parameterTypes": [
             "java.lang.String"
