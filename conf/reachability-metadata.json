@@ -34343,6 +34343,14 @@
           "parameterTypes": []
         },
         {
+          "name": "getStoreLocation",
+          "parameterTypes": []
+        },
+        {
+          "name": "getStoreLocation_JsonNullable",
+          "parameterTypes": []
+        },
+        {
           "name": "getStoreName",
           "parameterTypes": []
         },
@@ -34435,6 +34443,18 @@
           ]
         },
         {
+          "name": "setStoreLocation",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setStoreLocation_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
           "name": "setStoreName",
           "parameterTypes": [
             "java.lang.String"
@@ -34456,6 +34476,12 @@
           "name": "setTopicArn_JsonNullable",
           "parameterTypes": [
             "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
+          "name": "storeLocation",
+          "parameterTypes": [
+            "java.lang.String"
           ]
         },
         {
@@ -34576,6 +34602,14 @@
         },
         {
           "name": "getStatus_JsonNullable",
+          "parameterTypes": []
+        },
+        {
+          "name": "getStoreLocation",
+          "parameterTypes": []
+        },
+        {
+          "name": "getStoreLocation_JsonNullable",
           "parameterTypes": []
         },
         {
@@ -34769,6 +34803,18 @@
           ]
         },
         {
+          "name": "setStoreLocation",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setStoreLocation_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
+          ]
+        },
+        {
           "name": "setStoreName",
           "parameterTypes": [
             "java.lang.String"
@@ -34826,6 +34872,12 @@
           "name": "status",
           "parameterTypes": [
             "io.seqera.tower.model.LineageWorkspaceConfigStatus"
+          ]
+        },
+        {
+          "name": "storeLocation",
+          "parameterTypes": [
+            "java.lang.String"
           ]
         },
         {
@@ -44340,6 +44392,18 @@
           "parameterTypes": []
         },
         {
+          "name": "getSchedConfig",
+          "parameterTypes": []
+        },
+        {
+          "name": "getSchedEnabled",
+          "parameterTypes": []
+        },
+        {
+          "name": "getSchedEnabled_JsonNullable",
+          "parameterTypes": []
+        },
+        {
           "name": "getUserName",
           "parameterTypes": []
         },
@@ -44417,6 +44481,12 @@
           "name": "region",
           "parameterTypes": [
             "java.lang.String"
+          ]
+        },
+        {
+          "name": "schedConfig",
+          "parameterTypes": [
+            "io.seqera.tower.model.SchedConfig"
           ]
         },
         {
@@ -44525,6 +44595,12 @@
           "name": "setRegion",
           "parameterTypes": [
             "java.lang.String"
+          ]
+        },
+        {
+          "name": "setSchedConfig",
+          "parameterTypes": [
+            "io.seqera.tower.model.SchedConfig"
           ]
         },
         {
@@ -45156,6 +45232,12 @@
           ]
         },
         {
+          "name": "clientId",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
           "name": "description",
           "parameterTypes": [
             "java.lang.String"
@@ -45169,6 +45251,14 @@
         },
         {
           "name": "getAuditImageType",
+          "parameterTypes": []
+        },
+        {
+          "name": "getClientId",
+          "parameterTypes": []
+        },
+        {
+          "name": "getClientId_JsonNullable",
           "parameterTypes": []
         },
         {
@@ -45203,6 +45293,18 @@
           "name": "setAuditImageType",
           "parameterTypes": [
             "io.seqera.tower.model.AuditImageType"
+          ]
+        },
+        {
+          "name": "setClientId",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setClientId_JsonNullable",
+          "parameterTypes": [
+            "org.openapitools.jackson.nullable.JsonNullable"
           ]
         },
         {
