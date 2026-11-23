@@ -52109,7 +52109,7 @@
       "allDeclaredConstructors": true
     },
     {
-      "type": "io.seqera.tower.model.WorkflowDbDto",
+      "type": "io.seqera.tower.model.WorkflowListResponseDto",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
       "allDeclaredConstructors": true
@@ -54183,7 +54183,7 @@
       ]
     },
     {
-      "type": "io.seqera.tower.model.WorkflowMaxDbDto",
+      "type": "io.seqera.tower.model.WorkflowDescribeResponseDto",
       "allDeclaredFields": true,
       "methods": [
         {

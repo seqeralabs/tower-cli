@@ -46,7 +46,7 @@ public abstract class AbstractComputeEnvCmd extends AbstractApiCmd {
 
     protected ComputeEnvResponseDto computeEnvByName(Long workspaceId, String name) throws ApiException {
 
-        List<ListComputeEnvsResponseEntry> computeEnvs = computeEnvsApi().listComputeEnvs(null, workspaceId, List.of()).getComputeEnvs();
+        List<ListComputeEnvsResponseEntry> computeEnvs = computeEnvsApi().listComputeEnvs(null, workspaceId, List.of(), null, null, null).getComputeEnvs();
         ListComputeEnvsResponseEntry entry = computeEnvs
                 .stream()
                 .filter(ce -> name.equals(ce.getName()))

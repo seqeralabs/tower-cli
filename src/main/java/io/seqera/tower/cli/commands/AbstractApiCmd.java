@@ -665,7 +665,7 @@ public abstract class AbstractApiCmd extends AbstractCmd {
         if (availableComputeEnvsNameToId == null) {
             availableComputeEnvsNameToId = new HashMap<>();
             availableComputeEnvsIdToName = new HashMap<>();
-            for (ListComputeEnvsResponseEntry ce : computeEnvsApi().listComputeEnvs("AVAILABLE", workspaceId, List.of()).getComputeEnvs()) {
+            for (ListComputeEnvsResponseEntry ce : computeEnvsApi().listComputeEnvs("AVAILABLE", workspaceId, List.of(), null, null, null).getComputeEnvs()) {
 
                 if (ce.getPrimary() != null && ce.getPrimary()) {
                     primaryComputeEnvId = ce.getId();

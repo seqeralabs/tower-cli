@@ -35,7 +35,7 @@ import io.seqera.tower.model.ServiceInfo;
 import io.seqera.tower.model.Task;
 import io.seqera.tower.model.TaskStatus;
 import io.seqera.tower.model.WorkflowLoad;
-import io.seqera.tower.model.WorkflowMaxDbDto;
+import io.seqera.tower.model.WorkflowDescribeResponseDto;
 import io.seqera.tower.model.WorkflowMetrics;
 import io.seqera.tower.model.WorkflowQueryAttribute;
 import picocli.CommandLine.Command;
@@ -144,7 +144,7 @@ public class DumpCmd extends AbstractRunsCmd {
 
         // General workflow info (including labels)
 
-        WorkflowMaxDbDto workflow = getWorkflowDescription(workspaceId).getWorkflow();
+        WorkflowDescribeResponseDto workflow = getWorkflowDescription(workspaceId).getWorkflow();
         if (workflow == null) {
             throw new TowerException("Unknown workflow");
         }

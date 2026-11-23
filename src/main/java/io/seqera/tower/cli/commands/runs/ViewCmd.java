@@ -31,7 +31,7 @@ import io.seqera.tower.model.DescribeWorkflowLaunchResponse;
 import io.seqera.tower.model.DescribeWorkflowResponse;
 import io.seqera.tower.model.ProgressData;
 import io.seqera.tower.model.WorkflowLoad;
-import io.seqera.tower.model.WorkflowMaxDbDto;
+import io.seqera.tower.model.WorkflowDescribeResponseDto;
 import io.seqera.tower.model.WorkflowQueryAttribute;
 import picocli.CommandLine;
 
@@ -76,7 +76,7 @@ public class ViewCmd extends AbstractRunsCmd {
             throw new RunNotFoundException(id, workspaceRef(wspId));
         }
 
-        WorkflowMaxDbDto workflow = workflowResponse.getWorkflow();
+        WorkflowDescribeResponseDto workflow = workflowResponse.getWorkflow();
         WorkflowLoad workflowLoad = workflowLoadByWorkflowId(wspId, id);
 
         DescribeWorkflowLaunchResponse wfLaunch = workflowsApi().describeWorkflowLaunch(workflow.getId(), wspId);
