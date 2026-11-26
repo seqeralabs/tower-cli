@@ -1,0 +1,48 @@
+name: Notify CLI documentation
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  notify-docs:
+    name: Dispatch stable release to docs
+    if: github.event.release.prerelease == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Build dispatch payload
+        id: payload
+        env:
+          RELEASE_ID: ${{ github.event.release.id }}
+          TAG_NAME: ${{ github.event.release.tag_name }}
+          PUBLISHED_AT: ${{ github.event.release.published_at }}
+        run: |
+          payload=$(jq -cn \
+            --arg repository "$GITHUB_REPOSITORY" \
+            --arg release_id "$RELEASE_ID" \
+            --arg tag_name "$TAG_NAME" \
+            --arg published_at "$PUBLISHED_AT" \
+            '{repository: $repository, release_id: $release_id, tag_name: $tag_name, published_at: $published_at}')
+          echo "json=$payload" >> "$GITHUB_OUTPUT"
+
+      - name: Generate docs app token
+        id: docs-app-token
+        uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859 # ratchet:actions/create-github-app-token@v3.0.0
+        with:
+          app-id: ${{ secrets.DOCS_BOT_APP_ID }}
+          private-key: ${{ secrets.DOCS_BOT_APP_PRIVATE_KEY }}
+          owner: seqeralabs
+          repositories: docs
+
+      - name: Notify docs repository
+        uses: peter-evans/repository-dispatch@28959ce8df70de7be546dd1250a005dd32156697 # ratchet:peter-evans/repository-dispatch@v4.0.1
+        with:
+          token: ${{ steps.docs-app-token.outputs.token }}
+          repository: seqeralabs/docs
+          event-type: cli-release-published
+          client-payload: ${{ steps.payload.outputs.json }}
